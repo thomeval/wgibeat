@@ -1,0 +1,423 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XnaContent xmlns:Pipeline="Microsoft.Xna.Framework.Content.Pipeline">
+  <Asset Type="Pipeline:BuildItemCollection">
+    <Item>
+      <Source>Fonts\DefaultFont.spritefont</Source>
+      <Name>Fonts\DefaultFont</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Fonts\DefaultFont.xnb</Output>
+      <Time>2010-03-20T20:35:33.8168951+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Fonts\LargeFont.spritefont</Source>
+      <Name>Fonts\LargeFont</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Fonts\LargeFont.xnb</Output>
+      <Time>2010-03-26T14:35:19.7585583+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\arrowcdown.png</Source>
+      <Name>Textures\arrowcdown</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\arrowcdown.xnb</Output>
+      <Time>2010-03-19T18:35:39.6390906+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\arrowcleft.png</Source>
+      <Name>Textures\arrowcleft</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\arrowcleft.xnb</Output>
+      <Time>2010-03-19T18:36:01.6543498+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\arrowcright.png</Source>
+      <Name>Textures\arrowcright</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\arrowcright.xnb</Output>
+      <Time>2010-03-19T18:36:16.590204+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\arrowcup.png</Source>
+      <Name>Textures\arrowcup</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\arrowcup.xnb</Output>
+      <Time>2010-03-19T18:35:27.1723775+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\arrowdown.png</Source>
+      <Name>Textures\arrowdown</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\arrowdown.xnb</Output>
+      <Time>2010-03-19T18:34:23.1727169+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\arrowleft.png</Source>
+      <Name>Textures\arrowleft</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\arrowleft.xnb</Output>
+      <Time>2010-03-19T18:33:39.4512162+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\arrowright.png</Source>
+      <Name>Textures\arrowright</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\arrowright.xnb</Output>
+      <Time>2010-03-19T18:33:59.606369+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\arrowup.png</Source>
+      <Name>Textures\arrowup</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\arrowup.xnb</Output>
+      <Time>2010-03-19T18:34:39.1696319+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\beatMarkerP1.png</Source>
+      <Name>Textures\beatMarkerP1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\beatMarkerP1.xnb</Output>
+      <Time>2010-03-20T21:02:56.3978454+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\beatMeter.png</Source>
+      <Name>Textures\beatMeter</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\beatMeter.xnb</Output>
+      <Time>2010-03-20T21:02:56.4018456+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\evaluationHeader.png</Source>
+      <Name>Textures\evaluationHeader</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\evaluationHeader.xnb</Output>
+      <Time>2010-04-12T07:47:04.1213446+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\hitsBarLeft.png</Source>
+      <Name>Textures\hitsBarLeft</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\hitsBarLeft.xnb</Output>
+      <Time>2010-04-06T20:47:52.6812124+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\hitsBarRight.png</Source>
+      <Name>Textures\hitsBarRight</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\hitsBarRight.xnb</Output>
+      <Time>2010-04-06T20:47:47.7699315+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\koIndicator.png</Source>
+      <Name>Textures\koIndicator</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\koIndicator.xnb</Output>
+      <Time>2010-04-07T15:50:55.4786424+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\levelBarBase.png</Source>
+      <Name>Textures\levelBarBase</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\levelBarBase.xnb</Output>
+      <Time>2010-04-06T20:39:14.9435995+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\levelBarFront1.png</Source>
+      <Name>Textures\levelBarFront1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\levelBarFront1.xnb</Output>
+      <Time>2010-04-07T09:14:19.2115738+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\levelBarFront2.png</Source>
+      <Name>Textures\levelBarFront2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\levelBarFront2.xnb</Output>
+      <Time>2010-04-07T09:14:46.9371596+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\levelBarFront3.png</Source>
+      <Name>Textures\levelBarFront3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\levelBarFront3.xnb</Output>
+      <Time>2010-04-07T09:15:18.1469447+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\levelBarFront4.png</Source>
+      <Name>Textures\levelBarFront4</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\levelBarFront4.xnb</Output>
+      <Time>2010-04-07T09:51:53.1474915+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\lifebarBase.png</Source>
+      <Name>Textures\lifebarBase</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\lifebarBase.xnb</Output>
+      <Time>2010-04-07T07:55:22.0707457+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\lifebarBaseSide.png</Source>
+      <Name>Textures\lifebarBaseSide</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\lifebarBaseSide.xnb</Output>
+      <Time>2010-04-05T18:51:33.0086492+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\lifebarBaseSideUp.png</Source>
+      <Name>Textures\lifebarBaseSideUp</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\lifebarBaseSideUp.xnb</Output>
+      <Time>2010-04-16T20:12:04.1060672+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\lifebarOvercharge.png</Source>
+      <Name>Textures\lifebarOvercharge</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\lifebarOvercharge.xnb</Output>
+      <Time>2010-04-08T15:38:51.9806106+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\lifebarP1front.png</Source>
+      <Name>Textures\lifebarP1front</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\lifebarP1front.xnb</Output>
+      <Time>2010-04-04T20:45:12.6544099+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\mainMenuOption.png</Source>
+      <Name>Textures\mainMenuOption</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\mainMenuOption.xnb</Output>
+      <Time>2010-04-10T09:38:42.0397771+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\mainMenuOptionSelected.png</Source>
+      <Name>Textures\mainMenuOptionSelected</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\mainMenuOptionSelected.xnb</Output>
+      <Time>2010-04-10T09:37:43.4414255+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\noteBarLeft.png</Source>
+      <Name>Textures\noteBarLeft</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\noteBarLeft.xnb</Output>
+      <Time>2010-04-04T20:03:29.2562237+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\noteBarMiddle.png</Source>
+      <Name>Textures\noteBarMiddle</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\noteBarMiddle.xnb</Output>
+      <Time>2010-04-04T20:35:17.0743447+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\noteBarRight.png</Source>
+      <Name>Textures\noteBarRight</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\noteBarRight.xnb</Output>
+      <Time>2010-04-04T20:02:11.4347726+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\noteJudgement0.png</Source>
+      <Name>Textures\noteJudgement0</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\noteJudgement0.xnb</Output>
+      <Time>2010-04-05T19:47:38.6151509+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\noteJudgement1.png</Source>
+      <Name>Textures\noteJudgement1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\noteJudgement1.xnb</Output>
+      <Time>2010-04-05T19:34:59.5117327+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\noteJudgement2.png</Source>
+      <Name>Textures\noteJudgement2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\noteJudgement2.xnb</Output>
+      <Time>2010-04-05T19:38:38.8222765+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\noteJudgement3.png</Source>
+      <Name>Textures\noteJudgement3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\noteJudgement3.xnb</Output>
+      <Time>2010-04-05T19:40:46.232564+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\noteJudgement4.png</Source>
+      <Name>Textures\noteJudgement4</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\noteJudgement4.xnb</Output>
+      <Time>2010-04-05T19:45:50.8679881+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\noteJudgement5.png</Source>
+      <Name>Textures\noteJudgement5</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\noteJudgement5.xnb</Output>
+      <Time>2010-04-09T19:01:07.1244985+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\stageClearIndicator.png</Source>
+      <Name>Textures\stageClearIndicator</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\stageClearIndicator.xnb</Output>
+      <Time>2010-04-09T19:43:49.8270767+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\streakNumbers.png</Source>
+      <Name>Textures\streakNumbers</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\streakNumbers.xnb</Output>
+      <Time>2010-04-07T09:04:37.7103138+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\lifebarP2front.png</Source>
+      <Name>Textures\lifebarP2front</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\lifebarP2front.xnb</Output>
+      <Time>2010-04-20T14:45:46.3923275+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\lifebarP3front.png</Source>
+      <Name>Textures\lifebarP3front</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\lifebarP3front.xnb</Output>
+      <Time>2010-04-20T14:47:30.8413016+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\lifebarP4front.png</Source>
+      <Name>Textures\lifebarP4front</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\lifebarP4front.xnb</Output>
+      <Time>2010-04-20T14:48:30.6657234+02:00</Time>
+    </Item>
+    <BuildSuccessful>true</BuildSuccessful>
+    <Settings>
+      <TargetPlatform>Windows</TargetPlatform>
+      <BuildConfiguration>Debug</BuildConfiguration>
+      <CompressContent>false</CompressContent>
+      <RootDirectory>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\Content\</RootDirectory>
+      <LoggerRootDirectory>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\</LoggerRootDirectory>
+      <IntermediateDirectory>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\Content\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\</OutputDirectory>
+    </Settings>
+    <Assemblies>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.XImporter.dll</Key>
+        <Value>2009-05-28T00:16:14+02:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.VideoImporters.dll</Key>
+        <Value>2009-05-28T00:16:06+02:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.TextureImporter.dll</Key>
+        <Value>2009-05-28T00:16:16+02:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.FBXImporter.dll</Key>
+        <Value>2009-05-28T00:16:26+02:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.EffectImporter.dll</Key>
+        <Value>2009-05-28T00:16:12+02:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.AudioImporters.dll</Key>
+        <Value>2009-05-28T00:16:06+02:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Windows\assembly\GAC_32\Microsoft.Xna.Framework.Content.Pipeline\3.1.0.0__6d5c3888ef60e27d\Microsoft.Xna.Framework.Content.Pipeline.dll</Key>
+        <Value>2010-03-11T09:51:10.8799394+02:00</Value>
+      </Assembly>
+    </Assemblies>
+  </Asset>
+</XnaContent>

@@ -1,0 +1,49 @@
+Content\Fonts\DefaultFont.xnb
+Content\Fonts\LargeFont.xnb
+Content\Textures\arrowcdown.xnb
+Content\Textures\arrowcleft.xnb
+Content\Textures\arrowcright.xnb
+Content\Textures\arrowcup.xnb
+Content\Textures\arrowdown.xnb
+Content\Textures\arrowleft.xnb
+Content\Textures\arrowright.xnb
+Content\Textures\arrowup.xnb
+Content\Textures\beatMarkerP1.xnb
+Content\Textures\beatMeter.xnb
+Content\Textures\evaluationHeader.xnb
+Content\Textures\hitsBarLeft.xnb
+Content\Textures\hitsBarRight.xnb
+Content\Textures\koIndicator.xnb
+Content\Textures\levelBarBase.xnb
+Content\Textures\levelBarFront1.xnb
+Content\Textures\levelBarFront2.xnb
+Content\Textures\levelBarFront3.xnb
+Content\Textures\levelBarFront4.xnb
+Content\Textures\lifebarBase.xnb
+Content\Textures\lifebarBaseSide.xnb
+Content\Textures\lifebarBaseSideUp.xnb
+Content\Textures\lifebarOvercharge.xnb
+Content\Textures\lifebarP1front.xnb
+Content\Textures\mainMenuOption.xnb
+Content\Textures\mainMenuOptionSelected.xnb
+Content\Textures\noteBarLeft.xnb
+Content\Textures\noteBarMiddle.xnb
+Content\Textures\noteBarRight.xnb
+Content\Textures\noteJudgement0.xnb
+Content\Textures\noteJudgement1.xnb
+Content\Textures\noteJudgement2.xnb
+Content\Textures\noteJudgement3.xnb
+Content\Textures\noteJudgement4.xnb
+Content\Textures\noteJudgement5.xnb
+Content\Textures\stageClearIndicator.xnb
+Content\Textures\streakNumbers.xnb
+Content\Textures\lifebarP2front.xnb
+Content\Textures\lifebarP3front.xnb
+Content\Textures\lifebarP4front.xnb
+fmodex.dll
+metrics.txt
+settings.txt
+Songs\A Dangerous Mind\ADangerousMind.mp3
+Songs\Tik Tok\TikTok.mp3
+Songs\Tik Tok\0.sng
+Songs\A Dangerous Mind\1.sng
