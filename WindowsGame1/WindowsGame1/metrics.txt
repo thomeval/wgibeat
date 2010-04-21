@@ -51,3 +51,6 @@ NewGameMenuStart=[50,25][450,25][50,350][450,350];
 
 #Song Select;
 SongListMidpoint=[450,275];
+SongSelectScreenHeader=[0,0];
+SongBPMDisplay=[350,290];
+PlayersJoinedDisplay=[50,500];
