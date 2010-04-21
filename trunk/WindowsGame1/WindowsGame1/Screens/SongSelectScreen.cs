@@ -14,7 +14,7 @@ namespace WindowsGame1.Screens
         private List<SongListItem> SongList = new List<SongListItem>();
         private int _selectedIndex = 0;
 
-        private const int LISTITEMS_DRAWN = 8;
+        private const int LISTITEMS_DRAWN = 6;
         public SongSelectScreen(GameCore core) : base(core)
         {
 
@@ -37,6 +37,23 @@ namespace WindowsGame1.Screens
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            DrawSongList(spriteBatch);
+            var headerSprite = new Sprite
+                                   {
+                                       Height = 80,
+                                       Width = 800,
+                                       SpriteTexture = TextureManager.Textures["songSelectHeader"]
+                                   };
+            headerSprite.SetPosition(Core.Metrics["SongSelectScreenHeader",0]);
+            headerSprite.Draw(spriteBatch);
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], SongList[_selectedIndex].Song.Bpm + " BPM", Core.Metrics["SongBPMDisplay", 0], Color.White);
+
+
+
+        }
+
+        private void DrawSongList(SpriteBatch spriteBatch)
+        {
             var midpoint = Core.Metrics["SongListMidpoint", 0];
             SongList[_selectedIndex].SetPosition(midpoint);
             SongList[_selectedIndex].IsSelected = true;
@@ -48,6 +65,19 @@ namespace WindowsGame1.Screens
                 SongList[(_selectedIndex + x) % SongList.Count].IsSelected = false;
                 SongList[(_selectedIndex + x) % SongList.Count].SetPosition(midpoint);
                 SongList[(_selectedIndex + x) % SongList.Count].Draw(spriteBatch);
+            }
+            midpoint.Y -= 50 * LISTITEMS_DRAWN;
+            int index = _selectedIndex;
+            for (int x = 1; x <= LISTITEMS_DRAWN; x++)
+            {
+                index -= 1;
+                if (index < 0)
+                {
+                    index = SongList.Count - 1;
+                }
+                midpoint.Y -= 50;
+                SongList[index].SetPosition(midpoint);
+                SongList[index].Draw(spriteBatch);
             }
         }
 
@@ -86,7 +116,6 @@ namespace WindowsGame1.Screens
 
         private void MoveSelectionUp()
         {
-            //SongList[_selectedIndex].IsSelected = false;
             _selectedIndex -= 1;
             if (_selectedIndex < 0)
             {
@@ -97,7 +126,6 @@ namespace WindowsGame1.Screens
 
         private void MoveSelectionDown()
         {
-           // SongList[_selectedIndex].IsSelected = false;
             _selectedIndex = (_selectedIndex + 1)%SongList.Count();
 
         }
