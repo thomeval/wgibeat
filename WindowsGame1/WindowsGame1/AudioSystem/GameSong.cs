@@ -10,6 +10,7 @@ namespace WindowsGame1.AudioSystem
         public string Title { get; set; }
         public string Artist { get; set; }
         public string SongFile { get; set; }
+        public string DefinitionFile { get; set; }
         public double Bpm { get; set; }
         public double Offset { get; set; }
         public double Length { get; set; }

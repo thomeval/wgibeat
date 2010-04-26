@@ -124,11 +124,21 @@ namespace WindowsGame1.Screens
             }
             if ((_displayState == 1) && (gameTime.TotalRealTime.TotalSeconds >= _transitionTime))
             {
+                SaveSongToFile();
                 Core.ScreenTransition("Evaluation");
             }
             _phraseNumber = (gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds - _gameSong.Offset * 1000) / 1000 * (_gameSong.Bpm / 240);
             base.Update(gameTime);
         }
+
+        private void SaveSongToFile()
+        {
+            if (Core.Settings.Get<int>("SongDebug") == 1)
+            {
+                SongManager.SaveToFile(_gameSong);
+            }
+        }
+
         List<DisplayedJudgement> djToRemove = new List<DisplayedJudgement>();
         private void MaintainDisplayedJudgements()
         {
@@ -214,6 +224,7 @@ namespace WindowsGame1.Screens
         /// <param name="action"></param>
         public override void PerformAction(Action action)
         {
+            bool songDebug = Core.Settings.Get<int>("SongDebug") == 1;
             switch (action)
             {
                 case Action.P1_LEFT:
@@ -252,6 +263,42 @@ namespace WindowsGame1.Screens
                     break;
                 case Action.P4_BEATLINE:
                     HitBeatline(3);
+                    break;
+                case Action.SYSTEM_BPM_DECREASE:
+                    if (songDebug)
+                    {
+                        _gameSong.Bpm -= 0.1;
+                    }
+                    break;
+                case Action.SYSTEM_BPM_INCREASE:
+                    if (songDebug)
+                    {
+                        _gameSong.Bpm += 0.1;
+                    }
+                    break;
+                case Action.SYSTEM_OFFSET_DECREASE_BIG:
+                    if (songDebug)
+                    {
+                        _gameSong.Offset -= 0.1;
+                    }
+                    break;
+                case Action.SYSTEM_OFFSET_INCREASE_BIG:
+                    if (songDebug)
+                    {
+                        _gameSong.Offset += 0.1;
+                    }
+                    break;
+                case Action.SYSTEM_OFFSET_DECREASE_SMALL:
+                    if (songDebug)
+                    {
+                        _gameSong.Offset -= 0.01;
+                    }
+                    break;
+                case Action.SYSTEM_OFFSET_INCREASE_SMALL:
+                    if (songDebug)
+                    {
+                        _gameSong.Offset += 0.01;
+                    }
                     break;
             }
 
@@ -542,7 +589,9 @@ namespace WindowsGame1.Screens
             //Draw beatline judgements.
             foreach (DisplayedJudgement dj in _displayedJudgements)
             {
-                dj.Opacity = Convert.ToByte(Math.Max(0, (dj.DisplayUntil - _phraseNumber) * 510));
+                int opacity = Convert.ToInt32(Math.Max(0, (dj.DisplayUntil - _phraseNumber)*510));
+                opacity = Math.Min(opacity, 255);
+                dj.Opacity = Convert.ToByte(opacity);
                 dj.Draw(spriteBatch);
             }
             
@@ -726,9 +775,7 @@ namespace WindowsGame1.Screens
 
         private void DrawText(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + String.Format("{0:F3}",_phraseNumber), new Vector2 { X = 340, Y = 300 }, Color.White);
-            //spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "Hitoffset: " + _hitoffset,
-            //           new Vector2 { X = 350, Y = 480 }, Color.White);
+
 
             AdjustDisplayedScores();
             for (int x = 0; x < _playerCount; x++)
@@ -747,6 +794,23 @@ namespace WindowsGame1.Screens
                                        Core.Metrics["NormalLifebarText", x], Color.White);
 
             }
+            if (Core.Settings.Get<int>("SongDebug") == 1)
+            {
+            DrawDebugText(spriteBatch);
+            }
+        }
+
+        private void DrawDebugText(SpriteBatch spriteBatch)
+        {
+
+                spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("BPM: {0:F2}", _gameSong.Bpm),
+                       Core.Metrics["SongDebugBPM", 0], Color.White);
+                spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Offset: {0:F3}", _gameSong.Offset),
+                        Core.Metrics["SongDebugOffset", 0], Color.White);
+                spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + String.Format("{0:F3}", _phraseNumber), Core.Metrics["SongDebugPhrase", 0], Color.White);
+                spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Hitoffset: {0:F3}",  _hitoffset),
+                           Core.Metrics["SongDebugHitOffset",0], Color.White);
+  
         }
 
         private void AdjustDisplayedScores()

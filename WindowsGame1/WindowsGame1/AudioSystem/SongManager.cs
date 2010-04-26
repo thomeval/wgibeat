@@ -70,6 +70,24 @@ namespace WindowsGame1.AudioSystem
         {
             return (from e in _songs where e.GetHashCode() == hashCode select e).SingleOrDefault();
         }
+
+        public static void SaveToFile(GameSong song)
+        {
+
+            var file = new FileStream(song.Path + "\\" + song.DefinitionFile, FileMode.Create, FileAccess.Write);
+
+            var sw = new StreamWriter(file);
+
+            sw.WriteLine("#SONG-1.0;");
+            sw.WriteLine("Title={0};", song.Title);
+            sw.WriteLine("Artist={0};", song.Artist);
+            sw.WriteLine("Bpm={0};",Math.Round(song.Bpm,2));
+            sw.WriteLine("Offset={0};", Math.Round(song.Offset,3));
+            sw.WriteLine("Length={0};", Math.Round(song.Length,3));
+            sw.WriteLine("SongFile={0};", song.SongFile);
+            
+            sw.Close();
+        }
         public static GameSong LoadFromFile(string filename)
         {
             var newSong = new GameSong();
@@ -131,6 +149,7 @@ namespace WindowsGame1.AudioSystem
                 {
                     var newSong = LoadFromFile(file);
                     newSong.Path = currentFolder;
+                    newSong.DefinitionFile = Path.GetFileName(file);
                     newManager.AddSong(newSong);
                 }
                 folders.RemoveAt(0);

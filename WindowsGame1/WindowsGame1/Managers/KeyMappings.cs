@@ -48,6 +48,13 @@ namespace WindowsGame1
             _mappings.Add(Keys.PageUp, Action.P3_SELECT);
             _mappings.Add(Keys.Add, Action.P4_START);
 
+            _mappings.Add(Keys.F5, Action.SYSTEM_BPM_DECREASE);
+            _mappings.Add(Keys.F6, Action.SYSTEM_BPM_INCREASE);
+            _mappings.Add(Keys.F7, Action.SYSTEM_OFFSET_DECREASE_BIG);
+            _mappings.Add(Keys.F8, Action.SYSTEM_OFFSET_INCREASE_BIG);
+            _mappings.Add(Keys.F9, Action.SYSTEM_OFFSET_DECREASE_SMALL);
+            _mappings.Add(Keys.F10, Action.SYSTEM_OFFSET_INCREASE_SMALL);
+
             _buttonMappings[0].Add(Buttons.X, Action.P4_LEFT);
             _buttonMappings[0].Add(Buttons.B, Action.P4_RIGHT);
             _buttonMappings[0].Add(Buttons.Y, Action.P4_UP);
@@ -172,6 +179,13 @@ namespace WindowsGame1
         P4_BEATLINE,
         P4_START,
         P4_SELECT,
+
+        SYSTEM_BPM_INCREASE,
+        SYSTEM_BPM_DECREASE,
+        SYSTEM_OFFSET_INCREASE_BIG,
+        SYSTEM_OFFSET_INCREASE_SMALL,
+        SYSTEM_OFFSET_DECREASE_BIG,
+        SYSTEM_OFFSET_DECREASE_SMALL,
 
         NONE
         

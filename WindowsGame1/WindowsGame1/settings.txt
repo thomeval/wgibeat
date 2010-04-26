@@ -1,8 +1,8 @@
 ﻿#SETTINGS-1.0;
-Players=1;
 P1Difficulty=3;
 P2Difficulty=2;
 P3Difficulty=3;
 P4Difficulty=1;
 SongFolder=Songs;
 LastSongPlayed=A Dangerous Mind;
+SongDebug=1;
