@@ -140,10 +140,7 @@ namespace WindowsGame1
             _screens.Add("SongSelect", new SongSelectScreen(this));
             _activeScreen = _screens["MainMenu"];
             _activeScreen.Initialize();
-            foreach (GameScreen screen in _screens.Values)
-            {
-               // screen.Initialize();
-            }
+
         }
 
 
