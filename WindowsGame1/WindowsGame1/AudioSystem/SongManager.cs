@@ -137,7 +137,7 @@ namespace WindowsGame1.AudioSystem
         public static SongManager LoadFromFolder(string path)
         {
             var newManager = new SongManager();
-            List<string> folders = new List<string>();
+            var folders = new List<string>();
             folders.Add(path);
 
             while (folders.Count > 0)

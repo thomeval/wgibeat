@@ -388,6 +388,15 @@
       <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\RGPr\trunk\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\songSelectHeader.xnb</Output>
       <Time>2010-04-21T10:36:08.5514413+02:00</Time>
     </Item>
+    <Item>
+      <Source>Textures\evaluationGrades.png</Source>
+      <Name>Textures\evaluationGrades</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\RGPr\trunk\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\evaluationGrades.xnb</Output>
+      <Time>2010-04-28T15:11:38.2522194+02:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <TargetPlatform>Windows</TargetPlatform>
