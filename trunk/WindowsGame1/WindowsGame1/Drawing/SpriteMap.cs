@@ -10,22 +10,25 @@ namespace WindowsGame1.Drawing
     public class SpriteMap
     {
 
-
         public Texture2D SpriteTexture { get; set; }
-        public Color Color;
+        public Color Color = Color.White;
         public int TextureWidth { get; set;}
         public int TextureHeight { get; set; }
         public int Columns { get; set; }
         public int Rows { get; set; }
 
-        public void Draw(SpriteBatch sb, int cellnumber, int width, int height, int x, int y)
+        public void Draw(SpriteBatch spriteBatch, int cellnumber, int width, int height, int x, int y)
         {
             Rectangle sourceRect = CalculateSourceRectangle(cellnumber);
             var destRect = new Rectangle {Height = height, Width = width, X = x, Y = y};
 
-            sb.Draw(SpriteTexture, destRect, sourceRect, Color);
+            spriteBatch.Draw(SpriteTexture, destRect, sourceRect, Color);
         }
 
+        public void Draw(SpriteBatch spriteBatch, int cellnumber, int width, int height, Vector2 position)
+        {
+            Draw(spriteBatch, cellnumber,width,height,(int) position.X, (int) position.Y);
+        }
         private Rectangle CalculateSourceRectangle(int cellnumber)
         {
             int xOffset = 0, yOffset = 0;

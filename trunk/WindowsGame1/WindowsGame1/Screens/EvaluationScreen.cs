@@ -11,6 +11,8 @@ namespace WindowsGame1.Screens
     public class EvaluationScreen : GameScreen
     {
         private string[] _lines = {"Ideal","Cool","Ok","Bad","Fail","Fault","Miss"};
+        private const int NUM_EVALUATIONS = 8;
+
         public EvaluationScreen(GameCore core) : base(core)
         {
         }
@@ -23,7 +25,7 @@ namespace WindowsGame1.Screens
            {
                if (!Core.Players[x].Playing)
                {
-                   return;
+                   continue;
                }
                int y = 0;
                foreach (string line in _lines)
@@ -48,10 +50,103 @@ namespace WindowsGame1.Screens
                                       };
                headerSprite.SetPosition(Core.Metrics["EvaluationHeader",x]);
                headerSprite.Draw(spriteBatch);
+
+
            }
 
+            DrawGrades(spriteBatch);
             spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Press Start to continue.",
                                    Core.Metrics["EvaluationInstruction", 0], Color.White);
+        }
+
+        private void DrawGrades(SpriteBatch spriteBatch)
+        {
+            var gradeSpriteMap = new SpriteMap
+            {
+                Columns = 1,
+                Rows = NUM_EVALUATIONS,
+                SpriteTexture = TextureManager.Textures["evaluationGrades"],
+                TextureHeight = 280,
+                TextureWidth = 100
+            };
+
+            for (int x = 0; x < Core.Players.Count(); x++)
+            {
+                if (!Core.Players[x].Playing)
+                {
+                    continue;
+                }
+                int gradeIndex = CalculateGradeIndex(x);
+
+                gradeSpriteMap.Draw(spriteBatch, gradeIndex, 150, 52, Core.Metrics["EvaluationGrade",x]);
+            }
+        }
+
+        private int CalculateGradeIndex(int player)
+        {
+            if (Core.Players[player].KO)
+            {
+                //Fail
+                return NUM_EVALUATIONS - 1;
+            }
+            double percentage = CalculatePercentage(player);
+
+            if (percentage >= 95)
+            {
+                return 0;
+            }
+            if (percentage >= 90)
+            {
+                //S
+                return 1;
+            }
+            if (percentage >= 75)
+            {
+                //A
+                return 2;
+            }
+            if (percentage >= 60)
+            {
+                //B
+                return 3;
+            }
+            if (percentage >= 45)
+            {
+                //C
+                return 4;
+            }
+            if (percentage >= 30)
+            {
+                //D
+                return 5;
+            }
+            //E
+            return 6;
+        }
+
+        private double CalculatePercentage(int playerindex)
+        {
+            int[] judgements = Core.Players[playerindex].Judgements;
+
+            // Ideal + Cool + OK + Bad + Fail + Miss
+            int maxPossible = judgements[0] + judgements[1] + judgements[2] + judgements[3] + judgements[4] +
+                              judgements[6];
+            maxPossible *= 8;
+
+            //Ideals
+            int playerScore = judgements[0]*8;
+            //Cools
+            playerScore += judgements[1]*6;
+            //OKs
+            playerScore += judgements[2]*3;
+            //Bads
+            playerScore += judgements[3];
+            //Fails
+            playerScore += judgements[4]*-4;
+            //Faults
+            playerScore += judgements[5]*-1;
+
+            return 100.0*playerScore/maxPossible;
         }
 
         public override void PerformAction(Action action)

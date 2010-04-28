@@ -34,20 +34,20 @@ EvaluationLabelCool=[50,75][450,75][50,400][450,400];
 EvaluationLabelOk=[50,100][450,100][50,425][450,425];
 EvaluationLabelBad=[50,125][450,125][50,450][450,450];
 EvaluationLabelFail=[50,150][450,150][50,475][450,475];
-EvaluationLabelMiss=[50,175][450,175][50,500][450,500];
-EvaluationLabelFault=[50,200][450,200][50,525][450,525];
+EvaluationLabelFault=[50,175][450,175][50,500][450,500];
+EvaluationLabelMiss=[50,200][450,200][50,525][450,525];
 EvaluationLabelScore=[50,225][450,225][50,550][450,550];
-EvaluationLabelGrade=[50,250][450,250][50,575][450,575];
+EvaluationGradeBase=[300,200][700,200][300,525][700,525];
 
 EvaluationIdeal=[150,50][550,50][150,375][550,375];
 EvaluationCool=[150,75][550,75][150,400][550,400];
 EvaluationOk=[150,100][550,100][150,425][550,425];
 EvaluationBad=[150,125][550,125][150,450][550,450];
 EvaluationFail=[150,150][550,150][150,475][550,475];
-EvaluationMiss=[150,175][550,175][150,500][550,500];
-EvaluationFault=[150,200][550,200][150,525][550,525];
+EvaluationFault=[150,175][550,175][150,500][550,500];
+EvaluationMiss=[150,200][550,200][150,525][550,525];
 EvaluationScore=[150,225][550,225][150,550][550,550];
-EvaluationGrade=[150,250][550,250][150,575][550,575];
+EvaluationGrade=[250,150][650,150][250,475][650,475];
 
 #New Game;
 NewGameJoinNotification=[50,125][450,125][50,450][450,450];

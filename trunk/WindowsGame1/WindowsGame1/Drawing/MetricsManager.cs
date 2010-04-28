@@ -18,7 +18,7 @@ namespace WindowsGame1.Drawing
 
         public static MetricsManager Load(string filename)
         {
-            MetricsManager mm = new MetricsManager();
+            var mm = new MetricsManager();
 
 
             string filetext = File.ReadAllText(filename);
@@ -43,7 +43,7 @@ namespace WindowsGame1.Drawing
 
                 string[] svalues = rule.Substring(rule.IndexOf('=') + 1).Split(new[] {'[', ']', ','},StringSplitOptions.RemoveEmptyEntries);
 
-                Vector2[] values = new Vector2[svalues.Count()/2];
+                var values = new Vector2[svalues.Count()/2];
                 for (int i = 0; i < (svalues.Count()/2); i ++)
                 {
                     int X = Convert.ToInt32(svalues[2*i]);
