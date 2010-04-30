@@ -1,0 +1,8 @@
+--Zoran--
+-Menu Music
+-Common keys/commands across entire application. e.g Escape = quit.
+
+
+
+--Thome--
+-End of song ranking
