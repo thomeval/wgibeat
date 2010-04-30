@@ -27,6 +27,7 @@ namespace WindowsGame1.Screens
         private int SelectedMenuOption = 0;
         private Boolean SelectChange = false;
         private Boolean AvoidNextAction = false;
+        private Boolean LastActionSide = false;
 
         private ButtonLink[] links =  {
                                          new ButtonLink(Action.P1_LEFT,     Action.P2_LEFT,     Action.P3_LEFT,     Action.P4_LEFT,     "Left"),
@@ -56,15 +57,56 @@ namespace WindowsGame1.Screens
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Current player: Player" + CurrentPlayer , new Vector2(50, 100), Color.White);
+            spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Current player: Player" + CurrentPlayer , new Vector2(50, 110), Color.White);
             DrawMenu(spriteBatch);
         }
 
 
         private void DrawMenu(SpriteBatch spriteBatch)
         {
-            Vector2 tempVector1 = new Vector2(200, 0);
-            Vector2 tempVector2 = new Vector2(250, 0);
+
+
+            Vector2 tempVector1 = new Vector2(0, 50);
+            Vector2 tempVector2 = new Vector2(0, 60);
+
+            
+            for (int playerOption = 1; playerOption <= 4; playerOption++)
+            {
+                tempVector1.X = 100 + (170 * (playerOption - 1));
+                tempVector2.X = tempVector1.X + 32;
+
+                var menuOptionSprite = new Sprite
+                {
+                    Height = 50,
+                    SpriteTexture = TextureManager.Textures["mainMenuOption"],
+                    Width = 160
+                };
+
+                menuOptionSprite.SetPosition(tempVector1);
+                menuOptionSprite.ColorShading = Color.LawnGreen;
+
+                if (playerOption == CurrentPlayer)
+                {
+                    menuOptionSprite.ColorShading = Color.Tomato;
+                    menuOptionSprite.Y = (int) tempVector1.Y + 10;
+                    //menuOptionSprite.SpriteTexture = TextureManager.Textures["mainMenuOptionSelected"];
+                }
+
+                if ((Math.Abs(playerOption - CurrentPlayer) == 1))// || (Math.Abs(playerOption - CurrentPlayer) == 3))
+                {
+                    menuOptionSprite.Y = (int)tempVector1.Y + 5;
+                    menuOptionSprite.ColorShading = Color.Yellow;
+                }
+                
+                menuOptionSprite.Draw(spriteBatch);
+
+                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Player " + playerOption , tempVector2, Color.Black);
+
+            }
+
+
+            tempVector1.X = 100;
+            tempVector2.X = 120;
 
             for (int menuOption = 0; menuOption < links.Length; menuOption++)
             {
@@ -89,10 +131,6 @@ namespace WindowsGame1.Screens
 
                 spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], links[menuOption].name, tempVector2, Color.Black);
 
-                
-
-                
-                    
             }
         }
 
@@ -120,6 +158,49 @@ namespace WindowsGame1.Screens
                 Core.Exit();
             else
             {
+                switch (action)
+                {
+                    case Action.P1_LEFT:
+                    case Action.P2_LEFT:
+                    case Action.P3_LEFT:
+                    case Action.P4_LEFT:
+
+                        SelectChange = false;
+                        AvoidNextAction = false;
+
+                        CurrentPlayer--;
+
+                        if (CurrentPlayer < 1)
+                            CurrentPlayer = 4;
+
+                        return;
+
+                    case Action.P1_RIGHT:
+                    case Action.P2_RIGHT:
+                    case Action.P3_RIGHT:
+                    case Action.P4_RIGHT:
+
+                        SelectChange = false;
+                        AvoidNextAction = false;
+
+                        CurrentPlayer++;
+
+                        if (CurrentPlayer > 4)
+                            CurrentPlayer = 1;
+                        return;
+
+                    case Action.P1_START:
+                    case Action.P2_START:
+                    case Action.P3_START:
+                    case Action.P4_START:
+                        Console.WriteLine("Changed to changing");
+                        SelectChange = true;
+                        AvoidNextAction = true;
+                        break;
+
+                }
+
+
                 if (!SelectChange)
                 {
                     if (AvoidNextAction)
@@ -164,14 +245,7 @@ namespace WindowsGame1.Screens
                                         SelectedMenuOption = 0;
 
                                     break;
-                                case Action.P1_START:
-                                case Action.P2_START:
-                                case Action.P3_START:
-                                case Action.P4_START:
-                                    Console.WriteLine("Changed to changing");
-                                    SelectChange = true;
-                                    AvoidNextAction = true;
-                                    break;
+                                
                             }
                         }
                     }
