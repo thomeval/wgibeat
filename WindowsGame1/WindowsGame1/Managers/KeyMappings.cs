@@ -23,7 +23,6 @@ namespace WindowsGame1
         }
         public void LoadDefault()
         {
-
             _mappings = new Dictionary<Keys, Action>();
             _mappings.Add(Keys.A,Action.P1_LEFT);
             _mappings.Add(Keys.W, Action.P1_UP);
@@ -32,6 +31,7 @@ namespace WindowsGame1
             _mappings.Add(Keys.Space, Action.P1_BEATLINE);
             _mappings.Add(Keys.Q, Action.P1_START);
             _mappings.Add(Keys.E, Action.P1_SELECT);
+
             _mappings.Add(Keys.Left, Action.P2_LEFT);
             _mappings.Add(Keys.Right, Action.P2_RIGHT);
             _mappings.Add(Keys.Up, Action.P2_UP);
@@ -39,6 +39,7 @@ namespace WindowsGame1
             _mappings.Add(Keys.NumPad0, Action.P2_BEATLINE);
             _mappings.Add(Keys.NumPad1, Action.P2_START);
             _mappings.Add(Keys.NumPad2, Action.P2_SELECT);
+
             _mappings.Add(Keys.NumPad4, Action.P3_LEFT);
             _mappings.Add(Keys.NumPad6, Action.P3_RIGHT);
             _mappings.Add(Keys.NumPad8, Action.P3_UP);
@@ -46,6 +47,7 @@ namespace WindowsGame1
             _mappings.Add(Keys.Insert, Action.P3_BEATLINE);
             _mappings.Add(Keys.PageDown, Action.P3_START);
             _mappings.Add(Keys.PageUp, Action.P3_SELECT);
+
             _mappings.Add(Keys.Add, Action.P4_START);
 
             _mappings.Add(Keys.F5, Action.SYSTEM_BPM_DECREASE);
@@ -63,20 +65,40 @@ namespace WindowsGame1
             _buttonMappings[0].Add(Buttons.RightShoulder, Action.P4_BEATLINE);
             _buttonMappings[0].Add(Buttons.Start, Action.P4_START);
             _buttonMappings[0].Add(Buttons.Back, Action.P4_SELECT);
+
+            _mappings.Add(Keys.Escape, Action.P1_ESCAPE);
         }
 
-        public void LoadFromFile(string filename)
+        public Boolean LoadFromFile(string filename)
         {
-            var fs = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.Write);
-            var bf = new BinaryFormatter();
-            _mappings = (Dictionary<Keys, Action>) bf.Deserialize(fs);
-            _buttonMappings = (Dictionary<Buttons, Action>[])bf.Deserialize(fs);
-            fs.Close();
+            if (File.Exists(filename))
+            {
+                try
+                {
+                    var fs = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.Write);
+                    var bf = new BinaryFormatter();
+                    _mappings = (Dictionary<Keys, Action>)bf.Deserialize(fs);
+                    _buttonMappings = (Dictionary<Buttons, Action>[])bf.Deserialize(fs);
+                    fs.Close();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error reading Keys.conf file");
+                    return false;
+                }
+
+                return true;
+            }
+            else
+                return false;
         }
 
         public void SaveToFile(string filename)
         {
-            var fs = new FileStream(filename, FileMode.OpenOrCreate,FileAccess.Write);
+            if (File.Exists(filename))
+                File.Delete(filename);
+
+            var fs = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.Write);
             var bf = new BinaryFormatter();
             bf.Serialize(fs, _mappings);
             bf.Serialize(fs,_buttonMappings);
@@ -100,7 +122,7 @@ namespace WindowsGame1
             }
             else
             {
-                _mappings.Add(key, action);
+                _mappings.Add(key, action); //One key maps to many actions? Not handled in GameCore or GetAction(Keys key).
             }
         }
 
@@ -155,6 +177,8 @@ namespace WindowsGame1
         P1_BEATLINE,
         P1_START,
         P1_SELECT,
+        P1_ESCAPE,
+
         
         P2_LEFT,
         P2_RIGHT,

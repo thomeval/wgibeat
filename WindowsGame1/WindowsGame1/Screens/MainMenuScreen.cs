@@ -12,7 +12,7 @@ namespace WindowsGame1.Screens
     {
         public MainMenuOption SelectedMenuOption;
 
-        private string[] _menuText = {"Start Game", "Options", "Exit"};
+        private string[] _menuText = {"Start Game", "Keys", "Options", "Exit"};
         public MainMenuScreen(GameCore core) : base(core)
         {
         }
@@ -48,7 +48,7 @@ namespace WindowsGame1.Screens
                menuOptionSprite.SetPosition(Core.Metrics["MainMenuOptions", menuOption]);
                menuOptionSprite.Draw(spriteBatch);
 
-               spriteBatch.DrawString(TextureManager.Fonts["LargeFont"],_menuText[menuOption], Core.Metrics["MainMenuOptionText",menuOption],Color.Black);
+               spriteBatch.DrawString(TextureManager.Fonts["LargeFont"],_menuText[menuOption], Core.Metrics["MainMenuOptionText", menuOption],Color.Black);
            }
         }
 
@@ -98,6 +98,9 @@ namespace WindowsGame1.Screens
                 case MainMenuOption.START_GAME:
                     Core.ScreenTransition("NewGame");
                     break;
+                case MainMenuOption.KEYS:
+                    Core.ScreenTransition("KeyOptions");
+                    break;
                 case MainMenuOption.OPTIONS:
                     break;
                 case MainMenuOption.EXIT:
@@ -110,8 +113,9 @@ namespace WindowsGame1.Screens
     public enum MainMenuOption
     {
         START_GAME = 0,
-        OPTIONS = 1,
-        EXIT = 2,
-        COUNT = 3
+        KEYS = 1,
+        OPTIONS = 2,
+        EXIT = 3,
+        COUNT = 4
     }
 }

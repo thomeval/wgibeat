@@ -121,6 +121,7 @@
     <Compile Include="Screens\EvaluationScreen.cs" />
     <Compile Include="Screens\GameScreen.cs" />
     <Compile Include="Managers\SettingsManager.cs" />
+    <Compile Include="Screens\KeyOptionScreen.cs" />
     <Compile Include="Screens\MainGameScreen.cs" />
     <Compile Include="Screens\MainMenuScreen.cs" />
     <Compile Include="Screens\NewGameScreen.cs" />

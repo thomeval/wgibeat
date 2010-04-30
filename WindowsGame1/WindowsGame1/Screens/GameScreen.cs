@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace WindowsGame1.Screens
 {
@@ -35,6 +36,11 @@ namespace WindowsGame1.Screens
             // TODO: Add your update code here
             base.Update(gameTime);
 
+        }
+
+        public virtual void PerformKey(Keys key)
+        {
+            //Virtual so not all GameScreens need to implement it.
         }
 
         public abstract void Draw(GameTime gameTime, SpriteBatch spriteBatch);
