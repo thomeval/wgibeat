@@ -110,6 +110,11 @@ namespace WindowsGame1
             return (from e in _mappings.Keys where _mappings[e] == action select e).SingleOrDefault();
         }
 
+        public Keys[] GetKeys(Action action)
+        {
+            return (from e in _mappings.Keys where _mappings[e] == action select e).ToArray();
+        }
+
         public void SetKey(Keys key, Action action)
         {
             if (action == Action.NONE)

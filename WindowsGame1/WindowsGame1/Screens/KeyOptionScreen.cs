@@ -27,7 +27,7 @@ namespace WindowsGame1.Screens
         private int SelectedMenuOption = 0;
         private Boolean SelectChange = false;
         private Boolean AvoidNextAction = false;
-        private Boolean LastActionSide = false;
+        //private Boolean LastActionSide = false;
 
         private ButtonLink[] links =  {
                                          new ButtonLink(Action.P1_LEFT,     Action.P2_LEFT,     Action.P3_LEFT,     Action.P4_LEFT,     "Left"),
@@ -104,7 +104,6 @@ namespace WindowsGame1.Screens
 
             }
 
-
             tempVector1.X = 100;
             tempVector2.X = 120;
 
@@ -132,6 +131,64 @@ namespace WindowsGame1.Screens
                 spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], links[menuOption].name, tempVector2, Color.Black);
 
             }
+
+            tempVector1.X = 400;
+            //tempVector1.Y = 150;
+
+            tempVector2.X = 440;
+            //tempVector2.Y = 160;
+
+            Keys[] tempKeyList = Core._keyMappings.GetKeys(links[SelectedMenuOption].getAction(CurrentPlayer));
+
+            for (int keyList = 0; keyList < tempKeyList.Length; keyList++)
+            {
+
+                /*
+ 
+                */
+
+                tempVector1.Y = 150 + (keyList * 55);
+                tempVector2.Y = tempVector1.Y + 10;
+
+
+                var menuOptionSprite = new Sprite
+                {
+                    Height = 50,
+                    SpriteTexture = TextureManager.Textures["mainMenuOption"],
+                    Width = 300
+                };
+
+                menuOptionSprite.SetPosition(tempVector1);
+                menuOptionSprite.Draw(spriteBatch);
+                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Key = " + tempKeyList[keyList].ToString(), tempVector2, Color.Black);
+
+
+                /*
+
+                VertexPositionColor[] temp = {
+                                                new VertexPositionColor(new Vector3(310, 150 + (55 * SelectedMenuOption) + 10, 0), Color.Red),
+                                                new VertexPositionColor(new Vector3(400, 150 + (keyList * 55) + 10, 0), Color.Red)
+                                             };
+
+                int[] lineListIndices = { 0, 1 };
+
+
+                spriteBatch.GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionColor>(
+                    PrimitiveType.LineList,
+                    temp,
+                    0,  // vertex buffer offset to add to each element of the index buffer
+                    2,  // number of vertices in pointList
+                    lineListIndices,  // the index buffer
+                    0,  // first index element to read
+                    1   // number of primitives to draw
+                    );
+                  
+                */
+
+
+
+            }
+
         }
 
         public override void PerformKey(Keys key)
@@ -155,7 +212,7 @@ namespace WindowsGame1.Screens
         public override void PerformAction(Action action)
         {
             if (action == Action.P1_ESCAPE)
-                Core.Exit();
+                Core.ScreenTransition("MainMenu");
             else
             {
                 switch (action)
@@ -245,7 +302,7 @@ namespace WindowsGame1.Screens
                                         SelectedMenuOption = 0;
 
                                     break;
-                                
+
                             }
                         }
                     }
