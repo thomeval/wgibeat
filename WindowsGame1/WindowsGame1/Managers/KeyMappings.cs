@@ -81,9 +81,10 @@ namespace WindowsGame1
                     _buttonMappings = (Dictionary<Buttons, Action>[])bf.Deserialize(fs);
                     fs.Close();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     Console.WriteLine("Error reading Keys.conf file");
+
                     return false;
                 }
 
