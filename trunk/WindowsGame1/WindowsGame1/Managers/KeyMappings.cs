@@ -75,7 +75,7 @@ namespace WindowsGame1
             {
                 try
                 {
-                    var fs = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.Write);
+                    var fs = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.Read);
                     var bf = new BinaryFormatter();
                     _mappings = (Dictionary<Keys, Action>)bf.Deserialize(fs);
                     _buttonMappings = (Dictionary<Buttons, Action>[])bf.Deserialize(fs);
