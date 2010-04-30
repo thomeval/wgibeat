@@ -12,7 +12,7 @@ namespace WindowsGame1.Drawing
 
         public abstract void SetLife(double amount);
 
-        public virtual event EventHandler LifebarEmpty;
-        public virtual event EventHandler LifebarFull;
+        public abstract event EventHandler LifebarEmpty;
+        public abstract event EventHandler LifebarFull;
     }
 }
