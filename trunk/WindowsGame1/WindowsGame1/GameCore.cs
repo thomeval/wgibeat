@@ -25,7 +25,7 @@ namespace WindowsGame1
         private Dictionary<string, GameScreen> _screens;
         private GameScreen _activeScreen;
 
-        private KeyMappings _keyMappings = new KeyMappings();
+        public KeyMappings _keyMappings = new KeyMappings(); //Changed to public, for GameScreen access.
 
         private KeyboardState lastKeystate;
 
@@ -54,12 +54,16 @@ namespace WindowsGame1
             for (int x = 0; x < 4; x++)
             {
 
-                Players[x] = new Player {Hits = 0, Momentum = 0, Life = 50, Score = 0, PlayDifficulty = (Difficulty) Settings.Get<int>("P" +(x+ 1)+ "Difficulty"), Streak = -1};
+                Players[x] = new Player {Hits = 0, Momentum = 0, Life = 50, Score = 0, PlayDifficulty = (Difficulty) Settings.Get<int>("P" + (x + 1)+ "Difficulty"), Streak = -1};
 
             }
 
 
-            _keyMappings.LoadDefault();
+            Boolean passed = _keyMappings.LoadFromFile("Keys.conf");
+
+            if (!passed)
+                _keyMappings.LoadDefault();
+            
             base.Initialize();
         }
 
@@ -115,10 +119,18 @@ namespace WindowsGame1
 
             foreach (Keys key in currentState.GetPressedKeys())
             {
-                if ((_keyMappings.GetAction(key) != Action.NONE) && lastKeystate.IsKeyUp(key))
+
+                if (lastKeystate.IsKeyUp(key))
                 {
-                    _activeScreen.PerformAction(_keyMappings.GetAction(key));
+                    if (_keyMappings.GetAction(key) != Action.NONE)
+                        _activeScreen.PerformAction(_keyMappings.GetAction(key));
+
+                    _activeScreen.PerformKey(key);
                 }
+
+                
+
+                
             }
 
             lastKeystate = currentState;
@@ -138,6 +150,7 @@ namespace WindowsGame1
             _screens.Add("MainGame",new MainGameScreen(this));
             _screens.Add("Evaluation", new EvaluationScreen(this));
             _screens.Add("SongSelect", new SongSelectScreen(this));
+            _screens.Add("KeyOptions", new KeyOptionScreen(this));
             _activeScreen = _screens["MainMenu"];
             _activeScreen.Initialize();
 
