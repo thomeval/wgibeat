@@ -12,13 +12,12 @@ namespace WindowsGame1.Drawing
 
         public Texture2D SpriteTexture { get; set; }
         public Color Color = Color.White;
-        public int TextureWidth { get; set;}
-        public int TextureHeight { get; set; }
         public int Columns { get; set; }
         public int Rows { get; set; }
 
         public void Draw(SpriteBatch spriteBatch, int cellnumber, int width, int height, int x, int y)
         {
+
             Rectangle sourceRect = CalculateSourceRectangle(cellnumber);
             var destRect = new Rectangle {Height = height, Width = width, X = x, Y = y};
 
@@ -34,8 +33,8 @@ namespace WindowsGame1.Drawing
             int xOffset = 0, yOffset = 0;
             int xSize = 0, ySize = 0;
 
-            xSize = TextureWidth/Columns;
-            ySize = TextureHeight/Rows;
+            xSize = SpriteTexture.Width/Columns;
+            ySize = SpriteTexture.Height/Rows;
 
             while (cellnumber >= Columns)
             {

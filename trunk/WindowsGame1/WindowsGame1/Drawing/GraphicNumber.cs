@@ -24,7 +24,7 @@ namespace WindowsGame1.Drawing
 
         public void DrawNumber(SpriteBatch sb, int number, int x, int y)
         {
-            DrawNumber(sb, number,x,y, SpriteMap.TextureWidth / SpriteMap.Columns, SpriteMap.TextureHeight / SpriteMap.Rows);
+            DrawNumber(sb, number,x,y, SpriteMap.SpriteTexture.Width / SpriteMap.Columns, SpriteMap.SpriteTexture.Height / SpriteMap.Rows);
         }
 
         public void DrawNumber(SpriteBatch sb, int number, Vector2 position)

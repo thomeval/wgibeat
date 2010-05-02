@@ -65,9 +65,7 @@ namespace WindowsGame1.Screens
             {
                 Columns = 1,
                 Rows = NUM_EVALUATIONS,
-                SpriteTexture = TextureManager.Textures["evaluationGrades"],
-                TextureHeight = 280,
-                TextureWidth = 100
+                SpriteTexture = TextureManager.Textures["evaluationGrades"]
             };
 
             for (int x = 0; x < Core.Players.Count(); x++)
