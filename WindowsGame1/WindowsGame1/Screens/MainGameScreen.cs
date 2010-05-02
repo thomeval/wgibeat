@@ -89,19 +89,10 @@ namespace WindowsGame1.Screens
                 {
                     Columns = 3,
                     Rows = 4,
-                    SpriteTexture = TextureManager.Textures["streakNumbers"],
-                    TextureWidth = 120,
-                    TextureHeight = 240,
-                    Color = Color.White
+                    SpriteTexture = TextureManager.Textures["streakNumbers"]
                 }
             };
             base.Initialize();
-        }
-
-        private void StartFModSong()
-        {
-         
-            throw new NotImplementedException();
         }
 
         #region Updating
@@ -595,6 +586,10 @@ namespace WindowsGame1.Screens
                 dj.Draw(spriteBatch);
             }
             
+            if (_phraseNumber < 0)
+            {
+                DrawCountdowns(spriteBatch);
+            }
             DrawHitsCounters(spriteBatch);
             DrawStreakCounters(spriteBatch);
             DrawLevelBars(spriteBatch);
@@ -604,6 +599,40 @@ namespace WindowsGame1.Screens
             DrawClearIndicators(spriteBatch);
             DrawText(spriteBatch);
             DrawBorders(spriteBatch);
+        }
+
+        private void DrawCountdowns(SpriteBatch spriteBatch)
+        {
+            for (int x = 0; x < Core.Players.Count(); x++)
+            {
+                if (!Core.Players[x].Playing)
+                {
+                    return;
+                }
+                var countdownSpriteMap = new SpriteMap()
+                                             {
+                                                 Columns = 1,
+                                                 Rows = 4,
+                                                 SpriteTexture = TextureManager.Textures["countdown"]
+                                             };
+
+                if (_phraseNumber < -0.75)
+                {
+                    countdownSpriteMap.Draw(spriteBatch,0,200,60,Core.Metrics["Countdown",x]);
+                }
+                else if (_phraseNumber < -0.5)
+                {
+                    countdownSpriteMap.Draw(spriteBatch, 1, 200, 60, Core.Metrics["Countdown", x]);
+                }
+                else if (_phraseNumber < -0.25)
+                {
+                    countdownSpriteMap.Draw(spriteBatch, 2, 200, 60, Core.Metrics["Countdown", x]);
+                }
+                else if (_phraseNumber < -0.0)
+                {
+                    countdownSpriteMap.Draw(spriteBatch, 3, 200, 60, Core.Metrics["Countdown", x]);
+                }
+            }
         }
 
         private void DrawClearIndicators(SpriteBatch spriteBatch)
