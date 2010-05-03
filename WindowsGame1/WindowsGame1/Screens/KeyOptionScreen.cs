@@ -263,16 +263,12 @@ namespace WindowsGame1.Screens
                     if (AvoidNextAction)
                         AvoidNextAction = false;
                     {
-                        int newPlayer = 1;
+                        short outTemp;
 
-
-                        char temp = action.ToString()[1];
-                        short outTemp = 0;
-
-                        if (!Int16.TryParse(temp.ToString(), out outTemp))
+                        if (!Int16.TryParse(action.ToString()[1] + "", out outTemp))
                             return;
-                        else
-                            newPlayer = outTemp;
+                        
+                        int newPlayer = outTemp;
 
                         if (CurrentPlayer != newPlayer)
                             CurrentPlayer = newPlayer;

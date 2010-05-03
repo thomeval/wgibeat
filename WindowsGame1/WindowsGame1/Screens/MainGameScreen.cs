@@ -291,6 +291,10 @@ namespace WindowsGame1.Screens
                         _gameSong.Offset += 0.01;
                     }
                     break;
+                case Action.SYSTEM_BACK:
+                    Core.Songs.StopSong();
+                    Core.ScreenTransition("SongSelect");
+                    break;
             }
 
         }
