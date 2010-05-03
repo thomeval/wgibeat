@@ -80,6 +80,7 @@ namespace WindowsGame1.AudioSystem
 
             sw.WriteLine("#SONG-1.0;");
             sw.WriteLine("Title={0};", song.Title);
+            sw.WriteLine("Subtitle={0}", song.Subtitle);
             sw.WriteLine("Artist={0};", song.Artist);
             sw.WriteLine("Bpm={0};",Math.Round(song.Bpm,2));
             sw.WriteLine("Offset={0};", Math.Round(song.Offset,3));
@@ -107,12 +108,16 @@ namespace WindowsGame1.AudioSystem
                 }
 
                 string field = rule.Substring(0, rule.IndexOf("=")).ToUpper();
+                //Also works if value is blank... for some reason.
                 string value = rule.Substring(rule.IndexOf("=") + 1);
 
                 switch (field.ToUpper())
                 {
                     case "TITLE":
                         newSong.Title = value;
+                        break;
+                    case "SUBTITLE":
+                        newSong.Subtitle = value;
                         break;
                     case "ARTIST":
                         newSong.Artist = value;

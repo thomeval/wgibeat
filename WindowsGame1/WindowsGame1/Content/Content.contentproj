@@ -277,6 +277,18 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Textures\playerDifficulties.png">
+      <Name>playerDifficulties</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\playerDifficultiesFrame.png">
+      <Name>playerDifficultiesFrame</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="Audio\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
