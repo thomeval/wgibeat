@@ -8,6 +8,7 @@ namespace WindowsGame1.AudioSystem
     public class GameSong
     {
         public string Title { get; set; }
+        public string Subtitle { get; set; }
         public string Artist { get; set; }
         public string SongFile { get; set; }
         public string DefinitionFile { get; set; }
@@ -36,6 +37,7 @@ namespace WindowsGame1.AudioSystem
             unchecked
             {
                 int result = (Title != null ? Title.GetHashCode() : 0);
+                result = (result * 397) ^ (Subtitle != null ? Subtitle.GetHashCode() : 0);
                 result = (result*397) ^ (Artist != null ? Artist.GetHashCode() : 0);
                 result = (result*397) ^ (SongFile != null ? SongFile.GetHashCode() : 0);
                 result = (result*397) ^ Bpm.GetHashCode();

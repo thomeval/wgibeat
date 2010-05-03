@@ -38,6 +38,7 @@ namespace WindowsGame1.Screens
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             DrawSongList(spriteBatch);
+            DrawPlayerDifficulties(spriteBatch);
             var headerSprite = new Sprite
                                    {
                                        Height = 80,
@@ -52,6 +53,40 @@ namespace WindowsGame1.Screens
 
         }
 
+        private void DrawPlayerDifficulties(SpriteBatch spriteBatch)
+        {
+            var frameSpriteMap = new SpriteMap
+                                     {
+                                         Columns = 4,
+                                         Rows = 1,
+                                         SpriteTexture = TextureManager.Textures["playerDifficultiesFrame"]
+                                     };
+            var iconSpriteMap = new SpriteMap
+            {
+                Columns = 1,
+                Rows = 5,
+                SpriteTexture = TextureManager.Textures["playerDifficulties"]
+            };
+
+            //Draw for all players, even if not playing.
+            for (int x = 0; x < 4; x++)
+            {
+                frameSpriteMap.Draw(spriteBatch, x,50,100,Core.Metrics["PlayerDifficultiesFrame",x]);
+                int idx = GetPlayerDifficulty(x);
+                iconSpriteMap.Draw(spriteBatch, idx, 40, 40, Core.Metrics["PlayerDifficulties", x]);
+            }
+        }
+
+        private int GetPlayerDifficulty(int player)
+        {
+            if (!Core.Players[player].Playing)
+            {
+                return 0;
+            }
+
+            return 1 + (int) (Core.Players[player].PlayDifficulty);
+        }
+
         private void DrawSongList(SpriteBatch spriteBatch)
         {
             var midpoint = Core.Metrics["SongListMidpoint", 0];
@@ -59,6 +94,7 @@ namespace WindowsGame1.Screens
             SongList[_selectedIndex].IsSelected = true;
             SongList[_selectedIndex].Draw(spriteBatch);
 
+            //Draw SongListItems below (after) the selected one.
             for (int x = 1; x <= LISTITEMS_DRAWN; x++)
             {
                 midpoint.Y += 50;
@@ -66,8 +102,11 @@ namespace WindowsGame1.Screens
                 SongList[(_selectedIndex + x) % SongList.Count].SetPosition(midpoint);
                 SongList[(_selectedIndex + x) % SongList.Count].Draw(spriteBatch);
             }
+         
             midpoint.Y -= 50 * LISTITEMS_DRAWN;
             int index = _selectedIndex;
+
+            //Draw SongListItems above (before) the selected one.
             for (int x = 1; x <= LISTITEMS_DRAWN; x++)
             {
                 index -= 1;

@@ -406,6 +406,24 @@
       <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\RGPr\trunk\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\countdown.xnb</Output>
       <Time>2010-05-02T20:18:10.5498753+02:00</Time>
     </Item>
+    <Item>
+      <Source>Textures\playerDifficulties.png</Source>
+      <Name>Textures\playerDifficulties</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\RGPr\trunk\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\playerDifficulties.xnb</Output>
+      <Time>2010-05-03T17:55:17.7203252+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Textures\playerDifficultiesFrame.png</Source>
+      <Name>Textures\playerDifficultiesFrame</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\RGPr\trunk\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\playerDifficultiesFrame.xnb</Output>
+      <Time>2010-05-03T11:24:57.005351+02:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <TargetPlatform>Windows</TargetPlatform>
