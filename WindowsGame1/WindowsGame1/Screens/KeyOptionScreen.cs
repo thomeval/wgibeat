@@ -211,7 +211,7 @@ namespace WindowsGame1.Screens
 
         public override void PerformAction(Action action)
         {
-            if (action == Action.P1_ESCAPE)
+            if (action == Action.SYSTEM_BACK)
                 Core.ScreenTransition("MainMenu");
             else
             {
@@ -265,14 +265,14 @@ namespace WindowsGame1.Screens
                     {
                         int newPlayer = 1;
 
-                        if (action.ToString().Contains("P1"))
-                            newPlayer = 1;
-                        else if (action.ToString().Contains("P2"))
-                            newPlayer = 2;
-                        else if (action.ToString().Contains("P3"))
-                            newPlayer = 3;
-                        else if (action.ToString().Contains("P4"))
-                            newPlayer = 4;
+
+                        char temp = action.ToString()[1];
+                        short outTemp = 0;
+
+                        if (!Int16.TryParse(temp.ToString(), out outTemp))
+                            return;
+                        else
+                            newPlayer = outTemp;
 
                         if (CurrentPlayer != newPlayer)
                             CurrentPlayer = newPlayer;
