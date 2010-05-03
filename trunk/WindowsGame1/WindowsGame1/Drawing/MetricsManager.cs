@@ -46,9 +46,9 @@ namespace WindowsGame1.Drawing
                 var values = new Vector2[svalues.Count()/2];
                 for (int i = 0; i < (svalues.Count()/2); i ++)
                 {
-                    int X = Convert.ToInt32(svalues[2*i]);
-                    int Y = Convert.ToInt32(svalues[(2*i) + 1]);
-                    values[i] = new Vector2(X, Y);
+                    int x = Convert.ToInt32(svalues[2*i]);
+                    int y = Convert.ToInt32(svalues[(2*i) + 1]);
+                    values[i] = new Vector2(x, y);
                     
                 }
                 mm[id] = values;

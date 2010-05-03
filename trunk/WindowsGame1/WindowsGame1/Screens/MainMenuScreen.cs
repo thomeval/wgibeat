@@ -10,9 +10,9 @@ namespace WindowsGame1.Screens
 {
     public class MainMenuScreen : GameScreen
     {
-        public MainMenuOption SelectedMenuOption;
+        private MainMenuOption _selectedMenuOption;
 
-        private string[] _menuText = {"Start Game", "Keys", "Options", "Exit"};
+        private readonly string[] _menuText = {"Start Game", "Keys", "Options", "Exit"};
         public MainMenuScreen(GameCore core) : base(core)
         {
         }
@@ -41,7 +41,7 @@ namespace WindowsGame1.Screens
                                               SpriteTexture = TextureManager.Textures["mainMenuOption"],
                                               Width = 300
                                           };
-               if (menuOption == (int) SelectedMenuOption)
+               if (menuOption == (int) _selectedMenuOption)
                {
                    menuOptionSprite.SpriteTexture = TextureManager.Textures["mainMenuOptionSelected"];
                }
@@ -61,20 +61,20 @@ namespace WindowsGame1.Screens
                 case Action.P2_UP:
                 case Action.P3_UP:
                 case Action.P4_UP:
-                    newOptionValue = (int) SelectedMenuOption - 1;
+                    newOptionValue = (int) _selectedMenuOption - 1;
                     if (newOptionValue < 0)
                     {
                         newOptionValue += (int) MainMenuOption.COUNT;
                     }
-                    SelectedMenuOption = (MainMenuOption) newOptionValue;
+                    _selectedMenuOption = (MainMenuOption) newOptionValue;
                     break;
                 case Action.P1_DOWN:
                 case Action.P2_DOWN:
                 case Action.P3_DOWN:
                 case Action.P4_DOWN:
-                    newOptionValue = (int)SelectedMenuOption + 1;
+                    newOptionValue = (int)_selectedMenuOption + 1;
                     newOptionValue %= (int) MainMenuOption.COUNT;
-                    SelectedMenuOption = (MainMenuOption) newOptionValue;
+                    _selectedMenuOption = (MainMenuOption) newOptionValue;
                     break;
                     case Action.P1_START:
                     case Action.P2_START:
@@ -88,12 +88,15 @@ namespace WindowsGame1.Screens
                     case Action.P4_BEATLINE:
                     MenuOptionSelected();
                     break;
+                case Action.SYSTEM_BACK:
+                    Core.Exit();
+                    break;
             }
         }
 
         private void MenuOptionSelected()
         {
-            switch (SelectedMenuOption)
+            switch (_selectedMenuOption)
             {
                 case MainMenuOption.START_GAME:
                     Core.ScreenTransition("NewGame");

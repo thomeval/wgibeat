@@ -158,6 +158,9 @@ namespace WindowsGame1.Screens
                 case Action.P4_RIGHT:
                     _playerMenus[3].IncrementOption();
                     break;
+                case Action.SYSTEM_BACK:
+                    Core.ScreenTransition("MainMenu");
+                    break;
             }
         }
 

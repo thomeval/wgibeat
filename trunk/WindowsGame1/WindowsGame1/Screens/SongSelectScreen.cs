@@ -23,7 +23,10 @@ namespace WindowsGame1.Screens
 
         public override void Initialize()
         {
-            CreateSongList();
+            if (SongList.Count == 0)
+            {
+                CreateSongList();
+            }
             base.Initialize();
         }
 
@@ -143,6 +146,10 @@ namespace WindowsGame1.Screens
                 case Action.P4_START:
                     StartSong();
                     break;
+                case Action.SYSTEM_BACK:
+                    Core.ScreenTransition("NewGame");
+                    break;
+
             }
         }
 

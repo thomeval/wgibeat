@@ -155,8 +155,9 @@ namespace WindowsGame1.Screens
                 case Action.P2_START:
                 case Action.P3_START:
                 case Action.P4_START:
+                case Action.SYSTEM_BACK:
                     Core.Songs.StopSong();
-                    Core.ScreenTransition("MainMenu");
+                    Core.ScreenTransition("SongSelect");
                     break;
             }
         }

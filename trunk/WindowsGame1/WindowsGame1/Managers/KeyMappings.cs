@@ -56,6 +56,7 @@ namespace WindowsGame1
             _mappings.Add(Keys.F8, Action.SYSTEM_OFFSET_INCREASE_BIG);
             _mappings.Add(Keys.F9, Action.SYSTEM_OFFSET_DECREASE_SMALL);
             _mappings.Add(Keys.F10, Action.SYSTEM_OFFSET_INCREASE_SMALL);
+            _mappings.Add(Keys.Escape, Action.SYSTEM_BACK);
 
             _buttonMappings[0].Add(Buttons.X, Action.P4_LEFT);
             _buttonMappings[0].Add(Buttons.B, Action.P4_RIGHT);
@@ -66,7 +67,6 @@ namespace WindowsGame1
             _buttonMappings[0].Add(Buttons.Start, Action.P4_START);
             _buttonMappings[0].Add(Buttons.Back, Action.P4_SELECT);
 
-            _mappings.Add(Keys.Escape, Action.P1_ESCAPE);
         }
 
         public Boolean LoadFromFile(string filename)
@@ -120,15 +120,18 @@ namespace WindowsGame1
         {
             if (action == Action.NONE)
             {
+                //Unassigns a key.
                 _mappings.Remove(key);
             }
             else if (_mappings.ContainsKey(key))
             {
+                //Changes a key already assigned to a different Action.
                 _mappings[key] = action;
             }
             else
             {
-                _mappings.Add(key, action); //One key maps to many actions? Not handled in GameCore or GetAction(Keys key).
+                //Assigns an Action to a free key.
+                _mappings.Add(key, action);
             }
         }
 
@@ -216,6 +219,7 @@ namespace WindowsGame1
         SYSTEM_OFFSET_INCREASE_SMALL,
         SYSTEM_OFFSET_DECREASE_BIG,
         SYSTEM_OFFSET_DECREASE_SMALL,
+        SYSTEM_BACK,
 
         NONE
         
