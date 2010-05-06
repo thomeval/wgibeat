@@ -147,7 +147,7 @@ namespace WindowsGame1
                     Life -= 2;
                     break;
                 case Difficulty.HARD:
-                    Life -= 3;
+                    Life -= 4;
                     break;
             }
         }
@@ -159,16 +159,16 @@ namespace WindowsGame1
             switch (PlayDifficulty)
             {
                 case Difficulty.BEGINNER:
-                    Life -= 1;
-                    break;
-                case Difficulty.EASY:
                     Life -= 2;
                     break;
-                case Difficulty.MEDIUM:
+                case Difficulty.EASY:
                     Life -= 4;
                     break;
-                case Difficulty.HARD:
+                case Difficulty.MEDIUM:
                     Life -= 8;
+                    break;
+                case Difficulty.HARD:
+                    Life -= 12;
                     break;
             }
         }

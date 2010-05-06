@@ -99,8 +99,7 @@ namespace WindowsGame1.Screens
 
         public override void Update(GameTime gameTime)
         {
-            MaintainBeatlineNotes();
-            MaintainDisplayedJudgements();
+
 
             if (_startTime == null)
             {
@@ -119,6 +118,8 @@ namespace WindowsGame1.Screens
                 Core.ScreenTransition("Evaluation");
             }
             _phraseNumber = (gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds - _gameSong.Offset * 1000) / 1000 * (_gameSong.Bpm / 240);
+            MaintainBeatlineNotes();
+            MaintainDisplayedJudgements();
             base.Update(gameTime);
         }
 
@@ -510,7 +511,7 @@ namespace WindowsGame1.Screens
                 default:
                     //FAIL
                     Core.Players[player].Streak = -1;
-                    Core.Players[player].Life -= 3 * (_notebars[player].Notes.Count() - _notebars[player].NumberCompleted() + 1);
+                    Core.Players[player].Life -= (int) (1 + Core.Players[player].PlayDifficulty) * (_notebars[player].Notes.Count() - _notebars[player].NumberCompleted() + 1);
                     Core.Players[player].Momentum = (long)(Core.Players[player].Momentum * 0.7);
                     Core.Players[player].Judgements[4]++;
                     tex = TextureManager.Textures["noteJudgement0"];
@@ -877,7 +878,7 @@ namespace WindowsGame1.Screens
             brush.Render(spriteBatch);
             brush.ClearVectors();
 
-
+            
         }
         //How distant the beatline notes are from each other.
         //Increase this to make them move faster and more apart.
