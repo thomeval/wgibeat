@@ -80,7 +80,7 @@ namespace WindowsGame1.AudioSystem
 
             sw.WriteLine("#SONG-1.0;");
             sw.WriteLine("Title={0};", song.Title);
-            sw.WriteLine("Subtitle={0}", song.Subtitle);
+            sw.WriteLine("Subtitle={0};", song.Subtitle);
             sw.WriteLine("Artist={0};", song.Artist);
             sw.WriteLine("Bpm={0};",Math.Round(song.Bpm,2));
             sw.WriteLine("Offset={0};", Math.Round(song.Offset,3));
