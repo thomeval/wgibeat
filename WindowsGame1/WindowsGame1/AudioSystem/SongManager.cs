@@ -22,7 +22,7 @@ namespace WindowsGame1.AudioSystem
               FMOD.RESULT result;
             result = FMOD.Factory.System_Create(ref _fmodSystem);
             CheckFMODErrors(result);
-            result = _fmodSystem.init(32, FMOD.INITFLAGS.NORMAL, (IntPtr)null);
+            result = _fmodSystem.init(2, FMOD.INITFLAGS.NORMAL, (IntPtr)null);
             CheckFMODErrors(result);
 
         }
@@ -35,7 +35,7 @@ namespace WindowsGame1.AudioSystem
         {
             StopSong();
             FMOD.RESULT result;
-            result = _fmodSystem.createSound(song.Path + "\\" + song.SongFile, FMOD.MODE.HARDWARE, ref _fmodSound);
+            result = _fmodSystem.createSound(song.Path + "\\" + song.SongFile, FMOD.MODE.SOFTWARE, ref _fmodSound);
             CheckFMODErrors(result);
         }
         public void PlaySong()

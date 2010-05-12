@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,6 +22,7 @@ namespace WindowsGame1.Screens
 
         private double _phraseNumber;
         private double _hitoffset;
+        private double _songLoadDelay;
 
         private Lifebar[] _lifebars;
         private NoteBar[] _notebars;
@@ -42,6 +44,8 @@ namespace WindowsGame1.Screens
             _notebars = new NoteBar[_playerCount];
             _lifebars = new Lifebar[_playerCount];
             _displayState = 0;
+            _songLoadDelay = 0.0;
+            _confidence = 0;
             _lastBeatlineNote = -1;
             for (int x = 0; x < _playerCount; x++)
             {
@@ -72,13 +76,11 @@ namespace WindowsGame1.Screens
 
             }
 
-            var sw1 = new Stopwatch();
-            sw1.Start();
             _gameSong = Core.Settings.Get<GameSong>("CurrentSong");
             Core.Songs.LoadSong(_gameSong);
-            sw1.Stop();
-            System.Console.WriteLine("Init time: " + sw1.ElapsedMilliseconds);
+
             _startTime = null;
+
 
             _beatlineNotes = new List<BeatlineNote>();
             _notesToRemove = new List<BeatlineNote>();
@@ -99,6 +101,8 @@ namespace WindowsGame1.Screens
 
         #region Updating
 
+        private Timer _maintenanceThread;
+        private int timeCheck;
         public override void Update(GameTime gameTime)
         {
 
@@ -113,20 +117,45 @@ namespace WindowsGame1.Screens
                 _transitionTime = gameTime.TotalRealTime.TotalSeconds + 3;
 
             }
+            if (_maintenanceThread == null)
+            {
+                _maintenanceThread = new Timer(DoMaintenance,null,0,20);
+            }
             if ((_displayState == 1) && (gameTime.TotalRealTime.TotalSeconds >= _transitionTime))
             {
                 SaveSongToFile();
                 SaveHighScore();
+                _maintenanceThread.Dispose();
+                _maintenanceThread = null;
                 Core.ScreenTransition("Evaluation");
-            }
-            
-            _phraseNumber = (Core.Songs.GetCurrentSongProgress() - _gameSong.Offset * 1000) / 1000 * (_gameSong.Bpm / 240);
-
-            MaintainBeatlineNotes();
-            MaintainDisplayedJudgements();
+            }         
+            _phraseNumber = 1.0 * (gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay - _gameSong.Offset * 1000) / 1000 * (_gameSong.Bpm / 240);
+            timeCheck = (int)(gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay);
             base.Update(gameTime);
         }
 
+        private int _confidence = 0;
+        private void DoMaintenance(object state)
+        {
+            if (_displayState != 0)
+            {
+                return;
+            }
+                //_phraseNumber = 1.0 * (Core.Songs.GetCurrentSongProgress() - _gameSong.Offset * 1000) / 1000 * (_gameSong.Bpm / 240);
+                MaintainBeatlineNotes();
+                MaintainDisplayedJudgements();
+            var delay = Core.Songs.GetCurrentSongProgress() - timeCheck;
+                if ((_confidence < 15) && (Math.Abs(delay) > 25))
+                {
+                    _confidence = 0;
+                    _songLoadDelay +=  delay / 2.0;
+                }
+                else if (_confidence < 15)
+                {
+                    _confidence++;
+                }
+
+        }
         private void SaveSongToFile()
         {
             if (Core.Settings.Get<int>("SongDebug") == 1)
@@ -164,7 +193,7 @@ namespace WindowsGame1.Screens
         List<DisplayedJudgement> djToRemove = new List<DisplayedJudgement>();
         private void MaintainDisplayedJudgements()
         {
-
+            Monitor.Enter(_displayedJudgements);
             foreach (DisplayedJudgement dj in _displayedJudgements)
             {
                 if (dj.DisplayUntil <= _phraseNumber)
@@ -178,6 +207,7 @@ namespace WindowsGame1.Screens
                 _displayedJudgements.Remove(djr);
             }
             djToRemove.Clear();
+            Monitor.Exit(_displayedJudgements);
         }
 
         private List<BeatlineNote> _notesToRemove;
@@ -323,6 +353,8 @@ namespace WindowsGame1.Screens
                     }
                     break;
                 case Action.SYSTEM_BACK:
+                    _maintenanceThread.Dispose();
+                    _maintenanceThread = null;
                     Core.Songs.StopSong();
                     Core.ScreenTransition("SongSelect");
                     break;
@@ -549,7 +581,9 @@ namespace WindowsGame1.Screens
             }
             var newDj = new DisplayedJudgement { DisplayUntil = _phraseNumber + 0.5, Height = 40, Width = 150, Texture = tex, Player = player };
             newDj.SetPosition(Core.Metrics["Judgement", player]);
+            Monitor.Enter(_displayedJudgements);
             _displayedJudgements.Add(newDj);
+            Monitor.Exit(_displayedJudgements);
             _lifebars[player].SetLife(Core.Players[player].Life);
         }
         private BeatlineNote NearestBeatlineNote(int player)
@@ -623,6 +657,7 @@ namespace WindowsGame1.Screens
             {
                 DrawCountdowns(spriteBatch);
             }
+            
             DrawHitsCounters(spriteBatch);
             DrawStreakCounters(spriteBatch);
             DrawLevelBars(spriteBatch);
@@ -631,7 +666,7 @@ namespace WindowsGame1.Screens
             DrawSongInfo(spriteBatch,gameTime);
             DrawClearIndicators(spriteBatch);
             DrawText(spriteBatch);
-
+            
         }
 
         private void DrawCountdowns(SpriteBatch spriteBatch)
@@ -872,6 +907,9 @@ namespace WindowsGame1.Screens
                 spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + String.Format("{0:F3}", _phraseNumber), Core.Metrics["SongDebugPhrase", 0], Color.White);
                 spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Hitoffset: {0:F3}",  _hitoffset),
                            Core.Metrics["SongDebugHitOffset",0], Color.White);
+                spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + String.Format("Draw: {0:F3}", Core.diffD), new Vector2(600,500), Color.White);
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Update: {0:F3}", Core.diffU),
+                                   new Vector2(600, 540), Color.White);
   
         }
 
@@ -884,7 +922,7 @@ namespace WindowsGame1.Screens
                     continue;
                 }
 
-                long amount = (long) Math.Max(50, (Core.Players[x].Score - Core.Players[x].DisplayedScore) / 10);
+                var amount = (long) Math.Max(50, (Core.Players[x].Score - Core.Players[x].DisplayedScore) / 10);
 
                 Core.Players[x].DisplayedScore = Math.Min(Core.Players[x].Score, Core.Players[x].DisplayedScore + amount);
             }
