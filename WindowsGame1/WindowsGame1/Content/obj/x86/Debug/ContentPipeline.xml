@@ -424,6 +424,15 @@
       <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\RGPr\trunk\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\playerDifficultiesFrame.xnb</Output>
       <Time>2010-05-03T11:24:57.005351+02:00</Time>
     </Item>
+    <Item>
+      <Source>Textures\evaluationHighScore.png</Source>
+      <Name>Textures\evaluationHighScore</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\RGPr\trunk\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\evaluationHighScore.xnb</Output>
+      <Time>2010-05-12T09:12:37.1967595+02:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <TargetPlatform>Windows</TargetPlatform>

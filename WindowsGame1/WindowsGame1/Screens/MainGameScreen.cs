@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -68,15 +69,16 @@ namespace WindowsGame1.Screens
                 _lifebars[x].SetLife(Core.Players[x].Life);
                 _notebars[x] = NoteBar.CreateNoteBar((int) Core.Players[x].Level, 0);
                 _notebars[x].SetPosition(Core.Metrics["Notebar", x]);
-                _startTime = null;
+
             }
 
-            //StartFModSong();
+            var sw1 = new Stopwatch();
+            sw1.Start();
             _gameSong = Core.Settings.Get<GameSong>("CurrentSong");
-
             Core.Songs.LoadSong(_gameSong);
-            //se = Core.Content.Load<SoundEffect>("Audio/" + _gameSong.AssetName);
-            //sei = se.CreateInstance();
+            sw1.Stop();
+            System.Console.WriteLine("Init time: " + sw1.ElapsedMilliseconds);
+            _startTime = null;
 
             _beatlineNotes = new List<BeatlineNote>();
             _notesToRemove = new List<BeatlineNote>();
@@ -100,7 +102,6 @@ namespace WindowsGame1.Screens
         public override void Update(GameTime gameTime)
         {
 
-
             if (_startTime == null)
             {
                 Core.Songs.PlaySong();
@@ -115,9 +116,12 @@ namespace WindowsGame1.Screens
             if ((_displayState == 1) && (gameTime.TotalRealTime.TotalSeconds >= _transitionTime))
             {
                 SaveSongToFile();
+                SaveHighScore();
                 Core.ScreenTransition("Evaluation");
             }
-            _phraseNumber = (gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds - _gameSong.Offset * 1000) / 1000 * (_gameSong.Bpm / 240);
+            
+            _phraseNumber = (Core.Songs.GetCurrentSongProgress() - _gameSong.Offset * 1000) / 1000 * (_gameSong.Bpm / 240);
+
             MaintainBeatlineNotes();
             MaintainDisplayedJudgements();
             base.Update(gameTime);
@@ -129,6 +133,32 @@ namespace WindowsGame1.Screens
             {
                 SongManager.SaveToFile(_gameSong);
             }
+        }
+
+        private void SaveHighScore()
+        {
+            Core.Settings.Set("HighScorePlayer", -1);
+            //EvaluationScreen doesn't know what the current song is, so highscores must be saved here.
+            long highest = Core.Songs.GetHighScore(_gameSong.GetHashCode(),
+                                                   Core.Settings.Get<GameType>("CurrentGameType"));
+            int awardedPlayer = -1;
+            for (int x = 0; x < 4; x++)
+            {
+                if ((Core.Players[x].Playing) &&(Core.Players[x].Score > highest))
+                {
+                    //Store player with high score so that EvaluationScreen can display it.
+                    Core.Settings.Set("HighScorePlayer", x);
+                    highest = Math.Max(highest, Core.Players[x].Score);
+                    awardedPlayer = x;
+                }
+            }
+
+            if (awardedPlayer != -1)
+            {
+                Core.Songs.SetHighScore(_gameSong.GetHashCode(), GameType.NORMAL, highest);
+                Core.Songs.SaveHighScores("Scores.conf");
+            }
+
         }
 
         List<DisplayedJudgement> djToRemove = new List<DisplayedJudgement>();
@@ -416,11 +446,11 @@ namespace WindowsGame1.Screens
             switch (difficulty)
             {
                 case Difficulty.BEGINNER:
-                    return 20;
+                    return 15;
                 case Difficulty.EASY:
-                    return 50;
+                    return 40;
                 case Difficulty.MEDIUM:
-                    return 75;
+                    return 70;
                 case Difficulty.HARD:
                     return 150;
                 default:
@@ -563,9 +593,6 @@ namespace WindowsGame1.Screens
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
 
-
-            // TODO: Add your drawing code here
-
             //Begin drawing textures.
 
             //Draw a texture at a specific position.
@@ -590,7 +617,8 @@ namespace WindowsGame1.Screens
                 dj.Opacity = Convert.ToByte(opacity);
                 dj.Draw(spriteBatch);
             }
-            
+
+            DrawBorders(spriteBatch);            
             if (_phraseNumber < 0)
             {
                 DrawCountdowns(spriteBatch);
@@ -603,7 +631,7 @@ namespace WindowsGame1.Screens
             DrawSongInfo(spriteBatch,gameTime);
             DrawClearIndicators(spriteBatch);
             DrawText(spriteBatch);
-            DrawBorders(spriteBatch);
+
         }
 
         private void DrawCountdowns(SpriteBatch spriteBatch)
