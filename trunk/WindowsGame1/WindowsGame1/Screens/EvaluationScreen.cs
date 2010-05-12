@@ -55,8 +55,33 @@ namespace WindowsGame1.Screens
            }
 
             DrawGrades(spriteBatch);
+            DrawHighScoreNotification(spriteBatch,gameTime);
             spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Press Start to continue.",
                                    Core.Metrics["EvaluationInstruction", 0], Color.White);
+        }
+
+        private void DrawHighScoreNotification(SpriteBatch spriteBatch, GameTime gameTime)
+        {
+            for (int x = 0; x < Core.Players.Count(); x++)
+            {
+                if (!Core.Players[x].Playing)
+                {
+                    continue;
+                }
+                if (Core.Settings.Get<int>("HighScorePlayer") != -1)
+                {
+                    var recordSprite = new Sprite
+                                           {
+                                               Height = 30,
+                                               Width = 150,
+                                               SpriteTexture = TextureManager.Textures["evaluationHighScore"]
+                                           };
+
+                    recordSprite.ColorShading.A = (byte) (255*Math.Abs(Math.Sin(gameTime.TotalRealTime.TotalSeconds)));
+                    recordSprite.SetPosition(Core.Metrics["EvaluationHighScore", Core.Settings.Get<int>("HighScorePlayer")]);
+                    recordSprite.Draw(spriteBatch);
+                }
+            }
         }
 
         private void DrawGrades(SpriteBatch spriteBatch)
@@ -157,10 +182,14 @@ namespace WindowsGame1.Screens
                 case Action.P4_START:
                 case Action.SYSTEM_BACK:
                     Core.Songs.StopSong();
+                    Core.Settings.SaveToFile("settings.txt");
                     Core.ScreenTransition("SongSelect");
                     break;
             }
         }
+
+
+
         private void DrawBorders(SpriteBatch spriteBatch)
         {
             var brush = new PrimitiveLine(Core.GraphicsDevice) { Colour = Color.White };

@@ -226,6 +226,7 @@ namespace WindowsGame1.Screens
                 Core.Players[x].PlayDifficulty =
                     (Difficulty) (int) _playerMenus[x].GetByItemText("Difficulty").SelectedValue();
             }
+            Core.Settings.Set("CurrentGameType",GameType.NORMAL);
                 Core.ScreenTransition("SongSelect");
         }
 

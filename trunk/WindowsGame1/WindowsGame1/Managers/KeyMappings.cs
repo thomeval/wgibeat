@@ -96,10 +96,8 @@ namespace WindowsGame1
 
         public void SaveToFile(string filename)
         {
-            if (File.Exists(filename))
-                File.Delete(filename);
 
-            var fs = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.Write);
+            var fs = new FileStream(filename, FileMode.Open, FileAccess.Write);
             var bf = new BinaryFormatter();
             bf.Serialize(fs, _mappings);
             bf.Serialize(fs,_buttonMappings);

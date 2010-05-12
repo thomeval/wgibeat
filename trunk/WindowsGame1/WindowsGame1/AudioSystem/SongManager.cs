@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-using FMOD;
+
+
 
 namespace WindowsGame1.AudioSystem
 {
@@ -14,7 +16,7 @@ namespace WindowsGame1.AudioSystem
         private FMOD.System _fmodSystem = new FMOD.System();
         private FMOD.Channel _fmodChannel = new FMOD.Channel();
         private FMOD.Sound _fmodSound = new FMOD.Sound();
-
+        private Dictionary<int, HighScoreEntry> _highScoreEntries = new Dictionary<int, HighScoreEntry>();
         public SongManager()
         {
               FMOD.RESULT result;
@@ -22,7 +24,6 @@ namespace WindowsGame1.AudioSystem
             CheckFMODErrors(result);
             result = _fmodSystem.init(32, FMOD.INITFLAGS.NORMAL, (IntPtr)null);
             CheckFMODErrors(result);
-
 
         }
 
@@ -33,17 +34,33 @@ namespace WindowsGame1.AudioSystem
         public void LoadSong(GameSong song)
         {
             StopSong();
-            RESULT result;
+            FMOD.RESULT result;
             result = _fmodSystem.createSound(song.Path + "\\" + song.SongFile, FMOD.MODE.HARDWARE, ref _fmodSound);
             CheckFMODErrors(result);
         }
         public void PlaySong()
         {
-            RESULT result;
+            FMOD.RESULT result;
             result = _fmodSystem.playSound(FMOD.CHANNELINDEX.FREE, _fmodSound, false, ref _fmodChannel);
             CheckFMODErrors(result);
         }
 
+        public uint GetCurrentSongProgress()
+        {
+            FMOD.RESULT result;
+            uint position = 0;
+            result = _fmodChannel.getPosition(ref position, FMOD.TIMEUNIT.MS);
+            CheckFMODErrors(result);
+            return position;
+        }
+
+
+        public void SetCurrentSongPosition(uint position)
+        {
+            FMOD.RESULT result;
+            result = _fmodChannel.setPosition(position, FMOD.TIMEUNIT.MS);
+            CheckFMODErrors(result);
+        }
         private void CheckFMODErrors(FMOD.RESULT result)
         {
             if (result != FMOD.RESULT.OK)
@@ -136,6 +153,7 @@ namespace WindowsGame1.AudioSystem
                         break;
                 }
             }
+
             return newSong;
         }
 
@@ -156,6 +174,7 @@ namespace WindowsGame1.AudioSystem
                     newSong.Path = currentFolder;
                     newSong.DefinitionFile = Path.GetFileName(file);
                     newManager.AddSong(newSong);
+                    
                 }
                 folders.RemoveAt(0);
             }
@@ -175,5 +194,52 @@ namespace WindowsGame1.AudioSystem
             }
 
         }
+
+      public long GetHighScore(int songHashCode, GameType gameType)
+      {
+          if ((!_highScoreEntries.ContainsKey(songHashCode))|| (!_highScoreEntries[songHashCode].Scores.ContainsKey(gameType)))
+          {
+              return 0;
+          }
+          return _highScoreEntries[songHashCode].Scores[gameType]; 
+      }
+
+        public void SetHighScore(int songHashCode, GameType gameType, long score)
+        {
+            if (!_highScoreEntries.ContainsKey(songHashCode))
+            {
+                _highScoreEntries[songHashCode] = new HighScoreEntry();
+                _highScoreEntries[songHashCode].SongID = songHashCode;
+            }
+            _highScoreEntries[songHashCode].Scores[gameType] = score;
+        }
+
+        public void SaveHighScores(string filename)
+        {
+            var fs = new FileStream(filename, FileMode.Create, FileAccess.Write);
+            var bf = new BinaryFormatter();
+            bf.Serialize(fs, _highScoreEntries);
+
+            fs.Close();
+        }
+
+        public bool LoadHighScores(string filename)
+        {
+            try
+            {
+                var fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
+                var bf = new BinaryFormatter();
+                _highScoreEntries = (Dictionary<int, HighScoreEntry>)bf.Deserialize(fs);
+                fs.Close();
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+
+        }
+
     }
 }

@@ -27,6 +27,15 @@ namespace WindowsGame1.Screens
             {
                 CreateSongList();
             }
+            if (Core.Settings.Exists("LastSongPlayed"))
+            {
+                var lastSongHash = Core.Settings.Get<int>("LastSongPlayed");
+                var lastSong = (from e in SongList where e.Song.GetHashCode() == lastSongHash select e).FirstOrDefault();
+                if (lastSong != null)
+                {
+                    _selectedIndex = SongList.IndexOf(lastSong);
+                }
+            }
             base.Initialize();
         }
 
@@ -51,6 +60,7 @@ namespace WindowsGame1.Screens
             headerSprite.SetPosition(Core.Metrics["SongSelectScreenHeader",0]);
             headerSprite.Draw(spriteBatch);
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], SongList[_selectedIndex].Song.Bpm + " BPM", Core.Metrics["SongBPMDisplay", 0], Color.White);
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "High score: " + Core.Songs.GetHighScore(SongList[_selectedIndex].Song.GetHashCode(), Core.Settings.Get<GameType>("CurrentGameType")), Core.Metrics["SongHighScore", 0], Color.White);
 
 
 
@@ -156,7 +166,7 @@ namespace WindowsGame1.Screens
         private void StartSong()
         {
             Core.Settings.Set("CurrentSong",SongList[_selectedIndex].Song);
-            Core.Settings.Set("LastSongPlayed", SongList[_selectedIndex].Song.Title);
+            Core.Settings.Set("LastSongPlayed", SongList[_selectedIndex].Song.GetHashCode());
             Core.ScreenTransition("MainGame");
         }
 

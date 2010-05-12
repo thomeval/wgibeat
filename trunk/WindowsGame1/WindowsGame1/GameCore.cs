@@ -49,12 +49,12 @@ namespace WindowsGame1
             Metrics = MetricsManager.Load("metrics.txt");
             Settings = SettingsManager.LoadFromFile("settings.txt");
             Songs = SongManager.LoadFromFolder(Directory.GetCurrentDirectory() +"\\" + Settings["SongFolder"]);
-
+            Songs.LoadHighScores("Scores.conf");
             Players = new Player[4];
             for (int x = 0; x < 4; x++)
             {
 
-                Players[x] = new Player {Hits = 0, Momentum = 0, Life = 50, Score = 0, PlayDifficulty = (Difficulty) Settings.Get<int>("P" + (x + 1)+ "Difficulty"), Streak = -1};
+                Players[x] = new Player {Hits = 0, Momentum = 0, Life = 50, Score = 0, PlayDifficulty = Difficulty.BEGINNER, Streak = -1};
 
             }
 
