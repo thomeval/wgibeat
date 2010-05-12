@@ -50,7 +50,10 @@ namespace WindowsGame1
             Settings = SettingsManager.LoadFromFile("settings.txt");
             Songs = SongManager.LoadFromFolder(Directory.GetCurrentDirectory() +"\\" + Settings["SongFolder"]);
             Songs.LoadHighScores("Scores.conf");
+            //this.TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 15);
             Players = new Player[4];
+           // this.IsFixedTimeStep = false;
+
             for (int x = 0; x < 4; x++)
             {
 
@@ -103,6 +106,8 @@ namespace WindowsGame1
             // TODO: Unload any non ContentManager content here
         }
 
+        private double lastU;
+        public double diffU;
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -110,6 +115,11 @@ namespace WindowsGame1
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            if (lastU != null)
+            {
+                diffU = gameTime.TotalRealTime.TotalMilliseconds - lastU;
+            }
+            lastU = gameTime.TotalRealTime.TotalMilliseconds;
 
             if (_screens == null)
             {
@@ -128,7 +138,7 @@ namespace WindowsGame1
                     _activeScreen.PerformKey(key);
                 }
 
-                
+
 
                 
             }
@@ -157,12 +167,19 @@ namespace WindowsGame1
         }
 
 
+        private double lastD;
+        public double diffD;
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            if (lastD != null)
+            {
+                diffD = gameTime.TotalRealTime.TotalMilliseconds - lastD;
+            }
+            lastD = gameTime.TotalRealTime.TotalMilliseconds;     
             GraphicsDevice.Clear(Color.Black);
             _spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
             GraphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
@@ -170,7 +187,10 @@ namespace WindowsGame1
 
             _activeScreen.Draw(gameTime, _spriteBatch);
             _spriteBatch.End();
+
             base.Draw(gameTime);
+
+
         }
 
         public void ScreenTransition(string screen)
