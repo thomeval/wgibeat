@@ -12,8 +12,9 @@ namespace WindowsGame1.Screens
     {
         private MainMenuOption _selectedMenuOption;
 
-        private readonly string[] _menuText = {"Start Game", "Keys", "Options", "Exit"};
-        public MainMenuScreen(GameCore core) : base(core)
+        private readonly string[] _menuText = { "Start Game", "Keys", "Options", "Exit" };
+        public MainMenuScreen(GameCore core)
+            : base(core)
         {
         }
 
@@ -31,25 +32,45 @@ namespace WindowsGame1.Screens
             DrawMenu(spriteBatch);
         }
 
+        private void DrawBackground(SpriteBatch spriteBatch)
+        {
+            var background = new Sprite
+            {
+                Height = Core.Window.ClientBounds.Height,
+                SpriteTexture = TextureManager.Textures["menuBackground"],
+                Width = Core.Window.ClientBounds.Width,
+                X = 0,
+                Y = 0
+            };
+
+            background.Draw(spriteBatch);
+        }
+
         private void DrawMenu(SpriteBatch spriteBatch)
         {
-           for (int menuOption = 0; menuOption < (int) MainMenuOption.COUNT; menuOption++)
-           {
-               var menuOptionSprite = new Sprite
-                                          {
-                                              Height = 50,
-                                              SpriteTexture = TextureManager.Textures["mainMenuOption"],
-                                              Width = 300
-                                          };
-               if (menuOption == (int) _selectedMenuOption)
-               {
-                   menuOptionSprite.SpriteTexture = TextureManager.Textures["mainMenuOptionSelected"];
-               }
-               menuOptionSprite.SetPosition(Core.Metrics["MainMenuOptions", menuOption]);
-               menuOptionSprite.Draw(spriteBatch);
+            DrawBackground(spriteBatch);
+            
 
-               spriteBatch.DrawString(TextureManager.Fonts["LargeFont"],_menuText[menuOption], Core.Metrics["MainMenuOptionText", menuOption],Color.Black);
-           }
+
+            //TextureManager.Textures[barTexture]
+
+            for (int menuOption = 0; menuOption < (int)MainMenuOption.COUNT; menuOption++)
+            {
+                var menuOptionSprite = new Sprite
+                                           {
+                                               Height = 50,
+                                               SpriteTexture = TextureManager.Textures["mainMenuOption"],
+                                               Width = 300
+                                           };
+                if (menuOption == (int)_selectedMenuOption)
+                {
+                    menuOptionSprite.SpriteTexture = TextureManager.Textures["mainMenuOptionSelected"];
+                }
+                menuOptionSprite.SetPosition(Core.Metrics["MainMenuOptions", menuOption]);
+                menuOptionSprite.Draw(spriteBatch);
+
+                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], _menuText[menuOption], Core.Metrics["MainMenuOptionText", menuOption], Color.Black);
+            }
         }
 
         public override void PerformAction(Action action)
@@ -61,31 +82,31 @@ namespace WindowsGame1.Screens
                 case Action.P2_UP:
                 case Action.P3_UP:
                 case Action.P4_UP:
-                    newOptionValue = (int) _selectedMenuOption - 1;
+                    newOptionValue = (int)_selectedMenuOption - 1;
                     if (newOptionValue < 0)
                     {
-                        newOptionValue += (int) MainMenuOption.COUNT;
+                        newOptionValue += (int)MainMenuOption.COUNT;
                     }
-                    _selectedMenuOption = (MainMenuOption) newOptionValue;
+                    _selectedMenuOption = (MainMenuOption)newOptionValue;
                     break;
                 case Action.P1_DOWN:
                 case Action.P2_DOWN:
                 case Action.P3_DOWN:
                 case Action.P4_DOWN:
                     newOptionValue = (int)_selectedMenuOption + 1;
-                    newOptionValue %= (int) MainMenuOption.COUNT;
-                    _selectedMenuOption = (MainMenuOption) newOptionValue;
+                    newOptionValue %= (int)MainMenuOption.COUNT;
+                    _selectedMenuOption = (MainMenuOption)newOptionValue;
                     break;
-                    case Action.P1_START:
-                    case Action.P2_START:
-                    case Action.P3_START:
-                    case Action.P4_START:
+                case Action.P1_START:
+                case Action.P2_START:
+                case Action.P3_START:
+                case Action.P4_START:
                     MenuOptionSelected();
                     break;
-                    case Action.P1_BEATLINE:
-                    case Action.P2_BEATLINE:
-                    case Action.P3_BEATLINE:
-                    case Action.P4_BEATLINE:
+                case Action.P1_BEATLINE:
+                case Action.P2_BEATLINE:
+                case Action.P3_BEATLINE:
+                case Action.P4_BEATLINE:
                     MenuOptionSelected();
                     break;
                 case Action.SYSTEM_BACK:

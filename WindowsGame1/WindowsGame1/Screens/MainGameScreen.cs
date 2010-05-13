@@ -629,6 +629,7 @@ namespace WindowsGame1.Screens
        
 
         #region Drawing
+
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
 
@@ -933,17 +934,21 @@ namespace WindowsGame1.Screens
         private void DrawBorders(SpriteBatch spriteBatch)
         {
             var brush = new PrimitiveLine(Core.GraphicsDevice) { Colour = Color.White };
+
             brush.AddVector(new Vector2(400, 0));
             brush.AddVector(new Vector2(400, 600));
             brush.Render(spriteBatch);
+
             brush.ClearVectors();
             brush.AddVector(new Vector2(0, 275));
             brush.AddVector(new Vector2(800, 275));
             brush.Render(spriteBatch);
+
             brush.ClearVectors();
             brush.AddVector(new Vector2(0, 325));
             brush.AddVector(new Vector2(800, 325));
             brush.Render(spriteBatch);
+
             brush.ClearVectors();
 
             

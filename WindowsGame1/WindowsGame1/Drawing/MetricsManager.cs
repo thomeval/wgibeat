@@ -56,6 +56,7 @@ namespace WindowsGame1.Drawing
             }
             return mm;
         }
+
         public Vector2 this [string id, int player]
     {
             get
