@@ -65,6 +65,15 @@ Core.Metrics["EvaluationMaxStreak", x], Color.White);
                headerSprite.SetPosition(Core.Metrics["EvaluationHeader",x]);
                headerSprite.Draw(spriteBatch);
 
+               var gradeBaseSprite = new Sprite
+                                         {
+                                             Height = 90,
+                                             Width = 160,
+                                             SpriteTexture = TextureManager.Textures["evaluationGradeBase"]
+                                         };
+               gradeBaseSprite.SetPosition(Core.Metrics["EvaluationGradeBase",x]);
+               gradeBaseSprite.Draw(spriteBatch);
+
 
            }
 
