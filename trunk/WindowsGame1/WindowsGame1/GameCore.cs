@@ -106,8 +106,7 @@ namespace WindowsGame1
             // TODO: Unload any non ContentManager content here
         }
 
-        private double lastU;
-        public double diffU;
+
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -115,11 +114,7 @@ namespace WindowsGame1
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (lastU != null)
-            {
-                diffU = gameTime.TotalRealTime.TotalMilliseconds - lastU;
-            }
-            lastU = gameTime.TotalRealTime.TotalMilliseconds;
+
 
             if (_screens == null)
             {
@@ -167,19 +162,13 @@ namespace WindowsGame1
         }
 
 
-        private double lastD;
-        public double diffD;
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            if (lastD != null)
-            {
-                diffD = gameTime.TotalRealTime.TotalMilliseconds - lastD;
-            }
-            lastD = gameTime.TotalRealTime.TotalMilliseconds;     
+   
             GraphicsDevice.Clear(Color.Black);
             _spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
             GraphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;

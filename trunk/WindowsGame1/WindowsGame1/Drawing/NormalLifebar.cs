@@ -128,7 +128,8 @@ namespace WindowsGame1.Drawing
 
             if (_displayedLife < _life)
             {
-                _displayedLife += 0.1;
+                _displayedLife += Math.Min(0.1, _life - _displayedLife);
+
                 if ((_displayedLife > 100) && (_life > 100))
                 {
                     return;
@@ -155,7 +156,7 @@ namespace WindowsGame1.Drawing
             }
             if (_displayedLife > _life)
             {
-                _displayedLife -= 0.1;
+                _displayedLife -= Math.Min(0.1, _displayedLife - _life);
                 if ((_displayedLife > 100) && (_life > 100))
                 {
                     return;
