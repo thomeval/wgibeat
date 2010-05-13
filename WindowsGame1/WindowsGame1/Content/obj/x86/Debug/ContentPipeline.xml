@@ -433,6 +433,15 @@
       <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\RGPr\trunk\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\evaluationHighScore.xnb</Output>
       <Time>2010-05-12T09:12:37.1967595+02:00</Time>
     </Item>
+    <Item>
+      <Source>Textures\evaluationMaxBase.png</Source>
+      <Name>Textures\evaluationMaxBase</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\RGPr\trunk\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\evaluationMaxBase.xnb</Output>
+      <Time>2010-05-13T09:01:38.3098707+02:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <TargetPlatform>Windows</TargetPlatform>

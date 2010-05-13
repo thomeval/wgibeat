@@ -6,3 +6,8 @@
 
 --Thome--
 -End of song ranking - Done, may add more grades later.
+-Fix jittery lifebars - Done
+-Cooperative, Sync game modes
+-Shift Life delta calculations to Lifebar.cs
+
+

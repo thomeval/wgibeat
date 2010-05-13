@@ -144,6 +144,11 @@ namespace WindowsGame1.Screens
                 //_phraseNumber = 1.0 * (Core.Songs.GetCurrentSongProgress() - _gameSong.Offset * 1000) / 1000 * (_gameSong.Bpm / 240);
                 MaintainBeatlineNotes();
                 MaintainDisplayedJudgements();
+
+            //FMOD cannot reliably determine the position of the song. Using GetCurrentSongProgress()
+            //as the default timing mechanism makes it jerky and slows the game down, so we attempt
+            //to match current time with the song time by periodically sampling it. A hill climbing method
+            // is used here.
             var delay = Core.Songs.GetCurrentSongProgress() - timeCheck;
                 if ((_confidence < 15) && (Math.Abs(delay) > 25))
                 {
@@ -907,9 +912,6 @@ namespace WindowsGame1.Screens
                 spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + String.Format("{0:F3}", _phraseNumber), Core.Metrics["SongDebugPhrase", 0], Color.White);
                 spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Hitoffset: {0:F3}",  _hitoffset),
                            Core.Metrics["SongDebugHitOffset",0], Color.White);
-                spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + String.Format("Draw: {0:F3}", Core.diffD), new Vector2(600,500), Color.White);
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Update: {0:F3}", Core.diffU),
-                                   new Vector2(600, 540), Color.White);
   
         }
 

@@ -42,6 +42,20 @@ namespace WindowsGame1.Screens
                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + Core.Players[x].Score,
                    Core.Metrics["EvaluationScore", x], Color.White);
 
+               var maxSprite = new Sprite()
+                                   {
+                                       Height = 68,
+                                       Width = 160,
+                                       SpriteTexture = TextureManager.Textures["evaluationMaxBase"]
+                                   };
+               maxSprite.SetPosition(Core.Metrics["EvaluationMaxBase",x]);
+               maxSprite.Draw(spriteBatch);
+
+               spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + Core.Players[x].MaxHits,
+Core.Metrics["EvaluationMaxHits", x], Color.Black);
+               spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + Core.Players[x].MaxStreak,
+Core.Metrics["EvaluationMaxStreak", x], Color.White);
+
                var headerSprite = new Sprite
                                       {
                                           Height = 30,

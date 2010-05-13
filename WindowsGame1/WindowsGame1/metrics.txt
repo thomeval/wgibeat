@@ -39,8 +39,7 @@ EvaluationLabelFault=[20,175][420,175][20,500][420,500];
 EvaluationLabelMiss=[20,200][420,200][20,525][420,525];
 EvaluationLabelScore=[20,225][420,225][20,550][420,550];
 EvaluationGradeBase=[270,200][670,200][270,525][670,525];
-EvaluationMaxHitsBase=[220,150][620,150][220,475][620,475];
-EvaluationMaxStreakBase=[220,225][620,225][220,550][620,550];
+EvaluationMaxBase=[220,50][620,50][220,375][620,375];
 
 EvaluationIdeal=[120,50][520,50][120,375][520,375];
 EvaluationCool=[120,75][520,75][120,400][520,400];
@@ -51,8 +50,8 @@ EvaluationFault=[120,175][520,175][120,500][520,500];
 EvaluationMiss=[120,200][520,200][120,525][520,525];
 EvaluationScore=[120,225][520,225][120,550][520,550];
 EvaluationGrade=[220,150][620,150][220,475][620,475];
-EvaluationMaxHits=[220,100][620,100][220,425][620,425];
-EvaluationMaxStreak=[220,150][620,150][220,475][620,475];
+EvaluationMaxHits=[255,55][655,55][255,380][655,380];
+EvaluationMaxStreak=[265,85][665,85][265,410][665,410];
 EvaluationHighScore=[220,225][620,225][220,550][620,550];
 
 #New Game;
