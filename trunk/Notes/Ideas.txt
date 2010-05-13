@@ -1,0 +1,15 @@
+--Zoran--
+-Menu Music
+-Common keys/commands across entire application. e.g Escape = quit. Seems implemented by Thome.
+-Hash of song including in .sng file.
+-Create .sng screen. Include calculating hash, adjusting offset and bpm.
+
+
+
+--Thome--
+-End of song ranking - Done, may add more grades later.
+-Fix jittery lifebars - Done
+-Cooperative, Sync game modes
+-Shift Life delta calculations to Lifebar.cs
+
+
