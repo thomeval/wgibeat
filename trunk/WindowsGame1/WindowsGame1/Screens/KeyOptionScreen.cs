@@ -61,9 +61,25 @@ namespace WindowsGame1.Screens
             DrawMenu(spriteBatch);
         }
 
+        private void DrawBackground(SpriteBatch spriteBatch)
+        {
+            var background = new Sprite
+            {
+                Height = Core.Window.ClientBounds.Height,
+                SpriteTexture = TextureManager.Textures["keyScreenBackground"],
+                Width = Core.Window.ClientBounds.Width,
+                X = 0,
+                Y = 0
+            };
+
+            background.Draw(spriteBatch);
+        }
+
 
         private void DrawMenu(SpriteBatch spriteBatch)
         {
+
+            DrawBackground(spriteBatch);
 
 
             Vector2 tempVector1 = new Vector2(0, 50);

@@ -33,6 +33,7 @@ namespace WindowsGame1
         {
             GraphicsManager = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
         }
 
         /// <summary>
@@ -133,9 +134,6 @@ namespace WindowsGame1
                     _activeScreen.PerformKey(key);
                 }
 
-
-
-                
             }
 
             lastKeystate = currentState;
