@@ -478,6 +478,25 @@
       <Output>C:\Users\Zoran\Desktop\Colab\WindowsGame1\trunk\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\keyScreenBackground.xnb</Output>
       <Time>2010-05-14T00:14:20.5365737+02:00</Time>
     </Item>
+    <Item>
+      <Source>Textures\gameScreenBackground.jpg</Source>
+      <Name>Textures\gameScreenBackground</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Zoran\Desktop\Colab\WindowsGame1\trunk\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Textures\gameScreenBackground.xnb</Output>
+      <Time>2010-05-14T00:42:08.2399435+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Audio\Alice Deejay - Everything Begins With An E.mp3</Source>
+      <Name>Audio\Alice Deejay - Everything Begins With An E</Name>
+      <Importer>Mp3Importer</Importer>
+      <Processor>SongProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Zoran\Desktop\Colab\WindowsGame1\trunk\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Audio\Alice Deejay - Everything Begins With An E.xnb</Output>
+      <Extra>C:\Users\Zoran\Desktop\Colab\WindowsGame1\trunk\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Audio\Alice Deejay - Everything Begins With An E.wma</Extra>
+      <Time>2010-05-14T01:16:26.3199128+02:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <TargetPlatform>Windows</TargetPlatform>

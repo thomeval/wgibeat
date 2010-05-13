@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WindowsGame1.Drawing;
+using WindowsGame1.AudioSystem;
 
 namespace WindowsGame1.Screens
 {
@@ -26,6 +27,14 @@ namespace WindowsGame1.Screens
         public override void Initialize()
         {
             base.Initialize();
+
+            GameSong song = new GameSong()
+            {
+                Path = @"Content\Audio",
+                SongFile = @"Alice Deejay - Everything Begins With An E.wma"
+            };
+            Core.Songs.LoadSong(song);
+            Core.Songs.PlaySong();
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
@@ -50,10 +59,6 @@ namespace WindowsGame1.Screens
         {
             DrawBackground(spriteBatch);
             
-
-
-            //TextureManager.Textures[barTexture]
-
             for (int menuOption = 0; menuOption < (int)MainMenuOption.COUNT; menuOption++)
             {
                 var menuOptionSprite = new Sprite
@@ -101,7 +106,7 @@ namespace WindowsGame1.Screens
                 case Action.P2_START:
                 case Action.P3_START:
                 case Action.P4_START:
-                    MenuOptionSelected();
+                     MenuOptionSelected();
                     break;
                 case Action.P1_BEATLINE:
                 case Action.P2_BEATLINE:
@@ -120,9 +125,11 @@ namespace WindowsGame1.Screens
             switch (_selectedMenuOption)
             {
                 case MainMenuOption.START_GAME:
+                    //Core.Songs.StopSong();
                     Core.ScreenTransition("NewGame");
                     break;
                 case MainMenuOption.KEYS:
+                    //Core.Songs.StopSong();
                     Core.ScreenTransition("KeyOptions");
                     break;
                 case MainMenuOption.OPTIONS:

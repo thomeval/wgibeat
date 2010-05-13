@@ -81,7 +81,6 @@ namespace WindowsGame1.Screens
 
             DrawBackground(spriteBatch);
 
-
             Vector2 tempVector1 = new Vector2(0, 50);
             Vector2 tempVector2 = new Vector2(0, 60);
 

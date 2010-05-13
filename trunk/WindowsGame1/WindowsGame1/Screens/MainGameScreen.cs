@@ -591,15 +591,16 @@ namespace WindowsGame1.Screens
             Monitor.Exit(_displayedJudgements);
             _lifebars[player].SetLife(Core.Players[player].Life);
         }
+
         private BeatlineNote NearestBeatlineNote(int player)
         {
             return (from e in _beatlineNotes where (e.Player == player) && (!e.Hit) orderby CalculateHitOffset(e) select e).FirstOrDefault();
         }
+
         private double CalculateHitOffset(int player)
         {
             return CalculateHitOffset(NearestBeatlineNote(player));
         }
-
 
         private double CalculateHitOffset(BeatlineNote bln)
         {
@@ -630,9 +631,23 @@ namespace WindowsGame1.Screens
 
         #region Drawing
 
+        private void DrawBackground(SpriteBatch spriteBatch)
+        {
+            var background = new Sprite
+            {
+                Height = Core.Window.ClientBounds.Height,
+                SpriteTexture = TextureManager.Textures["gameScreenBackground"],
+                Width = Core.Window.ClientBounds.Width,
+                X = 0,
+                Y = 0
+            };
+
+            background.Draw(spriteBatch);
+        }
+
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-
+            DrawBackground(spriteBatch);
             //Begin drawing textures.
 
             //Draw a texture at a specific position.
