@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace WindowsGame1.Drawing
+namespace WGiBeat.Drawing
 {
     public class Sprite : DrawableObject
     {

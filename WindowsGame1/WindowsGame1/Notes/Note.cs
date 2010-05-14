@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using WindowsGame1.Drawing;
+using WGiBeat.Drawing;
 
-namespace WindowsGame1.Notes
+namespace WGiBeat.Notes
 {
     public class Note
     {

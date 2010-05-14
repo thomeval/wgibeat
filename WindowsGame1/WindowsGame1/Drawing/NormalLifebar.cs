@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace WindowsGame1.Drawing
+namespace WGiBeat.Drawing
 {
     public class NormalLifebar : Lifebar
     {

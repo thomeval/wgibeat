@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-namespace WindowsGame1.Drawing
+namespace WGiBeat.Drawing
 {
     public abstract class DrawableObject
     {

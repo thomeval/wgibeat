@@ -8,11 +8,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using WindowsGame1.AudioSystem;
-using WindowsGame1.Drawing;
-using WindowsGame1.Notes;
+using WGiBeat.AudioSystem;
+using WGiBeat.Drawing;
+using WGiBeat.Notes;
 
-namespace WindowsGame1.Screens
+namespace WGiBeat.Screens
 {
     public class MainGameScreen : GameScreen
     {

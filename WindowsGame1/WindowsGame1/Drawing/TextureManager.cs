@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace WindowsGame1.Drawing
+namespace WGiBeat.Drawing
 {
     public static class TextureManager
     {
