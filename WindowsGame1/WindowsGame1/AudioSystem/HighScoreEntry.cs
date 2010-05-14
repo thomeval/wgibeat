@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace WindowsGame1.AudioSystem
+namespace WGiBeat.AudioSystem
 {
     [Serializable]
     public class HighScoreEntry
