@@ -1,3 +1,0 @@
-C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\WindowsGame1\WindowsGame1\Content\obj\x86\Debug\ResolveAssemblyReference.cache
-C:\Users\sgtbash\Documents\Visual Studio 2008\Projects\RGPr\trunk\WindowsGame1\WindowsGame1\Content\obj\x86\Debug\ResolveAssemblyReference.cache
-C:\Users\Zoran\Desktop\Colab\WindowsGame1\trunk\WindowsGame1\WindowsGame1\Content\obj\x86\Debug\ResolveAssemblyReference.cache
