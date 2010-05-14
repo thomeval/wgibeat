@@ -1,6 +1,6 @@
 using System;
 
-namespace WindowsGame1
+namespace WGiBeat
 {
     static class Program
     {
