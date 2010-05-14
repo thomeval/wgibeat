@@ -7,7 +7,7 @@ using System.Text;
 
 
 
-namespace WindowsGame1.AudioSystem
+namespace WGiBeat.AudioSystem
 {
     public class SongManager
     {
