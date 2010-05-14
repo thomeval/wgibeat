@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using WindowsGame1.Drawing;
-using WindowsGame1.AudioSystem;
+using WGiBeat.AudioSystem;
+using WGiBeat.Drawing;
 
-namespace WindowsGame1.Screens
+namespace WGiBeat.Screens
 {
     public class MainMenuScreen : GameScreen
     {
