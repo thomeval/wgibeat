@@ -131,46 +131,50 @@ namespace WGiBeat
         }
         public Difficulty PlayDifficulty { get; set; }
 
-        public void MissedArrow()
+        public double MissedArrow()
         {
             Hits = 0;
             Momentum = (long)(Momentum * 0.95);
             Judgements[5]++;
+            int result = 0;
             switch (PlayDifficulty)
             {
                 case Difficulty.BEGINNER:
                     break;
                     case Difficulty.EASY:
-                    Life -= 1;
+                    result = -1;
                     break;
                 case Difficulty.MEDIUM:
-                    Life -= 2;
+                    result = -2;
                     break;
                 case Difficulty.HARD:
-                    Life -= 4;
+                    result = -4;
                     break;
             }
+            return result;
         }
 
-        public void MissedBeat()
+        public double MissedBeat()
         {
             Momentum = (long)(Momentum * 0.8);
             Judgements[6]++;
+            var result = 0;
             switch (PlayDifficulty)
             {
                 case Difficulty.BEGINNER:
-                    Life -= 2;
+                    result = -2;
                     break;
                 case Difficulty.EASY:
-                    Life -= 4;
+                    result = -4;
                     break;
                 case Difficulty.MEDIUM:
-                    Life -= 8;
+                    result = -8;
                     break;
                 case Difficulty.HARD:
-                    Life -= 12;
+                    result = -12;
                     break;
             }
+            return result;
         }
 
         public void ResetStats()

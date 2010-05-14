@@ -97,10 +97,10 @@ namespace WGiBeat.Notes
             barSpriteLeft.Draw(sb);
             barSpriteRight.Draw(sb);
             barSpriteMiddle.Draw(sb);
+
+            var sprite = new SpriteMap { SpriteTexture = TextureManager.Textures["arrows"], Columns = 4, Rows = 3 };
             foreach (Note note in Notes)
             {
-
-                var sprite = new SpriteMap {SpriteTexture = TextureManager.Textures["arrows"], Columns = 4, Rows = 3};
 
 
                 var cell = ((int) note.Direction);
