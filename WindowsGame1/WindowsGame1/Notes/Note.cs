@@ -18,10 +18,10 @@ namespace WindowsGame1.Notes
 
     public enum NoteDirection
     {
-        LEFT = 0,
+        UP = 0,
         RIGHT = 1,
-        UP = 2,
-        DOWN = 3,
+        DOWN = 2,
+        LEFT = 3,
         COUNT = 4
     }
 }

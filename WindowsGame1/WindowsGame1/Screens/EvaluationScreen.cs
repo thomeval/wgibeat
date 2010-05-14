@@ -44,7 +44,7 @@ namespace WindowsGame1.Screens
 
                var maxSprite = new Sprite()
                                    {
-                                       Height = 68,
+                                    //   Height = 68,
                                        Width = 160,
                                        SpriteTexture = TextureManager.Textures["evaluationMaxBase"]
                                    };
@@ -58,8 +58,7 @@ Core.Metrics["EvaluationMaxStreak", x], Color.White);
 
                var headerSprite = new Sprite
                                       {
-                                          Height = 30,
-                                          Width = 250,
+
                                           SpriteTexture = TextureManager.Textures["evaluationHeader"]
                                       };
                headerSprite.SetPosition(Core.Metrics["EvaluationHeader",x]);
@@ -95,8 +94,6 @@ Core.Metrics["EvaluationMaxStreak", x], Color.White);
                 {
                     var recordSprite = new Sprite
                                            {
-                                               Height = 30,
-                                               Width = 150,
                                                SpriteTexture = TextureManager.Textures["evaluationHighScore"]
                                            };
 
