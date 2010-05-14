@@ -4,11 +4,11 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using WindowsGame1.AudioSystem;
-using WindowsGame1.Drawing;
-using WindowsGame1.Screens;
+using WGiBeat.AudioSystem;
+using WGiBeat.Drawing;
+using WGiBeat.Screens;
 
-namespace WindowsGame1
+namespace WGiBeat
 {
     /// <summary>
     /// This is the main type for your game
