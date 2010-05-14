@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using Microsoft.Xna.Framework;
 
-namespace WindowsGame1.Drawing
+namespace WGiBeat.Drawing
 {
     public class MetricsManager
     {

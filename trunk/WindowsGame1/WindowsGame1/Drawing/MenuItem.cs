@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace WindowsGame1.Drawing
+namespace WGiBeat.Drawing
 {
     public class MenuItem
     {

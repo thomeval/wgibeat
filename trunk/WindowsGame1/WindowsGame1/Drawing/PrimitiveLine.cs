@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace WindowsGame1.Drawing
+namespace WGiBeat.Drawing
 {
     /// <summary>
     /// A class to make primitive 2D objects out of lines.

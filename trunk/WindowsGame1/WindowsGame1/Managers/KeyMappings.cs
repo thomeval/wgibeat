@@ -7,7 +7,7 @@ using System.Text;
 using System.Runtime.Serialization;
 using Microsoft.Xna.Framework.Input;
 
-namespace WindowsGame1
+namespace WGiBeat
 {
     public class KeyMappings
     {

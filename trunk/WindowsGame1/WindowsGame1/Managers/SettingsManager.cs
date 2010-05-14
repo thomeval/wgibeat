@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace WindowsGame1
+namespace WGiBeat
 {
     public class SettingsManager
     {

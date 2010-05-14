@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using WindowsGame1.Drawing;
+using WGiBeat.Drawing;
 
-namespace WindowsGame1.Notes
+namespace WGiBeat.Notes
 {
     public class NoteBar : DrawableObject
     {

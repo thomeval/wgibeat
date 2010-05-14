@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using WindowsGame1.AudioSystem;
+using WGiBeat.AudioSystem;
 
-namespace WindowsGame1.Drawing
+namespace WGiBeat.Drawing
 {
     public class SongListItem : DrawableObject
     {
