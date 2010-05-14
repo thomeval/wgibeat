@@ -3,6 +3,10 @@
     public enum GameType
     {
         NORMAL = 0,
-        COUNT = 1
+        TEAM = 1,
+        COOPERATIVE = 2,
+        SYNC = 3,
+        BATTLE = 4,
+        COUNT = 5
     }
 }

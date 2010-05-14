@@ -12,7 +12,5 @@ namespace WGiBeat.Drawing
 
         public abstract void SetLife(double amount);
 
-        public abstract event EventHandler LifebarEmpty;
-        public abstract event EventHandler LifebarFull;
     }
 }

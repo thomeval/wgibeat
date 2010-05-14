@@ -24,7 +24,7 @@ namespace WGiBeat.Screens
         private double _hitoffset;
         private double _songLoadDelay;
 
-        private Lifebar[] _lifebars;
+        private LifebarSet _lifebarSet;
         private NoteBar[] _notebars;
         private int _playerCount = 0;
         private GraphicNumber _streakNumbers;
@@ -42,7 +42,7 @@ namespace WGiBeat.Screens
         {
             _playerCount = 4;
             _notebars = new NoteBar[_playerCount];
-            _lifebars = new Lifebar[_playerCount];
+            _lifebarSet = new LifebarSet {Metrics = Core.Metrics, GameType = Core.Settings.Get<GameType>("GameMode")};
             _displayState = 0;
             _songLoadDelay = 0.0;
             _confidence = 0;
@@ -50,9 +50,7 @@ namespace WGiBeat.Screens
             for (int x = 0; x < _playerCount; x++)
             {
 
-                _lifebars[x] = new NormalLifebar {Height = 30, Width = 260, SideLocation = x};
-                _lifebars[x].SetPosition(Core.Metrics["NormalLifebar", x]);
-
+                
                 if (Core.Players[x] == null)
                 {
                     Core.Players[x] = new Player
@@ -70,7 +68,9 @@ namespace WGiBeat.Screens
                 {
                     Core.Players[x].ResetStats();
                 }
-                _lifebars[x].SetLife(Core.Players[x].Life);
+                _lifebarSet.Playing[x] = Core.Players[x].Playing;
+                _lifebarSet.SetLife(Core.Players[x].Life,x);
+
                 _notebars[x] = NoteBar.CreateNoteBar((int) Core.Players[x].Level, 0);
                 _notebars[x].SetPosition(Core.Metrics["Notebar", x]);
 
@@ -386,9 +386,8 @@ namespace WGiBeat.Screens
             else if (_notebars[player].CurrentNote() != null)
             {
                 _notebars[player].ResetAll();
-                Core.Players[player].MissedArrow();
-
-                _lifebars[player].SetLife(Core.Players[player].Life);
+                
+                Core.Players[player].Life = _lifebarSet.AdjustLife(Core.Players[player].MissedArrow(),player);
             }
         }
 
@@ -539,6 +538,7 @@ namespace WGiBeat.Screens
         private void AwardJudgement(int judgement, int player)
         {
             Texture2D tex;
+            double lifeAdjust = 0;
             switch (judgement)
             {
                 case 1:
@@ -546,14 +546,14 @@ namespace WGiBeat.Screens
                     Core.Players[player].Streak++;
                     double multiplier = ((9.0 + Math.Max(1, Core.Players[player].Streak))/10.0);
                     Core.Players[player].Score += (long) (1000*_notebars[player].NumberCompleted()*multiplier);
-                    Core.Players[player].AddLife(1 * _notebars[player].NumberCompleted());
+                    lifeAdjust = (1 * _notebars[player].NumberCompleted());
                     Core.Players[player].Judgements[0]++;
                     tex = TextureManager.Textures["noteJudgement1"];
                     break;
                 case 2:
                     //COOL
                     Core.Players[player].Score += 750 * _notebars[player].NumberCompleted();
-                    Core.Players[player].AddLife(0.5 * _notebars[player].NumberCompleted());
+                    lifeAdjust = (0.5 * _notebars[player].NumberCompleted());
                     Core.Players[player].Streak = -1;
                     Core.Players[player].Judgements[1]++;
                     tex = TextureManager.Textures["noteJudgement2"];
@@ -569,19 +569,19 @@ namespace WGiBeat.Screens
                     //BAD
                     Core.Players[player].Score += 250 * _notebars[player].NumberCompleted();
                     Core.Players[player].Streak = -1;
-                    Core.Players[player].Life -= 1 * _notebars[player].NumberCompleted();
+                    lifeAdjust = 1 * _notebars[player].NumberCompleted();
                     Core.Players[player].Judgements[3]++;
                     tex = TextureManager.Textures["noteJudgement4"];
                     break;
                 case 5:
                     //MISS
-                    Core.Players[player].MissedBeat();
+                    lifeAdjust = Core.Players[player].MissedBeat();
                     tex = TextureManager.Textures["noteJudgement5"];
                     break;
                 default:
                     //FAIL
                     Core.Players[player].Streak = -1;
-                    Core.Players[player].Life -= (int) (1 + Core.Players[player].PlayDifficulty) * (_notebars[player].Notes.Count() - _notebars[player].NumberCompleted() + 1);
+                    lifeAdjust -= (int)(1 + Core.Players[player].PlayDifficulty) * (_notebars[player].Notes.Count() - _notebars[player].NumberCompleted() + 1);
                     Core.Players[player].Momentum = (long)(Core.Players[player].Momentum * 0.7);
                     Core.Players[player].Judgements[4]++;
                     tex = TextureManager.Textures["noteJudgement0"];
@@ -589,10 +589,12 @@ namespace WGiBeat.Screens
             }
             var newDj = new DisplayedJudgement { DisplayUntil = _phraseNumber + 0.5, Height = 40, Width = 150, Texture = tex, Player = player };
             newDj.SetPosition(Core.Metrics["Judgement", player]);
+            Core.Players[player].Life = _lifebarSet.AdjustLife(lifeAdjust, player);
+
             Monitor.Enter(_displayedJudgements);
             _displayedJudgements.Add(newDj);
             Monitor.Exit(_displayedJudgements);
-            _lifebars[player].SetLife(Core.Players[player].Life);
+            
         }
 
         private BeatlineNote NearestBeatlineNote(int player)
@@ -663,10 +665,9 @@ namespace WGiBeat.Screens
                 if (Core.Players[x].Playing)
                 {
                     _notebars[x].Draw(spriteBatch);
-                    _lifebars[x].Draw(spriteBatch);
                 }
             }
-
+            _lifebarSet.Draw(spriteBatch);
             //Draw beatline judgements.
             Monitor.Enter(_displayedJudgements);
             foreach (DisplayedJudgement dj in _displayedJudgements)

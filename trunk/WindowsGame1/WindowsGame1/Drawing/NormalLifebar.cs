@@ -16,8 +16,7 @@ namespace WGiBeat.Drawing
         private Sprite _positiveAdjustPart;
         private Sprite _overchargePart;
         private double _overchargeTextureOffset;
-        public override event EventHandler LifebarFull;
-        public override event EventHandler LifebarEmpty;
+
 
         private const double OVERCHARGE_OFFSET_CLIP = 250;
         public int SideLocation { private get; set; }
@@ -187,14 +186,11 @@ namespace WGiBeat.Drawing
         {
             _life = amount;
 
-            if ((_life <= 0.0) && (LifebarEmpty != null))
-            {
-                LifebarEmpty(this, null);
-            }
-            if ((_life >= 200.0) && (LifebarFull != null))
-            {
-                LifebarFull(this, null);
-            }
+        }
+
+        public void AdjustLife(double amount)
+        {
+            
         }
     }
 }
