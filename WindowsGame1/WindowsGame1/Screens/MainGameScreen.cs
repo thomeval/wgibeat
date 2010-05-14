@@ -1036,20 +1036,19 @@ namespace WGiBeat.Screens
         {
             var pulseSprite = new Sprite
             {
-                //SpriteTexture = TextureManager.Textures["beatlinePulse"]
                 SpriteTexture = TextureManager.Textures["BeatFlame"]
             };
 
             pulseSprite.Width = (int) (80*(Math.Ceiling(_phraseNumber) - (_phraseNumber)));
-            pulseSprite.Height = 34;
+            pulseSprite.Height = 42;
             for (int x = 0; x < _playerCount; x++)
             {
                 if (!Core.Players[x].Playing)
                 {
                     continue;
                 }
-                pulseSprite.SetPosition((int) Core.Metrics["BeatlineBarBase", x].X + 33,
-                                        (int) Core.Metrics["BeatlineBarBase", x].Y + 3);
+                pulseSprite.SetPosition((int) Core.Metrics["BeatlineBarBase", x].X + 30,
+                                        (int) Core.Metrics["BeatlineBarBase", x].Y - 5);
                 pulseSprite.DrawTiled(spriteBatch, 83 - pulseSprite.Width, 0, pulseSprite.Width, 34);
                 
             }
