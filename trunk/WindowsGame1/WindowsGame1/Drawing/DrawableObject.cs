@@ -19,6 +19,12 @@ namespace WindowsGame1.Drawing
             X = (int) position.X;
             Y = (int) position.Y;
         }
+
+        public virtual void SetPosition(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
         public abstract void Draw(SpriteBatch sb);
     }
 }

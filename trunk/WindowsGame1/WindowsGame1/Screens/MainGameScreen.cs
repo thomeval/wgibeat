@@ -406,6 +406,8 @@ namespace WindowsGame1.Screens
             {
                 return;
             }
+
+            Monitor.Enter(_beatlineNotes);
             _hitoffset = CalculateHitOffset(player);
             var nearestBeatline = NearestBeatlineNote(player);
 
@@ -444,6 +446,7 @@ namespace WindowsGame1.Screens
                 nearestBeatline.DisplayPosition = CalculateAbsoluteBeatlinePosition(nearestBeatline.Position);
                 nearestBeatline.Position = _phraseNumber + 0.3;
             }
+            Monitor.Exit(_beatlineNotes);
         }
 
         private NoteDirection ActionToDirection(Action action)
@@ -665,6 +668,7 @@ namespace WindowsGame1.Screens
             }
 
             //Draw beatline judgements.
+            Monitor.Enter(_displayedJudgements);
             foreach (DisplayedJudgement dj in _displayedJudgements)
             {
                 int opacity = Convert.ToInt32(Math.Max(0, (dj.DisplayUntil - _phraseNumber)*510));
@@ -672,6 +676,7 @@ namespace WindowsGame1.Screens
                 dj.Opacity = Convert.ToByte(opacity);
                 dj.Draw(spriteBatch);
             }
+            Monitor.Exit(_displayedJudgements);
 
             DrawBorders(spriteBatch);            
             if (_phraseNumber < 0)
@@ -790,7 +795,7 @@ namespace WindowsGame1.Screens
                     {
                         return;
                     }
-                    _streakNumbers.SpriteMap.Color.A = currentJudgement.Opacity;
+                    _streakNumbers.SpriteMap.ColorShading.A = currentJudgement.Opacity;
 
                     _streakNumbers.DrawNumber(spriteBatch, Core.Players[x].Streak, Core.Metrics["StreakText", x], 30, 40);
                 }
@@ -979,33 +984,38 @@ namespace WindowsGame1.Screens
             const double BEAT_VISIBILITY = 1.1;
 
             DrawBeatlineBases(spriteBatch);
+            DrawBeatlinePulses(spriteBatch);
+            var markerSprite = new SpriteMap
+            {
+                Columns = 1,
+                Rows = 4,
+                SpriteTexture = TextureManager.Textures["beatMarkers"],
 
+            };
+            Monitor.Enter(_beatlineNotes);
             foreach (BeatlineNote bn in _beatlineNotes)
             {
                 var markerBeatOffset = (int)(BEAT_ZOOM_DISTANCE * (_phraseNumber - bn.Position));
+
+                //Dont render notes outside the visibility range.
                 if ((-1 * markerBeatOffset) > BEAT_ZOOM_DISTANCE * BEAT_VISIBILITY)
                 {
                     continue;
                 }
-                var markerSprite = new Sprite
-                {
-                    Height = 34,
-                    Width = 5,
-                    SpriteTexture = TextureManager.Textures["beatMarkerP1"],
-                    X = (int)Core.Metrics["BeatlineBarBase", bn.Player].X + 28 - (markerBeatOffset),
-                    Y = (int)Core.Metrics["BeatlineBarBase", bn.Player].Y + 3
 
-                };
+                var markerPosition = new Vector2{Y = (int)Core.Metrics["BeatlineBarBase", bn.Player].Y + 3};
                 if (bn.Hit)
                 {
-                    markerSprite.X = (int)Core.Metrics["BeatlineBarBase", bn.Player].X + 28 + bn.DisplayPosition;
+                    markerPosition.X = (int)Core.Metrics["BeatlineBarBase", bn.Player].X + 28 + bn.DisplayPosition;
                     //TODO: Fix
                     markerSprite.ColorShading.A = 128;
                 }
                 else
                 {
+                    markerPosition.X = (int)Core.Metrics["BeatlineBarBase", bn.Player].X + 28 - (markerBeatOffset);
 
-
+                                   
+                
                     if (markerBeatOffset > 0)
                     {
                         markerSprite.ColorShading.A = (byte)(255 + 1.1 * CalculateHitOffset(bn));
@@ -1015,10 +1025,30 @@ namespace WindowsGame1.Screens
                         markerSprite.ColorShading.A = 255;
                     }
                 }
-                markerSprite.Draw(spriteBatch);
+                markerSprite.Draw(spriteBatch,bn.Player,5,34,markerPosition);
 
             }
+            Monitor.Exit(_beatlineNotes);
+        }
 
+        private void DrawBeatlinePulses(SpriteBatch spriteBatch)
+        {
+            var pulseSprite = new Sprite
+            {
+                SpriteTexture = TextureManager.Textures["beatlinePulse"]
+            };
+            pulseSprite.Width = (int) (80*(Math.Ceiling(_phraseNumber) - (_phraseNumber)));
+            for (int x = 0; x < _playerCount; x++)
+            {
+                if (!Core.Players[x].Playing)
+                {
+                    continue;
+                }
+                pulseSprite.SetPosition((int) Core.Metrics["BeatlineBarBase", x].X + 33,
+                                        (int) Core.Metrics["BeatlineBarBase", x].Y + 3);
+                pulseSprite.DrawTiled(spriteBatch, 80 - pulseSprite.Width, 0, pulseSprite.Width, 34);
+                
+            }
         }
 
         private void DrawBeatlineBases(SpriteBatch spriteBatch)

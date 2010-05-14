@@ -11,7 +11,7 @@ namespace WindowsGame1.Drawing
     {
 
         public Texture2D SpriteTexture { get; set; }
-        public Color Color = Color.White;
+        public Color ColorShading = Color.White;
         public int Columns { get; set; }
         public int Rows { get; set; }
 
@@ -21,7 +21,7 @@ namespace WindowsGame1.Drawing
             Rectangle sourceRect = CalculateSourceRectangle(cellnumber);
             var destRect = new Rectangle {Height = height, Width = width, X = x, Y = y};
 
-            spriteBatch.Draw(SpriteTexture, destRect, sourceRect, Color);
+            spriteBatch.Draw(SpriteTexture, destRect, sourceRect, ColorShading);
         }
 
         public void Draw(SpriteBatch spriteBatch, int cellnumber, int width, int height, Vector2 position)

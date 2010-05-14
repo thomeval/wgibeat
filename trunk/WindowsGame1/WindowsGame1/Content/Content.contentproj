@@ -52,48 +52,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\arrowcdown.png">
-      <Name>arrowcdown</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\arrowcleft.png">
-      <Name>arrowcleft</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\arrowcright.png">
-      <Name>arrowcright</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\arrowcup.png">
-      <Name>arrowcup</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\arrowdown.png">
-      <Name>arrowdown</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\arrowleft.png">
-      <Name>arrowleft</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\arrowright.png">
-      <Name>arrowright</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\arrowup.png">
-      <Name>arrowup</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\beatMarkerP1.png">
-      <Name>beatMarkerP1</Name>
+    <Compile Include="Textures\beatMarkers.png">
+      <Name>beatMarkers</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -310,6 +270,21 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Textures\beatlinePulse.png">
+      <Name>beatlinePulse</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\arrows.png">
+      <Name>arrows</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Audio\" />
     <Compile Include="Textures\allBackground.jpg">
       <Name>allBackground</Name>
       <Importer>TextureImporter</Importer>

@@ -100,34 +100,20 @@ namespace WindowsGame1.Notes
             foreach (Note note in Notes)
             {
 
-                var sprite = new Sprite {Height = 32, Width = 32, X = posX, Y = posY};
-                var textureName = "";
-                switch (note.Direction)
-                {
-                    case NoteDirection.LEFT:
-                        textureName = "arrowleft";
-                        break;
-                    case NoteDirection.RIGHT:
-                        textureName = "arrowright";
-                        break;
-                    case NoteDirection.UP:
-                        textureName = "arrowup";
-                        break;
-                    case NoteDirection.DOWN:
-                        textureName = "arrowdown";
-                        break;
-                }
+                var sprite = new SpriteMap {SpriteTexture = TextureManager.Textures["arrows"], Columns = 4, Rows = 3};
+
+
+                var cell = ((int) note.Direction);
                 if (note.Completed)
                 {
-                    textureName = textureName.Replace("arrow", "arrowc");
+                    cell += 8;
                 }
                 else if (note.Reverse)
                 {
-                    textureName = textureName.Replace("arrow", "arrowr");  
+                    cell += 4;
                 }
 
-                sprite.SpriteTexture = TextureManager.Textures[textureName];
-                sprite.Draw(sb);
+                sprite.Draw(sb, cell, 32, 32, posX, posY);
                 posX += 32;
             }
         }
