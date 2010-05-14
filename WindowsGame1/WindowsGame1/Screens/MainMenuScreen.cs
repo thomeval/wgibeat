@@ -30,12 +30,10 @@ namespace WGiBeat.Screens
 
             try
             {
-
-
             GameSong song = new GameSong()
             {
                 Path = @"Content\Audio",
-                SongFile = @"MenuMusic.mp3"
+                SongFile = @"MenuSong.wma"
             };
             Core.Songs.LoadSong(song);
             Core.Songs.PlaySong();
