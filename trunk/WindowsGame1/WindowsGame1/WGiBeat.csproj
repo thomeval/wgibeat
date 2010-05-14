@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WindowsGame1</RootNamespace>
+    <RootNamespace>WGiBeat</RootNamespace>
     <AssemblyName>WindowsGame1</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <XnaFrameworkVersion>v3.1</XnaFrameworkVersion>
@@ -109,6 +109,7 @@
     <Compile Include="Drawing\TextureManager.cs" />
     <Compile Include="AudioSystem\GameSong.cs" />
     <Compile Include="GameType.cs" />
+    <Compile Include="Helpers\FiniteState.cs" />
     <Compile Include="Managers\KeyMappings.cs" />
     <Compile Include="AudioSystem\SongManager.cs" />
     <Compile Include="Notes\BeatlineNote.cs" />
