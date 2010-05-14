@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -28,13 +29,17 @@ namespace WGiBeat.Screens
         {
             base.Initialize();
 
-            GameSong song = new GameSong()
+
+            if (File.Exists("Content\\Audio\\" + "MenuSong.wma"))
             {
-                Path = @"Content\Audio",
-                SongFile = @"Alice Deejay - Everything Begins With An E.wma"
-            };
-            Core.Songs.LoadSong(song);
-            Core.Songs.PlaySong();
+                GameSong song = new GameSong()
+                                    {
+                                        Path = @"Content\Audio",
+                                        SongFile = @"MenuSong.wma"
+                                    };
+                Core.Songs.LoadSong(song);
+                Core.Songs.PlaySong();
+            }
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
@@ -58,7 +63,7 @@ namespace WGiBeat.Screens
         private void DrawMenu(SpriteBatch spriteBatch)
         {
             DrawBackground(spriteBatch);
-            
+
             for (int menuOption = 0; menuOption < (int)MainMenuOption.COUNT; menuOption++)
             {
                 var menuOptionSprite = new Sprite
@@ -106,7 +111,7 @@ namespace WGiBeat.Screens
                 case Action.P2_START:
                 case Action.P3_START:
                 case Action.P4_START:
-                     MenuOptionSelected();
+                    MenuOptionSelected();
                     break;
                 case Action.P1_BEATLINE:
                 case Action.P2_BEATLINE:

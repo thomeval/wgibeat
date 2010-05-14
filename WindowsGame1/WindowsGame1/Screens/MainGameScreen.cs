@@ -639,7 +639,7 @@ namespace WGiBeat.Screens
             var background = new Sprite
             {
                 Height = Core.Window.ClientBounds.Height,
-                SpriteTexture = TextureManager.Textures["gameScreenBackground"],
+                SpriteTexture = TextureManager.Textures["allBackground"],
                 Width = Core.Window.ClientBounds.Width,
                 X = 0,
                 Y = 0
@@ -755,11 +755,11 @@ namespace WGiBeat.Screens
         private void DrawSongInfo(SpriteBatch spriteBatch, GameTime gameTime)
         {
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + CalculateTimeLeft(gameTime)
-, Core.Metrics["SongTimeLeft", 0], Color.White);
+, Core.Metrics["SongTimeLeft", 0], Color.Black);
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + _gameSong.Title
-, Core.Metrics["SongTitle", 0], Color.White);
+, Core.Metrics["SongTitle", 0], Color.Black);
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + _gameSong.Artist
-, Core.Metrics["SongArtist", 0], Color.White);
+, Core.Metrics["SongArtist", 0], Color.Black);
         }
 
         private void DrawKOIndicators(SpriteBatch spriteBatch)
@@ -827,7 +827,7 @@ namespace WGiBeat.Screens
                 baseSprite.SetPosition(Core.Metrics["LevelBarBase", x]);
                 baseSprite.Draw(spriteBatch);
                 spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + (int)Core.Players[x].Level,
-                       Core.Metrics["LevelText", x], Color.White);
+                       Core.Metrics["LevelText", x], Color.Black);
 
                 double levelFraction = Core.Players[x].Level - (int)Core.Players[x].Level;
                 var barWidth = (int)(levelFraction * LEVELBAR_MAX_WIDTH);
@@ -891,7 +891,7 @@ namespace WGiBeat.Screens
                 baseSprite.SetPosition(Core.Metrics["HitsBar", x]);
                 baseSprite.Draw(spriteBatch);
                 spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("{0:D3}", Core.Players[x].Hits),
-       Core.Metrics["HitsText", x], Color.White);
+       Core.Metrics["HitsText", x], Color.Black);
 
             }
         }
@@ -908,13 +908,13 @@ namespace WGiBeat.Screens
                     continue;
                 }
 
-                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "P" + (x + 1), Core.Metrics["PlayerText", x], Color.White);
+                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "P" + (x + 1), Core.Metrics["PlayerText", x], Color.Black);
                 spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + Core.Players[x].DisplayedScore,
-                                       Core.Metrics["ScoreText", x], Color.White);
+                                       Core.Metrics["ScoreText", x], Color.Black);
 
                 
                 spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("{0:D3}", (int)Core.Players[x].Life),
-                                       Core.Metrics["NormalLifebarText", x], Color.White);
+                                       Core.Metrics["NormalLifebarText", x], Color.Black);
 
             }
             if (Core.Settings.Get<int>("SongDebug") == 1)
@@ -927,12 +927,12 @@ namespace WGiBeat.Screens
         {
 
                 spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("BPM: {0:F2}", _gameSong.Bpm),
-                       Core.Metrics["SongDebugBPM", 0], Color.White);
+                       Core.Metrics["SongDebugBPM", 0], Color.Black);
                 spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Offset: {0:F3}", _gameSong.Offset),
-                        Core.Metrics["SongDebugOffset", 0], Color.White);
-                spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + String.Format("{0:F3}", _phraseNumber), Core.Metrics["SongDebugPhrase", 0], Color.White);
+                        Core.Metrics["SongDebugOffset", 0], Color.Black);
+                spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + String.Format("{0:F3}", _phraseNumber), Core.Metrics["SongDebugPhrase", 0], Color.Black);
                 spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Hitoffset: {0:F3}",  _hitoffset),
-                           Core.Metrics["SongDebugHitOffset",0], Color.White);
+                           Core.Metrics["SongDebugHitOffset",0], Color.Black);
   
         }
 
@@ -953,7 +953,7 @@ namespace WGiBeat.Screens
 
         private void DrawBorders(SpriteBatch spriteBatch)
         {
-            var brush = new PrimitiveLine(Core.GraphicsDevice) { Colour = Color.White };
+            var brush = new PrimitiveLine(Core.GraphicsDevice) { Colour = Color.Black };
 
             brush.AddVector(new Vector2(400, 0));
             brush.AddVector(new Vector2(400, 600));
