@@ -16,6 +16,7 @@ namespace WGiBeat.AudioSystem
         private FMOD.System _fmodSystem = new FMOD.System();
         private FMOD.Channel _fmodChannel = new FMOD.Channel();
         private FMOD.Sound _fmodSound = new FMOD.Sound();
+        private GameSong _currentSong;
         private Dictionary<int, HighScoreEntry> _highScoreEntries = new Dictionary<int, HighScoreEntry>();
         public SongManager()
         {
@@ -34,6 +35,7 @@ namespace WGiBeat.AudioSystem
         public void LoadSong(GameSong song)
         {
             StopSong();
+            _currentSong = song;
             FMOD.RESULT result;
             result = _fmodSystem.createSound(song.Path + "\\" + song.SongFile, FMOD.MODE.SOFTWARE, ref _fmodSound);
             CheckFMODErrors(result);
@@ -63,9 +65,15 @@ namespace WGiBeat.AudioSystem
         }
         private void CheckFMODErrors(FMOD.RESULT result)
         {
-            if (result != FMOD.RESULT.OK)
+            switch (result)
             {
-                throw new Exception("FMOD error: " + result);
+                case FMOD.RESULT.OK:
+                    //Everything is fine.
+                    break;
+                case FMOD.RESULT.ERR_FILE_NOTFOUND:
+                    throw new FileNotFoundException("Unable to find GameSong file " + _currentSong.SongFile + " in " + _currentSong.Path);
+                    default:
+                    throw new Exception("FMOD error: " + result);
             }
         }
         public void StopSong()
