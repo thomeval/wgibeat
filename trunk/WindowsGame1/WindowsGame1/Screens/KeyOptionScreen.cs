@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using WindowsGame1.Drawing;
+using WGiBeat.Drawing;
 using Microsoft.Xna.Framework.Input;
 
 
@@ -16,15 +13,14 @@ using Microsoft.Xna.Framework.Input;
  * 4. Press key that you wish to use to perform that action.
  * 5. Voila.
  * 
- * Note. Saving to file is not yet working. Some sort of serializing error. Will look into it next."
  */
 
-namespace WindowsGame1.Screens
+namespace WGiBeat.Screens
 {
     class KeyOptionScreen : GameScreen
     {
-        private int CurrentPlayer = 1;
-        private int SelectedMenuOption = 0;
+        private int _currentPlayer = 1;
+        private int _selectedMenuOption = 0;
         private Boolean SelectChange = false;
         private Boolean AvoidNextAction = false;
         //private Boolean LastActionSide = false;
@@ -43,7 +39,6 @@ namespace WindowsGame1.Screens
 
         public KeyOptionScreen(GameCore core) : base(core)
         {
-
         }
 
         public override void Update(GameTime gameTime)
@@ -57,7 +52,7 @@ namespace WindowsGame1.Screens
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Current player: Player" + CurrentPlayer , new Vector2(50, 110), Color.White);
+            spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Current player: Player" + _currentPlayer, new Vector2(50, 110), Color.Black);
             DrawMenu(spriteBatch);
         }
 
@@ -100,14 +95,14 @@ namespace WindowsGame1.Screens
                 menuOptionSprite.SetPosition(tempVector1);
                 menuOptionSprite.ColorShading = Color.LawnGreen;
 
-                if (playerOption == CurrentPlayer)
+                if (playerOption == _currentPlayer)
                 {
                     menuOptionSprite.ColorShading = Color.Tomato;
                     menuOptionSprite.Y = (int) tempVector1.Y + 10;
                     //menuOptionSprite.SpriteTexture = TextureManager.Textures["mainMenuOptionSelected"];
                 }
 
-                if ((Math.Abs(playerOption - CurrentPlayer) == 1))// || (Math.Abs(playerOption - CurrentPlayer) == 3))
+                if ((Math.Abs(playerOption - _currentPlayer) == 1))// || (Math.Abs(playerOption - _currentPlayer) == 3))
                 {
                     menuOptionSprite.Y = (int)tempVector1.Y + 5;
                     menuOptionSprite.ColorShading = Color.Yellow;
@@ -137,7 +132,7 @@ namespace WindowsGame1.Screens
 
                
 
-                if (menuOption == (int)SelectedMenuOption)
+                if (menuOption == _selectedMenuOption)
                     menuOptionSprite.SpriteTexture = TextureManager.Textures["mainMenuOptionSelected"];
 
                 menuOptionSprite.SetPosition(tempVector1);
@@ -153,7 +148,7 @@ namespace WindowsGame1.Screens
             tempVector2.X = 440;
             //tempVector2.Y = 160;
 
-            Keys[] tempKeyList = Core._keyMappings.GetKeys(links[SelectedMenuOption].getAction(CurrentPlayer));
+            Keys[] tempKeyList = Core._keyMappings.GetKeys(links[_selectedMenuOption].getAction(_currentPlayer));
 
             for (int keyList = 0; keyList < tempKeyList.Length; keyList++)
             {
@@ -181,7 +176,7 @@ namespace WindowsGame1.Screens
                 /*
 
                 VertexPositionColor[] temp = {
-                                                new VertexPositionColor(new Vector3(310, 150 + (55 * SelectedMenuOption) + 10, 0), Color.Red),
+                                                new VertexPositionColor(new Vector3(310, 150 + (55 * _selectedMenuOption) + 10, 0), Color.Red),
                                                 new VertexPositionColor(new Vector3(400, 150 + (keyList * 55) + 10, 0), Color.Red)
                                              };
 
@@ -214,8 +209,8 @@ namespace WindowsGame1.Screens
                     AvoidNextAction = false;
                 else
                 {
-                    Console.WriteLine("Perform " + key.ToString());
-                    Core._keyMappings.SetKey(key, links[SelectedMenuOption].getAction(CurrentPlayer));
+                    //Console.WriteLine("Perform " + key);
+                    Core._keyMappings.SetKey(key, links[_selectedMenuOption].getAction(_currentPlayer));
                     Core._keyMappings.SaveToFile("Keys.conf");
 
                     SelectChange = false;
@@ -226,6 +221,70 @@ namespace WindowsGame1.Screens
 
         public override void PerformAction(Action action)
         {
+
+            /*
+            if (action == Action.SYSTEM_BACK)
+            {
+                Core.ScreenTransition("MainMenu");
+                return;
+            }
+
+
+            switch (State.CurrentState)
+            {
+                case 0:
+                    switch (action)
+                    {
+                        case Action.P1_LEFT:
+                        case Action.P2_LEFT:
+                        case Action.P3_LEFT:
+                        case Action.P4_LEFT:
+
+                            SelectChange = false;
+                            AvoidNextAction = false;
+
+                            _currentPlayer--;
+
+                            if (_currentPlayer < 1)
+                                _currentPlayer = 4;
+
+                            return;
+
+                        case Action.P1_RIGHT:
+                        case Action.P2_RIGHT:
+                        case Action.P3_RIGHT:
+                        case Action.P4_RIGHT:
+
+                            SelectChange = false;
+                            AvoidNextAction = false;
+
+                            _currentPlayer++;
+
+                            if (_currentPlayer > 4)
+                                _currentPlayer = 1;
+                            return;
+
+                        case Action.P1_START:
+                        case Action.P2_START:
+                        case Action.P3_START:
+                        case Action.P4_START:
+                            //Console.WriteLine("Changed to changing");
+                            SelectChange = true;
+                            AvoidNextAction = true;
+                            break;
+
+                    }
+                    break;
+
+                case 1:
+
+                    State.CurrentState = 0;
+
+                    break;
+
+            }
+
+            */
             if (action == Action.SYSTEM_BACK)
                 Core.ScreenTransition("MainMenu");
             else
@@ -240,10 +299,10 @@ namespace WindowsGame1.Screens
                         SelectChange = false;
                         AvoidNextAction = false;
 
-                        CurrentPlayer--;
+                        _currentPlayer--;
 
-                        if (CurrentPlayer < 1)
-                            CurrentPlayer = 4;
+                        if (_currentPlayer < 1)
+                            _currentPlayer = 4;
 
                         return;
 
@@ -255,17 +314,17 @@ namespace WindowsGame1.Screens
                         SelectChange = false;
                         AvoidNextAction = false;
 
-                        CurrentPlayer++;
+                        _currentPlayer++;
 
-                        if (CurrentPlayer > 4)
-                            CurrentPlayer = 1;
+                        if (_currentPlayer > 4)
+                            _currentPlayer = 1;
                         return;
 
                     case Action.P1_START:
                     case Action.P2_START:
                     case Action.P3_START:
                     case Action.P4_START:
-                        Console.WriteLine("Changed to changing");
+                        //Console.WriteLine("Changed to changing");
                         SelectChange = true;
                         AvoidNextAction = true;
                         break;
@@ -285,8 +344,8 @@ namespace WindowsGame1.Screens
                         
                         int newPlayer = outTemp;
 
-                        if (CurrentPlayer != newPlayer)
-                            CurrentPlayer = newPlayer;
+                        if (_currentPlayer != newPlayer)
+                            _currentPlayer = newPlayer;
                         else
                         {
 
@@ -296,10 +355,10 @@ namespace WindowsGame1.Screens
                                 case Action.P2_UP:
                                 case Action.P3_UP:
                                 case Action.P4_UP:
-                                    SelectedMenuOption--;
+                                    _selectedMenuOption--;
 
-                                    if (SelectedMenuOption < 0)
-                                        SelectedMenuOption = links.Length - 1;
+                                    if (_selectedMenuOption < 0)
+                                        _selectedMenuOption = links.Length - 1;
 
                                     break;
                                 case Action.P1_DOWN:
@@ -307,10 +366,10 @@ namespace WindowsGame1.Screens
                                 case Action.P3_DOWN:
                                 case Action.P4_DOWN:
 
-                                    SelectedMenuOption++;
+                                    _selectedMenuOption++;
 
-                                    if (SelectedMenuOption >= links.Length)
-                                        SelectedMenuOption = 0;
+                                    if (_selectedMenuOption >= links.Length)
+                                        _selectedMenuOption = 0;
 
                                     break;
 
@@ -323,20 +382,20 @@ namespace WindowsGame1.Screens
 
         private struct ButtonLink
         {
-            public Action P1_action { get; set; }
-            public Action P2_action { get; set; }
-            public Action P3_action { get; set; }
-            public Action P4_action { get; set; }
+            private Action P1_action { get; set; }
+            private Action P2_action { get; set; }
+            private Action P3_action { get; set; }
+            private Action P4_action { get; set; }
 
             public String name { get; set; }
 
             public ButtonLink(Action p1, Action p2, Action p3, Action p4, String _name) : this() //May be unecessary.
             {
-                this.P1_action = p1;
-                this.P2_action = p2;
-                this.P3_action = p3;
-                this.P4_action = p4;
-                this.name = _name;
+                P1_action = p1;
+                P2_action = p2;
+                P3_action = p3;
+                P4_action = p4;
+                name = _name;
 
             }
 

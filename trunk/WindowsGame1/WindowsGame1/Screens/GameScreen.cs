@@ -5,12 +5,13 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using WGiBeat.Helpers;
 
-namespace WindowsGame1.Screens
+namespace WGiBeat.Screens
 {
     public abstract class GameScreen : GameComponent
     {
- 
+        protected FiniteState State = new FiniteState(0);
         protected GameCore Core;
         public GameScreen(GameCore core) : base(core)
         {
