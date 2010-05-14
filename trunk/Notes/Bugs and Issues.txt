@@ -1,0 +1,1 @@
+1-Escape causes menu song to stop playing. In KeySCreen. I checked all references to Core.Songs.StopSong(), but I can't find the problem.
