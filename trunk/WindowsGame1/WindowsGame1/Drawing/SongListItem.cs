@@ -22,9 +22,9 @@ namespace WGiBeat.Drawing
             baseSprite.Draw(spriteBatch);
             //Draw Text
             Vector2 textPosition = new Vector2(this.X + 20, this.Y + 3);
-            spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], Song.Title, textPosition,Color.White);
+            spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], Song.Title, textPosition,Color.Black);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"],Song.Artist, textPosition, Color.White);
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], Song.Artist, textPosition, Color.Black);
             
         }
     }

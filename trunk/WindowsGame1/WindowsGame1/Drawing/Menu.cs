@@ -24,7 +24,7 @@ namespace WGiBeat.Drawing
             var position = new Vector2 {X = this.X, Y = this.Y};
             foreach (MenuItem menuItem in _menuItems)
             {
-                Color drawColor = (IsSelected(menuItem)) ? Color.Green : Color.White;
+                Color drawColor = (IsSelected(menuItem)) ? Color.Blue : Color.Black;
 
                     spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], menuItem.ItemText, position, drawColor);
                 position.X += xOptionOffset;

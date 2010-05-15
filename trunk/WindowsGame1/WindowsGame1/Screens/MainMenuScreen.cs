@@ -13,6 +13,9 @@ namespace WGiBeat.Screens
     {
         private MainMenuOption _selectedMenuOption;
 
+        private int _tick = 0;
+        private int _maxTick = 0;
+
         private readonly string[] _menuText = { "Start Game", "Keys", "Options", "Exit" };
         public MainMenuScreen(GameCore core)
             : base(core)
@@ -22,6 +25,8 @@ namespace WGiBeat.Screens
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+
         }
 
         public override void Initialize()
@@ -33,7 +38,7 @@ namespace WGiBeat.Screens
             GameSong song = new GameSong()
             {
                 Path = @"Content\Audio",
-                SongFile = @"MenuSong.wma"
+                SongFile = @"MenuMusic.mp3"
             };
             Core.Songs.LoadSong(song);
             Core.Songs.PlaySong();

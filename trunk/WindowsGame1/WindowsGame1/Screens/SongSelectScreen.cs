@@ -59,8 +59,8 @@ namespace WGiBeat.Screens
                                    };
             headerSprite.SetPosition(Core.Metrics["SongSelectScreenHeader",0]);
             headerSprite.Draw(spriteBatch);
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], SongList[_selectedIndex].Song.Bpm + " BPM", Core.Metrics["SongBPMDisplay", 0], Color.White);
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "High score: " + Core.Songs.GetHighScore(SongList[_selectedIndex].Song.GetHashCode(), Core.Settings.Get<GameType>("CurrentGameType")), Core.Metrics["SongHighScore", 0], Color.White);
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], SongList[_selectedIndex].Song.Bpm + " BPM", Core.Metrics["SongBPMDisplay", 0], Color.Black);
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "High score: " + Core.Songs.GetHighScore(SongList[_selectedIndex].Song.GetHashCode(), Core.Settings.Get<GameType>("CurrentGameType")), Core.Metrics["SongHighScore", 0], Color.Black);
 
 
 
@@ -100,8 +100,25 @@ namespace WGiBeat.Screens
             return 1 + (int) (Core.Players[player].PlayDifficulty);
         }
 
+        private void DrawBackground(SpriteBatch spriteBatch)
+        {
+            var background = new Sprite
+            {
+                Height = Core.Window.ClientBounds.Height,
+                SpriteTexture = TextureManager.Textures["allBackground"],
+                Width = Core.Window.ClientBounds.Width,
+                X = 0,
+                Y = 0
+            };
+
+            background.Draw(spriteBatch);
+        }
+
         private void DrawSongList(SpriteBatch spriteBatch)
         {
+
+            DrawBackground(spriteBatch);
+
             var midpoint = Core.Metrics["SongListMidpoint", 0];
             SongList[_selectedIndex].SetPosition(midpoint);
             SongList[_selectedIndex].IsSelected = true;
