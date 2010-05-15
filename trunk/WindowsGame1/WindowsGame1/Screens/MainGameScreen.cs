@@ -42,7 +42,7 @@ namespace WGiBeat.Screens
         {
             _playerCount = 4;
             _notebars = new NoteBar[_playerCount];
-            _lifebarSet = new LifebarSet {Metrics = Core.Metrics, GameType = Core.Settings.Get<GameType>("GameMode")};
+            _lifebarSet = new LifebarSet (Core.Metrics, Core.Players, Core.Settings.Get<GameType>("GameMode"));
             _displayState = 0;
             _songLoadDelay = 0.0;
             _confidence = 0;
@@ -68,8 +68,7 @@ namespace WGiBeat.Screens
                 {
                     Core.Players[x].ResetStats();
                 }
-                _lifebarSet.Playing[x] = Core.Players[x].Playing;
-                _lifebarSet.SetLife(Core.Players[x].Life,x);
+
 
                 _notebars[x] = NoteBar.CreateNoteBar((int) Core.Players[x].Level, 0);
                 _notebars[x].SetPosition(Core.Metrics["Notebar", x]);
@@ -265,15 +264,6 @@ namespace WGiBeat.Screens
 
         #endregion
 
-        public double CeilingPlus(double number)
-        {
-            if (Math.Ceiling(number) == number)
-            {
-                return number + 1;
-            }
-            return Math.Ceiling(number);
-        }
-
         #region Actions/Input
         /// <summary>
         /// Executes whenever the key has been pressed that corresponds to some action in the game.
@@ -387,7 +377,7 @@ namespace WGiBeat.Screens
             {
                 _notebars[player].ResetAll();
                 
-                Core.Players[player].Life = _lifebarSet.AdjustLife(Core.Players[player].MissedArrow(),player);
+                _lifebarSet.AdjustLife(Core.Players[player].MissedArrow(),player);
             }
         }
 
@@ -497,6 +487,8 @@ namespace WGiBeat.Screens
             }
         }
 
+        #region Beatline and Judgement
+
         private int CalculateAbsoluteBeatlinePosition(double position)
         {
             return (int)(BEAT_ZOOM_DISTANCE * (position - _phraseNumber));
@@ -589,7 +581,8 @@ namespace WGiBeat.Screens
             }
             var newDj = new DisplayedJudgement { DisplayUntil = _phraseNumber + 0.5, Height = 40, Width = 150, Texture = tex, Player = player };
             newDj.SetPosition(Core.Metrics["Judgement", player]);
-            Core.Players[player].Life = _lifebarSet.AdjustLife(lifeAdjust, player);
+            
+            _lifebarSet.AdjustLife(lifeAdjust, player);
 
             Monitor.Enter(_displayedJudgements);
             _displayedJudgements.Add(newDj);
@@ -611,6 +604,8 @@ namespace WGiBeat.Screens
         {
             return (bln.Position - _phraseNumber) * 1000 * 240 / _gameSong.Bpm;
         }
+
+        #endregion
 
         private string CalculateTimeLeft(GameTime gameTime)
         {
@@ -668,6 +663,7 @@ namespace WGiBeat.Screens
                 }
             }
             _lifebarSet.Draw(spriteBatch);
+
             //Draw beatline judgements.
             Monitor.Enter(_displayedJudgements);
             foreach (DisplayedJudgement dj in _displayedJudgements)
