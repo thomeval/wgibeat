@@ -26,15 +26,15 @@ namespace WGiBeat.Drawing
 
         public void Draw(SpriteBatch spriteBatch, int cellnumber, int width, int height, Vector2 position)
         {
-            Draw(spriteBatch, cellnumber,width,height,(int) position.X, (int) position.Y);
+            Draw(spriteBatch, cellnumber, width, height,(int) position.X, (int) position.Y);
         }
         private Rectangle CalculateSourceRectangle(int cellnumber)
         {
             int xOffset = 0, yOffset = 0;
             int xSize = 0, ySize = 0;
 
-            xSize = SpriteTexture.Width/Columns;
-            ySize = SpriteTexture.Height/Rows;
+            xSize = SpriteTexture.Width / Columns;
+            ySize = SpriteTexture.Height / Rows;
 
             while (cellnumber >= Columns)
             {

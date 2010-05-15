@@ -25,6 +25,6 @@ namespace WGiBeat.Drawing
             X = x;
             Y = y;
         }
-        public abstract void Draw(SpriteBatch sb);
+        public abstract void Draw(SpriteBatch spriteBatch);
     }
 }
