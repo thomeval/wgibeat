@@ -21,12 +21,7 @@ namespace WGiBeat
             get { return _life; }
             set
             {
-                _life = Math.Min(LIFE_MAX, value);
-                if (_life <= 0)
-                {
-                    KO = true;
-                    _life = 0;
-                }
+                _life = value;
             }
         }
 
@@ -108,27 +103,7 @@ namespace WGiBeat
                 return MaxDifficulty(PlayDifficulty);
         }
 
-        public void AddLife(double amount)
-        {
-            if (Life + amount > 100)
-            {
-                if (Life >= 100)
-                {
-                    Life += amount/3;
-                }
-                else
-                {
-                    double over = Life + amount - 100;
-                    Life = 100 + (over/3);
-                }
 
-
-            }
-            else
-            {
-                Life += amount;
-            }
-        }
         public Difficulty PlayDifficulty { get; set; }
 
         public double MissedArrow()

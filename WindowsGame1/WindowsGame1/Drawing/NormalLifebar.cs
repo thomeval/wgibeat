@@ -115,7 +115,11 @@ namespace WGiBeat.Drawing
  
                 }
                 _overchargePart.Width = (int)((this.Width - 5) / LIFEBAR_CAPACITY * (_displayedLife - 100));
-                _overchargePart.DrawTiled(sb,(int) _overchargeTextureOffset, 0, _overchargePart.Width, _overchargePart.Height );
+                if (_overchargePart.Width > 0)
+                {
+                    _overchargePart.DrawTiled(sb, (int) _overchargeTextureOffset, 0, _overchargePart.Width,
+                                              _overchargePart.Height);
+                }
             }
             DrawAdjustments(sb);
             _overchargeTextureOffset = (_overchargeTextureOffset + 0.5) % OVERCHARGE_OFFSET_CLIP;

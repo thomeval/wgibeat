@@ -9,43 +9,39 @@ namespace WGiBeat.Drawing
     public class LifebarSet
     {
 
+        private readonly MetricsManager _metrics;
+        private readonly Player[] _players; 
+        private readonly GameType _gameType;
+        private readonly Lifebar[] _lifebars;
+
         public LifebarSet()
         {
-            _life = new double[4];
             _lifebars = new Lifebar[4];
-            Playing = new bool[4];
         }
-        private readonly Lifebar[] _lifebars;
-        private readonly double[] _life;
-
-        public MetricsManager Metrics { get; set; }
-
-        public bool[] Playing
+        public LifebarSet(MetricsManager metrics, Player[] players, GameType gameType)
+        :this()
         {
-            get; set;
+            _metrics = metrics;
+            _players = players;
+            _gameType = gameType;
+            CreateLifebars();
         }
 
-        private GameType _gameType;
-        public GameType GameType
-        {
-            get { return _gameType; }
-            set
-            {
-                _gameType = value;
-                CreateLifebars();
-            }
-        }
 
         private void CreateLifebars()
         {
 
-            switch (GameType)
+            switch (_gameType)
             {
                 case GameType.NORMAL:
                     for (int x = 0; x < 4; x++)
                     {
                         _lifebars[x] = new NormalLifebar {Height = 30, Width = 260, SideLocation = x};
-                        _lifebars[x].SetPosition(Metrics["NormalLifebar", x]);
+                        _lifebars[x].SetPosition(_metrics["NormalLifebar", x]);
+                        if (_players != null)
+                        {
+                            _lifebars[x].SetLife(_players[x].Life);
+                        }
                     }
                     break;
                     case GameType.COOPERATIVE:
@@ -56,48 +52,56 @@ namespace WGiBeat.Drawing
         public double AdjustLife(double amount, int player)
         {
             //Adjust the life according to the 'rules' of the lifebar used, and return the new amount.
-            switch (GameType)
+            switch (_gameType)
             {
                 case GameType.NORMAL:
                     AdjustLifeNormal(amount, player);
-                    _lifebars[player].SetLife(_life[player]);
+                    _lifebars[player].SetLife(_players[player].Life);
                     break;
                 case GameType.COOPERATIVE:
                     
                     break;
             }
-            return _life[player];
+            return _players[player].Life;
         }
 
+        const int LIFE_MAX_NORMAL = 200;
         private void AdjustLifeNormal(double amount, int player)
         {
-            if (_life[player] + amount > 100)
+            if (_players[player].Life + amount > 100)
             {
-                if (_life[player] >= 100)
+                if (_players[player].Life >= 100)
                 {
-                    _life[player] += amount / 3;
+                    _players[player].Life += amount / 3;
                 }
                 else
                 {
-                    double over = _life[player] + amount - 100;
-                    _life[player] = 100 + (over / 3);
+                    double over = _players[player].Life + amount - 100;
+                    _players[player].Life = 100 + (over / 3);
                 }
 
             }
             else
             {
-                _life[player] += amount;
+                _players[player].Life += amount;
+            }
+
+            _players[player].Life = Math.Min(LIFE_MAX_NORMAL, _players[player].Life);
+            if (_players[player].Life <= 0)
+            {
+                _players[player].KO = true;
+                _players[player].Life = 0;
             }
             
         }
 
         public void SetLife(double amount, int player)
         {
-            _life[player] = amount;
-            switch (GameType)
+            _players[player].Life = amount;
+            switch (_gameType)
             {
                 case GameType.NORMAL:
-                    _lifebars[player].SetLife(_life[player]);
+                    _lifebars[player].SetLife(_players[player].Life);
                     break;
                 case GameType.COOPERATIVE:
 
@@ -108,23 +112,24 @@ namespace WGiBeat.Drawing
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            switch (GameType)
+            switch (_gameType)
             {
                 case GameType.NORMAL:
                     for (int x = 0; x < 4; x++)
                     {
-                        if (Playing[x])
+                        if (_players[x].Playing)
                         _lifebars[x].Draw(spriteBatch);
                     }
                     break;
                 case GameType.COOPERATIVE:
+                    if (_players[0].Playing || _players[1].Playing)
                     {
-                        _lifebars[0].SetPosition(Metrics["CoopLifebar", 0]);
+                        _lifebars[0].SetPosition(_metrics["CoopLifebar", 0]);
                         _lifebars[0].Draw(spriteBatch);
                     }
-                    if (Playing[2] || Playing[3])
+                    if (_players[2].Playing || _players[3].Playing)
                     {
-                        _lifebars[0].SetPosition(Metrics["CoopLifebar", 1]);
+                        _lifebars[0].SetPosition(_metrics["CoopLifebar", 1]);
                         _lifebars[0].Draw(spriteBatch);
                     }
                     break;
