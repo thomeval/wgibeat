@@ -41,8 +41,26 @@ namespace WGiBeat.Screens
             _playersJoined = 0;
             base.Initialize();
         }
+
+        private void DrawBackground(SpriteBatch spriteBatch)
+        {
+            var background = new Sprite
+            {
+                Height = Core.Window.ClientBounds.Height,
+                SpriteTexture = TextureManager.Textures["allBackground"],
+                Width = Core.Window.ClientBounds.Width,
+                X = 0,
+                Y = 0
+            };
+
+            background.Draw(spriteBatch);
+        }
+
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            DrawBackground(spriteBatch);
+
+
             DrawBorders(spriteBatch);
             DrawMenus(spriteBatch);
             for (int x = 0; x < 4; x++)
@@ -50,7 +68,7 @@ namespace WGiBeat.Screens
                 if (!Core.Players[x].Playing)
                 {
                     spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Press Start to Join...",
-                                           Core.Metrics["NewGameJoinNotification", x], Color.White);
+                                           Core.Metrics["NewGameJoinNotification", x], Color.Black);
                 }
 
             }
@@ -65,7 +83,7 @@ namespace WGiBeat.Screens
                     if (_cursorPositions[x] == 999)
                     {
                         spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Ready",
-                        Core.Metrics["NewGameJoinNotification", x], Color.White);
+                        Core.Metrics["NewGameJoinNotification", x], Color.Black);
                     }
                     else if (_cursorPositions[x] == 0)
                     {
@@ -79,7 +97,7 @@ namespace WGiBeat.Screens
 
         private void DrawBorders(SpriteBatch spriteBatch)
         {
-            var brush = new PrimitiveLine(Core.GraphicsDevice) { Colour = Color.White };
+            var brush = new PrimitiveLine(Core.GraphicsDevice) { Colour = Color.Black };
             brush.AddVector(new Vector2(400, 0));
             brush.AddVector(new Vector2(400, 600));
             brush.Render(spriteBatch);
