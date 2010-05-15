@@ -9,10 +9,10 @@ namespace WGiBeat.Drawing
 {
     public abstract class DrawableObject
     {
-        public int X;
-        public int Y;
-        public int Height;
-        public int Width;
+        public int X { get; set;}
+        public int Y { get; set; }
+        public int Height { get; set; }
+        public int Width { get; set; }
 
         public virtual void SetPosition(Vector2 position)
         {
