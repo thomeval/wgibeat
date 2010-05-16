@@ -25,6 +25,7 @@ namespace WGiBeat.Screens
         private double _songLoadDelay;
 
         private LifebarSet _lifebarSet;
+        private HitsBarSet _hitsbarSet;
         private NoteBar[] _notebars;
         private int _playerCount = 0;
         private GraphicNumber _streakNumbers;
@@ -43,6 +44,7 @@ namespace WGiBeat.Screens
             _playerCount = 4;
             _notebars = new NoteBar[_playerCount];
             _lifebarSet = new LifebarSet (Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
+            _hitsbarSet = new HitsBarSet(Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
             _displayState = 0;
             _songLoadDelay = 0.0;
             _confidence = 0;
@@ -222,7 +224,7 @@ namespace WGiBeat.Screens
 
         private void MaintainBeatlineNotes()
         {
-
+            Monitor.Enter(_beatlineNotes);
             foreach (BeatlineNote bn in _beatlineNotes)
             {
                 if ((CalculateHitOffset(bn) < -200) || (Core.Players[bn.Player].KO))
@@ -251,7 +253,7 @@ namespace WGiBeat.Screens
                     }
                 }
             }
-
+            Monitor.Exit(_beatlineNotes);
             _notesToRemove.Clear();
         }
 
@@ -665,7 +667,7 @@ namespace WGiBeat.Screens
                 }
             }
             _lifebarSet.Draw(spriteBatch);
-
+            _hitsbarSet.Draw(spriteBatch);
             //Draw beatline judgements.
             Monitor.Enter(_displayedJudgements);
             foreach (DisplayedJudgement dj in _displayedJudgements)
@@ -683,7 +685,7 @@ namespace WGiBeat.Screens
                 DrawCountdowns(spriteBatch);
             }
             
-            DrawHitsCounters(spriteBatch);
+
             DrawStreakCounters(spriteBatch);
             DrawLevelBars(spriteBatch);
             DrawBeat(spriteBatch);
@@ -866,34 +868,6 @@ namespace WGiBeat.Screens
             return "levelBarFront1";
         }
 
-        private void DrawHitsCounters(SpriteBatch spriteBatch)
-        {
-            for (int x = 0; x < _playerCount; x++)
-            {
-                if (!Core.Players[x].Playing)
-                {
-                    continue;
-                }
-                if (Core.Players[x].Hits < 25)
-                {
-                    continue;
-                }
-                var baseSprite = new Sprite
-                {
-                    Height = 55,
-                    Width = 60,
-                    SpriteTexture =
-                        (x % 2 == 0)
-                            ? TextureManager.Textures["hitsBarLeft"]
-                            : TextureManager.Textures["hitsBarRight"],
-                };
-                baseSprite.SetPosition(Core.Metrics["HitsBar", x]);
-                baseSprite.Draw(spriteBatch);
-                spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("{0:D3}", Core.Players[x].Hits),
-       Core.Metrics["HitsText", x], Color.Black);
-
-            }
-        }
 
         private void DrawText(SpriteBatch spriteBatch)
         {
