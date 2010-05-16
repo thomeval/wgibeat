@@ -44,7 +44,7 @@ namespace WGiBeat.Drawing
                     break;
                 default:
                     width = 60;
-                    height = 60;
+                    height = 55;
                     break;
             }
             for (int x = 0; x < 4; x++)
