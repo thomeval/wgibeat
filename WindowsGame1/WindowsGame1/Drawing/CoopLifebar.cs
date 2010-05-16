@@ -26,7 +26,7 @@ namespace WGiBeat.Drawing
 
             DrawBase(spriteBatch);
             //TODO: Implement leeching.
-
+            double penaltyMx = Math.Max(0,TotalLife()/TotalPositive());
             var frontSpriteMap = new SpriteMap
                                      {Columns = 1, Rows = 4, SpriteTexture = TextureManager.Textures["lifebarFront"]};
 
@@ -40,6 +40,7 @@ namespace WGiBeat.Drawing
                 }
 
                 var pieceWidth = (int) ((this.Width - 6) *(Parent.Players[x].Life/capacity));
+                pieceWidth = (int) (penaltyMx * pieceWidth);
                 if (pieceWidth > 0)
                 {
                     frontSpriteMap.Draw(spriteBatch, x, pieceWidth, this.Height - 6, posX, this.Y + 3);
@@ -48,6 +49,11 @@ namespace WGiBeat.Drawing
             }
 
             DrawSides(spriteBatch);
+        }
+
+        private double TotalPositive()
+        {
+            return (from e in Parent.Players where (e.Playing && e.Life >= 0) select e.Life).Sum();
         }
 
         private void DrawBase(SpriteBatch spriteBatch)
@@ -73,6 +79,12 @@ namespace WGiBeat.Drawing
                     position, Color.Black);
         }
 
+        private void DrawTotal(SpriteBatch spriteBatch, int x, int y)
+        {
+            var position = new Vector2(x, y);
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("{0:D3}", (int)TotalLife()),
+                    position, Color.Black);
+        }
         private void DrawSides(SpriteBatch spriteBatch)
         {
 
@@ -107,6 +119,7 @@ namespace WGiBeat.Drawing
                 DrawText(spriteBatch, playerIdx, _sidePart.X + 5, _sidePart.Y);
             }
 
+            DrawTotal(spriteBatch, (this.X + this.Width + 10)/2,_sidePart.Y);
 
 
         }

@@ -89,7 +89,9 @@ namespace WGiBeat.Drawing
                 _frontPart = new SpriteMap
                                  {
 
-                                     SpriteTexture = TextureManager.Textures["lifebarFront"]
+                                     SpriteTexture = TextureManager.Textures["lifebarFront"],
+                                     Columns = 1,
+                                     Rows = 4
                                  };
             }
 
@@ -120,7 +122,7 @@ namespace WGiBeat.Drawing
                 }
             }
             DrawAdjustments(spriteBatch);
-            DrawText(spriteBatch, sidePosX + 5, sidePosY + 5);
+            DrawText(spriteBatch, sidePosX + 5, sidePosY);
             _overchargeTextureOffset = (_overchargeTextureOffset + 0.5) % OVERCHARGE_OFFSET_CLIP;
 
         }
@@ -137,7 +139,12 @@ namespace WGiBeat.Drawing
 
             if (_adjustPart == null)
             {
-                _adjustPart = new SpriteMap {SpriteTexture = TextureManager.Textures["lifebarFront"]};
+                _adjustPart = new SpriteMap
+                {
+                    SpriteTexture = TextureManager.Textures["lifebarFront"],
+                    Columns = 1,
+                    Rows = 4
+                };
             }
             int adjustWidth, adjustX;
 

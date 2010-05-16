@@ -236,7 +236,7 @@ namespace WGiBeat.Screens
             foreach (BeatlineNote bnr in _notesToRemove)
             {
                 _beatlineNotes.Remove(bnr);
-                if (!bnr.Hit)
+                if ((!bnr.Hit) && (!Core.Players[bnr.Player].KO))
                 {
                     AwardJudgement(5, bnr.Player);
                 }
@@ -925,10 +925,6 @@ namespace WGiBeat.Screens
         private void DrawBorders(SpriteBatch spriteBatch)
         {
             var brush = new PrimitiveLine(Core.GraphicsDevice) { Colour = Color.Black };
-
-            brush.AddVector(new Vector2(400, 0));
-            brush.AddVector(new Vector2(400, 600));
-            brush.Render(spriteBatch);
 
             brush.ClearVectors();
             brush.AddVector(new Vector2(0, 275));
