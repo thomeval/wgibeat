@@ -192,7 +192,7 @@ namespace WGiBeat.Screens
 
             if (awardedPlayer != -1)
             {
-                Core.Songs.SetHighScore(_gameSong.GetHashCode(), GameType.NORMAL, highest);
+                Core.Songs.SetHighScore(_gameSong.GetHashCode(), Core.Settings.Get<GameType>("CurrentGameType"), highest);
                 Core.Songs.SaveHighScores("Scores.conf");
             }
 
@@ -953,9 +953,9 @@ namespace WGiBeat.Screens
             //Prevent notes from being drawn outside the beatline base.
             //Higher means longer visibility range.
             const double BEAT_VISIBILITY = 1.1;
-
-            DrawBeatlineBases(spriteBatch);
             DrawBeatlinePulses(spriteBatch);
+            DrawBeatlineBases(spriteBatch);
+
             var markerSprite = new SpriteMap
             {
                 Columns = 1,

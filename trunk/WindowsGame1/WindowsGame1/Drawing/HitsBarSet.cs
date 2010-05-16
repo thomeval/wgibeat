@@ -13,7 +13,7 @@ namespace WGiBeat.Drawing
         private readonly GameType _gameType;
         private readonly byte[] _opacity;
         private Color _textColor = Color.Black;
-        private Sprite _baseSprite;
+        private SpriteMap _baseSprite;
 
         public HitsBarSet()
         {
@@ -30,10 +30,22 @@ namespace WGiBeat.Drawing
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            int width, height;
             if (_baseSprite == null)
             {
-                _baseSprite = new Sprite
-                    {Width = 80};
+                _baseSprite = new SpriteMap {Columns = 1, Rows = 4};
+            }
+            switch (_gameType)
+            {
+
+                case GameType.COOPERATIVE:
+                    width = 80;
+                    height = 25;
+                    break;
+                default:
+                    width = 60;
+                    height = 60;
+                    break;
             }
             for (int x = 0; x < 4; x++)
             {
@@ -41,7 +53,7 @@ namespace WGiBeat.Drawing
                 {
                     continue;
                 }
-                if (_players[x].Hits < 0)
+                if (_players[x].Hits < 25)
                 {
                     _opacity[x] = (byte) Math.Max(_opacity[x] - 10, 0);
                 }
@@ -49,25 +61,17 @@ namespace WGiBeat.Drawing
                 {
                     _opacity[x] = (byte) Math.Min(_opacity[x] + 10, 255);
                 }
-                _baseSprite.SpriteTexture = TextureManager.Textures[DetermineSpriteName(x)];
+                _baseSprite.SpriteTexture = TextureManager.Textures["hitsBar" + DetermineSuffix()];
                 _baseSprite.ColorShading.A = _opacity[x];
                 _textColor.A = _opacity[x];
-                _baseSprite.SetPosition(_metrics["HitsBar" + DetermineSuffix(), x]);
-                _baseSprite.Draw(spriteBatch);
+                _baseSprite.Draw(spriteBatch, x, width, height, _metrics["HitsBar" + DetermineSuffix(), x]);
+
                 spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("{0:D3}", _players[x].Hits),
        _metrics["HitsText" + DetermineSuffix(), x], _textColor);
 
             }
         }
 
-        private string DetermineSpriteName(int player)
-        {
-            var result = "hitsBar";
-
-            result += DetermineSuffix();
-                result += (player % 2 == 0) ? "Left" : "Right";
-            return result;
-        }
 
         private string DetermineSuffix()
         {

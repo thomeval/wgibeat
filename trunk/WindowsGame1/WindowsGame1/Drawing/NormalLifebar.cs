@@ -9,11 +9,10 @@ namespace WGiBeat.Drawing
         private const double LIFEBAR_CAPACITY = 100;
         private double _displayedLife;
         
-        private Sprite _frontPart;
+        private SpriteMap _frontPart;
         private Sprite _sidePart;
         private Sprite _basePart;
-        private Sprite _negativeAdjustPart;
-        private Sprite _positiveAdjustPart;
+        private SpriteMap _adjustPart;
         private Sprite _overchargePart;
         private double _overchargeTextureOffset;
 
@@ -83,22 +82,22 @@ namespace WGiBeat.Drawing
 
             var solidLife = Math.Min(_displayedLife, Parent.Players[PlayerID].Life);
             solidLife = Math.Min(solidLife, 100);
+
+            
             if (_frontPart == null)
             {
-                _frontPart = new Sprite
+                _frontPart = new SpriteMap
                                  {
-                                     Height = this.Height - 6,
-                                     X = this.X + 3,
-                                     Y = this.Y + 3,
-                                     SpriteTexture = TextureManager.Textures["lifebarP"+(PlayerID + 1) + "front"]
+
+                                     SpriteTexture = TextureManager.Textures["lifebarFront"]
                                  };
             }
 
 
-            _frontPart.Width = (int) ((this.Width - 6)/LIFEBAR_CAPACITY*solidLife);
+            int frontWidth = (int) ((this.Width - 6)/LIFEBAR_CAPACITY*solidLife);
             _basePart.Draw(spriteBatch);
             _sidePart.Draw(spriteBatch);
-            _frontPart.Draw(spriteBatch);
+            _frontPart.Draw(spriteBatch,PlayerID,frontWidth, this.Height - 6, this.X + 3, this.Y + 3);
 
             if (_displayedLife > 100)
             {
@@ -133,9 +132,18 @@ namespace WGiBeat.Drawing
                     position, Color.Black);
         }
 
-        private void DrawAdjustments(SpriteBatch sb)
+        private void DrawAdjustments(SpriteBatch spriteBatch)
         {
 
+            if (_adjustPart == null)
+            {
+                _adjustPart = new SpriteMap {SpriteTexture = TextureManager.Textures["lifebarFront"]};
+            }
+            int adjustWidth, adjustX;
+
+            var actualPoint = (int)((this.Width - 6) / LIFEBAR_CAPACITY * Parent.Players[PlayerID].Life);
+
+            //Displaying less than actual life.
             if (_displayedLife < Parent.Players[PlayerID].Life)
             {
                 _displayedLife += Math.Min(0.1, Parent.Players[PlayerID].Life - _displayedLife);
@@ -144,26 +152,19 @@ namespace WGiBeat.Drawing
                 {
                     return;
                 }
-                var actualPoint = (int)((this.Width - 6) / LIFEBAR_CAPACITY * Parent.Players[PlayerID].Life);
+
                 var myWidth = (int)((this.Width - 6) / LIFEBAR_CAPACITY * (Parent.Players[PlayerID].Life - _displayedLife));
                 var startPoint = this.X + 2 + actualPoint - myWidth;
-                if (_positiveAdjustPart == null)
-                {
-                    _positiveAdjustPart = new Sprite
-                                              {
-                                                  Height = this.Height - 6,
-                                                  Y = this.Y + 3,
-                                                  SpriteTexture = TextureManager.Textures["lifebarP"+(PlayerID + 1)+"front"]
 
-                                              };
-
-                }
-                _positiveAdjustPart.Width = myWidth;
-                _positiveAdjustPart.X = startPoint;
-                _positiveAdjustPart.ColorShading.A = 128;
-                _positiveAdjustPart.Draw(sb);
+                adjustWidth= myWidth;
+                adjustX = startPoint;
+                _adjustPart.ColorShading = Color.White;
+                _adjustPart.ColorShading.A = 128;
+                _adjustPart.Draw(spriteBatch, PlayerID, adjustWidth, this.Height - 6, adjustX, this.Y + 3);
 
             }
+            
+            //Displaying more than actual life (shrinking).
             if (_displayedLife > Parent.Players[PlayerID].Life)
             {
                 _displayedLife -= Math.Min(0.1, _displayedLife - Parent.Players[PlayerID].Life);
@@ -171,23 +172,14 @@ namespace WGiBeat.Drawing
                 {
                     return;
                 }
-                var actualPoint = (int)((this.Width - 6) / LIFEBAR_CAPACITY * Parent.Players[PlayerID].Life);
+                
                 var myWidth = (int)((this.Width - 6) / LIFEBAR_CAPACITY * (_displayedLife - Parent.Players[PlayerID].Life));
                 var startPoint = this.X + 3 + actualPoint;
-                if (_negativeAdjustPart == null)
-                {
-                    _negativeAdjustPart = new Sprite
-                                              {
-                                                  Height = this.Height - 6,
-                                                  Y = this.Y + 3,
-                                                  SpriteTexture = TextureManager.Textures["lifebarP" + (PlayerID + 1) + "front"],
-                                                  ColorShading = Color.Gray
-                                              };
-                }
 
-                _negativeAdjustPart.Width = myWidth;
-                _negativeAdjustPart.X = startPoint;
-                _negativeAdjustPart.Draw(sb);
+                adjustWidth = myWidth;
+                adjustX = startPoint;
+                _adjustPart.ColorShading = Color.Gray;
+                _adjustPart.Draw(spriteBatch, PlayerID, adjustWidth, this.Height - 6, adjustX, this.Y + 3);
 
             }
            
