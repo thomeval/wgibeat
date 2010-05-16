@@ -911,9 +911,7 @@ namespace WGiBeat.Screens
                 spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + Core.Players[x].DisplayedScore,
                                        Core.Metrics["ScoreText", x], Color.Black);
 
-                
-                spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("{0:D3}", (int)Core.Players[x].Life),
-                                       Core.Metrics["NormalLifebarText", x], Color.Black);
+              
 
             }
             if (Core.Settings.Get<int>("SongDebug") == 1)
