@@ -45,7 +45,14 @@ namespace WGiBeat.Drawing
                     }
                     break;
                     case GameType.COOPERATIVE:
-                    break;
+                    _lifebars[0] = new CoopLifebar {Height = 30, Width = 785};
+     
+                    for (int x = 0; x < 4; x++ )
+                    {
+                        ((CoopLifebar) _lifebars[0]).Playing[x] = _players[x].Playing;
+                        ((CoopLifebar) _lifebars[0]).SetLife(_players[x].Life,x);
+                    }
+                        break;
             }
         }
 
@@ -59,7 +66,7 @@ namespace WGiBeat.Drawing
                     _lifebars[player].SetLife(_players[player].Life);
                     break;
                 case GameType.COOPERATIVE:
-                    
+                    ((CoopLifebar)_lifebars[0]).AdjustLife(amount, player);           
                     break;
             }
             return _players[player].Life;
@@ -104,7 +111,7 @@ namespace WGiBeat.Drawing
                     _lifebars[player].SetLife(_players[player].Life);
                     break;
                 case GameType.COOPERATIVE:
-
+                    ((CoopLifebar)_lifebars[0]).SetLife(_players[player].Life, player);   
                     break; 
             }
 
@@ -124,16 +131,34 @@ namespace WGiBeat.Drawing
                 case GameType.COOPERATIVE:
                     if (_players[0].Playing || _players[1].Playing)
                     {
+                        ((CoopLifebar) _lifebars[0]).SideLocationTop = false;
                         _lifebars[0].SetPosition(_metrics["CoopLifebar", 0]);
                         _lifebars[0].Draw(spriteBatch);
                     }
                     if (_players[2].Playing || _players[3].Playing)
                     {
+                        ((CoopLifebar)_lifebars[0]).SideLocationTop = true;
                         _lifebars[0].SetPosition(_metrics["CoopLifebar", 1]);
                         _lifebars[0].Draw(spriteBatch);
                     }
                     break;
             }
+        }
+
+        public void Reset()
+        {
+                    for (int x = 0; x < 4; x++)
+                    {
+                        if (_lifebars[x] != null)
+                        {
+                            _lifebars[x].Reset();
+
+                        }
+                    }
+                    for (int x = 0; x < 4; x++)
+                    {
+                        SetLife(_players[x].Life, x);
+                    }
         }
     }
 }

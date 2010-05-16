@@ -96,6 +96,7 @@
     <Compile Include="AudioSystem\FMOD\fmod_errors.cs" />
     <Compile Include="AudioSystem\FMOD\fmod_memoryinfo.cs" />
     <Compile Include="AudioSystem\HighScoreEntry.cs" />
+    <Compile Include="Drawing\CoopLifebar.cs" />
     <Compile Include="Drawing\DisplayedJudgement.cs" />
     <Compile Include="Drawing\DrawableObject.cs" />
     <Compile Include="Drawing\GraphicNumber.cs" />

@@ -12,5 +12,6 @@ namespace WGiBeat.Drawing
 
         public abstract void SetLife(double amount);
 
+        public abstract void Reset();
     }
 }
