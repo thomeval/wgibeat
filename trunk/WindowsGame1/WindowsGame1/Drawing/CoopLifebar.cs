@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing
 {
     public class CoopLifebar : Lifebar
     {
-        public readonly bool[] Playing;
+
         public bool SideLocationTop = false;
-        private readonly double[] _life;
         private readonly double[] _displayedLife;
 
         private Sprite _basePart;
@@ -18,8 +18,6 @@ namespace WGiBeat.Drawing
  
         public CoopLifebar()
         {
-            Playing = new bool[4];
-            _life = new double[4];
             _displayedLife = new double[4];
         }
 
@@ -36,12 +34,12 @@ namespace WGiBeat.Drawing
             int capacity = 125*Participants();
             for (int x = 0; x < 4; x++)
             {
-                if (!Playing[x])
+                if (!Parent.Players[x].Playing)
                 {
                     continue;
                 }
 
-                var pieceWidth = (int) ((this.Width - 6) *(_life[x]/capacity));
+                var pieceWidth = (int) ((this.Width - 6) *(Parent.Players[x].Life/capacity));
                 if (pieceWidth > 0)
                 {
                     frontSpriteMap.Draw(spriteBatch, x, pieceWidth, this.Height - 6, posX, this.Y + 3);
@@ -60,7 +58,7 @@ namespace WGiBeat.Drawing
                 {
                     Height = this.Height,
                     Width = this.Width,
-                    SpriteTexture = TextureManager.Textures["lifebarBase"]
+                    SpriteTexture = TextureManager.Textures["coopLifebarBase"]
                 };
             }
             _basePart.X = this.X;
@@ -68,61 +66,65 @@ namespace WGiBeat.Drawing
             _basePart.Draw(spriteBatch);
         }
 
+        private void DrawText(SpriteBatch spriteBatch, int player, int x, int y)
+        {
+            var position = new Vector2(x, y);
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("{0:D3}", (int)Parent.Players[player].Life),
+                    position, Color.Black);
+        }
+
         private void DrawSides(SpriteBatch spriteBatch)
         {
 
-
+            int playerIdx = 0;
             if (_sidePart == null)
             {
                 _sidePart = new Sprite();
             }
             _sidePart.Y = this.Y + this.Height;
             _sidePart.SpriteTexture = TextureManager.Textures["lifebarBaseSide"];
-            //SideLocation appears on top for Player 3 and 4.
+            //PlayerID appears on top for Player 3 and 4.
             if (SideLocationTop)
             {
                 _sidePart.SpriteTexture = TextureManager.Textures["lifebarBaseSideUp"];
                 _sidePart.Y = this.Y - 25;
+                playerIdx += 2;
             }
 
             //Draw on the right side.
-            _sidePart.X = this.X + this.Width - 50;
-            _sidePart.Draw(spriteBatch);
+
+            if (Parent.Players[playerIdx + 1].Playing)
+            {
+                _sidePart.X = this.X + this.Width - 50;
+                _sidePart.Draw(spriteBatch);
+                DrawText(spriteBatch, playerIdx + 1, _sidePart.X + 5, _sidePart.Y);
+            }
             //Draw on the left.
-            _sidePart.X = this.X;
-            _sidePart.Draw(spriteBatch);
+            if (Parent.Players[playerIdx].Playing)
+            {
+                _sidePart.X = this.X;
+                _sidePart.Draw(spriteBatch);
+                DrawText(spriteBatch, playerIdx, _sidePart.X + 5, _sidePart.Y);
+            }
+
+
 
         }
 
-        public override void SetLife(double amount)
-        {
-            throw new InvalidOperationException("Invalid operation for a CoopLifebar. Specifiy the player as well as amount.");
-        }
-
-        public void SetLife(double amount, int player)
-        {
-            _life[player] = amount;
-        }
-
-        public void AdjustLife(double amount, int player)
-        {
-            _life[player] += amount;
-        }
 
         public int Participants()
         {
-            return (from e in Playing where e select e).Count();
+            return (from e in Parent.Players where e.Playing select e).Count();
         }
 
         public double TotalLife()
         {
-            return (from e in _life select e).Sum();
+            return (from e in Parent.Players where e.Playing select e.Life).Sum();
         }
         public override void Reset()
         {
             for (int x = 0; x < 4; x++)
             {
-                _life[x] = 0;
                 _displayedLife[x] = 0;
             }
         }

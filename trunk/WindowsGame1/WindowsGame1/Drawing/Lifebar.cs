@@ -7,10 +7,7 @@ namespace WGiBeat.Drawing
 {
     public abstract class Lifebar : DrawableObject 
     {
-
-        protected double Life { get; set; }
-
-        public abstract void SetLife(double amount);
+        public LifebarSet Parent { get; set; }
 
         public abstract void Reset();
     }
