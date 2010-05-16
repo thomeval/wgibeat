@@ -192,9 +192,10 @@ namespace WGiBeat.Drawing
 
         }
 
-        public void AdjustLife(double amount)
+        public override void Reset()
         {
-            
+            _displayedLife = 0;
+            _life = 0;
         }
     }
 }

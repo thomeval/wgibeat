@@ -42,7 +42,7 @@ namespace WGiBeat.Screens
         {
             _playerCount = 4;
             _notebars = new NoteBar[_playerCount];
-            _lifebarSet = new LifebarSet (Core.Metrics, Core.Players, Core.Settings.Get<GameType>("GameMode"));
+            _lifebarSet = new LifebarSet (Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
             _displayState = 0;
             _songLoadDelay = 0.0;
             _confidence = 0;
@@ -66,7 +66,9 @@ namespace WGiBeat.Screens
                 }
                 else
                 {
+                    _lifebarSet.Reset();
                     Core.Players[x].ResetStats();
+
                 }
 
 
