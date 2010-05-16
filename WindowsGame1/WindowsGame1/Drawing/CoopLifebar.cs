@@ -15,7 +15,8 @@ namespace WGiBeat.Drawing
 
         private Sprite _basePart;
         private Sprite _sidePart;
- 
+        private SpriteMap _middlePart;
+
         public CoopLifebar()
         {
             _displayedLife = new double[4];
@@ -93,6 +94,12 @@ namespace WGiBeat.Drawing
             {
                 _sidePart = new Sprite();
             }
+            if (_middlePart == null)
+            {
+                _middlePart = new SpriteMap
+                                  {Columns = 1, Rows = 2, SpriteTexture = TextureManager.Textures["coopLifebarMiddle"]};
+            }
+
             _sidePart.Y = this.Y + this.Height;
             _sidePart.SpriteTexture = TextureManager.Textures["lifebarBaseSide"];
             //PlayerID appears on top for Player 3 and 4.
@@ -119,7 +126,8 @@ namespace WGiBeat.Drawing
                 DrawText(spriteBatch, playerIdx, _sidePart.X + 5, _sidePart.Y);
             }
 
-            DrawTotal(spriteBatch, (this.X + this.Width + 10)/2,_sidePart.Y);
+            _middlePart.Draw(spriteBatch, playerIdx/2, 139, 25, (this.X + this.Width - 134)/2, _sidePart.Y);
+            DrawTotal(spriteBatch, (this.X + this.Width - 40)/2,_sidePart.Y);
 
 
         }

@@ -45,21 +45,21 @@ namespace WGiBeat
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
-
             Metrics = MetricsManager.Load("metrics.txt");
             Settings = SettingsManager.LoadFromFile("settings.txt");
+
+            if (!Directory.Exists(Directory.GetCurrentDirectory() + "\\" + Settings["SongFolder"]))
+            {
+                Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\" + Settings["SongFolder"]);
+            }
             Songs = SongManager.LoadFromFolder(Directory.GetCurrentDirectory() +"\\" + Settings["SongFolder"]);
             Songs.LoadHighScores("Scores.conf");
-            //this.TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 15);
+
             Players = new Player[4];
-           // this.IsFixedTimeStep = false;
 
             for (int x = 0; x < 4; x++)
             {
-
                 Players[x] = new Player {Hits = 0, Momentum = 0, Life = 50, Score = 0, PlayDifficulty = Difficulty.BEGINNER, Streak = -1};
-
             }
 
 

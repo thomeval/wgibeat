@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Notes;
@@ -613,21 +609,18 @@ namespace WGiBeat.Screens
 
         private string CalculateTimeLeft(GameTime gameTime)
         {
-            double timeElapsed = gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds;
+            var timeElapsed = gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds;
+            var timeLeft = _gameSong.Length * 1000 - timeElapsed;
 
-            double timeLeft = _gameSong.Length * 1000 - timeElapsed;
-
-            TimeSpan ts = new TimeSpan(0, 0, 0, 0, (int)timeLeft);
-
-            //var timeToGo = TimeSpan.TicksPerSecond * _gameSong.
+            var ts = new TimeSpan(0, 0, 0, 0, (int)timeLeft);
 
             return ts.Minutes + ":" + String.Format("{0:D2}", Math.Max(0,ts.Seconds));
         }
         
         private bool SongPassed(GameTime gameTime)
         {
-            double timeElapsed = gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds;
-            double timeLeft = _gameSong.Length * 1000 - timeElapsed;
+            var timeElapsed = gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds;
+            var timeLeft = _gameSong.Length * 1000 - timeElapsed;
 
             return timeLeft <= 0.0;
         }
@@ -654,10 +647,6 @@ namespace WGiBeat.Screens
             DrawBackground(spriteBatch);
             //Begin drawing textures.
 
-            //Draw a texture at a specific position.
-            //Position can be defined as a Vector point (normal image size)
-            //or as a rectangle (scaled to rectangle size).
-
             //Draw the lifebars and notebars.
             for (int x = 0; x < 4; x++)
             {
@@ -668,6 +657,7 @@ namespace WGiBeat.Screens
             }
             _lifebarSet.Draw(spriteBatch);
             _hitsbarSet.Draw(spriteBatch);
+
             //Draw beatline judgements.
             Monitor.Enter(_displayedJudgements);
             foreach (DisplayedJudgement dj in _displayedJudgements)
@@ -685,7 +675,6 @@ namespace WGiBeat.Screens
                 DrawCountdowns(spriteBatch);
             }
             
-
             DrawStreakCounters(spriteBatch);
             DrawLevelBars(spriteBatch);
             DrawBeat(spriteBatch);
@@ -702,7 +691,7 @@ namespace WGiBeat.Screens
             {
                 if (!Core.Players[x].Playing)
                 {
-                    return;
+                    continue;
                 }
                 var countdownSpriteMap = new SpriteMap()
                                              {
@@ -850,6 +839,7 @@ namespace WGiBeat.Screens
             }
         }
 
+        //TODO: Refactor
         private string GetLevelBarTexture(double level)
         {
             if (level > 8)
@@ -871,7 +861,6 @@ namespace WGiBeat.Screens
 
         private void DrawText(SpriteBatch spriteBatch)
         {
-
 
             AdjustDisplayedScores();
             for (int x = 0; x < _playerCount; x++)
@@ -937,7 +926,6 @@ namespace WGiBeat.Screens
             brush.Render(spriteBatch);
 
             brush.ClearVectors();
-
             
         }
         //How distant the beatline notes are from each other.
@@ -974,7 +962,6 @@ namespace WGiBeat.Screens
                 if (bn.Hit)
                 {
                     markerPosition.X = (int)Core.Metrics["BeatlineBarBase", bn.Player].X + 28 + bn.DisplayPosition;
-                    //TODO: Fix
                     markerSprite.ColorShading.A = 128;
                 }
                 else
@@ -985,7 +972,7 @@ namespace WGiBeat.Screens
                 
                     if (markerBeatOffset > 0)
                     {
-                        markerSprite.ColorShading.A = (byte)(255 + 1.1 * CalculateHitOffset(bn));
+                        markerSprite.ColorShading.A = (byte)(Math.Max(0, 255 + 1.5 * CalculateHitOffset(bn)));
                     }
                     else
                     {
@@ -1009,7 +996,7 @@ namespace WGiBeat.Screens
             pulseSprite.Height = 42;
             for (int x = 0; x < _playerCount; x++)
             {
-                if (!Core.Players[x].Playing)
+                if ((!Core.Players[x].Playing) || (Core.Players[x].KO))
                 {
                     continue;
                 }

@@ -115,6 +115,16 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
+    <Compile Include="Textures\hitsBar.png">
+      <Name>hitsBar</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\hitsBarCoop.png">
+      <Name>hitsBarCoop</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="Textures\keyScreenBackground.jpg">
       <Name>keyScreenBackground</Name>
       <Importer>TextureImporter</Importer>
@@ -270,13 +280,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\hitsBar.png">
-      <Name>hitsBar</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\hitsBarCoop.png">
-      <Name>hitsBarCoop</Name>
+    <Compile Include="Textures\coopLifebarMiddle.png">
+      <Name>coopLifebarMiddle</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
