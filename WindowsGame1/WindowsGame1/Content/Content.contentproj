@@ -50,8 +50,21 @@
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Include="Textures\allBackground.jpg">
+      <Name>allBackground</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\arrows.png">
+      <Name>arrows</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\BeatFlame.png">
+      <Name>BeatFlame</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="Textures\beatMarkers.png">
       <Name>beatMarkers</Name>
       <Importer>TextureImporter</Importer>
@@ -62,18 +75,48 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
+    <Compile Include="Textures\coopLifebarBase.png">
+      <Name>coopLifebarBase</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\countdown.png">
+      <Name>countdown</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\evaluationGradeBase.png">
+      <Name>evaluationGradeBase</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\evaluationGrades.png">
+      <Name>evaluationGrades</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="Textures\evaluationHeader.png">
       <Name>evaluationHeader</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Textures\hitsBarLeft.png">
-      <Name>hitsBarLeft</Name>
+    <Compile Include="Textures\evaluationHighScore.png">
+      <Name>evaluationHighScore</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Textures\hitsBarRight.png">
-      <Name>hitsBarRight</Name>
+    <Compile Include="Textures\evaluationMaxBase.png">
+      <Name>evaluationMaxBase</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\gameScreenBackground.jpg">
+      <Name>gameScreenBackground</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\keyScreenBackground.jpg">
+      <Name>keyScreenBackground</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -122,13 +165,13 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Textures\lifebarOvercharge.png">
-      <Name>lifebarOvercharge</Name>
+    <Compile Include="Textures\lifebarFront.png">
+      <Name>lifebarFront</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Textures\lifebarP1front.png">
-      <Name>lifebarP1front</Name>
+    <Compile Include="Textures\lifebarOvercharge.png">
+      <Name>lifebarOvercharge</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -139,6 +182,11 @@
     </Compile>
     <Compile Include="Textures\mainMenuOptionSelected.png">
       <Name>mainMenuOptionSelected</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\menuBackground.jpg">
+      <Name>menuBackground</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -187,56 +235,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Textures\stageClearIndicator.png">
-      <Name>stageClearIndicator</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\streakNumbers.png">
-      <Name>streakNumbers</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\lifebarP2front.png">
-      <Name>lifebarP2front</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\lifebarP3front.png">
-      <Name>lifebarP3front</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\lifebarP4front.png">
-      <Name>lifebarP4front</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\songSelectHeader.png">
-      <Name>songSelectHeader</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\evaluationGrades.png">
-      <Name>evaluationGrades</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\countdown.png">
-      <Name>countdown</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Textures\playerDifficulties.png">
       <Name>playerDifficulties</Name>
       <Importer>TextureImporter</Importer>
@@ -247,57 +245,18 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\evaluationHighScore.png">
-      <Name>evaluationHighScore</Name>
+    <Compile Include="Textures\songSelectHeader.png">
+      <Name>songSelectHeader</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\evaluationMaxBase.png">
-      <Name>evaluationMaxBase</Name>
+    <Compile Include="Textures\stageClearIndicator.png">
+      <Name>stageClearIndicator</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\evaluationGradeBase.png">
-      <Name>evaluationGradeBase</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\arrows.png">
-      <Name>arrows</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\allBackground.jpg">
-      <Name>allBackground</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\menuBackground.jpg">
-      <Name>menuBackground</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\keyScreenBackground.jpg">
-      <Name>keyScreenBackground</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\gameScreenBackground.jpg">
-      <Name>gameScreenBackground</Name>
+    <Compile Include="Textures\streakNumbers.png">
+      <Name>streakNumbers</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -311,34 +270,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\BeatFlame.png">
-      <Name>BeatFlame</Name>
+    <Compile Include="Textures\hitsBar.png">
+      <Name>hitsBar</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\lifebarFront.png">
-      <Name>lifebarFront</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\coopLifebarBase.png">
-      <Name>coopLifebarBase</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\hitsBarCoopLeft.png">
-      <Name>hitsBarCoopLeft</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\hitsBarCoopRight.png">
-      <Name>hitsBarCoopRight</Name>
+    <Compile Include="Textures\hitsBarCoop.png">
+      <Name>hitsBarCoop</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
