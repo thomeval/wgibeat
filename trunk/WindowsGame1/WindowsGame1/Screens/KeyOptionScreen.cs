@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
  * 
  * 1. Switch to a player by pressing any of his keys.
  * 2. Move to action you wish to change.
- * 3. Press that player's START action button.
+ * 3. Press any player's START action button.
  * 4. Press key that you wish to use to perform that action.
  * 5. Voila.
  * 
@@ -20,12 +20,12 @@ namespace WGiBeat.Screens
     class KeyOptionScreen : GameScreen
     {
         private int _currentPlayer = 1;
-        private int _selectedMenuOption = 0;
-        private Boolean SelectChange = false;
-        private Boolean AvoidNextAction = false;
+        private int _selectedMenuOption;
+        private bool _selectChange;
+        private bool _avoidNextAction;
         //private Boolean LastActionSide = false;
 
-        private ButtonLink[] links =  {
+        private readonly ButtonLink[] _links =  {
                                          new ButtonLink(Action.P1_LEFT,     Action.P2_LEFT,     Action.P3_LEFT,     Action.P4_LEFT,     "Left"),
                                          new ButtonLink(Action.P1_RIGHT,    Action.P2_RIGHT,    Action.P3_RIGHT,    Action.P4_RIGHT,    "Right"),
                                          new ButtonLink(Action.P1_UP,       Action.P2_UP,       Action.P3_UP,       Action.P4_UP,       "Up"),
@@ -41,15 +41,6 @@ namespace WGiBeat.Screens
         {
         }
 
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-        }
-
-        public override void Initialize()
-        {
-            base.Initialize();
-        }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Current player: Player" + _currentPlayer, new Vector2(50, 110), Color.Black);
@@ -76,14 +67,14 @@ namespace WGiBeat.Screens
 
             DrawBackground(spriteBatch);
 
-            Vector2 tempVector1 = new Vector2(0, 50);
-            Vector2 tempVector2 = new Vector2(0, 60);
+            var panelPosition = new Vector2(0, 50);
+            var textPosition = new Vector2(0, 60);
 
             
             for (int playerOption = 1; playerOption <= 4; playerOption++)
             {
-                tempVector1.X = 100 + (170 * (playerOption - 1));
-                tempVector2.X = tempVector1.X + 32;
+                panelPosition.X = 100 + (170 * (playerOption - 1));
+
 
                 var menuOptionSprite = new Sprite
                 {
@@ -92,36 +83,29 @@ namespace WGiBeat.Screens
                     Width = 160
                 };
 
-                menuOptionSprite.SetPosition(tempVector1);
-                menuOptionSprite.ColorShading = Color.LawnGreen;
+                menuOptionSprite.SetPosition(panelPosition);
 
                 if (playerOption == _currentPlayer)
                 {
-                    menuOptionSprite.ColorShading = Color.Tomato;
-                    menuOptionSprite.Y = (int) tempVector1.Y + 10;
-                    //menuOptionSprite.SpriteTexture = TextureManager.Textures["mainMenuOptionSelected"];
+                    menuOptionSprite.SpriteTexture = TextureManager.Textures["mainMenuOptionSelected"];
                 }
 
-                if ((Math.Abs(playerOption - _currentPlayer) == 1))// || (Math.Abs(playerOption - _currentPlayer) == 3))
-                {
-                    menuOptionSprite.Y = (int)tempVector1.Y + 5;
-                    menuOptionSprite.ColorShading = Color.Yellow;
-                }
                 
                 menuOptionSprite.Draw(spriteBatch);
-
-                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Player " + playerOption , tempVector2, Color.Black);
+                textPosition.X = panelPosition.X + 32;
+                textPosition.Y = panelPosition.Y + 10;
+                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Player " + playerOption , textPosition, Color.Black);
 
             }
 
-            tempVector1.X = 100;
-            tempVector2.X = 120;
+            panelPosition.X = 100;
+            textPosition.X = 120;
 
-            for (int menuOption = 0; menuOption < links.Length; menuOption++)
+            for (int menuOption = 0; menuOption < _links.Length; menuOption++)
             {
 
-                tempVector1.Y = 150 + (55 * menuOption);
-                tempVector2.Y = tempVector1.Y + 10;
+                panelPosition.Y = 150 + (55 * menuOption);
+                textPosition.Y = panelPosition.Y + 10;
 
                 var menuOptionSprite = new Sprite
                 {
@@ -135,30 +119,26 @@ namespace WGiBeat.Screens
                 if (menuOption == _selectedMenuOption)
                     menuOptionSprite.SpriteTexture = TextureManager.Textures["mainMenuOptionSelected"];
 
-                menuOptionSprite.SetPosition(tempVector1);
+                menuOptionSprite.SetPosition(panelPosition);
                 menuOptionSprite.Draw(spriteBatch);
 
-                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], links[menuOption].name, tempVector2, Color.Black);
+                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], _links[menuOption].Name, textPosition, Color.Black);
 
             }
 
-            tempVector1.X = 400;
+            panelPosition.X = 400;
             //tempVector1.Y = 150;
 
-            tempVector2.X = 440;
+            textPosition.X = 440;
             //tempVector2.Y = 160;
 
-            Keys[] tempKeyList = Core.KeyMappings.GetKeys(links[_selectedMenuOption].getAction(_currentPlayer));
+            Keys[] tempKeyList = Core.KeyMappings.GetKeys(_links[_selectedMenuOption].GetAction(_currentPlayer));
 
             for (int keyList = 0; keyList < tempKeyList.Length; keyList++)
             {
 
-                /*
- 
-                */
-
-                tempVector1.Y = 150 + (keyList * 55);
-                tempVector2.Y = tempVector1.Y + 10;
+                panelPosition.Y = 150 + (keyList * 55);
+                textPosition.Y = panelPosition.Y + 10;
 
 
                 var menuOptionSprite = new Sprite
@@ -168,34 +148,9 @@ namespace WGiBeat.Screens
                     Width = 300
                 };
 
-                menuOptionSprite.SetPosition(tempVector1);
+                menuOptionSprite.SetPosition(panelPosition);
                 menuOptionSprite.Draw(spriteBatch);
-                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Key = " + tempKeyList[keyList].ToString(), tempVector2, Color.Black);
-
-
-                /*
-
-                VertexPositionColor[] temp = {
-                                                new VertexPositionColor(new Vector3(310, 150 + (55 * _selectedMenuOption) + 10, 0), Color.Red),
-                                                new VertexPositionColor(new Vector3(400, 150 + (keyList * 55) + 10, 0), Color.Red)
-                                             };
-
-                int[] lineListIndices = { 0, 1 };
-
-
-                spriteBatch.GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionColor>(
-                    PrimitiveType.LineList,
-                    temp,
-                    0,  // vertex buffer offset to add to each element of the index buffer
-                    2,  // number of vertices in pointList
-                    lineListIndices,  // the index buffer
-                    0,  // first index element to read
-                    1   // number of primitives to draw
-                    );
-                  
-                */
-
-
+                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Key = " + tempKeyList[keyList], textPosition, Color.Black);
 
             }
 
@@ -203,18 +158,18 @@ namespace WGiBeat.Screens
 
         public override void PerformKey(Keys key)
         {
-            if (SelectChange)
+            if (_selectChange)
             {
-                if (AvoidNextAction)
-                    AvoidNextAction = false;
+                if (_avoidNextAction)
+                    _avoidNextAction = false;
                 else
                 {
                     //Console.WriteLine("Perform " + key);
-                    Core.KeyMappings.SetKey(key, links[_selectedMenuOption].getAction(_currentPlayer));
+                    Core.KeyMappings.SetKey(key, _links[_selectedMenuOption].GetAction(_currentPlayer));
                     Core.KeyMappings.SaveToFile("Keys.conf");
 
-                    SelectChange = false;
-                    AvoidNextAction = true;
+                    _selectChange = false;
+                    _avoidNextAction = true;
                 }
             }
         }
@@ -222,69 +177,7 @@ namespace WGiBeat.Screens
         public override void PerformAction(Action action)
         {
 
-            /*
-            if (action == Action.SYSTEM_BACK)
-            {
-                Core.ScreenTransition("MainMenu");
-                return;
-            }
-
-
-            switch (State.CurrentState)
-            {
-                case 0:
-                    switch (action)
-                    {
-                        case Action.P1_LEFT:
-                        case Action.P2_LEFT:
-                        case Action.P3_LEFT:
-                        case Action.P4_LEFT:
-
-                            SelectChange = false;
-                            AvoidNextAction = false;
-
-                            _currentPlayer--;
-
-                            if (_currentPlayer < 1)
-                                _currentPlayer = 4;
-
-                            return;
-
-                        case Action.P1_RIGHT:
-                        case Action.P2_RIGHT:
-                        case Action.P3_RIGHT:
-                        case Action.P4_RIGHT:
-
-                            SelectChange = false;
-                            AvoidNextAction = false;
-
-                            _currentPlayer++;
-
-                            if (_currentPlayer > 4)
-                                _currentPlayer = 1;
-                            return;
-
-                        case Action.P1_START:
-                        case Action.P2_START:
-                        case Action.P3_START:
-                        case Action.P4_START:
-                            //Console.WriteLine("Changed to changing");
-                            SelectChange = true;
-                            AvoidNextAction = true;
-                            break;
-
-                    }
-                    break;
-
-                case 1:
-
-                    State.CurrentState = 0;
-
-                    break;
-
-            }
-
-            */
+            
             if (action == Action.SYSTEM_BACK)
                 Core.ScreenTransition("MainMenu");
             else
@@ -296,8 +189,8 @@ namespace WGiBeat.Screens
                     case Action.P3_LEFT:
                     case Action.P4_LEFT:
 
-                        SelectChange = false;
-                        AvoidNextAction = false;
+                        _selectChange = false;
+                        _avoidNextAction = false;
 
                         _currentPlayer--;
 
@@ -311,8 +204,8 @@ namespace WGiBeat.Screens
                     case Action.P3_RIGHT:
                     case Action.P4_RIGHT:
 
-                        SelectChange = false;
-                        AvoidNextAction = false;
+                        _selectChange = false;
+                        _avoidNextAction = false;
 
                         _currentPlayer++;
 
@@ -325,29 +218,18 @@ namespace WGiBeat.Screens
                     case Action.P3_START:
                     case Action.P4_START:
                         //Console.WriteLine("Changed to changing");
-                        SelectChange = true;
-                        AvoidNextAction = true;
+                        _selectChange = true;
+                        _avoidNextAction = true;
                         break;
 
                 }
 
 
-                if (!SelectChange)
+                if (!_selectChange)
                 {
-                    if (AvoidNextAction)
-                        AvoidNextAction = false;
+                    if (_avoidNextAction)
+                        _avoidNextAction = false;
                     {
-                        short outTemp;
-
-                        if (!Int16.TryParse(action.ToString()[1] + "", out outTemp))
-                            return;
-                        
-                        int newPlayer = outTemp;
-
-                        if (_currentPlayer != newPlayer)
-                            _currentPlayer = newPlayer;
-                        else
-                        {
 
                             switch (action)
                             {
@@ -358,7 +240,7 @@ namespace WGiBeat.Screens
                                     _selectedMenuOption--;
 
                                     if (_selectedMenuOption < 0)
-                                        _selectedMenuOption = links.Length - 1;
+                                        _selectedMenuOption = _links.Length - 1;
 
                                     break;
                                 case Action.P1_DOWN:
@@ -368,13 +250,12 @@ namespace WGiBeat.Screens
 
                                     _selectedMenuOption++;
 
-                                    if (_selectedMenuOption >= links.Length)
+                                    if (_selectedMenuOption >= _links.Length)
                                         _selectedMenuOption = 0;
 
                                     break;
 
                             }
-                        }
                     }
                 }
             }
@@ -382,35 +263,35 @@ namespace WGiBeat.Screens
 
         private struct ButtonLink
         {
-            private Action P1_action { get; set; }
-            private Action P2_action { get; set; }
-            private Action P3_action { get; set; }
-            private Action P4_action { get; set; }
+            private Action P1Action { get; set; }
+            private Action P2Action { get; set; }
+            private Action P3Action { get; set; }
+            private Action P4Action { get; set; }
 
-            public String name { get; set; }
+            public String Name { get; set; }
 
-            public ButtonLink(Action p1, Action p2, Action p3, Action p4, String _name) : this() //May be unecessary.
+            public ButtonLink(Action p1, Action p2, Action p3, Action p4, String name) : this() //May be unecessary.
             {
-                P1_action = p1;
-                P2_action = p2;
-                P3_action = p3;
-                P4_action = p4;
-                name = _name;
+                P1Action = p1;
+                P2Action = p2;
+                P3Action = p3;
+                P4Action = p4;
+                Name = name;
 
             }
 
-            public Action getAction(int Player)
+            public Action GetAction(int player)
             {
-                switch (Player)
+                switch (player)
                 {
                     case 1:
-                        return P1_action;
+                        return P1Action;
                     case 2:
-                        return P2_action;
+                        return P2Action;
                     case 3:
-                        return P3_action;
+                        return P3Action;
                     case 4:
-                        return P4_action;
+                        return P4Action;
                 }
 
                 return Action.NONE;
