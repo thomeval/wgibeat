@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace WGiBeat.Drawing
 {
@@ -68,6 +69,15 @@ namespace WGiBeat.Drawing
                 return null;
             }
             return _optionValues[_selectedOption];
+        }
+
+        public void SetSelectedByValue(object value)
+        {
+            var selected = (from e in _optionValues where value.Equals(e) select e).FirstOrDefault();
+            if (selected != null)
+            {
+                _selectedOption = _optionValues.IndexOf(selected);
+            }
         }
 
 

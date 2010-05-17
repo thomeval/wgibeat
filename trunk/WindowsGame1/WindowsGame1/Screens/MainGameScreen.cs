@@ -107,7 +107,7 @@ namespace WGiBeat.Screens
 
             if (_startTime == null)
             {
-                Core.Songs.PlaySong();
+                Core.Songs.PlaySong(Core.Settings.Get<double>("SongVolume"));
                 _startTime = new TimeSpan(gameTime.TotalRealTime.Ticks);
             }
             if (SongPassed(gameTime) && (_displayState == 0))
@@ -162,7 +162,7 @@ namespace WGiBeat.Screens
         }
         private void SaveSongToFile()
         {
-            if (Core.Settings.Get<int>("SongDebug") == 1)
+            if (Core.Settings.Get<bool>("SongDebug"))
             {
                 SongManager.SaveToFile(_gameSong);
             }
@@ -271,7 +271,7 @@ namespace WGiBeat.Screens
         /// <param name="action"></param>
         public override void PerformAction(Action action)
         {
-            bool songDebug = Core.Settings.Get<int>("SongDebug") == 1;
+            bool songDebug = Core.Settings.Get<bool>("SongDebug");
             switch (action)
             {
                 case Action.P1_LEFT:
@@ -877,7 +877,7 @@ namespace WGiBeat.Screens
               
 
             }
-            if (Core.Settings.Get<int>("SongDebug") == 1)
+            if (Core.Settings.Get<bool>("SongDebug"))
             {
             DrawDebugText(spriteBatch);
             }

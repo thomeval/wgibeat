@@ -40,13 +40,18 @@ namespace WGiBeat.AudioSystem
             result = _fmodSystem.createSound(song.Path + "\\" + song.SongFile, FMOD.MODE.SOFTWARE, ref _fmodSound);
             CheckFMODErrors(result);
         }
-        public void PlaySong()
+        public void PlaySong(double volume)
         {
             FMOD.RESULT result;
             result = _fmodSystem.playSound(FMOD.CHANNELINDEX.FREE, _fmodSound, false, ref _fmodChannel);
+            _fmodChannel.setVolume((float) volume);
             CheckFMODErrors(result);
         }
 
+        public GameSong CurrentSong()
+        {
+            return _currentSong;
+        }
         public uint GetCurrentSongProgress()
         {
             FMOD.RESULT result;
@@ -248,6 +253,7 @@ namespace WGiBeat.AudioSystem
             }
 
         }
+
 
     }
 }

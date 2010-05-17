@@ -35,13 +35,16 @@ namespace WGiBeat.Screens
 
             try
             {
-            GameSong song = new GameSong()
-            {
-                Path = @"Content\Audio",
-                SongFile = @"MenuMusic.mp3"
-            };
-            Core.Songs.LoadSong(song);
-            Core.Songs.PlaySong();
+                if (Core.Songs.CurrentSong() == null || Core.Songs.CurrentSong().SongFile != @"MenuMusic.mp3")
+                {
+                    GameSong song = new GameSong()
+                                        {
+                                            Path = @"Content\Audio",
+                                            SongFile = @"MenuMusic.mp3"
+                                        };
+                    Core.Songs.LoadSong(song);
+                    Core.Songs.PlaySong(Core.Settings.Get<double>("SongVolume"));
+                }
             }
 
             catch (Exception ex)
@@ -154,6 +157,7 @@ namespace WGiBeat.Screens
                     Core.ScreenTransition("KeyOptions");
                     break;
                 case MainMenuOption.OPTIONS:
+                    Core.ScreenTransition("Options");
                     break;
                 case MainMenuOption.EXIT:
                     Core.Exit();
