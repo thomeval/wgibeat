@@ -133,9 +133,16 @@ namespace WGiBeat.Screens
             base.Update(gameTime);
         }
 
-        private int _confidence = 0;
+        private int _confidence;
+        private bool _maintaining;
         private void DoMaintenance(object state)
         {
+          if (_maintaining)
+          {
+              return;
+          }
+
+            _maintaining = true;
             if (_displayState != 0)
             {
                 return;
@@ -159,6 +166,7 @@ namespace WGiBeat.Screens
                     _confidence++;
                 }
 
+            _maintaining = false;
         }
         private void SaveSongToFile()
         {
@@ -220,6 +228,7 @@ namespace WGiBeat.Screens
 
         private void MaintainBeatlineNotes()
         {
+
             Monitor.Enter(_beatlineNotes);
             foreach (BeatlineNote bn in _beatlineNotes)
             {
@@ -249,6 +258,7 @@ namespace WGiBeat.Screens
                     }
                 }
             }
+
             Monitor.Exit(_beatlineNotes);
             _notesToRemove.Clear();
         }
@@ -383,10 +393,7 @@ namespace WGiBeat.Screens
 
         private void HitBeatline(int player)
         {
-            if (player >= _playerCount)
-            {
-                return;
-            }
+
             if ((Core.Players[player].KO) || (!Core.Players[player].Playing))
             {
                 return;
@@ -404,6 +411,7 @@ namespace WGiBeat.Screens
             //such as double tapping the beatline key.
             if (_hitoffset > 900)
             {
+                Monitor.Exit(_beatlineNotes);
                 return;
             }
 
@@ -435,6 +443,7 @@ namespace WGiBeat.Screens
                 nearestBeatline.DisplayPosition = CalculateAbsoluteBeatlinePosition(nearestBeatline.Position);
                 nearestBeatline.Position = _phraseNumber + 0.3;
             }
+
             Monitor.Exit(_beatlineNotes);
         }
 
@@ -522,6 +531,7 @@ namespace WGiBeat.Screens
             }
             else
             {
+                //FAIL
                 AwardJudgement(0, player);
             }
 

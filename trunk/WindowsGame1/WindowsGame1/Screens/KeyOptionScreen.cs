@@ -148,7 +148,7 @@ namespace WGiBeat.Screens
             tempVector2.X = 440;
             //tempVector2.Y = 160;
 
-            Keys[] tempKeyList = Core._keyMappings.GetKeys(links[_selectedMenuOption].getAction(_currentPlayer));
+            Keys[] tempKeyList = Core.KeyMappings.GetKeys(links[_selectedMenuOption].getAction(_currentPlayer));
 
             for (int keyList = 0; keyList < tempKeyList.Length; keyList++)
             {
@@ -210,8 +210,8 @@ namespace WGiBeat.Screens
                 else
                 {
                     //Console.WriteLine("Perform " + key);
-                    Core._keyMappings.SetKey(key, links[_selectedMenuOption].getAction(_currentPlayer));
-                    Core._keyMappings.SaveToFile("Keys.conf");
+                    Core.KeyMappings.SetKey(key, links[_selectedMenuOption].getAction(_currentPlayer));
+                    Core.KeyMappings.SaveToFile("Keys.conf");
 
                     SelectChange = false;
                     AvoidNextAction = true;

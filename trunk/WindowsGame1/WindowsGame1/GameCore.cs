@@ -25,9 +25,9 @@ namespace WGiBeat
         private Dictionary<string, GameScreen> _screens;
         private GameScreen _activeScreen;
 
-        public KeyMappings _keyMappings = new KeyMappings(); //Changed to public, for GameScreen access.
+        public readonly KeyMappings KeyMappings = new KeyMappings(); //Changed to public, for GameScreen access.
 
-        private KeyboardState lastKeystate;
+        private KeyboardState _lastKeystate;
 
         public GameCore()
         {
@@ -63,10 +63,10 @@ namespace WGiBeat
             }
 
 
-            Boolean passed = _keyMappings.LoadFromFile("Keys.conf");
+            Boolean passed = KeyMappings.LoadFromFile("Keys.conf");
 
             if (!passed)
-                _keyMappings.LoadDefault();
+                KeyMappings.LoadDefault();
             
             base.Initialize();
         }
@@ -126,17 +126,17 @@ namespace WGiBeat
             foreach (Keys key in currentState.GetPressedKeys())
             {
 
-                if (lastKeystate.IsKeyUp(key))
+                if (_lastKeystate.IsKeyUp(key))
                 {
-                    if (_keyMappings.GetAction(key) != Action.NONE)
-                        _activeScreen.PerformAction(_keyMappings.GetAction(key));
+                    if (KeyMappings.GetAction(key) != Action.NONE)
+                        _activeScreen.PerformAction(KeyMappings.GetAction(key));
 
                     _activeScreen.PerformKey(key);
                 }
 
             }
 
-            lastKeystate = currentState;
+            _lastKeystate = currentState;
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
@@ -177,7 +177,6 @@ namespace WGiBeat
             _spriteBatch.End();
 
             base.Draw(gameTime);
-
 
         }
 

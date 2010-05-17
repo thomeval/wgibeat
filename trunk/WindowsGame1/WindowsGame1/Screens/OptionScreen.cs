@@ -10,8 +10,7 @@ namespace WGiBeat.Screens
 {
     public class OptionScreen : GameScreen
     {
-        private Menu _optionsMenu;
-
+        private readonly Menu _optionsMenu;
 
         public OptionScreen(GameCore core) : base(core)
         {
@@ -63,11 +62,6 @@ namespace WGiBeat.Screens
 
             background.Draw(spriteBatch);
             _optionsMenu.Draw(spriteBatch);
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
         }
 
         public override void PerformAction(Action action)
