@@ -105,6 +105,7 @@
     <Compile Include="Drawing\Menu.cs" />
     <Compile Include="Drawing\MenuItem.cs" />
     <Compile Include="Drawing\MetricsManager.cs" />
+    <Compile Include="Screens\ModeSelectScreen.cs" />
     <Compile Include="Drawing\NormalLifebar.cs" />
     <Compile Include="Drawing\PrimitiveLine.cs" />
     <Compile Include="Drawing\SineSwayParticle.cs" />

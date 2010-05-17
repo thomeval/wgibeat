@@ -244,8 +244,7 @@ namespace WGiBeat.Screens
                 Core.Players[x].PlayDifficulty =
                     (Difficulty) (int) _playerMenus[x].GetByItemText("Difficulty").SelectedValue();
             }
-            Core.Settings.Set("CurrentGameType",GameType.COOPERATIVE);
-                Core.ScreenTransition("SongSelect");
+                Core.ScreenTransition("ModeSelect");
         }
 
         public override void Update(GameTime gameTime)
