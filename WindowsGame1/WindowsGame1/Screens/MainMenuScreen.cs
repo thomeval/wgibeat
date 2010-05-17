@@ -16,18 +16,13 @@ namespace WGiBeat.Screens
         private int _tick = 0;
         private int _maxTick = 0;
 
+        private bool _displayNoSongsError = false;
         private readonly string[] _menuText = { "Start Game", "Keys", "Options", "Exit" };
         public MainMenuScreen(GameCore core)
             : base(core)
         {
         }
 
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-
-
-        }
 
         public override void Initialize()
         {
@@ -63,6 +58,11 @@ namespace WGiBeat.Screens
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             DrawMenu(spriteBatch);
+
+            if (_displayNoSongsError)
+            {
+                spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"],"Error: No songs loaded", Core.Metrics["MainMenuNoSongsError",0],Color.Black);
+            }
         }
 
         private void DrawBackground(SpriteBatch spriteBatch)
@@ -150,7 +150,14 @@ namespace WGiBeat.Screens
             {
                 case MainMenuOption.START_GAME:
                     //Core.Songs.StopSong();
-                    Core.ScreenTransition("NewGame");
+                    if (Core.Songs.AllSongs().Count > 0)
+                    {
+                        Core.ScreenTransition("NewGame");
+                    }
+                    else
+                    {
+                        _displayNoSongsError = true;
+                    }
                     break;
                 case MainMenuOption.KEYS:
                     //Core.Songs.StopSong();
