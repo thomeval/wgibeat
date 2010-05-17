@@ -68,3 +68,6 @@ SongHighScore=[250, 560];
 PlayerDifficultiesFrame=[0,500][50,500][100,500][150,500];
 PlayerDifficulties=[5,550][55,550][105,550][155,550];
 
+#Options;
+OptionsMenuStart=[30,100];
+

@@ -154,6 +154,7 @@ namespace WGiBeat
             _screens.Add("Evaluation", new EvaluationScreen(this));
             _screens.Add("SongSelect", new SongSelectScreen(this));
             _screens.Add("KeyOptions", new KeyOptionScreen(this));
+            _screens.Add("Options", new OptionScreen(this));
             _activeScreen = _screens["MainMenu"];
             _activeScreen.Initialize();
 

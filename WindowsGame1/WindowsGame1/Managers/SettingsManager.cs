@@ -64,8 +64,12 @@ namespace WGiBeat
                 string value = rule.Substring(rule.IndexOf('=') + 1);
 
                 double doubleAttempt;
-
-                if (double.TryParse(value,out doubleAttempt))
+                bool boolAttempt;
+                if (bool.TryParse(value, out boolAttempt))
+                {
+                    sm[id] = boolAttempt;
+                }
+                else if (double.TryParse(value,out doubleAttempt))
                 {
                     if (IsDecimal(doubleAttempt))
                     {
@@ -96,7 +100,7 @@ namespace WGiBeat
 
             foreach (string rule in _settings.Keys)
             {
-                outText += "\r\n" + rule + _settings[rule] + ";";
+                outText += "\r\n" + rule + "=" + _settings[rule] + ";";
             }
 
             File.WriteAllText(filename,outText);

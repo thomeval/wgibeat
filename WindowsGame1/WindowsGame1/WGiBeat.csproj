@@ -132,6 +132,7 @@
     <Compile Include="Screens\MainGameScreen.cs" />
     <Compile Include="Screens\MainMenuScreen.cs" />
     <Compile Include="Screens\NewGameScreen.cs" />
+    <Compile Include="Screens\OptionScreen.cs" />
     <Compile Include="Screens\SongSelectScreen.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -144,7 +145,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="settings.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Songs\readme.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
