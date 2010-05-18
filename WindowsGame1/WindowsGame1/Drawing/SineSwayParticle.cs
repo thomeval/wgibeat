@@ -24,7 +24,8 @@ namespace WGiBeat.Drawing
 
         //Convert sine wave amplitude to fit width. default Vertical = true.
 
-        public SineSwayParticle() : this(0, 1, true, 0.01, 0, Color.Black, "Particle", 25)
+        public SineSwayParticle()
+            : this(0, 1, true, 0.01, 0, new Color((float)233 / 255, (float)255 / 255, (float)251 / 255), "Particle", 25)
         {}
 
         public SineSwayParticle(Double startPosition, Double frequency, Boolean vertical, Double stepSize, Double shift, Color shade, String particleShape, int particleSize)
