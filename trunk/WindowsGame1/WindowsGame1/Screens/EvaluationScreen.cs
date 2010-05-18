@@ -11,7 +11,8 @@ namespace WGiBeat.Screens
     public class EvaluationScreen : GameScreen
     {
         private string[] _lines = {"Ideal","Cool","Ok","Bad","Fail","Fault","Miss"};
-        private const int NUM_EVALUATIONS = 8;
+        private int[] _evaluationCutoffs = {96, 92, 88, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40, 35, 30, 25,20};
+        private const int NUM_EVALUATIONS = 19;
 
         public EvaluationScreen(GameCore core) : base(core)
         {
@@ -134,37 +135,14 @@ Core.Metrics["EvaluationMaxStreak", x], Color.White);
             }
             double percentage = CalculatePercentage(player);
 
-            if (percentage >= 95)
+            for (int x = 0; x < _evaluationCutoffs.Count(); x++)
             {
-                return 0;
+                if (percentage >= _evaluationCutoffs[x])
+                {
+                    return x;
+                }
             }
-            if (percentage >= 90)
-            {
-                //S
-                return 1;
-            }
-            if (percentage >= 75)
-            {
-                //A
-                return 2;
-            }
-            if (percentage >= 60)
-            {
-                //B
-                return 3;
-            }
-            if (percentage >= 45)
-            {
-                //C
-                return 4;
-            }
-            if (percentage >= 30)
-            {
-                //D
-                return 5;
-            }
-            //E
-            return 6;
+            return NUM_EVALUATIONS - 2;
         }
 
         private double CalculatePercentage(int playerindex)
