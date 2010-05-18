@@ -16,32 +16,28 @@ namespace WGiBeat.Screens
         private SineSwayParticle _swp = new SineSwayParticle();
         private SineSwayParticleField _field = new SineSwayParticleField();
 
-
+        private bool _displayNoSongsError = false;
         private readonly string[] _menuText = { "Start Game", "Keys", "Options", "Exit" };
         public MainMenuScreen(GameCore core)
             : base(core)
         {
         }
 
-        public override void Update(GameTime gameTime)
-        {
+        public override void Update(GameTime gameTime)        
+        {            
             base.Update(gameTime);
-
-
-        }
-
+        }        
         public override void Initialize()
         {
             base.Initialize();
 
-            /*
-            swp.X = 250;
-            swp.Y = 250;
-            swp.Width = 100;
-            swp.Height = 200;
-            swp.Frequency = 2;
-            swp.StepSize = 0.01 / 3;
-            */
+            /*            swp.X = 250;            
+             * swp.Y = 250;            
+             * swp.Width = 100;            
+             * swp.Height = 200;           
+             * swp.Frequency = 2;           
+             * swp.StepSize = 0.01 / 3;            
+             */            
             try
             {
             GameSong song = new GameSong()
@@ -49,8 +45,12 @@ namespace WGiBeat.Screens
                 Path = @"Content\Audio",
                 SongFile = @"MenuMusic.mp3"
             };
-            Core.Songs.LoadSong(song);
-            Core.Songs.PlaySong(Core.Settings.Get<double>("SongVolume"));   //Menu music should be dependant on volume.
+            if ((Core.Songs.CurrentSong() == null) || (Core.Songs.CurrentSong().SongFile != song.SongFile))
+            {
+                Core.Songs.LoadSong(song);
+                Core.Songs.PlaySong(Core.Settings.Get<double>("SongVolume"));
+                    //Menu music should be dependant on volume.
+            }
             }
 
             catch (Exception ex)
@@ -69,6 +69,11 @@ namespace WGiBeat.Screens
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             DrawMenu(spriteBatch);
+
+            if (_displayNoSongsError)
+            {
+                spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"],"Error: No songs loaded", Core.Metrics["MainMenuNoSongsError",0],Color.Black);
+            }
         }
 
         private void DrawBackground(SpriteBatch spriteBatch)
@@ -83,21 +88,17 @@ namespace WGiBeat.Screens
             };
 
             background.Draw(spriteBatch);
-
-            _field.Draw(spriteBatch);
-            //swp.Draw(spriteBatch);
-
-            background.SpriteTexture = TextureManager.Textures["MainMenuForeground"];
-
-            background.Draw(spriteBatch);
+            _field.Draw(spriteBatch);            
+            //swp.Draw(spriteBatch);            
+            background.SpriteTexture = TextureManager.Textures["MainMenuForeground"];            
+            background.Draw(spriteBatch);        
         }
 
         private void DrawMenu(SpriteBatch spriteBatch)
         {
             DrawBackground(spriteBatch);
             
-            
-            for (int menuOption = 0; menuOption < (int)MainMenuOption.COUNT; menuOption++)
+                        for (int menuOption = 0; menuOption < (int)MainMenuOption.COUNT; menuOption++)
             {
                 var menuOptionSprite = new Sprite
                                            {
@@ -163,8 +164,14 @@ namespace WGiBeat.Screens
             switch (_selectedMenuOption)
             {
                 case MainMenuOption.START_GAME:
-                    //Core.Songs.StopSong();
-                    Core.ScreenTransition("NewGame");
+                    if (Core.Songs.AllSongs().Count > 0)
+                    {
+                        Core.ScreenTransition("NewGame");
+                    }
+                    else
+                    {
+                        _displayNoSongsError = true;
+                    }
                     break;
                 case MainMenuOption.KEYS:
                     //Core.Songs.StopSong();
