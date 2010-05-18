@@ -18,20 +18,23 @@ namespace WGiBeat.Drawing
         public int ParticleCount { get; set; }
         public Sprite[] Particles { get; set; }
 
+        public int ParticleSize { get; set; }
+
         private Sprite _particle; //temp
 
         //Convert sine wave amplitude to fit width. default Vertical = true.
 
-        public SineSwayParticle() : this(0, 1, true, 0.01, 0, Color.Black, "Particle")
+        public SineSwayParticle() : this(0, 1, true, 0.01, 0, Color.Black, "Particle", 25)
         {}
 
-        public SineSwayParticle(Double startPosition, Double frequency, Boolean vertical, Double stepSize, Double shift, Color shade, String particleShape)
+        public SineSwayParticle(Double startPosition, Double frequency, Boolean vertical, Double stepSize, Double shift, Color shade, String particleShape, int particleSize)
         {
             Position = startPosition;
             Frequency = frequency;
             Shift = shift;
             StepSize = stepSize;
             Vertical = vertical;
+
 
             _particle = new Sprite //temp
                             {
@@ -40,6 +43,8 @@ namespace WGiBeat.Drawing
                             };
 
             Vector2 tempVector = GetVector();
+
+            ParticleSize = particleSize;
 
             _particle.X = (int) tempVector.X;
             _particle.Y = (int) tempVector.Y;
@@ -68,12 +73,16 @@ namespace WGiBeat.Drawing
 
         public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
         {
+            _particle.Width = ParticleSize;
+            _particle.Height = ParticleSize;
+
             _particle.Draw(spriteBatch);
+
 
             Vector2 tempVector = GetVector();
 
-            _particle.X = (int)tempVector.X;
-            _particle.Y = (int)tempVector.Y;
+            _particle.X = (int) tempVector.X;
+            _particle.Y = (int) tempVector.Y;
 
             /*
             foreach (Sprite token in Particles)
