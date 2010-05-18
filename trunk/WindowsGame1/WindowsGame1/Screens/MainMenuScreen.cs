@@ -50,7 +50,7 @@ namespace WGiBeat.Screens
                 SongFile = @"MenuMusic.mp3"
             };
             Core.Songs.LoadSong(song);
-            Core.Songs.PlaySong();
+            Core.Songs.PlaySong(Core.Settings.Get<double>("SongVolume"));   //Menu music should be dependant on volume.
             }
 
             catch (Exception ex)
@@ -171,7 +171,7 @@ namespace WGiBeat.Screens
                     Core.ScreenTransition("KeyOptions");
                     break;
                 case MainMenuOption.OPTIONS:
-                    //swp.Vertical = !swp.Vertical;
+                    Core.ScreenTransition("Options");
                     break;
                 case MainMenuOption.EXIT:
                     Core.Exit();

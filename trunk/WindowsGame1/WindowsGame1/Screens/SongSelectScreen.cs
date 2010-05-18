@@ -145,6 +145,7 @@ namespace WGiBeat.Screens
                     index = SongList.Count - 1;
                 }
                 midpoint.Y -= 50;
+                SongList[index].IsSelected = false;
                 SongList[index].SetPosition(midpoint);
                 SongList[index].Draw(spriteBatch);
             }
