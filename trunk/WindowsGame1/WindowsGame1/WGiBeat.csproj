@@ -109,6 +109,7 @@
     <Compile Include="Drawing\NormalLifebar.cs" />
     <Compile Include="Drawing\PrimitiveLine.cs" />
     <Compile Include="Drawing\SineSwayParticle.cs" />
+    <Compile Include="Drawing\SineSwayParticleField.cs" />
     <Compile Include="Drawing\SongListItem.cs" />
     <Compile Include="Drawing\SpriteMap.cs" />
     <Compile Include="Drawing\TextureManager.cs" />

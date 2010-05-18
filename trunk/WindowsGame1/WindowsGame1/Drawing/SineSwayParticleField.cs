@@ -90,8 +90,8 @@ namespace WGiBeat.Drawing
             MinSize = 3;
             MaxSize = 15;
 
-            MinWidth = 15;
-            MaxWidth = 100;
+            MinWidth = 5;
+            MaxWidth = 30;
 
             MinHeight = 700;
             MaxHeight = 850;
