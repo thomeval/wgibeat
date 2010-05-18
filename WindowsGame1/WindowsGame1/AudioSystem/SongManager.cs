@@ -17,6 +17,9 @@ namespace WGiBeat.AudioSystem
         private FMOD.Channel _fmodChannel = new FMOD.Channel();
         private FMOD.Sound _fmodSound = new FMOD.Sound();
         private GameSong _currentSong;
+
+        private static Double _defaultVolume = 1;
+
         private Dictionary<int, HighScoreEntry> _highScoreEntries = new Dictionary<int, HighScoreEntry>();
         public SongManager()
         {
@@ -40,6 +43,12 @@ namespace WGiBeat.AudioSystem
             result = _fmodSystem.createSound(song.Path + "\\" + song.SongFile, FMOD.MODE.SOFTWARE, ref _fmodSound);
             CheckFMODErrors(result);
         }
+
+        public void PlaySong()
+        {
+            PlaySong(_defaultVolume);
+        }
+
         public void PlaySong(double volume)
         {
             FMOD.RESULT result;
