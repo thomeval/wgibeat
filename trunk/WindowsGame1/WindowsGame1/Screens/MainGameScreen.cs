@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
+using WGiBeat.Drawing.Sets;
 using WGiBeat.Notes;
 
 namespace WGiBeat.Screens

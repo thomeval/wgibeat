@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using WGiBeat.Drawing.Sets;
 
 namespace WGiBeat.Drawing
 {

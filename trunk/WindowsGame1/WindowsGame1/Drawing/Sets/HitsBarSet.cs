@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace WGiBeat.Drawing
+namespace WGiBeat.Drawing.Sets
 {
     public class HitsBarSet : DrawableObject
     {
@@ -67,7 +67,7 @@ namespace WGiBeat.Drawing
                 _baseSprite.Draw(spriteBatch, x, width, height, _metrics["HitsBar" + DetermineSuffix(), x]);
 
                 spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("{0:D3}", _players[x].Hits),
-       _metrics["HitsText" + DetermineSuffix(), x], _textColor);
+                                       _metrics["HitsText" + DetermineSuffix(), x], _textColor);
 
             }
         }
