@@ -26,7 +26,6 @@ namespace WGiBeat
         }
 
         public long Score { get; set; }
-        public long DisplayedScore { get; set; }
         private long _hits;
         public long Hits
         {
