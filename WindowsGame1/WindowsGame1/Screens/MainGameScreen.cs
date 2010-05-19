@@ -23,6 +23,7 @@ namespace WGiBeat.Screens
 
         private LifebarSet _lifebarSet;
         private HitsBarSet _hitsbarSet;
+        private ScoreSet _scoreSet;
         private NoteBar[] _notebars;
         private int _playerCount = 0;
         private GraphicNumber _streakNumbers;
@@ -42,6 +43,7 @@ namespace WGiBeat.Screens
             _notebars = new NoteBar[_playerCount];
             _lifebarSet = new LifebarSet (Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
             _hitsbarSet = new HitsBarSet(Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
+            _scoreSet = new ScoreSet(Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
             _displayState = 0;
             _songLoadDelay = 0.0;
             _confidence = 0;
@@ -668,6 +670,7 @@ namespace WGiBeat.Screens
             }
             _lifebarSet.Draw(spriteBatch);
             _hitsbarSet.Draw(spriteBatch);
+            _scoreSet.Draw(spriteBatch);
 
             //Draw beatline judgements.
             Monitor.Enter(_displayedJudgements);
@@ -873,21 +876,6 @@ namespace WGiBeat.Screens
         private void DrawText(SpriteBatch spriteBatch)
         {
 
-            AdjustDisplayedScores();
-            for (int x = 0; x < _playerCount; x++)
-            {
-                if (!Core.Players[x].Playing)
-                {
-                    continue;
-                }
-
-                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "P" + (x + 1), Core.Metrics["PlayerText", x], Color.Black);
-                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + Core.Players[x].DisplayedScore,
-                                       Core.Metrics["ScoreText", x], Color.Black);
-
-              
-
-            }
             if (Core.Settings.Get<bool>("SongDebug"))
             {
             DrawDebugText(spriteBatch);
@@ -904,22 +892,6 @@ namespace WGiBeat.Screens
                 spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + String.Format("{0:F3}", _phraseNumber), Core.Metrics["SongDebugPhrase", 0], Color.Black);
                 spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Hitoffset: {0:F3}",  _hitoffset),
                            Core.Metrics["SongDebugHitOffset",0], Color.Black);
-  
-        }
-
-        private void AdjustDisplayedScores()
-        {
-            for (int x = 0; x < 3; x++)
-            {
-                if (!Core.Players[x].Playing)
-                {
-                    continue;
-                }
-
-                var amount = (long) Math.Max(50, (Core.Players[x].Score - Core.Players[x].DisplayedScore) / 10);
-
-                Core.Players[x].DisplayedScore = Math.Min(Core.Players[x].Score, Core.Players[x].DisplayedScore + amount);
-            }
         }
 
         private void DrawBorders(SpriteBatch spriteBatch)
