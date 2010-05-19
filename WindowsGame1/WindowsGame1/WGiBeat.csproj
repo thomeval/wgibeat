@@ -100,11 +100,11 @@
     <Compile Include="Drawing\DisplayedJudgement.cs" />
     <Compile Include="Drawing\DrawableObject.cs" />
     <Compile Include="Drawing\GraphicNumber.cs" />
-    <Compile Include="Drawing\HitsBarSet.cs" />
-    <Compile Include="Drawing\LifebarSet.cs" />
     <Compile Include="Drawing\Menu.cs" />
     <Compile Include="Drawing\MenuItem.cs" />
     <Compile Include="Drawing\MetricsManager.cs" />
+    <Compile Include="Drawing\Sets\HitsBarSet.cs" />
+    <Compile Include="Drawing\Sets\LifebarSet.cs" />
     <Compile Include="Screens\ModeSelectScreen.cs" />
     <Compile Include="Drawing\NormalLifebar.cs" />
     <Compile Include="Drawing\PrimitiveLine.cs" />

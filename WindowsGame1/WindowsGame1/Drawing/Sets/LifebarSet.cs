@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace WGiBeat.Drawing
+namespace WGiBeat.Drawing.Sets
 {
     public class LifebarSet
     {
@@ -19,7 +19,7 @@ namespace WGiBeat.Drawing
             _lifebars = new Lifebar[4];
         }
         public LifebarSet(MetricsManager metrics, Player[] players, GameType gameType)
-        :this()
+            :this()
         {
             _metrics = metrics;
             Players = players;
@@ -41,9 +41,9 @@ namespace WGiBeat.Drawing
  
                     }
                     break;
-                    case GameType.COOPERATIVE:
+                case GameType.COOPERATIVE:
                     _lifebars[0] = new CoopLifebar {Height = 30, Width = 785, Parent = this};   
-                        break;
+                    break;
             }
         }
 
@@ -124,7 +124,7 @@ namespace WGiBeat.Drawing
                     for (int x = 0; x < 4; x++)
                     {
                         if (Players[x].Playing)
-                        _lifebars[x].Draw(spriteBatch);
+                            _lifebars[x].Draw(spriteBatch);
                     }
                     break;
                 case GameType.COOPERATIVE:
@@ -146,18 +146,18 @@ namespace WGiBeat.Drawing
 
         public void Reset()
         {
-                    for (int x = 0; x < 4; x++)
-                    {
-                        if (_lifebars[x] != null)
-                        {
-                            _lifebars[x].Reset();
+            for (int x = 0; x < 4; x++)
+            {
+                if (_lifebars[x] != null)
+                {
+                    _lifebars[x].Reset();
 
-                        }
-                    }
-                    for (int x = 0; x < 4; x++)
-                    {
-                        SetLife(Players[x].Life, x);
-                    }
+                }
+            }
+            for (int x = 0; x < 4; x++)
+            {
+                SetLife(Players[x].Life, x);
+            }
         }
     }
 }
