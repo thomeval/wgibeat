@@ -20,17 +20,26 @@ namespace WGiBeat.Drawing.Sets
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            var baseSprite = new SpriteMap
+                                 {
+                                     SpriteTexture = TextureManager.Textures["scoreBase"],
+                                     Columns = 1,
+                                     Rows = 4
+                                 };
 
             AdjustDisplayedScores();
             for (int x = 0; x < 4; x ++ )
             {
+                var tempVector = _metrics["ScoreText", x];
+                tempVector.X -= 13*_displayedScores[x].ToString().Length;
                 if (!_players[x].Playing)
                 {
                     continue;
                 }
-                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "P" + (x + 1), _metrics["PlayerText", x], Color.Black);
+                baseSprite.Draw(spriteBatch, x, 240, 40, _metrics["ScoreBase", x]);
                 spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + _displayedScores[x],
-                                       _metrics["ScoreText", x], Color.Black);
+                                      tempVector, Color.White);
+
             }
 
         }

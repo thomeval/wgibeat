@@ -11,6 +11,9 @@
 -Complete Coop mode (needs combined scoring, and grades)
 -Mode select screen
 -Complete updates to graphics
+-Clean up particle field
+-Refactor KeyScreen
+
 
 
 
