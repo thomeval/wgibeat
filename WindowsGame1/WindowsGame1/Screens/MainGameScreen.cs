@@ -181,28 +181,8 @@ namespace WGiBeat.Screens
 
         private void SaveHighScore()
         {
-            Core.Settings.Set("HighScorePlayer", -1);
-            //EvaluationScreen doesn't know what the current song is, so highscores must be saved here.
-            long highest = Core.Songs.GetHighScore(_gameSong.GetHashCode(),
-                                                   Core.Settings.Get<GameType>("CurrentGameType"));
-            int awardedPlayer = -1;
-            for (int x = 0; x < 4; x++)
-            {
-                if ((Core.Players[x].Playing) &&(Core.Players[x].Score > highest))
-                {
-                    //Store player with high score so that EvaluationScreen can display it.
-                    Core.Settings.Set("HighScorePlayer", x);
-                    highest = Math.Max(highest, Core.Players[x].Score);
-                    awardedPlayer = x;
-                }
-            }
-
-            if (awardedPlayer != -1)
-            {
-                Core.Songs.SetHighScore(_gameSong.GetHashCode(), Core.Settings.Get<GameType>("CurrentGameType"), highest);
-                Core.Songs.SaveHighScores("Scores.conf");
-            }
-
+            //Evaluation screen needs this setting to be able to display the high score indicator.
+            Core.Settings.Set("HighScorePlayer", Core.Songs.DetermineHighScore(Core.Players,Core.Settings.Get<GameType>("CurrentGameType")) );
         }
 
         List<DisplayedJudgement> djToRemove = new List<DisplayedJudgement>();
