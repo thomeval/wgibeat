@@ -81,7 +81,7 @@ namespace WGiBeat
                     _buttonMappings = (Dictionary<Buttons, Action>[])bf.Deserialize(fs);
                     fs.Close();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     Console.WriteLine("Error reading Keys.conf file");
 

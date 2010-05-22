@@ -295,9 +295,9 @@ namespace WGiBeat.AudioSystem
                 fs.Close();
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                Console.WriteLine("Error loading high scores.");
                 return false;
             }
 

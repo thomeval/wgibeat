@@ -61,6 +61,7 @@ namespace WGiBeat.Screens
             headerSprite.Draw(spriteBatch);
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], SongList[_selectedIndex].Song.Bpm + " BPM", Core.Metrics["SongBPMDisplay", 0], Color.Black);
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "High score: " + Core.Songs.GetHighScore(SongList[_selectedIndex].Song.GetHashCode(), Core.Settings.Get<GameType>("CurrentGameType")), Core.Metrics["SongHighScore", 0], Color.Black);
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "Mode: " + Core.Settings.Get<GameType>("CurrentGameType"), Core.Metrics["SelectedMode", 0], Color.Black);
 
 
 
