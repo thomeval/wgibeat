@@ -110,7 +110,6 @@ namespace WGiBeat.Drawing.Sets
                 }
 
                 var amount = Math.Max(25, (_players[x].Score - _displayedScores[x]) / 10);
-                Console.WriteLine(amount);
                 _displayedScores[x] = Math.Min(_players[x].Score, _displayedScores[x] + amount);
             }
         }
