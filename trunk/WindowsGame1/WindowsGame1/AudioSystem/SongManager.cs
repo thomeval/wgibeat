@@ -236,6 +236,46 @@ namespace WGiBeat.AudioSystem
             _highScoreEntries[songHashCode].Scores[gameType] = score;
         }
 
+        public int DetermineHighScore(Player[] players, GameType gameType)
+        {
+            var highest = GetHighScore(_currentSong.GetHashCode(), gameType);
+            int awardedPlayer = -1;
+            switch (gameType)
+            {
+                case GameType.NORMAL:
+
+
+                    for (int x = 0; x < 4; x++)
+                    {
+                        if ((players[x].Playing) && (players[x].Score > highest))
+                        {
+                            
+                            highest = Math.Max(highest, players[x].Score);
+                            awardedPlayer = x;
+                        }
+                    }
+
+                    if (awardedPlayer != -1)
+                    {
+                        SetHighScore(_currentSong.GetHashCode(), gameType, highest);
+                        SaveHighScores("Scores.conf");
+                    }
+                    break;
+                case GameType.COOPERATIVE:
+                    var currentTotal = (from e in players where e.Playing select e.Score).Sum();
+                    if (currentTotal > highest)
+                    {
+                        awardedPlayer = 4;
+                        SetHighScore(_currentSong.GetHashCode(), gameType, currentTotal);
+                        SaveHighScores("Scores.conf");
+                    }
+                    break;
+            }
+
+            return awardedPlayer;
+            
+        }
+
         public void SaveHighScores(string filename)
         {
             var fs = new FileStream(filename, FileMode.Create, FileAccess.Write);

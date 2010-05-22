@@ -21,92 +21,135 @@ namespace WGiBeat.Screens
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             DrawBorders(spriteBatch);
-
-           for (int x = 0; x < Core.Players.Count(); x++)
-           {
-               if (!Core.Players[x].Playing)
-               {
-                   continue;
-               }
-               int y = 0;
-               foreach (string line in _lines)
-               {
-                   spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], line + ":",
-                                          Core.Metrics["EvaluationLabel" + line,x],Color.White);
-                   spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + Core.Players[x].Judgements[y],
-                       Core.Metrics["Evaluation" + line, x], Color.White);
-                   y++;
-               }
-
-               spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Score:",
-    Core.Metrics["EvaluationLabelScore", x], Color.White);
-               spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + Core.Players[x].Score,
-                   Core.Metrics["EvaluationScore", x], Color.White);
-
-               var maxSprite = new Sprite()
-                                   {
-                                    //   Height = 68,
-                                       Width = 160,
-                                       SpriteTexture = TextureManager.Textures["evaluationMaxBase"]
-                                   };
-               maxSprite.SetPosition(Core.Metrics["EvaluationMaxBase",x]);
-               maxSprite.Draw(spriteBatch);
-
-               spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + Core.Players[x].MaxHits,
-Core.Metrics["EvaluationMaxHits", x], Color.Black);
-               spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + Core.Players[x].MaxStreak,
-Core.Metrics["EvaluationMaxStreak", x], Color.White);
-
-               var headerSprite = new Sprite
-                                      {
-
-                                          SpriteTexture = TextureManager.Textures["evaluationHeader"]
-                                      };
-               headerSprite.SetPosition(Core.Metrics["EvaluationHeader",x]);
-               headerSprite.Draw(spriteBatch);
-
-               var gradeBaseSprite = new Sprite
-                                         {
-                                             Height = 90,
-                                             Width = 160,
-                                             SpriteTexture = TextureManager.Textures["evaluationGradeBase"]
-                                         };
-               gradeBaseSprite.SetPosition(Core.Metrics["EvaluationGradeBase",x]);
-               gradeBaseSprite.Draw(spriteBatch);
-
-
-           }
-
+            DrawJudgementLines(spriteBatch);
+            DrawMax(spriteBatch);
             DrawGrades(spriteBatch);
-            DrawHighScoreNotification(spriteBatch,gameTime);
-            spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Press Start to continue.",
-                                   Core.Metrics["EvaluationInstruction", 0], Color.White);
+            DrawModeSpecific(spriteBatch);
+            DrawMisc(spriteBatch,gameTime);
+
+
         }
 
-        private void DrawHighScoreNotification(SpriteBatch spriteBatch, GameTime gameTime)
+        private void DrawModeSpecific(SpriteBatch spriteBatch)
         {
-            for (int x = 0; x < Core.Players.Count(); x++)
+           switch (Core.Settings.Get<GameType>("CurrentGameType"))
+           {
+               case GameType.NORMAL:
+                   break;
+               case GameType.COOPERATIVE:
+                   var totalScore = (from e in Core.Players where e.Playing select e.Score).Sum();
+                   spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "Team:",
+                                   Core.Metrics["EvaluationLabelTotalScore", 0], Color.White);
+                   spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + totalScore,
+                                   Core.Metrics["EvaluationTotalScore", 0], Color.White);
+                   break;
+           }
+        }
+
+        private void DrawMisc(SpriteBatch spriteBatch, GameTime gameTime)
+        {
+            var headerSprite = new Sprite
+            {
+                SpriteTexture = TextureManager.Textures["evaluationHeader"]
+            };
+
+            for (int x = 0; x < 4; x++)
             {
                 if (!Core.Players[x].Playing)
                 {
                     continue;
                 }
+                headerSprite.SetPosition(Core.Metrics["EvaluationHeader", x]);
+                headerSprite.Draw(spriteBatch);
+            }
+
+
+            DrawHighScoreNotification(spriteBatch, gameTime);
+            spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Press Start to continue.",
+                                   Core.Metrics["EvaluationInstruction", 0], Color.White);
+        }
+
+
+
+        private void DrawMax(SpriteBatch spriteBatch)
+        {
+            for (int x = 0; x < 4; x++)
+            {
+                if (!Core.Players[x].Playing)
+                {
+                    continue;
+                }
+
+                var maxSprite = new Sprite
+                {
+
+                    Width = 160,
+                    SpriteTexture = TextureManager.Textures["evaluationMaxBase"]
+                };
+                maxSprite.SetPosition(Core.Metrics["EvaluationMaxBase", x]);
+                maxSprite.Draw(spriteBatch);
+
+                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + Core.Players[x].MaxHits,
+Core.Metrics["EvaluationMaxHits", x], Color.Black);
+                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + Core.Players[x].MaxStreak,
+ Core.Metrics["EvaluationMaxStreak", x], Color.White);
+            }
+        }
+
+        private void DrawJudgementLines(SpriteBatch spriteBatch)
+        {
+            for (int x = 0; x < 4; x++)
+            {
+                if (!Core.Players[x].Playing)
+                {
+                    continue;
+                }
+                int y = 0;
+                foreach (string line in _lines)
+                {
+                    spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], line + ":",
+                                           Core.Metrics["EvaluationLabel" + line, x], Color.White);
+                    spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + Core.Players[x].Judgements[y],
+                                           Core.Metrics["Evaluation" + line, x], Color.White);
+                    y++;
+                }
+
+                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Score:",
+                                       Core.Metrics["EvaluationLabelScore", x], Color.White);
+                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + Core.Players[x].Score,
+                                       Core.Metrics["EvaluationScore", x], Color.White);
+            }
+        }
+
+        private void DrawHighScoreNotification(SpriteBatch spriteBatch, GameTime gameTime)
+        {
+
                 if (Core.Settings.Get<int>("HighScorePlayer") != -1)
                 {
                     var recordSprite = new Sprite
                                            {
-                                               SpriteTexture = TextureManager.Textures["evaluationHighScore"]
+                                               SpriteTexture = TextureManager.Textures["evaluationHighScore"],
+                                               Height = 25,
+                                               Width = 130
                                            };
 
-                    recordSprite.ColorShading.A = (byte) (255*Math.Abs(Math.Sin(gameTime.TotalRealTime.TotalSeconds)));
+                    recordSprite.ColorShading.A = (byte) (255*Math.Abs(Math.Sin(gameTime.TotalRealTime.TotalSeconds * 2)));
                     recordSprite.SetPosition(Core.Metrics["EvaluationHighScore", Core.Settings.Get<int>("HighScorePlayer")]);
                     recordSprite.Draw(spriteBatch);
                 }
-            }
         }
 
         private void DrawGrades(SpriteBatch spriteBatch)
         {
+
+            var gradeBaseSprite = new Sprite
+            {
+                Height = 90,
+                Width = 160,
+                SpriteTexture = TextureManager.Textures["evaluationGradeBase"]
+            };
+
+
             var gradeSpriteMap = new SpriteMap
             {
                 Columns = 1,
@@ -120,6 +163,9 @@ Core.Metrics["EvaluationMaxStreak", x], Color.White);
                 {
                     continue;
                 }
+                gradeBaseSprite.SetPosition(Core.Metrics["EvaluationGradeBase", x]);
+                gradeBaseSprite.Draw(spriteBatch);
+
                 int gradeIndex = CalculateGradeIndex(x);
 
                 gradeSpriteMap.Draw(spriteBatch, gradeIndex, 150, 52, Core.Metrics["EvaluationGrade",x]);
@@ -135,6 +181,11 @@ Core.Metrics["EvaluationMaxStreak", x], Color.White);
             }
             double percentage = CalculatePercentage(player);
 
+            return PercentageToGradeIndex(percentage);
+        }
+
+        private int PercentageToGradeIndex(double percentage)
+        {
             for (int x = 0; x < _evaluationCutoffs.Count(); x++)
             {
                 if (percentage >= _evaluationCutoffs[x])
@@ -170,6 +221,22 @@ Core.Metrics["EvaluationMaxStreak", x], Color.White);
             return 100.0*playerScore/maxPossible;
         }
 
+        private double CalculateTeamPercentage()
+        {
+            double totalPerc = 0;
+            int participants = 0;
+            for (int x = 0; x < 4; x++)
+            {
+                if (Core.Players[x].Playing)
+                {
+                    totalPerc += CalculatePercentage(x);
+                    participants += 1;
+                }
+            }
+
+            return totalPerc/participants;
+
+    }
         public override void PerformAction(Action action)
         {
             switch (action)
