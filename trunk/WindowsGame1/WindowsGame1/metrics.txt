@@ -79,3 +79,6 @@ SelectedMode=[250,520];
 #Options;
 OptionsMenuStart=[30,100];
 
+#Mode Select;
+ModeSelectScreenHeader=[0,0];
+

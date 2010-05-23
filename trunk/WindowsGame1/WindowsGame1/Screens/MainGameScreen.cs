@@ -554,7 +554,7 @@ namespace WGiBeat.Screens
                     //BAD
                     Core.Players[player].Score += 250 * _notebars[player].NumberCompleted();
                     Core.Players[player].Streak = -1;
-                    lifeAdjust = 1 * _notebars[player].NumberCompleted();
+                    lifeAdjust = -1 * _notebars[player].NumberCompleted();
                     Core.Players[player].Judgements[3]++;
                     tex = TextureManager.Textures["noteJudgement4"];
                     break;
@@ -566,7 +566,7 @@ namespace WGiBeat.Screens
                 default:
                     //FAIL
                     Core.Players[player].Streak = -1;
-                    lifeAdjust -= (int)(1 + Core.Players[player].PlayDifficulty) * (_notebars[player].Notes.Count() - _notebars[player].NumberCompleted() + 1);
+                    lifeAdjust = 0 - (int)(1 + Core.Players[player].PlayDifficulty) * (_notebars[player].Notes.Count() - _notebars[player].NumberCompleted() + 1);
                     Core.Players[player].Momentum = (long)(Core.Players[player].Momentum * 0.7);
                     Core.Players[player].Judgements[4]++;
                     tex = TextureManager.Textures["noteJudgement0"];
@@ -956,7 +956,9 @@ namespace WGiBeat.Screens
             };
 
             pulseSprite.Width = (int) (80*(Math.Ceiling(_phraseNumber) - (_phraseNumber)));
+            pulseSprite.ColorShading.A = (byte)(pulseSprite.Width * 255 / 80);
             pulseSprite.Height = 42;
+            Console.WriteLine(pulseSprite.ColorShading.A);
             for (int x = 0; x < _playerCount; x++)
             {
                 if ((!Core.Players[x].Playing) || (Core.Players[x].KO))

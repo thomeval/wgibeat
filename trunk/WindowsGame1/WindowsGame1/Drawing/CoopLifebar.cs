@@ -26,13 +26,12 @@ namespace WGiBeat.Drawing
         {
 
             DrawBase(spriteBatch);
-            //TODO: Implement leeching.
             double penaltyMx = Math.Max(0,TotalLife()/TotalPositive());
             var frontSpriteMap = new SpriteMap
                                      {Columns = 1, Rows = 4, SpriteTexture = TextureManager.Textures["lifebarFront"]};
 
             int posX = this.X + 3;
-            int capacity = 125*Participants();
+            int capacity = 100*Participants();
             for (int x = 0; x < 4; x++)
             {
                 if (!Parent.Players[x].Playing)
