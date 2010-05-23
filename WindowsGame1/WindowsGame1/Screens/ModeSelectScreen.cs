@@ -30,6 +30,9 @@ namespace WGiBeat.Screens
             DrawBackground(spriteBatch);
             DrawPlayerDifficulties(spriteBatch);
 
+            var headerSprite = new Sprite {SpriteTexture = TextureManager.Textures["modeSelectHeader"]};
+            headerSprite.SetPosition(Core.Metrics["ModeSelectScreenHeader", 0]);
+            headerSprite.Draw(spriteBatch);
             spriteBatch.DrawString(TextureManager.Fonts["LargeFont"],"" + (GameType) _selectedGameType, new Vector2(150,250),Color.Black);
         }
 

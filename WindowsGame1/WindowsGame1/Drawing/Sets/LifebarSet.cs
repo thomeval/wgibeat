@@ -65,7 +65,7 @@ namespace WGiBeat.Drawing.Sets
         private void AdjustLifeCoop(double amount, int player)
         {
             var theLifebar = (CoopLifebar) _lifebars[0];
-            var limit = (theLifebar.Participants() * 125) - theLifebar.TotalLife();
+            var limit = (theLifebar.Participants() * 100) - theLifebar.TotalLife();
             Players[player].Life += Math.Min(limit, amount);
 
             if (theLifebar.TotalLife() <= 0)

@@ -28,7 +28,7 @@ namespace WGiBeat.Drawing
             CheckIfDimensionsSet();
             var textureRect = new Rectangle(texU1, texV1, texU2, texV2);
             var dest = new Rectangle(X, Y, Width, Height);
-            spriteBatch.Draw(SpriteTexture, dest, textureRect, Color.White);
+            spriteBatch.Draw(SpriteTexture, dest, textureRect, ColorShading);
         }
 
         /// <summary>

@@ -42,6 +42,17 @@ namespace WGiBeat.Screens
                                    Core.Metrics["EvaluationLabelTotalScore", 0], Color.White);
                    spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + totalScore,
                                    Core.Metrics["EvaluationTotalScore", 0], Color.White);
+
+                   var gradeSpriteMap = new SpriteMap
+                   {
+                       Columns = 1,
+                       Rows = NUM_EVALUATIONS,
+                       SpriteTexture = TextureManager.Textures["evaluationGrades"]
+                   };
+
+                       int gradeIndex = PercentageToGradeIndex(CalculateTeamPercentage());
+                       gradeSpriteMap.Draw(spriteBatch, gradeIndex, 150, 52, Core.Metrics["EvaluationTotalGrade", 0]);
+
                    break;
            }
         }
