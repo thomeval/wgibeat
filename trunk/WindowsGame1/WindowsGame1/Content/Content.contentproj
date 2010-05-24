@@ -140,26 +140,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Textures\levelBarFront1.png">
-      <Name>levelBarFront1</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\levelBarFront2.png">
-      <Name>levelBarFront2</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\levelBarFront3.png">
-      <Name>levelBarFront3</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\levelBarFront4.png">
-      <Name>levelBarFront4</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="Textures\lifebarBase.png">
       <Name>lifebarBase</Name>
       <Importer>TextureImporter</Importer>
@@ -292,6 +272,13 @@
   <ItemGroup>
     <Compile Include="Textures\noteJudgements.png">
       <Name>noteJudgements</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\levelBarFronts.png">
+      <Name>levelBarFronts</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
