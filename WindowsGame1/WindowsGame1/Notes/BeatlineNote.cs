@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace WGiBeat.Notes
+﻿namespace WGiBeat.Notes
 {
     public class BeatlineNote
     {
@@ -16,28 +11,16 @@ namespace WGiBeat.Notes
         //The opacity of this BeatlineNote.
         public double DisplayUntil { get; set; }
 
-        //TODO: Refactor or remove.
-        public byte DisplayOpacity(double currentTime)
-        {
-            if (!Hit)
-            {
-                //Opacity is determined by how far over the impact line the BeatlineNote is.
-                return 255;
-            }
-            else
-            {
-                //Opacity is determined by the amount of time until the DisplayUntil.
-            }
-            return 255;
-        }
     }
 
     public enum BeatlineNoteJudgement
     {
-        IDEAL,
-        COOL,
-        OK,
-        BAD,
-        FAIL
+        IDEAL = 0,
+        COOL = 1,
+        OK = 2,
+        BAD = 3,
+        FAIL = 4,
+        MISS = 5,
+        COUNT = 6
     }
 }

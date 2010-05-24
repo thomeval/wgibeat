@@ -44,7 +44,6 @@ namespace WGiBeat
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
             Metrics = MetricsManager.Load("metrics.txt");
             Settings = SettingsManager.LoadFromFile("settings.txt");
 
@@ -80,9 +79,6 @@ namespace WGiBeat
             
             // Create a new SpriteBatch, which can be used to draw textures.
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
-
 
             var files = Directory.GetFiles(Content.RootDirectory + "/Textures", "*.xnb");
             foreach (string file in files)

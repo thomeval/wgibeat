@@ -10,7 +10,7 @@ namespace WGiBeat.Screens
 {
     public class EvaluationScreen : GameScreen
     {
-        private string[] _lines = {"Ideal","Cool","Ok","Bad","Fail","Fault","Miss"};
+        private string[] _lines = {"Ideal","Cool","Ok","Bad","Fail","Miss","Fault"};
         private int[] _evaluationCutoffs = {96, 92, 88, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40, 35, 30, 25,20};
         private const int NUM_EVALUATIONS = 19;
 

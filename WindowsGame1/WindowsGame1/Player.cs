@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using WGiBeat.Notes;
 
 namespace WGiBeat
 {
@@ -13,17 +14,8 @@ namespace WGiBeat
             Judgements = new int[8];
         }
         public string Name { get; set; }
-        private double _life;
 
-        private const double LIFE_MAX = 200;
-        public double Life
-        {
-            get { return _life; }
-            set
-            {
-                _life = value;
-            }
-        }
+        public double Life { get; set; }
 
         public long Score { get; set; }
         private long _hits;
@@ -58,9 +50,10 @@ namespace WGiBeat
         }
 
         public int MaxStreak { get; set; }
+
         public bool KO { get; set; }
         public bool Playing { get; set; }
-        //0 = Ideal, 1 = Cool, 2 = Ok, 3 = Bad, 4 = Fail, 5 = Fault, 6 = Miss;
+        //0 = Ideal, 1 = Cool, 2 = Ok, 3 = Bad, 4 = Fail, 5 = Miss, 6 = Fault;
         public int[] Judgements { get; set; }
 
         public double Level
@@ -109,7 +102,7 @@ namespace WGiBeat
         {
             Hits = 0;
             Momentum = (long)(Momentum * 0.95);
-            Judgements[5]++;
+            Judgements[6]++;
             int result = 0;
             switch (PlayDifficulty)
             {
@@ -131,7 +124,7 @@ namespace WGiBeat
         public double MissedBeat()
         {
             Momentum = (long)(Momentum * 0.8);
-            Judgements[6]++;
+            Judgements[(int) BeatlineNoteJudgement.MISS]++;
             var result = 0;
             switch (PlayDifficulty)
             {

@@ -210,36 +210,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Textures\noteJudgement0.png">
-      <Name>noteJudgement0</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\noteJudgement1.png">
-      <Name>noteJudgement1</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\noteJudgement2.png">
-      <Name>noteJudgement2</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\noteJudgement3.png">
-      <Name>noteJudgement3</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\noteJudgement4.png">
-      <Name>noteJudgement4</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\noteJudgement5.png">
-      <Name>noteJudgement5</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="Textures\playerDifficulties.png">
       <Name>playerDifficulties</Name>
       <Importer>TextureImporter</Importer>
@@ -315,6 +285,13 @@
   <ItemGroup>
     <Compile Include="Textures\modeSelectHeader.png">
       <Name>modeSelectHeader</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\noteJudgements.png">
+      <Name>noteJudgements</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

@@ -18,7 +18,7 @@ namespace WGiBeat.Drawing
             foreach (char c in temp)
             {
                 SpriteMap.Draw(sb,(int) Char.GetNumericValue(c),width,height,x + offset,y);
-                offset += width - SpacingAdjustment;
+                offset += width + SpacingAdjustment;
             }
         }
 

@@ -56,6 +56,8 @@ namespace WGiBeat
             _mappings.Add(Keys.F8, Action.SYSTEM_OFFSET_INCREASE_BIG);
             _mappings.Add(Keys.F9, Action.SYSTEM_OFFSET_DECREASE_SMALL);
             _mappings.Add(Keys.F10, Action.SYSTEM_OFFSET_INCREASE_SMALL);
+            _mappings.Add(Keys.F11, Action.SYSTEM_LENGTH_DECREASE);
+            _mappings.Add(Keys.F12, Action.SYSTEM_LENGTH_INCREASE);
             _mappings.Add(Keys.Escape, Action.SYSTEM_BACK);
 
             _buttonMappings[0].Add(Buttons.X, Action.P4_LEFT);
@@ -184,8 +186,6 @@ namespace WGiBeat
         P1_BEATLINE,
         P1_START,
         P1_SELECT,
-        P1_ESCAPE,
-
         
         P2_LEFT,
         P2_RIGHT,
@@ -217,9 +217,11 @@ namespace WGiBeat
         SYSTEM_OFFSET_INCREASE_SMALL,
         SYSTEM_OFFSET_DECREASE_BIG,
         SYSTEM_OFFSET_DECREASE_SMALL,
+        SYSTEM_LENGTH_DECREASE,
+        SYSTEM_LENGTH_INCREASE,
         SYSTEM_BACK,
 
         NONE
-        
+
     }
 }

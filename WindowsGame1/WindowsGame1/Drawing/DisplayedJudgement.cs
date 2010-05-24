@@ -1,23 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.Notes;
 
 namespace WGiBeat.Drawing
 {
     public class DisplayedJudgement : DrawableObject 
     {
-        public Texture2D Texture { get; set;}
         public double DisplayUntil { get; set; }
         public byte Opacity { get; set; }
         public int Player { get; set; }
-        public override void Draw(SpriteBatch sb)
+        public int Tier {get; set; }
+        private SpriteMap _judgementSprite;
+
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            var judgementSprite = new Sprite
-                                      {X = this.X, Y = this.Y, Height = 40, Width = 150, SpriteTexture = Texture};
-            judgementSprite.ColorShading.A = Opacity;
-            judgementSprite.Draw(sb);
+            if (_judgementSprite == null)
+            {
+                _judgementSprite = new SpriteMap {Columns = 1, Rows = (int) BeatlineNoteJudgement.COUNT, SpriteTexture = TextureManager.Textures["noteJudgements"]};
+            }
+            _judgementSprite.ColorShading.A = Opacity;
+
+            _judgementSprite.Draw(spriteBatch,Tier,this.Width, this.Height,this.X,this.Y);
         }
     }
 }
