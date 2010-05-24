@@ -193,7 +193,7 @@ namespace WGiBeat.Screens
                 _beatlineNotes.Remove(bnr);
                 if ((!bnr.Hit) && (!Core.Players[bnr.Player].KO))
                 {
-                    _noteJudgementSet.AwardJudgement(BeatlineNoteJudgement.MISS, bnr.Player, null);
+                    _lifebarSet.AdjustLife(_noteJudgementSet.AwardJudgement(BeatlineNoteJudgement.MISS, bnr.Player, null), bnr.Player);
                 }
             }
 
@@ -305,6 +305,18 @@ namespace WGiBeat.Screens
                     if (songDebug)
                     {
                         _gameSong.Offset += 0.01;
+                    }
+                    break;
+                case Action.SYSTEM_LENGTH_DECREASE:
+                    if (songDebug)
+                    {
+                        _gameSong.Length -= 0.1;
+                    }
+                    break;
+                case Action.SYSTEM_LENGTH_INCREASE:
+                    if (songDebug)
+                    {
+                        _gameSong.Length += 0.1;
                     }
                     break;
                 case Action.SYSTEM_BACK:
@@ -639,41 +651,20 @@ namespace WGiBeat.Screens
 
                 double levelFraction = Core.Players[x].Level - (int)Core.Players[x].Level;
                 var barWidth = (int)(levelFraction * LEVELBAR_MAX_WIDTH);
-                var barTexture = GetLevelBarTexture(Core.Players[x].Level);
 
                 if (Core.Players[x].Level == Core.Players[x].MaxDifficulty())
                 {
                     barWidth = LEVELBAR_MAX_WIDTH;
                 }
-                var barSprite = new Sprite
+                var barSprite = new SpriteMap
                 {
-                    Height = 19,
-                    Width = barWidth,
-                    SpriteTexture = TextureManager.Textures[barTexture]
+                    Columns = 1,
+                    Rows = 12,
+                    SpriteTexture = TextureManager.Textures["levelBarFronts"]
                 };
-                barSprite.SetPosition(Core.Metrics["LevelBar", x]);
 
-                barSprite.Draw(spriteBatch);
+                barSprite.Draw(spriteBatch, (int) Core.Players[x].Level - 1, barWidth, 19, Core.Metrics["LevelBar", x]);
             }
-        }
-
-        //TODO: Refactor
-        private string GetLevelBarTexture(double level)
-        {
-            if (level > 8)
-            {
-                return "levelBarFront4";
-            }
-            if (level > 5)
-            {
-                return "levelBarFront3";
-
-            }
-            if (level > 3)
-            {
-                return "levelBarFront2";
-            }
-            return "levelBarFront1";
         }
 
 
