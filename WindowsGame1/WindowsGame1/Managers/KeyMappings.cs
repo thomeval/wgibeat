@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Runtime.Serialization;
 using Microsoft.Xna.Framework.Input;
 
-namespace WGiBeat
+namespace WGiBeat.Managers
 {
     public class KeyMappings
     {
@@ -85,14 +83,14 @@ namespace WGiBeat
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Error reading Keys.conf file");
+                    Console.WriteLine("Error reading Keys.conf file: " + ex.Message);
 
                     return false;
                 }
 
                 return true;
             }
-            else
+
                 return false;
         }
 

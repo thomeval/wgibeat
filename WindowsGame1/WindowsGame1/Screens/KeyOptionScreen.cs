@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
 using Microsoft.Xna.Framework.Input;
+using Action=WGiBeat.Managers.Action;
 
 
 /* Instructions

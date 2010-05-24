@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using WGiBeat.Notes;
 
 namespace WGiBeat
@@ -18,6 +16,7 @@ namespace WGiBeat
         public double Life { get; set; }
 
         public long Score { get; set; }
+
         private long _hits;
         public long Hits
         {
@@ -53,6 +52,7 @@ namespace WGiBeat
 
         public bool KO { get; set; }
         public bool Playing { get; set; }
+
         //0 = Ideal, 1 = Cool, 2 = Ok, 3 = Bad, 4 = Fail, 5 = Miss, 6 = Fault;
         public int[] Judgements { get; set; }
 

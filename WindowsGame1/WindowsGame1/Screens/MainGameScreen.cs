@@ -8,6 +8,7 @@ using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Drawing.Sets;
 using WGiBeat.Notes;
+using Action=WGiBeat.Managers.Action;
 
 namespace WGiBeat.Screens
 {
@@ -25,7 +26,7 @@ namespace WGiBeat.Screens
         private ScoreSet _scoreSet;
         private NoteJudgementSet _noteJudgementSet;
         private NoteBar[] _notebars;
-        private int _playerCount = 0;
+        private int _playerCount;
         private GameSong _gameSong;
         private TimeSpan? _startTime;
         private int _displayState;
@@ -451,12 +452,11 @@ namespace WGiBeat.Screens
                 }
             }
 
-            //TODO: Does this really need the notebar of the player?
+            //UNSURE: Does this really need the notebar of the player?
             var lifeAdjust = _noteJudgementSet.AwardJudgement(result, player, _notebars[player]);
             _lifebarSet.AdjustLife(lifeAdjust, player);
 
         }
-
 
         private BeatlineNote NearestBeatlineNote(int player)
         {

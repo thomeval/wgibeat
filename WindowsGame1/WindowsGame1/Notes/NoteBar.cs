@@ -24,7 +24,6 @@ namespace WGiBeat.Notes
             return (from e in Notes where e.Reverse select e).Count();
         }
 
-
         public Note CurrentNote()
         {
             return (from e in Notes where !e.Completed select e).FirstOrDefault();

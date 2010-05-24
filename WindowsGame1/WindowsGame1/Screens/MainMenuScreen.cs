@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
+using Action=WGiBeat.Managers.Action;
 
 namespace WGiBeat.Screens
 {
@@ -16,7 +17,7 @@ namespace WGiBeat.Screens
         private SineSwayParticle _swp = new SineSwayParticle();
         private SineSwayParticleField _field = new SineSwayParticleField();
 
-        private bool _displayNoSongsError = false;
+        private bool _displayNoSongsError;
         private readonly string[] _menuText = { "Start Game", "Keys", "Options", "Exit" };
         public MainMenuScreen(GameCore core)
             : base(core)
@@ -37,33 +38,27 @@ namespace WGiBeat.Screens
              * swp.Height = 200;           
              * swp.Frequency = 2;           
              * swp.StepSize = 0.01 / 3;            
-             */            
+             */
             try
             {
-            GameSong song = new GameSong()
-            {
-                Path = @"Content\Audio",
-                SongFile = @"MenuMusic.mp3"
-            };
-            if ((Core.Songs.CurrentSong() == null) || (Core.Songs.CurrentSong().SongFile != song.SongFile))
-            {
-                Core.Songs.LoadSong(song);
-                Core.Songs.PlaySong(Core.Settings.Get<double>("SongVolume"));
-                    //Menu music should be dependant on volume.
-            }
+                GameSong song = new GameSong()
+                {
+                    Path = @"Content\Audio",
+                    SongFile = @"MenuMusic.mp3"
+                };
+                if ((Core.Songs.CurrentSong() == null) || (Core.Songs.CurrentSong().SongFile != song.SongFile))
+                {
+                    Core.Songs.LoadSong(song);
+                    Core.Songs.PlaySong(Core.Settings.Get<double>("SongVolume"));
+                }
             }
 
             catch (Exception ex)
             {
                 if (ex is System.IO.FileNotFoundException)
                 {
-                    Console.WriteLine(ex.Message);
-                }/*
-                else
-                {
-                    throw;                
+                    Console.WriteLine("Did not find MenuMusic. Skipping it.");
                 }
-                */
             }
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -174,7 +169,6 @@ namespace WGiBeat.Screens
                     }
                     break;
                 case MainMenuOption.KEYS:
-                    //Core.Songs.StopSong();
                     Core.ScreenTransition("KeyOptions");
                     break;
                 case MainMenuOption.OPTIONS:

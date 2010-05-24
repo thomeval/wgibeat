@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
+using Action=WGiBeat.Managers.Action;
 
 namespace WGiBeat.Screens
 {

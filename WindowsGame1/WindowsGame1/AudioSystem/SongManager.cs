@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-
 
 
 namespace WGiBeat.AudioSystem
@@ -18,9 +16,8 @@ namespace WGiBeat.AudioSystem
         private FMOD.Sound _fmodSound = new FMOD.Sound();
         private GameSong _currentSong;
 
-        private static Double _defaultVolume = 1;
-
         private Dictionary<int, HighScoreEntry> _highScoreEntries = new Dictionary<int, HighScoreEntry>();
+
         public SongManager()
         {
               FMOD.RESULT result;
@@ -28,7 +25,6 @@ namespace WGiBeat.AudioSystem
             CheckFMODErrors(result);
             result = _fmodSystem.init(2, FMOD.INITFLAGS.NORMAL, (IntPtr)null);
             CheckFMODErrors(result);
-
         }
 
         public List<GameSong> AllSongs()
@@ -42,11 +38,6 @@ namespace WGiBeat.AudioSystem
             FMOD.RESULT result;
             result = _fmodSystem.createSound(song.Path + "\\" + song.SongFile, FMOD.MODE.SOFTWARE, ref _fmodSound);
             CheckFMODErrors(result);
-        }
-
-        public void PlaySong()
-        {
-            PlaySong(_defaultVolume);
         }
 
         public void PlaySong(double volume)
@@ -128,6 +119,7 @@ namespace WGiBeat.AudioSystem
             
             sw.Close();
         }
+
         public static GameSong LoadFromFile(string filename)
         {
             var newSong = new GameSong();
@@ -297,7 +289,7 @@ namespace WGiBeat.AudioSystem
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error loading high scores.");
+                Console.WriteLine("Error loading high scores." + ex.Message);
                 return false;
             }
 

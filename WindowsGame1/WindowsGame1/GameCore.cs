@@ -6,14 +6,16 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
+using WGiBeat.Managers;
 using WGiBeat.Screens;
+using Action=WGiBeat.Managers.Action;
 
 namespace WGiBeat
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class GameCore : Microsoft.Xna.Framework.Game
+    public class GameCore : Game
     {
         public GraphicsDeviceManager GraphicsManager;
         private SpriteBatch _spriteBatch;
@@ -100,7 +102,7 @@ namespace WGiBeat
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            
         }
 
 
@@ -154,9 +156,7 @@ namespace WGiBeat
             _screens.Add("ModeSelect", new ModeSelectScreen(this));
             _activeScreen = _screens["MainMenu"];
             _activeScreen.Initialize();
-
         }
-
 
         /// <summary>
         /// This is called when the game should draw itself.
