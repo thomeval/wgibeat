@@ -8,9 +8,6 @@
         //Whether this BeatlineNote has been hit already.
         public bool Hit { get; set; }
 
-        //The opacity of this BeatlineNote.
-        public double DisplayUntil { get; set; }
-
     }
 
     public enum BeatlineNoteJudgement

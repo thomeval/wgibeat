@@ -7,10 +7,11 @@ namespace WGiBeat.Drawing.Sets
     public class NoteJudgementSet :DrawableObject
     {
         private readonly Player[] _players;
-        private DisplayedJudgement[] _displayedJudgements;
+        private readonly DisplayedJudgement[] _displayedJudgements;
         private readonly MetricsManager _metrics;
         private readonly GameType _gameType;
-        public double PhraseNumber;
+        private double _phraseNumber;
+
         private GraphicNumber _streakNumbers;
 
         public readonly int[] JudgementCutoffs = {20, 50, 125, 250};
@@ -35,7 +36,7 @@ namespace WGiBeat.Drawing.Sets
                 {
                     continue;
                 }
-                int opacity = Convert.ToInt32(Math.Max(0, (_displayedJudgements[x].DisplayUntil - PhraseNumber) * 510));
+                int opacity = Convert.ToInt32(Math.Max(0, (_displayedJudgements[x].DisplayUntil - _phraseNumber) * 510));
                 opacity = Math.Max(0,Math.Min(opacity, 255));
                 _displayedJudgements[x].Opacity = Convert.ToByte(opacity);
                 _displayedJudgements[x].Draw(spriteBatch);
@@ -51,7 +52,7 @@ namespace WGiBeat.Drawing.Sets
 
         public void Draw(SpriteBatch spriteBatch, double phraseNumber)
         {
-            PhraseNumber = phraseNumber;
+            _phraseNumber = phraseNumber;
 
             Draw(spriteBatch);
         }
@@ -94,7 +95,7 @@ namespace WGiBeat.Drawing.Sets
 
             _players[player].Judgements[(int)judgement]++;
 
-            var newDj = new DisplayedJudgement { DisplayUntil = PhraseNumber + 0.5, Height = 40, Width = 150, Player = player, Tier = (int)judgement };
+            var newDj = new DisplayedJudgement { DisplayUntil = _phraseNumber + 0.5, Height = 40, Width = 150, Player = player, Tier = (int)judgement };
             newDj.SetPosition(_metrics["Judgement", player]);
             _displayedJudgements[player] = newDj;
 

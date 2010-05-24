@@ -5,13 +5,14 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
+using Action=WGiBeat.Managers.Action;
 
 namespace WGiBeat.Screens
 {
     public class EvaluationScreen : GameScreen
     {
-        private string[] _lines = {"Ideal","Cool","Ok","Bad","Fail","Miss","Fault"};
-        private int[] _evaluationCutoffs = {96, 92, 88, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40, 35, 30, 25,20};
+        private readonly string[] _lines = {"Ideal","Cool","Ok","Bad","Fail","Miss","Fault"};
+        private readonly int[] _evaluationCutoffs = {96, 92, 88, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40, 35, 30, 25,20};
         private const int NUM_EVALUATIONS = 19;
 
         public EvaluationScreen(GameCore core) : base(core)
@@ -26,8 +27,6 @@ namespace WGiBeat.Screens
             DrawGrades(spriteBatch);
             DrawModeSpecific(spriteBatch);
             DrawMisc(spriteBatch,gameTime);
-
-
         }
 
         private void DrawModeSpecific(SpriteBatch spriteBatch)
@@ -79,8 +78,6 @@ namespace WGiBeat.Screens
             spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Press Start to continue.",
                                    Core.Metrics["EvaluationInstruction", 0], Color.White);
         }
-
-
 
         private void DrawMax(SpriteBatch spriteBatch)
         {
@@ -248,6 +245,7 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black);
             return totalPerc/participants;
 
     }
+
         public override void PerformAction(Action action)
         {
             switch (action)
@@ -264,8 +262,6 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black);
             }
         }
 
-
-
         private void DrawBorders(SpriteBatch spriteBatch)
         {
             var brush = new PrimitiveLine(Core.GraphicsDevice) { Colour = Color.White };
@@ -281,8 +277,6 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black);
             brush.AddVector(new Vector2(800, 325));
             brush.Render(spriteBatch);
             brush.ClearVectors();
-
-
         }
     }
 }
