@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing.Sets
 {
-    public class LifebarSet
+    public class LifebarSet : DrawableObject
     {
 
         private readonly MetricsManager _metrics;
@@ -116,7 +116,7 @@ namespace WGiBeat.Drawing.Sets
 
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             switch (_gameType)
             {

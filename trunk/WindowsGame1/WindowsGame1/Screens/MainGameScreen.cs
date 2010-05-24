@@ -15,7 +15,6 @@ namespace WGiBeat.Screens
     {
 
         private List<BeatlineNote> _beatlineNotes;
-        private List<DisplayedJudgement> _displayedJudgements;
 
         private double _phraseNumber;
         private double _hitoffset;
@@ -24,9 +23,9 @@ namespace WGiBeat.Screens
         private LifebarSet _lifebarSet;
         private HitsBarSet _hitsbarSet;
         private ScoreSet _scoreSet;
+        private NoteJudgementSet _noteJudgementSet;
         private NoteBar[] _notebars;
         private int _playerCount = 0;
-        private GraphicNumber _streakNumbers;
         private GameSong _gameSong;
         private TimeSpan? _startTime;
         private int _displayState;
@@ -44,6 +43,7 @@ namespace WGiBeat.Screens
             _lifebarSet = new LifebarSet (Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
             _hitsbarSet = new HitsBarSet(Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
             _scoreSet = new ScoreSet(Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
+            _noteJudgementSet = new NoteJudgementSet(Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
             _displayState = 0;
             _songLoadDelay = 0.0;
             _confidence = 0;
@@ -83,28 +83,16 @@ namespace WGiBeat.Screens
 
             _startTime = null;
 
-
             _beatlineNotes = new List<BeatlineNote>();
             _notesToRemove = new List<BeatlineNote>();
-            _displayedJudgements = new List<DisplayedJudgement>();
 
-            _streakNumbers = new GraphicNumber
-            {
-                SpacingAdjustment = 1,
-                SpriteMap = new SpriteMap
-                {
-                    Columns = 3,
-                    Rows = 4,
-                    SpriteTexture = TextureManager.Textures["streakNumbers"]
-                }
-            };
             base.Initialize();
         }
 
         #region Updating
 
         private Timer _maintenanceThread;
-        private int timeCheck;
+        private int _timeCheck;
         public override void Update(GameTime gameTime)
         {
 
@@ -121,6 +109,7 @@ namespace WGiBeat.Screens
             }
             if (_maintenanceThread == null)
             {
+                _maintaining = false;
                 _maintenanceThread = new Timer(DoMaintenance,null,0,20);
             }
             if ((_displayState == 1) && (gameTime.TotalRealTime.TotalSeconds >= _transitionTime))
@@ -132,7 +121,7 @@ namespace WGiBeat.Screens
                 Core.ScreenTransition("Evaluation");
             }         
             _phraseNumber = 1.0 * (gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay - _gameSong.Offset * 1000) / 1000 * (_gameSong.Bpm / 240);
-            timeCheck = (int)(gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay);
+            _timeCheck = (int)(gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay);
             base.Update(gameTime);
         }
 
@@ -150,15 +139,14 @@ namespace WGiBeat.Screens
             {
                 return;
             }
-                //_phraseNumber = 1.0 * (Core.Songs.GetCurrentSongProgress() - _gameSong.Offset * 1000) / 1000 * (_gameSong.Bpm / 240);
+
                 MaintainBeatlineNotes();
-                MaintainDisplayedJudgements();
 
             //FMOD cannot reliably determine the position of the song. Using GetCurrentSongProgress()
             //as the default timing mechanism makes it jerky and slows the game down, so we attempt
             //to match current time with the song time by periodically sampling it. A hill climbing method
             // is used here.
-            var delay = Core.Songs.GetCurrentSongProgress() - timeCheck;
+            var delay = Core.Songs.GetCurrentSongProgress() - _timeCheck;
                 if ((_confidence < 15) && (Math.Abs(delay) > 25))
                 {
                     _confidence = 0;
@@ -185,29 +173,8 @@ namespace WGiBeat.Screens
             Core.Settings.Set("HighScorePlayer", Core.Songs.DetermineHighScore(Core.Players,Core.Settings.Get<GameType>("CurrentGameType")) );
         }
 
-        List<DisplayedJudgement> djToRemove = new List<DisplayedJudgement>();
-        private void MaintainDisplayedJudgements()
-        {
-            Monitor.Enter(_displayedJudgements);
-            foreach (DisplayedJudgement dj in _displayedJudgements)
-            {
-                if (dj.DisplayUntil <= _phraseNumber)
-                {
-                    djToRemove.Add(dj);
-                }
-            }
-
-            foreach (DisplayedJudgement djr in djToRemove)
-            {
-                _displayedJudgements.Remove(djr);
-            }
-            djToRemove.Clear();
-            Monitor.Exit(_displayedJudgements);
-        }
-
         private List<BeatlineNote> _notesToRemove;
         private double _lastBeatlineNote = -1;
-
 
         private void MaintainBeatlineNotes()
         {
@@ -226,7 +193,7 @@ namespace WGiBeat.Screens
                 _beatlineNotes.Remove(bnr);
                 if ((!bnr.Hit) && (!Core.Players[bnr.Player].KO))
                 {
-                    AwardJudgement(5, bnr.Player);
+                    _noteJudgementSet.AwardJudgement(BeatlineNoteJudgement.MISS, bnr.Player, null);
                 }
             }
 
@@ -252,7 +219,7 @@ namespace WGiBeat.Screens
             {
                 return 9999;
             }
-            return ((_gameSong.Length - _gameSong.Offset) * 1000) / 1000 * (_gameSong.Bpm / 240);
+            return ((_gameSong.Length - _gameSong.Offset) * 1000 + _songLoadDelay) / 1000 * (_gameSong.Bpm / 240);
         }
 
         #endregion
@@ -261,10 +228,10 @@ namespace WGiBeat.Screens
         /// <summary>
         /// Executes whenever the key has been pressed that corresponds to some action in the game.
         /// </summary>
-        /// <param name="action"></param>
+        /// <param name="action">The Action that the user has requested.</param>
         public override void PerformAction(Action action)
         {
-            bool songDebug = Core.Settings.Get<bool>("SongDebug");
+            var songDebug = Core.Settings.Get<bool>("SongDebug");
             switch (action)
             {
                 case Action.P1_LEFT:
@@ -361,7 +328,7 @@ namespace WGiBeat.Screens
                 return;
             }
 
-            if ((_notebars[player].CurrentNote() != null) && (ActionToDirection(action) == _notebars[player].CurrentNote().Direction))
+            if ((_notebars[player].CurrentNote() != null) && (Note.ActionToDirection(action) == _notebars[player].CurrentNote().Direction))
             {
                 _notebars[player].MarkCurrentCompleted();
                 Core.Players[player].Hits++;
@@ -414,7 +381,6 @@ namespace WGiBeat.Screens
             {
                 AwardJudgement(null, player);
                 //Create next note bar.
-
                 _notebars[player] = NoteBar.CreateNoteBar((int)Core.Players[player].Level, 0, Core.Metrics["Notebar", player]);
             }
 
@@ -428,35 +394,6 @@ namespace WGiBeat.Screens
             }
 
             Monitor.Exit(_beatlineNotes);
-        }
-
-        private NoteDirection ActionToDirection(Action action)
-        {
-            switch (action)
-            {
-                case Action.P1_LEFT:
-                case Action.P2_LEFT:
-                case Action.P3_LEFT:
-                case Action.P4_LEFT:
-                    return NoteDirection.LEFT;
-                case Action.P1_RIGHT:
-                case Action.P2_RIGHT:
-                case Action.P3_RIGHT:
-                case Action.P4_RIGHT:
-                    return NoteDirection.RIGHT;
-                case Action.P1_UP:
-                case Action.P2_UP:
-                case Action.P3_UP:
-                case Action.P4_UP:
-                    return NoteDirection.UP;
-                case Action.P1_DOWN:
-                case Action.P2_DOWN:
-                case Action.P3_DOWN:
-                case Action.P4_DOWN:
-                    return NoteDirection.DOWN;
-                default:
-                    return NoteDirection.COUNT;
-            }
         }
 
         #endregion
@@ -491,97 +428,23 @@ namespace WGiBeat.Screens
         {
             double offset = (nearest == null) ? 9999 : CalculateHitOffset(nearest);
             offset = Math.Abs(offset);
+            BeatlineNoteJudgement result = BeatlineNoteJudgement.FAIL;
 
-            if (offset < 20)
+            for (int x = 0; x < _noteJudgementSet.JudgementCutoffs.Count(); x++ )
             {
-                //IDEAL
-                AwardJudgement(1,player);
-            }
-            else if (offset < 50)
-            {
-                //COOL
-                AwardJudgement(2, player);
-            }
-            else if (offset < 125)
-            {
-                //OK
-                AwardJudgement(3, player);
-            }
-            else if (offset < 250)
-            {
-                //BAD
-                AwardJudgement(4, player);
-            }
-            else
-            {
-                //FAIL
-                AwardJudgement(0, player);
+                if (offset < _noteJudgementSet.JudgementCutoffs[x])
+                {
+                    result = (BeatlineNoteJudgement) x;
+                    break;
+                }
             }
 
-        }
-
-        private void AwardJudgement(int judgement, int player)
-        {
-            Texture2D tex;
-            double lifeAdjust = 0;
-            switch (judgement)
-            {
-                case 1:
-                    //IDEAL
-                    Core.Players[player].Streak++;
-                    double multiplier = ((9.0 + Math.Max(1, Core.Players[player].Streak))/10.0);
-                    Core.Players[player].Score += (long) (1000*_notebars[player].NumberCompleted()*multiplier);
-                    lifeAdjust = (1 * _notebars[player].NumberCompleted());
-                    Core.Players[player].Judgements[0]++;
-                    tex = TextureManager.Textures["noteJudgement1"];
-                    break;
-                case 2:
-                    //COOL
-                    Core.Players[player].Score += 750 * _notebars[player].NumberCompleted();
-                    lifeAdjust = (0.5 * _notebars[player].NumberCompleted());
-                    Core.Players[player].Streak = -1;
-                    Core.Players[player].Judgements[1]++;
-                    tex = TextureManager.Textures["noteJudgement2"];
-                    break;
-                case 3:
-                    //OK
-                    Core.Players[player].Score += 500 * _notebars[player].NumberCompleted();
-                    Core.Players[player].Streak = -1;
-                    Core.Players[player].Judgements[2]++;
-                    tex = TextureManager.Textures["noteJudgement3"];
-                    break;
-                case 4:
-                    //BAD
-                    Core.Players[player].Score += 250 * _notebars[player].NumberCompleted();
-                    Core.Players[player].Streak = -1;
-                    lifeAdjust = -1 * _notebars[player].NumberCompleted();
-                    Core.Players[player].Judgements[3]++;
-                    tex = TextureManager.Textures["noteJudgement4"];
-                    break;
-                case 5:
-                    //MISS
-                    lifeAdjust = Core.Players[player].MissedBeat();
-                    tex = TextureManager.Textures["noteJudgement5"];
-                    break;
-                default:
-                    //FAIL
-                    Core.Players[player].Streak = -1;
-                    lifeAdjust = 0 - (int)(1 + Core.Players[player].PlayDifficulty) * (_notebars[player].Notes.Count() - _notebars[player].NumberCompleted() + 1);
-                    Core.Players[player].Momentum = (long)(Core.Players[player].Momentum * 0.7);
-                    Core.Players[player].Judgements[4]++;
-                    tex = TextureManager.Textures["noteJudgement0"];
-                    break;
-            }
-            var newDj = new DisplayedJudgement { DisplayUntil = _phraseNumber + 0.5, Height = 40, Width = 150, Texture = tex, Player = player };
-            newDj.SetPosition(Core.Metrics["Judgement", player]);
-            
+            //TODO: Does this really need the notebar of the player?
+            var lifeAdjust = _noteJudgementSet.AwardJudgement(result, player, _notebars[player]);
             _lifebarSet.AdjustLife(lifeAdjust, player);
 
-            Monitor.Enter(_displayedJudgements);
-            _displayedJudgements.Add(newDj);
-            Monitor.Exit(_displayedJudgements);
-            
         }
+
 
         private BeatlineNote NearestBeatlineNote(int player)
         {
@@ -618,8 +481,42 @@ namespace WGiBeat.Screens
             return timeLeft <= 0.0;
         }
        
-
         #region Drawing
+
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            DrawBackground(spriteBatch);
+            DrawBorders(spriteBatch); 
+
+            //Draw the notebars.
+            for (int x = 0; x < 4; x++)
+            {
+                if (Core.Players[x].Playing)
+                {
+                    _notebars[x].Draw(spriteBatch);
+                }
+            }
+
+            //Draw the component sets.
+            _lifebarSet.Draw(spriteBatch);
+            _hitsbarSet.Draw(spriteBatch);
+            _scoreSet.Draw(spriteBatch);
+            _noteJudgementSet.Draw(spriteBatch,_phraseNumber);
+
+           
+            if (_phraseNumber < 0)
+            {
+                DrawCountdowns(spriteBatch);
+            }
+            
+            DrawLevelBars(spriteBatch);
+            DrawBeat(spriteBatch);
+            DrawKOIndicators(spriteBatch);
+            DrawSongInfo(spriteBatch,gameTime);
+            DrawClearIndicators(spriteBatch);
+            DrawText(spriteBatch);
+            
+        }
 
         private void DrawBackground(SpriteBatch spriteBatch)
         {
@@ -631,52 +528,7 @@ namespace WGiBeat.Screens
                 X = 0,
                 Y = 0
             };
-
             background.Draw(spriteBatch);
-        }
-
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            DrawBackground(spriteBatch);
-            //Begin drawing textures.
-
-            //Draw the lifebars and notebars.
-            for (int x = 0; x < 4; x++)
-            {
-                if (Core.Players[x].Playing)
-                {
-                    _notebars[x].Draw(spriteBatch);
-                }
-            }
-            _lifebarSet.Draw(spriteBatch);
-            _hitsbarSet.Draw(spriteBatch);
-            _scoreSet.Draw(spriteBatch);
-
-            //Draw beatline judgements.
-            Monitor.Enter(_displayedJudgements);
-            foreach (DisplayedJudgement dj in _displayedJudgements)
-            {
-                int opacity = Convert.ToInt32(Math.Max(0, (dj.DisplayUntil - _phraseNumber)*510));
-                opacity = Math.Min(opacity, 255);
-                dj.Opacity = Convert.ToByte(opacity);
-                dj.Draw(spriteBatch);
-            }
-            Monitor.Exit(_displayedJudgements);
-
-            DrawBorders(spriteBatch);            
-            if (_phraseNumber < 0)
-            {
-                DrawCountdowns(spriteBatch);
-            }
-            
-            DrawStreakCounters(spriteBatch);
-            DrawLevelBars(spriteBatch);
-            DrawBeat(spriteBatch);
-            DrawKOIndicators(spriteBatch);
-            DrawSongInfo(spriteBatch,gameTime);
-            DrawClearIndicators(spriteBatch);
-            DrawText(spriteBatch);
-            
         }
 
         private void DrawCountdowns(SpriteBatch spriteBatch)
@@ -687,7 +539,7 @@ namespace WGiBeat.Screens
                 {
                     continue;
                 }
-                var countdownSpriteMap = new SpriteMap()
+                var countdownSpriteMap = new SpriteMap
                                              {
                                                  Columns = 1,
                                                  Rows = 4,
@@ -764,34 +616,6 @@ namespace WGiBeat.Screens
             }
         }
 
-        private void DrawStreakCounters(SpriteBatch spriteBatch)
-        {
-            for (int x = 0; x < _playerCount; x++)
-            {
-                if (Core.Players[x].Streak > 0)
-                {
-                    var currentJudgement = GetDisplayedJudgement(x);
-                    if (currentJudgement == null)
-                    {
-                        return;
-                    }
-                    if (currentJudgement.Texture != TextureManager.Textures["noteJudgement1"])
-                    {
-                        return;
-                    }
-                    _streakNumbers.SpriteMap.ColorShading.A = currentJudgement.Opacity;
-
-                    _streakNumbers.DrawNumber(spriteBatch, Core.Players[x].Streak, Core.Metrics["StreakText", x], 30, 40);
-                }
-            }
-        }
-
-        private DisplayedJudgement GetDisplayedJudgement(int player)
-        {
-            return
-                (from e in _displayedJudgements where e.Player == player orderby e.DisplayUntil select e).FirstOrDefault
-                    ();
-        }
         private void DrawLevelBars(SpriteBatch spriteBatch)
         {
             const int LEVELBAR_MAX_WIDTH = 185;
@@ -958,7 +782,7 @@ namespace WGiBeat.Screens
             pulseSprite.Width = (int) (80*(Math.Ceiling(_phraseNumber) - (_phraseNumber)));
             pulseSprite.ColorShading.A = (byte)(pulseSprite.Width * 255 / 80);
             pulseSprite.Height = 42;
-            Console.WriteLine(pulseSprite.ColorShading.A);
+            //Console.WriteLine(pulseSprite.ColorShading.A);
             for (int x = 0; x < _playerCount; x++)
             {
                 if ((!Core.Players[x].Playing) || (Core.Players[x].KO))

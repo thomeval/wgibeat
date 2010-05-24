@@ -105,6 +105,7 @@
     <Compile Include="Drawing\MetricsManager.cs" />
     <Compile Include="Drawing\Sets\HitsBarSet.cs" />
     <Compile Include="Drawing\Sets\LifebarSet.cs" />
+    <Compile Include="Drawing\Sets\NoteJudgementSet.cs" />
     <Compile Include="Drawing\Sets\ScoreSet.cs" />
     <Compile Include="Screens\ModeSelectScreen.cs" />
     <Compile Include="Drawing\NormalLifebar.cs" />
