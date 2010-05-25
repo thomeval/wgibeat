@@ -9,22 +9,32 @@ namespace WGiBeat.Screens
     public class ModeSelectScreen : GameScreen
     {
         private int _selectedGameType = 0;
+        private SpriteMap _baseSpriteMap;
+        private SpriteMap _optionsSpriteMap;
 
          public ModeSelectScreen(GameCore core)
              : base(core)
         {
-            BuildMenu();
         }
 
-        private void BuildMenu()
-        {
-
-        }
 
         public override void Initialize()
         {
+            _baseSpriteMap = new SpriteMap
+                                 {
+                                     Columns = 2, 
+                                     Rows = 1, 
+                                     SpriteTexture = TextureManager.Textures["modeOptionBase"]
+                                 };
 
+            _optionsSpriteMap = new SpriteMap
+            {
+                Columns = 1,
+                Rows = (int) GameType.COUNT,
+                SpriteTexture = TextureManager.Textures["modeOptions"]
+            };
             base.Initialize();
+
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
@@ -34,7 +44,24 @@ namespace WGiBeat.Screens
             var headerSprite = new Sprite {SpriteTexture = TextureManager.Textures["modeSelectHeader"]};
             headerSprite.SetPosition(Core.Metrics["ModeSelectScreenHeader", 0]);
             headerSprite.Draw(spriteBatch);
-            spriteBatch.DrawString(TextureManager.Fonts["LargeFont"],"" + (GameType) _selectedGameType, new Vector2(150,250),Color.Black);
+
+            DrawModeOptions(spriteBatch);
+           
+        }
+
+        private void DrawModeOptions(SpriteBatch spriteBatch)
+        {
+            var posX = (int) Core.Metrics["ModeSelectOptions", 0].X;
+            var posY = (int) Core.Metrics["ModeSelectOptions", 0].Y;
+
+            for (int x = 0; x < (int) GameType.COUNT; x++)
+            {
+                int selected = (x == _selectedGameType) ? 1 : 0;
+                _baseSpriteMap.Draw(spriteBatch, selected,270,270,posX,posY);
+
+                _optionsSpriteMap.Draw(spriteBatch,x,248,248,posX + 11, posY + 11);
+                posX += 275;
+            }
         }
 
         private void DrawBackground(SpriteBatch spriteBatch)
