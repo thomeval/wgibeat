@@ -81,4 +81,5 @@ OptionsMenuStart=[30,100];
 
 #Mode Select;
 ModeSelectScreenHeader=[0,0];
+ModeSelectOptions=[30,85];
 
