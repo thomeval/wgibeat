@@ -1,5 +1,9 @@
 ﻿namespace WGiBeat.Notes
 {
+    /// <summary>
+    /// A BeatlineNote represents a single note on a Beatline that must be hit in time with the beat of a song,
+    /// after all arrows in the current NoteBar have been hit.
+    /// </summary>
     public class BeatlineNote
     {
         public int Player { get; set; }
@@ -10,6 +14,9 @@
 
     }
 
+    /// <summary>
+    /// Represents how accurately a BeatlineNote was hit. Use COUNT to get the number of judgements available.
+    /// </summary>
     public enum BeatlineNoteJudgement
     {
         IDEAL = 0,

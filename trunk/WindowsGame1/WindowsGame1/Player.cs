@@ -4,6 +4,9 @@ using WGiBeat.Notes;
 
 namespace WGiBeat
 {
+    /// <summary>
+    /// Represents a single player currently playing the game. Multiple players can play simultaneously.
+    /// </summary>
     public class Player
     {
 
@@ -11,10 +14,9 @@ namespace WGiBeat
         {
             Judgements = new int[8];
         }
+
         public string Name { get; set; }
-
         public double Life { get; set; }
-
         public long Score { get; set; }
 
         private long _hits;
@@ -73,7 +75,7 @@ namespace WGiBeat
             }
         }
 
-        private int MaxDifficulty(Difficulty difficulty)
+        private static int MaxDifficulty(Difficulty difficulty)
         {
             switch (difficulty)
             {
@@ -84,7 +86,9 @@ namespace WGiBeat
                 case Difficulty.MEDIUM:
                     return 7;
                 case Difficulty.HARD:
-                    return 10;
+                    return 9;
+                case Difficulty.INSANE:
+                    return 11;
                     default:
                     return 10;
             }
@@ -94,7 +98,6 @@ namespace WGiBeat
         {
                 return MaxDifficulty(PlayDifficulty);
         }
-
 
         public Difficulty PlayDifficulty { get; set; }
 
@@ -168,6 +171,7 @@ namespace WGiBeat
         BEGINNER = 0,
         EASY = 1,
         MEDIUM = 2,
-        HARD = 3
+        HARD = 3,
+        INSANE = 4
     }
 }

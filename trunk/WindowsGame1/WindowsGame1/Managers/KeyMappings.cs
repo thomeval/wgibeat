@@ -7,6 +7,10 @@ using Microsoft.Xna.Framework.Input;
 
 namespace WGiBeat.Managers
 {
+    /// <summary>
+    /// Maps keys and gamepad buttons to a set of predetermined Actions. Almost all GameScreens use Actions exclusively for input.
+    /// Also allows the player to change these bindings. The bindings can be loaded from or saved to file.
+    /// </summary>
     public class KeyMappings
     {
         private Dictionary<Keys, Action> _mappings = new Dictionary<Keys, Action>();
@@ -175,6 +179,9 @@ namespace WGiBeat.Managers
         }
     }
 
+    /// <summary>
+    /// All predetermined Actions that are valid inputs for the game.
+    /// </summary>
     public enum Action
     {
         P1_LEFT,

@@ -44,7 +44,7 @@ namespace WGiBeat.Screens
         {
             foreach (GameSong song in Core.Songs.AllSongs())
             {
-                SongList.Add(new SongListItem {Height = 50, Song = song, Width = 350});
+                SongList.Add(new SongListItem {Height = 50, Song = song, Width = 380});
             }
         }
 

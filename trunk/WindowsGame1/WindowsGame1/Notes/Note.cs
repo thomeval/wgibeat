@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using WGiBeat.Drawing;
-using Action=WGiBeat.Managers.Action;
+﻿using Action=WGiBeat.Managers.Action;
 
 namespace WGiBeat.Notes
 {
+    /// <summary>
+    /// This represents a single note arrow that a player must press. An arrow can be pointing either left, right, up or down.
+    /// It can also be reversed (which will cause it to be drawn differently).
+    /// </summary>
     public class Note
     {
 
@@ -43,8 +42,6 @@ namespace WGiBeat.Notes
             }
         }
     }
-
-
 
     public enum NoteDirection
     {

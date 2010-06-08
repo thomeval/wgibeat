@@ -424,6 +424,8 @@ namespace WGiBeat.Screens
                     return 70;
                 case Difficulty.HARD:
                     return 150;
+                case Difficulty.INSANE:
+                    return 200;
                 default:
                     return 0;
             }
@@ -543,6 +545,7 @@ namespace WGiBeat.Screens
             background.Draw(spriteBatch);
         }
 
+        private readonly double[] _threshholds = {-1.00, -0.75, -0.5, -0.25, 0.0};
         private void DrawCountdowns(SpriteBatch spriteBatch)
         {
             for (int x = 0; x < Core.Players.Count(); x++)
@@ -554,26 +557,20 @@ namespace WGiBeat.Screens
                 var countdownSpriteMap = new SpriteMap
                                              {
                                                  Columns = 1,
-                                                 Rows = 4,
+                                                 Rows = 5,
                                                  SpriteTexture = TextureManager.Textures["countdown"]
                                              };
 
-                if (_phraseNumber < -0.75)
+                for (int y = 0; y < _threshholds.Count(); y++)
                 {
-                    countdownSpriteMap.Draw(spriteBatch,0,200,60,Core.Metrics["Countdown",x]);
+                    if (_phraseNumber < _threshholds[y])
+                    {
+                        countdownSpriteMap.ColorShading.A = (byte) Math.Min(255,(_threshholds[y] -  _phraseNumber) * 255 * 4);
+                        countdownSpriteMap.Draw(spriteBatch, y, 200, 60, Core.Metrics["Countdown", x]);
+                        break;
+                    }
                 }
-                else if (_phraseNumber < -0.5)
-                {
-                    countdownSpriteMap.Draw(spriteBatch, 1, 200, 60, Core.Metrics["Countdown", x]);
-                }
-                else if (_phraseNumber < -0.25)
-                {
-                    countdownSpriteMap.Draw(spriteBatch, 2, 200, 60, Core.Metrics["Countdown", x]);
-                }
-                else if (_phraseNumber < -0.0)
-                {
-                    countdownSpriteMap.Draw(spriteBatch, 3, 200, 60, Core.Metrics["Countdown", x]);
-                }
+  
             }
         }
 
