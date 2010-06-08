@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
-namespace WGiBeat
+namespace WGiBeat.Managers
 {
+    /// <summary>
+    /// Stores all current settings relevent to the game. These settings should be accessible from anywhere in the program, and
+    /// can be saved to or loaded from file.
+    /// </summary>
     public class SettingsManager
     {
         private Dictionary<string, object> _settings;

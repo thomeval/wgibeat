@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using WGiBeat.Helpers;
-using Action=WGiBeat.Managers.Action;
 
 namespace WGiBeat.Screens
 {
@@ -35,13 +34,27 @@ namespace WGiBeat.Screens
         //    base.Update(gameTime);
         //}
 
+        /// <summary>
+        /// Informs a GameScreen that a specific key has been pressed. Unless necessary, use PerformAction() instead.
+        /// </summary>
+        /// <param name="key">The key that was pressed.</param>
         public virtual void PerformKey(Keys key)
         {
             //Virtual so not all GameScreens need to implement it.
         }
 
+        /// <summary>
+        /// Executes when the GameScreen should draw itself. Normally occurs about 60 times a second, but timing is
+        /// not guarunteed to be stable. This method assumes GraphicsDevice.Clear() is already called before this.
+        /// </summary>
+        /// <param name="gameTime">The current real and game time.</param>
+        /// <param name="spriteBatch">The SpriteBatch to use for drawing.</param>
         public abstract void Draw(GameTime gameTime, SpriteBatch spriteBatch);
 
-        public abstract void PerformAction(Action action);
+        /// <summary>
+        /// Informs a GameScreen that a player has performed a specific action, and should respond accordingly.
+        /// </summary>
+        /// <param name="action">The action that was requested.</param>
+        public abstract void PerformAction(Managers.Action action);
     }
 }

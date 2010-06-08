@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
@@ -11,11 +8,11 @@ namespace WGiBeat.Screens
 {
     public class NewGameScreen : GameScreen
     {
-        private int _playersJoined = 0;
+        private int _playersJoined;
 
-        private int[] _cursorPositions = new int[4];
+        private readonly int[] _cursorPositions = new int[4];
 
-        private Menu[] _playerMenus = new Menu[4];
+        private readonly Menu[] _playerMenus = new Menu[4];
         public NewGameScreen(GameCore core) : base(core)
         {
 
@@ -246,11 +243,6 @@ namespace WGiBeat.Screens
                     (Difficulty) (int) _playerMenus[x].GetByItemText("Difficulty").SelectedValue();
             }
                 Core.ScreenTransition("ModeSelect");
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
         }
     }
 }

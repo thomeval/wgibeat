@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
@@ -25,18 +22,18 @@ namespace WGiBeat.Screens
             var item = new MenuItem {ItemText = "Song Volume"};
             for (int x = 0; x < 11; x++)
             {
-                item.AddOption(x + "0%", x * 0.1);
+                item.AddOption(x + "0%", "" + x * 0.1);
             }
             _optionsMenu.AddItem(item);
 
-            item = new MenuItem() {ItemText = "Song Debugging"};
+            item = new MenuItem {ItemText = "Song Debugging"};
             item.AddOption("Off", false);
             item.AddOption("On",true);
             _optionsMenu.AddItem(item);
 
-            item = new MenuItem() {ItemText = "Save"};
+            item = new MenuItem {ItemText = "Save"};
             _optionsMenu.AddItem(item);
-            item = new MenuItem() {ItemText = "Cancel"};
+            item = new MenuItem {ItemText = "Cancel"};
             _optionsMenu.AddItem(item);
         }
 
@@ -127,12 +124,12 @@ namespace WGiBeat.Screens
 
         private void LoadOptions()
         {
-            _optionsMenu.GetByItemText("Song Volume").SetSelectedByValue(Core.Settings.Get<object>("SongVolume"));
+            _optionsMenu.GetByItemText("Song Volume").SetSelectedByValue("" +Core.Settings.Get<object>("SongVolume"));
             _optionsMenu.GetByItemText("Song Debugging").SetSelectedByValue(Core.Settings.Get<object>("SongDebug"));
         }
         private void SaveOptions()
         {
-            Core.Settings.Set("SongVolume",(_optionsMenu.GetByItemText("Song Volume").SelectedValue()));
+            Core.Settings.Set("SongVolume",(Convert.ToDouble(_optionsMenu.GetByItemText("Song Volume").SelectedValue())));
             Core.Settings.Set("SongDebug", (_optionsMenu.GetByItemText("Song Debugging").SelectedValue()));
 
             Core.Settings.SaveToFile("settings.txt");

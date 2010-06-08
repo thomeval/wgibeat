@@ -7,6 +7,11 @@ using WGiBeat.Drawing;
 
 namespace WGiBeat.Notes
 {
+    /// <summary>
+    /// A NoteBar consists of a number of arrows that must be pressed in sequence. A NoteBar is responsible for drawing
+    /// all of the arrows it contains, as well as its background. To create a NoteBar with a random sequence of notes,
+    /// use CreateNoteBar().
+    /// </summary>
     public class NoteBar : DrawableObject
     {
 

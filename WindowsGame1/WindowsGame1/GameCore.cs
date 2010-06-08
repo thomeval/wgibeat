@@ -63,7 +63,6 @@ namespace WGiBeat
                 Players[x] = new Player {Hits = 0, Momentum = 0, Life = 50, Score = 0, PlayDifficulty = Difficulty.BEGINNER, Streak = -1};
             }
 
-
             Boolean passed = KeyMappings.LoadFromFile("Keys.conf");
 
             if (!passed)
