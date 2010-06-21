@@ -684,6 +684,8 @@ namespace WGiBeat.Screens
                 spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + String.Format("{0:F3}", _phraseNumber), Core.Metrics["SongDebugPhrase", 0], Color.Black);
                 spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Hitoffset: {0:F3}",  _hitoffset),
                            Core.Metrics["SongDebugHitOffset",0], Color.Black);
+                spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Length: {0:F3}", _gameSong.Length),
+               Core.Metrics["SongDebugLength", 0], Color.Black);
         }
 
         private void DrawBorders(SpriteBatch spriteBatch)
