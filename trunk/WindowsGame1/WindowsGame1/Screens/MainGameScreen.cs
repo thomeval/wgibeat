@@ -512,7 +512,7 @@ namespace WGiBeat.Screens
             }
 
             //Draw the component sets.
-            _lifebarSet.Draw(spriteBatch);
+            _lifebarSet.Draw(spriteBatch, _phraseNumber);
             _hitsbarSet.Draw(spriteBatch);
             _scoreSet.Draw(spriteBatch);
             _noteJudgementSet.Draw(spriteBatch,_phraseNumber);
@@ -743,9 +743,7 @@ namespace WGiBeat.Screens
                 }
                 else
                 {
-                    markerPosition.X = (int)Core.Metrics["BeatlineBarBase", bn.Player].X + 28 - (markerBeatOffset);
-
-                                   
+                    markerPosition.X = (int)Core.Metrics["BeatlineBarBase", bn.Player].X + 28 - (markerBeatOffset);     
                 
                     if (markerBeatOffset > 0)
                     {

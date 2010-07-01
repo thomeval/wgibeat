@@ -104,6 +104,7 @@
     <Compile Include="Drawing\MenuItem.cs" />
     <Compile Include="Drawing\MetricsManager.cs" />
     <Compile Include="Drawing\Sets\HitsBarSet.cs" />
+    <Compile Include="Drawing\Sets\LevelBarSet.cs" />
     <Compile Include="Drawing\Sets\LifebarSet.cs" />
     <Compile Include="Drawing\Sets\NoteJudgementSet.cs" />
     <Compile Include="Drawing\Sets\ScoreSet.cs" />
