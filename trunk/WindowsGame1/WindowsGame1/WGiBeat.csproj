@@ -100,6 +100,7 @@
     <Compile Include="Drawing\DisplayedJudgement.cs" />
     <Compile Include="Drawing\DrawableObject.cs" />
     <Compile Include="Drawing\GraphicNumber.cs" />
+    <Compile Include="Drawing\LevelBar.cs" />
     <Compile Include="Drawing\Menu.cs" />
     <Compile Include="Drawing\MenuItem.cs" />
     <Compile Include="Drawing\MetricsManager.cs" />
