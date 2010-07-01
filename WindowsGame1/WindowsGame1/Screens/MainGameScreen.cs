@@ -22,6 +22,7 @@ namespace WGiBeat.Screens
         private double _songLoadDelay;
 
         private LifebarSet _lifebarSet;
+        private LevelBarSet _levelbarSet;
         private HitsBarSet _hitsbarSet;
         private ScoreSet _scoreSet;
         private NoteJudgementSet _noteJudgementSet;
@@ -42,6 +43,7 @@ namespace WGiBeat.Screens
             _playerCount = 4;
             _notebars = new NoteBar[_playerCount];
             _lifebarSet = new LifebarSet (Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
+            _levelbarSet = new LevelBarSet(Core.Metrics, Core.Players,Core.Settings.Get<GameType>("CurrentGameType"));
             _hitsbarSet = new HitsBarSet(Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
             _scoreSet = new ScoreSet(Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
             _noteJudgementSet = new NoteJudgementSet(Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
@@ -513,6 +515,7 @@ namespace WGiBeat.Screens
 
             //Draw the component sets.
             _lifebarSet.Draw(spriteBatch, _phraseNumber);
+            _levelbarSet.Draw(spriteBatch);
             _hitsbarSet.Draw(spriteBatch);
             _scoreSet.Draw(spriteBatch);
             _noteJudgementSet.Draw(spriteBatch,_phraseNumber);
@@ -523,7 +526,6 @@ namespace WGiBeat.Screens
                 DrawCountdowns(spriteBatch);
             }
             
-            DrawLevelBars(spriteBatch);
             DrawBeat(spriteBatch);
             DrawKOIndicators(spriteBatch);
             DrawSongInfo(spriteBatch,gameTime);
@@ -622,45 +624,6 @@ namespace WGiBeat.Screens
                     koSprite.SetPosition(Core.Metrics["KOIndicator", x]);
                     koSprite.Draw(spriteBatch);
                 }
-            }
-        }
-
-        private void DrawLevelBars(SpriteBatch spriteBatch)
-        {
-            const int LEVELBAR_MAX_WIDTH = 185;
-            for (int x = 0; x < _playerCount; x++)
-            {
-                if (!Core.Players[x].Playing)
-                {
-                    continue;
-                }
-                var baseSprite = new Sprite
-                {
-                    Height = 25,
-                    Width = 216,
-                    SpriteTexture = TextureManager.Textures["levelBarBase"]
-
-                };
-                baseSprite.SetPosition(Core.Metrics["LevelBarBase", x]);
-                baseSprite.Draw(spriteBatch);
-                spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + (int)Core.Players[x].Level,
-                       Core.Metrics["LevelText", x], Color.Black);
-
-                double levelFraction = Core.Players[x].Level - (int)Core.Players[x].Level;
-                var barWidth = (int)(levelFraction * LEVELBAR_MAX_WIDTH);
-
-                if (Core.Players[x].Level == Core.Players[x].MaxDifficulty())
-                {
-                    barWidth = LEVELBAR_MAX_WIDTH;
-                }
-                var barSprite = new SpriteMap
-                {
-                    Columns = 1,
-                    Rows = 12,
-                    SpriteTexture = TextureManager.Textures["levelBarFronts"]
-                };
-
-                barSprite.Draw(spriteBatch, (int) Core.Players[x].Level - 1, barWidth, 19, Core.Metrics["LevelBar", x]);
             }
         }
 

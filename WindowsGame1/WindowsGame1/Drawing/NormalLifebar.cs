@@ -131,6 +131,7 @@ namespace WGiBeat.Drawing
             _frontPart.Draw(spriteBatch, PlayerID, frontWidth, this.Height - 6, this.X + 3, this.Y + 3);
 
             _displayedLife = Parent.Players[PlayerID].Life;
+            DrawAdjustments(spriteBatch);
             if (_displayedLife > 100)
             {
 
@@ -143,7 +144,7 @@ namespace WGiBeat.Drawing
                                               _overchargePart.Height);
                 }
             }
-            DrawAdjustments(spriteBatch);
+
             _gridPart.Draw(spriteBatch);
             DrawText(spriteBatch, _sidePart.X + 5, _sidePart.Y);
             _overchargeTextureOffset = (_overchargeTextureOffset + 0.5) % OVERCHARGE_OFFSET_CLIP;
@@ -163,7 +164,6 @@ namespace WGiBeat.Drawing
 
         private void DrawAdjustments(SpriteBatch spriteBatch)
         {
-
 
                 var myWidth = (int)((this.Width - 6) / LIFEBAR_CAPACITY * (Parent.Players[PlayerID].Life));
             myWidth = Math.Min(this.Width - 6, myWidth);
