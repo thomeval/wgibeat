@@ -200,7 +200,7 @@ namespace WGiBeat.Screens
                 }
             }
 
-            if ((_phraseNumber + 1 > _lastBeatlineNote) && (_lastBeatlineNote +1 < GetEndingTimeInPhrase()))
+            if ((_phraseNumber + 2 > _lastBeatlineNote) && (_lastBeatlineNote + 2 < GetEndingTimeInPhrase()))
             {
                 _lastBeatlineNote++;
                 for (int x = 0; x < _playerCount; x++)
@@ -404,7 +404,7 @@ namespace WGiBeat.Screens
             if (nearestBeatline != null)
             {
                 nearestBeatline.Hit = true;
-                nearestBeatline.DisplayPosition = CalculateAbsoluteBeatlinePosition(nearestBeatline.Position);
+                nearestBeatline.DisplayPosition = CalculateAbsoluteBeatlinePosition(nearestBeatline.Position, nearestBeatline.Player);
                 nearestBeatline.Position = _phraseNumber + 0.3;
             }
 
@@ -412,7 +412,6 @@ namespace WGiBeat.Screens
         }
 
         #endregion
-
 
         private static long MomentumIncreaseByDifficulty(Difficulty difficulty)
         {
@@ -435,9 +434,9 @@ namespace WGiBeat.Screens
 
         #region Beatline and Judgement
 
-        private int CalculateAbsoluteBeatlinePosition(double position)
+        private int CalculateAbsoluteBeatlinePosition(double position, int player)
         {
-            return (int)(BEAT_ZOOM_DISTANCE * (position - _phraseNumber));
+            return (int)((position - _phraseNumber) * Core.Players[player].BeatlineSpeed * BEAT_ZOOM_DISTANCE);
         }
 
 
@@ -690,10 +689,11 @@ namespace WGiBeat.Screens
             Monitor.Enter(_beatlineNotes);
             foreach (BeatlineNote bn in _beatlineNotes)
             {
-                var markerBeatOffset = (int)(BEAT_ZOOM_DISTANCE * (_phraseNumber - bn.Position));
+                var noteSpeed = Core.Players[bn.Player].BeatlineSpeed;
+                var markerBeatOffset = (int)(noteSpeed * BEAT_ZOOM_DISTANCE * (_phraseNumber - bn.Position));
 
                 //Dont render notes outside the visibility range.
-                if ((-1 * markerBeatOffset) > BEAT_ZOOM_DISTANCE * BEAT_VISIBILITY)
+                if (((-1 * markerBeatOffset) > BEAT_ZOOM_DISTANCE * BEAT_VISIBILITY) && (!bn.Hit))
                 {
                     continue;
                 }
@@ -701,16 +701,17 @@ namespace WGiBeat.Screens
                 var markerPosition = new Vector2{Y = (int)Core.Metrics["BeatlineBarBase", bn.Player].Y + 3};
                 if (bn.Hit)
                 {
-                    markerPosition.X = (int)Core.Metrics["BeatlineBarBase", bn.Player].X + 28 + bn.DisplayPosition;
+                    markerPosition.X = (int)Core.Metrics["BeatlineBarBase", bn.Player].X + 28 + (bn.DisplayPosition);
                     markerSprite.ColorShading.A = 128;
                 }
                 else
                 {
-                    markerPosition.X = (int)Core.Metrics["BeatlineBarBase", bn.Player].X + 28 - (markerBeatOffset);     
+                    markerPosition.X = (int)Core.Metrics["BeatlineBarBase", bn.Player].X + 28 -(markerBeatOffset);     
                 
                     if (markerBeatOffset > 0)
                     {
-                        markerSprite.ColorShading.A = (byte)(Math.Max(0, 255 + 1.5 * CalculateHitOffset(bn)));
+                        markerSprite.ColorShading.A = (byte)(Math.Max(0, 255 - 10 * markerBeatOffset));
+                        System.Diagnostics.Debug.WriteLine(Math.Max(0, 255 - 10 * markerBeatOffset));
                     }
                     else
                     {
