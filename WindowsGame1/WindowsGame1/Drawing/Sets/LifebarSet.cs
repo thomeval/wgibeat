@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing.Sets
@@ -118,13 +119,17 @@ namespace WGiBeat.Drawing.Sets
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            Draw(spriteBatch, 0.0);
+        }
+        public void Draw(SpriteBatch spriteBatch, double gameTime)
+        {
             switch (_gameType)
             {
                 case GameType.NORMAL:
                     for (int x = 0; x < 4; x++)
                     {
                         if (Players[x].Playing)
-                            _lifebars[x].Draw(spriteBatch);
+                            _lifebars[x].Draw(spriteBatch, gameTime);
                     }
                     break;
                 case GameType.COOPERATIVE:
@@ -159,5 +164,6 @@ namespace WGiBeat.Drawing.Sets
                 SetLife(Players[x].Life, x);
             }
         }
+
     }
 }

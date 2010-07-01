@@ -22,16 +22,14 @@ namespace WGiBeat.Drawing
             _displayedLife = new double[4];
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch, double gameTime)
         {
-
             DrawBase(spriteBatch);
-            double penaltyMx = Math.Max(0,TotalLife()/TotalPositive());
-            var frontSpriteMap = new SpriteMap
-                                     {Columns = 1, Rows = 4, SpriteTexture = TextureManager.Textures["lifebarFront"]};
+            double penaltyMx = Math.Max(0, TotalLife() / TotalPositive());
+            var frontSpriteMap = new SpriteMap { Columns = 1, Rows = 4, SpriteTexture = TextureManager.Textures["lifebarFront"] };
 
             int posX = this.X + 3;
-            int capacity = 100*Participants();
+            int capacity = 100 * Participants();
             for (int x = 0; x < 4; x++)
             {
                 if (!Parent.Players[x].Playing)
@@ -39,8 +37,8 @@ namespace WGiBeat.Drawing
                     continue;
                 }
 
-                var pieceWidth = (int) ((this.Width - 6) *(Parent.Players[x].Life/capacity));
-                pieceWidth = (int) (penaltyMx * pieceWidth);
+                var pieceWidth = (int)((this.Width - 6) * (Parent.Players[x].Life / capacity));
+                pieceWidth = (int)(penaltyMx * pieceWidth);
                 if (pieceWidth > 0)
                 {
                     frontSpriteMap.Draw(spriteBatch, x, pieceWidth, this.Height - 6, posX, this.Y + 3);
@@ -49,6 +47,11 @@ namespace WGiBeat.Drawing
             }
 
             DrawSides(spriteBatch);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            Draw(spriteBatch, 0.0);
         }
 
         private double TotalPositive()
@@ -148,5 +151,6 @@ namespace WGiBeat.Drawing
                 _displayedLife[x] = 0;
             }
         }
+
     }
 }
