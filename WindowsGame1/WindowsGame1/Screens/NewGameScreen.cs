@@ -33,6 +33,18 @@ namespace WGiBeat.Screens
                     difficulty.AddOption("Medium", 2);
                     difficulty.AddOption("Hard", 3);
                     _playerMenus[x].AddItem(difficulty);
+
+                var noteSpeed = new MenuItem {ItemText = "Beatline Speed"};
+                noteSpeed.AddOption("0.5x",0.5);
+                noteSpeed.AddOption("1x",1.0);
+                noteSpeed.AddOption("1.5x",1.5);
+                noteSpeed.AddOption("2x", 2.0);
+                noteSpeed.AddOption("3x", 3.0);
+                noteSpeed.AddOption("4x", 4.0);
+                noteSpeed.AddOption("6x", 6.0);
+                noteSpeed.SetSelectedByValue(1.0);
+                _playerMenus[x].AddItem(noteSpeed);
+
                 _playerMenus[x].SetPosition(Core.Metrics["NewGameMenuStart",x]);
                 _playerMenus[x].AddItem(new MenuItem { ItemText = "Leave" });
             }
@@ -241,6 +253,7 @@ namespace WGiBeat.Screens
             {
                 Core.Players[x].PlayDifficulty =
                     (Difficulty) (int) _playerMenus[x].GetByItemText("Difficulty").SelectedValue();
+                Core.Players[x].BeatlineSpeed = (double) _playerMenus[x].GetByItemText("Beatline Speed").SelectedValue();
             }
                 Core.ScreenTransition("ModeSelect");
         }

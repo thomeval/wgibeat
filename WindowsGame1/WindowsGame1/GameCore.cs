@@ -60,7 +60,16 @@ namespace WGiBeat
 
             for (int x = 0; x < 4; x++)
             {
-                Players[x] = new Player {Hits = 0, Momentum = 0, Life = 50, Score = 0, PlayDifficulty = Difficulty.BEGINNER, Streak = -1};
+                Players[x] = new Player
+                                 {
+                                     Hits = 0,
+                                     Momentum = 0,
+                                     Life = 50,
+                                     Score = 0,
+                                     PlayDifficulty = Difficulty.BEGINNER,
+                                     Streak = -1,
+                                     BeatlineSpeed = 1.0
+                                 };
             }
 
             Boolean passed = KeyMappings.LoadFromFile("Keys.conf");

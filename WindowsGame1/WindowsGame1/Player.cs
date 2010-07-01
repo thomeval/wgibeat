@@ -58,6 +58,7 @@ namespace WGiBeat
         //0 = Ideal, 1 = Cool, 2 = Ok, 3 = Bad, 4 = Fail, 5 = Miss, 6 = Fault;
         public int[] Judgements { get; set; }
 
+        public double BeatlineSpeed { get; set; }
         public double Level
         {
             get
