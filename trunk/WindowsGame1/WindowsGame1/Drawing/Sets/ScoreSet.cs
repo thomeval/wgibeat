@@ -12,6 +12,7 @@ namespace WGiBeat.Drawing.Sets
         private long[] _displayedScores;
         private readonly MetricsManager _metrics;
         private readonly GameType _gameType;
+        private SpriteMap _iconSpriteMap;
 
         private ScoreSet()
         {
@@ -24,7 +25,30 @@ namespace WGiBeat.Drawing.Sets
 
             DrawIndividualScores(spriteBatch);
             DrawCombinedScores(spriteBatch);
+            DrawPlayerDifficulties(spriteBatch);
 
+        }
+
+        private void DrawPlayerDifficulties(SpriteBatch spriteBatch)
+        {
+            if (_iconSpriteMap == null)
+            {
+                _iconSpriteMap = new SpriteMap
+                                        {
+                                            Columns = 1,
+                                            Rows = (int) Difficulty.COUNT + 1,
+                                            SpriteTexture = TextureManager.Textures["playerDifficulties"]
+                                        };
+            }
+            for (int x = 0; x < 4; x++)
+            {
+                if (! _players[x].Playing)
+                {
+                    continue;
+                }
+                int idx = 1 + (int)(_players[x].PlayDifficulty);
+                _iconSpriteMap.Draw(spriteBatch, idx, 30, 30, _metrics["GameScreenPlayerDifficulties", x]);
+            }
         }
 
         private void DrawCombinedScores(SpriteBatch spriteBatch)

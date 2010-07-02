@@ -20,6 +20,7 @@ Judgement=[120,195][540,235][120,325][540,365];
 StreakText=[170,235][590,195][170,365][590,325];
 BeatlineBarBase=[275,195][275,235][275,325][275,365];
 Countdown=[60,155][550,155][60,385][550,385];
+GameScreenPlayerDifficulties=[70,10][620,10][70,560][620,560];
 SongTitle=[10,275];
 SongArtist=[10,300];
 SongTimeLeft=[350,275];
