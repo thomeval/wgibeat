@@ -7,16 +7,17 @@ namespace WGiBeat.Drawing
 {
     public class LevelBar : DrawableObject
     {
-        public Vector2 TextPosition { get; set; }
+       
+        public Vector2 TextPosition; 
         public Vector2 BarPosition { get; set; }
         private SpriteMap _barSprite;
         private Sprite _baseSprite;
         private bool _spritesInit;
+        private int _lastLevelDrawn;
+        private byte _lastLevelOpacity;
 
         public LevelBarSet Parent { get; set; }
         public int PlayerID { get; set; }
-
-        //TODO: Add effect when level increases.
 
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -24,24 +25,50 @@ namespace WGiBeat.Drawing
             {
                 InitSprites();
             }
-
-            var maxWidth = this.Width - 30;
-
+   
                 _baseSprite.SetPosition(this.X, this.Y);
                 _baseSprite.Draw(spriteBatch);
+
+                var levelTextLength = Convert.ToInt32(Parent.Players[PlayerID].Level).ToString().Length;
+            TextPosition.X -= 6*levelTextLength;
                 spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + (int)Parent.Players[PlayerID].Level,
                        TextPosition, Color.Black);
+            TextPosition.X += 6*levelTextLength;
+            DrawBars(spriteBatch);
+                     
+        }
 
-                double levelFraction = Parent.Players[PlayerID].Level - Math.Floor(Parent.Players[PlayerID].Level);
-                var barWidth = (int)(levelFraction * maxWidth);
+        private void DrawBars(SpriteBatch spriteBatch)
+        {
+            //The maximum possible width of the bar.
+            var maxWidth = this.Width - 32;
+            //The current progress towards the next level.
+            double levelFraction = Parent.Players[PlayerID].Level - Math.Floor(Parent.Players[PlayerID].Level);
+            //The calculated width of the level bar.
+            var barWidth = (int)(levelFraction * maxWidth);
 
-                if (Parent.Players[PlayerID].Level == Parent.Players[PlayerID].MaxDifficulty())
-                {
-                    barWidth = maxWidth;
-                }
+            if (Parent.Players[PlayerID].Level == Parent.Players[PlayerID].MaxDifficulty())
+            {
+                barWidth = maxWidth;
+            }
 
-                _barSprite.Draw(spriteBatch, (int)Parent.Players[PlayerID].Level - 1, barWidth, this.Height-6, BarPosition);
-            
+            //Draw the last level bar (gradually fading out) if appropriate.
+            _lastLevelDrawn = Math.Min(_lastLevelDrawn, (int)Parent.Players[PlayerID].Level);
+            if (Math.Floor(Parent.Players[PlayerID].Level) - 1 > _lastLevelDrawn)
+            {
+                _lastLevelDrawn = (int)Parent.Players[PlayerID].Level - 1;
+                _lastLevelOpacity = 255;
+            }
+            if (_lastLevelDrawn > 0)
+            {
+                _barSprite.ColorShading.A = _lastLevelOpacity;
+                _barSprite.Draw(spriteBatch, _lastLevelDrawn - 1, maxWidth, this.Height - 6, BarPosition);
+                _lastLevelOpacity = (byte)Math.Max(_lastLevelOpacity - 5, 0);
+            }
+
+            //Draw the current level bar.
+            _barSprite.ColorShading.A = 255;
+            _barSprite.Draw(spriteBatch, (int)Parent.Players[PlayerID].Level - 1, barWidth, this.Height - 6, BarPosition);
         }
 
         private void InitSprites()
