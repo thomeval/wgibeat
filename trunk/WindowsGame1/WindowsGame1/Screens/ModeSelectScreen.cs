@@ -89,7 +89,7 @@ namespace WGiBeat.Screens
             var iconSpriteMap = new SpriteMap
             {
                 Columns = 1,
-                Rows = 5,
+                Rows = (int) Difficulty.COUNT + 1,
                 SpriteTexture = TextureManager.Textures["playerDifficulties"]
             };
 

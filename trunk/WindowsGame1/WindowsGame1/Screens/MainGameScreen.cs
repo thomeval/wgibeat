@@ -711,7 +711,6 @@ namespace WGiBeat.Screens
                     if (markerBeatOffset > 0)
                     {
                         markerSprite.ColorShading.A = (byte)(Math.Max(0, 255 - 10 * markerBeatOffset));
-                        System.Diagnostics.Debug.WriteLine(Math.Max(0, 255 - 10 * markerBeatOffset));
                     }
                     else
                     {
@@ -734,7 +733,7 @@ namespace WGiBeat.Screens
             pulseSprite.Width = (int) (80*(Math.Ceiling(_phraseNumber) - (_phraseNumber)));
             pulseSprite.ColorShading.A = (byte)(pulseSprite.Width * 255 / 80);
             pulseSprite.Height = 42;
-            //Console.WriteLine(pulseSprite.ColorShading.A);
+
             for (int x = 0; x < _playerCount; x++)
             {
                 if ((!Core.Players[x].Playing) || (Core.Players[x].KO))

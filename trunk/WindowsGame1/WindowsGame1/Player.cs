@@ -121,6 +121,9 @@ namespace WGiBeat
                 case Difficulty.HARD:
                     result = -4;
                     break;
+                    case Difficulty.INSANE:
+                    result -= 6;
+                    break;
             }
             return result;
         }
@@ -143,6 +146,9 @@ namespace WGiBeat
                     break;
                 case Difficulty.HARD:
                     result = -12;
+                    break;
+                    case Difficulty.INSANE:
+                    result -= 16;
                     break;
             }
             return result;
@@ -173,6 +179,7 @@ namespace WGiBeat
         EASY = 1,
         MEDIUM = 2,
         HARD = 3,
-        INSANE = 4
+        INSANE = 4,
+        COUNT = 5
     }
 }

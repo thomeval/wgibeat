@@ -32,6 +32,7 @@ namespace WGiBeat.Screens
                     difficulty.AddOption("Easy", 1);
                     difficulty.AddOption("Medium", 2);
                     difficulty.AddOption("Hard", 3);
+                    difficulty.AddOption("Insane",4);
                     _playerMenus[x].AddItem(difficulty);
 
                 var noteSpeed = new MenuItem {ItemText = "Beatline Speed"};
