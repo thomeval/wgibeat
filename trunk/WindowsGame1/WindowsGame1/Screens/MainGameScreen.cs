@@ -77,7 +77,7 @@ namespace WGiBeat.Screens
 
 
                 _notebars[x] = NoteBar.CreateNoteBar((int) Core.Players[x].Level, 0);
-                _notebars[x].SetPosition(Core.Metrics["Notebar", x]);
+                _notebars[x].SetPosition(Core.Metrics["NoteBar", x]);
 
             }
 
@@ -389,14 +389,14 @@ namespace WGiBeat.Screens
                 //Award Score
                 AwardJudgement(nearestBeatline, player);
                 //Create next note bar.
-                _notebars[player] = NoteBar.CreateNoteBar((int)Core.Players[player].Level, 0, Core.Metrics["Notebar", player]);
+                _notebars[player] = NoteBar.CreateNoteBar((int)Core.Players[player].Level, 0, Core.Metrics["NoteBar", player]);
 
             }
             else
             {
                 AwardJudgement(null, player);
                 //Create next note bar.
-                _notebars[player] = NoteBar.CreateNoteBar((int)Core.Players[player].Level, 0, Core.Metrics["Notebar", player]);
+                _notebars[player] = NoteBar.CreateNoteBar((int)Core.Players[player].Level, 0, Core.Metrics["NoteBar", player]);
             }
 
 

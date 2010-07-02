@@ -140,31 +140,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Textures\lifebarBase.png">
-      <Name>lifebarBase</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\lifebarBaseSide.png">
-      <Name>lifebarBaseSide</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\lifebarBaseSideUp.png">
-      <Name>lifebarBaseSideUp</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\lifebarFront.png">
-      <Name>lifebarFront</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\lifebarOvercharge.png">
-      <Name>lifebarOvercharge</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="Textures\mainMenuOption.png">
       <Name>mainMenuOption</Name>
       <Importer>TextureImporter</Importer>
@@ -296,8 +271,33 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\lifebarGridBase.png">
-      <Name>lifebarGridBase</Name>
+    <Compile Include="Textures\lifeBarBase.png">
+      <Name>lifeBarBase</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\lifeBarBaseSide.png">
+      <Name>lifeBarBaseSide</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\lifeBarBaseSideUp.png">
+      <Name>lifeBarBaseSideUp</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\lifeBarFront.png">
+      <Name>lifeBarFront</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\lifeBarGridBase.png">
+      <Name>lifeBarGridBase</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\lifeBarOvercharge.png">
+      <Name>lifeBarOvercharge</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
