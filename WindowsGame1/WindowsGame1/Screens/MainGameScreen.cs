@@ -53,8 +53,7 @@ namespace WGiBeat.Screens
             _lastBeatlineNote = -1;
             for (int x = 0; x < _playerCount; x++)
             {
-
-                
+        
                 if (Core.Players[x] == null)
                 {
                     Core.Players[x] = new Player
@@ -74,7 +73,6 @@ namespace WGiBeat.Screens
                     Core.Players[x].ResetStats();
 
                 }
-
 
                 _notebars[x] = NoteBar.CreateNoteBar((int) Core.Players[x].Level, 0);
                 _notebars[x].SetPosition(Core.Metrics["NoteBar", x]);
