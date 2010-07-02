@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing
 {
-    public class NormalLifebar : Lifebar
+    public class NormalLifeBar : LifeBar
     {
         private const double LIFEBAR_CAPACITY = 100;
         private double _displayedLife;
@@ -21,7 +21,7 @@ namespace WGiBeat.Drawing
         private const double OVERCHARGE_OFFSET_CLIP = 250;
         public int PlayerID { private get; set; }
 
-        public NormalLifebar()
+        public NormalLifeBar()
         {
             _displayedLife = 0;
             InitSprites();
@@ -63,26 +63,26 @@ namespace WGiBeat.Drawing
                 Width = this.Width,
                 X = this.X,
                 Y = this.Y,
-                SpriteTexture = TextureManager.Textures["lifebarBase"]
+                SpriteTexture = TextureManager.Textures["lifeBarBase"]
             };
 
             _sidePart = new Sprite
                             {
                                 X = sidePosX,
                                 Y = sidePosY,
-                                SpriteTexture = TextureManager.Textures["lifebarBaseSide"]
+                                SpriteTexture = TextureManager.Textures["lifeBarBaseSide"]
                             };
 
             _frontPart = new SpriteMap
             {
-                SpriteTexture = TextureManager.Textures["lifebarFront"],
+                SpriteTexture = TextureManager.Textures["lifeBarFront"],
                 Columns = 1,
                 Rows = 4
             };
 
             _adjustPart = new SpriteMap
             {
-                SpriteTexture = TextureManager.Textures["lifebarFront"],
+                SpriteTexture = TextureManager.Textures["lifeBarFront"],
                 Columns = 1,
                 Rows = 4
             };
@@ -92,7 +92,7 @@ namespace WGiBeat.Drawing
                 Height = this.Height - 6,
                 X = this.X + 3,
                 Y = this.Y + 3,
-                SpriteTexture = TextureManager.Textures["lifebarOvercharge"]
+                SpriteTexture = TextureManager.Textures["lifeBarOvercharge"]
             };
 
             _gridPart = new Sprite
@@ -101,12 +101,12 @@ namespace WGiBeat.Drawing
                                 Width = this.Width - 4,
                                 X = this.X + 2,
                                 Y = this.Y + 3,
-                                SpriteTexture = TextureManager.Textures["lifebarGridBase"]
+                                SpriteTexture = TextureManager.Textures["lifeBarGridBase"]
                             };
 
             if (PlayerID > 1)
             {
-                _sidePart.SpriteTexture = TextureManager.Textures["lifebarBaseSideUp"];
+                _sidePart.SpriteTexture = TextureManager.Textures["lifeBarBaseSideUp"];
             }
         }
 

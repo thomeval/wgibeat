@@ -1,23 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing
 {
-    public class CoopLifebar : Lifebar
+    public class CoopLifeBar : LifeBar
     {
 
-        public bool SideLocationTop = false;
+        public bool SideLocationTop;
         private readonly double[] _displayedLife;
 
         private Sprite _basePart;
         private Sprite _sidePart;
         private SpriteMap _middlePart;
 
-        public CoopLifebar()
+        public CoopLifeBar()
         {
             _displayedLife = new double[4];
         }
@@ -26,7 +24,7 @@ namespace WGiBeat.Drawing
         {
             DrawBase(spriteBatch);
             double penaltyMx = Math.Max(0, TotalLife() / TotalPositive());
-            var frontSpriteMap = new SpriteMap { Columns = 1, Rows = 4, SpriteTexture = TextureManager.Textures["lifebarFront"] };
+            var frontSpriteMap = new SpriteMap { Columns = 1, Rows = 4, SpriteTexture = TextureManager.Textures["lifeBarFront"] };
 
             int posX = this.X + 3;
             int capacity = 100 * Participants();
@@ -103,11 +101,11 @@ namespace WGiBeat.Drawing
             }
 
             _sidePart.Y = this.Y + this.Height;
-            _sidePart.SpriteTexture = TextureManager.Textures["lifebarBaseSide"];
+            _sidePart.SpriteTexture = TextureManager.Textures["lifeBarBaseSide"];
             //PlayerID appears on top for Player 3 and 4.
             if (SideLocationTop)
             {
-                _sidePart.SpriteTexture = TextureManager.Textures["lifebarBaseSideUp"];
+                _sidePart.SpriteTexture = TextureManager.Textures["lifeBarBaseSideUp"];
                 _sidePart.Y = this.Y - 25;
                 playerIdx += 2;
             }

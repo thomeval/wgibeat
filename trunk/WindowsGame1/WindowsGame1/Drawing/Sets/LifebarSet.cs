@@ -1,35 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing.Sets
 {
-    public class LifebarSet : DrawableObject
+    public class LifeBarSet : DrawableObject
     {
 
         private readonly MetricsManager _metrics;
         public readonly Player[] Players; 
         private readonly GameType _gameType;
-        private readonly Lifebar[] _lifebars;
+        private readonly LifeBar[] _lifeBars;
 
-        public LifebarSet()
+        public LifeBarSet()
         {
-            _lifebars = new Lifebar[4];
+            _lifeBars = new LifeBar[4];
         }
-        public LifebarSet(MetricsManager metrics, Player[] players, GameType gameType)
+        public LifeBarSet(MetricsManager metrics, Player[] players, GameType gameType)
             :this()
         {
             _metrics = metrics;
             Players = players;
             _gameType = gameType;
-            CreateLifebars();
+            CreateLifeBars();
         }
 
 
-        private void CreateLifebars()
+        private void CreateLifeBars()
         {
 
             switch (_gameType)
@@ -37,13 +33,13 @@ namespace WGiBeat.Drawing.Sets
                 case GameType.NORMAL:
                     for (int x = 0; x < 4; x++)
                     {
-                        _lifebars[x] = new NormalLifebar {Height = 30, Width = 260, PlayerID = x, Parent = this};
-                        _lifebars[x].SetPosition(_metrics["NormalLifebar", x]);
+                        _lifeBars[x] = new NormalLifeBar {Height = 30, Width = 260, PlayerID = x, Parent = this};
+                        _lifeBars[x].SetPosition(_metrics["NormalLifeBar", x]);
  
                     }
                     break;
                 case GameType.COOPERATIVE:
-                    _lifebars[0] = new CoopLifebar {Height = 30, Width = 785, Parent = this};   
+                    _lifeBars[0] = new CoopLifeBar {Height = 30, Width = 785, Parent = this};   
                     break;
             }
         }
@@ -65,7 +61,7 @@ namespace WGiBeat.Drawing.Sets
 
         private void AdjustLifeCoop(double amount, int player)
         {
-            var theLifebar = (CoopLifebar) _lifebars[0];
+            var theLifebar = (CoopLifeBar) _lifeBars[0];
             var limit = (theLifebar.Participants() * 100) - theLifebar.TotalLife();
             Players[player].Life += Math.Min(limit, amount);
 
@@ -129,21 +125,21 @@ namespace WGiBeat.Drawing.Sets
                     for (int x = 0; x < 4; x++)
                     {
                         if (Players[x].Playing)
-                            _lifebars[x].Draw(spriteBatch, gameTime);
+                            _lifeBars[x].Draw(spriteBatch, gameTime);
                     }
                     break;
                 case GameType.COOPERATIVE:
                     if (Players[0].Playing || Players[1].Playing)
                     {
-                        ((CoopLifebar) _lifebars[0]).SideLocationTop = false;
-                        _lifebars[0].SetPosition(_metrics["CoopLifebar", 0]);
-                        _lifebars[0].Draw(spriteBatch);
+                        ((CoopLifeBar) _lifeBars[0]).SideLocationTop = false;
+                        _lifeBars[0].SetPosition(_metrics["CoopLifeBar", 0]);
+                        _lifeBars[0].Draw(spriteBatch);
                     }
                     if (Players[2].Playing || Players[3].Playing)
                     {
-                        ((CoopLifebar)_lifebars[0]).SideLocationTop = true;
-                        _lifebars[0].SetPosition(_metrics["CoopLifebar", 1]);
-                        _lifebars[0].Draw(spriteBatch);
+                        ((CoopLifeBar)_lifeBars[0]).SideLocationTop = true;
+                        _lifeBars[0].SetPosition(_metrics["CoopLifeBar", 1]);
+                        _lifeBars[0].Draw(spriteBatch);
                     }
                     break;
             }
@@ -153,9 +149,9 @@ namespace WGiBeat.Drawing.Sets
         {
             for (int x = 0; x < 4; x++)
             {
-                if (_lifebars[x] != null)
+                if (_lifeBars[x] != null)
                 {
-                    _lifebars[x].Reset();
+                    _lifeBars[x].Reset();
 
                 }
             }

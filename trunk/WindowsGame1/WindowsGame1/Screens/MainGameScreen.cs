@@ -21,7 +21,7 @@ namespace WGiBeat.Screens
         private double _hitoffset;
         private double _songLoadDelay;
 
-        private LifebarSet _lifebarSet;
+        private LifeBarSet _lifeBarSet;
         private LevelBarSet _levelbarSet;
         private HitsBarSet _hitsbarSet;
         private ScoreSet _scoreSet;
@@ -42,7 +42,7 @@ namespace WGiBeat.Screens
         {
             _playerCount = 4;
             _notebars = new NoteBar[_playerCount];
-            _lifebarSet = new LifebarSet (Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
+            _lifeBarSet = new LifeBarSet (Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
             _levelbarSet = new LevelBarSet(Core.Metrics, Core.Players,Core.Settings.Get<GameType>("CurrentGameType"));
             _hitsbarSet = new HitsBarSet(Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
             _scoreSet = new ScoreSet(Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
@@ -70,7 +70,7 @@ namespace WGiBeat.Screens
                 }
                 else
                 {
-                    _lifebarSet.Reset();
+                    _lifeBarSet.Reset();
                     Core.Players[x].ResetStats();
 
                 }
@@ -196,7 +196,7 @@ namespace WGiBeat.Screens
                 _beatlineNotes.Remove(bnr);
                 if ((!bnr.Hit) && (!Core.Players[bnr.Player].KO))
                 {
-                    _lifebarSet.AdjustLife(_noteJudgementSet.AwardJudgement(BeatlineNoteJudgement.MISS, bnr.Player, null), bnr.Player);
+                    _lifeBarSet.AdjustLife(_noteJudgementSet.AwardJudgement(BeatlineNoteJudgement.MISS, bnr.Player, null), bnr.Player);
                 }
             }
 
@@ -352,7 +352,7 @@ namespace WGiBeat.Screens
             {
                 _notebars[player].ResetAll();
                 
-                _lifebarSet.AdjustLife(Core.Players[player].MissedArrow(),player);
+                _lifeBarSet.AdjustLife(Core.Players[player].MissedArrow(),player);
             }
         }
 
@@ -457,7 +457,7 @@ namespace WGiBeat.Screens
 
             //UNSURE: Does this really need the notebar of the player?
             var lifeAdjust = _noteJudgementSet.AwardJudgement(result, player, _notebars[player]);
-            _lifebarSet.AdjustLife(lifeAdjust, player);
+            _lifeBarSet.AdjustLife(lifeAdjust, player);
 
         }
 
@@ -513,7 +513,7 @@ namespace WGiBeat.Screens
             }
 
             //Draw the component sets.
-            _lifebarSet.Draw(spriteBatch, _phraseNumber);
+            _lifeBarSet.Draw(spriteBatch, _phraseNumber);
             _levelbarSet.Draw(spriteBatch);
             _hitsbarSet.Draw(spriteBatch);
             _scoreSet.Draw(spriteBatch);
