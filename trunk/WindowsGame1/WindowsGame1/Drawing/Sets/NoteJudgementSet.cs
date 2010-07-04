@@ -57,7 +57,7 @@ namespace WGiBeat.Drawing.Sets
             Draw(spriteBatch);
         }
 
-        public double AwardJudgement(BeatlineNoteJudgement judgement, int player, NoteBar noteBar)
+        public double AwardJudgement(BeatlineNoteJudgement judgement, int player, int numCompleted, int numNotCompleted)
         {
             double lifeAdjust = 0;
             switch (judgement)
@@ -65,22 +65,22 @@ namespace WGiBeat.Drawing.Sets
                 case BeatlineNoteJudgement.IDEAL:
                     _players[player].Streak++;
                     double multiplier = ((9.0 + Math.Max(1, _players[player].Streak)) / 10.0);
-                    _players[player].Score += (long)(1000 * noteBar.NumberCompleted() * multiplier);
-                    lifeAdjust = (1 * noteBar.NumberCompleted());
+                    _players[player].Score += (long)(1000 * numCompleted * multiplier);
+                    lifeAdjust = (1 * numCompleted);
                     break;
                 case BeatlineNoteJudgement.COOL:
-                    _players[player].Score += 750 * noteBar.NumberCompleted();
-                    lifeAdjust = (0.5 * noteBar.NumberCompleted());
+                    _players[player].Score += 750 * numCompleted;
+                    lifeAdjust = (0.5 * numCompleted);
                     _players[player].Streak = -1;
                     break;
                 case BeatlineNoteJudgement.OK:
-                    _players[player].Score += 500 * noteBar.NumberCompleted();
+                    _players[player].Score += 500 * numCompleted;
                     _players[player].Streak = -1;
                     break;
                 case BeatlineNoteJudgement.BAD:
-                    _players[player].Score += 250 * noteBar.NumberCompleted();
+                    _players[player].Score += 250 * numCompleted;
                     _players[player].Streak = -1;
-                    lifeAdjust = -1 * noteBar.NumberCompleted();
+                    lifeAdjust = -1 * numCompleted;
                     break;
                 case BeatlineNoteJudgement.MISS:
                     lifeAdjust = _players[player].MissedBeat();
@@ -88,7 +88,7 @@ namespace WGiBeat.Drawing.Sets
                 default:
                     //FAIL
                     _players[player].Streak = -1;
-                    lifeAdjust = 0 - (int)(1 + _players[player].PlayDifficulty) * (noteBar.Notes.Count - noteBar.NumberCompleted() + 1);
+                    lifeAdjust = 0 - (int)(1 + _players[player].PlayDifficulty) * (numNotCompleted + 1);
                     _players[player].Momentum = (long)(_players[player].Momentum * 0.7);
                     break;
             }

@@ -14,13 +14,20 @@ namespace WGiBeat.Screens
     {
         private List<SongListItem> SongList = new List<SongListItem>();
         private int _selectedIndex = 0;
+        private Sprite _scoreBaseSprite;
+        private Sprite _headerSprite;
+        private SpriteMap _frameSpriteMap;
+        private SpriteMap _iconSpriteMap;
+        private Sprite _background;
+        private SpriteMap _gradeSpriteMap;
 
         private const int LISTITEMS_DRAWN = 6;
+        private const int NUM_EVALUATIONS = 19;
+
         public SongSelectScreen(GameCore core) : base(core)
         {
 
         }
-
 
         public override void Initialize()
         {
@@ -37,7 +44,48 @@ namespace WGiBeat.Screens
                     _selectedIndex = SongList.IndexOf(lastSong);
                 }
             }
+            InitSprites();
             base.Initialize();
+        }
+
+        private void InitSprites()
+        {
+            _background = new Sprite
+            {
+                Height = Core.Window.ClientBounds.Height,
+                SpriteTexture = TextureManager.Textures["allBackground"],
+                Width = Core.Window.ClientBounds.Width,
+                X = 0,
+                Y = 0
+            };
+            _scoreBaseSprite = new Sprite
+            {
+                SpriteTexture = TextureManager.Textures["songHighScoreBase"]
+            };
+            _headerSprite = new Sprite
+            {
+             //   Height = 80,
+             //   Width = 800,
+                SpriteTexture = TextureManager.Textures["songSelectHeader"]
+            };
+            _frameSpriteMap = new SpriteMap
+            {
+                Columns = 4,
+                Rows = 1,
+                SpriteTexture = TextureManager.Textures["playerDifficultiesFrame"]
+            };
+            _iconSpriteMap = new SpriteMap
+            {
+                Columns = 1,
+                Rows = (int)Difficulty.COUNT + 1,
+                SpriteTexture = TextureManager.Textures["playerDifficulties"]
+            };
+            _gradeSpriteMap = new SpriteMap
+                                  {
+                                      Columns = 1,
+                                      Rows = NUM_EVALUATIONS,
+                                      SpriteTexture = TextureManager.Textures["evaluationGrades"]
+                                  };
         }
 
         private void CreateSongList()
@@ -52,43 +100,63 @@ namespace WGiBeat.Screens
         {
             DrawSongList(spriteBatch);
             DrawPlayerDifficulties(spriteBatch);
-            var headerSprite = new Sprite
-                                   {
-                                       Height = 80,
-                                       Width = 800,
-                                       SpriteTexture = TextureManager.Textures["songSelectHeader"]
-                                   };
-            headerSprite.SetPosition(Core.Metrics["SongSelectScreenHeader",0]);
-            headerSprite.Draw(spriteBatch);
+            DrawHighScoreFrame(spriteBatch);
+
+            _headerSprite.SetPosition(Core.Metrics["SongSelectScreenHeader",0]);
+            _headerSprite.Draw(spriteBatch);
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], SongList[_selectedIndex].Song.Bpm + " BPM", Core.Metrics["SongBPMDisplay", 0], Color.Black);
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "High score: " + Core.Songs.GetHighScore(SongList[_selectedIndex].Song.GetHashCode(), Core.Settings.Get<GameType>("CurrentGameType")), Core.Metrics["SongHighScore", 0], Color.Black);
+
+
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "Mode: " + Core.Settings.Get<GameType>("CurrentGameType"), Core.Metrics["SelectedMode", 0], Color.Black);
 
+        }
+
+        private void DrawHighScoreFrame(SpriteBatch spriteBatch)
+        {
+            _scoreBaseSprite.SetPosition(Core.Metrics["SongHighScoreBase", 0]);
+            _scoreBaseSprite.Draw(spriteBatch);
+            var cgt = Core.Settings.Get<GameType>("CurrentGameType");
+            var highScoreEntry = GetDisplayedHighScore();
+            var displayedScore = (highScoreEntry == null) ? 0 : highScoreEntry.Scores[cgt];
+            var displayedGrade = (highScoreEntry == null) ? -1 : highScoreEntry.Grades[cgt];
+            var displayedDifficulty = (highScoreEntry == null) ? -1 : (int) highScoreEntry.Difficulties[cgt] + 1;
+
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + displayedScore, Core.Metrics["SongHighScore", 0], Color.Black);
+            
+            if (displayedGrade != -1)
+            {
+                _gradeSpriteMap.Draw(spriteBatch,displayedGrade,68,24,Core.Metrics["SongHighScoreGrade",0]);
+            }
+            if (displayedDifficulty != -1)
+            {
+                _iconSpriteMap.Draw(spriteBatch, displayedDifficulty, 24, 24, Core.Metrics["SongHighScoreDifficulty", 0]);               
+            }
+        }
 
 
+        private HighScoreEntry GetDisplayedHighScore()
+        {
+            var highScoreEntry =
+                Core.Songs.GetHighScoreEntry(SongList[_selectedIndex].Song.GetHashCode());
+            if (highScoreEntry == null)
+            {
+                return null;
+            }
+            if (!highScoreEntry.Scores.ContainsKey(Core.Settings.Get<GameType>("CurrentGameType")))
+            {
+                return null;
+            }
+            return highScoreEntry;
         }
 
         private void DrawPlayerDifficulties(SpriteBatch spriteBatch)
         {
-            var frameSpriteMap = new SpriteMap
-                                     {
-                                         Columns = 4,
-                                         Rows = 1,
-                                         SpriteTexture = TextureManager.Textures["playerDifficultiesFrame"]
-                                     };
-            var iconSpriteMap = new SpriteMap
-            {
-                Columns = 1,
-                Rows = (int)Difficulty.COUNT + 1,
-                SpriteTexture = TextureManager.Textures["playerDifficulties"]
-            };
-
             //Draw for all players, even if not playing.
             for (int x = 0; x < 4; x++)
             {
-                frameSpriteMap.Draw(spriteBatch, x,50,100,Core.Metrics["PlayerDifficultiesFrame",x]);
+                _frameSpriteMap.Draw(spriteBatch, x,50,100,Core.Metrics["PlayerDifficultiesFrame",x]);
                 int idx = GetPlayerDifficulty(x);
-                iconSpriteMap.Draw(spriteBatch, idx, 40, 40, Core.Metrics["PlayerDifficulties", x]);
+                _iconSpriteMap.Draw(spriteBatch, idx, 40, 40, Core.Metrics["PlayerDifficulties", x]);
             }
         }
 
@@ -104,16 +172,8 @@ namespace WGiBeat.Screens
 
         private void DrawBackground(SpriteBatch spriteBatch)
         {
-            var background = new Sprite
-            {
-                Height = Core.Window.ClientBounds.Height,
-                SpriteTexture = TextureManager.Textures["allBackground"],
-                Width = Core.Window.ClientBounds.Width,
-                X = 0,
-                Y = 0
-            };
 
-            background.Draw(spriteBatch);
+            _background.Draw(spriteBatch);
         }
 
         private void DrawSongList(SpriteBatch spriteBatch)

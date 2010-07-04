@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
@@ -13,11 +11,125 @@ namespace WGiBeat.Screens
     {
         private readonly string[] _lines = {"Ideal","Cool","Ok","Bad","Fail","Miss","Fault"};
         private readonly int[] _evaluationCutoffs = {96, 92, 88, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40, 35, 30, 25,20};
+        private readonly int[] _grades = {0, 0, 0, 0};
+        private int _highScorePlayer;
         private const int NUM_EVALUATIONS = 19;
 
         public EvaluationScreen(GameCore core) : base(core)
         {
         }
+
+        #region Overrides
+        public override void Initialize()
+        {
+            CalculateGrades();
+            SaveHighScore();
+            base.Initialize();
+        }
+
+        public override void PerformAction(Action action)
+        {
+            switch (action)
+            {
+                case Action.P1_START:
+                case Action.P2_START:
+                case Action.P3_START:
+                case Action.P4_START:
+                case Action.SYSTEM_BACK:
+                    Core.Songs.StopSong();
+                    Core.Settings.SaveToFile("settings.txt");
+                    Core.ScreenTransition("SongSelect");
+                    break;
+            }
+        }
+        #endregion
+
+        #region Calculations
+        private void CalculateGrades()
+        {
+            switch (Core.Settings.Get<GameType>("CurrentGameType"))
+            {
+                case GameType.NORMAL:
+                    for (int x = 0; x < 4; x++ )
+                    {
+                        _grades[x] = CalculateGradeIndex(x);
+                    }
+                        break;
+                case GameType.COOPERATIVE:
+                    _grades[0] = PercentageToGradeIndex(CalculateTeamPercentage());
+                    break;
+            }
+        }
+
+        private int CalculateGradeIndex(int player)
+        {
+            if (Core.Players[player].KO)
+            {
+                //Fail
+                return NUM_EVALUATIONS - 1;
+            }
+            double percentage = CalculatePercentage(player);
+
+            return PercentageToGradeIndex(percentage);
+        }
+
+        private int PercentageToGradeIndex(double percentage)
+        {
+            for (int x = 0; x < _evaluationCutoffs.Count(); x++)
+            {
+                if (percentage >= _evaluationCutoffs[x])
+                {
+                    return x;
+                }
+            }
+            return NUM_EVALUATIONS - 2;
+        }
+
+        private double CalculatePercentage(int playerindex)
+        {
+            int[] judgements = Core.Players[playerindex].Judgements;
+
+            // Ideal + Cool + OK + Bad + Fail + Miss
+            int maxPossible = judgements[0] + judgements[1] + judgements[2] + judgements[3] + judgements[4] +
+                              judgements[6];
+            maxPossible *= 8;
+
+            //Ideals
+            int playerScore = judgements[0] * 8;
+            //Cools
+            playerScore += judgements[1] * 6;
+            //OKs
+            playerScore += judgements[2] * 3;
+            //Bads
+            playerScore += judgements[3];
+            //Fails
+            playerScore += judgements[4] * -4;
+            //Faults
+            playerScore += judgements[5] * -1;
+
+            return 100.0 * playerScore / maxPossible;
+        }
+
+
+        private double CalculateTeamPercentage()
+        {
+            double totalPerc = 0;
+            int participants = 0;
+            for (int x = 0; x < 4; x++)
+            {
+                if (Core.Players[x].Playing)
+                {
+                    totalPerc += CalculatePercentage(x);
+                    participants += 1;
+                }
+            }
+
+            return totalPerc / participants;
+
+        }
+        #endregion
+
+        #region Drawing
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
@@ -49,7 +161,7 @@ namespace WGiBeat.Screens
                        SpriteTexture = TextureManager.Textures["evaluationGrades"]
                    };
 
-                       int gradeIndex = PercentageToGradeIndex(CalculateTeamPercentage());
+                       int gradeIndex = _grades[0];
                        gradeSpriteMap.Draw(spriteBatch, gradeIndex, 150, 52, Core.Metrics["EvaluationTotalGrade", 0]);
 
                    break;
@@ -132,7 +244,7 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black);
         private void DrawHighScoreNotification(SpriteBatch spriteBatch, GameTime gameTime)
         {
 
-                if (Core.Settings.Get<int>("HighScorePlayer") != -1)
+                if (_highScorePlayer != -1)
                 {
                     var recordSprite = new Sprite
                                            {
@@ -142,7 +254,7 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black);
                                            };
 
                     recordSprite.ColorShading.A = (byte) (255*Math.Abs(Math.Sin(gameTime.TotalRealTime.TotalSeconds * 2)));
-                    recordSprite.SetPosition(Core.Metrics["EvaluationHighScore", Core.Settings.Get<int>("HighScorePlayer")]);
+                    recordSprite.SetPosition(Core.Metrics["EvaluationHighScore", _highScorePlayer]);
                     recordSprite.Draw(spriteBatch);
                 }
         }
@@ -180,88 +292,6 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black);
             }
         }
 
-        private int CalculateGradeIndex(int player)
-        {
-            if (Core.Players[player].KO)
-            {
-                //Fail
-                return NUM_EVALUATIONS - 1;
-            }
-            double percentage = CalculatePercentage(player);
-
-            return PercentageToGradeIndex(percentage);
-        }
-
-        private int PercentageToGradeIndex(double percentage)
-        {
-            for (int x = 0; x < _evaluationCutoffs.Count(); x++)
-            {
-                if (percentage >= _evaluationCutoffs[x])
-                {
-                    return x;
-                }
-            }
-            return NUM_EVALUATIONS - 2;
-        }
-
-        private double CalculatePercentage(int playerindex)
-        {
-            int[] judgements = Core.Players[playerindex].Judgements;
-
-            // Ideal + Cool + OK + Bad + Fail + Miss
-            int maxPossible = judgements[0] + judgements[1] + judgements[2] + judgements[3] + judgements[4] +
-                              judgements[6];
-            maxPossible *= 8;
-
-            //Ideals
-            int playerScore = judgements[0]*8;
-            //Cools
-            playerScore += judgements[1]*6;
-            //OKs
-            playerScore += judgements[2]*3;
-            //Bads
-            playerScore += judgements[3];
-            //Fails
-            playerScore += judgements[4]*-4;
-            //Faults
-            playerScore += judgements[5]*-1;
-
-            return 100.0*playerScore/maxPossible;
-        }
-
-        private double CalculateTeamPercentage()
-        {
-            double totalPerc = 0;
-            int participants = 0;
-            for (int x = 0; x < 4; x++)
-            {
-                if (Core.Players[x].Playing)
-                {
-                    totalPerc += CalculatePercentage(x);
-                    participants += 1;
-                }
-            }
-
-            return totalPerc/participants;
-
-    }
-
-        public override void PerformAction(Action action)
-        {
-            switch (action)
-            {
-                case Action.P1_START:
-                case Action.P2_START:
-                case Action.P3_START:
-                case Action.P4_START:
-                case Action.SYSTEM_BACK:
-                    Core.Songs.StopSong();
-                    Core.Settings.SaveToFile("settings.txt");
-                    Core.ScreenTransition("SongSelect");
-                    break;
-            }
-        }
-
         private void DrawBorders(SpriteBatch spriteBatch)
         {
             var brush = new PrimitiveLine(Core.GraphicsDevice) { Colour = Color.White };
@@ -277,6 +307,14 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black);
             brush.AddVector(new Vector2(800, 325));
             brush.Render(spriteBatch);
             brush.ClearVectors();
+        }
+
+        #endregion
+
+        private void SaveHighScore()
+        {
+            //Evaluation screen needs this setting to be able to display the high score indicator.
+            _highScorePlayer = Core.Songs.DetermineHighScore(Core.Players, Core.Settings.Get<GameType>("CurrentGameType"), _grades);
         }
     }
 }
