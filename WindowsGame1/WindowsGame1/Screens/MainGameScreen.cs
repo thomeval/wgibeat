@@ -116,7 +116,6 @@ namespace WGiBeat.Screens
             if ((_displayState == 1) && (gameTime.TotalRealTime.TotalSeconds >= _transitionTime))
             {
                 SaveSongToFile();
-                SaveHighScore();
                 _maintenanceThread.Dispose();
                 _maintenanceThread = null;
                 Core.ScreenTransition("Evaluation");
@@ -168,12 +167,6 @@ namespace WGiBeat.Screens
             }
         }
 
-        private void SaveHighScore()
-        {
-            //Evaluation screen needs this setting to be able to display the high score indicator.
-            Core.Settings.Set("HighScorePlayer", Core.Songs.DetermineHighScore(Core.Players,Core.Settings.Get<GameType>("CurrentGameType")) );
-        }
-
         private List<BeatlineNote> _notesToRemove;
         private double _lastBeatlineNote = -1;
 
@@ -194,7 +187,7 @@ namespace WGiBeat.Screens
                 _beatlineNotes.Remove(bnr);
                 if ((!bnr.Hit) && (!Core.Players[bnr.Player].KO))
                 {
-                    _lifeBarSet.AdjustLife(_noteJudgementSet.AwardJudgement(BeatlineNoteJudgement.MISS, bnr.Player, null), bnr.Player);
+                    _lifeBarSet.AdjustLife(_noteJudgementSet.AwardJudgement(BeatlineNoteJudgement.MISS, bnr.Player, 0,0), bnr.Player);
                 }
             }
 
@@ -453,8 +446,7 @@ namespace WGiBeat.Screens
                 }
             }
 
-            //UNSURE: Does this really need the notebar of the player?
-            var lifeAdjust = _noteJudgementSet.AwardJudgement(result, player, _notebars[player]);
+            var lifeAdjust = _noteJudgementSet.AwardJudgement(result, player, _notebars[player].NumberCompleted(), _notebars[player].Notes.Count - _notebars[player].NumberCompleted());
             _lifeBarSet.AdjustLife(lifeAdjust, player);
 
         }

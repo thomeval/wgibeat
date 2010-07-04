@@ -209,34 +209,53 @@ namespace WGiBeat.AudioSystem
 
         }
 
-      public long GetHighScore(int songHashCode, GameType gameType)
+      public HighScoreEntry GetHighScoreEntry(int songHashCode)
       {
-          if ((!_highScoreEntries.ContainsKey(songHashCode))|| (!_highScoreEntries[songHashCode].Scores.ContainsKey(gameType)))
-          {
-              return 0;
-          }
-          return _highScoreEntries[songHashCode].Scores[gameType]; 
+         if (!_highScoreEntries.ContainsKey(songHashCode))
+         {
+             return null;
+         }
+          return _highScoreEntries[songHashCode]; 
       }
 
-        public void SetHighScore(int songHashCode, GameType gameType, long score)
+        public void SetHighScoreEntry(int songHashCode, GameType gameType, long score, int grade, Difficulty difficulty)
         {
             if (!_highScoreEntries.ContainsKey(songHashCode))
             {
                 _highScoreEntries[songHashCode] = new HighScoreEntry();
-                _highScoreEntries[songHashCode].SongID = songHashCode;
             }
+            _highScoreEntries[songHashCode].Difficulties[gameType] = difficulty;
+            _highScoreEntries[songHashCode].Grades[gameType] = grade;
             _highScoreEntries[songHashCode].Scores[gameType] = score;
+
         }
 
-        public int DetermineHighScore(Player[] players, GameType gameType)
+        /// <summary>
+        /// Determines which player, if any, has earned a high score entry.
+        /// </summary>
+        /// <param name="players">The players of the current game.</param>
+        /// <param name="gameType">The GameType used in the current game.</param>
+        /// <param name="grades">The grades awarded to each player.</param>
+        /// <returns>-1 if no player beat the stored high score, 4 if all players as a team
+        /// beat the high score, or the player index (0 to 3) if a single player beat the high score.</returns>
+        public int DetermineHighScore(Player[] players, GameType gameType, int[] grades)
         {
-            var highest = GetHighScore(_currentSong.GetHashCode(), gameType);
+            var entry = GetHighScoreEntry(_currentSong.GetHashCode());
+            long highest;
+
+            if ((entry == null) || (!entry.Scores.ContainsKey(gameType)))
+            {
+                highest = 0;
+            }
+            else
+            {
+                highest = entry.Scores[gameType];
+            }
+
             int awardedPlayer = -1;
             switch (gameType)
             {
                 case GameType.NORMAL:
-
-
                     for (int x = 0; x < 4; x++)
                     {
                         if ((players[x].Playing) && (players[x].Score > highest))
@@ -249,7 +268,7 @@ namespace WGiBeat.AudioSystem
 
                     if (awardedPlayer != -1)
                     {
-                        SetHighScore(_currentSong.GetHashCode(), gameType, highest);
+                        SetHighScoreEntry(_currentSong.GetHashCode(), gameType, highest, grades[awardedPlayer], players[awardedPlayer].PlayDifficulty);
                         SaveHighScores("Scores.conf");
                     }
                     break;
@@ -258,7 +277,7 @@ namespace WGiBeat.AudioSystem
                     if (currentTotal > highest)
                     {
                         awardedPlayer = 4;
-                        SetHighScore(_currentSong.GetHashCode(), gameType, currentTotal);
+                        SetHighScoreEntry(_currentSong.GetHashCode(), gameType, currentTotal,grades[0],LowestDifficulty(players));
                         SaveHighScores("Scores.conf");
                     }
                     break;
@@ -266,6 +285,11 @@ namespace WGiBeat.AudioSystem
 
             return awardedPlayer;
             
+        }
+
+        private Difficulty LowestDifficulty(Player[] players)
+        {
+            return (from e in players where e.Playing select e.PlayDifficulty).Min();
         }
 
         public void SaveHighScores(string filename)
