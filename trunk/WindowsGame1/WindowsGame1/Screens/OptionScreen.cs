@@ -31,6 +31,11 @@ namespace WGiBeat.Screens
             item.AddOption("On",true);
             _optionsMenu.AddItem(item);
 
+            item = new MenuItem { ItemText = "Song Previews" };
+            item.AddOption("Off", false);
+            item.AddOption("On", true);
+            _optionsMenu.AddItem(item);
+
             item = new MenuItem {ItemText = "Save"};
             _optionsMenu.AddItem(item);
             item = new MenuItem {ItemText = "Cancel"};
@@ -124,14 +129,25 @@ namespace WGiBeat.Screens
 
         private void LoadOptions()
         {
-            _optionsMenu.GetByItemText("Song Volume").SetSelectedByValue("" +Core.Settings.Get<object>("SongVolume"));
-            _optionsMenu.GetByItemText("Song Debugging").SetSelectedByValue(Core.Settings.Get<object>("SongDebug"));
+            try
+            {
+                _optionsMenu.GetByItemText("Song Volume").SetSelectedByValue("" + Core.Settings.Get<object>("SongVolume"));
+                _optionsMenu.GetByItemText("Song Debugging").SetSelectedByValue(Core.Settings.Get<object>("SongDebug"));
+                _optionsMenu.GetByItemText("Song Previews").SetSelectedByValue(Core.Settings.Get<object>("SongPreview"));
+
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Failed to load options:" + ex.Message);
+            }
+
         }
         private void SaveOptions()
         {
             Core.Settings.Set("SongVolume",(Convert.ToDouble(_optionsMenu.GetByItemText("Song Volume").SelectedValue())));
             Core.Settings.Set("SongDebug", (_optionsMenu.GetByItemText("Song Debugging").SelectedValue()));
-
+            Core.Settings.Set("SongPreview", (_optionsMenu.GetByItemText("Song Previews").SelectedValue()));
+            Core.Songs.SetMasterVolume((float) Core.Settings.Get<double>("SongVolume"));
             Core.Settings.SaveToFile("settings.txt");
         }
     }

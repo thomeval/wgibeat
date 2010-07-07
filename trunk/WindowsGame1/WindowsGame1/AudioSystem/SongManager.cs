@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-
+using FMOD;
 
 namespace WGiBeat.AudioSystem
 {
@@ -11,19 +11,27 @@ namespace WGiBeat.AudioSystem
     {
         private readonly List<GameSong> _songs = new List<GameSong>();
 
-        private FMOD.System _fmodSystem = new FMOD.System();
-        private FMOD.Channel _fmodChannel = new FMOD.Channel();
-        private FMOD.Sound _fmodSound = new FMOD.Sound();
+        private readonly FMOD.System _fmodSystem = new FMOD.System();
+        private Channel _fmodChannel = new Channel();
+        private readonly List<Channel> _channels;
+        private readonly List<Sound> _sounds;
+        private Sound _fmodSound = new Sound();
         private GameSong _currentSong;
+        private const int CHANNEL_COUNT = 8;
+        private int _previewChannelIndex = -1;
+        private float _masterVolume = 1.0f;
 
+        //TODO: Consider refactoring into a separate manager.
         private Dictionary<int, HighScoreEntry> _highScoreEntries = new Dictionary<int, HighScoreEntry>();
 
         public SongManager()
         {
-              FMOD.RESULT result;
-            result = FMOD.Factory.System_Create(ref _fmodSystem);
+            _channels = new List<Channel>();
+            _sounds = new List<Sound>();
+              RESULT result;
+            result = Factory.System_Create(ref _fmodSystem);
             CheckFMODErrors(result);
-            result = _fmodSystem.init(2, FMOD.INITFLAGS.NORMAL, (IntPtr)null);
+            result = _fmodSystem.init(CHANNEL_COUNT, INITFLAGS.NORMAL, (IntPtr)null);
             CheckFMODErrors(result);
         }
 
@@ -35,47 +43,91 @@ namespace WGiBeat.AudioSystem
         {
             StopSong();
             _currentSong = song;
-            FMOD.RESULT result;
-            result = _fmodSystem.createSound(song.Path + "\\" + song.SongFile, FMOD.MODE.SOFTWARE, ref _fmodSound);
+            RESULT result;
+            result = _fmodSystem.createSound(song.Path + "\\" + song.SongFile, MODE.SOFTWARE, ref _fmodSound);
             CheckFMODErrors(result);
         }
 
-        public void PlaySong(double volume)
+        public void PlaySong()
         {
-            FMOD.RESULT result;
+            RESULT result;
             result = _fmodSystem.playSound(FMOD.CHANNELINDEX.FREE, _fmodSound, false, ref _fmodChannel);
-            _fmodChannel.setVolume((float) volume);
+            _fmodChannel.setVolume(_masterVolume);
             CheckFMODErrors(result);
         }
 
+        public void PlaySongPreview(GameSong song)
+        {
+            if (_previewChannelIndex != -1)
+            {
+                StopChannel(_previewChannelIndex);
+            }
+            _previewChannelIndex = PlaySoundEffect(song.Path + "\\" + song.SongFile);
+            var result = _channels[_previewChannelIndex].setPosition((uint)((song.Offset - 0.1) * 1000),TIMEUNIT.MS);
+            CheckFMODErrors(result);
+        }
+
+        public int PlaySoundEffect(string soundPath)
+        {
+            RESULT result;
+            int freeSlot = GetFreeSlot();
+            Sound mySound = _sounds[freeSlot];
+            Channel myChannel = _channels[freeSlot];
+            result = _fmodSystem.createSound(soundPath, MODE.CREATESTREAM, ref mySound);
+           
+            CheckFMODErrors(result);
+            result = _fmodSystem.playSound(CHANNELINDEX.FREE, mySound, false, ref myChannel);
+            CheckFMODErrors(result);
+            return freeSlot;
+        }
+        private int GetFreeSlot()
+        {
+            bool isPlaying = false;
+            for (int x = 0; x < _channels.Count(); x++)
+            {
+                _channels[x].isPlaying(ref isPlaying);
+                if (!isPlaying)
+                {
+                    return x;
+                }
+            }
+            _channels.Add(new Channel());
+            _sounds.Add(new Sound());
+            return _channels.Count - 1;
+        }
+
+        private void StopChannel(int index)
+        {
+            bool isPlaying = false;
+            _channels[index].isPlaying(ref isPlaying);
+            if (isPlaying)
+            {
+                var result = _channels[index].stop();
+                CheckFMODErrors(result);
+            }
+        }
         public GameSong CurrentSong()
         {
             return _currentSong;
         }
         public uint GetCurrentSongProgress()
         {
-            FMOD.RESULT result;
+            RESULT result;
             uint position = 0;
-            result = _fmodChannel.getPosition(ref position, FMOD.TIMEUNIT.MS);
+            result = _fmodChannel.getPosition(ref position, TIMEUNIT.MS);
             CheckFMODErrors(result);
             return position;
         }
 
 
-        public void SetCurrentSongPosition(uint position)
-        {
-            FMOD.RESULT result;
-            result = _fmodChannel.setPosition(position, FMOD.TIMEUNIT.MS);
-            CheckFMODErrors(result);
-        }
-        private void CheckFMODErrors(FMOD.RESULT result)
+        private void CheckFMODErrors(RESULT result)
         {
             switch (result)
             {
-                case FMOD.RESULT.OK:
+                case RESULT.OK:
                     //Everything is fine.
                     break;
-                case FMOD.RESULT.ERR_FILE_NOTFOUND:
+                case RESULT.ERR_FILE_NOTFOUND:
                     throw new FileNotFoundException("Unable to find GameSong file " + _currentSong.SongFile + " in " + _currentSong.Path);
                     default:
                     throw new Exception("FMOD error: " + result);
@@ -90,15 +142,6 @@ namespace WGiBeat.AudioSystem
                 var result = _fmodChannel.stop();
                 CheckFMODErrors(result);
             }
-        }
-
-        public GameSong GetByTitle(string title)
-        {
-            return (from e in _songs where e.Title == title select e).FirstOrDefault();
-        }
-        public GameSong GetByHashCode(int hashCode)
-        {
-            return (from e in _songs where e.GetHashCode() == hashCode select e).SingleOrDefault();
         }
 
         public static void SaveToFile(GameSong song)
@@ -139,7 +182,6 @@ namespace WGiBeat.AudioSystem
                 }
 
                 string field = rule.Substring(0, rule.IndexOf("=")).ToUpper();
-                //Also works if value is blank... for some reason.
                 string value = rule.Substring(rule.IndexOf("=") + 1);
 
                 switch (field.ToUpper())
@@ -316,9 +358,25 @@ namespace WGiBeat.AudioSystem
                 Console.WriteLine("Error loading high scores." + ex.Message);
                 return false;
             }
-
         }
 
+        public void StopSongPreview()
+        {
+            if (_previewChannelIndex != -1)
+            {
+                StopChannel(_previewChannelIndex);
+            }
+        }
 
+        public void SetPreviewVolume(float volume)
+        {
+            RESULT result;
+            result = _channels[_previewChannelIndex].setVolume(_masterVolume * volume);
+            CheckFMODErrors(result);
+        }
+        public void SetMasterVolume(float volume)
+        {
+            _masterVolume = volume;
+        }
     }
 }

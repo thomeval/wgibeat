@@ -77,6 +77,10 @@ namespace WGiBeat
             if (!passed)
                 KeyMappings.LoadDefault();
             
+            if (Settings.Exists("SongVolume"))
+            {
+                Songs.SetMasterVolume((float) Settings.Get<double>("SongVolume"));
+            }
             base.Initialize();
         }
 

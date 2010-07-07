@@ -49,7 +49,7 @@ namespace WGiBeat.Screens
                 if ((Core.Songs.CurrentSong() == null) || (Core.Songs.CurrentSong().SongFile != song.SongFile))
                 {
                     Core.Songs.LoadSong(song);
-                    Core.Songs.PlaySong(Core.Settings.Get<double>("SongVolume"));
+                    Core.Songs.PlaySong();
                 }
             }
 
