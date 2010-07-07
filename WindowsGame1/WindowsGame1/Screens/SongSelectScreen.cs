@@ -24,6 +24,7 @@ namespace WGiBeat.Screens
         private const int LISTITEMS_DRAWN = 6;
         private const int NUM_EVALUATIONS = 19;
 
+        private double _startedPreview;
         public SongSelectScreen(GameCore core) : base(core)
         {
 
@@ -46,6 +47,7 @@ namespace WGiBeat.Screens
             }
             InitSprites();
             base.Initialize();
+            PlaySongPreview();
         }
 
         private void InitSprites()
@@ -111,6 +113,30 @@ namespace WGiBeat.Screens
 
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            if (_startedPreview == -1)
+            {
+                _startedPreview = gameTime.TotalRealTime.TotalSeconds;
+            }
+            var previewTime = gameTime.TotalRealTime.TotalSeconds - _startedPreview;
+            if  (previewTime <= 1)
+            {
+                Core.Songs.SetPreviewVolume((float) previewTime);
+                System.Diagnostics.Debug.WriteLine((float) previewTime );
+            }
+            else if (previewTime >= 16)
+            {
+                PlaySongPreview();
+            }
+            else if (previewTime >= 15)
+            {
+                Core.Songs.SetPreviewVolume((float) (16 - previewTime));
+            }
+
+ 
+            base.Update(gameTime);
+        }
         private void DrawHighScoreFrame(SpriteBatch spriteBatch)
         {
             _scoreBaseSprite.SetPosition(Core.Metrics["SongHighScoreBase", 0]);
@@ -237,6 +263,7 @@ namespace WGiBeat.Screens
                     StartSong();
                     break;
                 case Action.SYSTEM_BACK:
+                    Core.Songs.StopSongPreview();
                     Core.ScreenTransition("NewGame");
                     break;
 
@@ -245,6 +272,7 @@ namespace WGiBeat.Screens
 
         private void StartSong()
         {
+            Core.Songs.StopSongPreview();
             Core.Settings.Set("CurrentSong",SongList[_selectedIndex].Song);
             Core.Settings.Set("LastSongPlayed", SongList[_selectedIndex].Song.GetHashCode());
             Core.ScreenTransition("MainGame");
@@ -257,13 +285,35 @@ namespace WGiBeat.Screens
             {
                 _selectedIndex = SongList.Count - 1;
             }
-
+            PlaySongPreview();
         }
 
         private void MoveSelectionDown()
         {
             _selectedIndex = (_selectedIndex + 1)%SongList.Count();
+            PlaySongPreview();
+        }
 
+        private void PlaySongPreview()
+        {
+            bool previewsOn = false;
+            try
+            {
+                previewsOn = Core.Settings.Get<bool>("SongPreview");
+                
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+            
+            if (previewsOn)
+            {
+                _startedPreview = -1;
+                Core.Songs.StopSong();
+                Core.Songs.PlaySongPreview(SongList[_selectedIndex].Song);
+            }
         }
     }
 }

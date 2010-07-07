@@ -15,6 +15,7 @@ namespace WGiBeat.Screens
     public class MainGameScreen : GameScreen
     {
 
+        //TODO: Consider refactoring notebars, beatlines and notejudgements into Sets.
         private List<BeatlineNote> _beatlineNotes;
 
         private double _phraseNumber;
@@ -32,7 +33,6 @@ namespace WGiBeat.Screens
         private TimeSpan? _startTime;
         private int _displayState;
         private double _transitionTime;
-
 
         public MainGameScreen(GameCore core) : base(core)
         {
@@ -90,7 +90,7 @@ namespace WGiBeat.Screens
             base.Initialize();
         }
 
-        #region Updating
+        #region Updating, Beatline maintenance
 
         private Timer _maintenanceThread;
         private int _timeCheck;
@@ -99,40 +99,49 @@ namespace WGiBeat.Screens
 
             if (_startTime == null)
             {
-                Core.Songs.PlaySong(Core.Settings.Get<double>("SongVolume"));
+                Core.Songs.PlaySong();
                 _startTime = new TimeSpan(gameTime.TotalRealTime.Ticks);
             }
-            if (SongPassed(gameTime) && (_displayState == 0))
-            {
-                _displayState = 1;
-                _transitionTime = gameTime.TotalRealTime.TotalSeconds + 3;
 
-            }
             if (_maintenanceThread == null)
             {
                 _maintaining = false;
                 _maintenanceThread = new Timer(DoMaintenance,null,0,20);
             }
-            if ((_displayState == 1) && (gameTime.TotalRealTime.TotalSeconds >= _transitionTime))
-            {
-                SaveSongToFile();
-                _maintenanceThread.Dispose();
-                _maintenanceThread = null;
-                Core.ScreenTransition("Evaluation");
-            }         
+
+            CheckForEndings(gameTime);
             _phraseNumber = 1.0 * (gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay - _gameSong.Offset * 1000) / 1000 * (_gameSong.Bpm / 240);
             _timeCheck = (int)(gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay);
             base.Update(gameTime);
+        }
+
+        private void CheckForEndings(GameTime gameTime)
+        {
+            if (SongPassed(gameTime) && (_displayState == 0))
+            {
+                _displayState = 1;
+                _transitionTime = gameTime.TotalRealTime.TotalSeconds + 3;
+            }
+            if ((_displayState == 1) && (gameTime.TotalRealTime.TotalSeconds >= _transitionTime))
+            {
+                if (Core.Settings.Get<bool>("SongDebug"))
+                {
+                    SongManager.SaveToFile(_gameSong);
+                }
+                _maintenanceThread.Dispose();
+                _maintenanceThread = null;
+                Core.ScreenTransition("Evaluation");
+            }
         }
 
         private int _confidence;
         private bool _maintaining;
         private void DoMaintenance(object state)
         {
-          if (_maintaining)
-          {
-              return;
-          }
+            if (_maintaining)
+            {
+                return;
+            }
 
             _maintaining = true;
             if (_displayState != 0)
@@ -140,31 +149,24 @@ namespace WGiBeat.Screens
                 return;
             }
 
-                MaintainBeatlineNotes();
+            MaintainBeatlineNotes();
 
             //FMOD cannot reliably determine the position of the song. Using GetCurrentSongProgress()
             //as the default timing mechanism makes it jerky and slows the game down, so we attempt
             //to match current time with the song time by periodically sampling it. A hill climbing method
             // is used here.
             var delay = Core.Songs.GetCurrentSongProgress() - _timeCheck;
-                if ((_confidence < 15) && (Math.Abs(delay) > 25))
-                {
-                    _confidence = 0;
-                    _songLoadDelay +=  delay / 2.0;
-                }
-                else if (_confidence < 15)
-                {
-                    _confidence++;
-                }
+            if ((_confidence < 15) && (Math.Abs(delay) > 25))
+            {
+                _confidence = 0;
+                _songLoadDelay += delay/2.0;
+            }
+            else if (_confidence < 15)
+            {
+                _confidence++;
+            }
 
             _maintaining = false;
-        }
-        private void SaveSongToFile()
-        {
-            if (Core.Settings.Get<bool>("SongDebug"))
-            {
-                SongManager.SaveToFile(_gameSong);
-            }
         }
 
         private List<BeatlineNote> _notesToRemove;
@@ -191,7 +193,7 @@ namespace WGiBeat.Screens
                 }
             }
 
-            if ((_phraseNumber + 2 > _lastBeatlineNote) && (_lastBeatlineNote + 2 < GetEndingTimeInPhrase()))
+            if ((_phraseNumber + 2 > _lastBeatlineNote) && (_lastBeatlineNote + 1 < GetEndingTimeInPhrase()))
             {
                 _lastBeatlineNote++;
                 for (int x = 0; x < _playerCount; x++)
