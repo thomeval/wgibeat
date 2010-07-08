@@ -96,6 +96,7 @@
     <Compile Include="AudioSystem\FMOD\fmod_errors.cs" />
     <Compile Include="AudioSystem\FMOD\fmod_memoryinfo.cs" />
     <Compile Include="AudioSystem\HighScoreEntry.cs" />
+    <Compile Include="AudioSystem\SongPreviewManager.cs" />
     <Compile Include="Drawing\CoopLifeBar.cs" />
     <Compile Include="Drawing\DisplayedJudgement.cs" />
     <Compile Include="Drawing\DrawableObject.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="Drawing\Sets\LifeBarSet.cs" />
     <Compile Include="Drawing\Sets\NoteJudgementSet.cs" />
     <Compile Include="Drawing\Sets\ScoreSet.cs" />
+    <Compile Include="Managers\HighScoreManager.cs" />
     <Compile Include="Screens\ModeSelectScreen.cs" />
     <Compile Include="Drawing\NormalLifeBar.cs" />
     <Compile Include="Drawing\PrimitiveLine.cs" />

@@ -53,7 +53,7 @@ namespace WGiBeat.Drawing
             }
 
             //Draw the last level bar (gradually fading out) if appropriate.
-            _lastLevelDrawn = Math.Min(_lastLevelDrawn, (int)Parent.Players[PlayerID].Level);
+            _lastLevelDrawn = Math.Min(_lastLevelDrawn, (int)Parent.Players[PlayerID].Level - 1);
             if (Math.Floor(Parent.Players[PlayerID].Level) - 1 > _lastLevelDrawn)
             {
                 _lastLevelDrawn = (int)Parent.Players[PlayerID].Level - 1;
