@@ -13,7 +13,8 @@ using Action=WGiBeat.Managers.Action;
 namespace WGiBeat
 {
     /// <summary>
-    /// This is the main type for your game
+    /// Represents the Core of the game. The main game loop happens here, and flows to the currently active
+    /// GameScreen. Also contains game settings, metrics, song database and players for universal access.
     /// </summary>
     public class GameCore : Game
     {
@@ -22,6 +23,7 @@ namespace WGiBeat
         public SettingsManager Settings;
         public MetricsManager Metrics;
         public SongManager Songs;
+        public HighScoreManager HighScores;
         public Player[] Players;
 
         private Dictionary<string, GameScreen> _screens;
@@ -48,13 +50,13 @@ namespace WGiBeat
         {
             Metrics = MetricsManager.Load("metrics.txt");
             Settings = SettingsManager.LoadFromFile("settings.txt");
-
+            HighScores = HighScoreManager.LoadFromFile("Scores.conf");
             if (!Directory.Exists(Directory.GetCurrentDirectory() + "\\" + Settings["SongFolder"]))
             {
                 Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\" + Settings["SongFolder"]);
             }
             Songs = SongManager.LoadFromFolder(Directory.GetCurrentDirectory() +"\\" + Settings["SongFolder"]);
-            Songs.LoadHighScores("Scores.conf");
+
 
             Players = new Player[4];
 
@@ -117,7 +119,6 @@ namespace WGiBeat
             
         }
 
-
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -125,8 +126,6 @@ namespace WGiBeat
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-
-
             if (_screens == null)
             {
                 InitializeScreens();
@@ -143,7 +142,6 @@ namespace WGiBeat
 
                     _activeScreen.PerformKey(key);
                 }
-
             }
 
             _lastKeystate = currentState;
@@ -198,9 +196,5 @@ namespace WGiBeat
             _screens[screen].Initialize();
             _activeScreen = _screens[screen];
         }
-
- 
-
     }
-
 }

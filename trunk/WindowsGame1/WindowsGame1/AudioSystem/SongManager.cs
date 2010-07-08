@@ -13,21 +13,17 @@ namespace WGiBeat.AudioSystem
 
         private readonly FMOD.System _fmodSystem = new FMOD.System();
         private Channel _fmodChannel = new Channel();
-        private readonly List<Channel> _channels;
-        private readonly List<Sound> _sounds;
+        private readonly Dictionary<int, Channel> _channels;
+        private readonly Dictionary<int, Sound> _sounds;
         private Sound _fmodSound = new Sound();
         private GameSong _currentSong;
         private const int CHANNEL_COUNT = 8;
-        private int _previewChannelIndex = -1;
         private float _masterVolume = 1.0f;
-
-        //TODO: Consider refactoring into a separate manager.
-        private Dictionary<int, HighScoreEntry> _highScoreEntries = new Dictionary<int, HighScoreEntry>();
 
         public SongManager()
         {
-            _channels = new List<Channel>();
-            _sounds = new List<Sound>();
+            _channels = new Dictionary<int, Channel>();
+            _sounds = new Dictionary<int, Sound>();
               RESULT result;
             result = Factory.System_Create(ref _fmodSystem);
             CheckFMODErrors(result);
@@ -56,16 +52,6 @@ namespace WGiBeat.AudioSystem
             CheckFMODErrors(result);
         }
 
-        public void PlaySongPreview(GameSong song)
-        {
-            if (_previewChannelIndex != -1)
-            {
-                StopChannel(_previewChannelIndex);
-            }
-            _previewChannelIndex = PlaySoundEffect(song.Path + "\\" + song.SongFile);
-            var result = _channels[_previewChannelIndex].setPosition((uint)((song.Offset - 0.1) * 1000),TIMEUNIT.MS);
-            CheckFMODErrors(result);
-        }
 
         public int PlaySoundEffect(string soundPath)
         {
@@ -80,6 +66,12 @@ namespace WGiBeat.AudioSystem
             CheckFMODErrors(result);
             return freeSlot;
         }
+
+        public void SetPosition(int soundChannel, double position)
+        {
+            var result = _channels[soundChannel].setPosition((uint)(position * 1000), TIMEUNIT.MS);
+            CheckFMODErrors(result);
+        }
         private int GetFreeSlot()
         {
             bool isPlaying = false;
@@ -91,13 +83,18 @@ namespace WGiBeat.AudioSystem
                     return x;
                 }
             }
-            _channels.Add(new Channel());
-            _sounds.Add(new Sound());
+            int nextIdx = (_channels.Keys.Count == 0) ? 0 : _channels.Keys.Max() + 1;
+            _channels.Add(nextIdx,  new Channel());
+            _sounds.Add(nextIdx, new Sound());
             return _channels.Count - 1;
         }
 
-        private void StopChannel(int index)
+        public void StopChannel(int index)
         {
+            if (!_channels.Keys.Contains(index))
+            {
+                return;
+            }
             bool isPlaying = false;
             _channels[index].isPlaying(ref isPlaying);
             if (isPlaying)
@@ -251,127 +248,11 @@ namespace WGiBeat.AudioSystem
 
         }
 
-      public HighScoreEntry GetHighScoreEntry(int songHashCode)
-      {
-         if (!_highScoreEntries.ContainsKey(songHashCode))
-         {
-             return null;
-         }
-          return _highScoreEntries[songHashCode]; 
-      }
 
-        public void SetHighScoreEntry(int songHashCode, GameType gameType, long score, int grade, Difficulty difficulty)
-        {
-            if (!_highScoreEntries.ContainsKey(songHashCode))
-            {
-                _highScoreEntries[songHashCode] = new HighScoreEntry();
-            }
-            _highScoreEntries[songHashCode].Difficulties[gameType] = difficulty;
-            _highScoreEntries[songHashCode].Grades[gameType] = grade;
-            _highScoreEntries[songHashCode].Scores[gameType] = score;
-
-        }
-
-        /// <summary>
-        /// Determines which player, if any, has earned a high score entry.
-        /// </summary>
-        /// <param name="players">The players of the current game.</param>
-        /// <param name="gameType">The GameType used in the current game.</param>
-        /// <param name="grades">The grades awarded to each player.</param>
-        /// <returns>-1 if no player beat the stored high score, 4 if all players as a team
-        /// beat the high score, or the player index (0 to 3) if a single player beat the high score.</returns>
-        public int DetermineHighScore(Player[] players, GameType gameType, int[] grades)
-        {
-            var entry = GetHighScoreEntry(_currentSong.GetHashCode());
-            long highest;
-
-            if ((entry == null) || (!entry.Scores.ContainsKey(gameType)))
-            {
-                highest = 0;
-            }
-            else
-            {
-                highest = entry.Scores[gameType];
-            }
-
-            int awardedPlayer = -1;
-            switch (gameType)
-            {
-                case GameType.NORMAL:
-                    for (int x = 0; x < 4; x++)
-                    {
-                        if ((players[x].Playing) && (players[x].Score > highest))
-                        {
-                            
-                            highest = Math.Max(highest, players[x].Score);
-                            awardedPlayer = x;
-                        }
-                    }
-
-                    if (awardedPlayer != -1)
-                    {
-                        SetHighScoreEntry(_currentSong.GetHashCode(), gameType, highest, grades[awardedPlayer], players[awardedPlayer].PlayDifficulty);
-                        SaveHighScores("Scores.conf");
-                    }
-                    break;
-                case GameType.COOPERATIVE:
-                    var currentTotal = (from e in players where e.Playing select e.Score).Sum();
-                    if (currentTotal > highest)
-                    {
-                        awardedPlayer = 4;
-                        SetHighScoreEntry(_currentSong.GetHashCode(), gameType, currentTotal,grades[0],LowestDifficulty(players));
-                        SaveHighScores("Scores.conf");
-                    }
-                    break;
-            }
-
-            return awardedPlayer;
-            
-        }
-
-        private Difficulty LowestDifficulty(Player[] players)
-        {
-            return (from e in players where e.Playing select e.PlayDifficulty).Min();
-        }
-
-        public void SaveHighScores(string filename)
-        {
-            var fs = new FileStream(filename, FileMode.Create, FileAccess.Write);
-            var bf = new BinaryFormatter();
-            bf.Serialize(fs, _highScoreEntries);
-
-            fs.Close();
-        }
-
-        public bool LoadHighScores(string filename)
-        {
-            try
-            {
-                var fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
-                var bf = new BinaryFormatter();
-                _highScoreEntries = (Dictionary<int, HighScoreEntry>)bf.Deserialize(fs);
-                fs.Close();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error loading high scores." + ex.Message);
-                return false;
-            }
-        }
-
-        public void StopSongPreview()
-        {
-            if (_previewChannelIndex != -1)
-            {
-                StopChannel(_previewChannelIndex);
-            }
-        }
-
-        public void SetPreviewVolume(float volume)
+        public void SetChannelVolume(int index, float volume)
         {
             RESULT result;
-            result = _channels[_previewChannelIndex].setVolume(_masterVolume * volume);
+            result = _channels[index].setVolume(_masterVolume * volume);
             CheckFMODErrors(result);
         }
         public void SetMasterVolume(float volume)

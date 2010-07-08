@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace WGiBeat.AudioSystem
+﻿namespace WGiBeat.AudioSystem
 {
     public class GameSong
     {

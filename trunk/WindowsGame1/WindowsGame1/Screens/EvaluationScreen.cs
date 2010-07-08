@@ -314,7 +314,8 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black);
         private void SaveHighScore()
         {
             //Evaluation screen needs this setting to be able to display the high score indicator.
-            _highScorePlayer = Core.Songs.DetermineHighScore(Core.Players, Core.Settings.Get<GameType>("CurrentGameType"), _grades);
+            _highScorePlayer = Core.HighScores.UpdateHighScore(Core.Settings.Get<int>("LastSongPlayed"),Core.Players, Core.Settings.Get<GameType>("CurrentGameType"), _grades);
+            Core.HighScores.SaveToFile("Scores.conf");
         }
     }
 }
