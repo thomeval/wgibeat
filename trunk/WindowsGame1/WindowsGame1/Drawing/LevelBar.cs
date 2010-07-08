@@ -52,13 +52,15 @@ namespace WGiBeat.Drawing
                 barWidth = maxWidth;
             }
 
-            //Draw the last level bar (gradually fading out) if appropriate.
             _lastLevelDrawn = Math.Min(_lastLevelDrawn, (int)Parent.Players[PlayerID].Level - 1);
+
+            //Level maxed out, draw a full bar.
             if (Math.Floor(Parent.Players[PlayerID].Level) - 1 > _lastLevelDrawn)
             {
                 _lastLevelDrawn = (int)Parent.Players[PlayerID].Level - 1;
                 _lastLevelOpacity = 255;
             }
+            //Draw the last level bar (gradually fading out) if appropriate.
             if (_lastLevelDrawn > 0)
             {
                 _barSprite.ColorShading.A = _lastLevelOpacity;

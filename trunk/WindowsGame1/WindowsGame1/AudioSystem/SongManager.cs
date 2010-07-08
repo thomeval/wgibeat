@@ -2,13 +2,18 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
 using FMOD;
 
 namespace WGiBeat.AudioSystem
 {
+    /// <summary>
+    /// A manager that handles all audio in the game. This is generally separated into Songs,
+    /// of which only one is allowed at a time, and Sound Effects, of which multiple simultanious
+    /// channels are provided. This manager also handles loading and saving of song files.
+    /// </summary>
     public class SongManager
     {
+        #region Fields
         private readonly List<GameSong> _songs = new List<GameSong>();
 
         private readonly FMOD.System _fmodSystem = new FMOD.System();
@@ -19,6 +24,7 @@ namespace WGiBeat.AudioSystem
         private GameSong _currentSong;
         private const int CHANNEL_COUNT = 8;
         private float _masterVolume = 1.0f;
+        #endregion 
 
         public SongManager()
         {
@@ -31,92 +37,7 @@ namespace WGiBeat.AudioSystem
             CheckFMODErrors(result);
         }
 
-        public List<GameSong> AllSongs()
-        {
-            return _songs;
-        }
-        public void LoadSong(GameSong song)
-        {
-            StopSong();
-            _currentSong = song;
-            RESULT result;
-            result = _fmodSystem.createSound(song.Path + "\\" + song.SongFile, MODE.SOFTWARE, ref _fmodSound);
-            CheckFMODErrors(result);
-        }
-
-        public void PlaySong()
-        {
-            RESULT result;
-            result = _fmodSystem.playSound(FMOD.CHANNELINDEX.FREE, _fmodSound, false, ref _fmodChannel);
-            _fmodChannel.setVolume(_masterVolume);
-            CheckFMODErrors(result);
-        }
-
-
-        public int PlaySoundEffect(string soundPath)
-        {
-            RESULT result;
-            int freeSlot = GetFreeSlot();
-            Sound mySound = _sounds[freeSlot];
-            Channel myChannel = _channels[freeSlot];
-            result = _fmodSystem.createSound(soundPath, MODE.CREATESTREAM, ref mySound);
-           
-            CheckFMODErrors(result);
-            result = _fmodSystem.playSound(CHANNELINDEX.FREE, mySound, false, ref myChannel);
-            CheckFMODErrors(result);
-            return freeSlot;
-        }
-
-        public void SetPosition(int soundChannel, double position)
-        {
-            var result = _channels[soundChannel].setPosition((uint)(position * 1000), TIMEUNIT.MS);
-            CheckFMODErrors(result);
-        }
-        private int GetFreeSlot()
-        {
-            bool isPlaying = false;
-            for (int x = 0; x < _channels.Count(); x++)
-            {
-                _channels[x].isPlaying(ref isPlaying);
-                if (!isPlaying)
-                {
-                    return x;
-                }
-            }
-            int nextIdx = (_channels.Keys.Count == 0) ? 0 : _channels.Keys.Max() + 1;
-            _channels.Add(nextIdx,  new Channel());
-            _sounds.Add(nextIdx, new Sound());
-            return _channels.Count - 1;
-        }
-
-        public void StopChannel(int index)
-        {
-            if (!_channels.Keys.Contains(index))
-            {
-                return;
-            }
-            bool isPlaying = false;
-            _channels[index].isPlaying(ref isPlaying);
-            if (isPlaying)
-            {
-                var result = _channels[index].stop();
-                CheckFMODErrors(result);
-            }
-        }
-        public GameSong CurrentSong()
-        {
-            return _currentSong;
-        }
-        public uint GetCurrentSongProgress()
-        {
-            RESULT result;
-            uint position = 0;
-            result = _fmodChannel.getPosition(ref position, TIMEUNIT.MS);
-            CheckFMODErrors(result);
-            return position;
-        }
-
-
+        #region Helpers
         private void CheckFMODErrors(RESULT result)
         {
             switch (result)
@@ -126,24 +47,82 @@ namespace WGiBeat.AudioSystem
                     break;
                 case RESULT.ERR_FILE_NOTFOUND:
                     throw new FileNotFoundException("Unable to find GameSong file " + _currentSong.SongFile + " in " + _currentSong.Path);
-                    default:
+                default:
                     throw new Exception("FMOD error: " + result);
             }
         }
-        public void StopSong()
+
+        public List<GameSong> AllSongs()
         {
-            bool isPlaying = false;
-            _fmodChannel.isPlaying(ref isPlaying);
-            if (isPlaying)
+            return _songs;
+        }
+
+        /// <summary>
+        /// Returns the currently playing song.
+        /// </summary>
+        /// <returns>The currently playing song.</returns>
+        public GameSong CurrentSong()
+        {
+            return _currentSong;
+        }
+        #endregion
+
+        #region File Operations
+        /// <summary>
+        /// Adds a GameSong to the list of songs available.
+        /// </summary>
+        /// <param name="song">The GameSong to add.</param>
+        private void AddSong(GameSong song)
+        {
+            if (!_songs.Contains(song))
             {
-                var result = _fmodChannel.stop();
-                CheckFMODErrors(result);
+                _songs.Add(song);
+            }
+            else
+            {
+                throw new Exception("SongManager already contains song with title: " + song.Title);
             }
         }
 
+        /// <summary>
+        /// Creates a new SongManager object, and populates its song database by
+        /// parsing all valid song files (.sng) from a folder. Subfolders are also parsed.
+        /// </summary>
+        /// <param name="path">The path containing song files to parse.</param>
+        /// <returns>A new SongManager instance, containing GameSongs for any .sng files parsed.</returns>
+        public static SongManager LoadFromFolder(string path)
+        {
+            var newManager = new SongManager();
+            var folders = new List<string>();
+            folders.Add(path);
+
+            while (folders.Count > 0)
+            {
+                string currentFolder = folders[0];
+
+                folders.AddRange(Directory.GetDirectories(currentFolder));
+                foreach (string file in Directory.GetFiles(currentFolder, "*.sng"))
+                {
+                    var newSong = LoadFromFile(file);
+                    newSong.Path = currentFolder;
+                    newSong.DefinitionFile = Path.GetFileName(file);
+                    newManager.AddSong(newSong);
+
+                }
+                folders.RemoveAt(0);
+            }
+
+            return newManager;
+        }
+
+        /// <summary>
+        /// Saves a GameSong object to a file. Note that the filename is taken from the GameSong
+        /// object itself. Most useful for saving edits made to song file during runtime
+        /// (such as Song Debugging).
+        /// </summary>
+        /// <param name="song">The GameSong to save to file.</param>
         public static void SaveToFile(GameSong song)
         {
-
             var file = new FileStream(song.Path + "\\" + song.DefinitionFile, FileMode.Create, FileAccess.Write);
 
             var sw = new StreamWriter(file);
@@ -152,14 +131,21 @@ namespace WGiBeat.AudioSystem
             sw.WriteLine("Title={0};", song.Title);
             sw.WriteLine("Subtitle={0};", song.Subtitle);
             sw.WriteLine("Artist={0};", song.Artist);
-            sw.WriteLine("Bpm={0};",Math.Round(song.Bpm,2));
-            sw.WriteLine("Offset={0};", Math.Round(song.Offset,3));
-            sw.WriteLine("Length={0};", Math.Round(song.Length,3));
+            sw.WriteLine("Bpm={0};", Math.Round(song.Bpm, 2));
+            sw.WriteLine("Offset={0};", Math.Round(song.Offset, 3));
+            sw.WriteLine("Length={0};", Math.Round(song.Length, 3));
             sw.WriteLine("SongFile={0};", song.SongFile);
-            
+
             sw.Close();
         }
 
+        /// <summary>
+        /// Loads a single GameSong from a file. The file should be a .sng file, and conform
+        /// to the song file standard. See the readme.txt in the /Songs folder for more
+        /// details.
+        /// </summary>
+        /// <param name="filename">The name of the file to load.</param>
+        /// <returns>A GameSong loaded from the file provided.</returns>
         public static GameSong LoadFromFile(string filename)
         {
             var newSong = new GameSong();
@@ -193,7 +179,7 @@ namespace WGiBeat.AudioSystem
                         newSong.Artist = value;
                         break;
                     case "OFFSET":
-                        newSong.Offset =  Convert.ToDouble(value);
+                        newSong.Offset = Convert.ToDouble(value);
                         break;
                     case "LENGTH":
                         newSong.Length = Convert.ToDouble(value);
@@ -206,58 +192,168 @@ namespace WGiBeat.AudioSystem
                         break;
                 }
             }
-
             return newSong;
         }
+        #endregion
 
-        public static SongManager LoadFromFolder(string path)
+        #region Sound Effect System
+        /// <summary>
+        /// Loads and immediately plays any audio file given, as a stream. Each sound effect is
+        /// given its own channel - the channel allocated to the provided audio file is the return
+        /// value. Because it is loaded as a stream, this occurs quickly.
+        /// </summary>
+        /// <param name="soundPath">The path and filename to the audio file to play.</param>
+        /// <returns>The channel ID allocated to audio file. Use this to control the playback.</returns>
+        public int PlaySoundEffect(string soundPath)
         {
-            var newManager = new SongManager();
-            var folders = new List<string>();
-            folders.Add(path);
+            RESULT result;
+            int freeSlot = GetFreeSlot();
+            Sound mySound = _sounds[freeSlot];
+            Channel myChannel = _channels[freeSlot];
+            result = _fmodSystem.createSound(soundPath, MODE.CREATESTREAM, ref mySound);
+           
+            CheckFMODErrors(result);
+            result = _fmodSystem.playSound(CHANNELINDEX.FREE, mySound, false, ref myChannel);
+            CheckFMODErrors(result);
+            return freeSlot;
+        }
 
-            while (folders.Count > 0)
+        /// <summary>
+        /// Sets the position of the sound channel given, to the position given (in milliseconds).
+        /// Will throw an ArgumentException if an invalid channel ID is provided.
+        /// </summary>
+        /// <param name="soundChannel">The Channel ID to adjust the position.</param>
+        /// <param name="position">The position, in milliseconds, to set the channel to.</param>
+        public void SetPosition(int soundChannel, double position)
+        {
+            if (!_channels.ContainsKey(soundChannel))
             {
-                string currentFolder = folders[0];
+                throw new ArgumentException("Invalid channel ID specified: " + soundChannel);
+            }
+            var result = _channels[soundChannel].setPosition((uint)(position * 1000), TIMEUNIT.MS);
+            CheckFMODErrors(result);
+        }
 
-                folders.AddRange(Directory.GetDirectories(currentFolder));
-                foreach (string file in Directory.GetFiles(currentFolder, "*.sng"))
+        /// <summary>
+        /// Iterates through the channel dictionary, to find a free ID number.
+        /// A channel is considered free if its sound has stopped playing. Otherwise, a new one
+        /// is created.
+        /// </summary>
+        /// <returns>The ID of the first free channel found.</returns>
+        private int GetFreeSlot()
+        {
+            bool isPlaying = false;
+            for (int x = 0; x < _channels.Count(); x++)
+            {
+                _channels[x].isPlaying(ref isPlaying);
+                if (!isPlaying)
                 {
-                    var newSong = LoadFromFile(file);
-                    newSong.Path = currentFolder;
-                    newSong.DefinitionFile = Path.GetFileName(file);
-                    newManager.AddSong(newSong);
-                    
+                    return x;
                 }
-                folders.RemoveAt(0);
             }
-
-            return newManager;
+            int nextIdx = (_channels.Keys.Count == 0) ? 0 : _channels.Keys.Max() + 1;
+            _channels.Add(nextIdx,  new Channel());
+            _sounds.Add(nextIdx, new Sound());
+            return _channels.Count - 1;
         }
 
-        private void AddSong(GameSong song)
+        /// <summary>
+        /// Stops playback of the a channel (and hence its audio), given its channel ID.
+        /// </summary>
+        /// <param name="index">The ID of the channel to stop.</param>
+        public void StopChannel(int index)
         {
-            if (!_songs.Contains(song))
+            if (!_channels.Keys.Contains(index))
             {
-                _songs.Add(song);
+                return;
             }
-            else
+            bool isPlaying = false;
+            _channels[index].isPlaying(ref isPlaying);
+            if (isPlaying)
             {
-                throw new Exception("SongManager already contains song with title: " + song.Title);
+                var result = _channels[index].stop();
+                CheckFMODErrors(result);
             }
-
         }
 
-
+        /// <summary>
+        /// Adjusts the volume of a specific channel (and hence the sound playing on it).
+        /// Note that the actual volume is also affected (attenuated) by the master volume.
+        /// </summary>
+        /// <param name="index">The ID of the channel to adjust the channel on.</param>
+        /// <param name="volume">The volume to set this channel to. 0 to mute, 1.0 for maximum volume.</param>
         public void SetChannelVolume(int index, float volume)
         {
             RESULT result;
             result = _channels[index].setVolume(_masterVolume * volume);
             CheckFMODErrors(result);
         }
+
+        /// <summary>
+        /// Adjusts the master volume of the game. All audio, including GameSongs and sound effects
+        /// are affected by this volume.
+        /// </summary>
+        /// <param name="volume">The new master volume to use. 0 to mute, 1.0 for maximum volume.</param>
         public void SetMasterVolume(float volume)
         {
             _masterVolume = volume;
         }
+        #endregion
+
+        #region Song Playback System
+
+        /// <summary>
+        /// Gets the position of the currently playing song, in milliseconds. Used for syncronization.
+        /// </summary>
+        /// <returns>The current song position, in milliseconds.</returns>
+        public uint GetCurrentSongProgress()
+        {
+            RESULT result;
+            uint position = 0;
+            result = _fmodChannel.getPosition(ref position, TIMEUNIT.MS);
+            CheckFMODErrors(result);
+            return position;
+        }
+ 
+        /// <summary>
+        /// Stops the currently playing GameSong.
+        /// </summary>
+        public void StopSong()
+        {
+            bool isPlaying = false;
+            _fmodChannel.isPlaying(ref isPlaying);
+            if (isPlaying)
+            {
+                var result = _fmodChannel.stop();
+                CheckFMODErrors(result);
+            }
+        }
+
+        /// <summary>
+        /// Loads a GameSong into memory. Only one GameSong is loaded at a time.
+        /// Note that this method can take some time to complete.
+        /// </summary>
+        /// <param name="song"></param>
+        public void LoadSong(GameSong song)
+        {
+            StopSong();
+            _currentSong = song;
+            RESULT result;
+            result = _fmodSystem.createSound(song.Path + "\\" + song.SongFile, MODE.SOFTWARE, ref _fmodSound);
+            CheckFMODErrors(result);
+        }
+
+        /// <summary>
+        /// Starts playing the latest GameSong loaded with LoadSong(), using the master volume.
+        /// </summary>
+        public void PlaySong()
+        {
+            RESULT result;
+            result = _fmodSystem.playSound(FMOD.CHANNELINDEX.FREE, _fmodSound, false, ref _fmodChannel);
+            _fmodChannel.setVolume(_masterVolume);
+            CheckFMODErrors(result);
+        }
+        #endregion
+
     }
 }
