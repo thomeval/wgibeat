@@ -105,9 +105,11 @@
     <Compile Include="Drawing\Menu.cs" />
     <Compile Include="Drawing\MenuItem.cs" />
     <Compile Include="Drawing\MetricsManager.cs" />
+    <Compile Include="Drawing\Sets\BeatlineSet.cs" />
     <Compile Include="Drawing\Sets\HitsBarSet.cs" />
     <Compile Include="Drawing\Sets\LevelBarSet.cs" />
     <Compile Include="Drawing\Sets\LifeBarSet.cs" />
+    <Compile Include="Drawing\Sets\NoteBarSet.cs" />
     <Compile Include="Drawing\Sets\NoteJudgementSet.cs" />
     <Compile Include="Drawing\Sets\ScoreSet.cs" />
     <Compile Include="Managers\HighScoreManager.cs" />

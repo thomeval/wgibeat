@@ -37,7 +37,6 @@ namespace WGiBeat
         {
             GraphicsManager = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-
         }
 
         /// <summary>
@@ -174,7 +173,6 @@ namespace WGiBeat
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-   
             GraphicsDevice.Clear(Color.Black);
             _spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
             GraphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
@@ -187,6 +185,11 @@ namespace WGiBeat
 
         }
 
+        /// <summary>
+        /// Changes the currently displayed GameScreen to the one with the provided name.
+        /// This GameScreen must already be present on the GameScreen Dictionary.
+        /// </summary>
+        /// <param name="screen">The name of the GameScreen to change to.</param>
         public void ScreenTransition(string screen)
         {
             if (!_screens.ContainsKey(screen))
