@@ -1,5 +1,9 @@
 ﻿namespace WGiBeat.AudioSystem
 {
+    /// <summary>
+    /// Represents a single playable song in the game. This class includes all metadata
+    /// loaded from a song file (.sng).
+    /// </summary>
     public class GameSong
     {
         public string Title { get; set; }

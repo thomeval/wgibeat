@@ -38,6 +38,11 @@ namespace WGiBeat.AudioSystem
         }
 
         #region Helpers
+
+        /// <summary>
+        /// Checks if FMOD is reporting any errors, and throws an Exception if one is found.
+        /// </summary>
+        /// <param name="result">The FMOD result code to check.</param>
         private void CheckFMODErrors(RESULT result)
         {
             switch (result)
@@ -52,6 +57,10 @@ namespace WGiBeat.AudioSystem
             }
         }
 
+        /// <summary>
+        /// Returns all songs stored in the Manager.
+        /// </summary>
+        /// <returns>A list of all stored GameSongs.</returns>
         public List<GameSong> AllSongs()
         {
             return _songs;
