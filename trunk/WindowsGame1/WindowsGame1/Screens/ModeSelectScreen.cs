@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
 using Action=WGiBeat.Managers.Action;
@@ -9,41 +8,75 @@ namespace WGiBeat.Screens
     public class ModeSelectScreen : GameScreen
     {
         private int _selectedGameType = 0;
-        private SpriteMap _baseSpriteMap;
+        private SpriteMap _optionBaseSpriteMap;
         private SpriteMap _optionsSpriteMap;
+        private SpriteMap _frameSpriteMap;
+        private SpriteMap _iconSpriteMap;
+        private Sprite _background;
+        private Sprite _headerSprite;
 
          public ModeSelectScreen(GameCore core)
              : base(core)
         {
         }
 
-
         public override void Initialize()
         {
-            _baseSpriteMap = new SpriteMap
-                                 {
-                                     Columns = 2, 
-                                     Rows = 1, 
-                                     SpriteTexture = TextureManager.Textures["modeOptionBase"]
-                                 };
+            InitSprites();
+            base.Initialize();
+        }
+
+        private void InitSprites()
+        {
+
+            _background = new Sprite
+            {
+                Height = Core.Window.ClientBounds.Height,
+                SpriteTexture = TextureManager.Textures["allBackground"],
+                Width = Core.Window.ClientBounds.Width,
+                X = 0,
+                Y = 0
+            };
+
+            _headerSprite = new Sprite { SpriteTexture = TextureManager.Textures["modeSelectHeader"] };
+
+            _optionBaseSpriteMap = new SpriteMap
+            {
+                Columns = 2,
+                Rows = 1,
+                SpriteTexture = TextureManager.Textures["modeOptionBase"]
+            };
 
             _optionsSpriteMap = new SpriteMap
             {
                 Columns = 1,
-                Rows = (int) GameType.COUNT,
+                Rows = (int)GameType.COUNT,
                 SpriteTexture = TextureManager.Textures["modeOptions"]
             };
-            base.Initialize();
 
+
+            _frameSpriteMap = new SpriteMap
+                                 {
+                                     Columns = 4,
+                                     Rows = 1,
+                                     SpriteTexture = TextureManager.Textures["playerDifficultiesFrame"]
+                                 };
+
+            _iconSpriteMap = new SpriteMap
+                                {
+                                    Columns = 1,
+                                    Rows = (int)Difficulty.COUNT + 1,
+                                    SpriteTexture = TextureManager.Textures["playerDifficulties"]
+                                };
         }
+
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             DrawBackground(spriteBatch);
             DrawPlayerDifficulties(spriteBatch);
 
-            var headerSprite = new Sprite {SpriteTexture = TextureManager.Textures["modeSelectHeader"]};
-            headerSprite.SetPosition(Core.Metrics["ModeSelectScreenHeader", 0]);
-            headerSprite.Draw(spriteBatch);
+            _headerSprite.SetPosition(Core.Metrics["ModeSelectScreenHeader", 0]);
+            _headerSprite.Draw(spriteBatch);
 
             DrawModeOptions(spriteBatch);
            
@@ -57,7 +90,7 @@ namespace WGiBeat.Screens
             for (int x = 0; x < (int) GameType.COUNT; x++)
             {
                 int selected = (x == _selectedGameType) ? 1 : 0;
-                _baseSpriteMap.Draw(spriteBatch, selected,270,270,posX,posY);
+                _optionBaseSpriteMap.Draw(spriteBatch, selected,270,270,posX,posY);
 
                 _optionsSpriteMap.Draw(spriteBatch,x,248,248,posX + 11, posY + 11);
                 posX += 275;
@@ -66,41 +99,24 @@ namespace WGiBeat.Screens
 
         private void DrawBackground(SpriteBatch spriteBatch)
         {
-            var background = new Sprite
-            {
-                Height = Core.Window.ClientBounds.Height,
-                SpriteTexture = TextureManager.Textures["allBackground"],
-                Width = Core.Window.ClientBounds.Width,
-                X = 0,
-                Y = 0
-            };
-
-            background.Draw(spriteBatch);
+            _background.Draw(spriteBatch);
         }
 
         private void DrawPlayerDifficulties(SpriteBatch spriteBatch)
         {
-            var frameSpriteMap = new SpriteMap
-            {
-                Columns = 4,
-                Rows = 1,
-                SpriteTexture = TextureManager.Textures["playerDifficultiesFrame"]
-            };
-            var iconSpriteMap = new SpriteMap
-            {
-                Columns = 1,
-                Rows = (int) Difficulty.COUNT + 1,
-                SpriteTexture = TextureManager.Textures["playerDifficulties"]
-            };
-
-            //Draw for all players, even if not playing.
+            int playerCount = 0;
             for (int x = 0; x < 4; x++)
             {
-                frameSpriteMap.Draw(spriteBatch, x, 50, 100, Core.Metrics["PlayerDifficultiesFrame", x]);
-                int idx = GetPlayerDifficulty(x);
-                iconSpriteMap.Draw(spriteBatch, idx, 40, 40, Core.Metrics["PlayerDifficulties", x]);
+                if (Core.Players[x].Playing)
+                {
+                    _frameSpriteMap.Draw(spriteBatch, x, 50, 100, Core.Metrics["PlayerDifficultiesFrame", playerCount]);
+                    int idx = GetPlayerDifficulty(x);
+                    _iconSpriteMap.Draw(spriteBatch, idx, 40, 40, Core.Metrics["PlayerDifficulties", playerCount]);
+                    playerCount++;
+                }
             }
         }
+
         private int GetPlayerDifficulty(int player)
         {
             if (!Core.Players[player].Playing)

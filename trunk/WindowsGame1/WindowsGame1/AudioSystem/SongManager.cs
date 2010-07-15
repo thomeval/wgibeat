@@ -24,6 +24,7 @@ namespace WGiBeat.AudioSystem
         private GameSong _currentSong;
         private const int CHANNEL_COUNT = 8;
         private float _masterVolume = 1.0f;
+
         #endregion 
 
         public SongManager()
@@ -283,6 +284,21 @@ namespace WGiBeat.AudioSystem
                 var result = _channels[index].stop();
                 CheckFMODErrors(result);
             }
+        }
+
+        /// <summary>
+        /// Returns the volume of a specific channel. Volume should be between 0.0 (mute) and 1.0 (maximum).
+        /// Channel volume is also affected by the master volume.
+        /// </summary>
+        /// <param name="index">The ID of the channel to retrieve the volume for.</param>
+        /// <returns>The current volume of the channel, between 0.0 and 1.0.</returns>
+        public float GetChannelVolume(int index)
+        {
+            RESULT result;
+            float volume = 0.0f;
+            result = _channels[index].getVolume(ref volume);
+            CheckFMODErrors(result);
+            return volume;
         }
 
         /// <summary>

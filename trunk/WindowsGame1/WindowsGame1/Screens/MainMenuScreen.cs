@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -19,6 +20,7 @@ namespace WGiBeat.Screens
 
         private bool _displayNoSongsError;
         private readonly string[] _menuText = { "Start Game", "Keys", "Options", "Exit" };
+
         public MainMenuScreen(GameCore core)
             : base(core)
         {
@@ -39,27 +41,15 @@ namespace WGiBeat.Screens
              * swp.Frequency = 2;           
              * swp.StepSize = 0.01 / 3;            
              */
-            try
-            {
-                GameSong song = new GameSong()
-                {
-                    Path = @"Content\Audio",
-                    SongFile = @"MenuMusic.mp3"
-                };
-                if ((Core.Songs.CurrentSong() == null) || (Core.Songs.CurrentSong().SongFile != song.SongFile))
-                {
-                    Core.Songs.LoadSong(song);
-                    Core.Songs.PlaySong();
-                }
-            }
 
-            catch (Exception ex)
-            {
-                if (ex is System.IO.FileNotFoundException)
+                if ((!Core.Cookies.ContainsKey("MenuMusicChannel")) && File.Exists("Content\\Audio\\MenuMusic.mp3"))
+                {
+                    Core.Cookies["MenuMusicChannel"] = Core.Songs.PlaySoundEffect("Content\\Audio\\MenuMusic.mp3");
+                }
+                else
                 {
                     Console.WriteLine("Did not find MenuMusic. Skipping it.");
                 }
-            }
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
