@@ -25,6 +25,7 @@ namespace WGiBeat
         public SongManager Songs;
         public HighScoreManager HighScores;
         public Player[] Players;
+        public Dictionary<string, object> Cookies;
 
         private Dictionary<string, GameScreen> _screens;
         private GameScreen _activeScreen;
@@ -47,6 +48,7 @@ namespace WGiBeat
         /// </summary>
         protected override void Initialize()
         {
+            Cookies = new Dictionary<string, object>();
             Metrics = MetricsManager.Load("metrics.txt");
             Settings = SettingsManager.LoadFromFile("settings.txt");
             HighScores = HighScoreManager.LoadFromFile("Scores.conf");

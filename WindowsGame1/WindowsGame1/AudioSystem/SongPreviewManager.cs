@@ -13,7 +13,7 @@ namespace WGiBeat.AudioSystem
     {
         public SongPreviewManager()
         {
-            myTimer = new Timer(UpdatePreviews,null, 0, 25);
+            _myTimer = new Timer(UpdatePreviews,null, 0, 25);
             PreviewDuration = 10;
         }
         public SongManager SongManager { get; set; }
@@ -23,11 +23,21 @@ namespace WGiBeat.AudioSystem
         private int _channelIndexPrev = -1;
         private float _channelPrevVolume = 1.0f;
         private float _channelCurrentVolume = 1.0f;
-        
+
+        public int ChannelIndexPrevious
+        {
+            get { return _channelIndexPrev; }
+            set
+            {
+                _channelIndexPrev = value;
+                _channelPrevVolume = SongManager.GetChannelVolume(_channelIndexPrev);
+            } 
+        }
+
         private GameSong _currentSong;
         private double _previewTime;
 
-        private readonly Timer myTimer;
+        private readonly Timer _myTimer;
 
         /// <summary>
         /// Properly disposes the SongPreviewManager by stopping the playing previews,
@@ -35,7 +45,7 @@ namespace WGiBeat.AudioSystem
         /// </summary>
         public void Dispose()
         {
-            myTimer.Dispose();
+            _myTimer.Dispose();
             if (_channelIndexCurrent != -1)
             {
                 SongManager.StopChannel(_channelIndexCurrent);

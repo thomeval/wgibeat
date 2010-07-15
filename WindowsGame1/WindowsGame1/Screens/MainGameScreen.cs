@@ -15,7 +15,7 @@ namespace WGiBeat.Screens
     public class MainGameScreen : GameScreen
     {
 
-        //TODO: Consider refactoring notebars, beatlines and notejudgements into Sets.
+        //TODO: Consider refactoring beatlines into Sets.
         private List<BeatlineNote> _beatlineNotes;
 
         private double _phraseNumber;

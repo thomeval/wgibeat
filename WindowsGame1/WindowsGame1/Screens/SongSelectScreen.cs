@@ -24,8 +24,6 @@ namespace WGiBeat.Screens
         private const int LISTITEMS_DRAWN = 6;
         private const int NUM_EVALUATIONS = 19;
 
-        private double _startedPreview;
-
         private SongPreviewManager _songPreviewManager;
         public SongSelectScreen(GameCore core) : base(core)
         {
@@ -38,6 +36,7 @@ namespace WGiBeat.Screens
             {
                 CreateSongList();
             }
+            //TODO: Move to Core.Cookies
             if (Core.Settings.Exists("LastSongPlayed"))
             {
                 var lastSongHash = Core.Settings.Get<int>("LastSongPlayed");
@@ -157,12 +156,16 @@ namespace WGiBeat.Screens
 
         private void DrawPlayerDifficulties(SpriteBatch spriteBatch)
         {
-            //Draw for all players, even if not playing.
+            int playerCount = 0;
             for (int x = 0; x < 4; x++)
             {
-                _frameSpriteMap.Draw(spriteBatch, x,50,100,Core.Metrics["PlayerDifficultiesFrame",x]);
-                int idx = GetPlayerDifficulty(x);
-                _iconSpriteMap.Draw(spriteBatch, idx, 40, 40, Core.Metrics["PlayerDifficulties", x]);
+                if (Core.Players[x].Playing)
+                {
+                    _frameSpriteMap.Draw(spriteBatch, x, 50, 100, Core.Metrics["PlayerDifficultiesFrame", playerCount]);
+                    int idx = GetPlayerDifficulty(x);
+                    _iconSpriteMap.Draw(spriteBatch, idx, 40, 40, Core.Metrics["PlayerDifficulties", playerCount]);
+                    playerCount++;
+                }
             }
         }
 
@@ -277,21 +280,21 @@ namespace WGiBeat.Screens
         private void PlaySongPreview()
         {
             bool previewsOn = false;
-            try
+
+            if (Core.Settings.Exists("SongPreview"))
             {
                 previewsOn = Core.Settings.Get<bool>("SongPreview");
-                
             }
-            catch (Exception)
-            {
-                
-                throw;
-            }
-            
+
             if (previewsOn)
             {
-                Core.Songs.StopSong();
+
                 _songPreviewManager.SetPreviewedSong(SongList[_selectedIndex].Song);
+                if (Core.Cookies.ContainsKey("MenuMusicChannel"))
+                {
+                    _songPreviewManager.ChannelIndexPrevious = (int)Core.Cookies["MenuMusicChannel"];
+                    Core.Cookies.Remove("MenuMusicChannel");
+                }
             }
         }
     }
