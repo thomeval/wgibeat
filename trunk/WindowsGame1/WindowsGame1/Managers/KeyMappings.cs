@@ -175,9 +175,9 @@ namespace WGiBeat.Managers
             }
             if (action == Action.NONE)
             {
-                _buttonMappings[controllerNumber-1].Remove(button);
+                _buttonMappings[controllerNumber - 1].Remove(button);
             }
-            else if (_buttonMappings[controllerNumber-1].ContainsKey(button))
+            else if (_buttonMappings[controllerNumber - 1].ContainsKey(button))
             {
                 _buttonMappings[controllerNumber - 1][button] = action;
             }

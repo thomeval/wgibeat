@@ -185,6 +185,25 @@ namespace WGiBeat.Screens
             }
         }
 
+        public override void PerformButton(Buttons buttons, int playerIndex)
+        {
+            switch (State.CurrentState)
+            {
+                case 2:
+                    State.CurrentState = 3;
+                    break;
+                case 3:
+
+                    Core.KeyMappings.SetButton(buttons, playerIndex, _links[_selectedMenuOption].GetAction(_currentPlayer));
+                    Core.KeyMappings.SaveToFile("Keys.conf");
+
+                    _selectChange = false;
+                    _avoidNextAction = true;
+                    State.CurrentState = 1;
+                    break;
+            }
+        }
+
         public override void PerformAction(Action action)
         {
 
