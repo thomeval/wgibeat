@@ -1,7 +1,4 @@
 --Zoran--
--Hash of song including in .sng file.
--Create .sng screen. Include calculating hash, adjusting offset and bpm.
-
 
 
 --Thome--
@@ -9,10 +6,14 @@
 
 ---Roadmap (0.1)---
 -Complete Coop mode (needs combined scoring, and grades)
--Mode select screen
+-Mode select screen Icons (DONE 10%)
 -Complete updates to graphics
 -Clean up particle field
--Refactor KeyScreen
+-Refactor KeyScreen (DONE 90%)
+-Make Song select screen consistent with rest of UI.
+
+
+
 
 
 
