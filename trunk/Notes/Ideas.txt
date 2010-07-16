@@ -1,6 +1,8 @@
 --Zoran--
 -Icons for controller buttons
 -Path following particle.
+-Deleting key links.
+-Resetting keys.
 
 --Thome--
 -Cooperative, Sync game modes
