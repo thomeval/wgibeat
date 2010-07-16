@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -136,6 +137,17 @@ namespace WGiBeat.Managers
             return (from e in _mappings.Keys where _mappings[e] == action select e).ToArray();
         }
 
+        public Buttons[] GetButtons(Action action, int controllerNumber)
+        {
+            if (!_buttonMappings[controllerNumber -1].ContainsValue(action))
+            {
+                return new Buttons[0];
+            }
+            return
+                (from e in _buttonMappings[controllerNumber - 1].Keys
+                 where _buttonMappings[controllerNumber - 1][e] == action
+                 select e).ToArray();
+        }
         public void SetKey(Keys key, Action action)
         {
             if (action == Action.NONE)
@@ -195,6 +207,8 @@ namespace WGiBeat.Managers
             }
             return _buttonMappings[controllerNumber - 1][button];
         }
+
+
     }
 
     /// <summary>

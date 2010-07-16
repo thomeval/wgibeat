@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using WGiBeat.Helpers;
@@ -42,6 +43,16 @@ namespace WGiBeat.Screens
         {
             //Virtual so not all GameScreens need to implement it.
         }
+        /// <summary>
+        /// Informs a GameScreen that a specific button on a game controller has been pressed. Unless necessary,
+        /// use PerformAction() instead.
+        /// </summary>
+        /// <param name="buttons">The button that was pressed,</param>
+        /// <param name="playerIndex">The player number of the controller (1-4).</param>
+        public virtual void PerformButton(Buttons buttons, int playerIndex)
+        {
+            //Virtual since its optional for GameScreens.
+        }
 
         /// <summary>
         /// Executes when the GameScreen should draw itself. Normally occurs about 60 times a second, but timing is
@@ -56,5 +67,7 @@ namespace WGiBeat.Screens
         /// </summary>
         /// <param name="action">The action that was requested.</param>
         public abstract void PerformAction(Managers.Action action);
+
+
     }
 }
