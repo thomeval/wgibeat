@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
@@ -33,6 +34,7 @@ namespace WGiBeat
         public readonly KeyMappings KeyMappings = new KeyMappings(); //Changed to public, for GameScreen access.
 
         private KeyboardState _lastKeystate;
+        private GamePadState[] _lastGamePadState;
 
         public GameCore()
         {
@@ -84,6 +86,9 @@ namespace WGiBeat
             {
                 Songs.SetMasterVolume((float) Settings.Get<double>("SongVolume"));
             }
+
+            _lastGamePadState = new GamePadState[4];
+
             base.Initialize();
         }
 
@@ -131,6 +136,56 @@ namespace WGiBeat
             {
                 InitializeScreens();
             }
+
+            DetectKeyPresses();
+            DetectButtonPresses();
+
+            _activeScreen.Update(gameTime);
+            base.Update(gameTime);
+        }
+
+        private void DetectButtonPresses()
+        {
+
+            for (int x = 0; x < 4; x++)
+            {
+                GamePadState currentState = GamePad.GetState((PlayerIndex) x);
+                foreach (Buttons button in GetPressedButtons(currentState))
+                {
+
+                    if (_lastGamePadState[x].IsButtonUp(button))
+                    {
+                        if (KeyMappings.GetAction(button,x + 1) != Action.NONE)
+                            _activeScreen.PerformAction(KeyMappings.GetAction(button,x + 1));
+
+                        _activeScreen.PerformButton(button,x + 1);
+                    }
+                }
+                _lastGamePadState[x] = currentState;
+            }
+        }
+
+        private List<Buttons> GetPressedButtons(GamePadState state)
+        {
+            var result = new List<Buttons>();
+
+            Buttons[] options = {
+                                    Buttons.A, Buttons.B, Buttons.X, Buttons.Y, Buttons.LeftShoulder, Buttons.RightShoulder
+                                    , Buttons.Start, Buttons.Back, Buttons.LeftTrigger, Buttons.RightTrigger, Buttons.DPadDown,
+                                    Buttons.DPadLeft, Buttons.DPadUp, Buttons.DPadRight
+                                };
+            foreach (Buttons option in options)
+            {
+                if (state.IsButtonDown(option))
+                {
+                    result.Add(option);
+                }
+            }
+            return result;
+        }
+
+        private void DetectKeyPresses()
+        {
             KeyboardState currentState = Keyboard.GetState();
 
             foreach (Keys key in currentState.GetPressedKeys())
@@ -144,14 +199,7 @@ namespace WGiBeat
                     _activeScreen.PerformKey(key);
                 }
             }
-
             _lastKeystate = currentState;
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
-
-            _activeScreen.Update(gameTime);
-            base.Update(gameTime);
         }
 
         private void InitializeScreens()

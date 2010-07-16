@@ -4,7 +4,10 @@
 
 --Thome--
 -Cooperative, Sync game modes
+-Animated BPM meter in SongSelectScreen
 -Sparks along UI. Over the wires.
+-Player Profiles
+
 
 ---Roadmap (0.1)---
 -Complete Coop mode (needs combined scoring, and grades)

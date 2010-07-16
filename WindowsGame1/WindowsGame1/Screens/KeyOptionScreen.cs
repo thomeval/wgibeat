@@ -18,7 +18,7 @@ using Action = WGiBeat.Managers.Action;
 
 namespace WGiBeat.Screens
 {
-    class KeyOptionScreen : GameScreen
+    public class KeyOptionScreen : GameScreen
     {
         private int _currentPlayer = 1;
         private int _selectedMenuOption;
@@ -35,8 +35,6 @@ namespace WGiBeat.Screens
                                          new ButtonLink(Action.P1_START,    Action.P2_START,    Action.P3_START,    Action.P4_START,    "Start"),
                                          new ButtonLink(Action.P1_SELECT,   Action.P2_SELECT,   Action.P3_SELECT,   Action.P4_SELECT,   "Select"),
                                         };
-
-
 
         public KeyOptionScreen(GameCore core)
             : base(core)
@@ -72,18 +70,19 @@ namespace WGiBeat.Screens
             var panelPosition = new Vector2(0, 50);
             var textPosition = new Vector2(0, 60);
 
+            var menuOptionSprite = new Sprite
+            {
+                Height = 50,
+                SpriteTexture = TextureManager.Textures["mainMenuOption"],
+                Width = 160
+            };
 
             for (int playerOption = 1; playerOption <= 4; playerOption++)
             {
                 panelPosition.X = 100 + (170 * (playerOption - 1));
 
 
-                var menuOptionSprite = new Sprite
-                {
-                    Height = 50,
-                    SpriteTexture = TextureManager.Textures["mainMenuOption"],
-                    Width = 160
-                };
+
 
                 menuOptionSprite.SetPosition(panelPosition);
 
@@ -103,20 +102,14 @@ namespace WGiBeat.Screens
             panelPosition.X = 100;
             textPosition.X = 120;
 
+
+            menuOptionSprite.Width = 200;
+
             for (int menuOption = 0; menuOption < _links.Length; menuOption++)
             {
 
                 panelPosition.Y = 150 + (55 * menuOption);
                 textPosition.Y = panelPosition.Y + 10;
-
-                var menuOptionSprite = new Sprite
-                {
-                    Height = 50,
-                    SpriteTexture = TextureManager.Textures["mainMenuOption"],
-                    Width = 200
-                };
-
-
 
                 if (menuOption == _selectedMenuOption)
                     menuOptionSprite.SpriteTexture = TextureManager.Textures["mainMenuOptionSelected"];
@@ -129,31 +122,41 @@ namespace WGiBeat.Screens
             }
 
             panelPosition.X = 400;
+            panelPosition.Y = 150;
             //tempVector1.Y = 150;
 
-            textPosition.X = 440;
+            textPosition.X = 420;
+            textPosition.Y = 160;
             //tempVector2.Y = 160;
+
+            menuOptionSprite.Width = 300;
 
             Keys[] tempKeyList = Core.KeyMappings.GetKeys(_links[_selectedMenuOption].GetAction(_currentPlayer));
 
-            for (int keyList = 0; keyList < tempKeyList.Length; keyList++)
+            foreach (Keys key in tempKeyList)
             {
-
-                panelPosition.Y = 150 + (keyList * 55);
-                textPosition.Y = panelPosition.Y + 10;
-
-
-                var menuOptionSprite = new Sprite
-                {
-                    Height = 50,
-                    SpriteTexture = TextureManager.Textures["mainMenuOption"],
-                    Width = 300
-                };
 
                 menuOptionSprite.SetPosition(panelPosition);
                 menuOptionSprite.Draw(spriteBatch);
-                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Key = " + tempKeyList[keyList], textPosition, Color.Black);
+                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Key = " + key, textPosition, Color.Black);
+                panelPosition.Y += 55;
+                textPosition.Y = panelPosition.Y + 10;
+            }
 
+            for (int index = 1; index < 4; index++)
+            {
+                var buttonList = Core.KeyMappings.GetButtons(_links[_selectedMenuOption].GetAction(_currentPlayer), index);
+                foreach (Buttons button in buttonList)
+                {
+
+                    menuOptionSprite.SetPosition(panelPosition);
+                    menuOptionSprite.Draw(spriteBatch);
+                    spriteBatch.DrawString(TextureManager.Fonts["LargeFont"],
+                                           "Pad " + index + " = " + button, textPosition,
+                                           Color.Black);
+                    panelPosition.Y += 55;
+                    textPosition.Y = panelPosition.Y + 10;
+                }
             }
 
         }
