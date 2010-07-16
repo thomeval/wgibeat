@@ -1,8 +1,10 @@
 --Zoran--
-
+-Icons for controller buttons
+-Path following particle.
 
 --Thome--
 -Cooperative, Sync game modes
+-Sparks along UI. Over the wires.
 
 ---Roadmap (0.1)---
 -Complete Coop mode (needs combined scoring, and grades)
