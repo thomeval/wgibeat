@@ -8,7 +8,7 @@ namespace WGiBeat.Screens
     public abstract class GameScreen : GameComponent
     {
         //UNSURE: What is this??? Zoran needs to explain himself.
-        protected FiniteState State = new FiniteState(0);
+        protected FiniteState State = new FiniteState(1);
         protected readonly GameCore Core;
 
         public GameScreen(GameCore core) : base(core)
