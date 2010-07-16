@@ -100,12 +100,30 @@ namespace WGiBeat.Managers
 
         public void SaveToFile(string filename)
         {
+            FileStream fs = null;
+            BinaryFormatter bf = null;
 
-            var fs = new FileStream(filename, FileMode.Open, FileAccess.Write);
-            var bf = new BinaryFormatter();
-            bf.Serialize(fs, _mappings);
-            bf.Serialize(fs,_buttonMappings);
-            fs.Close();
+            try
+            {
+                fs = new FileStream(filename, FileMode.Open, FileAccess.Write);
+                bf = new BinaryFormatter();
+                bf.Serialize(fs, _mappings);
+                bf.Serialize(fs, _buttonMappings);
+            }
+            catch (Exception)
+            {
+                fs = new FileStream(filename, FileMode.CreateNew, FileAccess.Write);
+                bf = new BinaryFormatter();
+                bf.Serialize(fs, _mappings);
+                bf.Serialize(fs, _buttonMappings);
+            }
+            finally
+            {
+                if (fs != null)
+                    fs.Close();
+            }
+            
+            
         }
 
         public Keys GetKey(Action action)
