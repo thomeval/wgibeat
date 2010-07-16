@@ -81,14 +81,17 @@ namespace WGiBeat.Screens
             {
                 panelPosition.X = 100 + (170 * (playerOption - 1));
 
-
-
+                
 
                 menuOptionSprite.SetPosition(panelPosition);
 
                 if (playerOption == _currentPlayer)
                 {
                     menuOptionSprite.SpriteTexture = TextureManager.Textures["mainMenuOptionSelected"];
+                    menuOptionSprite.Height = menuOptionSprite.Height;
+                } else
+                {
+                    menuOptionSprite.SpriteTexture = TextureManager.Textures["mainMenuOption"];
                 }
 
 
@@ -107,12 +110,14 @@ namespace WGiBeat.Screens
 
             for (int menuOption = 0; menuOption < _links.Length; menuOption++)
             {
-
+                
                 panelPosition.Y = 150 + (55 * menuOption);
                 textPosition.Y = panelPosition.Y + 10;
 
                 if (menuOption == _selectedMenuOption)
                     menuOptionSprite.SpriteTexture = TextureManager.Textures["mainMenuOptionSelected"];
+                else
+                    menuOptionSprite.SpriteTexture = TextureManager.Textures["mainMenuOption"];
 
                 menuOptionSprite.SetPosition(panelPosition);
                 menuOptionSprite.Draw(spriteBatch);
