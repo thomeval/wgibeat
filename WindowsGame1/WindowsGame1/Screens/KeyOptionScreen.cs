@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
 using Microsoft.Xna.Framework.Input;
-using Action=WGiBeat.Managers.Action;
+using Action = WGiBeat.Managers.Action;
 
 
 /* Instructions
@@ -35,17 +35,19 @@ namespace WGiBeat.Screens
                                          new ButtonLink(Action.P1_START,    Action.P2_START,    Action.P3_START,    Action.P4_START,    "Start"),
                                          new ButtonLink(Action.P1_SELECT,   Action.P2_SELECT,   Action.P3_SELECT,   Action.P4_SELECT,   "Select"),
                                         };
-                
 
 
-        public KeyOptionScreen(GameCore core) : base(core)
+
+        public KeyOptionScreen(GameCore core)
+            : base(core)
         {
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Current player: Player" + _currentPlayer, new Vector2(50, 110), Color.Black);
-            DrawMenu(spriteBatch);
+            DrawBackground(spriteBatch);
+            DrawOverlay(spriteBatch);
         }
 
         private void DrawBackground(SpriteBatch spriteBatch)
@@ -62,8 +64,7 @@ namespace WGiBeat.Screens
             background.Draw(spriteBatch);
         }
 
-
-        private void DrawMenu(SpriteBatch spriteBatch)
+        private void DrawOverlay(SpriteBatch spriteBatch)
         {
 
             DrawBackground(spriteBatch);
@@ -71,7 +72,7 @@ namespace WGiBeat.Screens
             var panelPosition = new Vector2(0, 50);
             var textPosition = new Vector2(0, 60);
 
-            
+
             for (int playerOption = 1; playerOption <= 4; playerOption++)
             {
                 panelPosition.X = 100 + (170 * (playerOption - 1));
@@ -91,11 +92,11 @@ namespace WGiBeat.Screens
                     menuOptionSprite.SpriteTexture = TextureManager.Textures["mainMenuOptionSelected"];
                 }
 
-                
+
                 menuOptionSprite.Draw(spriteBatch);
                 textPosition.X = panelPosition.X + 32;
                 textPosition.Y = panelPosition.Y + 10;
-                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Player " + playerOption , textPosition, Color.Black);
+                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Player " + playerOption, textPosition, Color.Black);
 
             }
 
@@ -115,7 +116,7 @@ namespace WGiBeat.Screens
                     Width = 200
                 };
 
-               
+
 
                 if (menuOption == _selectedMenuOption)
                     menuOptionSprite.SpriteTexture = TextureManager.Textures["mainMenuOptionSelected"];
@@ -159,104 +160,92 @@ namespace WGiBeat.Screens
 
         public override void PerformKey(Keys key)
         {
-            if (_selectChange)
+            switch (State.CurrentState)
             {
-                if (_avoidNextAction)
-                    _avoidNextAction = false;
-                else
-                {
-                    //Console.WriteLine("Perform " + key);
+                case 2:
+                    State.CurrentState = 3;
+                    break;
+                case 3:
+
                     Core.KeyMappings.SetKey(key, _links[_selectedMenuOption].GetAction(_currentPlayer));
                     Core.KeyMappings.SaveToFile("Keys.conf");
 
                     _selectChange = false;
                     _avoidNextAction = true;
-                }
+                    State.CurrentState = 1;
+                    break;
             }
         }
 
         public override void PerformAction(Action action)
         {
 
-            
+
             if (action == Action.SYSTEM_BACK)
                 Core.ScreenTransition("MainMenu");
             else
             {
-                switch (action)
+                if (State.CurrentState == 1)
                 {
-                    case Action.P1_LEFT:
-                    case Action.P2_LEFT:
-                    case Action.P3_LEFT:
-                    case Action.P4_LEFT:
-
-                        _selectChange = false;
-                        _avoidNextAction = false;
-
-                        _currentPlayer--;
-
-                        if (_currentPlayer < 1)
-                            _currentPlayer = 4;
-
-                        return;
-
-                    case Action.P1_RIGHT:
-                    case Action.P2_RIGHT:
-                    case Action.P3_RIGHT:
-                    case Action.P4_RIGHT:
-
-                        _selectChange = false;
-                        _avoidNextAction = false;
-
-                        _currentPlayer++;
-
-                        if (_currentPlayer > 4)
-                            _currentPlayer = 1;
-                        return;
-
-                    case Action.P1_START:
-                    case Action.P2_START:
-                    case Action.P3_START:
-                    case Action.P4_START:
-                        //Console.WriteLine("Changed to changing");
-                        _selectChange = true;
-                        _avoidNextAction = true;
-                        break;
-
-                }
-
-
-                if (!_selectChange)
-                {
-                    if (_avoidNextAction)
-                        _avoidNextAction = false;
+                    switch (action)
                     {
+                        case Action.P1_UP:
+                        case Action.P2_UP:
+                        case Action.P3_UP:
+                        case Action.P4_UP:
+                            _selectedMenuOption--;
 
-                            switch (action)
-                            {
-                                case Action.P1_UP:
-                                case Action.P2_UP:
-                                case Action.P3_UP:
-                                case Action.P4_UP:
-                                    _selectedMenuOption--;
+                            if (_selectedMenuOption < 0)
+                                _selectedMenuOption = _links.Length - 1;
 
-                                    if (_selectedMenuOption < 0)
-                                        _selectedMenuOption = _links.Length - 1;
+                            break;
 
-                                    break;
-                                case Action.P1_DOWN:
-                                case Action.P2_DOWN:
-                                case Action.P3_DOWN:
-                                case Action.P4_DOWN:
+                        case Action.P1_DOWN:
+                        case Action.P2_DOWN:
+                        case Action.P3_DOWN:
+                        case Action.P4_DOWN:
+                            _selectedMenuOption++;
 
-                                    _selectedMenuOption++;
+                            if (_selectedMenuOption >= _links.Length)
+                                _selectedMenuOption = 0;
 
-                                    if (_selectedMenuOption >= _links.Length)
-                                        _selectedMenuOption = 0;
+                            break;
 
-                                    break;
+                        case Action.P1_LEFT:
+                        case Action.P2_LEFT:
+                        case Action.P3_LEFT:
+                        case Action.P4_LEFT:
+                            _selectChange = false;
+                            _avoidNextAction = false;
 
-                            }
+                            _currentPlayer--;
+
+                            if (_currentPlayer < 1)
+                                _currentPlayer = 4;
+
+                            return;
+
+                        case Action.P1_RIGHT:
+                        case Action.P2_RIGHT:
+                        case Action.P3_RIGHT:
+                        case Action.P4_RIGHT:
+                            _selectChange = false;
+                            _avoidNextAction = false;
+
+                            _currentPlayer++;
+
+                            if (_currentPlayer > 4)
+                                _currentPlayer = 1;
+                            return;
+
+                        case Action.P1_START:
+                        case Action.P2_START:
+                        case Action.P3_START:
+                        case Action.P4_START:
+                            _selectChange = true;
+                            _avoidNextAction = true;
+                            State.CurrentState = 2;
+                            break;
                     }
                 }
             }
@@ -271,7 +260,8 @@ namespace WGiBeat.Screens
 
             public String Name { get; set; }
 
-            public ButtonLink(Action p1, Action p2, Action p3, Action p4, String name) : this() //May be unecessary.
+            public ButtonLink(Action p1, Action p2, Action p3, Action p4, String name)
+                : this() //May be unecessary.
             {
                 P1Action = p1;
                 P2Action = p2;
