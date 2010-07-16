@@ -1,0 +1,11 @@
+﻿WGiBeat uses the FMOD Sound System for its sound engine. The FMOD Sound System is copyright © Firelight Technologies Pty, Ltd., 1994-2010.
+For more information, see: http://www.fmod.org/
+Licence: http://www.fmod.org/index.php/sales/details/non-commercial
+(free non-commercial use)
+
+WGiBeat uses the 2Tech font in several graphics and numbers. 2Tech is developed and owned by Iconian Fonts.
+For more information, see: http://www.iconian.com/index.html
+Licence: http://www.iconian.com/commercial.html 
+(free non-commercial use)
+
+The remainder of WgiBeat is licened under...?
