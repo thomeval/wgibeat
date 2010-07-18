@@ -10,7 +10,7 @@ namespace WGiBeat.Screens
     public class EvaluationScreen : GameScreen
     {
         private readonly string[] _lines = {"Ideal","Cool","Ok","Bad","Fail","Miss","Fault"};
-        private readonly int[] _evaluationCutoffs = {96, 92, 88, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40, 35, 30, 25,20};
+        private readonly int[] _evaluationCutoffs = {95, 90, 86, 82, 78, 75, 70, 65, 60, 55, 50, 45, 40, 35, 30, 25,20};
         private readonly int[] _grades = {0, 0, 0, 0};
         private int _highScorePlayer;
         private const int NUM_EVALUATIONS = 19;
@@ -91,7 +91,7 @@ namespace WGiBeat.Screens
 
             // Ideal + Cool + OK + Bad + Fail + Miss
             int maxPossible = judgements[0] + judgements[1] + judgements[2] + judgements[3] + judgements[4] +
-                              judgements[6];
+                              judgements[5];
             maxPossible *= 8;
 
             //Ideals
@@ -105,7 +105,7 @@ namespace WGiBeat.Screens
             //Fails
             playerScore += judgements[4] * -4;
             //Faults
-            playerScore += judgements[5] * -1;
+            playerScore += judgements[6] * -1;
 
             return 100.0 * playerScore / maxPossible;
         }

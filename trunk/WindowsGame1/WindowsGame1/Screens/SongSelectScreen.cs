@@ -21,6 +21,7 @@ namespace WGiBeat.Screens
         private Sprite _background;
         private SpriteMap _gradeSpriteMap;
 
+        private BpmMeter _bpmMeter;
         private const int LISTITEMS_DRAWN = 6;
         private const int NUM_EVALUATIONS = 19;
 
@@ -48,6 +49,9 @@ namespace WGiBeat.Screens
             }
             InitSprites();
             _songPreviewManager = new SongPreviewManager{SongManager = Core.Songs};
+            _bpmMeter = new BpmMeter {Height = 100, Width = 300};
+            _bpmMeter.SetPosition(Core.Metrics["BPMMeter",0]);
+
             base.Initialize();
             PlaySongPreview();
         }
@@ -108,6 +112,7 @@ namespace WGiBeat.Screens
 
             _headerSprite.SetPosition(Core.Metrics["SongSelectScreenHeader",0]);
             _headerSprite.Draw(spriteBatch);
+            //_bpmMeter.Draw(spriteBatch);
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], SongList[_selectedIndex].Song.Bpm + " BPM", Core.Metrics["SongBPMDisplay", 0], Color.Black);
 
 
@@ -281,6 +286,7 @@ namespace WGiBeat.Screens
         {
             bool previewsOn = false;
 
+            _bpmMeter.Bpm = SongList[_selectedIndex].Song.Bpm;
             if (Core.Settings.Exists("SongPreview"))
             {
                 previewsOn = Core.Settings.Get<bool>("SongPreview");

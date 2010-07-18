@@ -80,6 +80,10 @@ namespace WGiBeat.AudioSystem
         /// </summary>
         private void ReplaySameSong()
         {
+            if (_channelIndexCurrent == -1)
+            {
+                return;
+            }
             SongManager.StopChannel(_channelIndexCurrent);
             _channelIndexCurrent = SongManager.PlaySoundEffect(_currentSong.Path + "\\" + _currentSong.SongFile);
             SongManager.SetPosition(_channelIndexCurrent, _currentSong.Offset);

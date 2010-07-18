@@ -163,7 +163,7 @@ namespace WGiBeat
             Score = 0;
             Hits = 0;
             MaxHits = 0;
-            Streak = -1;
+            Streak = 0;
             MaxStreak = 0;
             Momentum = 0;
             Life = 50;
