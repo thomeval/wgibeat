@@ -64,22 +64,25 @@ namespace WGiBeat.Drawing.Sets
             {
                 case BeatlineNoteJudgement.IDEAL:
                     _players[player].Streak++;
-                    double multiplier = ((9.0 + Math.Max(1, _players[player].Streak)) / 10.0);
+
+                    decimal multiplier = Convert.ToDecimal((9 + Math.Max(1, _players[player].Streak)));
+                    multiplier /= 10;
+
                     _players[player].Score += (long)(1000 * numCompleted * multiplier);
                     lifeAdjust = (1 * numCompleted);
                     break;
                 case BeatlineNoteJudgement.COOL:
                     _players[player].Score += 750 * numCompleted;
                     lifeAdjust = (0.5 * numCompleted);
-                    _players[player].Streak = -1;
+                    _players[player].Streak = 0;
                     break;
                 case BeatlineNoteJudgement.OK:
                     _players[player].Score += 500 * numCompleted;
-                    _players[player].Streak = -1;
+                    _players[player].Streak = 0;
                     break;
                 case BeatlineNoteJudgement.BAD:
                     _players[player].Score += 250 * numCompleted;
-                    _players[player].Streak = -1;
+                    _players[player].Streak = 0;
                     lifeAdjust = -1 * numCompleted;
                     break;
                 case BeatlineNoteJudgement.MISS:
@@ -87,7 +90,7 @@ namespace WGiBeat.Drawing.Sets
                     break;
                 default:
                     //FAIL
-                    _players[player].Streak = -1;
+                    _players[player].Streak = 0;
                     lifeAdjust = 0 - (int)(1 + _players[player].PlayDifficulty) * (numNotCompleted + 1);
                     _players[player].Momentum = (long)(_players[player].Momentum * 0.7);
                     break;
@@ -119,7 +122,7 @@ namespace WGiBeat.Drawing.Sets
             }
             for (int x = 0; x < 4; x++)
             {
-                if (_players[x].Streak > 0)
+                if (_players[x].Streak > 1)
                 {
                     
                     if (_displayedJudgements[x] == null)

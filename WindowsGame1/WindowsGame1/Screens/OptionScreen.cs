@@ -149,6 +149,7 @@ namespace WGiBeat.Screens
             Core.Settings.Set("SongPreview", (_optionsMenu.GetByItemText("Song Previews").SelectedValue()));
             Core.Songs.SetMasterVolume((float) Core.Settings.Get<double>("SongVolume"));
             Core.Settings.SaveToFile("settings.txt");
+
         }
     }
 }

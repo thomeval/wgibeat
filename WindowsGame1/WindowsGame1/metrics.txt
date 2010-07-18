@@ -80,6 +80,7 @@ SongHighScoreBase=[200,544];
 PlayerDifficultiesFrame=[0,500][50,500][100,500][150,500];
 PlayerDifficulties=[5,550][55,550][105,550][155,550];
 SelectedMode=[250,545];
+BPMMeter=[200,280];
 
 #Options;
 OptionsMenuStart=[30,100];

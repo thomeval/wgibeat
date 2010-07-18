@@ -225,6 +225,8 @@ namespace WGiBeat.AudioSystem
             CheckFMODErrors(result);
             result = _fmodSystem.playSound(CHANNELINDEX.FREE, mySound, false, ref myChannel);
             CheckFMODErrors(result);
+            result = myChannel.setVolume(_masterVolume);
+            CheckFMODErrors(result);
             return freeSlot;
         }
 
@@ -322,6 +324,11 @@ namespace WGiBeat.AudioSystem
         public void SetMasterVolume(float volume)
         {
             _masterVolume = volume;
+            for (int x = 0; x < _channels.Count(); x++)
+            {
+                RESULT result = _channels[x].setVolume(volume);
+                CheckFMODErrors(result);
+            }
         }
         #endregion
 

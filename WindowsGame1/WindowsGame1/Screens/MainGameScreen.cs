@@ -64,7 +64,7 @@ namespace WGiBeat.Screens
                                               Score = 0,
                                               PlayDifficulty =
                                                   (Difficulty) Core.Settings.Get<int>("P" + (x + 1) + "Difficulty"),
-                                              Streak = -1
+                                              Streak = 0
                                           };
                 }
                 else
@@ -87,6 +87,11 @@ namespace WGiBeat.Screens
             _beatlineNotes = new List<BeatlineNote>();
             _notesToRemove = new List<BeatlineNote>();
 
+            if (Core.Cookies.ContainsKey("MenuMusicChannel"))
+            {
+                Core.Songs.StopChannel( (int)Core.Cookies["MenuMusicChannel"]);
+                Core.Cookies.Remove("MenuMusicChannel");
+            }
             base.Initialize();
         }
 
