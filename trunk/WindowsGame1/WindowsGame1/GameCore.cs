@@ -158,7 +158,7 @@ namespace WGiBeat
                         if (KeyMappings.GetAction(button,x + 1) != Action.NONE)
                             _activeScreen.PerformAction(KeyMappings.GetAction(button,x + 1));
 
-                        _activeScreen.PerformButton(button,x + 1);
+                        _activeScreen.PerformButton(button, x + 1);
                     }
                 }
                 _lastGamePadState[x] = currentState;
@@ -190,7 +190,6 @@ namespace WGiBeat
 
             foreach (Keys key in currentState.GetPressedKeys())
             {
-
                 if (_lastKeystate.IsKeyUp(key))
                 {
                     if (KeyMappings.GetAction(key) != Action.NONE)

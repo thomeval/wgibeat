@@ -15,7 +15,6 @@ namespace WGiBeat.Screens
     {
         private MainMenuOption _selectedMenuOption;
 
-        private SineSwayParticle _swp = new SineSwayParticle();
         private SineSwayParticleField _field = new SineSwayParticleField();
 
         private bool _displayNoSongsError;
@@ -82,8 +81,17 @@ namespace WGiBeat.Screens
         private void DrawMenu(SpriteBatch spriteBatch)
         {
             DrawBackground(spriteBatch);
+
+            var header = new Sprite
+            {
+                SpriteTexture = TextureManager.Textures["mainMenuHeader"],
+                X = 0,
+                Y = 0
+            };
+
+            header.Draw(spriteBatch);
             
-                        for (int menuOption = 0; menuOption < (int)MainMenuOption.COUNT; menuOption++)
+            for (int menuOption = 0; menuOption < (int)MainMenuOption.COUNT; menuOption++)
             {
                 var menuOptionSprite = new Sprite
                                            {

@@ -9,7 +9,7 @@ namespace WGiBeat.Screens
     public class NewGameScreen : GameScreen
     {
         private int _playersJoined;
-
+        private SineSwayParticleField _field = new SineSwayParticleField();
         private readonly int[] _cursorPositions = new int[4];
 
         private readonly Menu[] _playerMenus = new Menu[4];
@@ -65,12 +65,13 @@ namespace WGiBeat.Screens
             };
 
             background.Draw(spriteBatch);
+            _field.Draw(spriteBatch);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             DrawBackground(spriteBatch);
-
+            
 
             DrawBorders(spriteBatch);
             DrawMenus(spriteBatch);
