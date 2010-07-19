@@ -130,7 +130,6 @@ namespace WGiBeat.Managers
                     fs.Close();
             }
             
-            
         }
 
         public Keys GetKey(Action action)

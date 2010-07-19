@@ -107,6 +107,7 @@ namespace WGiBeat.Drawing.Sets
 
         private void DrawStreakCounters(SpriteBatch spriteBatch)
         {
+            Color streakColor = new Color(10, 123, 237, 255);
             if (_streakNumbers == null)
             {
                 _streakNumbers = new GraphicNumber
@@ -133,9 +134,10 @@ namespace WGiBeat.Drawing.Sets
                     {
                         continue;
                     }
-                    _streakNumbers.SpriteMap.ColorShading.A = _displayedJudgements[x].Opacity;
-
-                    _streakNumbers.DrawNumber(spriteBatch, _players[x].Streak, _metrics["StreakText", x], 30, 40);
+                    //_streakNumbers.SpriteMap.ColorShading.A = _displayedJudgements[x].Opacity;
+                    streakColor.A = _displayedJudgements[x].Opacity;
+                    spriteBatch.DrawString(TextureManager.Fonts["TwoTechLarge"], "x" + _players[x].Streak,_metrics["StreakText",x],streakColor);
+                   // _streakNumbers.DrawNumber(spriteBatch, _players[x].Streak, _metrics["StreakText", x], 30, 40);
                 }
             }
         }
