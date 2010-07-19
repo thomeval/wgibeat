@@ -13,6 +13,7 @@ namespace WGiBeat.Screens
         private readonly int[] _cursorPositions = new int[4];
 
         private readonly Menu[] _playerMenus = new Menu[4];
+        private readonly OnScreenKeyboard[] _keyboards = new OnScreenKeyboard[4];
         public NewGameScreen(GameCore core) : base(core)
         {
 
@@ -49,6 +50,9 @@ namespace WGiBeat.Screens
                 _playerMenus[x].SetPosition(Core.Metrics["NewGameMenuStart",x]);
                 _playerMenus[x].AddItem(new MenuItem { ItemText = "Leave" });
             }
+
+            _keyboards[0] = new OnScreenKeyboard();
+            _keyboards[0].SetPosition(10,40);
             _playersJoined = 0;
             base.Initialize();
         }
@@ -65,6 +69,7 @@ namespace WGiBeat.Screens
             };
 
             background.Draw(spriteBatch);
+     //       _keyboards[0].Draw(spriteBatch);
             _field.Draw(spriteBatch);
         }
 

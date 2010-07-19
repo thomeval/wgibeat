@@ -106,6 +106,7 @@
     <Compile Include="Drawing\Menu.cs" />
     <Compile Include="Drawing\MenuItem.cs" />
     <Compile Include="Drawing\MetricsManager.cs" />
+    <Compile Include="Drawing\OnScreenKeyboard.cs" />
     <Compile Include="Drawing\Sets\BeatlineSet.cs" />
     <Compile Include="Drawing\Sets\HitsBarSet.cs" />
     <Compile Include="Drawing\Sets\LevelBarSet.cs" />
