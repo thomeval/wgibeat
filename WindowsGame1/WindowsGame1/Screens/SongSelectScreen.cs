@@ -25,6 +25,8 @@ namespace WGiBeat.Screens
         private const int LISTITEMS_DRAWN = 6;
         private const int NUM_EVALUATIONS = 19;
 
+        private SineSwayParticleField _field = new SineSwayParticleField();
+
         private SongPreviewManager _songPreviewManager;
         public SongSelectScreen(GameCore core) : base(core)
         {
@@ -70,6 +72,7 @@ namespace WGiBeat.Screens
             {
                 SpriteTexture = TextureManager.Textures["songHighScoreBase"]
             };
+
             _headerSprite = new Sprite
             {
              //   Height = 80,
@@ -134,7 +137,7 @@ namespace WGiBeat.Screens
             
             if (displayedGrade != -1)
             {
-                _gradeSpriteMap.Draw(spriteBatch,displayedGrade,68,24,Core.Metrics["SongHighScoreGrade",0]);
+                _gradeSpriteMap.Draw(spriteBatch, displayedGrade, 68, 24, Core.Metrics["SongHighScoreGrade",0]);
             }
             if (displayedDifficulty != -1)
             {
@@ -188,12 +191,15 @@ namespace WGiBeat.Screens
         {
 
             _background.Draw(spriteBatch);
+            _field.Draw(spriteBatch);
         }
 
         private void DrawSongList(SpriteBatch spriteBatch)
         {
 
             DrawBackground(spriteBatch);
+
+
 
             var midpoint = Core.Metrics["SongListMidpoint", 0];
             SongList[_selectedIndex].SetPosition(midpoint);

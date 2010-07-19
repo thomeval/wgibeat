@@ -15,6 +15,8 @@ namespace WGiBeat.Screens
         private Sprite _background;
         private Sprite _headerSprite;
 
+        private SineSwayParticleField _field = new SineSwayParticleField();
+
          public ModeSelectScreen(GameCore core)
              : base(core)
         {
@@ -73,6 +75,7 @@ namespace WGiBeat.Screens
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             DrawBackground(spriteBatch);
+            _field.Draw(spriteBatch); 
             DrawPlayerDifficulties(spriteBatch);
 
             _headerSprite.SetPosition(Core.Metrics["ModeSelectScreenHeader", 0]);
@@ -90,11 +93,28 @@ namespace WGiBeat.Screens
             for (int x = 0; x < (int) GameType.COUNT; x++)
             {
                 int selected = (x == _selectedGameType) ? 1 : 0;
-                _optionBaseSpriteMap.Draw(spriteBatch, selected,270,270,posX,posY);
+                _optionBaseSpriteMap.Draw(spriteBatch, selected, 270, 270, posX, posY);
 
-                _optionsSpriteMap.Draw(spriteBatch,x,248,248,posX + 11, posY + 11);
-                posX += 275;
+                _optionsSpriteMap.Draw(spriteBatch, x, 248, 248, posX + 11, posY + 11);
+                posX += 335;
             }
+
+            var icons = new Sprite
+            {
+                Height = 160,
+                SpriteTexture = TextureManager.Textures["modeSingleIcon"],
+                Width = 210,
+                X = posX - (335 * 2) + 30,
+                Y = posY + 30
+            };
+
+            icons.Draw(spriteBatch);
+            icons.SpriteTexture = TextureManager.Textures["modeCoopIcon"];
+            icons.X = icons.X + 335;
+
+            icons.Draw(spriteBatch);
+
+
         }
 
         private void DrawBackground(SpriteBatch spriteBatch)

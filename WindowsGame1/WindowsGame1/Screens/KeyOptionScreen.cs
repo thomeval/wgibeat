@@ -36,6 +36,8 @@ namespace WGiBeat.Screens
                                          new ButtonLink(Action.P1_SELECT,   Action.P2_SELECT,   Action.P3_SELECT,   Action.P4_SELECT,   "Select"),
                                         };
 
+        private SineSwayParticleField _field = new SineSwayParticleField();
+
         public KeyOptionScreen(GameCore core)
             : base(core)
         {
@@ -66,8 +68,20 @@ namespace WGiBeat.Screens
         {
 
             DrawBackground(spriteBatch);
+            _field.Draw(spriteBatch);
+            var header = new Sprite
+            {
+                SpriteTexture = TextureManager.Textures["keyOptionHeader"],
+                X = 0,
+                Y = 0
+            };
+           
+            header.Draw(spriteBatch);
 
-            var panelPosition = new Vector2(0, 50);
+            if (State.CurrentState == 3)
+                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Press key to add to action '" + _links[_selectedMenuOption].GetAction(_currentPlayer) + "'", new Vector2(120, 570), Color.Red);
+
+            var panelPosition = new Vector2(0, 73);
             var textPosition = new Vector2(0, 60);
 
             var menuOptionSprite = new Sprite
@@ -79,9 +93,7 @@ namespace WGiBeat.Screens
 
             for (int playerOption = 1; playerOption <= 4; playerOption++)
             {
-                panelPosition.X = 100 + (170 * (playerOption - 1));
-
-                
+                panelPosition.X = 60 + (170 * (playerOption - 1));
 
                 menuOptionSprite.SetPosition(panelPosition);
 

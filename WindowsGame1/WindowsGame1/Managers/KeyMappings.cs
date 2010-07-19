@@ -16,7 +16,8 @@ namespace WGiBeat.Managers
     {
         private Dictionary<Keys, Action> _mappings = new Dictionary<Keys, Action>();
         private Dictionary<Buttons, Action>[] _buttonMappings = new Dictionary<Buttons, Action>[4];
- 
+        private static String DEFAULT_KEYFILE = "Keys.conf";
+
         public KeyMappings()
         {
             for (int x =0; x < 4; x++)
@@ -97,6 +98,11 @@ namespace WGiBeat.Managers
             }
 
                 return false;
+        }
+
+        public void SaveToFile()
+        {
+            SaveToFile(DEFAULT_KEYFILE);
         }
 
         public void SaveToFile(string filename)

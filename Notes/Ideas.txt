@@ -4,13 +4,32 @@
 -Deleting key links.
 -Resetting keys.
 
+-Icons for mode select screen. Other stuff in that screen.
+
+-Song select screen. items. Bar at bottom. / top (mode select, too). Meter for song speed.
+
+-Evaluation screen, lot of work.
+
+-Option screen. Title. Menu design, animated.
+
+
+
+
+
+
+
+
+
+
+
+
 --Thome--
 -Cooperative, Sync game modes
 -Animated BPM meter in SongSelectScreen
 -Sparks along UI. Over the wires.
 -Player Profiles (Major)
 -Chance / SP gameplay (Major)
-
+-Life bar, black background.
 
 ---Roadmap (0.1)---
 -Complete Coop mode (Done)

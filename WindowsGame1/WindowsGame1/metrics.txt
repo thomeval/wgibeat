@@ -73,13 +73,13 @@ NewGameMenuStart=[50,25][450,25][50,350][450,350];
 SongListMidpoint=[450,275];
 SongSelectScreenHeader=[0,0];
 SongBPMDisplay=[350,290];
-SongHighScore=[215, 575];
-SongHighScoreGrade=[360,575];
-SongHighScoreDifficulty=[425,575];
-SongHighScoreBase=[200,544];
+SongHighScore=[215,575];
+SongHighScoreGrade=[335,578];
+SongHighScoreDifficulty=[400,575];
+SongHighScoreBase=[170,544];
 PlayerDifficultiesFrame=[0,500][50,500][100,500][150,500];
-PlayerDifficulties=[5,550][55,550][105,550][155,550];
-SelectedMode=[250,545];
+PlayerDifficulties=[7,545][57,545][107,545][157,545];
+SelectedMode=[230,550];
 BPMMeter=[200,280];
 
 #Options;
@@ -87,5 +87,5 @@ OptionsMenuStart=[30,100];
 
 #Mode Select;
 ModeSelectScreenHeader=[0,0];
-ModeSelectOptions=[30,85];
+ModeSelectOptions=[90,165];
 

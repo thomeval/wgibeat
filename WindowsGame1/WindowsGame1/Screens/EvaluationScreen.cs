@@ -15,8 +15,17 @@ namespace WGiBeat.Screens
         private int _highScorePlayer;
         private const int NUM_EVALUATIONS = 19;
 
+        private Sprite background = new Sprite();
+
+        private SineSwayParticleField _field = new SineSwayParticleField();
+
         public EvaluationScreen(GameCore core) : base(core)
         {
+            background.Height = Core.Window.ClientBounds.Height;
+            background.Width = core.Window.ClientBounds.Width;
+            background.SpriteTexture = TextureManager.Textures["allBackground"];
+            background.X = 0;
+            background.Y = 0;
         }
 
         #region Overrides
@@ -131,8 +140,16 @@ namespace WGiBeat.Screens
 
         #region Drawing
 
+        private void DrawBackground(SpriteBatch spriteBatch)
+        {
+            background.Draw(spriteBatch);
+            _field.Draw(spriteBatch);
+        }
+
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+
+            DrawBackground(spriteBatch);
             DrawBorders(spriteBatch);
             DrawJudgementLines(spriteBatch);
             DrawMax(spriteBatch);
@@ -150,9 +167,9 @@ namespace WGiBeat.Screens
                case GameType.COOPERATIVE:
                    var totalScore = (from e in Core.Players where e.Playing select e.Score).Sum();
                    spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "Team:",
-                                   Core.Metrics["EvaluationLabelTotalScore", 0], Color.White);
+                                   Core.Metrics["EvaluationLabelTotalScore", 0], Color.Black);
                    spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + totalScore,
-                                   Core.Metrics["EvaluationTotalScore", 0], Color.White);
+                                   Core.Metrics["EvaluationTotalScore", 0], Color.Black);
 
                    var gradeSpriteMap = new SpriteMap
                    {
@@ -188,7 +205,7 @@ namespace WGiBeat.Screens
 
             DrawHighScoreNotification(spriteBatch, gameTime);
             spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Press Start to continue.",
-                                   Core.Metrics["EvaluationInstruction", 0], Color.White);
+                                   Core.Metrics["EvaluationInstruction", 0], Color.Black);
         }
 
         private void DrawMax(SpriteBatch spriteBatch)
@@ -212,7 +229,7 @@ namespace WGiBeat.Screens
                 spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + Core.Players[x].MaxHits,
 Core.Metrics["EvaluationMaxHits", x], Color.Black);
                 spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + Core.Players[x].MaxStreak,
- Core.Metrics["EvaluationMaxStreak", x], Color.White);
+ Core.Metrics["EvaluationMaxStreak", x], Color.Black);
             }
         }
 
@@ -228,16 +245,16 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black);
                 foreach (string line in _lines)
                 {
                     spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], line + ":",
-                                           Core.Metrics["EvaluationLabel" + line, x], Color.White);
+                                           Core.Metrics["EvaluationLabel" + line, x], Color.Black);
                     spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + Core.Players[x].Judgements[y],
-                                           Core.Metrics["Evaluation" + line, x], Color.White);
+                                           Core.Metrics["Evaluation" + line, x], Color.Black);
                     y++;
                 }
 
                 spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Score:",
-                                       Core.Metrics["EvaluationLabelScore", x], Color.White);
+                                       Core.Metrics["EvaluationLabelScore", x], Color.Black);
                 spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + Core.Players[x].Score,
-                                       Core.Metrics["EvaluationScore", x], Color.White);
+                                       Core.Metrics["EvaluationScore", x], Color.Black);
             }
         }
 
@@ -294,7 +311,7 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black);
 
         private void DrawBorders(SpriteBatch spriteBatch)
         {
-            var brush = new PrimitiveLine(Core.GraphicsDevice) { Colour = Color.White };
+            var brush = new PrimitiveLine(Core.GraphicsDevice) { Colour = Color.Black };
             brush.AddVector(new Vector2(400, 0));
             brush.AddVector(new Vector2(400, 600));
             brush.Render(spriteBatch);

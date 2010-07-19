@@ -10,6 +10,8 @@ namespace WGiBeat.Screens
     {
         private readonly Menu _optionsMenu;
 
+        private SineSwayParticleField _field = new SineSwayParticleField();
+
         public OptionScreen(GameCore core) : base(core)
         {
             _optionsMenu = new Menu();
@@ -64,6 +66,18 @@ namespace WGiBeat.Screens
             };
 
             background.Draw(spriteBatch);
+            _field.Draw(spriteBatch);
+
+            var header = new Sprite
+            {
+                SpriteTexture = TextureManager.Textures["optionsHeader"],
+                X = 0,
+                Y = 0
+            };
+
+            background.Draw(spriteBatch);
+            header.Draw(spriteBatch);
+
             _optionsMenu.Draw(spriteBatch);
         }
 
