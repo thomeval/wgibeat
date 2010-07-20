@@ -10,6 +10,9 @@ namespace WGiBeat.Drawing
         private Sprite _baseSprite;
         public double Bpm { get; set; }
         public double SongTime { get; set; }
+
+        private const int DEFAULT_HEIGHT = 138;
+        private const int DEFAULT_WIDTH = 240;
         public int[] BpmLevels = {
                                      230,220,210,200,
                                      190,185,180,175,170,
@@ -32,6 +35,9 @@ namespace WGiBeat.Drawing
 
                                   SpriteTexture = TextureManager.Textures["BpmMeterBase"]
                               };
+            this.Width = DEFAULT_WIDTH;
+            this.Height = DEFAULT_HEIGHT;
+            
             
         }
 
@@ -46,12 +52,9 @@ namespace WGiBeat.Drawing
 
             var displayBpm = Math.Max(BpmLevels[BpmLevels.Count()-1], Bpm*(1 - beatFraction));
 
-            _baseSprite.Width = this.Width;
-            _baseSprite.Height = this.Height;
-            _baseSprite.X = this.X;
-            _baseSprite.Y = this.Y;
+            SetDimensions();
             _baseSprite.Draw(spriteBatch);
-            int height = this.Height/_meterSprite.Rows;
+            int height = (this.Height-2)/_meterSprite.Rows;
             for (int x = 0; x < BpmLevels.Count(); x++)
             {
                 if (displayBpm >= BpmLevels[x])
@@ -64,6 +67,14 @@ namespace WGiBeat.Drawing
                 }
                 _meterSprite.Draw(spriteBatch, x, this.Width, height, this.X, this.Y + (x*height));
             }
+        }
+
+        private void SetDimensions()
+        {
+            _baseSprite.Width = this.Width;
+            _baseSprite.Height = this.Height;
+            _baseSprite.X = this.X;
+            _baseSprite.Y = this.Y;
         }
     }
 }
