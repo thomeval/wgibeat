@@ -51,7 +51,7 @@ namespace WGiBeat.Screens
             }
             InitSprites();
             _songPreviewManager = new SongPreviewManager{SongManager = Core.Songs};
-            _bpmMeter = new BpmMeter {Height = 100, Width = 300};
+            _bpmMeter = new BpmMeter {Height = 155, Width = 150};
             _bpmMeter.SetPosition(Core.Metrics["BPMMeter",0]);
 
             base.Initialize();
@@ -115,7 +115,7 @@ namespace WGiBeat.Screens
 
             _headerSprite.SetPosition(Core.Metrics["SongSelectScreenHeader",0]);
             _headerSprite.Draw(spriteBatch);
-            //_bpmMeter.Draw(spriteBatch);
+            _bpmMeter.Draw(spriteBatch);
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], SongList[_selectedIndex].Song.Bpm + " BPM", Core.Metrics["SongBPMDisplay", 0], Color.Black);
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "Mode: " + Core.Settings.Get<GameType>("CurrentGameType"), Core.Metrics["SelectedMode", 0], Color.Black);
 
