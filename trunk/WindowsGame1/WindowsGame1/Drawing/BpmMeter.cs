@@ -11,16 +11,20 @@ namespace WGiBeat.Drawing
         public double Bpm { get; set; }
         public double SongTime { get; set; }
         public int[] BpmLevels = {
-                                     200,180,165,150,135,
-                                     120,115,110,105,100,
-                                     95,90,85,80
+                                     230,220,210,200,
+                                     190,185,180,175,170,
+                                     165,160,155,150,145,
+                                     140,135,130,125,120,
+                                     116,112,108,104,100,
+                                     97,94,91,88,85,
+                                     82,79,76,73,70,
                                  };
         public BpmMeter()
         {
             _meterSprite = new SpriteMap()
                                {
                                    Columns = 1,
-                                   Rows = 14,
+                                   Rows = BpmLevels.Count(),
                                    SpriteTexture = TextureManager.Textures["BpmMeterOverlay"]
                                };
             _baseSprite = new Sprite()
