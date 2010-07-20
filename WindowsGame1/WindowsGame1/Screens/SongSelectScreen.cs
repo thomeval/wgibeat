@@ -20,8 +20,10 @@ namespace WGiBeat.Screens
         private SpriteMap _iconSpriteMap;
         private Sprite _background;
         private SpriteMap _gradeSpriteMap;
-
+       
         private BpmMeter _bpmMeter;
+        private bool _resetSongTime = true;
+        private double _songStartTime = 0;
         private const int LISTITEMS_DRAWN = 6;
         private const int NUM_EVALUATIONS = 19;
 
@@ -112,13 +114,25 @@ namespace WGiBeat.Screens
             DrawSongList(spriteBatch);
             DrawPlayerDifficulties(spriteBatch);
             DrawHighScoreFrame(spriteBatch);
-
+            DrawBpmMeter(gameTime, spriteBatch);
             _headerSprite.SetPosition(Core.Metrics["SongSelectScreenHeader",0]);
             _headerSprite.Draw(spriteBatch);
-            _bpmMeter.Draw(spriteBatch);
+            
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], SongList[_selectedIndex].Song.Bpm + " BPM", Core.Metrics["SongBPMDisplay", 0], Color.Black);
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "Mode: " + Core.Settings.Get<GameType>("CurrentGameType"), Core.Metrics["SelectedMode", 0], Color.Black);
 
+        }
+
+        private void DrawBpmMeter(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            if (_resetSongTime)
+            {
+                _resetSongTime = false;
+                _songStartTime = gameTime.TotalRealTime.TotalMilliseconds;
+            }
+            _bpmMeter.SongTime = (gameTime.TotalRealTime.TotalMilliseconds - _songStartTime) / 1000 * (SongList[_selectedIndex].Song.Bpm / 60);
+
+            _bpmMeter.Draw(spriteBatch);
         }
 
         private void DrawHighScoreFrame(SpriteBatch spriteBatch)
@@ -291,6 +305,7 @@ namespace WGiBeat.Screens
             bool previewsOn = false;
 
             _bpmMeter.Bpm = SongList[_selectedIndex].Song.Bpm;
+            _resetSongTime = true;
             if (Core.Settings.Exists("SongPreview"))
             {
                 previewsOn = Core.Settings.Get<bool>("SongPreview");
