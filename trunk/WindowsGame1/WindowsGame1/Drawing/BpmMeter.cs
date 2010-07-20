@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing
@@ -8,7 +9,7 @@ namespace WGiBeat.Drawing
         private SpriteMap _meterSprite;
         private Sprite _baseSprite;
         public double Bpm { get; set; }
-
+        public double SongTime { get; set; }
         public int[] BpmLevels = {
                                      200,180,165,150,135,
                                      120,115,110,105,100,
@@ -32,8 +33,15 @@ namespace WGiBeat.Drawing
 
         private readonly Color _notLitColor = new Color(64, 64, 64, 255);
 
+        private const double BEAT_FRACTION_SEVERITY = 0.2;
         public override void Draw(SpriteBatch spriteBatch)
         {
+
+            var beatFraction = (SongTime) - Math.Floor(SongTime);
+            beatFraction *= BEAT_FRACTION_SEVERITY;
+
+            var displayBpm = Math.Max(BpmLevels[BpmLevels.Count()-1], Bpm*(1 - beatFraction));
+
             _baseSprite.Width = this.Width;
             _baseSprite.Height = this.Height;
             _baseSprite.X = this.X;
@@ -42,7 +50,7 @@ namespace WGiBeat.Drawing
             int height = this.Height/_meterSprite.Rows;
             for (int x = 0; x < BpmLevels.Count(); x++)
             {
-                if (Bpm >= BpmLevels[x])
+                if (displayBpm >= BpmLevels[x])
                 {
                     _meterSprite.ColorShading = Color.White;
                 }
