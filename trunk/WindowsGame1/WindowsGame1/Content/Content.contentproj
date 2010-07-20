@@ -359,8 +359,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\BpmMeter.png">
-      <Name>BpmMeter</Name>
+    <Compile Include="Textures\BpmMeterBase.png">
+      <Name>BpmMeterBase</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\BpmMeterOverlay.png">
+      <Name>BpmMeterOverlay</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

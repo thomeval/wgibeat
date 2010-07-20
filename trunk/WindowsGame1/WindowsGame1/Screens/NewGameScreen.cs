@@ -48,11 +48,17 @@ namespace WGiBeat.Screens
                 _playerMenus[x].AddItem(noteSpeed);
 
                 _playerMenus[x].SetPosition(Core.Metrics["NewGameMenuStart",x]);
+                
                 _playerMenus[x].AddItem(new MenuItem { ItemText = "Leave" });
+                _playerMenus[x].AddItem(new MenuItem{ItemText = "Show Keyboard"});
             }
 
-            _keyboards[0] = new OnScreenKeyboard();
-            _keyboards[0].SetPosition(10,40);
+            for (int x = 0; x < 4; x++)
+            {
+                _keyboards[x] = new OnScreenKeyboard();
+                _keyboards[x].SetPosition(Core.Metrics["OnScreenKeyboard",x]);
+                _keyboards[x].EnteredTextPosition = Core.Metrics["OnScreenKeyboardDisplay", x];
+            }
             _playersJoined = 0;
             base.Initialize();
         }
@@ -69,7 +75,6 @@ namespace WGiBeat.Screens
             };
 
             background.Draw(spriteBatch);
-     //       _keyboards[0].Draw(spriteBatch);
             _field.Draw(spriteBatch);
         }
 
@@ -102,6 +107,10 @@ namespace WGiBeat.Screens
                         spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Ready",
                         Core.Metrics["NewGameJoinNotification", x], Color.Black);
                     }
+                    else if (_cursorPositions[x] == 200)
+                    {
+                        _keyboards[x].Draw(spriteBatch);   
+                    }
                     else if (_cursorPositions[x] == 0)
                     {
                         _playerMenus[x].Draw(spriteBatch);
@@ -131,6 +140,8 @@ namespace WGiBeat.Screens
 
         public override void PerformAction(Action action)
         {
+            var player = action.ToString().Substring(0, action.ToString().IndexOf("_"));
+            var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
             switch (action)
             {
                 case Action.P1_START:
@@ -224,6 +235,9 @@ namespace WGiBeat.Screens
                     case "Decision":
                         _cursorPositions[number] = 999;
                         TryToStart();
+                        break;
+                    case "Show Keyboard":
+                        _cursorPositions[number] = 200;
                         break;
                 }
             }

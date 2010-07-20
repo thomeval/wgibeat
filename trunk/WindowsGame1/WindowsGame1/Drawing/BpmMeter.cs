@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing
@@ -9,29 +6,40 @@ namespace WGiBeat.Drawing
     public class BpmMeter :DrawableObject 
     {
         private SpriteMap _meterSprite;
-
+        private Sprite _baseSprite;
         public double Bpm { get; set; }
 
         public int[] BpmLevels = {
-                                     60, 62, 64, 66, 68, 70, 72, 74, 76, 78,
-                                     80, 83, 86, 89, 92, 95, 98, 101, 104, 107,
-                                     110, 114, 118, 122, 126, 130, 134, 138, 142, 146,
-                                     150, 155, 160, 165, 170, 175, 180, 185, 190, 195,
-                                     200
+                                     200,180,165,150,135,
+                                     120,115,110,105,100,
+                                     95,90,85,80
                                  };
         public BpmMeter()
         {
             _meterSprite = new SpriteMap()
                                {
-                                   Columns = 50,
-                                   Rows = 1,
-                                   SpriteTexture = TextureManager.Textures["BpmMeter"]
+                                   Columns = 1,
+                                   Rows = 14,
+                                   SpriteTexture = TextureManager.Textures["BpmMeterOverlay"]
                                };
+            _baseSprite = new Sprite()
+                              {
+
+                                  SpriteTexture = TextureManager.Textures["BpmMeterBase"]
+                              };
             
         }
+
+        private readonly Color _notLitColor = new Color(64, 64, 64, 255);
+
         public override void Draw(SpriteBatch spriteBatch)
         {
-            int width = this.Width/50;
+            _baseSprite.Width = this.Width;
+            _baseSprite.Height = this.Height;
+            _baseSprite.X = this.X;
+            _baseSprite.Y = this.Y;
+            _baseSprite.Draw(spriteBatch);
+            int height = this.Height/_meterSprite.Rows;
             for (int x = 0; x < BpmLevels.Count(); x++)
             {
                 if (Bpm >= BpmLevels[x])
@@ -40,9 +48,9 @@ namespace WGiBeat.Drawing
                 }
                 else
                 {
-                    _meterSprite.ColorShading = Color.Gray;
+                    _meterSprite.ColorShading = _notLitColor;
                 }
-                _meterSprite.Draw(spriteBatch, x, width, this.Height, this.X + (x * width), this.Y);
+                _meterSprite.Draw(spriteBatch, x, this.Width, height, this.X, this.Y + (x*height));
             }
         }
     }
