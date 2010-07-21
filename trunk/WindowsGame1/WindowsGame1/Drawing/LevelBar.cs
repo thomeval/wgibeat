@@ -29,11 +29,9 @@ namespace WGiBeat.Drawing
                 _baseSprite.SetPosition(this.X, this.Y);
                 _baseSprite.Draw(spriteBatch);
 
-                var levelTextLength = Convert.ToInt32(Parent.Players[PlayerID].Level).ToString().Length;
-            TextPosition.X -= 6*levelTextLength;
-                spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + (int)Parent.Players[PlayerID].Level,
-                       TextPosition, Color.Black);
-            TextPosition.X += 6*levelTextLength;
+
+                TextureManager.DrawString(spriteBatch, "" + (int)Parent.Players[PlayerID].Level, "DefaultFont",
+                       TextPosition, Color.Black,FontAlign.CENTER);
             DrawBars(spriteBatch);
                      
         }

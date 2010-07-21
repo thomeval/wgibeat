@@ -73,14 +73,14 @@ OnScreenKeyboardDisplay=[200,10][600,10][200,385][600,385];
 #Song Select;
 SongListMidpoint=[450,275];
 SongSelectScreenHeader=[0,0];
-SongBPMDisplay=[225,310];
-SongHighScore=[215,575];
+SongBPMDisplay=[365,315];
+SongHighScore=[330,577];
 SongHighScoreGrade=[335,578];
 SongHighScoreDifficulty=[400,575];
 SongHighScoreBase=[170,544];
 PlayerDifficultiesFrame=[0,500][50,500][100,500][150,500];
 PlayerDifficulties=[7,545][57,545][107,545][157,545];
-SelectedMode=[230,550];
+SelectedMode=[300,550];
 BPMMeter=[225,225];
 
 #Options;

@@ -80,13 +80,12 @@ namespace WGiBeat.Drawing.Sets
             {
                 if ((_players[2*x].Playing) || (_players[(2*x) + 1].Playing))
                 {
-                    var tempVector = _metrics["ScoreCombinedText", x];
-                    
-                    tempVector.X -= 13*scoreText.ToString().Length;
+
+                   
 
                     baseSprite.Draw(spriteBatch, 0, 240, 40, _metrics["ScoreCombinedBase", x]);
-                    spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + scoreText,
-                                           tempVector, Color.White);
+                    TextureManager.DrawString(spriteBatch,"" + scoreText, "LargeFont",
+                                           _metrics["ScoreCombinedText", x], Color.White,FontAlign.RIGHT);
                 }
             }
         }
@@ -100,19 +99,16 @@ namespace WGiBeat.Drawing.Sets
                 Rows = 4
             };
 
-
             for (int x = 0; x < 4; x++)
             {
-                var tempVector = _metrics["ScoreText", x];
-                tempVector.X -= 13 * _displayedScores[x].ToString().Length;
+
                 if (!_players[x].Playing)
                 {
                     continue;
                 }
                 baseSprite.Draw(spriteBatch, x, 240, 40, _metrics["ScoreBase", x]);
-                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + _displayedScores[x],
-                                      tempVector, Color.White);
-
+                TextureManager.DrawString(spriteBatch, "" + _displayedScores[x], "LargeFont",
+                                      _metrics["ScoreText", x], Color.White,FontAlign.RIGHT);
             }
         }
 

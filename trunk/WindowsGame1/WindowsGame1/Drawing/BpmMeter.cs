@@ -6,14 +6,14 @@ namespace WGiBeat.Drawing
 {
     public class BpmMeter :DrawableObject 
     {
-        private SpriteMap _meterSprite;
-        private Sprite _baseSprite;
+        private readonly SpriteMap _meterSprite;
+        private readonly Sprite _baseSprite;
         public double Bpm { get; set; }
         public double SongTime { get; set; }
 
         private const int DEFAULT_HEIGHT = 138;
         private const int DEFAULT_WIDTH = 240;
-        public int[] BpmLevels = {
+        public readonly int[] BpmLevels = {
                                      230,220,210,200,
                                      190,185,180,175,170,
                                      165,160,155,150,145,
@@ -43,7 +43,8 @@ namespace WGiBeat.Drawing
 
         private readonly Color _notLitColor = new Color(64, 64, 64, 255);
 
-        private const double BEAT_FRACTION_SEVERITY = 0.2;
+        private const double BEAT_FRACTION_SEVERITY = 0.3;
+
         public override void Draw(SpriteBatch spriteBatch)
         {
 

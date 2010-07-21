@@ -118,7 +118,7 @@ namespace WGiBeat.Screens
             _headerSprite.SetPosition(Core.Metrics["SongSelectScreenHeader",0]);
             _headerSprite.Draw(spriteBatch);
             
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "Mode: " + Core.Settings.Get<GameType>("CurrentGameType"), Core.Metrics["SelectedMode", 0], Color.Black);
+            TextureManager.DrawString(spriteBatch,"Mode: " + Core.Settings.Get<GameType>("CurrentGameType"),"DefaultFont", Core.Metrics["SelectedMode", 0], Color.Black,FontAlign.CENTER);
 
         }
 
@@ -132,9 +132,10 @@ namespace WGiBeat.Screens
             _bpmMeter.SongTime = (gameTime.TotalRealTime.TotalMilliseconds - _songStartTime) / 1000 * (SongList[_selectedIndex].Song.Bpm / 60);
 
             _bpmMeter.Draw(spriteBatch);
-            spriteBatch.DrawString(TextureManager.Fonts["TwoTechLarge"],
-                                   String.Format("{0:000.0}", SongList[_selectedIndex].Song.Bpm),
-                                   Core.Metrics["SongBPMDisplay", 0], Color.Black);
+
+            TextureManager.DrawString(spriteBatch, String.Format("{0:000.0}", SongList[_selectedIndex].Song.Bpm), "TwoTechLarge",
+                                   Core.Metrics["SongBPMDisplay", 0], Color.Black, FontAlign.RIGHT);
+
 
         }
 
@@ -148,7 +149,7 @@ namespace WGiBeat.Screens
             var displayedGrade = (highScoreEntry == null) ? -1 : highScoreEntry.Grades[cgt];
             var displayedDifficulty = (highScoreEntry == null) ? -1 : (int) highScoreEntry.Difficulties[cgt] + 1;
 
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + displayedScore, Core.Metrics["SongHighScore", 0], Color.Black);
+            TextureManager.DrawString(spriteBatch,"" + displayedScore, "DefaultFont",Core.Metrics["SongHighScore", 0], Color.Black,FontAlign.RIGHT);
             
             if (displayedGrade != -1)
             {
