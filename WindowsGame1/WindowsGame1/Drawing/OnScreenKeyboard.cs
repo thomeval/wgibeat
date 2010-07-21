@@ -21,7 +21,11 @@ namespace WGiBeat.Drawing
         public int SpacingX { get; set; }
         public int SpacingY { get; set; }
         private int _selectedIndex;
+        private SpriteMap _specialChars;
 
+        private int _totalItems {
+            get { return _chars.Count() + 3; }
+        }
         public OnScreenKeyboard()
         {
             EnteredText = "";
@@ -71,20 +75,38 @@ namespace WGiBeat.Drawing
                     _selectedIndex--;
                     if (_selectedIndex < 0)
                     {
-                        _selectedIndex = _chars.Count() - 1;
+                        _selectedIndex = _totalItems - 1;
                     }
                     break;
                 case NoteDirection.RIGHT:
                     _selectedIndex++;
-                    if (_selectedIndex >= _chars.Count())
+                    if (_selectedIndex >= _totalItems)
                     {
                         _selectedIndex = 0;
                     }
                     break;
                 case NoteDirection.UP:
+                    _selectedIndex -= this.Columns;
+                    if (_selectedIndex < _totalItems)
+                    {
+                        _selectedIndex += _totalItems;
+                    }
                     break;
                 case NoteDirection.DOWN:
+                    _selectedIndex += this.Columns;
+                    if (_selectedIndex >= _totalItems)
+                    {
+                        _selectedIndex -= _totalItems;
+                    }
                     break;
+            }
+        }
+
+        public void PickSelection()
+        {
+            if (_selectedIndex < _chars.Count())
+            {
+                EnteredText += _chars[_selectedIndex];
             }
         }
 

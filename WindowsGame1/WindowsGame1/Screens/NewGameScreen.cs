@@ -50,7 +50,7 @@ namespace WGiBeat.Screens
                 _playerMenus[x].SetPosition(Core.Metrics["NewGameMenuStart",x]);
                 
                 _playerMenus[x].AddItem(new MenuItem { ItemText = "Leave" });
-                _playerMenus[x].AddItem(new MenuItem{ItemText = "Show Keyboard"});
+             //   _playerMenus[x].AddItem(new MenuItem{ItemText = "Show Keyboard"});
             }
 
             for (int x = 0; x < 4; x++)
@@ -138,6 +138,7 @@ namespace WGiBeat.Screens
             brush.ClearVectors();
         }
 
+        //TODO: Refactor
         public override void PerformAction(Action action)
         {
             var player = action.ToString().Substring(0, action.ToString().IndexOf("_"));
