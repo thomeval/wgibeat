@@ -51,6 +51,9 @@ namespace WGiBeat.AudioSystem
                 case RESULT.OK:
                     //Everything is fine.
                     break;
+                case RESULT.ERR_CHANNEL_STOLEN:
+                    System.Diagnostics.Debug.WriteLine("Channel steal detected. Ignoring");
+                    break;
                 case RESULT.ERR_FILE_NOTFOUND:
                     throw new FileNotFoundException("Unable to find GameSong file " + _currentSong.SongFile + " in " + _currentSong.Path);
                 default:
@@ -326,8 +329,14 @@ namespace WGiBeat.AudioSystem
             _masterVolume = volume;
             for (int x = 0; x < _channels.Count(); x++)
             {
-                RESULT result = _channels[x].setVolume(volume);
+                bool isPlaying = false;
+                RESULT result = _channels[x].isPlaying(ref isPlaying);
                 CheckFMODErrors(result);
+                if (isPlaying)
+                {
+                    result = _channels[x].setVolume(volume);
+                    CheckFMODErrors(result);
+                }
             }
         }
         #endregion
