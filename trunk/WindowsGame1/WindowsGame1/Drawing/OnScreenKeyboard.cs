@@ -10,9 +10,8 @@ namespace WGiBeat.Drawing
 {
     public class OnScreenKeyboard : DrawableObject
     {
-        private char[] _chars = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9','_',(char) 13};
+        private readonly char[] _chars = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9','_'};
         public string EnteredText { get; set; }
-        public bool Active { get; set; }
         public Vector2 EnteredTextPosition { get; set; }
 
         public Color HighlightColor { get; set; }
@@ -20,8 +19,12 @@ namespace WGiBeat.Drawing
         public int Columns { get; set; }
         public int SpacingX { get; set; }
         public int SpacingY { get; set; }
+        public int MaxLength { get; set; }
         private int _selectedIndex;
         private SpriteMap _specialChars;
+
+        public event EventHandler EntryComplete;
+        public event EventHandler EntryCancelled;
 
         private int _totalItems {
             get { return _chars.Count() + 3; }
@@ -29,18 +32,25 @@ namespace WGiBeat.Drawing
         public OnScreenKeyboard()
         {
             EnteredText = "";
-            Active = false;
             EnteredTextPosition = new Vector2(0, 0);
             HighlightColor = Color.Blue;
             BaseColor = Color.Black;
             Columns = 10;
             SpacingX = 40;
             SpacingY = 30;
-            
+
+            InitSprites();
         }
+
+        private void InitSprites()
+        {
+            _specialChars = new SpriteMap
+                                {Columns = 3, Rows = 1, SpriteTexture = TextureManager.Textures["KeyboardIcons"]};
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
-           spriteBatch.DrawString(TextureManager.Fonts["TwoTech"],EnteredText, EnteredTextPosition, BaseColor);
+           TextureManager.DrawString(spriteBatch,EnteredText,"TwoTech", EnteredTextPosition, BaseColor,FontAlign.CENTER);
 
             DrawKeyboard(spriteBatch);
         }
@@ -64,7 +74,13 @@ namespace WGiBeat.Drawing
 
                 counter++;
             }
-            drawPosition.Y += 30;
+            drawPosition.Y += SpacingY;
+
+            for (int x = 0; x < 3; x++)
+            {
+                _specialChars.ColorShading = (_selectedIndex == _chars.Count() + x) ? HighlightColor : BaseColor;
+                _specialChars.Draw(spriteBatch,x,25,25, (SpacingX * x) + 5, (int) drawPosition.Y);
+            }
         }
 
         public void MoveSelection(NoteDirection dir)
@@ -106,10 +122,35 @@ namespace WGiBeat.Drawing
         {
             if (_selectedIndex < _chars.Count())
             {
-                EnteredText += _chars[_selectedIndex];
+                if (EnteredText.Length < MaxLength)
+                {
+                    EnteredText += _chars[_selectedIndex];
+                }
             }
-        }
-
-          
+            //Backspace
+            if (_selectedIndex == _chars.Count())
+            {
+                if (EnteredText.Length > 0)
+                {
+                    EnteredText = EnteredText.Substring(0, EnteredText.Length - 1);
+                }
+            }
+            //Cancel
+            if (_selectedIndex == _chars.Count() + 1)
+            {
+                if (EntryCancelled != null)
+                {
+                    EntryCancelled(this, null);
+                }
+            }
+            //Decide
+            if (_selectedIndex == _chars.Count() + 2)
+            {
+                if (EntryComplete != null)
+                {
+                    EntryComplete(this, null);
+                }
+            }
+        }  
     }
 }

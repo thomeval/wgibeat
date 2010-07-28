@@ -112,6 +112,7 @@ namespace WGiBeat.Screens
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             DrawSongList(spriteBatch);
+          //  DrawWaveForm(spriteBatch);
             DrawPlayerDifficulties(spriteBatch);
             DrawHighScoreFrame(spriteBatch);
             DrawBpmMeter(gameTime, spriteBatch);
@@ -122,6 +123,34 @@ namespace WGiBeat.Screens
 
         }
 
+        private void DrawWaveForm(SpriteBatch spriteBatch)
+        {
+            if (_songPreviewManager.ChannelIndexCurrent != -1)
+            {
+                float[] levels = Core.Songs.GetChannelWaveform(_songPreviewManager.ChannelIndexCurrent);
+
+                PrimitiveLine line = new PrimitiveLine(Core.GraphicsDevice);
+
+                line.Colour = Color.Black;
+                line.AddVector(new Vector2(200,200));
+                line.AddVector(new Vector2(400,200));
+                line.Render(spriteBatch);
+                line.ClearVectors();
+                line.Position.X = 200;
+                line.Position.Y = 250;
+                int posX = 0;
+                for (int x = 0; x < levels.Count(); x++)
+                {
+                    posX+=1;
+
+                    levels[x] =Math.Min(1,levels[x] *100);
+                    line.AddVector(new Vector2(posX,0));
+                    line.AddVector(new Vector2(posX, -50*levels[x]));
+                    
+                }
+                line.Render(spriteBatch);
+            }
+        }
         private void DrawBpmMeter(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (_resetSongTime)

@@ -396,5 +396,15 @@ namespace WGiBeat.AudioSystem
         }
         #endregion
 
+        public float[] GetChannelWaveform(int channel)
+        {
+            RESULT result;
+
+            var returnData = new float[1024];
+       
+            result = _channels[channel].getSpectrum(returnData, 1024, 0,DSP_FFT_WINDOW.RECT);
+            CheckFMODErrors(result);
+            return returnData;
+        }
     }
 }

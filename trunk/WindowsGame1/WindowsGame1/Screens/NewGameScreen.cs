@@ -50,12 +50,13 @@ namespace WGiBeat.Screens
                 _playerMenus[x].SetPosition(Core.Metrics["NewGameMenuStart",x]);
                 
                 _playerMenus[x].AddItem(new MenuItem { ItemText = "Leave" });
-             //   _playerMenus[x].AddItem(new MenuItem{ItemText = "Show Keyboard"});
+              //  _playerMenus[x].AddItem(new MenuItem{ItemText = "Show Keyboard"});
             }
 
             for (int x = 0; x < 4; x++)
             {
                 _keyboards[x] = new OnScreenKeyboard();
+                _keyboards[x].MaxLength = 10;
                 _keyboards[x].SetPosition(Core.Metrics["OnScreenKeyboard",x]);
                 _keyboards[x].EnteredTextPosition = Core.Metrics["OnScreenKeyboardDisplay", x];
             }
@@ -138,7 +139,7 @@ namespace WGiBeat.Screens
             brush.ClearVectors();
         }
 
-        //TODO: Refactor
+        //TODO: Refactor, add OSK support.
         public override void PerformAction(Action action)
         {
             var player = action.ToString().Substring(0, action.ToString().IndexOf("_"));
@@ -148,7 +149,7 @@ namespace WGiBeat.Screens
                 case Action.P1_START:
                     StartPressed(0);
                     break;
-                    case Action.P2_START:
+                case Action.P2_START:
                     StartPressed(1);
                     break;
                 case Action.P3_START:
@@ -223,6 +224,10 @@ namespace WGiBeat.Screens
             {
                 //Player is already ready.
                 return;
+            }
+            else if (_cursorPositions[number] == 200)
+            {
+                _keyboards[number].PickSelection();
             }
             else
             {
