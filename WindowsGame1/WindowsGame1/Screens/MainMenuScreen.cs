@@ -43,7 +43,7 @@ namespace WGiBeat.Screens
 
                 if ((!Core.Cookies.ContainsKey("MenuMusicChannel")) && File.Exists("Content\\Audio\\MenuMusic.mp3"))
                 {
-                    Core.Cookies["MenuMusicChannel"] = Core.Songs.PlaySoundEffect("Content\\Audio\\MenuMusic.mp3");
+                    //Core.Cookies["MenuMusicChannel"] = Core.Songs.PlaySoundEffect("Content\\Audio\\MenuMusic.mp3");
                 }
                 else
                 {

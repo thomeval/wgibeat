@@ -27,6 +27,9 @@ namespace WGiBeat.Managers
         }
         public void LoadDefault()
         {
+            _mappings.Clear(); //Assumes that loading default means overriding previous settings.
+            _buttonMappings[0].Clear(); //Assumes that loading default means overriding previous settings.
+
             _mappings = new Dictionary<Keys, Action>();
             _mappings.Add(Keys.A,Action.P1_LEFT);
             _mappings.Add(Keys.W, Action.P1_UP);
