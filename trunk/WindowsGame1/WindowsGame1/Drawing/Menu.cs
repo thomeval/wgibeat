@@ -47,8 +47,9 @@ namespace WGiBeat.Drawing
             {
                 maxLength = Math.Max(maxLength, menuItem.ItemText.Length);
             }
-            return (maxLength*15) + 10;
+            return (maxLength * 15) + 10;
         }
+
 
         public MenuItem SelectedItem()
         {

@@ -9,6 +9,7 @@ namespace WGiBeat.Screens
     public class OptionScreen : GameScreen
     {
         private readonly Menu _optionsMenu;
+        private Boolean _keyReset = false;
 
         private SineSwayParticleField _field = new SineSwayParticleField();
 
@@ -16,7 +17,7 @@ namespace WGiBeat.Screens
         {
             _optionsMenu = new Menu();
             BuildMenu();
-            _optionsMenu.SetPosition(Core.Metrics["OptionsMenuStart",0]);
+            _optionsMenu.SetPosition(Core.Metrics["OptionsMenuStart", 0]);
         }
 
         private void BuildMenu()
@@ -38,6 +39,8 @@ namespace WGiBeat.Screens
             item.AddOption("On", true);
             _optionsMenu.AddItem(item);
 
+            item = new MenuItem {ItemText = "Reset Keys" };
+            _optionsMenu.AddItem(item);
             item = new MenuItem {ItemText = "Save"};
             _optionsMenu.AddItem(item);
             item = new MenuItem {ItemText = "Cancel"};
@@ -131,6 +134,9 @@ namespace WGiBeat.Screens
         {
             switch (_optionsMenu.SelectedItem().ItemText)
             {
+                case "Reset Keys":
+                    _keyReset = !_keyReset;
+                    break;
                 case "Save":
                     SaveOptions();
                     Core.ScreenTransition("MainMenu");
@@ -158,6 +164,10 @@ namespace WGiBeat.Screens
         }
         private void SaveOptions()
         {
+
+            Core.KeyMappings.LoadDefault();
+            Core.KeyMappings.SaveToFile("Keys.conf");
+
             Core.Settings.Set("SongVolume",(Convert.ToDouble(_optionsMenu.GetByItemText("Song Volume").SelectedValue())));
             Core.Settings.Set("SongDebug", (_optionsMenu.GetByItemText("Song Debugging").SelectedValue()));
             Core.Settings.Set("SongPreview", (_optionsMenu.GetByItemText("Song Previews").SelectedValue()));

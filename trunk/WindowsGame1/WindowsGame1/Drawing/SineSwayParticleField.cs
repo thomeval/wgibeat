@@ -35,13 +35,18 @@ namespace WGiBeat.Drawing
         public int MinSize { get; set; }
         public int MaxSize { get; set; }
 
-
-
         private Random _rand = new Random();
+
+        private String[] _textureList = { "Particle_1", "Particle_2", "Particle_3", "Particle_4", "Particle_5", };
+        private Boolean RandomizeTextures { get; set; }
 
         public SineSwayParticleField(int x, int y, int width, int height)
         {
             InitDefaultRanges();
+
+            MinHeight = 0;
+            MaxHeight = height;
+
             InitializeSwayers();
         }
 
@@ -65,16 +70,19 @@ namespace WGiBeat.Drawing
                 InitializeSwayer(token);
             }
 
-            var sorted = from s in _swayers
+            var sorted = from s in _swayers 
                          orderby (s.Width + s.Height)
-                         select s;
+                         select s; //Forgot why I did this.
 
             _swayers = sorted.ToArray();
 
         }
 
-        private void InitDefaultRanges()
+        private void InitDefaultRanges() //Add into settings file.
         {
+
+            RandomizeTextures = true;
+
             MinPosition = 0;
             MaxPosition = 1;
 
@@ -90,14 +98,14 @@ namespace WGiBeat.Drawing
             MinSize = 3;
             MaxSize = 15;
 
-            MinWidth = 5;
-            MaxWidth = 30;
+            MinWidth = 1; //5
+            MaxWidth = 30; //30
 
             MinHeight = 700;
             MaxHeight = 850;
 
             MinY = -95;
-            MaxY = 0;
+            MaxY = -5;
 
             MinX = -15;
             MaxX = 800;
@@ -109,9 +117,7 @@ namespace WGiBeat.Drawing
         {
             particle.ParticleSize = _rand.Next(MinSize, MaxSize);
 
-            particle.Width = _rand.Next(MinWidth, MaxWidth);
-            //particle.Height = _rand.Next(MinHeight, MaxHeight);
-            particle.Height = _rand.Next(MinHeight, MaxHeight);
+
 
             particle.Frequency = MinFrequency + (_rand.NextDouble() * (MaxFrequency - MinFrequency));
             particle.Shift = MinShift + (_rand.NextDouble() * (MaxShift - MinShift));
@@ -120,9 +126,16 @@ namespace WGiBeat.Drawing
             particle.X = _rand.Next(MinX, MaxX);
             particle.Y = _rand.Next(MinY, MaxY);
 
-            particle.StepSize = MinStepSize + (_rand.NextDouble() * (MaxStepSize - MinStepSize));
-        }
+            particle.Width = _rand.Next(MinWidth, MaxWidth);
+            particle.Height = _rand.Next(MinHeight, MaxHeight);
 
+            particle.StepSize = MinStepSize + (_rand.NextDouble() * (MaxStepSize - MinStepSize));
+
+            if (RandomizeTextures) //Hacky. Must fix.
+            {
+                particle.Particle.SpriteTexture = TextureManager.Textures[_textureList[_rand.Next(0, 5)]];
+            }
+        }
         public override void Draw(SpriteBatch spriteBatch)
         {
             foreach (SineSwayParticle token in _swayers)

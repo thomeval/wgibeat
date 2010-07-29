@@ -16,16 +16,16 @@ namespace WGiBeat.Drawing
         public Double Shift { get; set; }
 
         public int ParticleCount { get; set; }
-        public Sprite[] Particles { get; set; }
+        //public Sprite[] Particles { get; set; }
 
         public int ParticleSize { get; set; }
 
-        private Sprite _particle; //temp
+        public Sprite Particle { get; set; }
 
         //Convert sine wave amplitude to fit width. default Vertical = true.
 
         public SineSwayParticle()
-            : this(0, 1, true, 0.01, 0, new Color((float)233 / 255, (float)255 / 255, (float)251 / 255), "Particle", 25)
+            : this(0, 1, true, 0.01, 0, new Color((float) 233 / 255, (float) 255 / 255, (float) 251 / 255), "Particle_1", 25)
         {}
 
         public SineSwayParticle(Double startPosition, Double frequency, Boolean vertical, Double stepSize, Double shift, Color shade, String particleShape, int particleSize)
@@ -36,8 +36,7 @@ namespace WGiBeat.Drawing
             StepSize = stepSize;
             Vertical = vertical;
 
-
-            _particle = new Sprite //temp
+            Particle = new Sprite //temp
                             {
                                 SpriteTexture = TextureManager.Textures[particleShape],
                                 ColorShading = shade
@@ -47,8 +46,8 @@ namespace WGiBeat.Drawing
 
             ParticleSize = particleSize;
 
-            _particle.X = (int) tempVector.X;
-            _particle.Y = (int) tempVector.Y;
+            Particle.X = (int) tempVector.X;
+            Particle.Y = (int) tempVector.Y;
         }
 
 
@@ -74,25 +73,16 @@ namespace WGiBeat.Drawing
 
         public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
         {
-            _particle.Width = ParticleSize;
-            _particle.Height = ParticleSize;
+            Particle.Width = ParticleSize;
+            Particle.Height = ParticleSize;
 
-            _particle.Draw(spriteBatch);
+            Particle.Draw(spriteBatch);
 
 
             Vector2 tempVector = GetVector();
 
-            _particle.X = (int) tempVector.X;
-            _particle.Y = (int) tempVector.Y;
-
-            /*
-            foreach (Sprite token in Particles)
-            {
-                token.Draw(spriteBatch);
-
-            }
-            */
-            //throw new NotImplementedException();
+            Particle.X = (int) tempVector.X;
+            Particle.Y = (int) tempVector.Y;
 
             Step();
         }
