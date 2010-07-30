@@ -110,7 +110,7 @@ namespace WGiBeat.Drawing
             MinX = -15;
             MaxX = 800;
 
-            Count = 220;
+            Count = 520;
         }
 
         private void InitializeSwayer(SineSwayParticle particle)
