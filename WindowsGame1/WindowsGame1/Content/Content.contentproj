@@ -105,11 +105,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Textures\keyScreenBackground.jpg">
-      <Name>keyScreenBackground</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="Textures\koIndicator.png">
       <Name>koIndicator</Name>
       <Importer>TextureImporter</Importer>
