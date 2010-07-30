@@ -54,7 +54,7 @@ namespace WGiBeat.Screens
             InitSprites();
             _songPreviewManager = new SongPreviewManager{SongManager = Core.Songs};
             _bpmMeter = new BpmMeter ();
-            _bpmMeter.SetPosition(Core.Metrics["BPMMeter",0]);
+            _bpmMeter.SetPosition(Core.Metrics["BPMMeter", 0]);
 
             base.Initialize();
             PlaySongPreview();
