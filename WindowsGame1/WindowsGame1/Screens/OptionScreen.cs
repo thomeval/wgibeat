@@ -164,9 +164,11 @@ namespace WGiBeat.Screens
         }
         private void SaveOptions()
         {
-
-            Core.KeyMappings.LoadDefault();
-            Core.KeyMappings.SaveToFile("Keys.conf");
+            if (_keyReset)
+            {
+                Core.KeyMappings.LoadDefault();
+                Core.KeyMappings.SaveToFile("Keys.conf");
+            }
 
             Core.Settings.Set("SongVolume",(Convert.ToDouble(_optionsMenu.GetByItemText("Song Volume").SelectedValue())));
             Core.Settings.Set("SongDebug", (_optionsMenu.GetByItemText("Song Debugging").SelectedValue()));
