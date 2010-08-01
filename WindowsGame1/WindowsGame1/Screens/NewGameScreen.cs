@@ -10,6 +10,7 @@ namespace WGiBeat.Screens
     {
         private int _playersJoined;
         private SineSwayParticleField _field = new SineSwayParticleField();
+        //TODO: Consider refactoring into enum.
         private readonly int[] _cursorPositions = new int[4];
 
         private readonly Menu[] _playerMenus = new Menu[4];
@@ -50,6 +51,8 @@ namespace WGiBeat.Screens
                 _playerMenus[x].SetPosition(Core.Metrics["NewGameMenuStart",x]);
                 
                 _playerMenus[x].AddItem(new MenuItem { ItemText = "Leave" });
+
+              //NOTE: Uncomment this to get access to the incomplete OnScreenKeyboard. Not functional yet.
               //  _playerMenus[x].AddItem(new MenuItem{ItemText = "Show Keyboard"});
             }
 

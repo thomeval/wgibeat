@@ -18,19 +18,18 @@ namespace WGiBeat.AudioSystem
 
         private readonly FMOD.System _fmodSystem = new FMOD.System();
         private Channel _fmodChannel = new Channel();
-        private readonly Dictionary<int, Channel> _channels;
-        private readonly Dictionary<int, Sound> _sounds;
+        private readonly Dictionary<string, Sound> _sounds;
         private Sound _fmodSound = new Sound();
         private GameSong _currentSong;
         private const int CHANNEL_COUNT = 8;
         private float _masterVolume = 1.0f;
 
+        private Channel tmpChannel = new Channel();
         #endregion 
 
         public SongManager()
         {
-            _channels = new Dictionary<int, Channel>();
-            _sounds = new Dictionary<int, Sound>();
+            _sounds = new Dictionary<string, Sound>();
               RESULT result;
             result = Factory.System_Create(ref _fmodSystem);
             CheckFMODErrors(result);
@@ -216,13 +215,13 @@ namespace WGiBeat.AudioSystem
         /// value. Because it is loaded as a stream, this occurs quickly.
         /// </summary>
         /// <param name="soundPath">The path and filename to the audio file to play.</param>
-        /// <returns>The channel ID allocated to audio file. Use this to control the playback.</returns>
+        /// <returns>The channel ID allocated by Fmod to the channel. Use this to control the playback.</returns>
         public int PlaySoundEffect(string soundPath)
         {
             RESULT result;
-            int freeSlot = GetFreeSlot();
-            Sound mySound = _sounds[freeSlot];
-            Channel myChannel = _channels[freeSlot];
+            Sound mySound = GetOrCreateSound(soundPath);
+            Channel myChannel = new Channel();
+            
             result = _fmodSystem.createSound(soundPath, MODE.CREATESTREAM, ref mySound);
            
             CheckFMODErrors(result);
@@ -230,22 +229,26 @@ namespace WGiBeat.AudioSystem
             CheckFMODErrors(result);
             result = myChannel.setVolume(_masterVolume);
             CheckFMODErrors(result);
-            return freeSlot;
+
+            int index = -1;
+            result = myChannel.getIndex(ref index);
+            CheckFMODErrors(result);
+            return index;
         }
 
         /// <summary>
         /// Sets the position of the sound channel given, to the position given (in milliseconds).
         /// Will throw an ArgumentException if an invalid channel ID is provided.
         /// </summary>
-        /// <param name="soundChannel">The Channel ID to adjust the position.</param>
+        /// <param name="index">The Channel ID to adjust the position.</param>
         /// <param name="position">The position, in milliseconds, to set the channel to.</param>
-        public void SetPosition(int soundChannel, double position)
+        public void SetPosition(int index, double position)
         {
-            if (!_channels.ContainsKey(soundChannel))
-            {
-                throw new ArgumentException("Invalid channel ID specified: " + soundChannel);
-            }
-            var result = _channels[soundChannel].setPosition((uint)(position * 1000), TIMEUNIT.MS);
+            var resultCode = _fmodSystem.getChannel(index, ref tmpChannel);
+            CheckFMODErrors(resultCode);
+
+
+            var result = tmpChannel.setPosition((uint)(position * 1000), TIMEUNIT.MS);
             CheckFMODErrors(result);
         }
 
@@ -255,21 +258,17 @@ namespace WGiBeat.AudioSystem
         /// is created.
         /// </summary>
         /// <returns>The ID of the first free channel found.</returns>
-        private int GetFreeSlot()
+        private Sound GetOrCreateSound(string soundPath)
         {
-            bool isPlaying = false;
-            for (int x = 0; x < _channels.Count(); x++)
+            if (!_sounds.ContainsKey(soundPath))
             {
-                _channels[x].isPlaying(ref isPlaying);
-                if (!isPlaying)
-                {
-                    return x;
-                }
+                var mySound = new Sound();
+
+                var resultCode = _fmodSystem.createSound(soundPath, MODE.CREATESTREAM, ref mySound);
+                CheckFMODErrors(resultCode);
+                return mySound;
             }
-            int nextIdx = (_channels.Keys.Count == 0) ? 0 : _channels.Keys.Max() + 1;
-            _channels.Add(nextIdx,  new Channel());
-            _sounds.Add(nextIdx, new Sound());
-            return _channels.Count - 1;
+            return _sounds[soundPath];
         }
 
         /// <summary>
@@ -278,16 +277,17 @@ namespace WGiBeat.AudioSystem
         /// <param name="index">The ID of the channel to stop.</param>
         public void StopChannel(int index)
         {
-            if (!_channels.Keys.Contains(index))
-            {
-                return;
-            }
+            var resultCode = _fmodSystem.getChannel(index, ref tmpChannel);
+            CheckFMODErrors(resultCode);
+
             bool isPlaying = false;
-            _channels[index].isPlaying(ref isPlaying);
+            tmpChannel.isPlaying(ref isPlaying);
+            CheckFMODErrors(resultCode);
+
             if (isPlaying)
             {
-                var result = _channels[index].stop();
-                CheckFMODErrors(result);
+                resultCode = tmpChannel.stop();
+                CheckFMODErrors(resultCode);
             }
         }
 
@@ -299,10 +299,12 @@ namespace WGiBeat.AudioSystem
         /// <returns>The current volume of the channel, between 0.0 and 1.0.</returns>
         public float GetChannelVolume(int index)
         {
-            RESULT result;
+            var resultCode = _fmodSystem.getChannel(index, ref tmpChannel);
+            CheckFMODErrors(resultCode);
+
             float volume = 0.0f;
-            result = _channels[index].getVolume(ref volume);
-            CheckFMODErrors(result);
+            resultCode = tmpChannel.getVolume(ref volume);
+            CheckFMODErrors(resultCode);
             return volume;
         }
 
@@ -314,9 +316,11 @@ namespace WGiBeat.AudioSystem
         /// <param name="volume">The volume to set this channel to. 0 to mute, 1.0 for maximum volume.</param>
         public void SetChannelVolume(int index, float volume)
         {
-            RESULT result;
-            result = _channels[index].setVolume(_masterVolume * volume);
-            CheckFMODErrors(result);
+            var resultCode = _fmodSystem.getChannel(index, ref tmpChannel);
+            CheckFMODErrors(resultCode);
+
+            resultCode = tmpChannel.setVolume(_masterVolume * volume);
+            CheckFMODErrors(resultCode);
         }
 
         /// <summary>
@@ -327,18 +331,15 @@ namespace WGiBeat.AudioSystem
         public void SetMasterVolume(float volume)
         {
             _masterVolume = volume;
-            for (int x = 0; x < _channels.Count(); x++)
-            {
-                bool isPlaying = false;
-                RESULT result = _channels[x].isPlaying(ref isPlaying);
-                CheckFMODErrors(result);
-                if (isPlaying)
-                {
-                    result = _channels[x].setVolume(volume);
-                    CheckFMODErrors(result);
-                }
-            }
+
+            ChannelGroup masterGroup = new ChannelGroup();
+            var resultCode = _fmodSystem.getMasterChannelGroup(ref masterGroup);
+            CheckFMODErrors(resultCode);
+
+            masterGroup.setVolume(_masterVolume);
         }
+
+
         #endregion
 
         #region Song Playback System
@@ -396,14 +397,15 @@ namespace WGiBeat.AudioSystem
         }
         #endregion
 
-        public float[] GetChannelWaveform(int channel)
+        public float[] GetChannelWaveform(int index)
         {
-            RESULT result;
-
             var returnData = new float[1024];
-       
-            result = _channels[channel].getSpectrum(returnData, 1024, 0,DSP_FFT_WINDOW.RECT);
-            CheckFMODErrors(result);
+
+            var resultCode = _fmodSystem.getChannel(index, ref tmpChannel);
+            CheckFMODErrors(resultCode);
+
+            resultCode = tmpChannel.getSpectrum(returnData, 1024, 0,DSP_FFT_WINDOW.RECT);
+            CheckFMODErrors(resultCode);
             return returnData;
         }
     }

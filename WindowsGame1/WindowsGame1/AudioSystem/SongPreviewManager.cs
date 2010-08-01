@@ -13,7 +13,7 @@ namespace WGiBeat.AudioSystem
     {
         public SongPreviewManager()
         {
-            _myTimer = new Timer(UpdatePreviews,null, 0, 25);
+            _myTimer = new Timer(UpdatePreviews,null, 0, 100);
             PreviewDuration = 10;
         }
         public SongManager SongManager { get; set; }
@@ -70,7 +70,10 @@ namespace WGiBeat.AudioSystem
         public void SetPreviewedSong(GameSong song)
         {
             _currentSong = song;
-            SongManager.StopChannel(_channelIndexPrev);
+            if (_channelIndexPrev > -1)
+            {
+                SongManager.StopChannel(_channelIndexPrev);
+            }
             _channelIndexPrev = _channelIndexCurrent;
             _channelPrevVolume = _channelCurrentVolume;
             _channelIndexCurrent = SongManager.PlaySoundEffect(song.Path + "\\" + song.SongFile);
@@ -95,21 +98,27 @@ namespace WGiBeat.AudioSystem
             SetVolumes();
         }
 
+        private bool _updateInProgress;
         /// <summary>
         /// Timer method. Adjusts the preview time and checks whether the volume should be adjusted.
         /// </summary>
         /// <param name="state">Not used.</param>
         private void UpdatePreviews(object state)
         {
-            _previewTime = (_previewTime + 0.025);
-
-            if (_previewTime >= PreviewDuration)
+            if (!_updateInProgress)
             {
-                _previewTime -= PreviewDuration;
-                ReplaySameSong();
+                _updateInProgress = true;
+                _previewTime = (_previewTime + 0.1);
+
+                if (_previewTime >= PreviewDuration)
+                {
+                    _previewTime -= PreviewDuration;
+                    ReplaySameSong();
+                }
+                _channelPrevVolume = Math.Max(0.0f, _channelPrevVolume - 0.05f);
+                SetVolumes();
+                _updateInProgress = false;
             }
-            _channelPrevVolume = Math.Max(0.0f, _channelPrevVolume - 0.025f);
-            SetVolumes();
         }
 
         /// <summary>
@@ -118,13 +127,13 @@ namespace WGiBeat.AudioSystem
         /// </summary>
         private void SetVolumes()
         {
-            if (_previewTime <= 1)
+            if (_previewTime <= 2)
             {
-                _channelCurrentVolume = (float)_previewTime;
+                _channelCurrentVolume = (float)_previewTime / 2;
             }
-            else if (_previewTime >= PreviewDuration -1)
+            else if (_previewTime >= PreviewDuration -2)
             {
-                _channelCurrentVolume = (float)(PreviewDuration - _previewTime);
+                _channelCurrentVolume = (float)Math.Max(0,(PreviewDuration - _previewTime)/2);
             }
 
             if (_channelIndexCurrent != -1)
