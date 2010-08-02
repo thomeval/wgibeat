@@ -112,7 +112,7 @@ namespace WGiBeat.Screens
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             DrawSongList(spriteBatch);
-          //  DrawWaveForm(spriteBatch);
+            DrawWaveForm(spriteBatch);
             DrawPlayerDifficulties(spriteBatch);
             DrawHighScoreFrame(spriteBatch);
             DrawBpmMeter(gameTime, spriteBatch);
@@ -129,6 +129,7 @@ namespace WGiBeat.Screens
             {
                 float[] levels = Core.Songs.GetChannelWaveform(_songPreviewManager.ChannelIndexCurrent);
 
+
                 PrimitiveLine line = new PrimitiveLine(Core.GraphicsDevice);
 
                 line.Colour = Color.Black;
@@ -139,15 +140,22 @@ namespace WGiBeat.Screens
                 line.Position.X = 200;
                 line.Position.Y = 250;
                 int posX = 0;
-                for (int x = 0; x < levels.Count(); x++)
-                {
-                    posX+=1;
 
-                    levels[x] =Math.Min(1,levels[x] *100);
-                    line.AddVector(new Vector2(posX,0));
-                    line.AddVector(new Vector2(posX, -50*levels[x]));
-                    
+                float[] averageLevels = new float[levels.Count() / 32];
+
+                for (int x = 0; x < averageLevels.Count(); x++ )
+                {
+                    averageLevels[x] = levels.Skip(32 * x).Take(32).Average();
                 }
+                    for (int x = 0; x < averageLevels.Count(); x++)
+                    {
+
+                        averageLevels[x] = Math.Min(1, averageLevels[x] * 10 * (x + 1));
+                        line.AddVector(new Vector2(posX, 0));
+                        line.AddVector(new Vector2(posX, -50 * averageLevels[x]));
+                        line.AddVector(new Vector2(posX + 5, -50 * averageLevels[x]));
+                        posX += 5;
+                    }
                 line.Render(spriteBatch);
             }
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using FMOD;
 
 namespace WGiBeat.AudioSystem
@@ -277,9 +278,11 @@ namespace WGiBeat.AudioSystem
         /// <param name="index">The ID of the channel to stop.</param>
         public void StopChannel(int index)
         {
+            System.Diagnostics.Debug.WriteLine("Stopping channel " + index);
             var resultCode = _fmodSystem.getChannel(index, ref tmpChannel);
             CheckFMODErrors(resultCode);
 
+            Monitor.Enter(tmpChannel);
             bool isPlaying = false;
             tmpChannel.isPlaying(ref isPlaying);
             CheckFMODErrors(resultCode);
@@ -289,6 +292,7 @@ namespace WGiBeat.AudioSystem
                 resultCode = tmpChannel.stop();
                 CheckFMODErrors(resultCode);
             }
+            Monitor.Exit(tmpChannel);
         }
 
         /// <summary>
@@ -406,6 +410,7 @@ namespace WGiBeat.AudioSystem
 
             resultCode = tmpChannel.getSpectrum(returnData, 1024, 0,DSP_FFT_WINDOW.RECT);
             CheckFMODErrors(resultCode);
+
             return returnData;
         }
     }

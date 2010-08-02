@@ -92,7 +92,12 @@ namespace WGiBeat.AudioSystem
             {
                 return;
             }
-            SongManager.StopChannel(_channelIndexCurrent);
+            
+            //Indicate that the current channel index is invalid.
+            int tempIdx = _channelIndexCurrent;
+            _channelIndexCurrent = -1;
+            SongManager.StopChannel(tempIdx);
+
             _channelIndexCurrent = SongManager.PlaySoundEffect(_currentSong.Path + "\\" + _currentSong.SongFile);
             SongManager.SetPosition(_channelIndexCurrent, _currentSong.Offset);
             SetVolumes();
