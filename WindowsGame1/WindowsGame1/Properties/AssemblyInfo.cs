@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("WGiBeat")]
 [assembly: AssemblyProduct("WGiBeat")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyCompany("WGiBeat team")]
 
-[assembly: AssemblyCopyright("Copyright © Microsoft 2010")]
+[assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,3 +31,4 @@ using System.Runtime.InteropServices;
 //      Revision
 //
 [assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersionAttribute("1.0.0.0")]
