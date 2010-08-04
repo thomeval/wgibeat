@@ -2,44 +2,52 @@
 -Icons for controller buttons
 -Path following particle.
 -Deleting key links.
--Resetting keys.
+-Resetting keys. (Done)
 
 -Icons for mode select screen. Other stuff in that screen.
 
 -Song select screen. items. Bar at bottom. / top (mode select, too). Meter for song speed.
 
--Evaluation screen, lot of work.
+-Evaluation screen, lot of work. (Done?)
 
 -Option screen. Title. Menu design, animated.
-
-
-
-
-
-
-
-
-
-
+-Winamp style spectrum analyser (transferred)
+-Highscore display: Difficulty icons dont fit (Hard/Insane)
+-Highscore display: Darken grade area (S grades are hard to read)
+-New grade icons?
 
 
 --Thome--
--Cooperative, Sync game modes
--Animated BPM meter in SongSelectScreen
+-Cooperative (Done), Sync, Battle, VS CPU game modes
+-Cooperative bonuses (Streaks? Sync perfects?)
+
 -Sparks along UI. Over the wires.
 -Player Profiles (Major)
 -Chance / SP gameplay (Major)
--Life bar, black background.
+
+-Blocky Life bar, black background.
+-Lifebar updates for Cooperative mode
+-Refactor beatlines
+-Investigate timing / press lag
+-On screen keyboard (needed for profiles)
+-Prevent coop mode with 1 player
+
+
+
+---Roadmap (0.2)---
+-Licence?
+-Installer that works
+Place items here as they are completed.
 
 ---Roadmap (0.1)---
 -Complete Coop mode (Done)
 -Song Previewing (Done)
--Mode select screen Icons (DONE 10%)
--Complete updates to graphics
--Clean up particle field
+-Mode select screen Icons (DONE)
+-Complete updates to graphics (Done)
+-Clean up particle field (Done)
 -Refactor KeyScreen (DONE 90%)
--Make Song select screen consistent with rest of UI.
-
+-Make Song select screen consistent with rest of UI. (Done)
+-Animated BPM meter in SongSelectScreen (Done)
 
 
 
