@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
 using Action=WGiBeat.Managers.Action;
@@ -16,8 +18,9 @@ namespace WGiBeat.Screens
         private Sprite _headerSprite;
 
         private SineSwayParticleField _field = new SineSwayParticleField();
+        private Sprite _restrictionSprite;
 
-         public ModeSelectScreen(GameCore core)
+        public ModeSelectScreen(GameCore core)
              : base(core)
         {
         }
@@ -70,6 +73,8 @@ namespace WGiBeat.Screens
                                     Rows = (int)Difficulty.COUNT + 1,
                                     SpriteTexture = TextureManager.Textures["playerDifficulties"]
                                 };
+            _restrictionSprite = new Sprite {SpriteTexture = TextureManager.Textures["RestrictionBorder"]};
+            _restrictionSprite.SetPosition(Core.Metrics["RestrictionBase", 0]);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -82,7 +87,19 @@ namespace WGiBeat.Screens
             _headerSprite.Draw(spriteBatch);
 
             DrawModeOptions(spriteBatch);
+            DrawRestriction(spriteBatch);
            
+        }
+
+        private void DrawRestriction(SpriteBatch spriteBatch)
+        {
+            var restrictionMessage = GameTypeAllowed((GameType) _selectedGameType);
+            if (restrictionMessage == "")
+            {
+                return;
+            }
+            _restrictionSprite.Draw(spriteBatch);
+            TextureManager.DrawString(spriteBatch, restrictionMessage,"DefaultFont",Core.Metrics["RestrictionMessage",0],Color.White, FontAlign.LEFT);
         }
 
         private void DrawModeOptions(SpriteBatch spriteBatch)
@@ -95,10 +112,20 @@ namespace WGiBeat.Screens
                 int selected = (x == _selectedGameType) ? 1 : 0;
                 _optionBaseSpriteMap.Draw(spriteBatch, selected, 270, 270, posX, posY);
 
+                if (GameTypeAllowed((GameType)x) == "")
+                {
+                    _optionsSpriteMap.ColorShading.A = 255;
+                }
+                else
+                {
+                    _optionsSpriteMap.ColorShading.A = 64;
+                }
                 _optionsSpriteMap.Draw(spriteBatch, x, 248, 248, posX + 11, posY + 11);
                 posX += 335;
             }
+            
 
+            //TODO: Redo this. Recommended to merge with modeOptions.png
             var icons = new Sprite
             {
                 Height = 160,
@@ -201,10 +228,34 @@ namespace WGiBeat.Screens
             }
         }
 
+        private int PlayerCount()
+        {
+            return (from e in Core.Players where e.Playing select e).Count();
+        }
+
+        public string GameTypeAllowed(GameType gameType)
+        {
+            switch (gameType)
+            {
+                case GameType.NORMAL:
+                    return "";
+                    case GameType.COOPERATIVE:
+                    if (PlayerCount() > 1)
+                    {
+                        return "";
+                    }
+                    return "Cannot play with only one player.";
+                default:
+                    return "";
+            }
+        }
         private void DoAction()
         {
-            Core.Settings.Set("CurrentGameType",(GameType) _selectedGameType);
-            Core.ScreenTransition("SongSelect");
+            if (GameTypeAllowed((GameType) _selectedGameType) == "")
+            {
+                Core.Settings.Set("CurrentGameType", (GameType) _selectedGameType);
+                Core.ScreenTransition("SongSelect");
+            }
         }
     }
 }
