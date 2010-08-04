@@ -89,4 +89,6 @@ OptionsMenuStart=[30,100];
 #Mode Select;
 ModeSelectScreenHeader=[0,0];
 ModeSelectOptions=[90,165];
+RestrictionMessage=[450,500];
+RestrictionBase=[400,480]
 
