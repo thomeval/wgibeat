@@ -67,6 +67,15 @@ namespace WGiBeat.Notes
                 var direction = (NoteDirection)rnd.Next((int)NoteDirection.COUNT);
                 newNoteBar.Notes.Add(new Note { Completed = false, Direction = direction, Reverse = false });
             }
+            for (int x = 0; x < Math.Min(numReverse,numNotes); x++)
+            {
+                int idx = rnd.Next(newNoteBar.Notes.Count);
+                while (newNoteBar.Notes[idx].Reverse)
+                {
+                    idx = rnd.Next(newNoteBar.Notes.Count);
+                }
+                newNoteBar.Notes[idx].Reverse = true;
+            }
             newNoteBar.X = posX;
             newNoteBar.Y = posY;
             return newNoteBar;

@@ -18,6 +18,7 @@ namespace WGiBeat
         public string Name { get; set; }
         public double Life { get; set; }
         public long Score { get; set; }
+        public bool IsBlazing { get; set; }
 
         private long _hits;
         public long Hits
