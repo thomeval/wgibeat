@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
-using Action=WGiBeat.Managers.Action;
+using WGiBeat.Notes;
+using Action = WGiBeat.Managers.Action;
 
 namespace WGiBeat.Screens
 {
@@ -11,11 +13,12 @@ namespace WGiBeat.Screens
         private int _playersJoined;
         private SineSwayParticleField _field = new SineSwayParticleField();
         //TODO: Consider refactoring into enum.
-        private readonly int[] _cursorPositions = new int[4];
+        private readonly CursorPosition[] _cursorPositions = new CursorPosition[4];
 
         private readonly Menu[] _playerMenus = new Menu[4];
         private readonly OnScreenKeyboard[] _keyboards = new OnScreenKeyboard[4];
-        public NewGameScreen(GameCore core) : base(core)
+        public NewGameScreen(GameCore core)
+            : base(core)
         {
 
         }
@@ -24,23 +27,23 @@ namespace WGiBeat.Screens
         {
             for (int x = 0; x < Core.Players.Count(); x++)
             {
-                _cursorPositions[x] = -1;
+                _cursorPositions[x] = CursorPosition.NOT_JOINED;
                 Core.Players[x].Playing = false;
 
-                    _playerMenus[x] = new Menu();
-                    _playerMenus[x].AddItem(new MenuItem { ItemText = "Decision" });
-                    var difficulty = new MenuItem { ItemText = "Difficulty" };
-                    difficulty.AddOption("Beginner", 0);
-                    difficulty.AddOption("Easy", 1);
-                    difficulty.AddOption("Medium", 2);
-                    difficulty.AddOption("Hard", 3);
-                    difficulty.AddOption("Insane",4);
-                    _playerMenus[x].AddItem(difficulty);
+                _playerMenus[x] = new Menu();
+                _playerMenus[x].AddItem(new MenuItem { ItemText = "Decision" });
+                var difficulty = new MenuItem { ItemText = "Difficulty" };
+                difficulty.AddOption("Beginner", 0);
+                difficulty.AddOption("Easy", 1);
+                difficulty.AddOption("Medium", 2);
+                difficulty.AddOption("Hard", 3);
+                difficulty.AddOption("Insane", 4);
+                _playerMenus[x].AddItem(difficulty);
 
-                var noteSpeed = new MenuItem {ItemText = "Beatline Speed"};
-                noteSpeed.AddOption("0.5x",0.5);
-                noteSpeed.AddOption("1x",1.0);
-                noteSpeed.AddOption("1.5x",1.5);
+                var noteSpeed = new MenuItem { ItemText = "Beatline Speed" };
+                noteSpeed.AddOption("0.5x", 0.5);
+                noteSpeed.AddOption("1x", 1.0);
+                noteSpeed.AddOption("1.5x", 1.5);
                 noteSpeed.AddOption("2x", 2.0);
                 noteSpeed.AddOption("3x", 3.0);
                 noteSpeed.AddOption("4x", 4.0);
@@ -48,23 +51,40 @@ namespace WGiBeat.Screens
                 noteSpeed.SetSelectedByValue(1.0);
                 _playerMenus[x].AddItem(noteSpeed);
 
-                _playerMenus[x].SetPosition(Core.Metrics["NewGameMenuStart",x]);
-                
+                _playerMenus[x].SetPosition(Core.Metrics["NewGameMenuStart", x]);
+
                 _playerMenus[x].AddItem(new MenuItem { ItemText = "Leave" });
 
-              //NOTE: Uncomment this to get access to the incomplete OnScreenKeyboard. Not functional yet.
-              //  _playerMenus[x].AddItem(new MenuItem{ItemText = "Show Keyboard"});
+                //NOTE: Uncomment this to get access to the incomplete OnScreenKeyboard. Not functional yet.
+                  _playerMenus[x].AddItem(new MenuItem{ItemText = "Show Keyboard"});
             }
 
             for (int x = 0; x < 4; x++)
             {
                 _keyboards[x] = new OnScreenKeyboard();
                 _keyboards[x].MaxLength = 10;
-                _keyboards[x].SetPosition(Core.Metrics["OnScreenKeyboard",x]);
+                _keyboards[x].Id = x;
+                _keyboards[x].SetPosition(Core.Metrics["OnScreenKeyboard", x]);
                 _keyboards[x].EnteredTextPosition = Core.Metrics["OnScreenKeyboardDisplay", x];
+                _keyboards[x].EntryCancelled += new EventHandler(Keyboard_EntryCancelled);
+                _keyboards[x].EntryComplete += new EventHandler(Keyboard_EntryComplete);
             }
             _playersJoined = 0;
             base.Initialize();
+        }
+
+        private void Keyboard_EntryComplete(object sender, EventArgs e)
+        {
+            var senderKeyboard = ((OnScreenKeyboard) sender);
+            var player = senderKeyboard.Id;
+            Core.Players[player].Name = senderKeyboard.EnteredText;
+            _cursorPositions[player] = CursorPosition.MAIN_MENU;
+        }
+
+        private void Keyboard_EntryCancelled(object sender, EventArgs e)
+        {
+            var player = ((OnScreenKeyboard) sender).Id;
+            _cursorPositions[player] = CursorPosition.MAIN_MENU;
         }
 
         private void DrawBackground(SpriteBatch spriteBatch)
@@ -85,44 +105,33 @@ namespace WGiBeat.Screens
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             DrawBackground(spriteBatch);
-            
-
             DrawBorders(spriteBatch);
             DrawMenus(spriteBatch);
-            for (int x = 0; x < 4; x++)
-            {
-                if (!Core.Players[x].Playing)
-                {
-                    spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Press Start to Join...",
-                                           Core.Metrics["NewGameJoinNotification", x], Color.Black);
-                }
-
-            }
         }
 
         private void DrawMenus(SpriteBatch spriteBatch)
         {
-            for (int x = 0; x < 4; x++ )
+            for (int x = 0; x < 4; x++)
             {
-                if (Core.Players[x].Playing)
-                {
-                    if (_cursorPositions[x] == 999)
-                    {
-                        spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Ready",
-                        Core.Metrics["NewGameJoinNotification", x], Color.Black);
-                    }
-                    else if (_cursorPositions[x] == 200)
-                    {
-                        _keyboards[x].Draw(spriteBatch);   
-                    }
-                    else if (_cursorPositions[x] == 0)
-                    {
-                        _playerMenus[x].Draw(spriteBatch);
-                    }
 
+                switch (_cursorPositions[x])
+                {
+                    case CursorPosition.NOT_JOINED:
+                        TextureManager.DrawString(spriteBatch,"Press Start to Join...", "LargeFont", 
+                        Core.Metrics["NewGameJoinNotification", x], Color.Black,FontAlign.LEFT);
+                        break;
+                    case CursorPosition.MAIN_MENU:
+                        _playerMenus[x].Draw(spriteBatch);
+                        break;
+                    case CursorPosition.KEYBOARD:
+                        _keyboards[x].Draw(spriteBatch);
+                        break;
+                    case CursorPosition.READY:
+                        TextureManager.DrawString(spriteBatch, "Ready", "LargeFont",
+                        Core.Metrics["NewGameJoinNotification", x], Color.Black, FontAlign.LEFT);
+                        break;
                 }
             }
-
         }
 
         private void DrawBorders(SpriteBatch spriteBatch)
@@ -142,74 +151,60 @@ namespace WGiBeat.Screens
             brush.ClearVectors();
         }
 
-        //TODO: Refactor, add OSK support.
         public override void PerformAction(Action action)
         {
-            var player = action.ToString().Substring(0, action.ToString().IndexOf("_"));
+            int player;
+            Int32.TryParse("" + action.ToString()[1], out player);
+            player--;
             var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
-            switch (action)
+
+            switch (paction)
             {
-                case Action.P1_START:
-                    StartPressed(0);
+                case "START":
+                    StartPressed(player);
                     break;
-                case Action.P2_START:
-                    StartPressed(1);
+                case "UP":
+                    if (_cursorPositions[player] == CursorPosition.KEYBOARD)
+                    {
+                        _keyboards[player].MoveSelection(NoteDirection.UP);
+                    }
+                    else
+                    {
+                        _playerMenus[player].DecrementSelected();
+                    }
+
                     break;
-                case Action.P3_START:
-                    StartPressed(2);
+                case "DOWN":
+                    if (_cursorPositions[player] == CursorPosition.KEYBOARD)
+                    {
+                        _keyboards[player].MoveSelection(NoteDirection.DOWN);
+                    }
+                    else
+                    {
+                        _playerMenus[player].IncrementSelected();
+                    }
                     break;
-                case Action.P4_START:
-                    StartPressed(3);
+                case "RIGHT":
+                    if (_cursorPositions[player] == CursorPosition.KEYBOARD)
+                    {
+                        _keyboards[player].MoveSelection(NoteDirection.RIGHT);
+                    }
+                    else
+                    {
+                        _playerMenus[player].IncrementOption();
+                    }
                     break;
-                    case Action.P1_UP:
-                    _playerMenus[0].DecrementSelected();
+                case "LEFT":
+                    if (_cursorPositions[player] == CursorPosition.KEYBOARD)
+                    {
+                        _keyboards[player].MoveSelection(NoteDirection.LEFT);
+                    }
+                    else
+                    {
+                        _playerMenus[player].DecrementOption();
+                    }
                     break;
-                    case Action.P2_UP:
-                    _playerMenus[1].DecrementSelected();
-                    break;
-                    case Action.P3_UP:
-                    _playerMenus[2].DecrementSelected();
-                    break;
-                    case Action.P4_UP:
-                    _playerMenus[3].DecrementSelected();
-                    break;
-                    case Action.P1_DOWN:
-                    _playerMenus[0].IncrementSelected();
-                    break;
-                    case Action.P2_DOWN:
-                    _playerMenus[1].IncrementSelected();
-                    break;
-                    case Action.P3_DOWN:
-                    _playerMenus[2].IncrementSelected();
-                    break;
-                    case Action.P4_DOWN:
-                    _playerMenus[3].IncrementSelected();
-                    break;
-                case Action.P1_LEFT:
-                    _playerMenus[0].DecrementOption();
-                    break;
-                case Action.P2_LEFT:
-                    _playerMenus[1].DecrementOption();
-                    break;
-                case Action.P3_LEFT:
-                    _playerMenus[2].DecrementOption();
-                    break;
-                case Action.P4_LEFT:
-                    _playerMenus[3].DecrementOption();
-                    break;
-                case Action.P1_RIGHT:
-                    _playerMenus[0].IncrementOption();
-                    break;
-                case Action.P2_RIGHT:
-                    _playerMenus[1].IncrementOption();
-                    break;
-                case Action.P3_RIGHT:
-                    _playerMenus[2].IncrementOption();
-                    break;
-                case Action.P4_RIGHT:
-                    _playerMenus[3].IncrementOption();
-                    break;
-                case Action.SYSTEM_BACK:
+                case "BACK":
                     Core.ScreenTransition("MainMenu");
                     break;
             }
@@ -217,38 +212,44 @@ namespace WGiBeat.Screens
 
         private void StartPressed(int number)
         {
-            if (!Core.Players[number].Playing)
+            switch (_cursorPositions[number])
             {
-                _cursorPositions[number] = 0;
-                Core.Players[number].Playing = true;
-                _playersJoined += 1;
+                case CursorPosition.NOT_JOINED:
+                    _cursorPositions[number] = CursorPosition.MAIN_MENU;
+                    Core.Players[number].Playing = true;
+                    _playersJoined += 1;
+                    break;
+                case CursorPosition.MAIN_MENU:
+                    SelectMainMenuItem(number);
+                    break;
+                case CursorPosition.KEYBOARD:
+                    _keyboards[number].PickSelection();
+                    break;
+                case CursorPosition.READY:
+                    //Player is already ready.
+                    return;
             }
-            else if (_cursorPositions[number] == 999)
+
+
+        }
+
+        private void SelectMainMenuItem(int number)
+        {
+            switch (_playerMenus[number].SelectedItem().ItemText)
             {
-                //Player is already ready.
-                return;
-            }
-            else if (_cursorPositions[number] == 200)
-            {
-                _keyboards[number].PickSelection();
-            }
-            else
-            {
-                switch (_playerMenus[number].SelectedItem().ItemText)
-                {
-                    case "Leave":
-                        _cursorPositions[number] = -1;
-                        Core.Players[number].Playing = false;
-                        TryToStart();
-                        break;
-                    case "Decision":
-                        _cursorPositions[number] = 999;
-                        TryToStart();
-                        break;
-                    case "Show Keyboard":
-                        _cursorPositions[number] = 200;
-                        break;
-                }
+                case "Leave":
+                    _cursorPositions[number] = CursorPosition.NOT_JOINED;
+                    Core.Players[number].Playing = false;
+                    _playersJoined--;
+                    TryToStart();
+                    break;
+                case "Decision":
+                    _cursorPositions[number] = CursorPosition.READY;
+                    TryToStart();
+                    break;
+                case "Show Keyboard":
+                    _cursorPositions[number] = CursorPosition.KEYBOARD;
+                    break;
             }
         }
 
@@ -257,7 +258,7 @@ namespace WGiBeat.Screens
             bool noPlayers = true;
             for (int x = 0; x < 4; x++)
             {
-                noPlayers = noPlayers && (_cursorPositions[x] == -1);
+                noPlayers = noPlayers && (_cursorPositions[x] == CursorPosition.NOT_JOINED);
             }
             if (noPlayers)
             {
@@ -267,7 +268,7 @@ namespace WGiBeat.Screens
             bool everyoneReady = true;
             for (int x = 0; x < 4; x++)
             {
-                everyoneReady = everyoneReady && (!(Core.Players[x].Playing ^ _cursorPositions[x] == 999));
+                everyoneReady = everyoneReady && (!(Core.Players[x].Playing ^ _cursorPositions[x] == CursorPosition.READY));
             }
 
             if (everyoneReady)
@@ -279,13 +280,21 @@ namespace WGiBeat.Screens
 
         private void StartGame()
         {
-            for (int x = 0; x < 4; x++ )
+            for (int x = 0; x < 4; x++)
             {
                 Core.Players[x].PlayDifficulty =
-                    (Difficulty) (int) _playerMenus[x].GetByItemText("Difficulty").SelectedValue();
-                Core.Players[x].BeatlineSpeed = (double) _playerMenus[x].GetByItemText("Beatline Speed").SelectedValue();
+                    (Difficulty)(int)_playerMenus[x].GetByItemText("Difficulty").SelectedValue();
+                Core.Players[x].BeatlineSpeed = (double)_playerMenus[x].GetByItemText("Beatline Speed").SelectedValue();
             }
-                Core.ScreenTransition("ModeSelect");
+            Core.ScreenTransition("ModeSelect");
         }
+    }
+
+    enum CursorPosition
+    {
+        NOT_JOINED,
+        MAIN_MENU,
+        READY,
+        KEYBOARD,
     }
 }

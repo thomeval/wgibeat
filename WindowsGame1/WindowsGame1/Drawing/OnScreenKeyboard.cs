@@ -29,6 +29,12 @@ namespace WGiBeat.Drawing
         private int _totalItems {
             get { return _chars.Count() + 3; }
         }
+
+        public int Id
+        {
+            get; set;
+        }
+
         public OnScreenKeyboard()
         {
             EnteredText = "";
@@ -74,12 +80,15 @@ namespace WGiBeat.Drawing
 
                 counter++;
             }
-            drawPosition.Y += SpacingY;
+
 
             for (int x = 0; x < 3; x++)
             {
+                drawPosition.X = (this.X) + (SpacingX * (counter % Columns));
+                drawPosition.Y = (this.Y) + (SpacingY * (counter / Columns));
                 _specialChars.ColorShading = (_selectedIndex == _chars.Count() + x) ? HighlightColor : BaseColor;
-                _specialChars.Draw(spriteBatch,x,25,25, (SpacingX * x) + 5, (int) drawPosition.Y);
+                _specialChars.Draw(spriteBatch,x,25,25, (int) drawPosition.X, (int) drawPosition.Y);
+                counter++;
             }
         }
 
@@ -103,7 +112,7 @@ namespace WGiBeat.Drawing
                     break;
                 case NoteDirection.UP:
                     _selectedIndex -= this.Columns;
-                    if (_selectedIndex < _totalItems)
+                    if (_selectedIndex < 0)
                     {
                         _selectedIndex += _totalItems;
                     }
