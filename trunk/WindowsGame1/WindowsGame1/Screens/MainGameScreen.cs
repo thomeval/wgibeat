@@ -50,6 +50,7 @@ namespace WGiBeat.Screens
             _displayState = 0;
             _songLoadDelay = 0.0;
             _confidence = 0;
+            _lastBlazeCheck = 0;
             _lastBeatlineNote = -1;
             for (int x = 0; x < _playerCount; x++)
             {
@@ -114,10 +115,32 @@ namespace WGiBeat.Screens
                 _maintenanceThread = new Timer(DoMaintenance,null,0,200);
             }
 
+
             CheckForEndings(gameTime);
             _phraseNumber = 1.0 * (gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay - _gameSong.Offset * 1000) / 1000 * (_gameSong.Bpm / 240);
             _timeCheck = (int)(gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay);
+            MaintainBlazings();
             base.Update(gameTime);
+        }
+
+        private void MaintainBlazings()
+        {
+            if (_phraseNumber - _lastBlazeCheck > 0.25)
+            {
+                _lastBlazeCheck += 0.25;
+                for (int x = 0; x < 4; x++)
+                {
+                    if ((Core.Players[x].IsBlazing))
+                    {
+                        Core.Players[x].Life--;
+                        if (Core.Players[x].Life < 100)
+                        {
+                            Core.Players[x].Life -= 25;
+                            Core.Players[x].IsBlazing = false;
+                        }
+                    }       
+                }
+            }
         }
 
         private void CheckForEndings(GameTime gameTime)
@@ -344,7 +367,10 @@ namespace WGiBeat.Screens
 
         private void ToggleBlazing(int player)
         {
-            Core.Players[player].IsBlazing = !Core.Players[player].IsBlazing;
+            if (Core.Players[player].Life > 100)
+            {
+                Core.Players[player].IsBlazing = true;
+            }
         }
 
         private void HitArrow(Action action, int player)
@@ -565,6 +591,8 @@ namespace WGiBeat.Screens
         }
 
         private readonly double[] _threshholds = {-1.00, -0.75, -0.5, -0.25, 0.0};
+        private double _lastBlazeCheck;
+
         private void DrawCountdowns(SpriteBatch spriteBatch)
         {
             for (int x = 0; x < Core.Players.Count(); x++)
