@@ -68,7 +68,7 @@ namespace WGiBeat.Drawing.Sets
                     decimal multiplier = Convert.ToDecimal((9 + Math.Max(1, _players[player].Streak)));
                     multiplier /= 10;
 
-                    _players[player].Score += (long)(1000 * numCompleted * multiplier);
+                    _players[player].Score += (long)(1000 * (numCompleted) * multiplier);
                     lifeAdjust = (1 * numCompleted);
                     break;
                 case BeatlineNoteJudgement.COOL:

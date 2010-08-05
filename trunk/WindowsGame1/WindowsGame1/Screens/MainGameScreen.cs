@@ -111,7 +111,7 @@ namespace WGiBeat.Screens
             if (_maintenanceThread == null)
             {
                 _maintaining = false;
-                _maintenanceThread = new Timer(DoMaintenance,null,0,20);
+                _maintenanceThread = new Timer(DoMaintenance,null,0,200);
             }
 
             CheckForEndings(gameTime);
@@ -272,6 +272,18 @@ namespace WGiBeat.Screens
                 case Action.P4_BEATLINE:
                     HitBeatline(3);
                     break;
+                    case Action.P1_SELECT:
+                    ToggleBlazing(0);
+                    break;
+                    case Action.P2_SELECT:
+                    ToggleBlazing(1);
+                    break;
+                case Action.P3_SELECT:
+                    ToggleBlazing(2);
+                    break;
+                case Action.P4_SELECT:
+                    ToggleBlazing(3);
+                    break;
                 case Action.SYSTEM_BPM_DECREASE:
                     if (songDebug)
                     {
@@ -330,6 +342,11 @@ namespace WGiBeat.Screens
 
         }
 
+        private void ToggleBlazing(int player)
+        {
+            Core.Players[player].IsBlazing = !Core.Players[player].IsBlazing;
+        }
+
         private void HitArrow(Action action, int player)
         {
             if (player >= _playerCount)
@@ -379,6 +396,7 @@ namespace WGiBeat.Screens
             }
 
             //Check if all notes in the notebar have been hit and act accordingly.
+
             if (_notebars[player].AllCompleted())
             {
                 //Increment Player Level
@@ -387,16 +405,19 @@ namespace WGiBeat.Screens
                 //Award Score
                 AwardJudgement(nearestBeatline, player);
                 //Create next note bar.
-                _notebars[player] = NoteBar.CreateNoteBar((int)Core.Players[player].Level, 0, Core.Metrics["NoteBar", player]);
+                int numArrow = (int)Core.Players[player].Level;
+                int numReverse = (Core.Players[player].IsBlazing) ? (int)Core.Players[player].Level / 2 : 0;
+                _notebars[player] = NoteBar.CreateNoteBar(numArrow, numReverse, Core.Metrics["NoteBar", player]);
 
             }
             else
             {
                 AwardJudgement(null, player);
                 //Create next note bar.
-                _notebars[player] = NoteBar.CreateNoteBar((int)Core.Players[player].Level, 0, Core.Metrics["NoteBar", player]);
+                int numArrow = (int)Core.Players[player].Level;
+                int numReverse = (Core.Players[player].IsBlazing) ? (int)Core.Players[player].Level / 2 : 0;
+                _notebars[player] = NoteBar.CreateNoteBar(numArrow, numReverse, Core.Metrics["NoteBar", player]);
             }
-
 
             //Mark the beatlinenote as hit (it will be displayed differently and hold position)
             if (nearestBeatline != null)
@@ -453,7 +474,7 @@ namespace WGiBeat.Screens
                 }
             }
 
-            var lifeAdjust = _noteJudgementSet.AwardJudgement(result, player, _notebars[player].NumberCompleted(), _notebars[player].Notes.Count - _notebars[player].NumberCompleted());
+            var lifeAdjust = _noteJudgementSet.AwardJudgement(result, player, _notebars[player].NumberCompleted() + _notebars[player].NumberReverse(), _notebars[player].Notes.Count - _notebars[player].NumberCompleted());
             _lifeBarSet.AdjustLife(lifeAdjust, player);
 
         }

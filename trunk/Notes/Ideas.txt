@@ -20,26 +20,30 @@
 -Sparks along UI. Over the wires.
 
 --Thome--
--Cooperative (Done), Sync, Battle, VS CPU game modes
+-Cooperative (Done), Sync, Battle (0.3?), VS CPU game modes (0.3?)
 -Cooperative bonuses (Streaks? Sync perfects?)
 
 
--Player Profiles (Major)
--Chance / SP gameplay (Major)
+-Player Profiles (Major - 0.3?)
+-Chance / SP gameplay (Major - In progress)
 
 -Blocky Life bar, black background.
 -Lifebar updates for Cooperative mode
 -Refactor beatlines
 -Investigate timing / press lag
 -On screen keyboard (needed for profiles)
--Prevent coop mode with 1 player (Done)
-
+-Song folders / tree (Major - 0.3?)
+-Display subtitle on SongSelectScreen
 
 
 ---Roadmap (0.2)---
 -Licence?
 -Installer that works
+-Webhosting (ezra)
+-Investigate framerate / beatline lag
+-Prevent coop mode with 1 player (Done)
 Place items here as they are completed.
+
 
 ---Roadmap (0.1)---
 -Complete Coop mode (Done)
