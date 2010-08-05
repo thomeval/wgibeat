@@ -1,5 +1,0 @@
-﻿#SETTINGS-1.0;
-SongFolder=Songs;
-SongDebug=false;
-GameMode=0;
-SongVolume=0.9;
