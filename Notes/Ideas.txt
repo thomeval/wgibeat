@@ -18,15 +18,15 @@
 -Change ModeSelect icons, and use modeOptions.png instead
 -Replace graphics to use correct font
 -Sparks along UI. Over the wires.
+-Graphics for On Screen Keyboard
+-Graphics for restriction messages and possibly mode descriptions
+
 
 --Thome--
 -Cooperative (Done), Sync, Battle (0.3?), VS CPU game modes (0.3?)
 -Cooperative bonuses (Streaks? Sync perfects?)
-
-
 -Player Profiles (Major - 0.3?)
 -Chance / SP gameplay (Major - In progress)
-
 -Blocky Life bar, black background.
 -Lifebar updates for Cooperative mode
 -Refactor beatlines
@@ -34,6 +34,8 @@
 -On screen keyboard (needed for profiles)
 -Song folders / tree (Major - 0.3?)
 -Display subtitle on SongSelectScreen
+-Scalable beatline impact zone?
+-Full screen mode?
 
 
 ---Roadmap (0.2)---
