@@ -84,12 +84,12 @@ namespace WGiBeat.Drawing.Sets
             {
                 if (Players[player].Life >= 100)
                 {
-                    Players[player].Life += amount / 3;
+                    Players[player].Life += amount / 2;
                 }
                 else
                 {
                     double over = Players[player].Life + amount - 100;
-                    Players[player].Life = 100 + (over / 3);
+                    Players[player].Life = 100 + (over / 2);
                 }
 
             }

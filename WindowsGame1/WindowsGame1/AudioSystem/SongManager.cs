@@ -278,7 +278,6 @@ namespace WGiBeat.AudioSystem
         /// <param name="index">The ID of the channel to stop.</param>
         public void StopChannel(int index)
         {
-            System.Diagnostics.Debug.WriteLine("Stopping channel " + index);
             var resultCode = _fmodSystem.getChannel(index, ref tmpChannel);
             CheckFMODErrors(resultCode);
 

@@ -53,6 +53,10 @@ namespace WGiBeat
             //For some reason XNA has a bug when using FixedTimeSteps, which is enabled by default.
             //Using this causes 100% CPU usage (one core) and a frame rate drop.
             this.IsFixedTimeStep = false;
+            //NOTE: Uncomment to disable vsync.
+            //GraphicsManager.SynchronizeWithVerticalRetrace = false;
+
+            GraphicsManager.ApplyChanges();
             Cookies = new Dictionary<string, object>();
             Metrics = MetricsManager.Load("metrics.txt");
             Settings = SettingsManager.LoadFromFile("settings.txt");
