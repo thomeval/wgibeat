@@ -24,18 +24,21 @@
 
 --Thome--
 -Cooperative (Done), Sync, Battle (0.3?), VS CPU game modes (0.3?)
--Cooperative bonuses (Streaks? Sync perfects?)
 -Player Profiles (Major - 0.3?)
+-Song folders / tree (Major - 0.3?)
+-Cooperative bonuses (Streaks? Sync perfects?)
 -Chance / SP gameplay (Major - In progress)
 -Blocky Life bar, black background.
 -Lifebar updates for Cooperative mode
 -Refactor beatlines
 -Investigate timing / press lag
--On screen keyboard (needed for profiles)
--Song folders / tree (Major - 0.3?)
+-On screen keyboard (needed for profiles)(Done)
+
 -Display subtitle on SongSelectScreen
 -Scalable beatline impact zone?
--Full screen mode?
+-Full screen mode? (Done)
+-Local copy of XNA DLL's to remove dependency?
+-Public domain music as a sample file?
 
 
 ---Roadmap (0.2)---

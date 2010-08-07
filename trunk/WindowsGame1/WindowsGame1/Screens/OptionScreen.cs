@@ -39,6 +39,11 @@ namespace WGiBeat.Screens
             item.AddOption("On", true);
             _optionsMenu.AddItem(item);
 
+            item = new MenuItem {ItemText = "Full screen"};
+            item.AddOption("Off", false);
+            item.AddOption("On", true);
+            _optionsMenu.AddItem(item);
+
             item = new MenuItem {ItemText = "Reset Keys" };
             _optionsMenu.AddItem(item);
             item = new MenuItem {ItemText = "Save"};
@@ -154,7 +159,10 @@ namespace WGiBeat.Screens
                 _optionsMenu.GetByItemText("Song Volume").SetSelectedByValue("" + Core.Settings.Get<object>("SongVolume"));
                 _optionsMenu.GetByItemText("Song Debugging").SetSelectedByValue(Core.Settings.Get<object>("SongDebug"));
                 _optionsMenu.GetByItemText("Song Previews").SetSelectedByValue(Core.Settings.Get<object>("SongPreview"));
-
+                if (Core.Settings.Exists("FullScreen"))
+                {
+                    _optionsMenu.GetByItemText("Full screen").SetSelectedByValue(Core.Settings.Get<object>("FullScreen"));                    
+                }
             }
             catch (Exception ex)
             {
@@ -173,7 +181,10 @@ namespace WGiBeat.Screens
             Core.Settings.Set("SongVolume",(Convert.ToDouble(_optionsMenu.GetByItemText("Song Volume").SelectedValue())));
             Core.Settings.Set("SongDebug", (_optionsMenu.GetByItemText("Song Debugging").SelectedValue()));
             Core.Settings.Set("SongPreview", (_optionsMenu.GetByItemText("Song Previews").SelectedValue()));
+            Core.Settings.Set("FullScreen", _optionsMenu.GetByItemText("Full screen").SelectedValue());
             Core.Songs.SetMasterVolume((float) Core.Settings.Get<double>("SongVolume"));
+            Core.GraphicsManager.IsFullScreen = Core.Settings.Get<bool>("FullScreen");
+            Core.GraphicsManager.ApplyChanges();
             Core.Settings.SaveToFile("settings.txt");
 
         }

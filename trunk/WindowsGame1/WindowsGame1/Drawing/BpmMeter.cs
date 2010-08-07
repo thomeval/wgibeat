@@ -14,7 +14,7 @@ namespace WGiBeat.Drawing
         private const int DEFAULT_HEIGHT = 138;
         private const int DEFAULT_WIDTH = 240;
         public readonly int[] BpmLevels = {
-                                     230,220,210,200,
+                                     210,205,200,195,
                                      190,185,180,175,170,
                                      165,160,155,150,145,
                                      140,135,130,125,120,

@@ -56,7 +56,7 @@ namespace WGiBeat
             //NOTE: Uncomment to disable vsync.
             //GraphicsManager.SynchronizeWithVerticalRetrace = false;
 
-            GraphicsManager.ApplyChanges();
+
             Cookies = new Dictionary<string, object>();
             Metrics = MetricsManager.Load("metrics.txt");
             Settings = SettingsManager.LoadFromFile("settings.txt");
@@ -93,7 +93,11 @@ namespace WGiBeat
             {
                 Songs.SetMasterVolume((float) Settings.Get<double>("SongVolume"));
             }
-
+            if (Settings.Exists("FullScreen"))
+            {
+                GraphicsManager.IsFullScreen = Settings.Get<bool>("FullScreen");
+            }
+            GraphicsManager.ApplyChanges();
             _lastGamePadState = new GamePadState[4];
 
             base.Initialize();
