@@ -23,7 +23,7 @@ namespace WGiBeat.Screens
         private void BuildMenu()
         {
             var item = new MenuItem {ItemText = "Song Volume"};
-            for (int x = 0; x < 11; x++)
+            for (int x = 1; x < 11; x++)
             {
                 item.AddOption(x + "0%", "" + x * 0.1);
             }
