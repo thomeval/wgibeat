@@ -116,10 +116,18 @@ namespace WGiBeat.Screens
             DrawPlayerDifficulties(spriteBatch);
             DrawHighScoreFrame(spriteBatch);
             DrawBpmMeter(gameTime, spriteBatch);
+            DrawSongText(spriteBatch);
             _headerSprite.SetPosition(Core.Metrics["SongSelectScreenHeader",0]);
             _headerSprite.Draw(spriteBatch);
             
             TextureManager.DrawString(spriteBatch,"Mode: " + Core.Settings.Get<GameType>("CurrentGameType"),"DefaultFont", Core.Metrics["SelectedMode", 0], Color.Black,FontAlign.CENTER);
+
+        }
+
+        private void DrawSongText(SpriteBatch spriteBatch)
+        {
+            TextureManager.DrawString(spriteBatch,SongList[_selectedIndex].Song.Title, "DefaultFont",Core.Metrics["SongTitle",0],Color.Black, FontAlign.CENTER);
+            TextureManager.DrawString(spriteBatch, SongList[_selectedIndex].Song.Subtitle, "DefaultFont", Core.Metrics["SongSubtitle", 0], Color.Black, FontAlign.CENTER );
 
         }
 
@@ -133,12 +141,13 @@ namespace WGiBeat.Screens
                 PrimitiveLine line = new PrimitiveLine(Core.GraphicsDevice);
 
                 line.Colour = Color.Black;
-                line.AddVector(new Vector2(200,200));
-                line.AddVector(new Vector2(400,200));
+
+
+                line.Position = Core.Metrics["SongSpectrum", 0];
+                line.AddVector(new Vector2(0, -70));
+                line.AddVector(new Vector2(200, -70));
                 line.Render(spriteBatch);
                 line.ClearVectors();
-                line.Position.X = 200;
-                line.Position.Y = 250;
                 int posX = 0;
 
                 float[] averageLevels = new float[levels.Count() / 32];
@@ -152,8 +161,8 @@ namespace WGiBeat.Screens
 
                         averageLevels[x] = Math.Min(1, averageLevels[x] * 10 * (x + 1));
                         line.AddVector(new Vector2(posX, 0));
-                        line.AddVector(new Vector2(posX, -50 * averageLevels[x]));
-                        line.AddVector(new Vector2(posX + 5, -50 * averageLevels[x]));
+                        line.AddVector(new Vector2(posX, -70 * averageLevels[x]));
+                        line.AddVector(new Vector2(posX + 5, -70 * averageLevels[x]));
                         posX += 5;
                     }
                 line.Render(spriteBatch);
