@@ -82,10 +82,10 @@ PlayerDifficultiesFrame=[0,500][50,500][100,500][150,500];
 PlayerDifficulties=[7,545][57,545][107,545][157,545];
 SelectedMode=[300,550];
 BPMMeter=[225,225];
-SongBPMDisplay=[355,315];
-SongSubtitle=[320,225];
-SongTitle=[320,200];
-SongSpectrum=[225,320];
+SelectedSongBPMDisplay=[355,315];
+SelectedSongSubtitle=[320,225];
+SelectedSongTitle=[320,200];
+SelectedSongSpectrum=[225,320];
 
 #Options;
 OptionsMenuStart=[30,100];

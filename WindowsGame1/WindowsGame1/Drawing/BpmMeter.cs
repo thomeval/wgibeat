@@ -43,7 +43,7 @@ namespace WGiBeat.Drawing
 
         private readonly Color _notLitColor = new Color(64, 64, 64, 255);
 
-        private const double BEAT_FRACTION_SEVERITY = 0.3;
+        private const double BEAT_FRACTION_SEVERITY = 0.35;
 
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -58,7 +58,7 @@ namespace WGiBeat.Drawing
             int height = (this.Height-2)/_meterSprite.Rows;
             for (int x = 0; x < BpmLevels.Count(); x++)
             {
-                if (displayBpm >= BpmLevels[x])
+                if ((displayBpm >= BpmLevels[x]))
                 {
                     _meterSprite.ColorShading = Color.White;
                 }
@@ -69,6 +69,7 @@ namespace WGiBeat.Drawing
                 _meterSprite.Draw(spriteBatch, x, this.Width, height, this.X, this.Y + (x*height));
             }
         }
+
 
         private void SetDimensions()
         {

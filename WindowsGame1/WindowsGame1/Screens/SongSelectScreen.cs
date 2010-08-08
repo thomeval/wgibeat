@@ -126,8 +126,8 @@ namespace WGiBeat.Screens
 
         private void DrawSongText(SpriteBatch spriteBatch)
         {
-            TextureManager.DrawString(spriteBatch,SongList[_selectedIndex].Song.Title, "DefaultFont",Core.Metrics["SongTitle",0],Color.Black, FontAlign.CENTER);
-            TextureManager.DrawString(spriteBatch, SongList[_selectedIndex].Song.Subtitle, "DefaultFont", Core.Metrics["SongSubtitle", 0], Color.Black, FontAlign.CENTER );
+            TextureManager.DrawString(spriteBatch,SongList[_selectedIndex].Song.Title, "DefaultFont",Core.Metrics["SelectedSongTitle",0],Color.Black, FontAlign.CENTER);
+            TextureManager.DrawString(spriteBatch, SongList[_selectedIndex].Song.Subtitle, "DefaultFont", Core.Metrics["SelectedSongSubtitle", 0], Color.Black, FontAlign.CENTER );
 
         }
 
@@ -143,7 +143,7 @@ namespace WGiBeat.Screens
                 line.Colour = Color.Black;
 
 
-                line.Position = Core.Metrics["SongSpectrum", 0];
+                line.Position = Core.Metrics["SelectedSongSpectrum", 0];
                 line.AddVector(new Vector2(0, -70));
                 line.AddVector(new Vector2(200, -70));
                 line.Render(spriteBatch);
@@ -180,7 +180,7 @@ namespace WGiBeat.Screens
             _bpmMeter.Draw(spriteBatch);
 
             TextureManager.DrawString(spriteBatch, String.Format("{0:000.0}", SongList[_selectedIndex].Song.Bpm), "TwoTechLarge",
-                                   Core.Metrics["SongBPMDisplay", 0], Color.Black, FontAlign.RIGHT);
+                                   Core.Metrics["SelectedSongBPMDisplay", 0], Color.Black, FontAlign.RIGHT);
 
 
         }
