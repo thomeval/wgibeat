@@ -13,7 +13,6 @@ namespace WGiBeat.Drawing
         private Sprite _sidePart;
         private Sprite _basePart;
         private Sprite _gridPart;
-        private SpriteMap _adjustPart;
         private Sprite _overchargePart;
         private double _overchargeTextureOffset;
 
@@ -80,13 +79,6 @@ namespace WGiBeat.Drawing
                 Rows = 4
             };
 
-            _adjustPart = new SpriteMap
-            {
-                SpriteTexture = TextureManager.Textures["lifeBarFront"],
-                Columns = 1,
-                Rows = 4
-            };
-
             _overchargePart = new Sprite
             {
                 Height = this.Height - 6,
@@ -111,30 +103,52 @@ namespace WGiBeat.Drawing
         }
 
         const double BEAT_FRACTION_SEVERITY = 0.3;
-
+        private const int FRONT_WIDTH = 4;
+        private int _blocksCount;
         public override void Draw(SpriteBatch spriteBatch, double gameTime)
         {
+            _blocksCount = (int) Math.Ceiling((this.Width - 6)/4.00);
             var solidLife = Math.Min(Parent.Players[PlayerID].Life, 100);
+
+            //Causes the bar to pulse on every beat.
             gameTime *= 4;
             var beatFraction = (gameTime) -  Math.Floor(gameTime);
             beatFraction *= BEAT_FRACTION_SEVERITY;
 
+            //Causes the bar to not pulse before the first beat.
             if (gameTime >= 0)
             {
                 solidLife *= (1 - beatFraction);
             }
 
-            int frontWidth = (int)((this.Width - 6) / LIFEBAR_CAPACITY * solidLife);
             _basePart.Draw(spriteBatch);
             _sidePart.Draw(spriteBatch);
 
-            _frontPart.Draw(spriteBatch, PlayerID, frontWidth, this.Height - 6, this.X + 3, this.Y + 3);
+            //Draw each block in sequence. Either in colour, or black depending on the Player's life.
+            var highestBlock = GetHighestBlockLevel();
+            for (int x = 0; x < _blocksCount;x++)
+            {
+                var minLife = LIFEBAR_CAPACITY/_blocksCount*x;
+                if (solidLife > minLife)
+                {
+                    _frontPart.ColorShading = Color.White;
+                }
+                else if (x == highestBlock)
+                {
+                    _frontPart.ColorShading = Color.LightGray;
+                }
+                else
+                {
+                    _frontPart.ColorShading = Color.Black;
+                }
+                _frontPart.Draw(spriteBatch, PlayerID, FRONT_WIDTH, this.Height - 6, this.X + 3 + (FRONT_WIDTH * x), this.Y + 3);
+            }
 
             _displayedLife = Parent.Players[PlayerID].Life;
-            DrawAdjustments(spriteBatch);
+
+            //Draw the overcharge above the normal bar.
             if (_displayedLife > 100)
             {
-
                 _overchargePart.Width = (int)((this.Width - 5) / LIFEBAR_CAPACITY * (_displayedLife - 100));
                 _overchargePart.ColorShading.A = Convert.ToByte((_displayedLife - 100) * 2.55);
                 _overchargePart.ColorShading.A = Math.Max(_overchargePart.ColorShading.A, (byte) 80);
@@ -150,6 +164,19 @@ namespace WGiBeat.Drawing
             _overchargeTextureOffset = (_overchargeTextureOffset + 0.5) % OVERCHARGE_OFFSET_CLIP;
         }
 
+        public int GetHighestBlockLevel()
+        {
+            for (int x = _blocksCount-1; x >= 0; x--)
+            {
+                var minLife = LIFEBAR_CAPACITY / _blocksCount * x;
+
+                if (Parent.Players[PlayerID].Life > minLife)
+                {
+                    return x;
+                }
+            }
+            return 0;
+        }
         public override void Draw(SpriteBatch spriteBatch)
         {
             Draw(spriteBatch, 0.0);
@@ -162,18 +189,6 @@ namespace WGiBeat.Drawing
                     position, Color.Black);
         }
 
-        private void DrawAdjustments(SpriteBatch spriteBatch)
-        {
-
-                var myWidth = (int)((this.Width - 6) / LIFEBAR_CAPACITY * (Parent.Players[PlayerID].Life));
-            myWidth = Math.Min(this.Width - 6, myWidth);
-                var startPoint = this.X + 3;
-
-                _adjustPart.ColorShading = Color.White;
-                _adjustPart.ColorShading.A = 128;
-                _adjustPart.Draw(spriteBatch, PlayerID, myWidth, this.Height - 6, startPoint, this.Y + 3);
-
-        }
 
         public override void Reset()
         {
