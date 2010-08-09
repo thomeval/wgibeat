@@ -120,7 +120,7 @@ namespace WGiBeat.Screens
             _headerSprite.SetPosition(Core.Metrics["SongSelectScreenHeader",0]);
             _headerSprite.Draw(spriteBatch);
             
-            TextureManager.DrawString(spriteBatch,"Mode: " + Core.Settings.Get<GameType>("CurrentGameType"),"DefaultFont", Core.Metrics["SelectedMode", 0], Color.Black,FontAlign.CENTER);
+            TextureManager.DrawString(spriteBatch,"Mode: " + Core.Cookies["CurrentGameType"],"DefaultFont", Core.Metrics["SelectedMode", 0], Color.Black,FontAlign.CENTER);
 
         }
 
@@ -189,7 +189,7 @@ namespace WGiBeat.Screens
         {
             _scoreBaseSprite.SetPosition(Core.Metrics["SongHighScoreBase", 0]);
             _scoreBaseSprite.Draw(spriteBatch);
-            var cgt = Core.Settings.Get<GameType>("CurrentGameType");
+            var cgt = (GameType) Core.Cookies["CurrentGameType"];
             var highScoreEntry = GetDisplayedHighScore();
             var displayedScore = (highScoreEntry == null) ? 0 : highScoreEntry.Scores[cgt];
             var displayedGrade = (highScoreEntry == null) ? -1 : highScoreEntry.Grades[cgt];
@@ -217,7 +217,7 @@ namespace WGiBeat.Screens
             {
                 return null;
             }
-            if (!highScoreEntry.Scores.ContainsKey(Core.Settings.Get<GameType>("CurrentGameType")))
+            if (!highScoreEntry.Scores.ContainsKey((GameType) Core.Cookies["CurrentGameType"]))
             {
                 return null;
             }
@@ -329,7 +329,7 @@ namespace WGiBeat.Screens
         private void StartSong()
         {
             _songPreviewManager.Dispose();
-            Core.Settings.Set("CurrentSong",SongList[_selectedIndex].Song);
+            Core.Cookies["CurrentSong"] = SongList[_selectedIndex].Song;
             Core.Settings.Set("LastSongPlayed", SongList[_selectedIndex].Song.GetHashCode());
             Core.ScreenTransition("MainGame");
         }

@@ -44,12 +44,12 @@ namespace WGiBeat.Screens
         {
             _playerCount = 4;
             _notebars = new NoteBar[_playerCount];
-            _lifeBarSet = new LifeBarSet(Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
-            _levelbarSet = new LevelBarSet(Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
-            _hitsbarSet = new HitsBarSet(Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
-            _scoreSet = new ScoreSet(Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
-            _noteJudgementSet = new NoteJudgementSet(Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
-            _beatlineSet = new BeatlineSet(Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
+            _lifeBarSet = new LifeBarSet(Core.Metrics, Core.Players, (GameType) Core.Cookies["CurrentGameType"]);
+            _levelbarSet = new LevelBarSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
+            _hitsbarSet = new HitsBarSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
+            _scoreSet = new ScoreSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
+            _noteJudgementSet = new NoteJudgementSet(Core.Metrics,Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
+            _beatlineSet = new BeatlineSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
 
             _beatlineSet.NoteMissed += BeatlineNoteMissed;
             _displayState = 0;
@@ -84,7 +84,7 @@ namespace WGiBeat.Screens
 
             }
 
-            _gameSong = Core.Settings.Get<GameSong>("CurrentSong");
+            _gameSong = (GameSong) Core.Cookies["CurrentSong"];
             Core.Songs.LoadSong(_gameSong);
 
             _startTime = null;
@@ -98,13 +98,6 @@ namespace WGiBeat.Screens
                 Core.Cookies.Remove("MenuMusicChannel");
             }
             base.Initialize();
-        }
-
-        private void BeatlineNoteMissed(object sender, EventArgs e)
-        {
-            var player = ((Beatline)sender).Id;
-            _lifeBarSet.AdjustLife(
-    _noteJudgementSet.AwardJudgement(BeatlineNoteJudgement.MISS, player, 0, 0), player);
         }
 
         #region Updating, Beatline maintenance
@@ -193,15 +186,6 @@ namespace WGiBeat.Screens
             }
         }
 
-        private double GetEndingTimeInPhrase()
-        {
-            if (!_startTime.HasValue)
-            {
-                return 9999;
-            }
-            return ((_gameSong.Length - _gameSong.Offset) * 1000 + _songLoadDelay) / 1000 * (_gameSong.Bpm / 240);
-        }
-
         #endregion
 
         #region Actions/Input
@@ -211,6 +195,7 @@ namespace WGiBeat.Screens
         /// <param name="action">The Action that the user has requested.</param>
         public override void PerformAction(Action action)
         {
+            //TODO: Refactor
             var songDebug = Core.Settings.Get<bool>("SongDebug");
             switch (action)
             {
@@ -359,7 +344,6 @@ namespace WGiBeat.Screens
                 return;
             }
 
-
             _debugLastHitOffset = _beatlineSet.CalculateHitOffset(player, _phraseNumber);
 
             var complete = _notebars[player].AllCompleted();
@@ -378,19 +362,20 @@ namespace WGiBeat.Screens
             //Award Score
             ApplyJudgement(judgement, player);
             //Create next note bar.
-            int numArrow = (int)Core.Players[player].Level;
-            int numReverse = (Core.Players[player].IsBlazing) ? (int)Core.Players[player].Level / 2 : 0;
+            var numArrow = (int)Core.Players[player].Level;
+            var numReverse = (Core.Players[player].IsBlazing) ? (int)Core.Players[player].Level / 2 : 0;
             _notebars[player] = NoteBar.CreateNoteBar(numArrow, numReverse, Core.Metrics["NoteBar", player]);
 
         }
+        #endregion
+
+        #region Helper Methods
 
         private void ApplyJudgement(BeatlineNoteJudgement judgement, int player)
         {
             var lifeAdjust = _noteJudgementSet.AwardJudgement(judgement, player, _notebars[player].NumberCompleted() + _notebars[player].NumberReverse(), _notebars[player].Notes.Count - _notebars[player].NumberCompleted());
             _lifeBarSet.AdjustLife(lifeAdjust, player);
         }
-
-        #endregion
 
         private static long MomentumIncreaseByDifficulty(Difficulty difficulty)
         {
@@ -411,12 +396,6 @@ namespace WGiBeat.Screens
             }
         }
 
-        #region Beatline and Judgement
-
-
-
-        #endregion
-
         private string CalculateTimeLeft(GameTime gameTime)
         {
             var timeElapsed = gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds;
@@ -434,6 +413,22 @@ namespace WGiBeat.Screens
 
             return timeLeft <= 0.0;
         }
+
+
+        private double GetEndingTimeInPhrase()
+        {
+
+            return ((_gameSong.Length - _gameSong.Offset) * 1000 + _songLoadDelay) / 1000 * (_gameSong.Bpm / 240);
+        }
+
+        private void BeatlineNoteMissed(object sender, EventArgs e)
+        {
+            var player = ((Beatline)sender).Id;
+            _lifeBarSet.AdjustLife(
+                _noteJudgementSet.AwardJudgement(BeatlineNoteJudgement.MISS, player, 0, 0), player);
+        }
+
+        #endregion
 
         #region Drawing
 
