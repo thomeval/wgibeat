@@ -14,7 +14,7 @@ namespace WGiBeat.Drawing.Sets
 
         private GraphicNumber _streakNumbers;
 
-        public readonly int[] JudgementCutoffs = {20, 50, 125, 250};
+        public static readonly int[] JudgementCutoffs = {20, 50, 125, 250,1500};
         public NoteJudgementSet()
         {
             _displayedJudgements = new DisplayedJudgement[4];
@@ -88,12 +88,14 @@ namespace WGiBeat.Drawing.Sets
                 case BeatlineNoteJudgement.MISS:
                     lifeAdjust = _players[player].MissedBeat();
                     break;
-                default:
-                    //FAIL
+                case BeatlineNoteJudgement.FAIL:
                     _players[player].Streak = 0;
                     lifeAdjust = 0 - (int)(1 + _players[player].PlayDifficulty) * (numNotCompleted + 1);
                     _players[player].Momentum = (long)(_players[player].Momentum * 0.7);
                     break;
+                    case BeatlineNoteJudgement.COUNT:
+                    //Ignore judgement
+                    return 0.0;
             }
 
             _players[player].Judgements[(int)judgement]++;
