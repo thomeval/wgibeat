@@ -56,7 +56,7 @@ namespace WGiBeat.Screens
         #region Calculations
         private void CalculateGrades()
         {
-            switch (Core.Settings.Get<GameType>("CurrentGameType"))
+            switch ((GameType)Core.Cookies["CurrentGameType"])
             {
                 case GameType.NORMAL:
                     for (int x = 0; x < 4; x++ )
@@ -160,7 +160,7 @@ namespace WGiBeat.Screens
 
         private void DrawModeSpecific(SpriteBatch spriteBatch)
         {
-           switch (Core.Settings.Get<GameType>("CurrentGameType"))
+            switch ((GameType)Core.Cookies["CurrentGameType"])
            {
                case GameType.NORMAL:
                    break;
@@ -331,7 +331,7 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black);
         private void SaveHighScore()
         {
             //Evaluation screen needs this setting to be able to display the high score indicator.
-            _highScorePlayer = Core.HighScores.UpdateHighScore(Core.Settings.Get<int>("LastSongPlayed"),Core.Players, Core.Settings.Get<GameType>("CurrentGameType"), _grades);
+            _highScorePlayer = Core.HighScores.UpdateHighScore(Core.Settings.Get<int>("LastSongPlayed"), Core.Players, (GameType)Core.Cookies["CurrentGameType"], _grades);
             Core.HighScores.SaveToFile("Scores.conf");
         }
     }

@@ -253,7 +253,7 @@ namespace WGiBeat.Screens
         {
             if (GameTypeAllowed((GameType) _selectedGameType) == "")
             {
-                Core.Settings.Set("CurrentGameType", (GameType) _selectedGameType);
+                Core.Cookies["CurrentGameType"] = (GameType) _selectedGameType;
                 Core.ScreenTransition("SongSelect");
             }
         }
