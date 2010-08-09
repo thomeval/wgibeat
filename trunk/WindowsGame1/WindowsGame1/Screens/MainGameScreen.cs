@@ -8,7 +8,7 @@ using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Drawing.Sets;
 using WGiBeat.Notes;
-using Action=WGiBeat.Managers.Action;
+using Action = WGiBeat.Managers.Action;
 
 namespace WGiBeat.Screens
 {
@@ -16,10 +16,10 @@ namespace WGiBeat.Screens
     {
 
         //TODO: Consider refactoring beatlines into Sets.
-        private List<BeatlineNote> _beatlineNotes;
+
 
         private double _phraseNumber;
-        private double _hitoffset;
+        private double _debugLastHitOffset;
         private double _songLoadDelay;
 
         private LifeBarSet _lifeBarSet;
@@ -27,6 +27,7 @@ namespace WGiBeat.Screens
         private HitsBarSet _hitsbarSet;
         private ScoreSet _scoreSet;
         private NoteJudgementSet _noteJudgementSet;
+        private BeatlineSet _beatlineSet;
         private NoteBar[] _notebars;
         private int _playerCount;
         private GameSong _gameSong;
@@ -34,7 +35,8 @@ namespace WGiBeat.Screens
         private int _displayState;
         private double _transitionTime;
 
-        public MainGameScreen(GameCore core) : base(core)
+        public MainGameScreen(GameCore core)
+            : base(core)
         {
         }
 
@@ -42,19 +44,21 @@ namespace WGiBeat.Screens
         {
             _playerCount = 4;
             _notebars = new NoteBar[_playerCount];
-            _lifeBarSet = new LifeBarSet (Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
-            _levelbarSet = new LevelBarSet(Core.Metrics, Core.Players,Core.Settings.Get<GameType>("CurrentGameType"));
+            _lifeBarSet = new LifeBarSet(Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
+            _levelbarSet = new LevelBarSet(Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
             _hitsbarSet = new HitsBarSet(Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
             _scoreSet = new ScoreSet(Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
             _noteJudgementSet = new NoteJudgementSet(Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
+            _beatlineSet = new BeatlineSet(Core.Metrics, Core.Players, Core.Settings.Get<GameType>("CurrentGameType"));
+
+            _beatlineSet.NoteMissed += BeatlineNoteMissed;
             _displayState = 0;
             _songLoadDelay = 0.0;
             _confidence = 0;
             _lastBlazeCheck = 0;
-            _lastBeatlineNote = -1;
             for (int x = 0; x < _playerCount; x++)
             {
-        
+
                 if (Core.Players[x] == null)
                 {
                     Core.Players[x] = new Player
@@ -64,7 +68,7 @@ namespace WGiBeat.Screens
                                               Life = 50,
                                               Score = 0,
                                               PlayDifficulty =
-                                                  (Difficulty) Core.Settings.Get<int>("P" + (x + 1) + "Difficulty"),
+                                                  (Difficulty)Core.Settings.Get<int>("P" + (x + 1) + "Difficulty"),
                                               Streak = 0
                                           };
                 }
@@ -75,7 +79,7 @@ namespace WGiBeat.Screens
 
                 }
 
-                _notebars[x] = NoteBar.CreateNoteBar((int) Core.Players[x].Level, 0);
+                _notebars[x] = NoteBar.CreateNoteBar((int)Core.Players[x].Level, 0);
                 _notebars[x].SetPosition(Core.Metrics["NoteBar", x]);
 
             }
@@ -84,22 +88,29 @@ namespace WGiBeat.Screens
             Core.Songs.LoadSong(_gameSong);
 
             _startTime = null;
-
-            _beatlineNotes = new List<BeatlineNote>();
-            _notesToRemove = new List<BeatlineNote>();
+            _beatlineSet.EndingPhrase = GetEndingTimeInPhrase();
+            _beatlineSet.Bpm = _gameSong.Bpm;
+            _beatlineSet.SetSpeeds();
 
             if (Core.Cookies.ContainsKey("MenuMusicChannel"))
             {
-                Core.Songs.StopChannel( (int)Core.Cookies["MenuMusicChannel"]);
+                Core.Songs.StopChannel((int)Core.Cookies["MenuMusicChannel"]);
                 Core.Cookies.Remove("MenuMusicChannel");
             }
             base.Initialize();
         }
 
+        private void BeatlineNoteMissed(object sender, EventArgs e)
+        {
+            var player = ((Beatline)sender).Id;
+            _lifeBarSet.AdjustLife(
+    _noteJudgementSet.AwardJudgement(BeatlineNoteJudgement.MISS, player, 0, 0), player);
+        }
+
         #region Updating, Beatline maintenance
 
-        private Timer _maintenanceThread;
         private int _timeCheck;
+
         public override void Update(GameTime gameTime)
         {
 
@@ -109,16 +120,11 @@ namespace WGiBeat.Screens
                 _startTime = new TimeSpan(gameTime.TotalRealTime.Ticks);
             }
 
-            if (_maintenanceThread == null)
-            {
-                _maintaining = false;
-                _maintenanceThread = new Timer(DoMaintenance,null,0,200);
-            }
-
-
             CheckForEndings(gameTime);
+            SyncSong();
             _phraseNumber = 1.0 * (gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay - _gameSong.Offset * 1000) / 1000 * (_gameSong.Bpm / 240);
             _timeCheck = (int)(gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay);
+            _beatlineSet.MaintainBeatlineNotes(_phraseNumber);
             MaintainBlazings();
             base.Update(gameTime);
         }
@@ -138,7 +144,7 @@ namespace WGiBeat.Screens
                             Core.Players[x].Life -= 25;
                             Core.Players[x].IsBlazing = false;
                         }
-                    }       
+                    }
                 }
             }
         }
@@ -156,28 +162,20 @@ namespace WGiBeat.Screens
                 {
                     SongManager.SaveToFile(_gameSong);
                 }
-                _maintenanceThread.Dispose();
-                _maintenanceThread = null;
+
                 Core.ScreenTransition("Evaluation");
             }
         }
 
         private int _confidence;
-        private bool _maintaining;
-        private void DoMaintenance(object state)
-        {
-            if (_maintaining)
-            {
-                return;
-            }
 
-            _maintaining = true;
+        private void SyncSong()
+        {
+
             if (_displayState != 0)
             {
                 return;
             }
-
-            MaintainBeatlineNotes();
 
             //FMOD cannot reliably determine the position of the song. Using GetCurrentSongProgress()
             //as the default timing mechanism makes it jerky and slows the game down, so we attempt
@@ -187,54 +185,12 @@ namespace WGiBeat.Screens
             if ((_confidence < 15) && (Math.Abs(delay) > 25))
             {
                 _confidence = 0;
-                _songLoadDelay += delay/2.0;
+                _songLoadDelay += delay / 2.0;
             }
             else if (_confidence < 15)
             {
                 _confidence++;
             }
-
-            _maintaining = false;
-        }
-
-        private List<BeatlineNote> _notesToRemove;
-        private double _lastBeatlineNote = -1;
-
-        private void MaintainBeatlineNotes()
-        {
-
-            Monitor.Enter(_beatlineNotes);
-            foreach (BeatlineNote bn in _beatlineNotes)
-            {
-                if ((CalculateHitOffset(bn) < -200) || (Core.Players[bn.Player].KO))
-                {
-                    _notesToRemove.Add(bn);
-                }
-            }
-
-            foreach (BeatlineNote bnr in _notesToRemove)
-            {
-                _beatlineNotes.Remove(bnr);
-                if ((!bnr.Hit) && (!Core.Players[bnr.Player].KO))
-                {
-                    _lifeBarSet.AdjustLife(_noteJudgementSet.AwardJudgement(BeatlineNoteJudgement.MISS, bnr.Player, 0,0), bnr.Player);
-                }
-            }
-
-            if ((_phraseNumber + 2 > _lastBeatlineNote) && (_lastBeatlineNote + 1 < GetEndingTimeInPhrase()))
-            {
-                _lastBeatlineNote++;
-                for (int x = 0; x < _playerCount; x++)
-                {
-                    if ((!Core.Players[x].KO) && (Core.Players[x].Playing))
-                    {
-                        _beatlineNotes.Add(new BeatlineNote {Player = x, Position = _lastBeatlineNote});
-                    }
-                }
-            }
-
-            Monitor.Exit(_beatlineNotes);
-            _notesToRemove.Clear();
         }
 
         private double GetEndingTimeInPhrase()
@@ -295,10 +251,10 @@ namespace WGiBeat.Screens
                 case Action.P4_BEATLINE:
                     HitBeatline(3);
                     break;
-                    case Action.P1_SELECT:
+                case Action.P1_SELECT:
                     ToggleBlazing(0);
                     break;
-                    case Action.P2_SELECT:
+                case Action.P2_SELECT:
                     ToggleBlazing(1);
                     break;
                 case Action.P3_SELECT:
@@ -356,8 +312,6 @@ namespace WGiBeat.Screens
                     }
                     break;
                 case Action.SYSTEM_BACK:
-                    _maintenanceThread.Dispose();
-                    _maintenanceThread = null;
                     Core.Songs.StopSong();
                     Core.ScreenTransition("SongSelect");
                     break;
@@ -392,8 +346,8 @@ namespace WGiBeat.Screens
             else if (_notebars[player].CurrentNote() != null)
             {
                 _notebars[player].ResetAll();
-                
-                _lifeBarSet.AdjustLife(Core.Players[player].MissedArrow(),player);
+
+                _lifeBarSet.AdjustLife(Core.Players[player].MissedArrow(), player);
             }
         }
 
@@ -404,56 +358,36 @@ namespace WGiBeat.Screens
             {
                 return;
             }
-            if (NearestBeatlineNote(player) == null)
-            {
-                return;
-            }
 
-            Monitor.Enter(_beatlineNotes);
-            _hitoffset = CalculateHitOffset(player);
-            var nearestBeatline = NearestBeatlineNote(player);
 
-            //Prevent the player from missing beatlines very far away by mistake
-            //such as double tapping the beatline key.
-            if (_hitoffset > 900)
+            _debugLastHitOffset = _beatlineSet.CalculateHitOffset(player, _phraseNumber);
+
+            var complete = _notebars[player].AllCompleted();
+            var judgement = _beatlineSet.AwardJudgement(_phraseNumber, player, true);
+            if (judgement == BeatlineNoteJudgement.COUNT)
             {
-                Monitor.Exit(_beatlineNotes);
                 return;
             }
 
             //Check if all notes in the notebar have been hit and act accordingly.
-
-            if (_notebars[player].AllCompleted())
+            if (complete)
             {
                 //Increment Player Level
                 Core.Players[player].Momentum += MomentumIncreaseByDifficulty(Core.Players[player].PlayDifficulty);
-
-                //Award Score
-                AwardJudgement(nearestBeatline, player);
-                //Create next note bar.
-                int numArrow = (int)Core.Players[player].Level;
-                int numReverse = (Core.Players[player].IsBlazing) ? (int)Core.Players[player].Level / 2 : 0;
-                _notebars[player] = NoteBar.CreateNoteBar(numArrow, numReverse, Core.Metrics["NoteBar", player]);
-
             }
-            else
-            {
-                AwardJudgement(null, player);
-                //Create next note bar.
-                int numArrow = (int)Core.Players[player].Level;
-                int numReverse = (Core.Players[player].IsBlazing) ? (int)Core.Players[player].Level / 2 : 0;
-                _notebars[player] = NoteBar.CreateNoteBar(numArrow, numReverse, Core.Metrics["NoteBar", player]);
-            }
+            //Award Score
+            ApplyJudgement(judgement, player);
+            //Create next note bar.
+            int numArrow = (int)Core.Players[player].Level;
+            int numReverse = (Core.Players[player].IsBlazing) ? (int)Core.Players[player].Level / 2 : 0;
+            _notebars[player] = NoteBar.CreateNoteBar(numArrow, numReverse, Core.Metrics["NoteBar", player]);
 
-            //Mark the beatlinenote as hit (it will be displayed differently and hold position)
-            if (nearestBeatline != null)
-            {
-                nearestBeatline.Hit = true;
-                nearestBeatline.DisplayPosition = CalculateAbsoluteBeatlinePosition(nearestBeatline.Position, nearestBeatline.Player);
-                nearestBeatline.Position = _phraseNumber + 0.3;
-            }
+        }
 
-            Monitor.Exit(_beatlineNotes);
+        private void ApplyJudgement(BeatlineNoteJudgement judgement, int player)
+        {
+            var lifeAdjust = _noteJudgementSet.AwardJudgement(judgement, player, _notebars[player].NumberCompleted() + _notebars[player].NumberReverse(), _notebars[player].Notes.Count - _notebars[player].NumberCompleted());
+            _lifeBarSet.AdjustLife(lifeAdjust, player);
         }
 
         #endregion
@@ -479,46 +413,7 @@ namespace WGiBeat.Screens
 
         #region Beatline and Judgement
 
-        private int CalculateAbsoluteBeatlinePosition(double position, int player)
-        {
-            return (int)((position - _phraseNumber) * Core.Players[player].BeatlineSpeed * BEAT_ZOOM_DISTANCE);
-        }
 
-
-        private void AwardJudgement(BeatlineNote nearest, int player)
-        {
-            double offset = (nearest == null) ? 9999 : CalculateHitOffset(nearest);
-            offset = Math.Abs(offset);
-            BeatlineNoteJudgement result = BeatlineNoteJudgement.FAIL;
-
-            for (int x = 0; x < _noteJudgementSet.JudgementCutoffs.Count(); x++ )
-            {
-                if (offset < _noteJudgementSet.JudgementCutoffs[x])
-                {
-                    result = (BeatlineNoteJudgement) x;
-                    break;
-                }
-            }
-
-            var lifeAdjust = _noteJudgementSet.AwardJudgement(result, player, _notebars[player].NumberCompleted() + _notebars[player].NumberReverse(), _notebars[player].Notes.Count - _notebars[player].NumberCompleted());
-            _lifeBarSet.AdjustLife(lifeAdjust, player);
-
-        }
-
-        private BeatlineNote NearestBeatlineNote(int player)
-        {
-            return (from e in _beatlineNotes where (e.Player == player) && (!e.Hit) orderby CalculateHitOffset(e) select e).FirstOrDefault();
-        }
-
-        private double CalculateHitOffset(int player)
-        {
-            return CalculateHitOffset(NearestBeatlineNote(player));
-        }
-
-        private double CalculateHitOffset(BeatlineNote bln)
-        {
-            return (bln.Position - _phraseNumber) * 1000 * 240 / _gameSong.Bpm;
-        }
 
         #endregion
 
@@ -529,9 +424,9 @@ namespace WGiBeat.Screens
 
             var ts = new TimeSpan(0, 0, 0, 0, (int)timeLeft);
 
-            return ts.Minutes + ":" + String.Format("{0:D2}", Math.Max(0,ts.Seconds));
+            return ts.Minutes + ":" + String.Format("{0:D2}", Math.Max(0, ts.Seconds));
         }
-        
+
         private bool SongPassed(GameTime gameTime)
         {
             var timeElapsed = gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds;
@@ -539,13 +434,13 @@ namespace WGiBeat.Screens
 
             return timeLeft <= 0.0;
         }
-       
+
         #region Drawing
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             DrawBackground(spriteBatch);
-            DrawBorders(spriteBatch); 
+            DrawBorders(spriteBatch);
 
             //Draw the notebars.
             for (int x = 0; x < 4; x++)
@@ -561,20 +456,19 @@ namespace WGiBeat.Screens
             _levelbarSet.Draw(spriteBatch);
             _hitsbarSet.Draw(spriteBatch);
             _scoreSet.Draw(spriteBatch);
-            _noteJudgementSet.Draw(spriteBatch,_phraseNumber);
+            _noteJudgementSet.Draw(spriteBatch, _phraseNumber);
+            _beatlineSet.Draw(spriteBatch, _phraseNumber);
 
-           
             if (_phraseNumber < 0)
             {
                 DrawCountdowns(spriteBatch);
             }
-            
-            DrawBeat(spriteBatch);
+
             DrawKOIndicators(spriteBatch);
-            DrawSongInfo(spriteBatch,gameTime);
+            DrawSongInfo(spriteBatch, gameTime);
             DrawClearIndicators(spriteBatch);
             DrawText(spriteBatch);
-            
+
         }
 
         private void DrawBackground(SpriteBatch spriteBatch)
@@ -590,7 +484,7 @@ namespace WGiBeat.Screens
             background.Draw(spriteBatch);
         }
 
-        private readonly double[] _threshholds = {-1.00, -0.75, -0.5, -0.25, 0.0};
+        private readonly double[] _threshholds = { -1.00, -0.75, -0.5, -0.25, 0.0 };
         private double _lastBlazeCheck;
 
         private void DrawCountdowns(SpriteBatch spriteBatch)
@@ -612,12 +506,12 @@ namespace WGiBeat.Screens
                 {
                     if (_phraseNumber < _threshholds[y])
                     {
-                        countdownSpriteMap.ColorShading.A = (byte) Math.Min(255,(_threshholds[y] -  _phraseNumber) * 255 * 4);
+                        countdownSpriteMap.ColorShading.A = (byte)Math.Min(255, (_threshholds[y] - _phraseNumber) * 255 * 4);
                         countdownSpriteMap.Draw(spriteBatch, y, 200, 60, Core.Metrics["Countdown", x]);
                         break;
                     }
                 }
-  
+
             }
         }
 
@@ -678,22 +572,22 @@ namespace WGiBeat.Screens
 
             if (Core.Settings.Get<bool>("SongDebug"))
             {
-            DrawDebugText(spriteBatch);
+                DrawDebugText(spriteBatch);
             }
         }
 
         private void DrawDebugText(SpriteBatch spriteBatch)
         {
 
-                spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("BPM: {0:F2}", _gameSong.Bpm),
-                       Core.Metrics["SongDebugBPM", 0], Color.Black);
-                spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Offset: {0:F3}", _gameSong.Offset),
-                        Core.Metrics["SongDebugOffset", 0], Color.Black);
-                spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + String.Format("{0:F3}", _phraseNumber), Core.Metrics["SongDebugPhrase", 0], Color.Black);
-                spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Hitoffset: {0:F3}",  _hitoffset),
-                           Core.Metrics["SongDebugHitOffset",0], Color.Black);
-                spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Length: {0:F3}", _gameSong.Length),
-               Core.Metrics["SongDebugLength", 0], Color.Black);
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("BPM: {0:F2}", _gameSong.Bpm),
+                   Core.Metrics["SongDebugBPM", 0], Color.Black);
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Offset: {0:F3}", _gameSong.Offset),
+                    Core.Metrics["SongDebugOffset", 0], Color.Black);
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + String.Format("{0:F3}", _phraseNumber), Core.Metrics["SongDebugPhrase", 0], Color.Black);
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Hitoffset: {0:F3}", _debugLastHitOffset),
+                       Core.Metrics["SongDebugHitOffset", 0], Color.Black);
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Length: {0:F3}", _gameSong.Length),
+           Core.Metrics["SongDebugLength", 0], Color.Black);
         }
 
         private void DrawBorders(SpriteBatch spriteBatch)
@@ -711,108 +605,9 @@ namespace WGiBeat.Screens
             brush.Render(spriteBatch);
 
             brush.ClearVectors();
-            
-        }
-        //How distant the beatline notes are from each other.
-        //Increase this to make them move faster and more apart.
-        const int BEAT_ZOOM_DISTANCE = 200;
-        private void DrawBeat(SpriteBatch spriteBatch)
-        {
-
-            //Prevent notes from being drawn outside the beatline base.
-            //Higher means longer visibility range.
-            const double BEAT_VISIBILITY = 1.1;
-            DrawBeatlinePulses(spriteBatch);
-            DrawBeatlineBases(spriteBatch);
-
-            var markerSprite = new SpriteMap
-            {
-                Columns = 1,
-                Rows = 4,
-                SpriteTexture = TextureManager.Textures["beatMarkers"],
-
-            };
-            Monitor.Enter(_beatlineNotes);
-            foreach (BeatlineNote bn in _beatlineNotes)
-            {
-                var noteSpeed = Core.Players[bn.Player].BeatlineSpeed;
-                var markerBeatOffset = (int)(noteSpeed * BEAT_ZOOM_DISTANCE * (_phraseNumber - bn.Position));
-
-                //Dont render notes outside the visibility range.
-                if (((-1 * markerBeatOffset) > BEAT_ZOOM_DISTANCE * BEAT_VISIBILITY) && (!bn.Hit))
-                {
-                    continue;
-                }
-
-                var markerPosition = new Vector2{Y = (int)Core.Metrics["BeatlineBarBase", bn.Player].Y + 3};
-                if (bn.Hit)
-                {
-                    markerPosition.X = (int)Core.Metrics["BeatlineBarBase", bn.Player].X + 28 + (bn.DisplayPosition);
-                    markerSprite.ColorShading.A = 128;
-                }
-                else
-                {
-                    markerPosition.X = (int)Core.Metrics["BeatlineBarBase", bn.Player].X + 28 -(markerBeatOffset);     
-                
-                    if (markerBeatOffset > 0)
-                    {
-                        markerSprite.ColorShading.A = (byte)(Math.Max(0, 255 - 10 * markerBeatOffset));
-                    }
-                    else
-                    {
-                        markerSprite.ColorShading.A = 255;
-                    }
-                }
-                markerSprite.Draw(spriteBatch,bn.Player,5,34,markerPosition);
-
-            }
-            Monitor.Exit(_beatlineNotes);
-        }
-
-        private void DrawBeatlinePulses(SpriteBatch spriteBatch)
-        {
-            var pulseSprite = new Sprite
-            {
-                SpriteTexture = TextureManager.Textures["BeatFlame"]
-            };
-
-            pulseSprite.Width = (int) (80*(Math.Ceiling(_phraseNumber) - (_phraseNumber)));
-            pulseSprite.ColorShading.A = (byte)(pulseSprite.Width * 255 / 80);
-            pulseSprite.Height = 42;
-
-            for (int x = 0; x < _playerCount; x++)
-            {
-                if ((!Core.Players[x].Playing) || (Core.Players[x].KO))
-                {
-                    continue;
-                }
-                pulseSprite.SetPosition((int) Core.Metrics["BeatlineBarBase", x].X + 30,
-                                        (int) Core.Metrics["BeatlineBarBase", x].Y - 5);
-                pulseSprite.DrawTiled(spriteBatch, 83 - pulseSprite.Width, 0, pulseSprite.Width, 34);
-                
-            }
-        }
-
-        private void DrawBeatlineBases(SpriteBatch spriteBatch)
-        {
-            for (int x = 0; x < _playerCount; x++)
-            {
-                if (!Core.Players[x].Playing)
-                {
-                    continue;
-                }
-                var baseSprite = new Sprite
-                {
-                    Height = 40,
-                    Width = 250,
-                    SpriteTexture = TextureManager.Textures["beatMeter"],
-                    X = (int)Core.Metrics["BeatlineBarBase", x].X,
-                    Y = (int)Core.Metrics["BeatlineBarBase", x].Y
-                };
-                baseSprite.Draw(spriteBatch);
-            }
 
         }
+
         #endregion
     }
 }
