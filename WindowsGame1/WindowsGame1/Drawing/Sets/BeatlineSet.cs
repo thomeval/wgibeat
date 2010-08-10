@@ -81,7 +81,6 @@ namespace WGiBeat.Drawing.Sets
 
                 for (int y = 0; y < missedNotes; y++)
                 {
-
                     if (NoteMissed != null)
                     {
                         NoteMissed(_beatlines[x], null);

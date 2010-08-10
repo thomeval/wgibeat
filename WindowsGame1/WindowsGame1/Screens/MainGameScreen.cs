@@ -136,6 +136,7 @@ namespace WGiBeat.Screens
                         {
                             Core.Players[x].Life -= 25;
                             Core.Players[x].IsBlazing = false;
+                            _notebars[x].CancelReverse();
                         }
                     }
                 }
@@ -347,7 +348,7 @@ namespace WGiBeat.Screens
             _debugLastHitOffset = _beatlineSet.CalculateHitOffset(player, _phraseNumber);
 
             var complete = _notebars[player].AllCompleted();
-            var judgement = _beatlineSet.AwardJudgement(_phraseNumber, player, true);
+            var judgement = _beatlineSet.AwardJudgement(_phraseNumber, player, complete);
             if (judgement == BeatlineNoteJudgement.COUNT)
             {
                 return;

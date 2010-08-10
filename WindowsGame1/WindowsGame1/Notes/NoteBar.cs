@@ -50,6 +50,14 @@ namespace WGiBeat.Notes
                 note.Completed = true;
             }
         }
+
+        public void CancelReverse()
+        {
+            foreach (Note note in Notes)
+            {
+                note.Reverse = false;
+            }
+        }
         public static NoteBar CreateNoteBar(int numNotes, int numReverse)
         {
             return CreateNoteBar(numNotes, numReverse, 0, 0);
