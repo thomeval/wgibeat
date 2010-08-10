@@ -126,9 +126,18 @@ namespace WGiBeat.Screens
 
         private void DrawSongText(SpriteBatch spriteBatch)
         {
-            TextureManager.DrawString(spriteBatch,SongList[_selectedIndex].Song.Title, "DefaultFont",Core.Metrics["SelectedSongTitle",0],Color.Black, FontAlign.CENTER);
-            TextureManager.DrawString(spriteBatch, SongList[_selectedIndex].Song.Subtitle, "DefaultFont", Core.Metrics["SelectedSongSubtitle", 0], Color.Black, FontAlign.CENTER );
+            var currentSong = SongList[_selectedIndex].Song;
 
+            if (!String.IsNullOrEmpty(currentSong.Title))
+            {
+                TextureManager.DrawString(spriteBatch, currentSong.Title, "DefaultFont",
+                                          Core.Metrics["SelectedSongTitle", 0], Color.Black, FontAlign.CENTER);
+            }
+            if (!String.IsNullOrEmpty(currentSong.Subtitle))
+            {
+                TextureManager.DrawString(spriteBatch, currentSong.Subtitle, "DefaultFont",
+                                          Core.Metrics["SelectedSongSubtitle", 0], Color.Black, FontAlign.CENTER);
+            }
         }
 
         private void DrawWaveForm(SpriteBatch spriteBatch)
