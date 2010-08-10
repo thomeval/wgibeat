@@ -12,8 +12,8 @@
 
 -Option screen. Title. Menu design, animated.
 -Winamp style spectrum analyser (transferred)
--Highscore display: Difficulty icons dont fit (Hard/Insane)
--Highscore display: Darken grade area (S grades are hard to read)
+-Highscore display: Difficulty icons dont fit (Hard/Insane) 90% Done
+-Highscore display: Darken grade area (S grades are hard to read) Done.
 -New grade icons?
 -Change ModeSelect icons, and use modeOptions.png instead
 -Replace graphics to use correct font
