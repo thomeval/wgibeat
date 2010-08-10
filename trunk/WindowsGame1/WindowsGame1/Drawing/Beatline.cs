@@ -186,20 +186,17 @@ namespace WGiBeat.Drawing
                 return BeatlineNoteJudgement.COUNT;
             }
             BeatlineNoteJudgement result = BeatlineNoteJudgement.FAIL;
-            if (!completed)
+            if (completed)
             {
-                return result;
-            }
-
-            for (int x = 0; x < NoteJudgementSet.JudgementCutoffs.Count(); x++)
-            {
-                if (offset < NoteJudgementSet.JudgementCutoffs[x])
+                for (int x = 0; x < NoteJudgementSet.JudgementCutoffs.Count(); x++)
                 {
-                    result = (BeatlineNoteJudgement)x;
-                    break;
+                    if (offset < NoteJudgementSet.JudgementCutoffs[x])
+                    {
+                        result = (BeatlineNoteJudgement) x;
+                        break;
+                    }
                 }
             }
-
             //Mark the beatlinenote as hit (it will be displayed differently and hold position)
             if (nearest != null)
             {

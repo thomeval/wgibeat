@@ -131,8 +131,9 @@ namespace WGiBeat
 
         public double MissedBeat()
         {
+
             Momentum = (long)(Momentum * 0.8);
-            Judgements[(int) BeatlineNoteJudgement.MISS]++;
+           // Judgements[(int) BeatlineNoteJudgement.MISS]++;
             var result = 0;
             switch (PlayDifficulty)
             {
