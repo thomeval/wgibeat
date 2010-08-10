@@ -1,6 +1,8 @@
 ﻿WGiBeat - v0.1 Readme
-By thomeval and xcepticzp
+By thomeval(thomeval@gmail.com) and xcepticzp(xcepticzoki@gmail.com)
 --------------------------------------------
+
+
 
 Setup
 --------------------------------------------
@@ -12,6 +14,7 @@ http://www.microsoft.com/downloads/details.aspx?FamilyID=53867a2a-e249-4560-8011
 
 .NET Framework 3.5 SP1
 http://www.microsoft.com/downloads/details.aspx?FamilyID=ab99342f-5d1a-413d-8319-81da479ab0d7&DisplayLang=en
+
 
 
 Usage and default keys
@@ -39,11 +42,16 @@ To start a game, first press select Start Game from the main menu, then press St
 When all players are ready, the select mode screen is displayed. Choose which mode to play, and press start again.
 When the mode is chosen, a list of available songs is displayed. Select the song to be played, and press start again.
 
+
+
 Gameplay
 ----------------------------------------------
 The basic gameplay involves entering a sequence of arrows, followed by pressing the Beatline key as accurately to the beat of the song being played as possible. First press the corresponding directions displayed as arrows. When entered correctly, each will turn green.
+
 Once all arrows are green, press the Beatline key, on the appropriate beat of the song. A gauge near the middle of the screen will assist in determining when to do this. Only attempt to hit the beatline key once all arrows have been entered correctly.
+
 Depending on your accuracy in hitting the Beatline key, you will be awarded points, and a new set of arrows will be displayed. Repeat the above for every sequence shown.
+
 Entering note sequences correctly, followed by correctly hitting the Beatline key accurately will also cause the life gauge to increase. Making mistakes (such as hitting the wrong arrow, or missing the beatline), will cause the life gauge to decrease.
 If the life gauge ever reaches zero during a song, you fail. Avoid emptying the life gauge to pass the song. An evaluation of your performace is given at the end of the song.
 
