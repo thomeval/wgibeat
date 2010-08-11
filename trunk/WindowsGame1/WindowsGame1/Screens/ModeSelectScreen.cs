@@ -123,24 +123,6 @@ namespace WGiBeat.Screens
                 _optionsSpriteMap.Draw(spriteBatch, x, 248, 248, posX + 11, posY + 11);
                 posX += 335;
             }
-            
-
-            //TODO: Redo this. Recommended to merge with modeOptions.png
-            var icons = new Sprite
-            {
-                Height = 160,
-                SpriteTexture = TextureManager.Textures["modeSingleIcon"],
-                Width = 210,
-                X = posX - (335 * 2) + 30,
-                Y = posY + 30
-            };
-
-            icons.Draw(spriteBatch);
-            icons.SpriteTexture = TextureManager.Textures["modeCoopIcon"];
-            icons.X = icons.X + 335;
-
-            icons.Draw(spriteBatch);
-
 
         }
 
