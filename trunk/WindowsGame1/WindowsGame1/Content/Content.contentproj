@@ -268,18 +268,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\modeCoopIcon.png">
-      <Name>modeCoopIcon</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\modeSingleIcon.png">
-      <Name>modeSingleIcon</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Textures\modeSelectHeader.png">
       <Name>modeSelectHeader</Name>
       <Importer>TextureImporter</Importer>
