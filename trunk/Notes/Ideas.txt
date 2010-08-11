@@ -4,7 +4,7 @@
 -Deleting key links.
 -Resetting keys. (Done)
 
--Icons for mode select screen. Other stuff in that screen.
+-Icons for mode select screen. Other stuff in that screen. 66% done
 
 -Song select screen. items. Bar at bottom. / top (mode select, too). Meter for song speed.
 
