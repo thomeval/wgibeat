@@ -13,7 +13,6 @@ namespace WGiBeat.Drawing
 
         public Color ColorShading;
         public Texture2D SpriteTexture;
-        public float Rotation { get; set; }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
