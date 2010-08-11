@@ -110,19 +110,7 @@ namespace WGiBeat.Drawing.Sets
         private void DrawStreakCounters(SpriteBatch spriteBatch)
         {
             Color streakColor = new Color(10, 123, 237, 255);
-            if (_streakNumbers == null)
-            {
-                _streakNumbers = new GraphicNumber
-                {
-                    SpacingAdjustment = -1,
-                    SpriteMap = new SpriteMap
-                    {
-                        Columns = 3,
-                        Rows = 4,
-                        SpriteTexture = TextureManager.Textures["streakNumbers"]
-                    }
-                };
-            }
+    
             for (int x = 0; x < 4; x++)
             {
                 if (_players[x].Streak > 1)
