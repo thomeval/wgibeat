@@ -22,11 +22,18 @@ namespace WGiBeat.Drawing
         private List<Double> yCoef { get; set; }
 
         private static Double CORNER_SNAP_LENGTH = 0.01; //Or something.
+
+        public PathFollowerParticle()
+        {
+            
+        }
         
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            
+            Particle.Draw(spriteBatch);
+
+            //update position or whatever.
         }
 
         public void RecalcSegments()
