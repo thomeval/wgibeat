@@ -8,10 +8,10 @@
 
 -Song select screen. items. Bar at bottom. / top (mode select, too). Meter for song speed.
 
--Evaluation screen, lot of work. (Done?)
+-Evaluation screen, lot of work. 80% Done
 
 -Option screen. Title. Menu design, animated.
--Winamp style spectrum analyser (transferred)
+-Winamp style spectrum analyser (transferred) (WIP)
 -Highscore display: Difficulty icons dont fit (Hard/Insane) 90% Done
 -Highscore display: Darken grade area (S grades are hard to read) Done.
 -New difficulty icons?
