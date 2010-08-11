@@ -24,6 +24,7 @@ namespace WGiBeat.Managers
 
         public void SetHighScoreEntry(int songHashCode, GameType gameType, long score, int grade, Difficulty difficulty)
         {
+            gameType = TranslateGameType(gameType);
             if (!_highScoreEntries.ContainsKey(songHashCode))
             {
                 _highScoreEntries[songHashCode] = new HighScoreEntry();
@@ -36,6 +37,7 @@ namespace WGiBeat.Managers
 
         private int DetermineHighScore(int songHashCode, Player[] players, GameType gameType)
         {
+            gameType = TranslateGameType(gameType);
             var entry = GetHighScoreEntry(songHashCode);
             long highest;
 
@@ -87,6 +89,7 @@ namespace WGiBeat.Managers
         /// beat the high score, or the player index (0 to 3) if a single player beat the high score.
         public int UpdateHighScore(int SongHashCode, Player[] players, GameType gameType, int[] grades)
         {
+            gameType = TranslateGameType(gameType);
             var result = DetermineHighScore(SongHashCode, players, gameType);
 
             switch (result)
@@ -106,6 +109,17 @@ namespace WGiBeat.Managers
                     break;
             }
             return result;
+        }
+
+        public static GameType TranslateGameType(GameType gameType)
+        {
+            switch (gameType)
+            {
+                case GameType.TEAM:
+                    return GameType.NORMAL;
+                    default:
+                    return gameType;
+            }
         }
 
         private static Difficulty LowestDifficulty(Player[] players)

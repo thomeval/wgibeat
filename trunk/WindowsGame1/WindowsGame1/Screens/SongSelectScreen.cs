@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
+using WGiBeat.Managers;
 using Action=WGiBeat.Managers.Action;
 
 namespace WGiBeat.Screens
@@ -198,7 +199,7 @@ namespace WGiBeat.Screens
         {
             _scoreBaseSprite.SetPosition(Core.Metrics["SongHighScoreBase", 0]);
             _scoreBaseSprite.Draw(spriteBatch);
-            var cgt = (GameType) Core.Cookies["CurrentGameType"];
+            var cgt = HighScoreManager.TranslateGameType((GameType) Core.Cookies["CurrentGameType"]);
             var highScoreEntry = GetDisplayedHighScore();
             var displayedScore = (highScoreEntry == null) ? 0 : highScoreEntry.Scores[cgt];
             var displayedGrade = (highScoreEntry == null) ? -1 : highScoreEntry.Grades[cgt];

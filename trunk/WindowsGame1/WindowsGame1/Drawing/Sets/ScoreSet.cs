@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing.Sets
@@ -13,10 +10,22 @@ namespace WGiBeat.Drawing.Sets
         private readonly MetricsManager _metrics;
         private readonly GameType _gameType;
         private SpriteMap _iconSpriteMap;
+        private SpriteMap _coopBaseSprite;
+        private Sprite _teamBaseSprite;
+        private SpriteMap _individualBaseSprite;
 
         private ScoreSet()
         {
             _displayedScores = new long[4];
+        }
+
+        public ScoreSet(MetricsManager metrics, Player[] players, GameType type)
+            : this()
+        {
+            _metrics = metrics;
+            _players = players;
+            _gameType = type;
+            InitSprites();
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -29,17 +38,35 @@ namespace WGiBeat.Drawing.Sets
 
         }
 
+        private void InitSprites()
+        {
+            _iconSpriteMap = new SpriteMap
+            {
+                Columns = 1,
+                Rows = (int)Difficulty.COUNT + 1,
+                SpriteTexture = TextureManager.Textures["playerDifficulties"]
+            };
+
+            _coopBaseSprite = new SpriteMap
+            {
+                SpriteTexture = TextureManager.Textures["scoreBaseCombined"],
+                Columns = 1,
+                Rows = 1
+            };
+            _teamBaseSprite = new Sprite
+            {
+                //SpriteTexture = TextureManager.Textures["scoreBaseTeam"],
+            };
+            _individualBaseSprite = new SpriteMap
+            {
+                SpriteTexture = TextureManager.Textures["scoreBase"],
+                Columns = 1,
+                Rows = 4
+            };
+        }
         private void DrawPlayerDifficulties(SpriteBatch spriteBatch)
         {
-            if (_iconSpriteMap == null)
-            {
-                _iconSpriteMap = new SpriteMap
-                                        {
-                                            Columns = 1,
-                                            Rows = (int) Difficulty.COUNT + 1,
-                                            SpriteTexture = TextureManager.Textures["playerDifficulties"]
-                                        };
-            }
+
             for (int x = 0; x < 4; x++)
             {
                 if (! _players[x].Playing)
@@ -53,51 +80,68 @@ namespace WGiBeat.Drawing.Sets
 
         private void DrawCombinedScores(SpriteBatch spriteBatch)
         {
-            long scoreText = 0;
-
-            var baseSprite = new SpriteMap
-            {
-                SpriteTexture = TextureManager.Textures["scoreBaseCombined"],
-                Columns = 1,
-                Rows = 1
-            };
-
             switch (_gameType)
             {
                 case GameType.NORMAL:
                     return;
-                    case GameType.COOPERATIVE:
-                    for (int x = 0; x < 4; x++ )
-                    {
-                        if (_players[x].Playing)
-                        {
-                            scoreText +=_displayedScores[x];
-                        }
-                    }
-                        break;
+                case GameType.COOPERATIVE:
+                    DrawCoopCombinedScore(spriteBatch);
+                    break;
             }
+        }
+
+        private void DrawCoopCombinedScore(SpriteBatch spriteBatch)
+        {
+            long scoreText = 0;
+            for (int x = 0; x < 4; x++)
+            {
+                if (_players[x].Playing)
+                {
+                    scoreText += _displayedScores[x];
+                }
+            }
+
             for (int x = 0; x < 2; x++)
             {
-                if ((_players[2*x].Playing) || (_players[(2*x) + 1].Playing))
+                if ((_players[2 * x].Playing) || (_players[(2 * x) + 1].Playing))
                 {
 
-                   
-
-                    baseSprite.Draw(spriteBatch, 0, 240, 40, _metrics["ScoreCombinedBase", x]);
-                    TextureManager.DrawString(spriteBatch,"" + scoreText, "LargeFont",
-                                           _metrics["ScoreCombinedText", x], Color.White,FontAlign.RIGHT);
+                    _coopBaseSprite.Draw(spriteBatch, 0, 240, 40, _metrics["ScoreCombinedBase", x]);
+                    TextureManager.DrawString(spriteBatch, "" + scoreText, "LargeFont",
+                                           _metrics["ScoreCombinedText", x], Color.White, FontAlign.RIGHT);
                 }
+            }
+        }
+        private void DrawTeamCombinedScores(SpriteBatch spriteBatch)
+        {
+            long scoreTextA = 0, scoreTextB = 0;
+            for (int x = 0; x < 4; x++)
+            {
+                if (_players[x].Playing)
+                {
+                    if (_players[x].Team == 1)
+                    {
+                        scoreTextA += _displayedScores[x];
+                    }
+                    else if (_players[x].Team == 2)
+                    {
+                        scoreTextB += _displayedScores[x];
+                    }
+                }
+            }
+
+            for (int x = 0; x < 2; x++)
+            {
+                _teamBaseSprite.SetPosition(_metrics["ScoreCombinedBase",x]);
+                    TextureManager.DrawString(spriteBatch, "" + scoreTextA, "LargeFont",
+                                           _metrics["ScoreTeamAText", x], Color.White, FontAlign.LEFT);
+                    TextureManager.DrawString(spriteBatch, "" + scoreTextB, "LargeFont",
+                           _metrics["ScoreTeamBText", x], Color.White, FontAlign.RIGHT);
             }
         }
 
         private void DrawIndividualScores(SpriteBatch spriteBatch)
         {
-            var baseSprite = new SpriteMap
-            {
-                SpriteTexture = TextureManager.Textures["scoreBase"],
-                Columns = 1,
-                Rows = 4
-            };
 
             for (int x = 0; x < 4; x++)
             {
@@ -106,18 +150,10 @@ namespace WGiBeat.Drawing.Sets
                 {
                     continue;
                 }
-                baseSprite.Draw(spriteBatch, x, 240, 40, _metrics["ScoreBase", x]);
+                _individualBaseSprite.Draw(spriteBatch, x, 240, 40, _metrics["ScoreBase", x]);
                 TextureManager.DrawString(spriteBatch, "" + _displayedScores[x], "LargeFont",
                                       _metrics["ScoreText", x], Color.White,FontAlign.RIGHT);
             }
-        }
-
-        public ScoreSet(MetricsManager metrics, Player[] players, GameType type)
-            :this()
-        {
-            _metrics = metrics;
-            _players = players;
-            _gameType = type;
         }
 
         private void AdjustDisplayedScores()
