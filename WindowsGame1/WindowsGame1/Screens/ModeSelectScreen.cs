@@ -107,6 +107,9 @@ namespace WGiBeat.Screens
             var posX = (int) Core.Metrics["ModeSelectOptions", 0].X;
             var posY = (int) Core.Metrics["ModeSelectOptions", 0].Y;
 
+            if (_selectedGameType == 2)
+                posX -= 335;
+
             for (int x = 0; x < (int) GameType.COUNT; x++)
             {
                 int selected = (x == _selectedGameType) ? 1 : 0;
