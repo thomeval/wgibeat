@@ -240,14 +240,21 @@ namespace WGiBeat.Screens
                 case GameType.NORMAL:
                     return "";
                     case GameType.COOPERATIVE:
-                    if (PlayerCount() > 1)
+                    if (PlayerCount() < 2)
                     {
-                        return "";
+                        return "Cannot play with only one player.";
                     }
-                    return "Cannot play with only one player.";
+                    break;
+                    case GameType.TEAM:
+                    if (PlayerCount() < 3)
+                    {
+                        return "Cannot play with fewer than three players.";
+                    }
+                    break;
                 default:
-                    return "";
+                    break;
             }
+            return "";
         }
         private void DoAction()
         {
