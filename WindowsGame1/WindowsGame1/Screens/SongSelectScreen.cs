@@ -200,7 +200,7 @@ namespace WGiBeat.Screens
             _scoreBaseSprite.SetPosition(Core.Metrics["SongHighScoreBase", 0]);
             _scoreBaseSprite.Draw(spriteBatch);
             var cgt = HighScoreManager.TranslateGameType((GameType) Core.Cookies["CurrentGameType"]);
-            var highScoreEntry = GetDisplayedHighScore();
+            var highScoreEntry = GetDisplayedHighScore(cgt);
             var displayedScore = (highScoreEntry == null) ? 0 : highScoreEntry.Scores[cgt];
             var displayedGrade = (highScoreEntry == null) ? -1 : highScoreEntry.Grades[cgt];
             var displayedDifficulty = (highScoreEntry == null) ? -1 : (int) highScoreEntry.Difficulties[cgt] + 1;
@@ -218,7 +218,7 @@ namespace WGiBeat.Screens
         }
 
 
-        private HighScoreEntry GetDisplayedHighScore()
+        private HighScoreEntry GetDisplayedHighScore(GameType gameType)
         {
             Core.HighScores.CurrentSong = SongList[_selectedIndex].Song;
             var highScoreEntry =
@@ -227,7 +227,7 @@ namespace WGiBeat.Screens
             {
                 return null;
             }
-            if (!highScoreEntry.Scores.ContainsKey((GameType) Core.Cookies["CurrentGameType"]))
+            if (!highScoreEntry.Scores.ContainsKey(gameType))
             {
                 return null;
             }
@@ -271,8 +271,6 @@ namespace WGiBeat.Screens
 
             DrawBackground(spriteBatch);
 
-
-
             var midpoint = Core.Metrics["SongListMidpoint", 0];
             SongList[_selectedIndex].SetPosition(midpoint);
             SongList[_selectedIndex].IsSelected = true;
@@ -304,7 +302,6 @@ namespace WGiBeat.Screens
                 SongList[index].Draw(spriteBatch);
             }
         }
-
 
         public override void PerformAction(Action action)
         {

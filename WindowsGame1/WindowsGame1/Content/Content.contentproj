@@ -222,13 +222,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\modeOptionBase.png">
-      <Name>modeOptionBase</Name>
+    <Compile Include="Textures\ModeOptionBase.png">
+      <Name>ModeOptionBase</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Textures\modeOptions.png">
-      <Name>modeOptions</Name>
+    <Compile Include="Textures\ModeOptions.png">
+      <Name>ModeOptions</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -299,8 +299,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\arrows.png">
-      <Name>arrows</Name>
+    <Compile Include="Textures\Arrows.png">
+      <Name>Arrows</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -417,6 +417,13 @@
   <ItemGroup>
     <Compile Include="Textures\RestrictionBorder.png">
       <Name>RestrictionBorder</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\ScoreBaseTeam.png">
+      <Name>ScoreBaseTeam</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

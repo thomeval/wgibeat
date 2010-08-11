@@ -55,7 +55,7 @@ namespace WGiBeat.Drawing.Sets
             };
             _teamBaseSprite = new Sprite
             {
-                //SpriteTexture = TextureManager.Textures["scoreBaseTeam"],
+                SpriteTexture = TextureManager.Textures["ScoreBaseTeam"]
             };
             _individualBaseSprite = new SpriteMap
             {
@@ -86,6 +86,9 @@ namespace WGiBeat.Drawing.Sets
                     return;
                 case GameType.COOPERATIVE:
                     DrawCoopCombinedScore(spriteBatch);
+                    break;
+                    case GameType.TEAM:
+                    DrawTeamCombinedScores(spriteBatch);
                     break;
             }
         }
@@ -133,6 +136,7 @@ namespace WGiBeat.Drawing.Sets
             for (int x = 0; x < 2; x++)
             {
                 _teamBaseSprite.SetPosition(_metrics["ScoreCombinedBase",x]);
+                _teamBaseSprite.Draw(spriteBatch);
                     TextureManager.DrawString(spriteBatch, "" + scoreTextA, "LargeFont",
                                            _metrics["ScoreTeamAText", x], Color.White, FontAlign.LEFT);
                     TextureManager.DrawString(spriteBatch, "" + scoreTextB, "LargeFont",

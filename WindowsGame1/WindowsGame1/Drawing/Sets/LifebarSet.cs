@@ -31,6 +31,7 @@ namespace WGiBeat.Drawing.Sets
             switch (_gameType)
             {
                 case GameType.NORMAL:
+                case GameType.TEAM:
                     for (int x = 0; x < 4; x++)
                     {
                         _lifeBars[x] = new NormalLifeBar {Height = 30, Width = 260, PlayerID = x, Parent = this};
@@ -50,6 +51,7 @@ namespace WGiBeat.Drawing.Sets
             switch (_gameType)
             {
                 case GameType.NORMAL:
+                case GameType.TEAM:
                     AdjustLifeNormal(amount, player);
                     break;
                 case GameType.COOPERATIVE:
@@ -122,6 +124,7 @@ namespace WGiBeat.Drawing.Sets
             switch (_gameType)
             {
                 case GameType.NORMAL:
+                case GameType.TEAM:
                     for (int x = 0; x < 4; x++)
                     {
                         if (Players[x].Playing)
