@@ -8,6 +8,6 @@
        // SYNC = 3,
        // VS_CPU = 4,
        // BATTLE = 5,
-        COUNT = 2
+        COUNT = 3
     }
 }

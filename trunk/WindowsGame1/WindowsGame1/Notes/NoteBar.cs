@@ -119,7 +119,7 @@ namespace WGiBeat.Notes
             barSpriteRight.Draw(sb);
             barSpriteMiddle.Draw(sb);
 
-            var sprite = new SpriteMap { SpriteTexture = TextureManager.Textures["arrows"], Columns = 4, Rows = 3 };
+            var sprite = new SpriteMap { SpriteTexture = TextureManager.Textures["Arrows"], Columns = 4, Rows = 3 };
             foreach (Note note in Notes)
             {
 

@@ -49,14 +49,14 @@ namespace WGiBeat.Screens
             {
                 Columns = 2,
                 Rows = 1,
-                SpriteTexture = TextureManager.Textures["modeOptionBase"]
+                SpriteTexture = TextureManager.Textures["ModeOptionBase"]
             };
 
             _optionsSpriteMap = new SpriteMap
             {
                 Columns = 1,
                 Rows = (int)GameType.COUNT,
-                SpriteTexture = TextureManager.Textures["modeOptions"]
+                SpriteTexture = TextureManager.Textures["ModeOptions"]
             };
 
 

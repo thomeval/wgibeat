@@ -1,2 +1,4 @@
-1-Escape causes menu song to stop playing. In KeySCreen. I checked all references to Core.Songs.StopSong(), but I can't find the problem. //REMOVED.
-2.Loading settings file with song volumed at 0 causes crash.
+====Zoran====
+1) PlayerDifficultiesFrame graphic has improper width (must be divisible by 4)
+
+====Thome====
