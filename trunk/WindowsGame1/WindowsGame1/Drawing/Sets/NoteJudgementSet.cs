@@ -12,8 +12,6 @@ namespace WGiBeat.Drawing.Sets
         private readonly GameType _gameType;
         private double _phraseNumber;
 
-        private GraphicNumber _streakNumbers;
-
         public static readonly int[] JudgementCutoffs = {20, 50, 125, 250,1500};
         public NoteJudgementSet()
         {
