@@ -107,13 +107,13 @@ namespace WGiBeat.Screens
             var posX = (int) Core.Metrics["ModeSelectOptions", 0].X;
             var posY = (int) Core.Metrics["ModeSelectOptions", 0].Y;
 
-            if (_selectedGameType == 2)
-                posX -= 335;
+         //   if (_selectedGameType == 2)
+          //      posX -= 335;
 
             for (int x = 0; x < (int) GameType.COUNT; x++)
             {
                 int selected = (x == _selectedGameType) ? 1 : 0;
-                _optionBaseSpriteMap.Draw(spriteBatch, selected, 270, 270, posX, posY);
+                _optionBaseSpriteMap.Draw(spriteBatch, selected, 250, 250, posX, posY);
 
                 if (GameTypeAllowed((GameType)x) == "")
                 {
@@ -123,8 +123,8 @@ namespace WGiBeat.Screens
                 {
                     _optionsSpriteMap.ColorShading.A = 64;
                 }
-                _optionsSpriteMap.Draw(spriteBatch, x, 248, 248, posX + 11, posY + 11);
-                posX += 335;
+                _optionsSpriteMap.Draw(spriteBatch, x, 228, 228, posX + 10, posY + 10);
+                posX += 255;
             }
 
         }
@@ -233,7 +233,7 @@ namespace WGiBeat.Screens
                     case GameType.TEAM:
                     if (PlayerCount() < 3)
                     {
-                        return "Cannot play with fewer than three players.";
+                        return "Requires at least three players.";
                     }
                     break;
                 default:
