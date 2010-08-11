@@ -1,8 +1,6 @@
-﻿WGiBeat - v0.1 Readme
-By thomeval(thomeval@gmail.com) and xcepticzp(xcepticzoki@gmail.com)
+﻿WGiBeat - v0.2 Readme
+By thomeval(thomeval[_at_]gmail[_dot_]com) and xcepticzp(xcepticzoki[_at_]gmail[_dot_]com)
 --------------------------------------------
-
-
 
 Setup
 --------------------------------------------
