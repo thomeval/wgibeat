@@ -14,6 +14,8 @@ namespace WGiBeat.Drawing
         public int Height { get; set; }
         public int Width { get; set; }
 
+        public float Rotation { get; set; }
+
         public virtual void SetPosition(Vector2 position)
         {
             X = (int) position.X;
