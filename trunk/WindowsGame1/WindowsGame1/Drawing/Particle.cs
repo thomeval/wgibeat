@@ -9,6 +9,11 @@ namespace WGiBeat.Drawing
     class Particle : DrawableObject
     {
 
+        public Particle()
+        {
+            
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             throw new NotImplementedException();
