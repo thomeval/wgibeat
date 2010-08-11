@@ -15,17 +15,16 @@ namespace WGiBeat.Screens
         private int _highScorePlayer;
         private const int NUM_EVALUATIONS = 19;
 
-        private Sprite background = new Sprite();
-
         private SineSwayParticleField _field = new SineSwayParticleField();
+        private Sprite _background;
+        private SpriteMap _gradeSpriteMap;
+        private Sprite _headerSprite;
+        private Sprite _maxSprite;
+        private Sprite _recordSprite;
+        private Sprite _gradeBaseSprite;
 
         public EvaluationScreen(GameCore core) : base(core)
         {
-            background.Height = Core.Window.ClientBounds.Height;
-            background.Width = core.Window.ClientBounds.Width;
-            background.SpriteTexture = TextureManager.Textures["allBackground"];
-            background.X = 0;
-            background.Y = 0;
         }
 
         #region Overrides
@@ -33,7 +32,55 @@ namespace WGiBeat.Screens
         {
             CalculateGrades();
             SaveHighScore();
+            InitSprites();
             base.Initialize();
+        }
+
+        private void InitSprites()
+        {
+
+            _headerSprite = new Sprite
+            {
+                SpriteTexture = TextureManager.Textures["evaluationHeader"]
+            };
+            _background = new Sprite
+                              {
+                                  Height = Core.Window.ClientBounds.Height,
+                                  Width = Core.Window.ClientBounds.Width,
+                                  SpriteTexture = TextureManager.Textures["allBackground"]
+                              };
+
+            _maxSprite = new Sprite
+            {
+                Width = 160,
+                SpriteTexture = TextureManager.Textures["evaluationMaxBase"]
+            };
+            _recordSprite = new Sprite
+            {
+                SpriteTexture = TextureManager.Textures["evaluationHighScore"],
+                Height = 25,
+                Width = 130
+            };
+            _gradeBaseSprite = new Sprite
+            {
+                Height = 90,
+                Width = 160,
+                SpriteTexture = TextureManager.Textures["evaluationGradeBase"]
+            };
+
+            _gradeSpriteMap = new SpriteMap
+            {
+                Columns = 1,
+                Rows = NUM_EVALUATIONS,
+                SpriteTexture = TextureManager.Textures["evaluationGrades"]
+            };
+        }
+
+        private void SaveHighScore()
+        {
+            //Evaluation screen needs this setting to be able to display the high score indicator.
+            _highScorePlayer = Core.HighScores.UpdateHighScore(Core.Settings.Get<int>("LastSongPlayed"), Core.Players, (GameType)Core.Cookies["CurrentGameType"], _grades);
+            Core.HighScores.SaveToFile("Scores.conf");
         }
 
         public override void PerformAction(Action action)
@@ -59,6 +106,7 @@ namespace WGiBeat.Screens
             switch ((GameType)Core.Cookies["CurrentGameType"])
             {
                 case GameType.NORMAL:
+                case GameType.TEAM:
                     for (int x = 0; x < 4; x++ )
                     {
                         _grades[x] = CalculateGradeIndex(x);
@@ -119,7 +167,6 @@ namespace WGiBeat.Screens
             return 100.0 * playerScore / maxPossible;
         }
 
-
         private double CalculateTeamPercentage()
         {
             double totalPerc = 0;
@@ -140,15 +187,8 @@ namespace WGiBeat.Screens
 
         #region Drawing
 
-        private void DrawBackground(SpriteBatch spriteBatch)
-        {
-            background.Draw(spriteBatch);
-            _field.Draw(spriteBatch);
-        }
-
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-
             DrawBackground(spriteBatch);
             DrawBorders(spriteBatch);
             DrawJudgementLines(spriteBatch);
@@ -156,6 +196,12 @@ namespace WGiBeat.Screens
             DrawGrades(spriteBatch);
             DrawModeSpecific(spriteBatch);
             DrawMisc(spriteBatch,gameTime);
+        }
+
+        private void DrawBackground(SpriteBatch spriteBatch)
+        {
+            _background.Draw(spriteBatch);
+            _field.Draw(spriteBatch);
         }
 
         private void DrawModeSpecific(SpriteBatch spriteBatch)
@@ -166,46 +212,39 @@ namespace WGiBeat.Screens
                    break;
                case GameType.COOPERATIVE:
                    var totalScore = (from e in Core.Players where e.Playing select e.Score).Sum();
-                   spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "Team:",
-                                   Core.Metrics["EvaluationLabelTotalScore", 0], Color.Black);
-                   spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + totalScore,
-                                   Core.Metrics["EvaluationTotalScore", 0], Color.Black);
-
-                   var gradeSpriteMap = new SpriteMap
-                   {
-                       Columns = 1,
-                       Rows = NUM_EVALUATIONS,
-                       SpriteTexture = TextureManager.Textures["evaluationGrades"]
-                   };
+                   TextureManager.DrawString(spriteBatch, "Team:","DefaultFont",
+                                   Core.Metrics["EvaluationLabelTotalScore", 0], Color.Black,FontAlign.LEFT);
+                   TextureManager.DrawString(spriteBatch, "" + totalScore,"DefaultFont",
+                                   Core.Metrics["EvaluationTotalScore", 0], Color.Black,FontAlign.LEFT);
 
                        int gradeIndex = _grades[0];
-                       gradeSpriteMap.Draw(spriteBatch, gradeIndex, 150, 52, Core.Metrics["EvaluationTotalGrade", 0]);
+                       _gradeSpriteMap.Draw(spriteBatch, gradeIndex, 150, 52, Core.Metrics["EvaluationTotalGrade", 0]);
 
+                   break;
+                    case GameType.TEAM:
+                   var teamAScore = (from e in Core.Players where (e.Playing && e.Team == 1) select e.Score).Sum();
+                   var teamBScore = (from e in Core.Players where (e.Playing && e.Team == 2) select e.Score).Sum();
+                    TextureManager.DrawString(spriteBatch,"Blue: " + teamAScore, "DefaultFont",Core.Metrics["EvaulationTeamScore",0],Color.Black,FontAlign.LEFT);
+                    TextureManager.DrawString(spriteBatch, "Red: " + teamBScore, "DefaultFont", Core.Metrics["EvaulationTeamScore", 1], Color.Black, FontAlign.LEFT);
                    break;
            }
         }
 
         private void DrawMisc(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            var headerSprite = new Sprite
-            {
-                SpriteTexture = TextureManager.Textures["evaluationHeader"]
-            };
-
             for (int x = 0; x < 4; x++)
             {
                 if (!Core.Players[x].Playing)
                 {
                     continue;
                 }
-                headerSprite.SetPosition(Core.Metrics["EvaluationHeader", x]);
-                headerSprite.Draw(spriteBatch);
+                _headerSprite.SetPosition(Core.Metrics["EvaluationHeader", x]);
+                _headerSprite.Draw(spriteBatch);
             }
 
-
             DrawHighScoreNotification(spriteBatch, gameTime);
-            spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Press Start to continue.",
-                                   Core.Metrics["EvaluationInstruction", 0], Color.Black);
+            TextureManager.DrawString(spriteBatch, "Press Start to continue.","LargeFont",
+                                   Core.Metrics["EvaluationInstruction", 0], Color.Black,FontAlign.LEFT);
         }
 
         private void DrawMax(SpriteBatch spriteBatch)
@@ -217,14 +256,8 @@ namespace WGiBeat.Screens
                     continue;
                 }
 
-                var maxSprite = new Sprite
-                {
-
-                    Width = 160,
-                    SpriteTexture = TextureManager.Textures["evaluationMaxBase"]
-                };
-                maxSprite.SetPosition(Core.Metrics["EvaluationMaxBase", x]);
-                maxSprite.Draw(spriteBatch);
+                _maxSprite.SetPosition(Core.Metrics["EvaluationMaxBase", x]);
+                _maxSprite.Draw(spriteBatch);
 
                 spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + Core.Players[x].MaxHits,
 Core.Metrics["EvaluationMaxHits", x], Color.Black);
@@ -260,39 +293,16 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black);
 
         private void DrawHighScoreNotification(SpriteBatch spriteBatch, GameTime gameTime)
         {
-
                 if (_highScorePlayer != -1)
                 {
-                    var recordSprite = new Sprite
-                                           {
-                                               SpriteTexture = TextureManager.Textures["evaluationHighScore"],
-                                               Height = 25,
-                                               Width = 130
-                                           };
-
-                    recordSprite.ColorShading.A = (byte) (255*Math.Abs(Math.Sin(gameTime.TotalRealTime.TotalSeconds * 2)));
-                    recordSprite.SetPosition(Core.Metrics["EvaluationHighScore", _highScorePlayer]);
-                    recordSprite.Draw(spriteBatch);
+                    _recordSprite.ColorShading.A = (byte) (255*Math.Abs(Math.Sin(gameTime.TotalRealTime.TotalSeconds * 2)));
+                    _recordSprite.SetPosition(Core.Metrics["EvaluationHighScore", _highScorePlayer]);
+                    _recordSprite.Draw(spriteBatch);
                 }
         }
 
         private void DrawGrades(SpriteBatch spriteBatch)
         {
-
-            var gradeBaseSprite = new Sprite
-            {
-                Height = 90,
-                Width = 160,
-                SpriteTexture = TextureManager.Textures["evaluationGradeBase"]
-            };
-
-
-            var gradeSpriteMap = new SpriteMap
-            {
-                Columns = 1,
-                Rows = NUM_EVALUATIONS,
-                SpriteTexture = TextureManager.Textures["evaluationGrades"]
-            };
 
             for (int x = 0; x < Core.Players.Count(); x++)
             {
@@ -300,12 +310,11 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black);
                 {
                     continue;
                 }
-                gradeBaseSprite.SetPosition(Core.Metrics["EvaluationGradeBase", x]);
-                gradeBaseSprite.Draw(spriteBatch);
 
-                int gradeIndex = CalculateGradeIndex(x);
-
-                gradeSpriteMap.Draw(spriteBatch, gradeIndex, 150, 52, Core.Metrics["EvaluationGrade",x]);
+                _gradeBaseSprite.SetPosition(Core.Metrics["EvaluationGradeBase", x]);
+                _gradeBaseSprite.Draw(spriteBatch);
+                var gradeIndex = CalculateGradeIndex(x);
+                _gradeSpriteMap.Draw(spriteBatch, gradeIndex, 150, 52, Core.Metrics["EvaluationGrade",x]);
             }
         }
 
@@ -328,11 +337,5 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black);
 
         #endregion
 
-        private void SaveHighScore()
-        {
-            //Evaluation screen needs this setting to be able to display the high score indicator.
-            _highScorePlayer = Core.HighScores.UpdateHighScore(Core.Settings.Get<int>("LastSongPlayed"), Core.Players, (GameType)Core.Cookies["CurrentGameType"], _grades);
-            Core.HighScores.SaveToFile("Scores.conf");
-        }
     }
 }

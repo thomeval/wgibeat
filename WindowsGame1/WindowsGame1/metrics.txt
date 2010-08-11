@@ -14,7 +14,7 @@ ScoreCombinedBase=[260,5][260,555];
 ScoreText=[230,10][780,10][230,560][780,560];
 ScoreCombinedText=[485,10][485,560];
 ScoreTeamAText=[270,10][270,560];
-ScoreTeamBText=[520,10][520,560];
+ScoreTeamBText=[530,10][530,560];
 PlayerText=[10,10][750,10][10,560][750,560];
 KOIndicator=[50,40][475,40][50,405][450,405];
 NoteBar=[200,50][600,50][200,515][600,515];
@@ -52,6 +52,7 @@ EvaluationGradeBase=[220,130][620,130][220,455][620,455];
 EvaluationMaxBase=[220,50][620,50][220,375][620,375];
 EvaluationLabelTotalScore=[410,275];
 
+
 EvaluationIdeal=[120,50][520,50][120,375][520,375];
 EvaluationCool=[120,75][520,75][120,400][520,400];
 EvaluationOk=[120,100][520,100][120,425][520,425];
@@ -66,6 +67,7 @@ EvaluationMaxStreak=[265,85][665,85][265,410][665,410];
 EvaluationHighScore=[220,225][620,225][220,550][620,550][410,295];
 EvaluationTotalScore=[510,275];
 EvaluationTotalGrade=[610,275];
+EvaulationTeamScore=[410,275][410,300];
 
 #New Game;
 NewGameJoinNotification=[50,125][450,125][50,450][450,450];
