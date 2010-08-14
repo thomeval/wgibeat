@@ -123,7 +123,7 @@ namespace WGiBeat.Screens
                 {
                     _optionsSpriteMap.ColorShading.A = 64;
                 }
-                _optionsSpriteMap.Draw(spriteBatch, x, 228, 228, posX + 10, posY + 10);
+                _optionsSpriteMap.Draw(spriteBatch, x, 229, 229, posX + 10, posY + 10);
                 posX += 255;
             }
 
@@ -235,12 +235,22 @@ namespace WGiBeat.Screens
                     {
                         return "Requires at least three players.";
                     }
+                    if ((TeamCount(1) == 0 ) || TeamCount(2) == 0)
+                    {
+                        return "One team has no players.";
+                    }
                     break;
                 default:
                     break;
             }
             return "";
         }
+
+        private decimal TeamCount(int team)
+        {
+            return (from e in Core.Players where e.Playing && e.Team == team select e).Count();
+        }
+
         private void DoAction()
         {
             if (GameTypeAllowed((GameType) _selectedGameType) == "")

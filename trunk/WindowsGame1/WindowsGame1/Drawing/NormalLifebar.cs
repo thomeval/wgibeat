@@ -105,6 +105,7 @@ namespace WGiBeat.Drawing
         const double BEAT_FRACTION_SEVERITY = 0.3;
         private const int FRONT_WIDTH = 4;
         private int _blocksCount;
+
         public override void Draw(SpriteBatch spriteBatch, double gameTime)
         {
             _blocksCount = (int) Math.Ceiling((this.Width - 6)/4.00);
