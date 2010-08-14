@@ -136,13 +136,13 @@ namespace WGiBeat.Drawing.Sets
                     {
                         ((CoopLifeBar) _lifeBars[0]).SideLocationTop = false;
                         _lifeBars[0].SetPosition(_metrics["CoopLifeBar", 0]);
-                        _lifeBars[0].Draw(spriteBatch);
+                        _lifeBars[0].Draw(spriteBatch,gameTime);
                     }
                     if (Players[2].Playing || Players[3].Playing)
                     {
                         ((CoopLifeBar)_lifeBars[0]).SideLocationTop = true;
                         _lifeBars[0].SetPosition(_metrics["CoopLifeBar", 1]);
-                        _lifeBars[0].Draw(spriteBatch);
+                        _lifeBars[0].Draw(spriteBatch, gameTime);
                     }
                     break;
             }

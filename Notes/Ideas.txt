@@ -2,7 +2,6 @@
 -Icons for controller buttons
 -Path following particle.
 -Deleting key links.
--Resetting keys. (Done)
 
 -Icons for mode select screen. Other stuff in that screen. 66% done
 
@@ -23,24 +22,25 @@
 
 
 --Thome--
--Cooperative (Done), Team (in progress), Sync, Battle (0.3?), VS CPU game modes (0.3?)
+-Team (90% done), Sync (0.3), Battle (0.3?), VS CPU game modes (0.3?)
 -Player Profiles (Major - 0.3?)
 -On screen keyboard (needed for profiles)(Done)
--Song folders / tree (Major - 0.3?)
+-Song folders / tree (Major - 0.4?)
 -Song list sorting (0.3)
+-Better error message when prerequisites aren't installed (0.3)
+-Public domain music as a sample file? (0.3)
 
 -Cooperative bonuses (Streaks? Sync perfects?)
 -Chance / SP gameplay (Major - Needs graphics)
 -Lifebar updates for Cooperative mode
 
--Investigate timing / press lag
--Scalable beatline impact zone?
--Local copy of XNA DLL's to remove dependency? (Needs more than XNA.Framework and XNA.Framework.Game)
--Public domain music as a sample file?
+-Investigate timing / press lag (Better due to framerate fix, but is it perfect?)
+-Local copy of XNA DLL's to remove dependency? (Cancelled, too many dependencies)
+
 
 
 ---Roadmap (0.2)---
--Installer that works
+-Installer that works (In progress)
 -Licence (Done - BSD)
 -Webhosting (ezra)
 -Display subtitle on SongSelectScreen (Done)
@@ -49,6 +49,7 @@
 -Prevent coop mode with 1 player (Done)
 -Blocky Life bar, black background. (Done)
 -Refactor beatlines (Done)
+-Resetting keys. (Done)
 Place items here as they are completed.
 
 
