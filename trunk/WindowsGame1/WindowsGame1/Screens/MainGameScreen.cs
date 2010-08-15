@@ -44,11 +44,11 @@ namespace WGiBeat.Screens
         {
             _playerCount = 4;
             _notebars = new NoteBar[_playerCount];
-            _lifeBarSet = new LifeBarSet(Core.Metrics, Core.Players, (GameType) Core.Cookies["CurrentGameType"]);
+            _lifeBarSet = new LifeBarSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
             _levelbarSet = new LevelBarSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
             _hitsbarSet = new HitsBarSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
             _scoreSet = new ScoreSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
-            _noteJudgementSet = new NoteJudgementSet(Core.Metrics,Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
+            _noteJudgementSet = new NoteJudgementSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
             _beatlineSet = new BeatlineSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
 
             _beatlineSet.NoteMissed += BeatlineNoteMissed;
@@ -84,7 +84,7 @@ namespace WGiBeat.Screens
 
             }
 
-            _gameSong = (GameSong) Core.Cookies["CurrentSong"];
+            _gameSong = (GameSong)Core.Cookies["CurrentSong"];
             Core.Songs.LoadSong(_gameSong);
 
             _startTime = null;
@@ -307,10 +307,17 @@ namespace WGiBeat.Screens
 
         private void ToggleBlazing(int player)
         {
-            if (Core.Players[player].Life > 100)
+            switch ((GameType)Core.Cookies["CurrentGameType"])
             {
-                Core.Players[player].IsBlazing = true;
+                case GameType.NORMAL:
+                case GameType.TEAM:
+                    if (Core.Players[player].Life > 100)
+                    {
+                        Core.Players[player].IsBlazing = true;
+                    }
+                    break;
             }
+
         }
 
         private void HitArrow(Action action, int player)
