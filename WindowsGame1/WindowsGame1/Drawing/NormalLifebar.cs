@@ -10,12 +10,12 @@ namespace WGiBeat.Drawing
         private double _displayedLife;
 
         private SpriteMap _frontPart;
-        private Sprite _sidePart;
+        private SpriteMap _sidePart;
         private Sprite _basePart;
         private Sprite _gridPart;
         private Sprite _overchargePart;
         private double _overchargeTextureOffset;
-
+        private Vector2 _sidePos;
 
         private const double OVERCHARGE_OFFSET_CLIP = 250;
         public int PlayerID { private get; set; }
@@ -29,29 +29,29 @@ namespace WGiBeat.Drawing
         private void InitSprites()
         {
 
-            int sidePosX, sidePosY;
+            _sidePos = new Vector2();
 
             switch (PlayerID)
             {
                 case 1:
                     //Top Right
-                    sidePosX = this.X + this.Width - 50;
-                    sidePosY = this.Y + this.Height;
+                    _sidePos.X = this.X + this.Width - 50;
+                    _sidePos.Y = this.Y + this.Height;
                     break;
                 case 2:
                     //Bottom Left
-                    sidePosX = this.X;
-                    sidePosY = this.Y - 25;
+                    _sidePos.X = this.X;
+                    _sidePos.Y = this.Y - 25;
                     break;
                 case 3:
                     //Bottom Right
-                    sidePosX = this.X + this.Width - 50;
-                    sidePosY = this.Y - 25;
+                    _sidePos.X = this.X + this.Width - 50;
+                    _sidePos.Y = this.Y - 25;
                     break;
                 default:
                     //Top Left
-                    sidePosX = this.X;
-                    sidePosY = this.Y + this.Height;
+                    _sidePos.X = this.X;
+                    _sidePos.Y = this.Y + this.Height;
                     break;
 
             }
@@ -65,11 +65,11 @@ namespace WGiBeat.Drawing
                 SpriteTexture = TextureManager.Textures["lifeBarBase"]
             };
 
-            _sidePart = new Sprite
+            _sidePart = new SpriteMap
                             {
-                                X = sidePosX,
-                                Y = sidePosY,
-                                SpriteTexture = TextureManager.Textures["lifeBarBaseSide"]
+                                SpriteTexture = TextureManager.Textures["lifeBarBaseSide"],
+                                Columns=1,
+                                Rows=2
                             };
 
             _frontPart = new SpriteMap
@@ -96,10 +96,6 @@ namespace WGiBeat.Drawing
                                 SpriteTexture = TextureManager.Textures["lifeBarGridBase"]
                             };
 
-            if (PlayerID > 1)
-            {
-                _sidePart.SpriteTexture = TextureManager.Textures["lifeBarBaseSideUp"];
-            }
         }
 
         const double BEAT_FRACTION_SEVERITY = 0.3;
@@ -123,7 +119,7 @@ namespace WGiBeat.Drawing
             }
 
             _basePart.Draw(spriteBatch);
-            _sidePart.Draw(spriteBatch);
+            _sidePart.Draw(spriteBatch,PlayerID/2,50,25,_sidePos);
 
             //Draw each block in sequence. Either in colour, or black depending on the Player's life.
             var highestBlock = GetHighestBlockLevel();
@@ -161,7 +157,7 @@ namespace WGiBeat.Drawing
             }
 
             _gridPart.Draw(spriteBatch);
-            DrawText(spriteBatch, _sidePart.X + 5, _sidePart.Y);
+            DrawText(spriteBatch, _sidePos);
             _overchargeTextureOffset = (_overchargeTextureOffset + 0.5) % OVERCHARGE_OFFSET_CLIP;
         }
 
@@ -183,11 +179,12 @@ namespace WGiBeat.Drawing
             Draw(spriteBatch, 0.0);
         }
 
-        private void DrawText(SpriteBatch spriteBatch, int x, int y)
+        private void DrawText(SpriteBatch spriteBatch,Vector2 position)
         {
-            var position = new Vector2(x, y);
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("{0:D3}", (int)Parent.Players[PlayerID].Life),
-                    position, Color.Black);
+            position.X += 25;
+            TextureManager.DrawString(spriteBatch, String.Format("{0:D3}", (int)Parent.Players[PlayerID].Life),
+                    "DefaultFont",position, Color.Black,FontAlign.CENTER);
+            position.X -= 25;
         }
 
 
