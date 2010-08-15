@@ -223,9 +223,9 @@ namespace WGiBeat.AudioSystem
             Sound mySound = GetOrCreateSound(soundPath);
             Channel myChannel = new Channel();
             
-            result = _fmodSystem.createSound(soundPath, MODE.CREATESTREAM, ref mySound);
+           // result = _fmodSystem.createStream(soundPath, MODE.SOFTWARE, ref mySound);
            
-            CheckFMODErrors(result);
+          //  CheckFMODErrors(result);
             result = _fmodSystem.playSound(CHANNELINDEX.FREE, mySound, false, ref myChannel);
             CheckFMODErrors(result);
             result = myChannel.setVolume(_masterVolume);
@@ -265,7 +265,7 @@ namespace WGiBeat.AudioSystem
             {
                 var mySound = new Sound();
 
-                var resultCode = _fmodSystem.createSound(soundPath, MODE.CREATESTREAM, ref mySound);
+                var resultCode = _fmodSystem.createStream(soundPath, MODE.SOFTWARE, ref mySound);
                 CheckFMODErrors(resultCode);
                 return mySound;
             }
