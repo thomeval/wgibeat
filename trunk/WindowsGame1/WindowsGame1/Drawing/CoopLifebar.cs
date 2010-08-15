@@ -12,7 +12,7 @@ namespace WGiBeat.Drawing
         private readonly double[] _displayedLife;
 
         private Sprite _basePart;
-        private Sprite _sidePart;
+        private SpriteMap _sidePart;
         private Sprite _gridPart;
         private SpriteMap _middlePart;
         private SpriteMap _frontPart;
@@ -39,7 +39,12 @@ namespace WGiBeat.Drawing
                 SpriteTexture = TextureManager.Textures["lifeBarGridBase"]
             };
 
-            _sidePart = new Sprite();
+            _sidePart = new SpriteMap()
+                            {
+                                SpriteTexture = TextureManager.Textures["lifeBarBaseSide"],
+                                Rows = 2,
+                                Columns = 1
+                            };
 
             _middlePart = new SpriteMap { Columns = 1, Rows = 2, SpriteTexture = TextureManager.Textures["coopLifebarMiddle"] };
 
@@ -124,9 +129,9 @@ namespace WGiBeat.Drawing
 
         private void DrawText(SpriteBatch spriteBatch, int player, int x, int y)
         {
-            var position = new Vector2(x, y);
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("{0:D3}", (int)Parent.Players[player].Life),
-                    position, Color.Black);
+            var position = new Vector2(x + 25, y);
+            TextureManager.DrawString(spriteBatch, String.Format("{0:D3}", (int)Parent.Players[player].Life),
+                    "DefaultFont",position, Color.Black,FontAlign.CENTER);
         }
 
         private void DrawTotal(SpriteBatch spriteBatch, int x, int y)
@@ -137,36 +142,37 @@ namespace WGiBeat.Drawing
         }
         private void DrawSides(SpriteBatch spriteBatch)
         {
-            //TODO: Refactor this
             int playerIdx = 0;
+            int posX, posY;
 
-            _sidePart.Y = this.Y + this.Height;
-            _sidePart.SpriteTexture = TextureManager.Textures["lifeBarBaseSide"];
-            //PlayerID appears on top for Player 3 and 4.
+            //Lifebar amounts appear on top for Player 3 and 4.
             if (SideLocationTop)
             {
-                _sidePart.SpriteTexture = TextureManager.Textures["lifeBarBaseSideUp"];
-                _sidePart.Y = this.Y - 25;
                 playerIdx += 2;
+                posY = this.Y - 25;
+            }
+            else
+            {
+                posY = this.Y + this.Height;
             }
 
             //Draw on the right side.
             if (Parent.Players[playerIdx + 1].Playing)
             {
-                _sidePart.X = this.X + this.Width - 50;
-                _sidePart.Draw(spriteBatch);
-                DrawText(spriteBatch, playerIdx + 1, _sidePart.X + 5, _sidePart.Y);
+                posX = this.X + this.Width - 50;
+                _sidePart.Draw(spriteBatch, playerIdx / 2, 50, 25, posX, posY);
+                DrawText(spriteBatch, playerIdx + 1, posX, posY);
             }
             //Draw on the left.
             if (Parent.Players[playerIdx].Playing)
             {
-                _sidePart.X = this.X;
-                _sidePart.Draw(spriteBatch);
-                DrawText(spriteBatch, playerIdx, _sidePart.X + 5, _sidePart.Y);
+                posX = this.X;
+                _sidePart.Draw(spriteBatch, playerIdx / 2, 50, 25, posX, posY);
+                DrawText(spriteBatch, playerIdx, posX, posY);
             }
 
-            _middlePart.Draw(spriteBatch, playerIdx / 2, 139, 25, (this.X + this.Width - 134) / 2, _sidePart.Y);
-            DrawTotal(spriteBatch, (this.X + this.Width - 40) / 2, _sidePart.Y);
+            _middlePart.Draw(spriteBatch, playerIdx / 2, 139, 25, (this.X + this.Width - 134) / 2, posY);
+            DrawTotal(spriteBatch, (this.X + this.Width - 40) / 2, posY);
 
         }
 
