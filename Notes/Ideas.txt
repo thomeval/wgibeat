@@ -19,7 +19,8 @@
 -Sparks along UI. Over the wires.
 -Graphics for On Screen Keyboard
 -Graphics for restriction messages and possibly mode descriptions
-
+-Graphics for chance / SP gameplay
+-Program Icon 
 
 --Thome--
 -Team (90% done), Sync (0.3), Battle (0.3?), VS CPU game modes (0.3?)
@@ -29,14 +30,14 @@
 -Song list sorting (0.3)
 -Better error message when prerequisites aren't installed (0.3)
 -Public domain music as a sample file? (0.3)
-
--Cooperative bonuses (Streaks? Sync perfects?)
+-Cooperative bonuses (Streaks? Sync perfects?) (0.3)
+-Enhance song loading (skip bad song files, display meaningful errors, etc) (0.3)
+-Loading screen for songs, etc (0.3)
+-Critical error handling (0.3)
 -Chance / SP gameplay (Major - Needs graphics)
--Lifebar updates for Cooperative mode
 
 -Investigate timing / press lag (Better due to framerate fix, but is it perfect?)
 -Local copy of XNA DLL's to remove dependency? (Cancelled, too many dependencies)
-
 
 
 ---Roadmap (0.2)---
@@ -50,7 +51,7 @@
 -Blocky Life bar, black background. (Done)
 -Refactor beatlines (Done)
 -Resetting keys. (Done)
-Place items here as they are completed.
+-Lifebar updates for Cooperative mode (Done)
 
 
 ---Roadmap (0.1)---
