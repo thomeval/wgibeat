@@ -4,8 +4,8 @@ By thomeval(thomeval[_at_]gmail[_dot_]com) and xcepticzp(xcepticzoki[_at_]gmail[
 
 Setup
 --------------------------------------------
-Before running this game, ensure that your system has the .NET Framework 3.5 SP 1, and XNA Framework Redistributable 3.1 installed. If either of them are not present, the game will fail to load.
-These can be downloaded from the links below:
+Before running this game, ensure that your system has the .NET Framework 3.5 SP 1, and XNA Framework Redistributable 3.1 installed. If either of them are not present, the game will fail to load. Note that the WGiBeat installer should detect whether these are installed for you. Due to size concerns, the .NET Framework is not included in the installer (a link will be provided instead). 
+Alternatively, the prerequisites can be downloaded from the links below:
 
 XNA Framework Redistributable 3.1:
 http://www.microsoft.com/downloads/details.aspx?FamilyID=53867a2a-e249-4560-8011-98eb3e799ef2&displaylang=en
