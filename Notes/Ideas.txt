@@ -35,6 +35,10 @@
 -Loading screen for songs, etc (0.3)
 -Critical error handling (0.3)
 -Chance / SP gameplay (Major - Needs graphics)
+-Rewrite options loading
+-Stop song if everyone KO'ed
+-"Performance" indicator (evaluation + ingame)
+-Lifebar graph
 
 -Investigate timing / press lag (Better due to framerate fix, but is it perfect?)
 -Local copy of XNA DLL's to remove dependency? (Cancelled, too many dependencies)
