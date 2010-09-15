@@ -155,7 +155,9 @@
     </Content>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
-    <Content Include="Legal.txt" />
+    <Content Include="Legal.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="metrics.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
