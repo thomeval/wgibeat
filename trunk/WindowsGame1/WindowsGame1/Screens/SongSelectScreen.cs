@@ -141,11 +141,15 @@ namespace WGiBeat.Screens
             }
         }
 
+        private const int WAVEFORM_POINTS = 512;
+        private const int WAVEFORM_CLUSTER_SIZE = 16;
+        private float[] maxLevels = new float[WAVEFORM_POINTS / WAVEFORM_CLUSTER_SIZE];
+        private float[] dropSpeed = new float[WAVEFORM_POINTS / WAVEFORM_CLUSTER_SIZE];
         private void DrawWaveForm(SpriteBatch spriteBatch)
         {
             if (_songPreviewManager.ChannelIndexCurrent != -1)
             {
-                float[] levels = Core.Songs.GetChannelWaveform(_songPreviewManager.ChannelIndexCurrent);
+                float[] levels = Core.Songs.GetChannelWaveform(_songPreviewManager.ChannelIndexCurrent, WAVEFORM_POINTS);
 
 
                 PrimitiveLine line = new PrimitiveLine(Core.GraphicsDevice);
@@ -160,22 +164,44 @@ namespace WGiBeat.Screens
                 line.ClearVectors();
                 int posX = 0;
 
-                float[] averageLevels = new float[levels.Count() / 32];
+                float[] averageLevels = new float[levels.Count() / WAVEFORM_CLUSTER_SIZE];
 
+                
                 for (int x = 0; x < averageLevels.Count(); x++ )
                 {
-                    averageLevels[x] = levels.Skip(32 * x).Take(32).Average();
-                }
-                    for (int x = 0; x < averageLevels.Count(); x++)
-                    {
+                    averageLevels[x] = levels.Skip(WAVEFORM_CLUSTER_SIZE * x).Take(WAVEFORM_CLUSTER_SIZE).Average();
+                   // averageLevels[x] = averageLevels[x]* 2 * (float) Math.Pow(x, 1.5);  
+                      averageLevels[x] = Math.Min(1, averageLevels[x] * 8 * (x + 1));
 
-                        averageLevels[x] = Math.Min(1, averageLevels[x] * 10 * (x + 1));
+
+                    if (averageLevels[x] >= maxLevels[x])
+                    {
+                        dropSpeed[x] = 0.0f;
+                    }
+                    else
+                    {
+                        dropSpeed[x] += 0.00025f;
+                    }
+                        maxLevels[x] = Math.Max(averageLevels[x], maxLevels[x] - dropSpeed[x]);
+
                         line.AddVector(new Vector2(posX, 0));
                         line.AddVector(new Vector2(posX, -70 * averageLevels[x]));
-                        line.AddVector(new Vector2(posX + 5, -70 * averageLevels[x]));
-                        posX += 5;
+                        line.AddVector(new Vector2(posX + 6, -70 * averageLevels[x]));
+                        posX += 6;
                     }
                 line.Render(spriteBatch);
+
+                posX = 0;
+                for (int x = 0; x < maxLevels.Count(); x++)
+                {
+                    line.ClearVectors();
+ 
+                    line.AddVector(new Vector2(posX, -70 * maxLevels[x]));
+                    line.AddVector(new Vector2(posX + 6, -70 * maxLevels[x]));
+                    line.Render(spriteBatch);
+                    posX += 6; 
+                    
+                }
             }
         }
         private void DrawBpmMeter(GameTime gameTime, SpriteBatch spriteBatch)

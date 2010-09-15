@@ -400,14 +400,14 @@ namespace WGiBeat.AudioSystem
         }
         #endregion
 
-        public float[] GetChannelWaveform(int index)
+        public float[] GetChannelWaveform(int index, int numPoints)
         {
-            var returnData = new float[1024];
+            var returnData = new float[numPoints];
 
             var resultCode = _fmodSystem.getChannel(index, ref tmpChannel);
             CheckFMODErrors(resultCode);
 
-            resultCode = tmpChannel.getSpectrum(returnData, 1024, 0,DSP_FFT_WINDOW.RECT);
+            resultCode = tmpChannel.getSpectrum(returnData, numPoints, 0, DSP_FFT_WINDOW.RECT);
             CheckFMODErrors(resultCode);
 
             return returnData;
