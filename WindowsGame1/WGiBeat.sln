@@ -11,8 +11,8 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{FD908542-5D88-4E20-8624-42FC33B8D250}.Debug|x86.ActiveCfg = Debug|x86
 		{FD908542-5D88-4E20-8624-42FC33B8D250}.Debug|x86.Build.0 = Debug|x86
-		{FD908542-5D88-4E20-8624-42FC33B8D250}.Release|x86.ActiveCfg = Release|x86
-		{FD908542-5D88-4E20-8624-42FC33B8D250}.Release|x86.Build.0 = Release|x86
+		{FD908542-5D88-4E20-8624-42FC33B8D250}.Release|x86.ActiveCfg = Debug|x86
+		{FD908542-5D88-4E20-8624-42FC33B8D250}.Release|x86.Build.0 = Debug|x86
 		{5AFCFB80-1A90-4EF0-902B-DB05C84134B8}.Debug|x86.ActiveCfg = Debug|x86
 		{5AFCFB80-1A90-4EF0-902B-DB05C84134B8}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
