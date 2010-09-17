@@ -25,8 +25,10 @@ namespace WGiBeat.Screens
         private BpmMeter _bpmMeter;
         private bool _resetSongTime = true;
         private double _songStartTime = 0;
-        private const int LISTITEMS_DRAWN = 6;
+        private int _songListDrawOffset = 0;
+        private const int LISTITEMS_DRAWN = 7;
         private const int NUM_EVALUATIONS = 19;
+        private const double SONG_CHANGE_SPEED = 0.9;
 
         private SineSwayParticleField _field = new SineSwayParticleField();
 
@@ -145,6 +147,8 @@ namespace WGiBeat.Screens
         private const int WAVEFORM_CLUSTER_SIZE = 16;
         private float[] maxLevels = new float[WAVEFORM_POINTS / WAVEFORM_CLUSTER_SIZE];
         private float[] dropSpeed = new float[WAVEFORM_POINTS / WAVEFORM_CLUSTER_SIZE];
+        private double _displayedBpm;
+
         private void DrawWaveForm(SpriteBatch spriteBatch)
         {
             if (_songPreviewManager.ChannelIndexCurrent != -1)
@@ -206,6 +210,15 @@ namespace WGiBeat.Screens
         }
         private void DrawBpmMeter(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            if (_displayedBpm == 0.0)
+            {
+                _displayedBpm = SongList[_selectedIndex].Song.Bpm;
+            }
+            else
+            {
+                var diff = _displayedBpm - SongList[_selectedIndex].Song.Bpm;
+                _displayedBpm -= diff* 0.2;
+            }
             if (_resetSongTime)
             {
                 _resetSongTime = false;
@@ -215,7 +228,7 @@ namespace WGiBeat.Screens
 
             _bpmMeter.Draw(spriteBatch);
 
-            TextureManager.DrawString(spriteBatch, String.Format("{0:000.0}", SongList[_selectedIndex].Song.Bpm), "TwoTechLarge",
+            TextureManager.DrawString(spriteBatch, String.Format("{0:000.0}", _displayedBpm), "TwoTechLarge",
                                    Core.Metrics["SelectedSongBPMDisplay", 0], Color.Black, FontAlign.RIGHT);
 
 
@@ -298,7 +311,9 @@ namespace WGiBeat.Screens
             DrawBackground(spriteBatch);
 
             var midpoint = Core.Metrics["SongListMidpoint", 0];
+            midpoint.Y += _songListDrawOffset;
             SongList[_selectedIndex].SetPosition(midpoint);
+           // 
             SongList[_selectedIndex].IsSelected = true;
             SongList[_selectedIndex].Draw(spriteBatch);
 
@@ -327,6 +342,9 @@ namespace WGiBeat.Screens
                 SongList[index].SetPosition(midpoint);
                 SongList[index].Draw(spriteBatch);
             }
+
+            midpoint.Y -= _songListDrawOffset;
+            _songListDrawOffset = (int) (_songListDrawOffset * SONG_CHANGE_SPEED);
         }
 
         public override void PerformAction(Action action)
@@ -375,12 +393,14 @@ namespace WGiBeat.Screens
                 _selectedIndex = SongList.Count - 1;
             }
             PlaySongPreview();
+            _songListDrawOffset -= 50;
         }
 
         private void MoveSelectionDown()
         {
             _selectedIndex = (_selectedIndex + 1)%SongList.Count();
             PlaySongPreview();
+            _songListDrawOffset += 50;
         }
 
         private void PlaySongPreview()
