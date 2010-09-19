@@ -44,7 +44,7 @@ namespace WGiBeat.Screens
             {
                 CreateSongList();
             }
-            //TODO: Move to Core.Cookies
+
             if (Core.Settings.Exists("LastSongPlayed"))
             {
                 var lastSongHash = Core.Settings.Get<int>("LastSongPlayed");

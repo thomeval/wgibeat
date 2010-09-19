@@ -22,7 +22,8 @@ namespace WGiBeat.Screens
         private Sprite _maxSprite;
         private Sprite _recordSprite;
         private Sprite _gradeBaseSprite;
-
+        private LifeGraph _lifeGraph;
+        private double _lastCycle;
         public EvaluationScreen(GameCore core) : base(core)
         {
         }
@@ -33,7 +34,34 @@ namespace WGiBeat.Screens
             CalculateGrades();
             SaveHighScore();
             InitSprites();
+            InitObjects();
             base.Initialize();
+        }
+
+        private void InitObjects()
+        {
+            _lifeGraph = new LifeGraph();
+            _lifeGraph.LineDrawer = new PrimitiveLine(Core.GraphicsDevice);
+            _lifeGraph.Min = 0;
+            _lifeGraph.Max = 200;
+            _lifeGraph.Location = -1;
+            for (int x = 0; x < 4; x++)
+            {
+                if (Core.Players[x].Playing)
+                {
+                    _lifeGraph[x] = Core.Players[x].LifeHistory.ToArray();
+                }
+                else
+                {
+                    _lifeGraph.Location = x;
+                }
+            }
+
+            if (_lifeGraph.Location > -1)
+            {
+                _lifeGraph.SetPosition(Core.Metrics["LifeGraph", _lifeGraph.Location]);
+            }
+            
         }
 
         private void InitSprites()
@@ -196,6 +224,22 @@ namespace WGiBeat.Screens
             DrawGrades(spriteBatch);
             DrawModeSpecific(spriteBatch);
             DrawMisc(spriteBatch,gameTime);
+            DrawGraphs(spriteBatch,gameTime);
+        }
+
+
+        private void DrawGraphs(SpriteBatch spriteBatch, GameTime time)
+        {
+
+            if (time.TotalRealTime.TotalSeconds - _lastCycle > 1)
+            {
+                _lastCycle = time.TotalRealTime.TotalSeconds;
+                _lifeGraph.CycleTopLine();
+            }
+            if (_lifeGraph.Location > -1)
+            {
+                _lifeGraph.Draw(spriteBatch);
+            }
         }
 
         private void DrawBackground(SpriteBatch spriteBatch)

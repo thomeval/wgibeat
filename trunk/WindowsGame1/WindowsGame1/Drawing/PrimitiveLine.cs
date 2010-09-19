@@ -29,6 +29,8 @@ namespace WGiBeat.Drawing
         /// </summary>
         public float Depth;
 
+        public int Width;
+
         /// <summary>
         /// Gets the number of vectors which make up the primtive line object.
         /// </summary>
@@ -55,7 +57,7 @@ namespace WGiBeat.Drawing
             Colour = Color.White;
             Position = new Vector2(0, 0);
             Depth = 0;
-
+            Width = 1;
             vectors = new List<Vector2>();
         }
 
@@ -132,7 +134,7 @@ namespace WGiBeat.Drawing
                                  Colour,
                                  angle,
                                  Vector2.Zero,
-                                 new Vector2(distance, 1),
+                                 new Vector2(distance, Width),
                                  SpriteEffects.None,
                                  Depth);
             }
