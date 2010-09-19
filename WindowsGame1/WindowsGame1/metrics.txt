@@ -68,6 +68,7 @@ EvaluationHighScore=[220,225][620,225][220,550][620,550][410,295];
 EvaluationTotalScore=[510,275];
 EvaluationTotalGrade=[610,275];
 EvaulationTeamScore=[410,275][410,300];
+LifeGraph=[20,20][420,20][20,345][420,345];
 
 #New Game;
 NewGameJoinNotification=[50,125][450,125][50,450][450,450];

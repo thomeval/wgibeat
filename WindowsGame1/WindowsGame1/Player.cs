@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using WGiBeat.Notes;
 
@@ -104,6 +105,17 @@ namespace WGiBeat
 
         public Difficulty PlayDifficulty { get; set; }
 
+        private List<float> _lifeHistory = new List<float>();
+        public List<float> LifeHistory
+        {
+            get { return _lifeHistory; }
+        }
+
+        public void RecordCurrentLife()
+        {
+            _lifeHistory.Add((float) Life);
+        }
+
         public double MissedArrow()
         {
             Hits = 0;
@@ -171,7 +183,7 @@ namespace WGiBeat
             Momentum = 0;
             Life = 50;
             KO = false;
-            
+            _lifeHistory.Clear();
         }
         
     }

@@ -34,7 +34,8 @@ namespace WGiBeat.Screens
         private TimeSpan? _startTime;
         private int _displayState;
         private double _transitionTime;
-
+        private double _lastBlazeCheck;
+        private double _lastLifeRecord;
         public MainGameScreen(GameCore core)
             : base(core)
         {
@@ -56,6 +57,7 @@ namespace WGiBeat.Screens
             _songLoadDelay = 0.0;
             _confidence = 0;
             _lastBlazeCheck = 0;
+            _lastLifeRecord = -0.5;
             for (int x = 0; x < _playerCount; x++)
             {
 
@@ -119,7 +121,20 @@ namespace WGiBeat.Screens
             _timeCheck = (int)(gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay);
             _beatlineSet.MaintainBeatlineNotes(_phraseNumber);
             MaintainBlazings();
+            RecordPlayerLife();
             base.Update(gameTime);
+        }
+
+        private void RecordPlayerLife()
+        {
+            if (_phraseNumber + 1 > _lastLifeRecord)
+            {
+                foreach (Player player in Core.Players)
+                {
+                    player.RecordCurrentLife();
+                }
+                _lastLifeRecord++;
+            }
         }
 
         private void MaintainBlazings()
@@ -488,7 +503,6 @@ namespace WGiBeat.Screens
         }
 
         private readonly double[] _threshholds = { -1.00, -0.75, -0.5, -0.25, 0.0 };
-        private double _lastBlazeCheck;
 
         private void DrawCountdowns(SpriteBatch spriteBatch)
         {
