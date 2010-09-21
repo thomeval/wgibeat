@@ -47,7 +47,7 @@ namespace WGiBeat.Screens
                 }
                 else
                 {
-                    Console.WriteLine("Did not find MenuMusic. Skipping it.");
+                    Console.WriteLine("Did not find MenuMusic or it is already playing. Skipping load.");
                 }
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)

@@ -116,6 +116,7 @@
     <Compile Include="Drawing\Sets\LifeBarSet.cs" />
     <Compile Include="Drawing\Sets\NoteJudgementSet.cs" />
     <Compile Include="Drawing\Sets\ScoreSet.cs" />
+    <Compile Include="Drawing\SongSortDisplay.cs" />
     <Compile Include="Managers\HighScoreManager.cs" />
     <Compile Include="Drawing\LifeGraph.cs" />
     <Compile Include="Screens\ModeSelectScreen.cs" />

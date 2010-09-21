@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using WGiBeat.Helpers;
+using Action=WGiBeat.Managers.Action;
 
 namespace WGiBeat.Screens
 {
@@ -68,5 +69,9 @@ namespace WGiBeat.Screens
         public abstract void PerformAction(Managers.Action action);
 
 
+        public virtual void PerformActionReleased(Action action)
+        {
+            //Virtual since it is optional for GameScreens.
+        }
     }
 }
