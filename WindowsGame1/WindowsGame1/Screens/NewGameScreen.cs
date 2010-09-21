@@ -61,14 +61,12 @@ namespace WGiBeat.Screens
                 _playerMenus[x].AddItem(new MenuItem { ItemText = "Leave" });
 
                 //NOTE: Uncomment this to get access to the incomplete OnScreenKeyboard. Not functional yet.
-                //  _playerMenus[x].AddItem(new MenuItem{ItemText = "Show Keyboard"});
+                  _playerMenus[x].AddItem(new MenuItem{ItemText = "Show Keyboard"});
             }
 
             for (int x = 0; x < 4; x++)
             {
-                _keyboards[x] = new OnScreenKeyboard();
-                _keyboards[x].MaxLength = 10;
-                _keyboards[x].Id = x;
+                _keyboards[x] = new OnScreenKeyboard {MaxLength = 10, Id = x};
                 _keyboards[x].SetPosition(Core.Metrics["OnScreenKeyboard", x]);
                 _keyboards[x].EnteredTextPosition = Core.Metrics["OnScreenKeyboardDisplay", x];
                 _keyboards[x].EntryCancelled += Keyboard_EntryCancelled;

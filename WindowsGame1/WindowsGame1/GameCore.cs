@@ -209,6 +209,14 @@ namespace WGiBeat
                     _activeScreen.PerformKey(key);
                 }
             }
+
+            foreach (Keys key in _lastKeystate.GetPressedKeys())
+            {
+                if (currentState.IsKeyUp(key))
+                {
+                    _activeScreen.PerformActionReleased(KeyMappings.GetAction(key));
+                }
+            }
             _lastKeystate = currentState;
         }
 
