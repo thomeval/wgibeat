@@ -58,7 +58,6 @@ namespace WGiBeat.Drawing
             if (Active)
             {
                 DrawList(spriteBatch);
- 
             }
         }
 
