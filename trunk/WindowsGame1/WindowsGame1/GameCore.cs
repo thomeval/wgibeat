@@ -61,6 +61,8 @@ namespace WGiBeat
             Metrics = MetricsManager.Load("metrics.txt");
             Settings = SettingsManager.LoadFromFile("settings.txt");
             HighScores = HighScoreManager.LoadFromFile("Scores.conf");
+            TextureManager.GraphicsDevice = this.GraphicsDevice;
+
             if (!Directory.Exists(Directory.GetCurrentDirectory() + "\\" + Settings["SongFolder"]))
             {
                 Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\" + Settings["SongFolder"]);

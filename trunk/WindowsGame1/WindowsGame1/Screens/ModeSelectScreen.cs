@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,6 +20,7 @@ namespace WGiBeat.Screens
 
         private SineSwayParticleField _field = new SineSwayParticleField();
         private Sprite _restrictionSprite;
+        private List<PlayerOptionsFrame> _playerOptions = new List<PlayerOptionsFrame>();
 
         public ModeSelectScreen(GameCore core)
              : base(core)
@@ -28,6 +30,18 @@ namespace WGiBeat.Screens
         public override void Initialize()
         {
             InitSprites();
+
+            var frameCount = 0;
+            _playerOptions.Clear();
+            for (int x = 3; x >= 0; x--)
+            {
+                if (Core.Players[x].Playing)
+                {
+                    _playerOptions.Add(new PlayerOptionsFrame { Player = Core.Players[x], PlayerIndex = x });
+                    _playerOptions[frameCount].SetPosition(Core.Metrics["PlayerOptionsFrame", frameCount]);
+                    frameCount++;
+                }
+            }
             base.Initialize();
         }
 
@@ -81,7 +95,7 @@ namespace WGiBeat.Screens
         {
             DrawBackground(spriteBatch);
             _field.Draw(spriteBatch); 
-            DrawPlayerDifficulties(spriteBatch);
+            DrawPlayerOptions(spriteBatch);
 
             _headerSprite.SetPosition(Core.Metrics["ModeSelectScreenHeader", 0]);
             _headerSprite.Draw(spriteBatch);
@@ -107,9 +121,6 @@ namespace WGiBeat.Screens
             var posX = (int) Core.Metrics["ModeSelectOptions", 0].X;
             var posY = (int) Core.Metrics["ModeSelectOptions", 0].Y;
 
-         //   if (_selectedGameType == 2)
-          //      posX -= 335;
-
             for (int x = 0; x < (int) GameType.COUNT; x++)
             {
                 int selected = (x == _selectedGameType) ? 1 : 0;
@@ -134,82 +145,100 @@ namespace WGiBeat.Screens
             _background.Draw(spriteBatch);
         }
 
-        private void DrawPlayerDifficulties(SpriteBatch spriteBatch)
+        private void DrawPlayerOptions(SpriteBatch spriteBatch)
         {
-            int playerCount = 0;
-            for (int x = 0; x < 4; x++)
+            foreach (PlayerOptionsFrame pof in _playerOptions)
             {
-                if (Core.Players[x].Playing)
-                {
-                    _frameSpriteMap.Draw(spriteBatch, x, 50, 100, Core.Metrics["PlayerDifficultiesFrame", playerCount]);
-                    int idx = GetPlayerDifficulty(x);
-                    _iconSpriteMap.Draw(spriteBatch, idx, 40, 40, Core.Metrics["PlayerDifficulties", playerCount]);
-                    playerCount++;
-                }
+                pof.Draw(spriteBatch);
             }
-        }
-
-        private int GetPlayerDifficulty(int player)
-        {
-            if (!Core.Players[player].Playing)
-            {
-                return 0;
-            }
-
-            return 1 + (int)(Core.Players[player].PlayDifficulty);
         }
 
         public override void PerformAction(Action action)
         {
-            switch (action)
+         int player;
+            Int32.TryParse("" + action.ToString()[1], out player);
+            player--;
+            var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
+
+            var playerOptions = (from e in _playerOptions where e.PlayerIndex == player select e).SingleOrDefault();
+            switch (paction)
             {
-                case Action.P1_LEFT:
-                case Action.P2_LEFT:
-                case Action.P3_LEFT:
-                case Action.P4_LEFT:
-                    _selectedGameType -= 1;
-                    if (_selectedGameType < 0)
+                case "LEFT":
+                    if (playerOptions.SpeedChangeActive)
                     {
-                        _selectedGameType = (int) GameType.COUNT - 1;
+                        playerOptions.AdjustDifficulty(-1);
                     }
-                    break;
-                case Action.P1_RIGHT:
-                case Action.P2_RIGHT:
-                case Action.P3_RIGHT:
-                case Action.P4_RIGHT:
-                    _selectedGameType += 1;
-                    if (_selectedGameType == (int) GameType.COUNT)
+                    else
                     {
-                        _selectedGameType = 0;
+                        ChangeGameType(-1);
                     }
-                    break;
-                case Action.P1_UP:
-                case Action.P2_UP:
-                case Action.P3_UP:
-                case Action.P4_UP:
 
                     break;
-                case Action.P1_DOWN:
-                case Action.P2_DOWN:
-                case Action.P3_DOWN:
-                case Action.P4_DOWN:
-
+                case "RIGHT":
+                    if (playerOptions.SpeedChangeActive)
+                    {
+                        playerOptions.AdjustDifficulty(1);
+                    }
+                    else
+                    {
+                        ChangeGameType(1);   
+                    }
                     break;
-                case (Action.SYSTEM_BACK):
+                case "UP":
+                    if (playerOptions.SpeedChangeActive)
+                    {
+                        playerOptions.AdjustSpeed(1);
+                    }
+                    break;
+                case "DOWN":
+                    if (playerOptions.SpeedChangeActive)
+                    {
+                        playerOptions.AdjustSpeed(-1);
+                    }
+                    break;
+                case "BACK":
                     Core.ScreenTransition("NewGame");
                     break;
 
-                case Action.P1_START:
-                case Action.P2_START:
-                case Action.P3_START:
-                case Action.P4_START:
-                case Action.P1_BEATLINE:
-                case Action.P2_BEATLINE:
-                case Action.P3_BEATLINE:
-                case Action.P4_BEATLINE:
+                case "START":
                     DoAction();
                     break;
+                case "SELECT":
+                    playerOptions.SpeedChangeActive = true;
+                    break;
                    
+            }
+        }
+
+        public override void PerformActionReleased(Action action)
+        {
+            int player;
+            Int32.TryParse("" + action.ToString()[1], out player);
+            player--;
+            var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
+
+            var playerOptions = (from e in _playerOptions where e.PlayerIndex == player select e).SingleOrDefault();
+            switch (paction)
+            {
+                case "SELECT":
+                    if (playerOptions != null)
+                    {
+                        playerOptions.SpeedChangeActive = false;
+                    }
+                    break;
+            }
+        }
+
+        private void ChangeGameType(int amount)
+        {
+            _selectedGameType += amount;
+            if (_selectedGameType < 0)
+            {
+                _selectedGameType += (int)GameType.COUNT;
+            }
+            if (_selectedGameType >= (int)GameType.COUNT)
+            {
+                _selectedGameType -= (int) GameType.COUNT;
             }
         }
 
