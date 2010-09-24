@@ -26,7 +26,7 @@ namespace WGiBeat.Drawing
         public void InitSprites()
         {
             _backgroundSprite = new Sprite {SpriteTexture = TextureManager.Textures["SongSortBackground"]};
-            _arrowSprites = new SpriteMap() {SpriteTexture = TextureManager.Textures["SongSortArrows"], Columns=2, Rows = 1};
+            _arrowSprites = new SpriteMap {SpriteTexture = TextureManager.Textures["IndicatorArrows"], Columns=4, Rows = 1};
             _listBackgroundSprite = new Sprite {SpriteTexture = TextureManager.Textures["SongSortListBackground"]};
             _textPosition = new Vector2();
         }
@@ -52,8 +52,8 @@ namespace WGiBeat.Drawing
             TextureManager.DrawString(spriteBatch,"" + SongSortMode, "TwoTechLarge",_textPosition,Color.Black, FontAlign.CENTER);
 
             _arrowSprites.ColorShading.A = _activeOpacity;
-            _arrowSprites.Draw(spriteBatch, 0, 35, 35, this.X + 15, this.Y + 8);
-            _arrowSprites.Draw(spriteBatch, 1, 35, 35, this.X + this.Width - 40, this.Y + 8);
+            _arrowSprites.Draw(spriteBatch, 1, 35, 35, this.X + 15, this.Y + 8);
+            _arrowSprites.Draw(spriteBatch, 0, 35, 35, this.X + this.Width - 40, this.Y + 8);
 
             if (Active)
             {
@@ -64,7 +64,6 @@ namespace WGiBeat.Drawing
         private void SetSpritePositions()
         {
             _backgroundSprite.SetPosition(this.X,this.Y);
-
         }
 
         private void DrawList(SpriteBatch spriteBatch)
