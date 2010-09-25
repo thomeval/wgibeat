@@ -36,7 +36,7 @@ namespace WGiBeat.Drawing
         public PlayerOptionsFrame()
         {
             InitSprites();
-            this.Width = 375;
+            this.Width = 450;
             this.Height = 38;
             _speedTextOpacity = 0;
         }
@@ -72,6 +72,7 @@ namespace WGiBeat.Drawing
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+
             _backgrounds.Draw(spriteBatch, PlayerIndex, this.Width, this.Height, this.X, this.Y);
             _difficultyIcons.Draw(spriteBatch, (int)Player.PlayDifficulty + 1, 32, 32, this.X + 65, this.Y + 2);
 
@@ -84,17 +85,8 @@ namespace WGiBeat.Drawing
         private void DrawText(SpriteBatch spriteBatch)
         {
             CalculateTextPositions();
-            if (SpeedChangeActive)
-            {
-                _speedTextOpacity = (byte)Math.Min(_speedTextOpacity + 10, 255);
-            }
-            else
-            {
-                _speedTextOpacity = (byte)Math.Max(_speedTextOpacity - 10, 0);
-            }
 
             var playerName = string.IsNullOrEmpty(Player.Name) ? "Guest" : this.Player.Name;
-            //this.X + PlayerID.Width + Difficulty Icon width + half of available name space.
 
             DrawChangeControls(spriteBatch);
             _textColor.A = (byte)(255 - _speedTextOpacity);
@@ -102,14 +94,12 @@ namespace WGiBeat.Drawing
             TextureManager.DrawString(spriteBatch, playerName, "TwoTechLarge", _nameTextPosition, _textColor,
                                       FontAlign.CENTER);
             //  TextureManager.ResetClipRectangle();
-
-
         }
 
         private void DrawChangeControls(SpriteBatch spriteBatch)
         {
             _indicatorArrows.ColorShading.A = _speedTextOpacity;
-            _indicatorArrows.Draw(spriteBatch,1,15,15,(int) _difficultyTextPosition.X,(int) _difficultyTextPosition.Y + 25);
+            _indicatorArrows.Draw(spriteBatch, 1, 15, 15, (int)_difficultyTextPosition.X, (int)_difficultyTextPosition.Y + 25);
             _indicatorArrows.Draw(spriteBatch, 0, 15, 15, (int)_difficultyTextPosition.X + 15, (int)_difficultyTextPosition.Y + 25);
             _indicatorArrows.Draw(spriteBatch, 2, 15, 15, (int)_speedTextPosition.X - 32, (int)_speedTextPosition.Y - 8);
             _indicatorArrows.Draw(spriteBatch, 3, 15, 15, (int)_speedTextPosition.X - 17, (int)_speedTextPosition.Y - 8);
@@ -124,7 +114,8 @@ namespace WGiBeat.Drawing
 
         private void CalculateTextPositions()
         {
-            _nameTextPosition.X = this.X + 70 + 35 + 110;
+            //this.X + PlayerID.Width + Difficulty Icon width + half of available name space.
+            _nameTextPosition.X = this.X + 70 + 35 + 150;
             _nameTextPosition.Y = this.Y - 10;
             _speedTextPosition.X = this.X + this.Width - 35;
             _speedTextPosition.Y = this.Y + 10;
@@ -135,16 +126,19 @@ namespace WGiBeat.Drawing
         private readonly double[] _speedOptions = { 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0 };
 
         private const int BLOCK_HEIGHT = 5;
+        private readonly Color _blockColor = new Color(64, 64, 64, 255);
+
         private void DrawSpeedBlocks(SpriteBatch spriteBatch)
         {
-            var posY = this.Y + this.Height - BLOCK_HEIGHT;
+            var posY = this.Y + this.Height - BLOCK_HEIGHT - 1;
             for (int x = 0; x < _speedOptions.Length; x++)
             {
-                if (Player.BeatlineSpeed >= _speedOptions[x])
-                {
-                    _speedBlocks.Draw(spriteBatch, 6 - x, 30, BLOCK_HEIGHT, this.X + this.Width - 31, posY);
-                    posY -= BLOCK_HEIGHT;
-                }
+
+                var drawColor = Player.BeatlineSpeed >= _speedOptions[x] ? Color.White : _blockColor;
+                _speedBlocks.ColorShading = drawColor;
+                _speedBlocks.Draw(spriteBatch, 6 - x, 30, BLOCK_HEIGHT, this.X + this.Width - 31, posY);
+
+                posY -= BLOCK_HEIGHT;
             }
         }
 

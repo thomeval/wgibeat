@@ -14,21 +14,18 @@ namespace WGiBeat.Screens
     {
         private readonly List<SongListItem> _songList = new List<SongListItem>();
         private int _selectedIndex;
-        private Sprite _scoreBaseSprite;
         private Sprite _headerSprite;
-        private SpriteMap _iconSpriteMap;
         private Sprite _background;
-        private SpriteMap _gradeSpriteMap;
        
         private BpmMeter _bpmMeter;
         private SongSortDisplay _songSortDisplay;
+        private HighScoreFrame _highScoreFrame;
         private readonly List<PlayerOptionsFrame> _playerOptions = new List<PlayerOptionsFrame>();
 
         private bool _resetSongTime = true;
         private double _songStartTime;
         private int _songListDrawOffset;
         private const int LISTITEMS_DRAWN = 7;
-        private const int NUM_EVALUATIONS = 19;
         private const double SONG_CHANGE_SPEED = 0.9;
 
         private SineSwayParticleField _field = new SineSwayParticleField();
@@ -36,8 +33,7 @@ namespace WGiBeat.Screens
         private SongPreviewManager _songPreviewManager;
 
         public SongSelectScreen(GameCore core) : base(core)
-        {
-            
+        {           
         }
 
         public override void Initialize()
@@ -47,6 +43,9 @@ namespace WGiBeat.Screens
             _songSortDisplay.SetPosition(Core.Metrics["SongSortDisplay", 0]);
             _songSortDisplay.InitSprites();
             _songPreviewManager = new SongPreviewManager { SongManager = Core.Songs };
+            _highScoreFrame = new HighScoreFrame();
+            _highScoreFrame.SetPosition(Core.Metrics["SongHighScoreFrame", 0]);
+            _highScoreFrame.InitSprites();
             _bpmMeter = new BpmMeter();
             _bpmMeter.SetPosition(Core.Metrics["BPMMeter", 0]);
             _playerOptions.Clear();
@@ -66,7 +65,7 @@ namespace WGiBeat.Screens
                 {
                     CreateSongList();
                 }
-
+            
             if (Core.Settings.Exists("LastSongPlayed"))
             {
                 var lastSongHash = Core.Settings.Get<int>("LastSongPlayed");
@@ -89,32 +88,13 @@ namespace WGiBeat.Screens
                 Height = Core.Window.ClientBounds.Height,
                 SpriteTexture = TextureManager.Textures["allBackground"],
                 Width = Core.Window.ClientBounds.Width,
-                X = 0,
-                Y = 0
-            };
-            _scoreBaseSprite = new Sprite
-            {
-                SpriteTexture = TextureManager.Textures["songHighScoreBase"]
             };
 
             _headerSprite = new Sprite
             {
-             //   Height = 80,
-             //   Width = 800,
                 SpriteTexture = TextureManager.Textures["songSelectHeader"]
             };
-            _iconSpriteMap = new SpriteMap
-            {
-                Columns = 1,
-                Rows = (int)Difficulty.COUNT + 1,
-                SpriteTexture = TextureManager.Textures["playerDifficulties"]
-            };
-            _gradeSpriteMap = new SpriteMap
-                                  {
-                                      Columns = 1,
-                                      Rows = NUM_EVALUATIONS,
-                                      SpriteTexture = TextureManager.Textures["evaluationGrades"]
-                                  };
+
         }
 
         private void CreateSongList()
@@ -125,6 +105,7 @@ namespace WGiBeat.Screens
                 _songList.Add(new SongListItem {Height = 50, Song = song, Width = 380});
             }
             SortSongList();
+            _highScoreFrame.HighScoreEntry = GetDisplayedHighScore((GameType)Core.Cookies["CurrentGameType"]);
         }
 
         private void SortSongList()
@@ -175,7 +156,7 @@ namespace WGiBeat.Screens
             DrawSongText(spriteBatch);
             _songSortDisplay.Draw(spriteBatch);
       
-            TextureManager.DrawString(spriteBatch,"Mode: " + Core.Cookies["CurrentGameType"],"DefaultFont", Core.Metrics["SelectedMode", 0], Color.Black,FontAlign.CENTER);
+        //    TextureManager.DrawString(spriteBatch,"Mode: " + Core.Cookies["CurrentGameType"],"DefaultFont", Core.Metrics["SelectedMode", 0], Color.Black,FontAlign.CENTER);
 
         }
 
@@ -281,39 +262,19 @@ namespace WGiBeat.Screens
 
         private void DrawHighScoreFrame(SpriteBatch spriteBatch)
         {
-            _scoreBaseSprite.SetPosition(Core.Metrics["SongHighScoreBase", 0]);
+
           //  _scoreBaseSprite.Draw(spriteBatch);
             var cgt = HighScoreManager.TranslateGameType((GameType) Core.Cookies["CurrentGameType"]);
-            var highScoreEntry = GetDisplayedHighScore(cgt);
-            var displayedScore = (highScoreEntry == null) ? 0 : highScoreEntry.Scores[cgt];
-            var displayedGrade = (highScoreEntry == null) ? -1 : highScoreEntry.Grades[cgt];
-            var displayedDifficulty = (highScoreEntry == null) ? -1 : (int) highScoreEntry.Difficulties[cgt] + 1;
+            _highScoreFrame.HighScoreEntry = GetDisplayedHighScore(cgt);
+            _highScoreFrame.Draw(spriteBatch);
 
-          //  TextureManager.DrawString(spriteBatch,"" + displayedScore, "DefaultFont",Core.Metrics["SongHighScore", 0], Color.Black,FontAlign.RIGHT);
-            
-            if (displayedGrade != -1)
-            {
-          //      _gradeSpriteMap.Draw(spriteBatch, displayedGrade, 68, 24, Core.Metrics["SongHighScoreGrade",0]);
-            }
-            if (displayedDifficulty != -1)
-            {
-         //       _iconSpriteMap.Draw(spriteBatch, displayedDifficulty, 24, 24, Core.Metrics["SongHighScoreDifficulty", 0]);               
-            }
         }
 
         private HighScoreEntry GetDisplayedHighScore(GameType gameType)
         {
             Core.HighScores.CurrentSong = _songList[_selectedIndex].Song;
             var highScoreEntry =
-                Core.HighScores.GetHighScoreEntry(_songList[_selectedIndex].Song.GetHashCode());
-            if (highScoreEntry == null)
-            {
-                return null;
-            }
-            if (!highScoreEntry.Scores.ContainsKey(gameType))
-            {
-                return null;
-            }
+                Core.HighScores.GetHighScoreEntry(_songList[_selectedIndex].Song.GetHashCode(),gameType);
             return highScoreEntry;
         }
 
