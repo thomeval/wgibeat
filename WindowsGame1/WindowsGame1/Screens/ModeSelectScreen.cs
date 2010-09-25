@@ -149,7 +149,7 @@ namespace WGiBeat.Screens
             switch (paction)
             {
                 case "LEFT":
-                    if (playerOptions.SpeedChangeActive)
+                    if (playerOptions.OptionChangeActive)
                     {
                         playerOptions.AdjustDifficulty(-1);
                     }
@@ -160,7 +160,7 @@ namespace WGiBeat.Screens
 
                     break;
                 case "RIGHT":
-                    if (playerOptions.SpeedChangeActive)
+                    if (playerOptions.OptionChangeActive)
                     {
                         playerOptions.AdjustDifficulty(1);
                     }
@@ -170,13 +170,13 @@ namespace WGiBeat.Screens
                     }
                     break;
                 case "UP":
-                    if (playerOptions.SpeedChangeActive)
+                    if (playerOptions.OptionChangeActive)
                     {
                         playerOptions.AdjustSpeed(1);
                     }
                     break;
                 case "DOWN":
-                    if (playerOptions.SpeedChangeActive)
+                    if (playerOptions.OptionChangeActive)
                     {
                         playerOptions.AdjustSpeed(-1);
                     }
@@ -189,7 +189,7 @@ namespace WGiBeat.Screens
                     DoAction();
                     break;
                 case "SELECT":
-                    playerOptions.SpeedChangeActive = true;
+                    playerOptions.OptionChangeActive = true;
                     break;
                    
             }
@@ -208,7 +208,7 @@ namespace WGiBeat.Screens
                 case "SELECT":
                     if (playerOptions != null)
                     {
-                        playerOptions.SpeedChangeActive = false;
+                        playerOptions.OptionChangeActive = false;
                     }
                     break;
             }

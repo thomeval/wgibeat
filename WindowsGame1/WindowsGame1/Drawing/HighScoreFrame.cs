@@ -20,6 +20,8 @@ namespace WGiBeat.Drawing
         private Vector2 _namePosition;
         private Vector2 _difficultyPosition;
 
+        private Color _textColor = Color.Black;
+
         private byte _opacity;
         public HighScoreFrame()
         {
@@ -27,7 +29,23 @@ namespace WGiBeat.Drawing
             this.Height = 110;
         }
 
-        private Color _textColor = Color.Black;
+        public void InitSprites()
+        {
+            _difficultySpriteMap = new SpriteMap
+            {
+                Columns = 1,
+                Rows = (int)Difficulty.COUNT + 1,
+                SpriteTexture = TextureManager.Textures["playerDifficulties"]
+            };
+            _gradeSpriteMap = new SpriteMap
+            {
+                Columns = 1,
+                Rows = NUM_EVALUATIONS,
+                SpriteTexture = TextureManager.Textures["evaluationGrades"]
+            };
+            _baseSprite = new Sprite { SpriteTexture = TextureManager.Textures["HighScoreFrame"] };
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
 
@@ -78,23 +96,6 @@ namespace WGiBeat.Drawing
             _namePosition.X = this.X + (this.Width/2);
             _namePosition.Y = this.Y + 52;
 
-        }
-
-        public void InitSprites()
-        {
-            _difficultySpriteMap = new SpriteMap
-            {
-                Columns = 1,
-                Rows = (int)Difficulty.COUNT + 1,
-                SpriteTexture = TextureManager.Textures["playerDifficulties"]
-            };
-            _gradeSpriteMap = new SpriteMap
-            {
-                Columns = 1,
-                Rows = NUM_EVALUATIONS,
-                SpriteTexture = TextureManager.Textures["evaluationGrades"]
-            };
-            _baseSprite = new Sprite{SpriteTexture = TextureManager.Textures["HighScoreFrame"]};
         }
     }
 }

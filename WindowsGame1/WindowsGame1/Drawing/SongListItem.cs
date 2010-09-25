@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.AudioSystem;
 
@@ -21,7 +17,7 @@ namespace WGiBeat.Drawing
             
             baseSprite.Draw(spriteBatch);
             //Draw Text
-            Vector2 textPosition = new Vector2(this.X + 20, this.Y + 3);
+            var textPosition = new Vector2(this.X + 20, this.Y + 3);
             spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], Song.Title, textPosition,Color.Black);
             textPosition.Y += 20;
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], Song.Artist, textPosition, Color.Black);

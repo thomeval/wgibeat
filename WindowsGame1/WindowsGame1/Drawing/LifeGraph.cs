@@ -94,8 +94,8 @@ namespace WGiBeat.Screens
             LineDrawer.ClearVectors();
             LineDrawer.AddVector(new Vector2(this.X, this.Y));
             LineDrawer.AddVector(new Vector2(this.X + this.Width, this.Y));
-            LineDrawer.AddVector(new Vector2(this.X + this.Width, this.Y + this.Height));
-            LineDrawer.AddVector(new Vector2(this.X, this.Y + this.Height));
+            LineDrawer.AddVector(new Vector2(this.X + this.Width, this.Y + this.Height + 3));
+            LineDrawer.AddVector(new Vector2(this.X, this.Y + this.Height + 3));
             LineDrawer.AddVector(new Vector2(this.X, this.Y));
             LineDrawer.Render(spriteBatch);
         }

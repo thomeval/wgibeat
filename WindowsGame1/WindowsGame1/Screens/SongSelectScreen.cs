@@ -345,7 +345,7 @@ namespace WGiBeat.Screens
             switch (paction)
             {
                 case "UP":
-                    if ((playerOptions != null) && (playerOptions.SpeedChangeActive))
+                    if ((playerOptions != null) && (playerOptions.OptionChangeActive))
                     {
                         playerOptions.AdjustSpeed(1);
                     }
@@ -356,7 +356,7 @@ namespace WGiBeat.Screens
                     break;
                 case "DOWN":
 
-                    if ((playerOptions != null) &&(playerOptions.SpeedChangeActive))
+                    if ((playerOptions != null) &&(playerOptions.OptionChangeActive))
                     {
                         playerOptions.AdjustSpeed(-1);
                     }
@@ -367,7 +367,7 @@ namespace WGiBeat.Screens
                     break;
 
                 case "LEFT":
-                    if (playerOptions.SpeedChangeActive)
+                    if (playerOptions.OptionChangeActive)
                     {
                         playerOptions.AdjustDifficulty(-1);
                     }
@@ -379,7 +379,7 @@ namespace WGiBeat.Screens
                     break;
 
                 case "RIGHT":
-                    if (playerOptions.SpeedChangeActive)
+                    if (playerOptions.OptionChangeActive)
                     {
                         playerOptions.AdjustDifficulty(1);
                     }
@@ -394,7 +394,7 @@ namespace WGiBeat.Screens
                     _songSortDisplay.Active = true;
                     break;
                 case "SELECT":
-                    playerOptions.SpeedChangeActive = true;
+                    playerOptions.OptionChangeActive = true;
                     break;
                 case "START":
                     StartSong();
@@ -420,7 +420,7 @@ namespace WGiBeat.Screens
                 case "SELECT":
                     if (playerOptions != null)
                     {
-                        playerOptions.SpeedChangeActive = false;
+                        playerOptions.OptionChangeActive = false;
                     }
                     break;
                 case "BEATLINE":

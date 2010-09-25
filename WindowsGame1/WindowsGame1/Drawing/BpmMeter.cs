@@ -24,13 +24,13 @@ namespace WGiBeat.Drawing
                                  };
         public BpmMeter()
         {
-            _meterSprite = new SpriteMap()
+            _meterSprite = new SpriteMap
                                {
                                    Columns = 1,
                                    Rows = BpmLevels.Count(),
                                    SpriteTexture = TextureManager.Textures["BpmMeterOverlay"]
                                };
-            _baseSprite = new Sprite()
+            _baseSprite = new Sprite
                               {
 
                                   SpriteTexture = TextureManager.Textures["BpmMeterBase"]

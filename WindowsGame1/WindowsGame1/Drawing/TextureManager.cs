@@ -36,11 +36,24 @@ namespace WGiBeat.Drawing
             }
             spriteBatch.DrawString(Fonts[fontName], text, measuredPosition, color);
         }
-        
+
+        /*
+        public static void DrawStringClipped(string text, string fontName, Vector2 position, Color color, FontAlign align, Rectangle clip)
+        {
+            var oldRect = GraphicsDevice.ScissorRectangle;
+            var spriteBatch = new SpriteBatch(GraphicsDevice);
+            GraphicsDevice.ScissorRectangle = clip;
+            spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+
+            DrawString(spriteBatch, text, fontName, position, color, align);
+            GraphicsDevice.ScissorRectangle = oldRect;
+            spriteBatch.End();
+        }
+
         public static void SetClipRectangle(int x, int y, int width, int height)
         {
             GraphicsDevice.ScissorRectangle = new Rectangle(x, y, width, height);
-            GraphicsDevice.RenderState.ScissorTestEnable = true;
+
 
         }
         public static void ResetClipRectangle()
@@ -49,6 +62,7 @@ namespace WGiBeat.Drawing
                                                             GraphicsDevice.DisplayMode.Height);
             GraphicsDevice.RenderState.ScissorTestEnable = false;
         }
+         */
     }
 
     public enum FontAlign
