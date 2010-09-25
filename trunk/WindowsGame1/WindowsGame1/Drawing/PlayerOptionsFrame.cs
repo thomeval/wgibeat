@@ -26,8 +26,8 @@ namespace WGiBeat.Drawing
         private SpriteMap _difficultyIcons;
         private SpriteMap _indicatorArrows;
 
-        public bool SpeedChangeActive;
-        private byte _speedTextOpacity;
+        public bool OptionChangeActive;
+        private byte _optionControlOpacity;
 
         private Vector2 _nameTextPosition;
         private Vector2 _speedTextPosition;
@@ -38,7 +38,7 @@ namespace WGiBeat.Drawing
             InitSprites();
             this.Width = 450;
             this.Height = 38;
-            _speedTextOpacity = 0;
+            _optionControlOpacity = 0;
         }
 
         private void InitSprites()
@@ -85,11 +85,20 @@ namespace WGiBeat.Drawing
         private void DrawText(SpriteBatch spriteBatch)
         {
             CalculateTextPositions();
+            if (OptionChangeActive)
+            {
+                _optionControlOpacity = (byte) Math.Min(255, _optionControlOpacity + 10);
+            }
+            else
+            {
+                _optionControlOpacity = (byte) Math.Max(0, _optionControlOpacity - 10);
+            }
 
             var playerName = string.IsNullOrEmpty(Player.Name) ? "Guest" : this.Player.Name;
 
             DrawChangeControls(spriteBatch);
-            _textColor.A = (byte)(255 - _speedTextOpacity);
+            _textColor.A = (byte)(255 - _optionControlOpacity);
+            var clipRect = new Rectangle {Height = this.Height, Width = this.Width - 150, X = this.X + 75, Y = this.Y};
             //  TextureManager.SetClipRectangle(this.X + 100, this.Y, this.X + this.Width - 160, this.Height);
             TextureManager.DrawString(spriteBatch, playerName, "TwoTechLarge", _nameTextPosition, _textColor,
                                       FontAlign.CENTER);
@@ -98,13 +107,13 @@ namespace WGiBeat.Drawing
 
         private void DrawChangeControls(SpriteBatch spriteBatch)
         {
-            _indicatorArrows.ColorShading.A = _speedTextOpacity;
+            _indicatorArrows.ColorShading.A = _optionControlOpacity;
             _indicatorArrows.Draw(spriteBatch, 1, 15, 15, (int)_difficultyTextPosition.X, (int)_difficultyTextPosition.Y + 25);
             _indicatorArrows.Draw(spriteBatch, 0, 15, 15, (int)_difficultyTextPosition.X + 15, (int)_difficultyTextPosition.Y + 25);
             _indicatorArrows.Draw(spriteBatch, 2, 15, 15, (int)_speedTextPosition.X - 32, (int)_speedTextPosition.Y - 8);
             _indicatorArrows.Draw(spriteBatch, 3, 15, 15, (int)_speedTextPosition.X - 17, (int)_speedTextPosition.Y - 8);
             var speedText = string.Format("{0:0.0}x", Player.BeatlineSpeed);
-            _textColor.A = _speedTextOpacity;
+            _textColor.A = _optionControlOpacity;
             TextureManager.DrawString(spriteBatch, speedText, "TwoTech", _speedTextPosition, _textColor,
                                       FontAlign.RIGHT);
 

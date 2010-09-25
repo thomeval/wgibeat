@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -62,8 +59,8 @@ namespace WGiBeat.Drawing
 
         private Vector2 GetVector()
         {
-            int widthAlt  = (int) (Math.Sin((Position + Shift) * Math.PI * 2 * Frequency) * Width);
-            int heightAlt = (int) (Position * Height);
+            var widthAlt  = (int) (Math.Sin((Position + Shift) * Math.PI * 2 * Frequency) * Width);
+            var heightAlt = (int) (Position * Height);
 
             if (Vertical)
                 return new Vector2(X + widthAlt, Y + heightAlt);
@@ -71,7 +68,7 @@ namespace WGiBeat.Drawing
             return new Vector2(X + heightAlt, Y + widthAlt);
         }
 
-        public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             Particle.Width = ParticleSize;
             Particle.Height = ParticleSize;

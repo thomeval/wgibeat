@@ -56,7 +56,6 @@ namespace WGiBeat
             //NOTE: Uncomment to disable vsync.
             //GraphicsManager.SynchronizeWithVerticalRetrace = false;
 
-
             Cookies = new Dictionary<string, object>();
             Metrics = MetricsManager.Load("metrics.txt");
             Settings = SettingsManager.LoadFromFile("settings.txt");
@@ -99,6 +98,7 @@ namespace WGiBeat
             {
                 GraphicsManager.IsFullScreen = Settings.Get<bool>("FullScreen");
             }
+            GraphicsDevice.RenderState.ScissorTestEnable = true;
             GraphicsManager.ApplyChanges();
             _lastGamePadState = new GamePadState[4];
 
@@ -244,6 +244,8 @@ namespace WGiBeat
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
+           // _spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+            //TODO: Experiment with using texture sizes in powers of two.
             _spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
             GraphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
             GraphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Wrap;

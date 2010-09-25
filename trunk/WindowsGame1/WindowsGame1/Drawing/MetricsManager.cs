@@ -9,7 +9,7 @@ namespace WGiBeat.Drawing
 {
     public class MetricsManager
     {
-        private Dictionary<string, Vector2[]> _metrics;
+        private readonly Dictionary<string, Vector2[]> _metrics;
 
         public MetricsManager()
         {
