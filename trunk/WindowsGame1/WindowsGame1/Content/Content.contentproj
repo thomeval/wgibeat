@@ -158,6 +158,11 @@
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Compile Include="Fonts\TwoTech36.spritefont">
+      <Name>TwoTech36</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
     <Compile Include="Fonts\TwoTechLarge.spritefont">
       <Name>TwoTechLarge</Name>
       <Importer>FontDescriptionImporter</Importer>
@@ -261,13 +266,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\playerDifficultiesFrame.png">
-      <Name>playerDifficultiesFrame</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Textures\modeSelectHeader.png">
       <Name>modeSelectHeader</Name>
       <Importer>TextureImporter</Importer>
@@ -298,13 +296,6 @@
   <ItemGroup>
     <Compile Include="Textures\keyOptionHeader.png">
       <Name>keyOptionHeader</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\songHighScoreBase.png">
-      <Name>songHighScoreBase</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -443,6 +434,13 @@
   <ItemGroup>
     <Compile Include="Textures\IndicatorArrows.png">
       <Name>IndicatorArrows</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\HighScoreFrame.png">
+      <Name>HighScoreFrame</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

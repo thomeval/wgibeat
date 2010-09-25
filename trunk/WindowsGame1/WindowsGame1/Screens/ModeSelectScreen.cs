@@ -13,8 +13,6 @@ namespace WGiBeat.Screens
         private int _selectedGameType = 0;
         private SpriteMap _optionBaseSpriteMap;
         private SpriteMap _optionsSpriteMap;
-        private SpriteMap _frameSpriteMap;
-        private SpriteMap _iconSpriteMap;
         private Sprite _background;
         private Sprite _headerSprite;
 
@@ -74,19 +72,6 @@ namespace WGiBeat.Screens
             };
 
 
-            _frameSpriteMap = new SpriteMap
-                                 {
-                                     Columns = 4,
-                                     Rows = 1,
-                                     SpriteTexture = TextureManager.Textures["playerDifficultiesFrame"]
-                                 };
-
-            _iconSpriteMap = new SpriteMap
-                                {
-                                    Columns = 1,
-                                    Rows = (int)Difficulty.COUNT + 1,
-                                    SpriteTexture = TextureManager.Textures["playerDifficulties"]
-                                };
             _restrictionSprite = new Sprite {SpriteTexture = TextureManager.Textures["RestrictionBorder"]};
             _restrictionSprite.SetPosition(Core.Metrics["RestrictionBase", 0]);
         }

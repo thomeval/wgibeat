@@ -10,17 +10,11 @@ namespace WGiBeat.AudioSystem
     [Serializable]
     public class HighScoreEntry
     {
-       
-        public HighScoreEntry()
-        {
-            Scores = new Dictionary<GameType, long>();
-            Grades = new Dictionary<GameType, int>();
-            Difficulties = new Dictionary<GameType, Difficulty>();
-        }
-        public Dictionary<GameType, long> Scores { get; set; }
-        public Dictionary<GameType, int> Grades { get; set; }
-        public Dictionary<GameType, Difficulty> Difficulties { get; set;}
-
+        public long Score { get; set; }
+        public int Grade { get; set; }
+        public Difficulty Difficulty {get; set;}
+        public string Name { get; set; }
         public int SongID { get; set; }
+        public GameType GameType { get; set; }
     }
 }

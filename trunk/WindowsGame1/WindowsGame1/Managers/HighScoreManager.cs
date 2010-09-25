@@ -11,43 +11,48 @@ namespace WGiBeat.Managers
     {
         public GameSong CurrentSong { get; set; }
 
-        private Dictionary<int, HighScoreEntry> _highScoreEntries = new Dictionary<int, HighScoreEntry>();
+        private List <HighScoreEntry> _highScoreEntries = new List <HighScoreEntry>();
 
-        public HighScoreEntry GetHighScoreEntry(int songHashCode)
+        public HighScoreEntry GetHighScoreEntry(int songHashCode, GameType gameType)
         {
-            if (!_highScoreEntries.ContainsKey(songHashCode))
-            {
-                return null;
-            }
-            return _highScoreEntries[songHashCode];
+            var highScoreEntry =
+                (from e in _highScoreEntries where (e.SongID == songHashCode) && (e.GameType == gameType) select e).
+                    SingleOrDefault();
+
+            return highScoreEntry;
         }
 
         public void SetHighScoreEntry(int songHashCode, GameType gameType, long score, int grade, Difficulty difficulty)
         {
             gameType = TranslateGameType(gameType);
-            if (!_highScoreEntries.ContainsKey(songHashCode))
-            {
-                _highScoreEntries[songHashCode] = new HighScoreEntry();
-            }
-            _highScoreEntries[songHashCode].Difficulties[gameType] = difficulty;
-            _highScoreEntries[songHashCode].Grades[gameType] = grade;
-            _highScoreEntries[songHashCode].Scores[gameType] = score;
-        }
+            var highScoreEntry =
+     (from e in _highScoreEntries where (e.SongID == songHashCode) && (e.GameType == gameType) select e).
+         SingleOrDefault() ?? new HighScoreEntry { SongID = songHashCode, GameType = gameType };
 
+
+            highScoreEntry.Difficulty = difficulty;
+            highScoreEntry.Grade = grade;
+            highScoreEntry.Score = score;
+
+            if (!_highScoreEntries.Contains(highScoreEntry))
+            {
+                _highScoreEntries.Add(highScoreEntry);
+            }
+        }
 
         private int DetermineHighScore(int songHashCode, Player[] players, GameType gameType)
         {
             gameType = TranslateGameType(gameType);
-            var entry = GetHighScoreEntry(songHashCode);
+            var entry = GetHighScoreEntry(songHashCode,gameType);
             long highest;
 
-            if ((entry == null) || (!entry.Scores.ContainsKey(gameType)))
+            if (entry == null)
             {
                 highest = 0;
             }
             else
             {
-                highest = entry.Scores[gameType];
+                highest = entry.Score;
             }
 
             int awardedPlayer = -1;
@@ -74,23 +79,22 @@ namespace WGiBeat.Managers
             }
 
             return awardedPlayer;
-
         }
 
         /// <summary>
         /// Updates the stored high score of the current song and game type, if the score achieved
         /// is higher.
         /// </summary>
-        /// <param name="SongHashCode">The hashcode of the song played.</param>
+        /// <param name="songHashCode">The hashcode of the song played.</param>
         /// <param name="players">The players of the current game.</param>
         /// <param name="gameType">The GameType used in the current game.</param>
         /// <param name="grades">The GameType used in the current game.</param>
         /// <returns>-1 if no player beat the stored high score, 4 if all players as a team
         /// beat the high score, or the player index (0 to 3) if a single player beat the high score.
-        public int UpdateHighScore(int SongHashCode, Player[] players, GameType gameType, int[] grades)
+        public int UpdateHighScore(int songHashCode, Player[] players, GameType gameType, int[] grades)
         {
             gameType = TranslateGameType(gameType);
-            var result = DetermineHighScore(SongHashCode, players, gameType);
+            var result = DetermineHighScore(songHashCode, players, gameType);
 
             switch (result)
             {
@@ -144,7 +148,7 @@ namespace WGiBeat.Managers
                 var result = new HighScoreManager();
                 var fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
                 var bf = new BinaryFormatter();
-                result._highScoreEntries = (Dictionary<int, HighScoreEntry>)bf.Deserialize(fs);
+                result._highScoreEntries = (List<HighScoreEntry>)bf.Deserialize(fs);
                 fs.Close();
                 return result;
             }
