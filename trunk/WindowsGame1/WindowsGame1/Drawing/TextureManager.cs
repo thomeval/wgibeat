@@ -23,18 +23,23 @@ namespace WGiBeat.Drawing
         public static void DrawString(SpriteBatch spriteBatch, string text, string fontName, Vector2 position, Color color, FontAlign align)
         {
             var measuredPosition = new Vector2(position.X, position.Y);
+            var lines = text.Split('\n');
 
-            switch (align)
+            foreach (string line in lines)
             {
-
+                var measurements = Fonts[fontName].MeasureString(line);
+                switch (align)
+                {
                     case FontAlign.CENTER:
-                    measuredPosition.X -= Fonts[fontName].MeasureString(text).X/2;
-                    break;
+                        measuredPosition.X -= measurements.X/2;
+                        break;
                     case FontAlign.RIGHT:
-                    measuredPosition.X -= Fonts[fontName].MeasureString(text).X;
-                    break;
+                        measuredPosition.X -= measurements.X;
+                        break;
+                }
+                spriteBatch.DrawString(Fonts[fontName], line, measuredPosition, color);
+                measuredPosition.Y += measurements.Y;
             }
-            spriteBatch.DrawString(Fonts[fontName], text, measuredPosition, color);
         }
 
         /*
