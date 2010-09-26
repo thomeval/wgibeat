@@ -15,6 +15,7 @@ namespace WGiBeat.Drawing
         public double Speed { get; set; }
         public double Bpm { get; set; }
         public int Id { get; set; }
+        public bool DisablePulse { get; set; }
         private SpriteMap _markerSprite;
         private Sprite _pulseSprite;
         private Sprite _baseSprite;
@@ -69,13 +70,15 @@ namespace WGiBeat.Drawing
 
         private void DrawPulse(SpriteBatch spriteBatch, double phraseNumber)
         {
-
+            if (DisablePulse)
+            {
+                return;
+            }
             _pulseSprite.Width = (int)(80 * (Math.Ceiling(phraseNumber) - (phraseNumber)));
             _pulseSprite.ColorShading.A = (byte)(_pulseSprite.Width * 255 / 80);
             _pulseSprite.Height = 42;
             _pulseSprite.SetPosition(this.X + 30, this.Y - 5);
             _pulseSprite.DrawTiled(spriteBatch, 83 - _pulseSprite.Width, 0, _pulseSprite.Width, 34);
-
         }
 
         private void DrawNotes(SpriteBatch spriteBatch, double phraseNumber)

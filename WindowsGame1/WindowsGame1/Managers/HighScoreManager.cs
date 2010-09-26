@@ -22,7 +22,7 @@ namespace WGiBeat.Managers
             return highScoreEntry;
         }
 
-        public void SetHighScoreEntry(int songHashCode, GameType gameType, long score, int grade, Difficulty difficulty)
+        public void SetHighScoreEntry(int songHashCode, GameType gameType, long score, int grade, Difficulty difficulty, string name)
         {
             gameType = TranslateGameType(gameType);
             var highScoreEntry =
@@ -33,7 +33,7 @@ namespace WGiBeat.Managers
             highScoreEntry.Difficulty = difficulty;
             highScoreEntry.Grade = grade;
             highScoreEntry.Score = score;
-
+            highScoreEntry.Name = name;
             if (!_highScoreEntries.Contains(highScoreEntry))
             {
                 _highScoreEntries.Add(highScoreEntry);
@@ -104,12 +104,13 @@ namespace WGiBeat.Managers
                 case 4:
                     //Team score.
                     var total = (from e in players where e.Playing select e.Score).Sum();
-                    SetHighScoreEntry(CurrentSong.GetHashCode(), gameType, total, grades[0], LowestDifficulty(players));
+                    var playerCount = (from e in players where e.Playing select e).Count();
+                    SetHighScoreEntry(CurrentSong.GetHashCode(), gameType, total, grades[0], LowestDifficulty(players), playerCount + " Players" );
                     break;
                 default:
                     //Individual high score.
                     var highest = (from e in players where e.Playing select e.Score).Max();
-                    SetHighScoreEntry(CurrentSong.GetHashCode(), gameType, highest, grades[result], players[result].PlayDifficulty);
+                    SetHighScoreEntry(CurrentSong.GetHashCode(), gameType, highest, grades[result], players[result].PlayDifficulty, players[result].Name);
                     break;
             }
             return result;

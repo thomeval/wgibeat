@@ -160,7 +160,7 @@ namespace WGiBeat.Screens
 
         private void CheckForEndings(GameTime gameTime)
         {
-            if (SongPassed(gameTime) && (_displayState == 0))
+            if ((SongPassed(gameTime) ||AllPlayersKOed()) && (_displayState == 0))
             {
                 _displayState = 1;
                 _transitionTime = gameTime.TotalRealTime.TotalSeconds + 3;
@@ -174,6 +174,11 @@ namespace WGiBeat.Screens
 
                 Core.ScreenTransition("Evaluation");
             }
+        }
+
+        private bool AllPlayersKOed()
+        {
+            return (from e in Core.Players select e).All(e => (!e.Playing || e.KO));
         }
 
         private int _confidence;
@@ -326,6 +331,7 @@ namespace WGiBeat.Screens
             {
                 case GameType.NORMAL:
                 case GameType.TEAM:
+                case GameType.COOPERATIVE:
                     if (Core.Players[player].Life > 100)
                     {
                         Core.Players[player].IsBlazing = true;
@@ -440,8 +446,8 @@ namespace WGiBeat.Screens
 
         private double GetEndingTimeInPhrase()
         {
-
-            return ((_gameSong.Length - _gameSong.Offset) * 1000 + _songLoadDelay) / 1000 * (_gameSong.Bpm / 240);
+            //Removed _songLoadDelay here
+            return ((_gameSong.Length - _gameSong.Offset) * 1000) / 1000 * (_gameSong.Bpm / 240);
         }
 
         private void BeatlineNoteMissed(object sender, EventArgs e)
