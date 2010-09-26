@@ -11,10 +11,7 @@
 
 -Option screen. Title. Menu design, animated.
 -Winamp style spectrum analyser (transferred) (WIP)
--Highscore display: Difficulty icons dont fit (Hard/Insane) 90% Done
--Highscore display: Darken grade area (S grades are hard to read) Done.
 -New difficulty icons?
--Change ModeSelect icons, and use modeOptions.png instead
 -Replace graphics to use correct font
 -Sparks along UI. Over the wires.
 -Graphics for On Screen Keyboard
@@ -23,11 +20,11 @@
 -Program Icon 
 
 --Thome--
--Team (90% done), Sync (0.3), Battle (0.3?), VS CPU game modes (0.3?)
+-Sync (0.3), Battle (0.4?), VS CPU game modes (0.4?)
 -Player Profiles (Major - 0.3?)
 -On screen keyboard (needed for profiles)(Done)
 -Song folders / tree (Major - 0.4?)
--Song list sorting (0.3)
+
 -Better error message when prerequisites aren't installed (0.3)
 -Public domain music as a sample file? (0.3)
 -Cooperative bonuses (Streaks? Sync perfects?) (0.3)
@@ -38,16 +35,24 @@
 -Rewrite options loading
 -Stop song if everyone KO'ed
 -"Performance" indicator (evaluation + ingame)
--Lifebar graph
+-Lifebar graph (In progress)
+-Resize Mode options
+-Mode descriptions
 
 -Investigate timing / press lag (Better due to framerate fix, but is it perfect?)
--Local copy of XNA DLL's to remove dependency? (Cancelled, too many dependencies)
 
+
+---Roadmap (0.3)---
+-Song list sorting (0.3)(Done)
+-Player status/options indicators (Done)
+-Improved Highscore display (Done)
+-Icon for Team mode (Done)
 
 ---Roadmap (0.2)---
--Installer that works (In progress)
+-Team Mode (Done)
+-Installer that works (Done)
 -Licence (Done - BSD)
--Webhosting (ezra)
+-Webhosting (Done - Google Code)
 -Display subtitle on SongSelectScreen (Done)
 -Full screen mode? (Done)
 -Framerate / smoothness improvement (Done)
@@ -64,7 +69,7 @@
 -Mode select screen Icons (DONE)
 -Complete updates to graphics (Done)
 -Clean up particle field (Done)
--Refactor KeyScreen (DONE 90%)
+-Refactor KeyScreen (DONE)
 -Make Song select screen consistent with rest of UI. (Done)
 -Animated BPM meter in SongSelectScreen (Done)
 

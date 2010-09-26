@@ -86,8 +86,15 @@ namespace WGiBeat.Screens
             _headerSprite.Draw(spriteBatch);
 
             DrawModeOptions(spriteBatch);
+            DrawModeDescription(spriteBatch);
             DrawRestriction(spriteBatch);
            
+        }
+
+        private void DrawModeDescription(SpriteBatch spriteBatch)
+        {
+            var gameType = (GameType) _selectedGameType;
+            TextureManager.DrawString(spriteBatch,GetModeDescription(gameType),"DefaultFont",Core.Metrics["ModeDescription",0],Color.Black, FontAlign.LEFT);
         }
 
         private void DrawRestriction(SpriteBatch spriteBatch)
@@ -109,7 +116,7 @@ namespace WGiBeat.Screens
             for (int x = 0; x < (int) GameType.COUNT; x++)
             {
                 int selected = (x == _selectedGameType) ? 1 : 0;
-                _optionBaseSpriteMap.Draw(spriteBatch, selected, 250, 250, posX, posY);
+                _optionBaseSpriteMap.Draw(spriteBatch, selected, 250, 160, posX, posY);
 
                 if (GameTypeAllowed((GameType)x) == "")
                 {
@@ -119,7 +126,7 @@ namespace WGiBeat.Screens
                 {
                     _optionsSpriteMap.ColorShading.A = 64;
                 }
-                _optionsSpriteMap.Draw(spriteBatch, x, 229, 229, posX + 10, posY + 10);
+                _optionsSpriteMap.Draw(spriteBatch, x, 229, 139, posX + 10, posY + 10);
                 posX += 255;
             }
 
@@ -138,6 +145,22 @@ namespace WGiBeat.Screens
             }
         }
 
+        private string GetModeDescription(GameType gameType)
+        {
+            switch (gameType)
+            {
+                case GameType.NORMAL:
+                    return "1 to 4 players:\nEach player plays independantly and \nis evaluated individually.";
+                case GameType.COOPERATIVE:
+                    return
+                        "2 to 4 players:\nWork as a team to achieve high scores. \nPlayer scores and life bars are combined.";
+
+                case GameType.TEAM:
+                    return "3 to 4 players:\nTwo teams play competitively.\nThe team with the higher score wins.";
+                default:     
+                    return "Game type not recognized.";
+            }
+        }
         public override void PerformAction(Action action)
         {
          int player;
@@ -241,7 +264,7 @@ namespace WGiBeat.Screens
                     case GameType.COOPERATIVE:
                     if (PlayerCount() < 2)
                     {
-                        return "Cannot play with only one player.";
+                        return "Requires at least two players.";
                     }
                     break;
                     case GameType.TEAM:
