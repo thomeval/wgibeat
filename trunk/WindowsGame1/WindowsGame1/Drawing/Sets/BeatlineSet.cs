@@ -62,6 +62,7 @@ namespace WGiBeat.Drawing.Sets
             {
                 if (Players[x].Playing)
                 {
+                    _beatlines[x].DisablePulse = Players[x].KO;
                     _beatlines[x].Draw(spriteBatch, phraseNumber);
                 }
             }

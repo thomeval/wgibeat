@@ -67,7 +67,7 @@ namespace WGiBeat.Screens
             int maxLength = (from e in _lineData select e.Length).Max() - 1;
 
             float tickX = (float)this.Width / maxLength;
-            float tickY = (float)this.Height / (Max - Min);
+            float tickY = (float)(this.Height - 7) / (Max - Min);
             bool loopedOnce = false;
             for (int x = _topLine; (x != _topLine) || (!loopedOnce); x = (x+1) % 4)
             {
@@ -77,7 +77,7 @@ namespace WGiBeat.Screens
                 LineDrawer.Colour = LineColours[x];
                 for (int y = 0; y < _lineData[x].Length; y++)
                 {
-                    float posY = this.Y + this.Height;
+                    float posY = this.Y + this.Height - 7;
                     posY += Math.Max(_lineData[x][y] - Min, 0) * -tickY;
                     var pos = new Vector2(posX, posY);
                     posX += tickX;
@@ -94,8 +94,8 @@ namespace WGiBeat.Screens
             LineDrawer.ClearVectors();
             LineDrawer.AddVector(new Vector2(this.X, this.Y));
             LineDrawer.AddVector(new Vector2(this.X + this.Width, this.Y));
-            LineDrawer.AddVector(new Vector2(this.X + this.Width, this.Y + this.Height + 3));
-            LineDrawer.AddVector(new Vector2(this.X, this.Y + this.Height + 3));
+            LineDrawer.AddVector(new Vector2(this.X + this.Width, this.Y + this.Height));
+            LineDrawer.AddVector(new Vector2(this.X, this.Y + this.Height));
             LineDrawer.AddVector(new Vector2(this.X, this.Y));
             LineDrawer.Render(spriteBatch);
         }

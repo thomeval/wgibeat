@@ -25,6 +25,7 @@
 -On screen keyboard (needed for profiles)(Done)
 -Song folders / tree (Major - 0.4?)
 
+-Menu music for each screen.
 -Better error message when prerequisites aren't installed (0.3)
 -Public domain music as a sample file? (0.3)
 -Cooperative bonuses (Streaks? Sync perfects?) (0.3)
@@ -37,7 +38,8 @@
 -"Performance" indicator (evaluation + ingame)
 -Lifebar graph (In progress)
 -Resize Mode options
--Mode descriptions
+-Mode descriptions (Needs graphics)
+-Frame for song title/artist in song select
 
 -Investigate timing / press lag (Better due to framerate fix, but is it perfect?)
 

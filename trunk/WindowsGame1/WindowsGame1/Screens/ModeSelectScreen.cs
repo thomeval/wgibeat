@@ -15,10 +15,12 @@ namespace WGiBeat.Screens
         private SpriteMap _optionsSpriteMap;
         private Sprite _background;
         private Sprite _headerSprite;
+        private Sprite _descriptionBaseSprite;
 
         private SineSwayParticleField _field = new SineSwayParticleField();
         private Sprite _restrictionSprite;
         private List<PlayerOptionsFrame> _playerOptions = new List<PlayerOptionsFrame>();
+
 
         public ModeSelectScreen(GameCore core)
              : base(core)
@@ -71,7 +73,8 @@ namespace WGiBeat.Screens
                 SpriteTexture = TextureManager.Textures["ModeOptions"]
             };
 
-
+            _descriptionBaseSprite = new Sprite() {SpriteTexture = TextureManager.Textures["ModeDescriptionBase"]};
+            _descriptionBaseSprite.SetPosition(Core.Metrics["ModeDescriptionBase",0]);
             _restrictionSprite = new Sprite {SpriteTexture = TextureManager.Textures["RestrictionBorder"]};
             _restrictionSprite.SetPosition(Core.Metrics["RestrictionBase", 0]);
         }
@@ -93,6 +96,7 @@ namespace WGiBeat.Screens
 
         private void DrawModeDescription(SpriteBatch spriteBatch)
         {
+            _descriptionBaseSprite.Draw(spriteBatch);
             var gameType = (GameType) _selectedGameType;
             TextureManager.DrawString(spriteBatch,GetModeDescription(gameType),"DefaultFont",Core.Metrics["ModeDescription",0],Color.Black, FontAlign.LEFT);
         }
