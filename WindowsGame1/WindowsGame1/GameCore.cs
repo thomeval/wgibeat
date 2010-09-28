@@ -30,7 +30,7 @@ namespace WGiBeat
 
         private Dictionary<string, GameScreen> _screens;
         private GameScreen _activeScreen;
-
+        private MenuMusicManager _menuMusicManager; 
         public readonly KeyMappings KeyMappings = new KeyMappings(); //Changed to public, for GameScreen access.
 
         private KeyboardState _lastKeystate;
@@ -62,12 +62,19 @@ namespace WGiBeat
             HighScores = HighScoreManager.LoadFromFile("Scores.conf");
             TextureManager.GraphicsDevice = this.GraphicsDevice;
 
+
             if (!Directory.Exists(Directory.GetCurrentDirectory() + "\\" + Settings["SongFolder"]))
             {
                 Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\" + Settings["SongFolder"]);
             }
             Songs = SongManager.LoadFromFolder(Directory.GetCurrentDirectory() +"\\" + Settings["SongFolder"]);
 
+            _menuMusicManager = new MenuMusicManager
+            {
+                MusicFilePath = Directory.GetCurrentDirectory() + "\\MenuMusic\\",
+                SongManager = this.Songs
+            };
+            _menuMusicManager.LoadMusicList(Directory.GetCurrentDirectory() + "\\MenuMusic\\MusicList.txt");
 
             Players = new Player[4];
 
@@ -233,8 +240,7 @@ namespace WGiBeat
             _screens.Add("KeyOptions", new KeyOptionScreen(this));
             _screens.Add("Options", new OptionScreen(this));
             _screens.Add("ModeSelect", new ModeSelectScreen(this));
-            _activeScreen = _screens["MainMenu"];
-            _activeScreen.Initialize();
+            ScreenTransition("MainMenu");
         }
 
         /// <summary>
@@ -270,6 +276,7 @@ namespace WGiBeat
             }
             _screens[screen].Initialize();
             _activeScreen = _screens[screen];
+            _menuMusicManager.ChangeMusic(screen);
         }
     }
 }

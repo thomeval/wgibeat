@@ -96,6 +96,7 @@
     <Compile Include="AudioSystem\FMOD\fmod_errors.cs" />
     <Compile Include="AudioSystem\FMOD\fmod_memoryinfo.cs" />
     <Compile Include="AudioSystem\HighScoreEntry.cs" />
+    <Compile Include="AudioSystem\MenuMusicManager.cs" />
     <Compile Include="AudioSystem\SongPreviewManager.cs" />
     <Compile Include="Drawing\Beatline.cs" />
     <Compile Include="Drawing\BpmMeter.cs" />
@@ -162,6 +163,9 @@
     <Content Include="GameThumbnail.png" />
     <Content Include="Legal.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MenuMusic\MusicList.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="metrics.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

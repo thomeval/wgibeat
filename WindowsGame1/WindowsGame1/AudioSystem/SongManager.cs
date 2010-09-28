@@ -217,15 +217,17 @@ namespace WGiBeat.AudioSystem
         /// </summary>
         /// <param name="soundPath">The path and filename to the audio file to play.</param>
         /// <returns>The channel ID allocated by Fmod to the channel. Use this to control the playback.</returns>
-        public int PlaySoundEffect(string soundPath)
+        public int PlaySoundEffect(string soundPath, bool loop)
         {
             RESULT result;
             Sound mySound = GetOrCreateSound(soundPath);
             Channel myChannel = new Channel();
-            
-           // result = _fmodSystem.createStream(soundPath, MODE.SOFTWARE, ref mySound);
-           
-          //  CheckFMODErrors(result);
+
+            if (loop)
+            {
+                CheckFMODErrors(mySound.setMode((uint) MODE.SOFTWARE + MODE.CREATESTREAM + (uint) MODE.LOOP_NORMAL));
+            }
+
             result = _fmodSystem.playSound(CHANNELINDEX.FREE, mySound, false, ref myChannel);
             CheckFMODErrors(result);
             result = myChannel.setVolume(_masterVolume);
@@ -234,9 +236,15 @@ namespace WGiBeat.AudioSystem
             int index = -1;
             result = myChannel.getIndex(ref index);
             CheckFMODErrors(result);
+
             return index;
         }
 
+
+        public int PlaySoundEffect(string path)
+        {
+            return PlaySoundEffect(path, false);
+        }
         /// <summary>
         /// Sets the position of the sound channel given, to the position given (in milliseconds).
         /// Will throw an ArgumentException if an invalid channel ID is provided.
@@ -412,5 +420,6 @@ namespace WGiBeat.AudioSystem
 
             return returnData;
         }
+
     }
 }

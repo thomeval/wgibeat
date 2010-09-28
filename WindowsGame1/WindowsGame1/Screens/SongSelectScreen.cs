@@ -470,11 +470,11 @@ namespace WGiBeat.Screens
             {
 
                 _songPreviewManager.SetPreviewedSong(_songList[_selectedIndex].Song);
-                if (Core.Cookies.ContainsKey("MenuMusicChannel"))
-                {
-                    _songPreviewManager.ChannelIndexPrevious = (int)Core.Cookies["MenuMusicChannel"];
-                    Core.Cookies.Remove("MenuMusicChannel");
-                }
+                //if (Core.Cookies.ContainsKey("MenuMusicChannel"))
+                //{
+                //    _songPreviewManager.ChannelIndexPrevious = (int)Core.Cookies["MenuMusicChannel"];
+                //    Core.Cookies.Remove("MenuMusicChannel");
+                //}
             }
         }
     } 
