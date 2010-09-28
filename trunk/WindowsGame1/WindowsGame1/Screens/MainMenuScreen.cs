@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using Action=WGiBeat.Managers.Action;
 
@@ -19,6 +14,10 @@ namespace WGiBeat.Screens
 
         private bool _displayNoSongsError;
         private readonly string[] _menuText = { "Start Game", "Keys", "Options", "Exit" };
+        private Sprite _background;
+        private Sprite _header;
+        private Sprite _menuOptionSprite;
+        private Sprite _foreground;
 
         public MainMenuScreen(GameCore core)
             : base(core)
@@ -28,27 +27,37 @@ namespace WGiBeat.Screens
         public override void Update(GameTime gameTime)        
         {            
             base.Update(gameTime);
-        }        
+        }
+
         public override void Initialize()
         {
+            InitSprites();
             base.Initialize();
-
-            /*            swp.X = 250;            
-             * swp.Y = 250;            
-             * swp.Width = 100;            
-             * swp.Height = 200;           
-             * swp.Frequency = 2;           
-             * swp.StepSize = 0.01 / 3;            
-             */
-
-                if ((!Core.Cookies.ContainsKey("MenuMusicChannel")) && File.Exists("Content\\Audio\\MenuMusic.mp3"))
-                {
-                    Core.Cookies["MenuMusicChannel"] = Core.Songs.PlaySoundEffect("Content\\Audio\\MenuMusic.mp3");
-                }
-                else
-                {
-                    Console.WriteLine("Did not find MenuMusic or it is already playing. Skipping load.");
-                }
+        }
+        private void InitSprites()
+        {
+            _background = new Sprite
+            {
+                Height = Core.Window.ClientBounds.Height,
+                SpriteTexture = TextureManager.Textures["MainMenuBackground"],
+                Width = Core.Window.ClientBounds.Width
+            };
+            _foreground = new Sprite
+            {
+                Height = Core.Window.ClientBounds.Height,
+                SpriteTexture = TextureManager.Textures["MainMenuForeground"],
+                Width = Core.Window.ClientBounds.Width
+            };
+            _header = new Sprite
+            {
+                SpriteTexture = TextureManager.Textures["mainMenuHeader"]
+            };
+            _menuOptionSprite = new Sprite
+            {
+                Height = 50,
+                SpriteTexture = TextureManager.Textures["mainMenuOption"],
+                Width = 300
+            };
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
@@ -62,63 +71,40 @@ namespace WGiBeat.Screens
 
         private void DrawBackground(SpriteBatch spriteBatch)
         {
-            var background = new Sprite
-            {
-                Height = Core.Window.ClientBounds.Height,
-                SpriteTexture = TextureManager.Textures["MainMenuBackground"],
-                Width = Core.Window.ClientBounds.Width,
-                X = 0,
-                Y = 0
-            };
-
-            background.Draw(spriteBatch);
-            _field.Draw(spriteBatch);            
-            //swp.Draw(spriteBatch);            
-            background.SpriteTexture = TextureManager.Textures["MainMenuForeground"];            
-            background.Draw(spriteBatch);        
+            _background.Draw(spriteBatch);
+            _field.Draw(spriteBatch);                                
+            _foreground.Draw(spriteBatch);        
         }
 
         private void DrawMenu(SpriteBatch spriteBatch)
         {
             DrawBackground(spriteBatch);
 
-            var header = new Sprite
-            {
-                SpriteTexture = TextureManager.Textures["mainMenuHeader"],
-                X = 0,
-                Y = 0
-            };
-
-            header.Draw(spriteBatch);
+            _header.Draw(spriteBatch);
             
             for (int menuOption = 0; menuOption < (int)MainMenuOption.COUNT; menuOption++)
             {
-                var menuOptionSprite = new Sprite
-                                           {
-                                               Height = 50,
-                                               SpriteTexture = TextureManager.Textures["mainMenuOption"],
-                                               Width = 300
-                                           };
-                if (menuOption == (int)_selectedMenuOption)
-                {
-                    menuOptionSprite.SpriteTexture = TextureManager.Textures["mainMenuOptionSelected"];
-                }
-                menuOptionSprite.SetPosition(Core.Metrics["MainMenuOptions", menuOption]);
-                menuOptionSprite.Draw(spriteBatch);
+
+                _menuOptionSprite.SpriteTexture = menuOption == (int)_selectedMenuOption ? TextureManager.Textures["mainMenuOptionSelected"] : TextureManager.Textures["mainMenuOption"];
+                _menuOptionSprite.SetPosition(Core.Metrics["MainMenuOptions", menuOption]);
+                _menuOptionSprite.Draw(spriteBatch);
 
                 spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], _menuText[menuOption], Core.Metrics["MainMenuOptionText", menuOption], Color.Black);
             }
         }
 
+//TODO: Refactor
         public override void PerformAction(Action action)
         {
             int newOptionValue;
-            switch (action)
+            int player;
+            Int32.TryParse("" + action.ToString()[1], out player);
+            player--;
+            var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
+
+            switch (paction)
             {
-                case Action.P1_UP:
-                case Action.P2_UP:
-                case Action.P3_UP:
-                case Action.P4_UP:
+                case "UP":
                     newOptionValue = (int)_selectedMenuOption - 1;
                     if (newOptionValue < 0)
                     {
@@ -126,27 +112,18 @@ namespace WGiBeat.Screens
                     }
                     _selectedMenuOption = (MainMenuOption)newOptionValue;
                     break;
-                case Action.P1_DOWN:
-                case Action.P2_DOWN:
-                case Action.P3_DOWN:
-                case Action.P4_DOWN:
+                case "DOWN":
                     newOptionValue = (int)_selectedMenuOption + 1;
                     newOptionValue %= (int)MainMenuOption.COUNT;
                     _selectedMenuOption = (MainMenuOption)newOptionValue;
                     break;
-                case Action.P1_START:
-                case Action.P2_START:
-                case Action.P3_START:
-                case Action.P4_START:
+                case "START":
                      MenuOptionSelected();
                     break;
-                case Action.P1_BEATLINE:
-                case Action.P2_BEATLINE:
-                case Action.P3_BEATLINE:
-                case Action.P4_BEATLINE:
+                case "BEATLINE":
                     MenuOptionSelected();
                     break;
-                case Action.SYSTEM_BACK:
+                case "BACK":
                     Core.Exit();
                     break;
             }
