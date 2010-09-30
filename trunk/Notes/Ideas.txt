@@ -25,7 +25,7 @@
 -On screen keyboard (needed for profiles)(Done)
 -Song folders / tree (Major - 0.4?)
 
--Menu music for each screen.
+
 -Better error message when prerequisites aren't installed (0.3)
 -Public domain music as a sample file? (0.3)
 -Cooperative bonuses (Streaks? Sync perfects?) (0.3)
@@ -39,6 +39,8 @@
 -Lifebar graph (In progress)
 -Resize Mode options
 -Mode descriptions (Needs graphics)
+-Loop menu music.
+-Fade out menu music when no next music.
 -Frame for song title/artist in song select
 
 -Investigate timing / press lag (Better due to framerate fix, but is it perfect?)
@@ -49,6 +51,7 @@
 -Player status/options indicators (Done)
 -Improved Highscore display (Done)
 -Icon for Team mode (Done)
+-Menu music for each screen. (Done)
 
 ---Roadmap (0.2)---
 -Team Mode (Done)

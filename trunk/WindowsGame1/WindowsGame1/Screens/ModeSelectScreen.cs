@@ -160,7 +160,7 @@ namespace WGiBeat.Screens
                         "2 to 4 players:\nWork as a team to achieve high scores. \nPlayer scores and life bars are combined.";
 
                 case GameType.TEAM:
-                    return "3 to 4 players:\nTwo teams play competitively.\nThe team with the higher score wins.";
+                    return "2 to 4 players:\nTwo teams play competitively.\nThe team with the higher score wins.";
                 default:     
                     return "Game type not recognized.";
             }
@@ -272,9 +272,9 @@ namespace WGiBeat.Screens
                     }
                     break;
                     case GameType.TEAM:
-                    if (PlayerCount() < 3)
+                    if (PlayerCount() < 2)
                     {
-                        return "Requires at least three players.";
+                        return "Requires at least two players.";
                     }
                     if ((TeamCount(1) == 0 ) || TeamCount(2) == 0)
                     {

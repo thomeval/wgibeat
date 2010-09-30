@@ -24,6 +24,7 @@ namespace WGiBeat.Screens
         private Sprite _gradeBaseSprite;
         private LifeGraph _lifeGraph;
         private double _lastCycle;
+        private TeamScoreMeter _teamScoreMeter;
         public EvaluationScreen(GameCore core) : base(core)
         {
         }
@@ -61,7 +62,9 @@ namespace WGiBeat.Screens
             {
                 _lifeGraph.SetPosition(Core.Metrics["LifeGraph", _lifeGraph.Location]);
             }
-            
+            _teamScoreMeter = new TeamScoreMeter();
+            _teamScoreMeter.SetPosition(Core.Metrics["EvaluationTeamScoreMeter",0]);
+            _teamScoreMeter.InitSprites();
         }
 
         private void InitSprites()
@@ -268,8 +271,10 @@ namespace WGiBeat.Screens
                     case GameType.TEAM:
                    var teamAScore = (from e in Core.Players where (e.Playing && e.Team == 1) select e.Score).Sum();
                    var teamBScore = (from e in Core.Players where (e.Playing && e.Team == 2) select e.Score).Sum();
-                    TextureManager.DrawString(spriteBatch,"Blue: " + teamAScore, "DefaultFont",Core.Metrics["EvaulationTeamScore",0],Color.Black,FontAlign.LEFT);
-                    TextureManager.DrawString(spriteBatch, "Red: " + teamBScore, "DefaultFont", Core.Metrics["EvaulationTeamScore", 1], Color.Black, FontAlign.LEFT);
+                   _teamScoreMeter.BlueScore = teamAScore;
+                   _teamScoreMeter.RedScore = teamBScore;
+                   _teamScoreMeter.Draw(spriteBatch);
+                   _teamScoreMeter.Update();
                    break;
            }
         }

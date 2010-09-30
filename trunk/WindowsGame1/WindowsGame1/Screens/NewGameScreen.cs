@@ -10,11 +10,9 @@ namespace WGiBeat.Screens
 {
     public class NewGameScreen : GameScreen
     {
-        private int _playersJoined;
         private SineSwayParticleField _field = new SineSwayParticleField();
-        //TODO: Consider refactoring into enum.
-        private readonly CursorPosition[] _cursorPositions = new CursorPosition[4];
 
+        private readonly CursorPosition[] _cursorPositions = new CursorPosition[4];
         private readonly Menu[] _playerMenus = new Menu[4];
         private readonly OnScreenKeyboard[] _keyboards = new OnScreenKeyboard[4];
         public NewGameScreen(GameCore core)
@@ -58,10 +56,10 @@ namespace WGiBeat.Screens
 
                 _playerMenus[x].SetPosition(Core.Metrics["NewGameMenuStart", x]);
 
-                _playerMenus[x].AddItem(new MenuItem { ItemText = "Leave" });
-
                 //NOTE: Uncomment this to get access to the incomplete OnScreenKeyboard. Not functional yet.
-                  _playerMenus[x].AddItem(new MenuItem{ItemText = "Show Keyboard"});
+                _playerMenus[x].AddItem(new MenuItem { ItemText = "Name Entry" });
+
+                _playerMenus[x].AddItem(new MenuItem { ItemText = "Leave" });
             }
 
             for (int x = 0; x < 4; x++)
@@ -72,7 +70,6 @@ namespace WGiBeat.Screens
                 _keyboards[x].EntryCancelled += Keyboard_EntryCancelled;
                 _keyboards[x].EntryComplete += Keyboard_EntryComplete;
             }
-            _playersJoined = 0;
             base.Initialize();
         }
 
@@ -220,7 +217,6 @@ namespace WGiBeat.Screens
                 case CursorPosition.NOT_JOINED:
                     _cursorPositions[number] = CursorPosition.MAIN_MENU;
                     Core.Players[number].Playing = true;
-                    _playersJoined += 1;
                     break;
                 case CursorPosition.MAIN_MENU:
                     SelectMainMenuItem(number);
@@ -232,8 +228,6 @@ namespace WGiBeat.Screens
                     //Player is already ready.
                     return;
             }
-
-
         }
 
         private void SelectMainMenuItem(int number)
@@ -243,14 +237,13 @@ namespace WGiBeat.Screens
                 case "Leave":
                     _cursorPositions[number] = CursorPosition.NOT_JOINED;
                     Core.Players[number].Playing = false;
-                    _playersJoined--;
                     TryToStart();
                     break;
                 case "Decision":
                     _cursorPositions[number] = CursorPosition.READY;
                     TryToStart();
                     break;
-                case "Show Keyboard":
+                case "Name Entry":
                     _cursorPositions[number] = CursorPosition.KEYBOARD;
                     break;
             }

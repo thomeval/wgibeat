@@ -85,11 +85,6 @@ namespace WGiBeat.Screens
 
             header.Draw(spriteBatch);
 
-
-
-
-
-
             String instructionText = "";
 
             if (State.CurrentState == 3)
@@ -196,12 +191,12 @@ namespace WGiBeat.Screens
                     panelPosition.Y += 40;
                     textPosition.Y = panelPosition.Y + 5;
                 }
-            }
 
-            /*
+
                 for (int index = 1; index < 4; index++)
                 {
-                    var buttonList = Core.KeyMappings.GetButtons(_links[_selectedMenuOption].GetAction(_currentPlayer), index);
+                    var buttonList = Core.KeyMappings.GetButtons(_links[_selectedMenuOption].GetAction(_currentPlayer),
+                                                                 index);
                     foreach (Buttons button in buttonList)
                     {
 
@@ -210,11 +205,11 @@ namespace WGiBeat.Screens
                         spriteBatch.DrawString(TextureManager.Fonts["LargeFont"],
                                                "Pad " + index + " = " + button, textPosition,
                                                Color.Black);
-                        panelPosition.Y += 55;
-                        textPosition.Y = panelPosition.Y + 10;
+                        panelPosition.Y += 40;
+                        textPosition.Y = panelPosition.Y + 5;
                     }
                 }
-                */
+            }
         }
 
         public override void PerformKey(Keys key)

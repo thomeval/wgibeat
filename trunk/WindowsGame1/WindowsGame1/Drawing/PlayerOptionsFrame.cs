@@ -74,7 +74,7 @@ namespace WGiBeat.Drawing
         {
 
             _backgrounds.Draw(spriteBatch, PlayerIndex, this.Width, this.Height, this.X, this.Y);
-            _difficultyIcons.Draw(spriteBatch, (int)Player.PlayDifficulty + 1, 32, 32, this.X + 65, this.Y + 2);
+            _difficultyIcons.Draw(spriteBatch, (int)Player.PlayDifficulty + 1, 32, 32, this.X + 65, this.Y + 3);
 
             DrawText(spriteBatch);
 

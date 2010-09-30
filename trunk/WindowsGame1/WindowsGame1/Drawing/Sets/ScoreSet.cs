@@ -11,9 +11,9 @@ namespace WGiBeat.Drawing.Sets
         private readonly GameType _gameType;
         private SpriteMap _iconSpriteMap;
         private SpriteMap _coopBaseSprite;
-        private Sprite _teamBaseSprite;
         private SpriteMap _individualBaseSprite;
 
+        private TeamScoreMeter _teamScoreMeter;
         private ScoreSet()
         {
             _displayedScores = new long[4];
@@ -53,10 +53,8 @@ namespace WGiBeat.Drawing.Sets
                 Columns = 1,
                 Rows = 1
             };
-            _teamBaseSprite = new Sprite
-            {
-                SpriteTexture = TextureManager.Textures["ScoreBaseTeam"]
-            };
+            _teamScoreMeter = new TeamScoreMeter();
+            _teamScoreMeter.InitSprites();
             _individualBaseSprite = new SpriteMap
             {
                 SpriteTexture = TextureManager.Textures["scoreBase"],
@@ -117,31 +115,37 @@ namespace WGiBeat.Drawing.Sets
         }
         private void DrawTeamCombinedScores(SpriteBatch spriteBatch)
         {
-            long scoreTextA = 0, scoreTextB = 0;
+            long blueScore = 0, redScore = 0;
             for (int x = 0; x < 4; x++)
             {
                 if (_players[x].Playing)
                 {
                     if (_players[x].Team == 1)
                     {
-                        scoreTextA += _displayedScores[x];
+                        blueScore += _displayedScores[x];
                     }
                     else if (_players[x].Team == 2)
                     {
-                        scoreTextB += _displayedScores[x];
+                        redScore += _displayedScores[x];
                     }
                 }
             }
 
-            for (int x = 0; x < 2; x++)
+            _teamScoreMeter.BlueScore = blueScore;
+            _teamScoreMeter.RedScore = redScore;
+
+            if (_players[0].Playing || _players[1].Playing)
             {
-                _teamBaseSprite.SetPosition(_metrics["ScoreCombinedBase",x]);
-                _teamBaseSprite.Draw(spriteBatch);
-                    TextureManager.DrawString(spriteBatch, "" + scoreTextA, "LargeFont",
-                                           _metrics["ScoreTeamAText", x], Color.White, FontAlign.LEFT);
-                    TextureManager.DrawString(spriteBatch, "" + scoreTextB, "LargeFont",
-                           _metrics["ScoreTeamBText", x], Color.White, FontAlign.RIGHT);
+                _teamScoreMeter.SetPosition(_metrics["ScoreCombinedBase", 0]);
+                _teamScoreMeter.Draw(spriteBatch);
             }
+            if (_players[2].Playing || (_players[3].Playing))
+            {
+                _teamScoreMeter.SetPosition(_metrics["ScoreCombinedBase", 1]);
+                _teamScoreMeter.Draw(spriteBatch);
+            }
+            _teamScoreMeter.Update();
+
         }
 
         private void DrawIndividualScores(SpriteBatch spriteBatch)

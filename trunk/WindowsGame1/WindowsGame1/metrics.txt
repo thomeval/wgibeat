@@ -67,7 +67,7 @@ EvaluationMaxStreak=[265,85][665,85][265,410][665,410];
 EvaluationHighScore=[220,225][620,225][220,550][620,550][410,295];
 EvaluationTotalScore=[510,275];
 EvaluationTotalGrade=[610,275];
-EvaulationTeamScore=[410,275][410,300];
+EvaluationTeamScoreMeter=[410,280];
 LifeGraph=[20,20][420,20][20,345][420,345];
 
 #New Game;
