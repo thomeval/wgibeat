@@ -23,8 +23,8 @@ namespace WGiBeat.Screens
         public int Min { get; set; }
         public int Location { get; set; }
         
-        public Color[] LineColours = {Color.Red, Color.Blue, Color.Green, Color.Yellow};
-        private float[][] _lineData;
+        public readonly Color[] LineColours = {Color.Red, Color.Blue, Color.Green, Color.Yellow};
+        private readonly float[][] _lineData;
         private int _topLine;
 
         public PrimitiveLine LineDrawer;
@@ -67,7 +67,7 @@ namespace WGiBeat.Screens
             int maxLength = (from e in _lineData select e.Length).Max() - 1;
 
             float tickX = (float)this.Width / maxLength;
-            float tickY = (float)(this.Height - 7) / (Max - Min);
+            float tickY = (float)(this.Height - 11) / (Max - Min);
             bool loopedOnce = false;
             for (int x = _topLine; (x != _topLine) || (!loopedOnce); x = (x+1) % 4)
             {
