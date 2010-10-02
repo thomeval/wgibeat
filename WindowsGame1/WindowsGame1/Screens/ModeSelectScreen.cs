@@ -296,6 +296,13 @@ namespace WGiBeat.Screens
         {
             if (GameTypeAllowed((GameType) _selectedGameType) == "")
             {
+                if (((GameType)_selectedGameType ) != GameType.TEAM)
+                {
+                    foreach (Player player in Core.Players)
+                    {
+                        player.Team = 0;
+                    }
+                }
                 Core.Cookies["CurrentGameType"] = (GameType) _selectedGameType;
                 Core.ScreenTransition("SongSelect");
             }

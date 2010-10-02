@@ -3,24 +3,22 @@
 -Path following particle.
 -Deleting key links.
 
--Icons for mode select screen. Other stuff in that screen. 66% done
-
 -Song select screen. items. Bar at bottom. / top (mode select, too). Meter for song speed.
 
 -Evaluation screen, lot of work. 80% Done
 
 -Option screen. Title. Menu design, animated.
--Winamp style spectrum analyser (transferred) (WIP)
+
 -New difficulty icons?
 -Replace graphics to use correct font
 -Sparks along UI. Over the wires.
 -Graphics for On Screen Keyboard
--Graphics for restriction messages and possibly mode descriptions
 -Graphics for chance / SP gameplay
 -Program Icon 
 
 --Thome--
 -Sync (0.3), Battle (0.4?), VS CPU game modes (0.4?)
+-Song Sort bookmarks / quick navigation (0.4)
 -Player Profiles (Major - 0.3?)
 -On screen keyboard (needed for profiles)(Done)
 -Song folders / tree (Major - 0.4?)
@@ -34,24 +32,31 @@
 -Critical error handling (0.3)
 -Chance / SP gameplay (Major - Needs graphics)
 -Rewrite options loading
--Stop song if everyone KO'ed
 -"Performance" indicator (evaluation + ingame)
 -Lifebar graph (In progress)
--Resize Mode options
 -Mode descriptions (Needs graphics)
--Loop menu music.
+-Name list
+-Beatline scaling with 1 or 2 players
+-Player Label for beatlines
+
 -Fade out menu music when no next music.
 -Frame for song title/artist in song select
 
 -Investigate timing / press lag (Better due to framerate fix, but is it perfect?)
-
+-Team select screen
 
 ---Roadmap (0.3)---
 -Song list sorting (0.3)(Done)
 -Player status/options indicators (Done)
 -Improved Highscore display (Done)
 -Icon for Team mode (Done)
+-Tug of war bar for team mode (Done)
 -Menu music for each screen. (Done)
+-Winamp style spectrum analyser (Done)
+-Graphics for restriction messages and possibly mode descriptions (Done)
+-Stop song if everyone KO'ed (Done)
+-Resize Mode options (Done)
+-Loop menu music (Done)
 
 ---Roadmap (0.2)---
 -Team Mode (Done)

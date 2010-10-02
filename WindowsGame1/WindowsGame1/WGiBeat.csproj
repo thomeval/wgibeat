@@ -124,6 +124,7 @@
     <Compile Include="Managers\HighScoreManager.cs" />
     <Compile Include="Drawing\LifeGraph.cs" />
     <Compile Include="Managers\NetManager.cs" />
+    <Compile Include="Screens\InitialLoadScreen.cs" />
     <Compile Include="Screens\ModeSelectScreen.cs" />
     <Compile Include="Drawing\NormalLifeBar.cs" />
     <Compile Include="Drawing\PrimitiveLine.cs" />
