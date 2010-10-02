@@ -42,6 +42,14 @@ namespace WGiBeat.Drawing
             }
         }
 
+        public static Texture2D BlankTexture(int width, int height)
+        {
+            var tex = new Texture2D(GraphicsDevice, 1, 1, 1, TextureUsage.None, SurfaceFormat.Color);
+            var pixels = new Color[1];
+            pixels[0] = Color.White;
+            tex.SetData(pixels);
+            return tex;
+        }
         /*
         public static void DrawStringClipped(string text, string fontName, Vector2 position, Color color, FontAlign align, Rectangle clip)
         {

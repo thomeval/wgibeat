@@ -25,6 +25,7 @@ namespace WGiBeat.Drawing
         private SpriteMap _speedBlocks;
         private SpriteMap _difficultyIcons;
         private SpriteMap _indicatorArrows;
+        private Sprite _nameBackground;
 
         public bool OptionChangeActive;
         private byte _optionControlOpacity;
@@ -67,6 +68,7 @@ namespace WGiBeat.Drawing
                                    Rows = 1,
                                    SpriteTexture = TextureManager.Textures["IndicatorArrows"]
                                };
+            _nameBackground = new Sprite {SpriteTexture = TextureManager.BlankTexture(300, 300)};
 
         }
 
@@ -76,9 +78,28 @@ namespace WGiBeat.Drawing
             _backgrounds.Draw(spriteBatch, PlayerIndex, this.Width, this.Height, this.X, this.Y);
             _difficultyIcons.Draw(spriteBatch, (int)Player.PlayDifficulty + 1, 32, 32, this.X + 65, this.Y + 3);
 
+            DrawNameBackgrounds(spriteBatch);
             DrawText(spriteBatch);
-
             DrawSpeedBlocks(spriteBatch);
+        }
+
+        private readonly Color _blueBackground = new Color(128,128,255,128);
+        private readonly Color _redBackground = new Color(255,128,128,128);
+        private void DrawNameBackgrounds(SpriteBatch spriteBatch)
+        {
+            if (Player.Team == 1)
+            {
+                _nameBackground.ColorShading = _blueBackground;
+            }
+            if (Player.Team == 2)
+            {
+                _nameBackground.ColorShading = _redBackground;
+            }
+            _nameBackground.Width = this.Width - 133;
+            _nameBackground.Height = this.Height - 2;
+            _nameBackground.X = this.X + 100;
+            _nameBackground.Y = this.Y + 1;
+            _nameBackground.Draw(spriteBatch);
         }
 
         private Color _textColor = Color.Black;
@@ -136,6 +157,7 @@ namespace WGiBeat.Drawing
 
         private const int BLOCK_HEIGHT = 5;
         private readonly Color _blockColor = new Color(64, 64, 64, 255);
+
 
         private void DrawSpeedBlocks(SpriteBatch spriteBatch)
         {

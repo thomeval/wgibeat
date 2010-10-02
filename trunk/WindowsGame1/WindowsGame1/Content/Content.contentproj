@@ -158,6 +158,11 @@
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Compile Include="Fonts\LogFont.spritefont">
+      <Name>LogFont</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
     <Compile Include="Fonts\TwoTech36.spritefont">
       <Name>TwoTech36</Name>
       <Importer>FontDescriptionImporter</Importer>
@@ -465,6 +470,13 @@
     </Compile>
     <Compile Include="Textures\TugOfWarRed.png">
       <Name>TugOfWarRed</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\LoadingMessageBase.png">
+      <Name>LoadingMessageBase</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

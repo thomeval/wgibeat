@@ -20,7 +20,7 @@
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(other.Title, Title) && Equals(other.Artist, Artist) && Equals(other.SongFile, SongFile) && other.Bpm == Bpm && other.Offset == Offset && other.Length == Length;
+            return other.GetHashCode() == this.GetHashCode();
         }
 
         public override bool Equals(object obj)

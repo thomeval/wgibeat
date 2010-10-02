@@ -7,6 +7,7 @@ using FMOD;
 
 namespace WGiBeat.AudioSystem
 {
+    //TODO: Consider splitting into GameSong related functions and FMOD related functions.
     /// <summary>
     /// A manager that handles all audio in the game. This is generally separated into Songs,
     /// of which only one is allowed at a time, and Sound Effects, of which multiple simultanious
@@ -24,13 +25,14 @@ namespace WGiBeat.AudioSystem
         private GameSong _currentSong;
         private const int CHANNEL_COUNT = 8;
         private float _masterVolume = 1.0f;
-
+        private static List<string> _logMessages;
         private Channel tmpChannel = new Channel();
         #endregion 
 
         public SongManager()
         {
             _sounds = new Dictionary<string, Sound>();
+            _logMessages = new List<string>();
               RESULT result;
             result = Factory.System_Create(ref _fmodSystem);
             CheckFMODErrors(result);
@@ -57,7 +59,7 @@ namespace WGiBeat.AudioSystem
                 case RESULT.ERR_FILE_NOTFOUND:
                     throw new FileNotFoundException("Unable to find GameSong file " + _currentSong.SongFile + " in " + _currentSong.Path);
                 default:
-                    throw new Exception("FMOD error: " + result);
+                    throw new Exception("FMOD error: " + Error.String(result));
             }
         }
 
@@ -93,7 +95,7 @@ namespace WGiBeat.AudioSystem
             }
             else
             {
-                throw new Exception("SongManager already contains song with title: " + song.Title);
+                throw new Exception("SongManager already contains song with hashcode: " + song.GetHashCode());
             }
         }
 
@@ -103,29 +105,35 @@ namespace WGiBeat.AudioSystem
         /// </summary>
         /// <param name="path">The path containing song files to parse.</param>
         /// <returns>A new SongManager instance, containing GameSongs for any .sng files parsed.</returns>
-        public static SongManager LoadFromFolder(string path)
+        public void LoadFromFolder(string path)
         {
-            var newManager = new SongManager();
             var folders = new List<string>();
             folders.Add(path);
 
             while (folders.Count > 0)
             {
                 string currentFolder = folders[0];
-
+                _logMessages.Add("INFO: Loading songfiles in " + currentFolder+"\n");
                 folders.AddRange(Directory.GetDirectories(currentFolder));
                 foreach (string file in Directory.GetFiles(currentFolder, "*.sng"))
                 {
                     var newSong = LoadFromFile(file);
+                    if (newSong ==  null)
+                    {
+                        continue;
+                    }
                     newSong.Path = currentFolder;
                     newSong.DefinitionFile = Path.GetFileName(file);
-                    newManager.AddSong(newSong);
+                    AddSong(newSong);
 
                 }
                 folders.RemoveAt(0);
             }
-
-            return newManager;
+            if (_songs.Count == 0)
+            {
+                _logMessages.Add(String.Format("ERROR: No valid song files loaded. WGiBeat is not playable without one!"));
+            }
+            _logMessages.Add(String.Format("INFO: Song load completed. {0} songs loaded.",_songs.Count));
         }
 
         /// <summary>
@@ -159,52 +167,62 @@ namespace WGiBeat.AudioSystem
         /// </summary>
         /// <param name="filename">The name of the file to load.</param>
         /// <returns>A GameSong loaded from the file provided.</returns>
-        public static GameSong LoadFromFile(string filename)
+        public GameSong LoadFromFile(string filename)
         {
             var newSong = new GameSong();
 
-            string songText = File.ReadAllText(filename);
-
-            songText = songText.Replace("\r", "");
-            songText = songText.Replace("\n", "");
-
-            string[] rules = songText.Split(';');
-
-            foreach (string rule in rules)
+            try
             {
-                if ((rule.Length == 0) || (rule[0] == '#'))
-                {
-                    continue;
-                }
+                string songText = File.ReadAllText(filename);
 
-                string field = rule.Substring(0, rule.IndexOf("=")).ToUpper();
-                string value = rule.Substring(rule.IndexOf("=") + 1);
+                songText = songText.Replace("\r", "");
+                songText = songText.Replace("\n", "");
 
-                switch (field.ToUpper())
+                string[] rules = songText.Split(';');
+
+                foreach (string rule in rules)
                 {
-                    case "TITLE":
-                        newSong.Title = value;
-                        break;
-                    case "SUBTITLE":
-                        newSong.Subtitle = value;
-                        break;
-                    case "ARTIST":
-                        newSong.Artist = value;
-                        break;
-                    case "OFFSET":
-                        newSong.Offset = Convert.ToDouble(value);
-                        break;
-                    case "LENGTH":
-                        newSong.Length = Convert.ToDouble(value);
-                        break;
-                    case "BPM":
-                        newSong.Bpm = Convert.ToDouble(value);
-                        break;
-                    case "SONGFILE":
-                        newSong.SongFile = value;
-                        break;
+                    if ((rule.Length == 0) || (rule[0] == '#'))
+                    {
+                        continue;
+                    }
+
+                    string field = rule.Substring(0, rule.IndexOf("=")).ToUpper();
+                    string value = rule.Substring(rule.IndexOf("=") + 1);
+
+                    switch (field.ToUpper())
+                    {
+                        case "TITLE":
+                            newSong.Title = value;
+                            break;
+                        case "SUBTITLE":
+                            newSong.Subtitle = value;
+                            break;
+                        case "ARTIST":
+                            newSong.Artist = value;
+                            break;
+                        case "OFFSET":
+                            newSong.Offset = Convert.ToDouble(value);
+                            break;
+                        case "LENGTH":
+                            newSong.Length = Convert.ToDouble(value);
+                            break;
+                        case "BPM":
+                            newSong.Bpm = Convert.ToDouble(value);
+                            break;
+                        case "SONGFILE":
+                            newSong.SongFile = value;
+                            break;
+                    }
                 }
+                _logMessages.Add("INFO: Loaded " + newSong.Title + " successfully.\n");
             }
+            catch (Exception)
+            {
+                _logMessages.Add("WARN: Failed to load song: " + filename+ "\n");
+                return null;
+            }
+            
             return newSong;
         }
         #endregion
@@ -227,7 +245,7 @@ namespace WGiBeat.AudioSystem
             {
                 CheckFMODErrors(mySound.setMode((uint) MODE.SOFTWARE + MODE.CREATESTREAM + (uint) MODE.LOOP_NORMAL));
             }
-
+         
             result = _fmodSystem.playSound(CHANNELINDEX.FREE, mySound, false, ref myChannel);
             CheckFMODErrors(result);
             result = myChannel.setVolume(_masterVolume);
@@ -272,7 +290,6 @@ namespace WGiBeat.AudioSystem
             if (!_sounds.ContainsKey(soundPath))
             {
                 var mySound = new Sound();
-
                 var resultCode = _fmodSystem.createStream(soundPath, MODE.SOFTWARE, ref mySound);
                 CheckFMODErrors(resultCode);
                 return mySound;
@@ -421,5 +438,16 @@ namespace WGiBeat.AudioSystem
             return returnData;
         }
 
+        #region Logging
+        public static string GetLogMessages()
+        {
+            string result = "";
+            foreach (string message in _logMessages)
+            {
+                result += message + "\n";
+            }
+            return result;
+        }
+        #endregion
     }
 }

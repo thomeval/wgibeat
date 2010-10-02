@@ -67,7 +67,8 @@ namespace WGiBeat
             {
                 Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\" + Settings["SongFolder"]);
             }
-            Songs = SongManager.LoadFromFolder(Directory.GetCurrentDirectory() +"\\" + Settings["SongFolder"]);
+
+            Songs = new SongManager();
 
             _menuMusicManager = new MenuMusicManager
             {
@@ -232,6 +233,7 @@ namespace WGiBeat
         private void InitializeScreens()
         {
             _screens = new Dictionary<string, GameScreen>();
+            _screens.Add("InitialLoad",new InitialLoadScreen(this));
             _screens.Add("MainMenu", new MainMenuScreen(this));
             _screens.Add("NewGame",new NewGameScreen(this));
             _screens.Add("MainGame",new MainGameScreen(this));
@@ -240,7 +242,7 @@ namespace WGiBeat
             _screens.Add("KeyOptions", new KeyOptionScreen(this));
             _screens.Add("Options", new OptionScreen(this));
             _screens.Add("ModeSelect", new ModeSelectScreen(this));
-            ScreenTransition("MainMenu");
+            ScreenTransition("InitialLoad");
         }
 
         /// <summary>

@@ -37,6 +37,11 @@ MainMenuOptions=[250,150][250,250][250,350][250,450];
 MainMenuOptionText=[270,160][270,260][270,360][270,460];
 MainMenuNoSongsError=[270,200];
 
+#Initial Load;
+LoadMessage=[435,560];
+LoadMessageBase=[420,555];
+SongLoadLog=[25,40];
+
 #Evaluation;
 EvaluationHeader=[20,10][420,10][20,335][420,335];
 EvaluationInstruction=[10,275];
