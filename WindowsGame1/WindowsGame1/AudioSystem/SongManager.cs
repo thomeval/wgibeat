@@ -215,6 +215,10 @@ namespace WGiBeat.AudioSystem
                             break;
                     }
                 }
+                if (!ValidateSongFile(newSong, filename))
+                {
+                    return null;
+                }
                 _logMessages.Add("INFO: Loaded " + newSong.Title + " successfully.\n");
             }
             catch (Exception)
@@ -222,9 +226,27 @@ namespace WGiBeat.AudioSystem
                 _logMessages.Add("WARN: Failed to load song: " + filename+ "\n");
                 return null;
             }
-            
+
+
             return newSong;
         }
+
+        private bool ValidateSongFile(GameSong song,string filename)
+        {
+            if (string.IsNullOrEmpty(song.SongFile))
+            {
+                _logMessages.Add("WARN: No audio file specified in "+ filename);
+                return false;
+            }
+            var path = Path.GetDirectoryName(filename) + "\\" + song.SongFile;
+            if (!File.Exists(path))
+            {
+                _logMessages.Add("WARN: Couldn't find audio file specified: " + path);
+                return false;
+            }
+            return true;
+        }
+
         #endregion
 
         #region Sound Effect System
