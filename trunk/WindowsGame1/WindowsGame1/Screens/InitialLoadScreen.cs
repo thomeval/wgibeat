@@ -17,6 +17,8 @@ namespace WGiBeat.Screens
         private int _minY, _maxY;
         private Sprite _baseSprite;
         private bool _autoScroll = true;
+
+        public const string VERSION_STRING = "v0.3 pre";
         public string SongFolderPath { get; set; }
 
         public InitialLoadScreen(GameCore core) : base(core)
@@ -43,7 +45,7 @@ namespace WGiBeat.Screens
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             _maxY = 40;
-            
+            int errorCount = 0, warnCount = 0;
             var currentPos = new Vector2(_textPosition.X, _textPosition.Y);
             string[] splitChars = {"\n"};
             var lines = SongManager.GetLogMessages().Split(splitChars,StringSplitOptions.RemoveEmptyEntries);
@@ -63,9 +65,11 @@ namespace WGiBeat.Screens
                         break;
                     case "WARN":
                         drawColor = Color.Yellow;
+                        warnCount++;
                         break;
                     case "ERRO":
                         drawColor = Color.Red;
+                        errorCount++;
                         break;
                      default:
                         drawColor = Color.White;
@@ -86,6 +90,9 @@ namespace WGiBeat.Screens
             {
                 TextureManager.DrawString(spriteBatch, "Loading...", "LargeFont", Core.Metrics["LoadMessage", 0], Color.White, FontAlign.LEFT);
             }
+            TextureManager.DrawString(spriteBatch,String.Format("{0} errors, {1} warnings",errorCount,warnCount),"DefaultFont",Core.Metrics["LoadErrorCount",0],Color.White,FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch,"" + VERSION_STRING, "DefaultFont", Core.Metrics["LoadVersion", 0], Color.White, FontAlign.LEFT);
+
         }
 
         public override void PerformAction(Action action)

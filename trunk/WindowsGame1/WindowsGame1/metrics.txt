@@ -38,8 +38,10 @@ MainMenuOptionText=[270,160][270,260][270,360][270,460];
 MainMenuNoSongsError=[270,200];
 
 #Initial Load;
-LoadMessage=[435,560];
-LoadMessageBase=[420,555];
+LoadMessage=[435,565];
+LoadMessageBase=[0,560];
+LoadErrorCount=[25,575];
+LoadVersion=[340,575];
 SongLoadLog=[25,40];
 
 #Evaluation;
