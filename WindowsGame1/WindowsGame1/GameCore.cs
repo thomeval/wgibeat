@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
@@ -19,7 +18,7 @@ namespace WGiBeat
     /// </summary>
     public class GameCore : Game
     {
-        public GraphicsDeviceManager GraphicsManager;
+        public readonly GraphicsDeviceManager GraphicsManager;
         private SpriteBatch _spriteBatch;
         public SettingsManager Settings;
         public MetricsManager Metrics;
@@ -36,6 +35,7 @@ namespace WGiBeat
         private KeyboardState _lastKeystate;
         private GamePadState[] _lastGamePadState;
 
+        public const string VERSION_STRING = "v0.3 pre";
         public GameCore()
         {
             GraphicsManager = new GraphicsDeviceManager(this);
@@ -118,8 +118,7 @@ namespace WGiBeat
         /// all of your content.
         /// </summary>
         protected override void LoadContent()
-        {
-            
+        {         
             // Create a new SpriteBatch, which can be used to draw textures.
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -134,7 +133,6 @@ namespace WGiBeat
             {
                 TextureManager.AddFont(Path.GetFileNameWithoutExtension(file), Content.Load<SpriteFont>("Fonts/" + Path.GetFileNameWithoutExtension(file)));
             }
-
         }
 
         /// <summary>

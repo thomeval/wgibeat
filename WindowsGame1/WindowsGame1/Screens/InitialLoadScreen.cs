@@ -12,13 +12,12 @@ namespace WGiBeat.Screens
     public class InitialLoadScreen : GameScreen
     {
 
-        private bool _doneLoading = false;
+        private bool _doneLoading;
         private Vector2 _textPosition;
         private int _minY, _maxY;
         private Sprite _baseSprite;
         private bool _autoScroll = true;
 
-        public const string VERSION_STRING = "v0.3 pre";
         public string SongFolderPath { get; set; }
 
         public InitialLoadScreen(GameCore core) : base(core)
@@ -91,15 +90,12 @@ namespace WGiBeat.Screens
                 TextureManager.DrawString(spriteBatch, "Loading...", "LargeFont", Core.Metrics["LoadMessage", 0], Color.White, FontAlign.LEFT);
             }
             TextureManager.DrawString(spriteBatch,String.Format("{0} errors, {1} warnings",errorCount,warnCount),"DefaultFont",Core.Metrics["LoadErrorCount",0],Color.White,FontAlign.LEFT);
-            TextureManager.DrawString(spriteBatch,"" + VERSION_STRING, "DefaultFont", Core.Metrics["LoadVersion", 0], Color.White, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch,"" + GameCore.VERSION_STRING, "DefaultFont", Core.Metrics["LoadVersion", 0], Color.White, FontAlign.LEFT);
 
         }
 
         public override void PerformAction(Action action)
         {
-            int player;
-            Int32.TryParse("" + action.ToString()[1], out player);
-            player--;
             var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
 
             switch (paction)

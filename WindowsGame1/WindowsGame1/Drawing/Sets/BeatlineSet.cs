@@ -27,7 +27,19 @@ namespace WGiBeat.Drawing.Sets
             }
         }
 
-        public double EndingPhrase { get; set; }
+        private double _endingPhrase;
+        public double EndingPhrase
+        {
+            get { return _endingPhrase; }
+            set
+            {
+                _endingPhrase = value;
+                foreach (Beatline bl in _beatlines)
+                {
+                    bl.EndPhrase = EndingPhrase;
+                }
+            }
+        }
 
         public event EventHandler NoteMissed;
         public BeatlineSet()
@@ -53,7 +65,7 @@ namespace WGiBeat.Drawing.Sets
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Draw(spriteBatch,0.0);
+            Draw(spriteBatch, 0.0);
         }
 
         public void Draw(SpriteBatch spriteBatch, double phraseNumber)
@@ -72,7 +84,7 @@ namespace WGiBeat.Drawing.Sets
         public void MaintainBeatlineNotes(double phraseNumber)
         {
 
-            for (int x = 0; x < 4; x++ )
+            for (int x = 0; x < 4; x++)
             {
                 if (Players[x].KO)
                 {

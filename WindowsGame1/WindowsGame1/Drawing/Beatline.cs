@@ -16,9 +16,13 @@ namespace WGiBeat.Drawing
         public double Bpm { get; set; }
         public int Id { get; set; }
         public bool DisablePulse { get; set; }
+        public double EndPhrase { get; set; }
         private SpriteMap _markerSprite;
         private Sprite _pulseSprite;
         private Sprite _baseSprite;
+
+        //Used by endpoint markers.
+        private const int BEHIND_VISIBILITY = 23;
 
         public const int HIT_IGNORE_CUTOFF = 1000;
         //How distant the beatline notes are from each other.
@@ -40,10 +44,11 @@ namespace WGiBeat.Drawing
             _markerSprite = new SpriteMap
             {
                 Columns = 1,
-                Rows = 4,
+                Rows = 5,
                 SpriteTexture = TextureManager.Textures["beatMarkers"],
 
             };
+
             _pulseSprite = new Sprite
             {
                 SpriteTexture = TextureManager.Textures["BeatFlame"]
@@ -66,6 +71,22 @@ namespace WGiBeat.Drawing
             DrawPulse(spriteBatch, phraseNumber);
             DrawBase(spriteBatch);
             DrawNotes(spriteBatch, phraseNumber);
+            DrawEndPoints(spriteBatch, phraseNumber);
+        }
+
+        private void DrawEndPoints(SpriteBatch spriteBatch, double phraseNumber)
+        {
+            var endpointBeatOffset = (int)(Speed * BEAT_ZOOM_DISTANCE * (phraseNumber - EndPhrase));
+
+            //Dont render endpoint if outside the visibility range.
+            if (((-1 * endpointBeatOffset) > BEAT_ZOOM_DISTANCE * BEAT_VISIBILITY) || (endpointBeatOffset > BEHIND_VISIBILITY))
+            {
+                return;
+            }
+
+            var markerPosition = new Vector2 { X = this.X + 28 - (endpointBeatOffset), Y = (this.Y + 3) };
+            _markerSprite.ColorShading.A = 255;
+            _markerSprite.Draw(spriteBatch, 4, 1, 34, markerPosition);
         }
 
         private void DrawPulse(SpriteBatch spriteBatch, double phraseNumber)
@@ -81,6 +102,7 @@ namespace WGiBeat.Drawing
             _pulseSprite.DrawTiled(spriteBatch, 83 - _pulseSprite.Width, 0, _pulseSprite.Width, 34);
         }
 
+
         private void DrawNotes(SpriteBatch spriteBatch, double phraseNumber)
         {
             foreach (BeatlineNote bn in _beatlineNotes)
@@ -94,6 +116,7 @@ namespace WGiBeat.Drawing
                 }
 
                 var markerPosition = new Vector2 { Y = (this.Y + 3) };
+
                 if (bn.Hit)
                 {
                     markerPosition.X = this.X + 28 + (bn.DisplayPosition);

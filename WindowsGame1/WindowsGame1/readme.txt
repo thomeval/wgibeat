@@ -1,4 +1,4 @@
-﻿WGiBeat - v0.2 Readme
+﻿WGiBeat - v0.3 Readme
 By thomeval(thomeval[_at_]gmail[_dot_]com) and xcepticzp(xcepticzoki[_at_]gmail[_dot_]com)
 --------------------------------------------
 
@@ -12,7 +12,6 @@ http://www.microsoft.com/downloads/details.aspx?FamilyID=53867a2a-e249-4560-8011
 
 .NET Framework 3.5 SP1
 http://www.microsoft.com/downloads/details.aspx?FamilyID=ab99342f-5d1a-413d-8319-81da479ab0d7&DisplayLang=en
-
 
 
 Usage and default keys

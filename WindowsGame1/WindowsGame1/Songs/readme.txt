@@ -13,7 +13,7 @@ SONGFILE=The name of the song file (such as mysong.mp3) goes here.;
 
 Note that each line MUST end in a semicolon, and the file must start with #SONG-1.0;
 
-Place the song file (can be .mp3 or .ogg) and its .sng file in the same folder.
+Place the song file (can be .mp3, .wma or .ogg) and its .sng file in the same folder. Multiple songs can be placed in the same folder.
 
 Once the .sng file is created, the BPM, offset and length attributes (necessary to properly syncronize the game with the music), can be
 adjusted on the fly from inside WGiBeat itself. To do this, enable "Song Debugging" from the options menu. Then, when playing a song,
