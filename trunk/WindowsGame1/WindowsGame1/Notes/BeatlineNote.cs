@@ -11,7 +11,6 @@
         public int DisplayPosition { get; set; }
         //Whether this BeatlineNote has been hit already.
         public bool Hit { get; set; }
-
     }
 
     /// <summary>

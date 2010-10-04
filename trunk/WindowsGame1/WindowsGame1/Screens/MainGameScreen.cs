@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.AudioSystem;
@@ -427,9 +425,10 @@ namespace WGiBeat.Screens
 
         private string CalculateTimeLeft(GameTime gameTime)
         {
-            var timeElapsed = gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds;
-            var timeLeft = _gameSong.Length * 1000 - timeElapsed;
 
+            var timeElapsed = gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds;
+           // var timeLeft = _gameSong.Length * 1000 - timeElapsed;
+            var timeLeft = _gameSong.Length*1000 - _timeCheck;
             var ts = new TimeSpan(0, 0, 0, 0, (int)timeLeft);
 
             return ts.Minutes + ":" + String.Format("{0:D2}", Math.Max(0, ts.Seconds));
@@ -438,8 +437,8 @@ namespace WGiBeat.Screens
         private bool SongPassed(GameTime gameTime)
         {
             var timeElapsed = gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds;
-            var timeLeft = _gameSong.Length * 1000 - timeElapsed;
-
+           // var timeLeft = _gameSong.Length * 1000 - timeElapsed;
+            var timeLeft = _gameSong.Length * 1000 - _timeCheck;
             return timeLeft <= 0.0;
         }
 
