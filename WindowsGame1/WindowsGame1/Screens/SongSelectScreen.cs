@@ -65,16 +65,14 @@ namespace WGiBeat.Screens
                 {
                     CreateSongList();
                 }
-            
-            if (Core.Settings.Exists("LastSongPlayed"))
-            {
+
                 var lastSongHash = Core.Settings.Get<int>("LastSongPlayed");
                 var lastSong = (from e in _songList where e.Song.GetHashCode() == lastSongHash select e).FirstOrDefault();
                 if (lastSong != null)
                 {
                     _selectedIndex = _songList.IndexOf(lastSong);
                 }
-            }
+
             InitSprites();
 
             base.Initialize();
@@ -457,24 +455,15 @@ namespace WGiBeat.Screens
 
         private void PlaySongPreview()
         {
-            bool previewsOn = false;
-
             _bpmMeter.Bpm = _songList[_selectedIndex].Song.Bpm;
             _resetSongTime = true;
-            if (Core.Settings.Exists("SongPreview"))
-            {
-                previewsOn = Core.Settings.Get<bool>("SongPreview");
-            }
+            var previewsOn = Core.Settings.Get<bool>("SongPreview");
 
             if (previewsOn)
             {
 
                 _songPreviewManager.SetPreviewedSong(_songList[_selectedIndex].Song);
-                //if (Core.Cookies.ContainsKey("MenuMusicChannel"))
-                //{
-                //    _songPreviewManager.ChannelIndexPrevious = (int)Core.Cookies["MenuMusicChannel"];
-                //    Core.Cookies.Remove("MenuMusicChannel");
-                //}
+
             }
         }
     } 

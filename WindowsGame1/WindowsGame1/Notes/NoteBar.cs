@@ -16,6 +16,7 @@ namespace WGiBeat.Notes
     {
 
         public List<Note> Notes { get; set; }
+
         public NoteBar()
         {
             Notes = new List<Note>();
@@ -58,6 +59,8 @@ namespace WGiBeat.Notes
                 note.Reverse = false;
             }
         }
+
+
         public static NoteBar CreateNoteBar(int numNotes, int numReverse)
         {
             return CreateNoteBar(numNotes, numReverse, 0, 0);
@@ -66,21 +69,23 @@ namespace WGiBeat.Notes
         {
             return CreateNoteBar(numNotes, numReverse, (int) position.X, (int) position.Y);
         }
+
+        private static Random _rnd = new Random();
         public static NoteBar CreateNoteBar(int numNotes, int numReverse, int posX, int posY)
         {
             var newNoteBar = new NoteBar();
-            var rnd = new Random();
+
             for (int x = 0; x < numNotes; x++)
             {
-                var direction = (NoteDirection)rnd.Next((int)NoteDirection.COUNT);
+                var direction = (NoteDirection)_rnd.Next((int)NoteDirection.COUNT);
                 newNoteBar.Notes.Add(new Note { Completed = false, Direction = direction, Reverse = false });
             }
             for (int x = 0; x < Math.Min(numReverse,numNotes); x++)
             {
-                int idx = rnd.Next(newNoteBar.Notes.Count);
+                int idx = _rnd.Next(newNoteBar.Notes.Count);
                 while (newNoteBar.Notes[idx].Reverse)
                 {
-                    idx = rnd.Next(newNoteBar.Notes.Count);
+                    idx = _rnd.Next(newNoteBar.Notes.Count);
                 }
                 newNoteBar.Notes[idx].Reverse = true;
             }

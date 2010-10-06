@@ -31,7 +31,6 @@
 -Loading screen for songs, etc (0.3)
 -Critical error handling (0.3)
 -Chance / SP gameplay (Major - Needs graphics)
--Rewrite options loading
 -"Performance" indicator (evaluation + ingame)
 -Lifebar graph (In progress)
 -Mode descriptions (Needs graphics)
@@ -41,7 +40,7 @@
 
 -Fade out menu music when no next music.
 -Frame for song title/artist in song select
-
+-Song length doesn't work properly.
 -Investigate timing / press lag (Better due to framerate fix, but is it perfect?)
 -Team select screen
 
@@ -57,6 +56,7 @@
 -Stop song if everyone KO'ed (Done)
 -Resize Mode options (Done)
 -Loop menu music (Done)
+-Rewrite options loading (Done)
 
 ---Roadmap (0.2)---
 -Team Mode (Done)

@@ -17,9 +17,9 @@ namespace WGiBeat.Screens
         private Sprite _headerSprite;
         private Sprite _descriptionBaseSprite;
 
-        private SineSwayParticleField _field = new SineSwayParticleField();
+        private readonly SineSwayParticleField _field = new SineSwayParticleField();
         private Sprite _restrictionSprite;
-        private List<PlayerOptionsFrame> _playerOptions = new List<PlayerOptionsFrame>();
+        private readonly List<PlayerOptionsFrame> _playerOptions = new List<PlayerOptionsFrame>();
 
 
         public ModeSelectScreen(GameCore core)
@@ -117,7 +117,7 @@ namespace WGiBeat.Screens
             var posX = (int) Core.Metrics["ModeSelectOptions", 0].X;
             var posY = (int) Core.Metrics["ModeSelectOptions", 0].Y;
 
-            for (int x = 0; x < (int) GameType.COUNT; x++)
+            for (int x = 0; x < (int) GameType.COUNT -1; x++)
             {
                 int selected = (x == _selectedGameType) ? 1 : 0;
                 _optionBaseSpriteMap.Draw(spriteBatch, selected, 250, 160, posX, posY);
@@ -157,10 +157,12 @@ namespace WGiBeat.Screens
                     return "1 to 4 players:\nEach player plays independantly and \nis evaluated individually.";
                 case GameType.COOPERATIVE:
                     return
-                        "2 to 4 players:\nWork as a team to achieve high scores. \nPlayer scores and life bars are combined.";
+                        "2 to 4 players:\nPlay as a team to achieve high scores. \nPlayer scores and life bars are combined.";
 
                 case GameType.TEAM:
                     return "2 to 4 players:\nTwo teams play competitively.\nThe team with the higher score wins.";
+                    case GameType.SYNC:
+                    return "2 to 4 players:\nPlayers share a single score and life bar\n All players must keep up, or fail as a group.";
                 default:     
                     return "Game type not recognized.";
             }
@@ -246,11 +248,11 @@ namespace WGiBeat.Screens
             _selectedGameType += amount;
             if (_selectedGameType < 0)
             {
-                _selectedGameType += (int)GameType.COUNT;
+                _selectedGameType += (int)GameType.COUNT -1;
             }
-            if (_selectedGameType >= (int)GameType.COUNT)
+            if (_selectedGameType >= (int)GameType.COUNT -1)
             {
-                _selectedGameType -= (int) GameType.COUNT;
+                _selectedGameType -= (int) GameType.COUNT -1;
             }
         }
 
@@ -263,8 +265,6 @@ namespace WGiBeat.Screens
         {
             switch (gameType)
             {
-                case GameType.NORMAL:
-                    return "";
                     case GameType.COOPERATIVE:
                     if (PlayerCount() < 2)
                     {
@@ -281,6 +281,14 @@ namespace WGiBeat.Screens
                         return "One team has no players.";
                     }
                     break;
+                    
+                    case GameType.SYNC:
+                    if (PlayerCount() < 2)
+                    {
+                        return "Requires at least two players.";
+                    }
+                    break;
+                     
                 default:
                     break;
             }

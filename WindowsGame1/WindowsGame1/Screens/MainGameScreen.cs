@@ -13,9 +13,6 @@ namespace WGiBeat.Screens
     public class MainGameScreen : GameScreen
     {
 
-        //TODO: Consider refactoring beatlines into Sets.
-
-
         private double _phraseNumber;
         private double _debugLastHitOffset;
         private double _songLoadDelay;
@@ -158,7 +155,7 @@ namespace WGiBeat.Screens
 
         private void CheckForEndings(GameTime gameTime)
         {
-            if ((SongPassed(gameTime) ||AllPlayersKOed()) && (_displayState == 0))
+            if ((SongPassed() ||AllPlayersKOed()) && (_displayState == 0))
             {
                 _displayState = 1;
                 _transitionTime = gameTime.TotalRealTime.TotalSeconds + 3;
@@ -214,108 +211,77 @@ namespace WGiBeat.Screens
         /// <param name="action">The Action that the user has requested.</param>
         public override void PerformAction(Action action)
         {
-            //TODO: Refactor
             var songDebug = Core.Settings.Get<bool>("SongDebug");
-            switch (action)
+            int player;
+            Int32.TryParse("" + action.ToString()[1], out player);
+            player--;
+            var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
+
+
+            switch (paction)
             {
-                case Action.P1_LEFT:
-                case Action.P1_RIGHT:
-                case Action.P1_UP:
-                case Action.P1_DOWN:
-                    HitArrow(action, 0);
+                case "LEFT":
+                case "RIGHT":
+                case "UP":
+                case "DOWN":
+                    HitArrow(action, player);
                     break;
 
-                case Action.P2_LEFT:
-                case Action.P2_RIGHT:
-                case Action.P2_UP:
-                case Action.P2_DOWN:
-                    HitArrow(action, 1);
+                case "BEATLINE":
+                    HitBeatline(player);
                     break;
-                case Action.P3_LEFT:
-                case Action.P3_RIGHT:
-                case Action.P3_UP:
-                case Action.P3_DOWN:
-                    HitArrow(action, 2);
+                case "SELECT":
+                    ToggleBlazing(player);
                     break;
-                case Action.P4_LEFT:
-                case Action.P4_RIGHT:
-                case Action.P4_UP:
-                case Action.P4_DOWN:
-                    HitArrow(action, 3);
-                    break;
-                case Action.P1_BEATLINE:
-                    HitBeatline(0);
-                    break;
-                case Action.P2_BEATLINE:
-                    HitBeatline(1);
-                    break;
-                case Action.P3_BEATLINE:
-                    HitBeatline(2);
-                    break;
-                case Action.P4_BEATLINE:
-                    HitBeatline(3);
-                    break;
-                case Action.P1_SELECT:
-                    ToggleBlazing(0);
-                    break;
-                case Action.P2_SELECT:
-                    ToggleBlazing(1);
-                    break;
-                case Action.P3_SELECT:
-                    ToggleBlazing(2);
-                    break;
-                case Action.P4_SELECT:
-                    ToggleBlazing(3);
-                    break;
-                case Action.SYSTEM_BPM_DECREASE:
+                case  "BPM_DECREASE":
                     if (songDebug)
                     {
                         _gameSong.Bpm -= 0.1;
                     }
                     break;
-                case Action.SYSTEM_BPM_INCREASE:
+                case "BPM_INCREASE":
                     if (songDebug)
                     {
                         _gameSong.Bpm += 0.1;
                     }
                     break;
-                case Action.SYSTEM_OFFSET_DECREASE_BIG:
+                case "OFFSET_DECREASE_BIG":
                     if (songDebug)
                     {
                         _gameSong.Offset -= 0.1;
                     }
                     break;
-                case Action.SYSTEM_OFFSET_INCREASE_BIG:
+                case "OFFSET_INCREASE_BIG":
                     if (songDebug)
                     {
                         _gameSong.Offset += 0.1;
                     }
                     break;
-                case Action.SYSTEM_OFFSET_DECREASE_SMALL:
+                case "OFFSET_DECREASE_SMALL":
                     if (songDebug)
                     {
                         _gameSong.Offset -= 0.01;
                     }
                     break;
-                case Action.SYSTEM_OFFSET_INCREASE_SMALL:
+                case "OFFSET_INCREASE_SMALL":
                     if (songDebug)
                     {
                         _gameSong.Offset += 0.01;
                     }
                     break;
-                case Action.SYSTEM_LENGTH_DECREASE:
+                case "LENGTH_DECREASE":
                     if (songDebug)
                     {
                         _gameSong.Length -= 0.1;
                     }
                     break;
-                case Action.SYSTEM_LENGTH_INCREASE:
+                case "LENGTH_INCREASE":
                     if (songDebug)
                     {
                         _gameSong.Length += 0.1;
                     }
                     break;
-                case Action.SYSTEM_BACK:
+                case "BACK":
                     Core.Songs.StopSong();
                     Core.ScreenTransition("SongSelect");
                     break;
@@ -423,10 +389,10 @@ namespace WGiBeat.Screens
             }
         }
 
-        private string CalculateTimeLeft(GameTime gameTime)
+        private string CalculateTimeLeft()
         {
 
-            var timeElapsed = gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds;
+           // var timeElapsed = gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds;
            // var timeLeft = _gameSong.Length * 1000 - timeElapsed;
             var timeLeft = _gameSong.Length*1000 - _timeCheck;
             var ts = new TimeSpan(0, 0, 0, 0, (int)timeLeft);
@@ -434,9 +400,9 @@ namespace WGiBeat.Screens
             return ts.Minutes + ":" + String.Format("{0:D2}", Math.Max(0, ts.Seconds));
         }
 
-        private bool SongPassed(GameTime gameTime)
+        private bool SongPassed()
         {
-            var timeElapsed = gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds;
+            //var timeElapsed = gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds;
            // var timeLeft = _gameSong.Length * 1000 - timeElapsed;
             var timeLeft = _gameSong.Length * 1000 - _timeCheck;
             return timeLeft <= 0.0;
@@ -488,7 +454,7 @@ namespace WGiBeat.Screens
             }
 
             DrawKOIndicators(spriteBatch);
-            DrawSongInfo(spriteBatch, gameTime);
+            DrawSongInfo(spriteBatch);
             DrawClearIndicators(spriteBatch);
             DrawText(spriteBatch);
 
@@ -560,9 +526,9 @@ namespace WGiBeat.Screens
         }
 
 
-        private void DrawSongInfo(SpriteBatch spriteBatch, GameTime gameTime)
+        private void DrawSongInfo(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + CalculateTimeLeft(gameTime)
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + CalculateTimeLeft()
 , Core.Metrics["SongTimeLeft", 0], Color.Black);
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + _gameSong.Title
 , Core.Metrics["SongTitle", 0], Color.Black);
