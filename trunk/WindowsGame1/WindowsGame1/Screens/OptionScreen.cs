@@ -71,8 +71,6 @@ namespace WGiBeat.Screens
                 Height = Core.Window.ClientBounds.Height,
                 SpriteTexture = TextureManager.Textures["allBackground"],
                 Width = Core.Window.ClientBounds.Width,
-                X = 0,
-                Y = 0
             };
 
             background.Draw(spriteBatch);
@@ -81,8 +79,6 @@ namespace WGiBeat.Screens
             var header = new Sprite
             {
                 SpriteTexture = TextureManager.Textures["optionsHeader"],
-                X = 0,
-                Y = 0
             };
 
             background.Draw(spriteBatch);
@@ -161,10 +157,8 @@ namespace WGiBeat.Screens
                 _optionsMenu.GetByItemText("Song Volume").SetSelectedByValue("" + Core.Settings.Get<object>("SongVolume"));
                 _optionsMenu.GetByItemText("Song Debugging").SetSelectedByValue(Core.Settings.Get<object>("SongDebug"));
                 _optionsMenu.GetByItemText("Song Previews").SetSelectedByValue(Core.Settings.Get<object>("SongPreview"));
-                if (Core.Settings.Exists("FullScreen"))
-                {
-                    _optionsMenu.GetByItemText("Full screen").SetSelectedByValue(Core.Settings.Get<object>("FullScreen"));                    
-                }
+                _optionsMenu.GetByItemText("Full screen").SetSelectedByValue(Core.Settings.Get<object>("FullScreen"));                    
+                
             }
             catch (Exception ex)
             {

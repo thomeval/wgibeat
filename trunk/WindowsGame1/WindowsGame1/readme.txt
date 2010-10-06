@@ -17,7 +17,7 @@ http://www.microsoft.com/downloads/details.aspx?FamilyID=ab99342f-5d1a-413d-8319
 Usage and default keys
 ---------------------------------------------
 Start the game by running WGiBeat.exe
-The game is controlled entirely with a keyboard. The following keys are used by default:
+The game is controlled entirely with either a keyboard or an Xbox 360 controller. The following keys are used by default:
 
 Player 1:
 W = Up

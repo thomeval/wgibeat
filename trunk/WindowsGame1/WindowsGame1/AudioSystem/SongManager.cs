@@ -463,11 +463,13 @@ namespace WGiBeat.AudioSystem
         #region Logging
         public static string GetLogMessages()
         {
+            Monitor.Enter(_logMessages);
             string result = "";
             foreach (string message in _logMessages)
             {
                 result += message + "\n";
             }
+            Monitor.Exit(_logMessages);
             return result;
         }
         #endregion

@@ -41,9 +41,20 @@ namespace WGiBeat.Managers
             _settings[id] = value;
         }
 
+        public static SettingsManager LoadDefaults()
+        {
+            var sm = new SettingsManager();
+            sm["SongPreview"] = true;
+            sm["SongVolume"] = "0.7";
+            sm["SongFolder"] = "Songs";
+            sm["FullScreen"] = false;
+            sm["SongDebug"] = false;
+            sm["LastSongPlayed"] = 0;
+            return sm;
+        }
         public static SettingsManager LoadFromFile(string filename)
         {
-            SettingsManager sm = new SettingsManager();
+            var sm = LoadDefaults();
 
             string filetext = File.ReadAllText(filename);
 
