@@ -19,7 +19,7 @@ namespace WGiBeat.Drawing
         public double EndPhrase { get; set; }
         private SpriteMap _markerSprite;
         private Sprite _pulseSprite;
-        private Sprite _baseSprite;
+        private SpriteMap _baseSprite;
 
         //Used by endpoint markers.
         private const int BEHIND_VISIBILITY = 23;
@@ -41,6 +41,8 @@ namespace WGiBeat.Drawing
 
         private void InitSprites()
         {
+            this.Height = 40;
+            this.Width = 250;
             _markerSprite = new SpriteMap
             {
                 Columns = 1,
@@ -53,11 +55,11 @@ namespace WGiBeat.Drawing
             {
                 SpriteTexture = TextureManager.Textures["BeatFlame"]
             };
-            _baseSprite = new Sprite
+            _baseSprite = new SpriteMap
             {
-                Height = 40,
-                Width = 250,
-                SpriteTexture = TextureManager.Textures["beatMeter"]
+                SpriteTexture = TextureManager.Textures["beatMeter"],
+                Columns = 1,
+                Rows = 4
             };
         }
 
@@ -142,9 +144,7 @@ namespace WGiBeat.Drawing
 
         private void DrawBase(SpriteBatch spriteBatch)
         {
-
-            _baseSprite.SetPosition(this.X,this.Y);
-                _baseSprite.Draw(spriteBatch);
+             _baseSprite.Draw(spriteBatch, Id, this.Width, this.Height, this.X, this.Y);
         }
 
         public void AddBeatlineNote(BeatlineNote bln)

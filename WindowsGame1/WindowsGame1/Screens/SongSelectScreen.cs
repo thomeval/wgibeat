@@ -38,7 +38,6 @@ namespace WGiBeat.Screens
 
         public override void Initialize()
         {
-
             _songSortDisplay = new SongSortDisplay();
             _songSortDisplay.SetPosition(Core.Metrics["SongSortDisplay", 0]);
             _songSortDisplay.InitSprites();
