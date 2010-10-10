@@ -57,7 +57,7 @@ namespace WGiBeat.Drawing
             };
             _baseSprite = new SpriteMap
             {
-                SpriteTexture = TextureManager.Textures["beatMeter"],
+                SpriteTexture = TextureManager.Textures["BeatMeter"],
                 Columns = 1,
                 Rows = 4
             };
@@ -156,7 +156,6 @@ namespace WGiBeat.Drawing
         {
             _beatlineNotes.Clear();
         }
-
 
         public int TrimExpired(double phraseNumber)
         {
