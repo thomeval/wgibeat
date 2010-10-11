@@ -137,7 +137,7 @@
     <Compile Include="GameType.cs" />
     <Compile Include="Helpers\FiniteState.cs" />
     <Compile Include="Managers\KeyMappings.cs" />
-    <Compile Include="AudioSystem\SongManager.cs" />
+    <Compile Include="AudioSystem\AudioManager.cs" />
     <Compile Include="Notes\BeatlineNote.cs" />
     <Compile Include="Drawing\LifeBar.cs" />
     <Compile Include="Notes\Note.cs" />

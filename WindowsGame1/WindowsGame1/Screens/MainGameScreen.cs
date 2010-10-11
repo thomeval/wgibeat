@@ -172,7 +172,7 @@ namespace WGiBeat.Screens
             {
                 if (Core.Settings.Get<bool>("SongDebug"))
                 {
-                    SongManager.SaveToFile(_gameSong);
+                    AudioManager.SaveToFile(_gameSong);
                 }
 
                 Core.ScreenTransition("Evaluation");

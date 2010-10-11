@@ -47,7 +47,7 @@ namespace WGiBeat.Screens
             int errorCount = 0, warnCount = 0;
             var currentPos = new Vector2(_textPosition.X, _textPosition.Y);
             string[] splitChars = {"\n"};
-            var lines = SongManager.GetLogMessages().Split(splitChars,StringSplitOptions.RemoveEmptyEntries);
+            var lines = AudioManager.GetLogMessages().Split(splitChars,StringSplitOptions.RemoveEmptyEntries);
             _minY = Math.Min(lines.Length * -12 + 560, 40);
 
             if (_autoScroll)

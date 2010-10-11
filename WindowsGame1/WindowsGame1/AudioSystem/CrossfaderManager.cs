@@ -5,7 +5,7 @@ namespace WGiBeat.AudioSystem
 {
     /// <summary>
     /// A manager that handles playing crossfading of any FMOD sound channel. Audio such as Song 
-    /// Previews are played using a SongManager, as a stream. The song is played from the GameSong's 
+    /// Previews are played using a AudioManager, as a stream. The song is played from the GameSong's 
     /// 'offset' point (representing the first playable beat of the song), for the duration specified.
     /// Crossfading between playing previews is also provided.
     /// </summary>
@@ -16,7 +16,7 @@ namespace WGiBeat.AudioSystem
             _myTimer = new Timer(UpdatePreviews,null, 0, 100);
             PreviewDuration = 10;
         }
-        public SongManager SongManager { get; set; }
+        public AudioManager AudioManager { get; set; }
         public int PreviewDuration { get; set; }
 
         private int _channelIndexCurrent = -1;
@@ -30,7 +30,7 @@ namespace WGiBeat.AudioSystem
             set
             {
                 _channelIndexPrev = value;
-                _channelPrevVolume = SongManager.GetChannelVolume(_channelIndexPrev);
+                _channelPrevVolume = AudioManager.GetChannelVolume(_channelIndexPrev);
             } 
         }
 
@@ -53,11 +53,11 @@ namespace WGiBeat.AudioSystem
             _myTimer.Dispose();
             if (_channelIndexCurrent != -1)
             {
-                SongManager.StopChannel(_channelIndexCurrent);
+                AudioManager.StopChannel(_channelIndexCurrent);
             }
             if (_channelIndexPrev != -1)
             {
-                SongManager.StopChannel(_channelIndexPrev);
+                AudioManager.StopChannel(_channelIndexPrev);
             }
         }
 
@@ -73,8 +73,8 @@ namespace WGiBeat.AudioSystem
             {
                 return;
             }
-            SetNewChannel(SongManager.PlaySoundEffect(song.Path + "\\" + song.SongFile));
-            SongManager.SetPosition(_channelIndexCurrent, song.Offset);
+            SetNewChannel(AudioManager.PlaySoundEffect(song.Path + "\\" + song.SongFile));
+            AudioManager.SetPosition(_channelIndexCurrent, song.Offset);
             _currentSong = song;
         }
 
@@ -88,7 +88,7 @@ namespace WGiBeat.AudioSystem
             _currentSong = null;
             if (_channelIndexPrev > -1)
             {
-                SongManager.StopChannel(_channelIndexPrev);
+                AudioManager.StopChannel(_channelIndexPrev);
             }
                 _channelIndexPrev = _channelIndexCurrent;
                 _channelPrevVolume = _channelCurrentVolume;
@@ -110,10 +110,10 @@ namespace WGiBeat.AudioSystem
             //Indicate that the current channel index is invalid.
             int tempIdx = _channelIndexCurrent;
             _channelIndexCurrent = -1;
-            SongManager.StopChannel(tempIdx);
+            AudioManager.StopChannel(tempIdx);
 
-            _channelIndexCurrent = SongManager.PlaySoundEffect(_currentSong.Path + "\\" + _currentSong.SongFile);
-            SongManager.SetPosition(_channelIndexCurrent, _currentSong.Offset);
+            _channelIndexCurrent = AudioManager.PlaySoundEffect(_currentSong.Path + "\\" + _currentSong.SongFile);
+            AudioManager.SetPosition(_channelIndexCurrent, _currentSong.Offset);
             SetVolumes();
         }
 
@@ -157,11 +157,11 @@ namespace WGiBeat.AudioSystem
 
             if (_channelIndexCurrent != -1)
             {
-                SongManager.SetChannelVolume(_channelIndexCurrent, _channelCurrentVolume);
+                AudioManager.SetChannelVolume(_channelIndexCurrent, _channelCurrentVolume);
             }
             if (_channelIndexPrev != -1)
             {
-                SongManager.SetChannelVolume(_channelIndexPrev, _channelPrevVolume);
+                AudioManager.SetChannelVolume(_channelIndexPrev, _channelPrevVolume);
             }
         }
 
