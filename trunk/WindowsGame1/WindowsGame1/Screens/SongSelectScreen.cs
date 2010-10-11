@@ -16,7 +16,8 @@ namespace WGiBeat.Screens
         private int _selectedIndex;
         private Sprite _headerSprite;
         private Sprite _background;
-       
+        private bool _previewStarted;
+
         private BpmMeter _bpmMeter;
         private SongSortDisplay _songSortDisplay;
         private HighScoreFrame _highScoreFrame;
@@ -30,7 +31,7 @@ namespace WGiBeat.Screens
 
         private SineSwayParticleField _field = new SineSwayParticleField();
 
-        private SongPreviewManager _songPreviewManager;
+        public CrossfaderManager Crossfader;
 
         public SongSelectScreen(GameCore core) : base(core)
         {           
@@ -41,7 +42,8 @@ namespace WGiBeat.Screens
             _songSortDisplay = new SongSortDisplay();
             _songSortDisplay.SetPosition(Core.Metrics["SongSortDisplay", 0]);
             _songSortDisplay.InitSprites();
-            _songPreviewManager = new SongPreviewManager { SongManager = Core.Songs };
+            Crossfader = Core.Crossfader;
+            _previewStarted = false;
             _highScoreFrame = new HighScoreFrame();
             _highScoreFrame.SetPosition(Core.Metrics["SongHighScoreFrame", 0]);
             _highScoreFrame.InitSprites();
@@ -75,7 +77,6 @@ namespace WGiBeat.Screens
             InitSprites();
 
             base.Initialize();
-            PlaySongPreview();
         }
 
         private void InitSprites()
@@ -152,8 +153,7 @@ namespace WGiBeat.Screens
             DrawBpmMeter(gameTime, spriteBatch);
             DrawSongText(spriteBatch);
             _songSortDisplay.Draw(spriteBatch);
-      
-        //    TextureManager.DrawString(spriteBatch,"Mode: " + Core.Cookies["CurrentGameType"],"DefaultFont", Core.Metrics["SelectedMode", 0], Color.Black,FontAlign.CENTER);
+     
 
         }
 
@@ -181,9 +181,9 @@ namespace WGiBeat.Screens
 
         private void DrawWaveForm(SpriteBatch spriteBatch)
         {
-            if (_songPreviewManager.ChannelIndexCurrent != -1)
+            if (Crossfader.ChannelIndexCurrent != -1)
             {
-                float[] levels = Core.Songs.GetChannelWaveform(_songPreviewManager.ChannelIndexCurrent, WAVEFORM_POINTS);
+                float[] levels = Core.Songs.GetChannelWaveform(Crossfader.ChannelIndexCurrent, WAVEFORM_POINTS);
 
                 var line = new PrimitiveLine(Core.GraphicsDevice);
                 line.Colour = Color.Black;
@@ -259,12 +259,9 @@ namespace WGiBeat.Screens
 
         private void DrawHighScoreFrame(SpriteBatch spriteBatch)
         {
-
-          //  _scoreBaseSprite.Draw(spriteBatch);
             var cgt = HighScoreManager.TranslateGameType((GameType) Core.Cookies["CurrentGameType"]);
             _highScoreFrame.HighScoreEntry = GetDisplayedHighScore(cgt);
             _highScoreFrame.Draw(spriteBatch);
-
         }
 
         private HighScoreEntry GetDisplayedHighScore(GameType gameType)
@@ -331,6 +328,15 @@ namespace WGiBeat.Screens
 
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            if (!_previewStarted)
+            {
+                _previewStarted = true;
+                PlaySongPreview();
+            }
+            base.Update(gameTime);
+        }
         public override void PerformAction(Action action)
         {
             int player;
@@ -397,10 +403,8 @@ namespace WGiBeat.Screens
                     StartSong();
                     break;
                 case "BACK":
-                    _songPreviewManager.Dispose();
                     Core.ScreenTransition("NewGame");
                     break;
-
             }
         }
 
@@ -428,7 +432,7 @@ namespace WGiBeat.Screens
 
         private void StartSong()
         {
-            _songPreviewManager.Dispose();
+            Crossfader.SetNewChannel(-1);
             Core.Cookies["CurrentSong"] = _songList[_selectedIndex].Song;
             Core.Settings.Set("LastSongPlayed", _songList[_selectedIndex].Song.GetHashCode());
             Core.ScreenTransition("MainGame");
@@ -456,13 +460,12 @@ namespace WGiBeat.Screens
         {
             _bpmMeter.Bpm = _songList[_selectedIndex].Song.Bpm;
             _resetSongTime = true;
+            Crossfader.PreviewDuration = 10;
             var previewsOn = Core.Settings.Get<bool>("SongPreview");
 
             if (previewsOn)
             {
-
-                _songPreviewManager.SetPreviewedSong(_songList[_selectedIndex].Song);
-
+                Crossfader.SetPreviewedSong(_songList[_selectedIndex].Song);
             }
         }
     } 

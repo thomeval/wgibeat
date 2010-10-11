@@ -27,6 +27,30 @@ namespace WGiBeat.Drawing.Sets
             }
         }
 
+        private bool _large;
+        public bool Large
+        {
+            get { return _large; }
+            set
+            {
+                _large = value;
+                for (int x = 0; x <4; x++)
+                {
+                    _beatlines[x].Large = value;
+                }
+                if (Large)
+                {
+                    _beatlines[1].SetPosition(_metrics["BeatlineBarBase",0]);
+                    _beatlines[3].SetPosition(_metrics["BeatlineBarBase",2]);
+                }
+                else
+                {
+                    _beatlines[1].SetPosition(_metrics["BeatlineBarBase", 1]);
+                    _beatlines[3].SetPosition(_metrics["BeatlineBarBase", 3]);
+                }
+            }
+        }
+
         private double _endingPhrase;
         public double EndingPhrase
         {

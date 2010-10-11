@@ -4,14 +4,14 @@ using System.Threading;
 namespace WGiBeat.AudioSystem
 {
     /// <summary>
-    /// A manager that handles playing previews of GameSongs. Previews are played using 
-    /// a SongManager, as a stream. The song is played from the GameSong's 'offset' point
-    /// (representing the first playable beat of the song), for the duration specified.
+    /// A manager that handles playing crossfading of any FMOD sound channel. Audio such as Song 
+    /// Previews are played using a SongManager, as a stream. The song is played from the GameSong's 
+    /// 'offset' point (representing the first playable beat of the song), for the duration specified.
     /// Crossfading between playing previews is also provided.
     /// </summary>
-    public class SongPreviewManager : IDisposable
+    public class CrossfaderManager : IDisposable
     {
-        public SongPreviewManager()
+        public CrossfaderManager()
         {
             _myTimer = new Timer(UpdatePreviews,null, 0, 100);
             PreviewDuration = 10;
@@ -45,7 +45,7 @@ namespace WGiBeat.AudioSystem
         private readonly Timer _myTimer;
 
         /// <summary>
-        /// Properly disposes the SongPreviewManager by stopping the playing previews,
+        /// Properly disposes the CrossfaderManager by stopping the playing previews,
         /// and timer used.
         /// </summary>
         public void Dispose()
@@ -69,19 +69,33 @@ namespace WGiBeat.AudioSystem
         /// <param name="song">The GameSong to preview.</param>
         public void SetPreviewedSong(GameSong song)
         {
+            if (_currentSong == song)
+            {
+                return;
+            }
+            SetNewChannel(SongManager.PlaySoundEffect(song.Path + "\\" + song.SongFile));
+            SongManager.SetPosition(_channelIndexCurrent, song.Offset);
             _currentSong = song;
+        }
+
+        /// <summary>
+        /// Changes the currently playing sound channel to a new one. This method
+        /// should be used if a non-GameSong sound is to be used and crossfaded out.
+        /// </summary>
+        /// <param name="channelId"></param>
+        public void SetNewChannel(int channelId)
+        {
+            _currentSong = null;
             if (_channelIndexPrev > -1)
             {
                 SongManager.StopChannel(_channelIndexPrev);
             }
-            _channelIndexPrev = _channelIndexCurrent;
-            _channelPrevVolume = _channelCurrentVolume;
-            _channelIndexCurrent = SongManager.PlaySoundEffect(song.Path + "\\" + song.SongFile);
-            SongManager.SetPosition(_channelIndexCurrent, song.Offset);
+                _channelIndexPrev = _channelIndexCurrent;
+                _channelPrevVolume = _channelCurrentVolume;
+            _channelIndexCurrent = channelId;
             _previewTime = 0.0;
             SetVolumes();
         }
-
         /// <summary>
         /// Restarts the preview of the current song. Used when the preview is completed
         /// but not stopped.
@@ -115,7 +129,7 @@ namespace WGiBeat.AudioSystem
                 _updateInProgress = true;
                 _previewTime = (_previewTime + 0.1);
 
-                if (_previewTime >= PreviewDuration)
+                if ((PreviewDuration > 0 )&&(_previewTime >= PreviewDuration))
                 {
                     _previewTime -= PreviewDuration;
                     ReplaySameSong();
@@ -136,7 +150,7 @@ namespace WGiBeat.AudioSystem
             {
                 _channelCurrentVolume = (float)_previewTime / 2;
             }
-            else if (_previewTime >= PreviewDuration -2)
+            else if ((PreviewDuration > 0) && (_previewTime >= PreviewDuration -2))
             {
                 _channelCurrentVolume = (float)Math.Max(0,(PreviewDuration - _previewTime)/2);
             }
@@ -150,5 +164,6 @@ namespace WGiBeat.AudioSystem
                 SongManager.SetChannelVolume(_channelIndexPrev, _channelPrevVolume);
             }
         }
+
     }
 }

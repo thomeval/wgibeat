@@ -24,6 +24,7 @@ namespace WGiBeat
         public MetricsManager Metrics;
         public SongManager Songs;
         public HighScoreManager HighScores;
+        public CrossfaderManager Crossfader;
         public Player[] Players;
         public Dictionary<string, object> Cookies;
 
@@ -60,6 +61,8 @@ namespace WGiBeat
             Metrics = MetricsManager.Load("metrics.txt");
             Settings = SettingsManager.LoadFromFile("settings.txt");
             HighScores = HighScoreManager.LoadFromFile("Scores.conf");
+            Songs = new SongManager();
+            Crossfader = new CrossfaderManager{SongManager = this.Songs};
             TextureManager.GraphicsDevice = this.GraphicsDevice;
 
 
@@ -68,12 +71,12 @@ namespace WGiBeat
                 Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\" + Settings["SongFolder"]);
             }
 
-            Songs = new SongManager();
 
             _menuMusicManager = new MenuMusicManager
             {
                 MusicFilePath = Directory.GetCurrentDirectory() + "\\MenuMusic\\",
-                SongManager = this.Songs
+                SongManager = this.Songs,
+                Crossfader = this.Crossfader
             };
             _menuMusicManager.LoadMusicList(Directory.GetCurrentDirectory() + "\\MenuMusic\\MusicList.txt");
 

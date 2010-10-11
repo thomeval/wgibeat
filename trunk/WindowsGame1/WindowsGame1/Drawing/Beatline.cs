@@ -20,6 +20,8 @@ namespace WGiBeat.Drawing
         private SpriteMap _markerSprite;
         private Sprite _pulseSprite;
         private SpriteMap _baseSprite;
+        private SpriteMap _largeBaseSprite;
+        public bool Large { get; set; }
 
         //Used by endpoint markers.
         private const int BEHIND_VISIBILITY = 23;
@@ -32,6 +34,9 @@ namespace WGiBeat.Drawing
         //Prevent notes from being drawn outside the beatline base.
         //Higher means longer visibility range.
         public const double BEAT_VISIBILITY = 1.1;
+
+        private const int NORMAL_HEIGHT = 34;
+        private const int LARGE_HEIGHT = 68;
         public Beatline()
         {
             _beatlineNotes = new List<BeatlineNote>();
@@ -61,15 +66,22 @@ namespace WGiBeat.Drawing
                 Columns = 1,
                 Rows = 4
             };
+            _largeBaseSprite = new SpriteMap
+            {
+                SpriteTexture = TextureManager.Textures["BeatMeterLarge"],
+                Columns = 1,
+                Rows = 4
+            };
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Draw(spriteBatch,0.0);
+            Draw(spriteBatch, 0.0);
         }
 
         public void Draw(SpriteBatch spriteBatch, double phraseNumber)
         {
+            this.Height = Large ? 80 : 40;
             DrawPulse(spriteBatch, phraseNumber);
             DrawBase(spriteBatch);
             DrawNotes(spriteBatch, phraseNumber);
@@ -86,9 +98,11 @@ namespace WGiBeat.Drawing
                 return;
             }
 
-            var markerPosition = new Vector2 { X = this.X + 28 - (endpointBeatOffset), Y = (this.Y + 3) };
+            var markerPosition = new Vector2 { X = this.X + 28 - (endpointBeatOffset) };
+            var markerHeight = Large ? LARGE_HEIGHT : NORMAL_HEIGHT;
+            markerPosition.Y = Large ? this.Y + 6 : this.Y + 3;
             _markerSprite.ColorShading.A = 255;
-            _markerSprite.Draw(spriteBatch, 4, 1, 34, markerPosition);
+            _markerSprite.Draw(spriteBatch, 4, 1, markerHeight, markerPosition);
         }
 
         private void DrawPulse(SpriteBatch spriteBatch, double phraseNumber)
@@ -99,7 +113,7 @@ namespace WGiBeat.Drawing
             }
             _pulseSprite.Width = (int)(80 * (Math.Ceiling(phraseNumber) - (phraseNumber)));
             _pulseSprite.ColorShading.A = (byte)(_pulseSprite.Width * 255 / 80);
-            _pulseSprite.Height = 42;
+            _pulseSprite.Height = this.Height;
             _pulseSprite.SetPosition(this.X + 30, this.Y - 5);
             _pulseSprite.DrawTiled(spriteBatch, 83 - _pulseSprite.Width, 0, _pulseSprite.Width, 34);
         }
@@ -117,8 +131,8 @@ namespace WGiBeat.Drawing
                     continue;
                 }
 
-                var markerPosition = new Vector2 { Y = (this.Y + 3) };
-
+                var markerPosition = new Vector2 ();
+                markerPosition.Y = Large ? this.Y + 6 : this.Y + 3;
                 if (bn.Hit)
                 {
                     markerPosition.X = this.X + 28 + (bn.DisplayPosition);
@@ -137,14 +151,24 @@ namespace WGiBeat.Drawing
                         _markerSprite.ColorShading.A = 255;
                     }
                 }
-                _markerSprite.Draw(spriteBatch, bn.Player, 5, 34, markerPosition);
+                var markerHeight = Large ? LARGE_HEIGHT : NORMAL_HEIGHT;
+                _markerSprite.Draw(spriteBatch, bn.Player, 5, markerHeight, markerPosition);
 
             }
         }
 
         private void DrawBase(SpriteBatch spriteBatch)
         {
-             _baseSprite.Draw(spriteBatch, Id, this.Width, this.Height, this.X, this.Y);
+            if (Large)
+            {
+                           
+                _largeBaseSprite.Draw(spriteBatch,Id, this.Width, this.Height, this.X, this.Y);
+
+            }
+            else
+            {
+                _baseSprite.Draw(spriteBatch, Id, this.Width, this.Height, this.X, this.Y);
+            }
         }
 
         public void AddBeatlineNote(BeatlineNote bln)
@@ -162,12 +186,12 @@ namespace WGiBeat.Drawing
             _notesToRemove.Clear();
             foreach (BeatlineNote bn in _beatlineNotes)
             {
-                if ((CalculateHitOffset(bn,phraseNumber) < -200))
+                if ((CalculateHitOffset(bn, phraseNumber) < -200))
                 {
                     _notesToRemove.Add(bn);
                 }
             }
-        
+
             foreach (BeatlineNote bnr in _notesToRemove)
             {
                 _beatlineNotes.Remove(bnr);
@@ -191,7 +215,7 @@ namespace WGiBeat.Drawing
 
         public BeatlineNote NearestBeatlineNote(double phraseNumber)
         {
-            return (from e in _beatlineNotes where (!e.Hit) orderby CalculateHitOffset(e,phraseNumber) select e).FirstOrDefault();
+            return (from e in _beatlineNotes where (!e.Hit) orderby CalculateHitOffset(e, phraseNumber) select e).FirstOrDefault();
         }
 
         private int CalculateAbsoluteBeatlinePosition(double position, double phraseNumber)
@@ -202,7 +226,7 @@ namespace WGiBeat.Drawing
         public BeatlineNoteJudgement DetermineJudgement(double phraseNumber, bool completed)
         {
             var nearest = NearestBeatlineNote(phraseNumber);
-            double offset = (nearest == null) ? 9999 : CalculateHitOffset(nearest,phraseNumber);
+            double offset = (nearest == null) ? 9999 : CalculateHitOffset(nearest, phraseNumber);
             offset = Math.Abs(offset);
 
             if (offset > HIT_IGNORE_CUTOFF)
@@ -217,7 +241,7 @@ namespace WGiBeat.Drawing
                 {
                     if (offset < NoteJudgementSet.JudgementCutoffs[x])
                     {
-                        result = (BeatlineNoteJudgement) x;
+                        result = (BeatlineNoteJudgement)x;
                         break;
                     }
                 }

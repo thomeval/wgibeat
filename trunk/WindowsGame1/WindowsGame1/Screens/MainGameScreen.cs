@@ -48,6 +48,7 @@ namespace WGiBeat.Screens
             _beatlineSet = new BeatlineSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
 
             _beatlineSet.NoteMissed += BeatlineNoteMissed;
+            _beatlineSet.Large = LargeBeatlinesSuitable();
             _displayState = 0;
             _songLoadDelay = 0.0;
             _confidence = 0;
@@ -95,6 +96,13 @@ namespace WGiBeat.Screens
                 Core.Cookies.Remove("MenuMusicChannel");
             }
             base.Initialize();
+        }
+
+        private bool LargeBeatlinesSuitable()
+        {
+            var result = !(Core.Players[0].Playing && Core.Players[1].Playing);
+            result = result && !(Core.Players[2].Playing && Core.Players[3].Playing);
+            return result;
         }
 
         #region Updating, Beatline maintenance

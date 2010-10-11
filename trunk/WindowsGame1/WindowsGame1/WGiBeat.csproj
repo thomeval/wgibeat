@@ -97,7 +97,7 @@
     <Compile Include="AudioSystem\FMOD\fmod_memoryinfo.cs" />
     <Compile Include="AudioSystem\HighScoreEntry.cs" />
     <Compile Include="AudioSystem\MenuMusicManager.cs" />
-    <Compile Include="AudioSystem\SongPreviewManager.cs" />
+    <Compile Include="AudioSystem\CrossfaderManager.cs" />
     <Compile Include="Drawing\Beatline.cs" />
     <Compile Include="Drawing\BpmMeter.cs" />
     <Compile Include="Drawing\CoopLifeBar.cs" />
