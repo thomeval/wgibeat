@@ -1,38 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 using FMOD;
 
 namespace WGiBeat.AudioSystem
 {
-    //TODO: Consider splitting into GameSong related functions and FMOD related functions.
     /// <summary>
-    /// A manager that handles all audio in the game. This is generally separated into Songs,
-    /// of which only one is allowed at a time, and Sound Effects, of which multiple simultanious
-    /// channels are provided. This manager also handles loading and saving of song files.
+    /// A manager that handles all FMOD related functionality in the game. Audio files are
+    /// loaded as Sound Effects, which are streamed and handled by FMOD. The primary method for
+    /// interacting with playing audio is through channel ID numbers.
     /// </summary>
     public class AudioManager
     {
         #region Fields
-        private readonly List<GameSong> _songs = new List<GameSong>();
 
         private readonly FMOD.System _fmodSystem = new FMOD.System();
-        private Channel _fmodChannel = new Channel();
-        private readonly Dictionary<string, Sound> _sounds;
-        private Sound _fmodSound = new Sound();
-        private GameSong _currentSong;
+        private readonly Dictionary<string, Sound> _sounds = new Dictionary<string, Sound>();
+
         private const int CHANNEL_COUNT = 8;
         private float _masterVolume = 1.0f;
-        private static List<string> _logMessages;
-        private Channel tmpChannel = new Channel();
+        private Channel _tmpChannel = new Channel();
         #endregion 
 
         public AudioManager()
         {
-            _sounds = new Dictionary<string, Sound>();
-            _logMessages = new List<string>();
-              RESULT result;
+            RESULT result;
             result = Factory.System_Create(ref _fmodSystem);
             CheckFMODErrors(result);
             result = _fmodSystem.init(CHANNEL_COUNT, INITFLAGS.NORMAL, (IntPtr)null);
@@ -58,205 +50,6 @@ namespace WGiBeat.AudioSystem
                 default:
                     throw new Exception("FMOD error: " + Error.String(result));
             }
-        }
-
-        /// <summary>
-        /// Returns all songs stored in the Manager.
-        /// </summary>
-        /// <returns>A list of all stored GameSongs.</returns>
-        public List<GameSong> AllSongs()
-        {
-            return _songs;
-        }
-
-        /// <summary>
-        /// Returns the currently playing song.
-        /// </summary>
-        /// <returns>The currently playing song.</returns>
-        public GameSong CurrentSong()
-        {
-            return _currentSong;
-        }
-        #endregion
-
-        #region File Operations
-        /// <summary>
-        /// Adds a GameSong to the list of songs available.
-        /// </summary>
-        /// <param name="song">The GameSong to add.</param>
-        private void AddSong(GameSong song)
-        {
-            if (!_songs.Contains(song))
-            {
-                _songs.Add(song);
-            }
-            else
-            {
-                throw new Exception("SongManager already contains song with hashcode: " + song.GetHashCode());
-            }
-        }
-
-        /// <summary>
-        /// Creates a new SongManager object, and populates its song database by
-        /// parsing all valid song files (.sng) from a folder. Subfolders are also parsed.
-        /// </summary>
-        /// <param name="path">The path containing song files to parse.</param>
-        /// <returns>A new SongManager instance, containing GameSongs for any .sng files parsed.</returns>
-        public void LoadFromFolder(string path)
-        {
-            var folders = new List<string>();
-            folders.Add(path);
-
-            while (folders.Count > 0)
-            {
-                string currentFolder = folders[0];
-                _logMessages.Add("INFO: Loading songfiles in " + currentFolder+"\n");
-                folders.AddRange(Directory.GetDirectories(currentFolder));
-                foreach (string file in Directory.GetFiles(currentFolder, "*.sng"))
-                {
-                    var newSong = LoadFromFile(file);
-                    if (newSong ==  null)
-                    {
-                        continue;
-                    }
-                    newSong.Path = currentFolder;
-                    newSong.DefinitionFile = Path.GetFileName(file);
-                    AddSong(newSong);
-
-                }
-                folders.RemoveAt(0);
-            }
-            if (_songs.Count == 0)
-            {
-                _logMessages.Add(String.Format("ERROR: No valid song files loaded. WGiBeat is not playable without one!"));
-            }
-            _logMessages.Add(String.Format("INFO: Song load completed. {0} songs loaded.",_songs.Count));
-        }
-
-        /// <summary>
-        /// Saves a GameSong object to a file. Note that the filename is taken from the GameSong
-        /// object itself. Most useful for saving edits made to song file during runtime
-        /// (such as Song Debugging).
-        /// </summary>
-        /// <param name="song">The GameSong to save to file.</param>
-        public static void SaveToFile(GameSong song)
-        {
-            var file = new FileStream(song.Path + "\\" + song.DefinitionFile, FileMode.Create, FileAccess.Write);
-
-            var sw = new StreamWriter(file);
-
-            sw.WriteLine("#SONG-1.0;");
-            sw.WriteLine("Title={0};", song.Title);
-            sw.WriteLine("Subtitle={0};", song.Subtitle);
-            sw.WriteLine("Artist={0};", song.Artist);
-            sw.WriteLine("Bpm={0};", Math.Round(song.Bpm, 2));
-            sw.WriteLine("Offset={0};", Math.Round(song.Offset, 3));
-            sw.WriteLine("Length={0};", Math.Round(song.Length, 3));
-            sw.WriteLine("SongFile={0};", song.SongFile);
-
-            sw.Close();
-        }
-
-        /// <summary>
-        /// Loads a single GameSong from a file. The file should be a .sng file, and conform
-        /// to the song file standard. See the readme.txt in the /Songs folder for more
-        /// details.
-        /// </summary>
-        /// <param name="filename">The name of the file to load.</param>
-        /// <returns>A GameSong loaded from the file provided.</returns>
-        public GameSong LoadFromFile(string filename)
-        {
-            var newSong = new GameSong();
-
-            try
-            {
-                string songText = File.ReadAllText(filename);
-
-                songText = songText.Replace("\r", "");
-                songText = songText.Replace("\n", "");
-
-                string[] rules = songText.Split(';');
-
-                foreach (string rule in rules)
-                {
-                    if ((rule.Length == 0) || (rule[0] == '#'))
-                    {
-                        continue;
-                    }
-
-                    string field = rule.Substring(0, rule.IndexOf("=")).ToUpper();
-                    string value = rule.Substring(rule.IndexOf("=") + 1);
-
-                    switch (field.ToUpper())
-                    {
-                        case "TITLE":
-                            newSong.Title = value;
-                            break;
-                        case "SUBTITLE":
-                            newSong.Subtitle = value;
-                            break;
-                        case "ARTIST":
-                            newSong.Artist = value;
-                            break;
-                        case "OFFSET":
-                            newSong.Offset = Convert.ToDouble(value);
-                            break;
-                        case "LENGTH":
-                            newSong.Length = Convert.ToDouble(value);
-                            break;
-                        case "BPM":
-                            newSong.Bpm = Convert.ToDouble(value);
-                            break;
-                        case "SONGFILE":
-                            newSong.SongFile = value;
-                            break;
-                    }
-                }
-                if (!ValidateSongFile(newSong, filename))
-                {
-                    return null;
-                }
-                _logMessages.Add("INFO: Loaded " + newSong.Title + " successfully.\n");
-            }
-            catch (Exception)
-            {
-                _logMessages.Add("WARN: Failed to load song: " + filename+ "\n");
-                return null;
-            }
-
-
-            return newSong;
-        }
-
-        private bool ValidateSongFile(GameSong song,string filename)
-        {
-            if (string.IsNullOrEmpty(song.SongFile))
-            {
-                _logMessages.Add("WARN: No audio file specified in "+ filename);
-                return false;
-            }
-            var path = Path.GetDirectoryName(filename) + "\\" + song.SongFile;
-            if (!File.Exists(path))
-            {
-                _logMessages.Add("WARN: Couldn't find audio file specified: " + path);
-                return false;
-            }
-            if (song.Length <= 0)
-            {
-                _logMessages.Add("WARN: Song length is not specified or invalid in " + filename);
-                return false;
-            }
-            if (song.Bpm <= 0)
-            {
-                _logMessages.Add("WARN: Song BPM is not specified or invalid in " + filename);
-                return false;
-            }
-            if (song.Offset < 0)
-            {
-                _logMessages.Add("WARN: Song offset is invalid in " + filename);
-                return false;
-            }
-            return true;
         }
 
         #endregion
@@ -312,10 +105,10 @@ namespace WGiBeat.AudioSystem
         /// <param name="position">The position, in milliseconds, to set the channel to.</param>
         public void SetPosition(int index, double position)
         {
-            var resultCode = _fmodSystem.getChannel(index, ref tmpChannel);
+            var resultCode = _fmodSystem.getChannel(index, ref _tmpChannel);
             CheckFMODErrors(resultCode);
 
-            var result = tmpChannel.setPosition((uint)(position * 1000), TIMEUNIT.MS);
+            var result = _tmpChannel.setPosition((uint)(position * 1000), TIMEUNIT.MS);
             CheckFMODErrors(result);
         }
 
@@ -343,20 +136,20 @@ namespace WGiBeat.AudioSystem
         /// <param name="index">The ID of the channel to stop.</param>
         public void StopChannel(int index)
         {
-            var resultCode = _fmodSystem.getChannel(index, ref tmpChannel);
+            var resultCode = _fmodSystem.getChannel(index, ref _tmpChannel);
             CheckFMODErrors(resultCode);
 
-            Monitor.Enter(tmpChannel);
+            Monitor.Enter(_tmpChannel);
             bool isPlaying = false;
-            tmpChannel.isPlaying(ref isPlaying);
+            _tmpChannel.isPlaying(ref isPlaying);
             CheckFMODErrors(resultCode);
 
             if (isPlaying)
             {
-                resultCode = tmpChannel.stop();
+                resultCode = _tmpChannel.stop();
                 CheckFMODErrors(resultCode);
             }
-            Monitor.Exit(tmpChannel);
+            Monitor.Exit(_tmpChannel);
         }
 
         /// <summary>
@@ -367,11 +160,11 @@ namespace WGiBeat.AudioSystem
         /// <returns>The current volume of the channel, between 0.0 and 1.0.</returns>
         public float GetChannelVolume(int index)
         {
-            var resultCode = _fmodSystem.getChannel(index, ref tmpChannel);
+            var resultCode = _fmodSystem.getChannel(index, ref _tmpChannel);
             CheckFMODErrors(resultCode);
 
             float volume = 0.0f;
-            resultCode = tmpChannel.getVolume(ref volume);
+            resultCode = _tmpChannel.getVolume(ref volume);
             CheckFMODErrors(resultCode);
             return volume;
         }
@@ -384,10 +177,10 @@ namespace WGiBeat.AudioSystem
         /// <param name="volume">The volume to set this channel to. 0 to mute, 1.0 for maximum volume.</param>
         public void SetChannelVolume(int index, float volume)
         {
-            var resultCode = _fmodSystem.getChannel(index, ref tmpChannel);
+            var resultCode = _fmodSystem.getChannel(index, ref _tmpChannel);
             CheckFMODErrors(resultCode);
 
-            resultCode = tmpChannel.setVolume(_masterVolume * volume);
+            resultCode = _tmpChannel.setVolume(_masterVolume * volume);
             CheckFMODErrors(resultCode);
         }
 
@@ -408,37 +201,24 @@ namespace WGiBeat.AudioSystem
         }
 
 
+        /// <summary>
+        /// Gets the position of the currently playing audio file in a given channel, in milliseconds. Used for syncronization.
+        /// </summary>
+        /// <param name="index">The ID of the desired channel.</param>
+        /// <returns>The current song position, in milliseconds.</returns>
+        public uint GetChannelPosition(int index)
+        {
+            uint position = 0;
+            CheckFMODErrors(_fmodSystem.getChannel(index, ref _tmpChannel));
+            CheckFMODErrors(_tmpChannel.getPosition(ref position, TIMEUNIT.MS));
+            return position;
+        }
         #endregion
 
         #region Song Playback System
 
-        /// <summary>
-        /// Gets the position of the currently playing song, in milliseconds. Used for syncronization.
-        /// </summary>
-        /// <returns>The current song position, in milliseconds.</returns>
-        public uint GetCurrentSongProgress()
-        {
-            RESULT result;
-            uint position = 0;
-            result = _fmodChannel.getPosition(ref position, TIMEUNIT.MS);
-            CheckFMODErrors(result);
-            return position;
-        }
- 
-        /// <summary>
-        /// Stops the currently playing GameSong.
-        /// </summary>
-        public void StopSong()
-        {
-            bool isPlaying = false;
-            _fmodChannel.isPlaying(ref isPlaying);
-            if (isPlaying)
-            {
-                var result = _fmodChannel.stop();
-                CheckFMODErrors(result);
-            }
-        }
 
+        /*
         /// <summary>
         /// Loads a GameSong into memory. Only one GameSong is loaded at a time.
         /// Note that this method can take some time to complete.
@@ -463,33 +243,21 @@ namespace WGiBeat.AudioSystem
             _fmodChannel.setVolume(_masterVolume);
             CheckFMODErrors(result);
         }
+         */
         #endregion
 
         public float[] GetChannelWaveform(int index, int numPoints)
         {
             var returnData = new float[numPoints];
 
-            var resultCode = _fmodSystem.getChannel(index, ref tmpChannel);
+            var resultCode = _fmodSystem.getChannel(index, ref _tmpChannel);
             CheckFMODErrors(resultCode);
 
-            resultCode = tmpChannel.getSpectrum(returnData, numPoints, 0, DSP_FFT_WINDOW.RECT);
+            resultCode = _tmpChannel.getSpectrum(returnData, numPoints, 0, DSP_FFT_WINDOW.RECT);
             CheckFMODErrors(resultCode);
 
             return returnData;
         }
 
-        #region Logging
-        public static string GetLogMessages()
-        {
-            Monitor.Enter(_logMessages);
-            string result = "";
-            foreach (string message in _logMessages)
-            {
-                result += message + "\n";
-            }
-            Monitor.Exit(_logMessages);
-            return result;
-        }
-        #endregion
     }
 }
