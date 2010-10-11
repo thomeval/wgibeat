@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using FMOD;
 
@@ -13,7 +12,7 @@ namespace WGiBeat.AudioSystem
     /// of which only one is allowed at a time, and Sound Effects, of which multiple simultanious
     /// channels are provided. This manager also handles loading and saving of song files.
     /// </summary>
-    public class SongManager
+    public class AudioManager
     {
         #region Fields
         private readonly List<GameSong> _songs = new List<GameSong>();
@@ -29,7 +28,7 @@ namespace WGiBeat.AudioSystem
         private Channel tmpChannel = new Channel();
         #endregion 
 
-        public SongManager()
+        public AudioManager()
         {
             _sounds = new Dictionary<string, Sound>();
             _logMessages = new List<string>();
@@ -56,8 +55,6 @@ namespace WGiBeat.AudioSystem
                 case RESULT.ERR_CHANNEL_STOLEN:
                     System.Diagnostics.Debug.WriteLine("Channel steal detected. Ignoring");
                     break;
-                case RESULT.ERR_FILE_NOTFOUND:
-                    throw new FileNotFoundException("Unable to find GameSong file " + _currentSong.SongFile + " in " + _currentSong.Path);
                 default:
                     throw new Exception("FMOD error: " + Error.String(result));
             }
@@ -244,6 +241,21 @@ namespace WGiBeat.AudioSystem
                 _logMessages.Add("WARN: Couldn't find audio file specified: " + path);
                 return false;
             }
+            if (song.Length <= 0)
+            {
+                _logMessages.Add("WARN: Song length is not specified or invalid in " + filename);
+                return false;
+            }
+            if (song.Bpm <= 0)
+            {
+                _logMessages.Add("WARN: Song BPM is not specified or invalid in " + filename);
+                return false;
+            }
+            if (song.Offset < 0)
+            {
+                _logMessages.Add("WARN: Song offset is invalid in " + filename);
+                return false;
+            }
             return true;
         }
 
@@ -256,12 +268,13 @@ namespace WGiBeat.AudioSystem
         /// value. Because it is loaded as a stream, this occurs quickly.
         /// </summary>
         /// <param name="soundPath">The path and filename to the audio file to play.</param>
+        /// <param name="loop">Whether tthe audio file should loop. Set to false for the audio file to play only once.</param>
         /// <returns>The channel ID allocated by Fmod to the channel. Use this to control the playback.</returns>
         public int PlaySoundEffect(string soundPath, bool loop)
         {
             RESULT result;
-            Sound mySound = GetOrCreateSound(soundPath);
-            Channel myChannel = new Channel();
+            var mySound = GetOrCreateSound(soundPath);
+            var myChannel = new Channel();
 
             if (loop)
             {
@@ -280,7 +293,13 @@ namespace WGiBeat.AudioSystem
             return index;
         }
 
-
+        /// <summary>
+        /// Loads and immediately plays any audio file given, as a stream. Each sound effect is
+        /// given its own channel - the channel allocated to the provided audio file is the return
+        /// value. Because it is loaded as a stream, this occurs quickly.
+        /// </summary>
+        /// <param name="path">The path and filename to the audio file to play.</param>
+        /// <returns>The channel ID allocated by Fmod to the channel. Use this to control the playback.</returns>
         public int PlaySoundEffect(string path)
         {
             return PlaySoundEffect(path, false);
@@ -295,7 +314,6 @@ namespace WGiBeat.AudioSystem
         {
             var resultCode = _fmodSystem.getChannel(index, ref tmpChannel);
             CheckFMODErrors(resultCode);
-
 
             var result = tmpChannel.setPosition((uint)(position * 1000), TIMEUNIT.MS);
             CheckFMODErrors(result);

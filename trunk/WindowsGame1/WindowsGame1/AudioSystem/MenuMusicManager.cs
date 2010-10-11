@@ -13,7 +13,7 @@ namespace WGiBeat.AudioSystem
         private int _musicChannel = -1;
         private string _currentMusic;
 
-        public SongManager SongManager { get; set; }
+        public AudioManager AudioManager { get; set; }
         public CrossfaderManager Crossfader { get; set; }
         public string MusicFilePath { get; set; }
         public MenuMusicManager()
@@ -76,7 +76,7 @@ namespace WGiBeat.AudioSystem
 
                 //StopExistingMusic();
                 _currentMusic = _musicList[name];
-                _musicChannel = SongManager.PlaySoundEffect(MusicFilePath + _musicList[name],true);
+                _musicChannel = AudioManager.PlaySoundEffect(MusicFilePath + _musicList[name],true);
                 Crossfader.PreviewDuration = 0;
                 Crossfader.SetNewChannel(_musicChannel);
             }
@@ -92,7 +92,7 @@ namespace WGiBeat.AudioSystem
             {
                 return;
             }
-            //SongManager.StopChannel(_musicChannel);
+            //AudioManager.StopChannel(_musicChannel);
             _musicChannel = -1;
             _currentMusic = "";
             Crossfader.SetNewChannel(_musicChannel);
