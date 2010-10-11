@@ -123,7 +123,7 @@ namespace WGiBeat.Screens
                 case Action.P3_START:
                 case Action.P4_START:
                 case Action.SYSTEM_BACK:
-                    Core.Songs.StopSong();
+                    Core.Songs.StopCurrentSong();
                     Core.Settings.SaveToFile("settings.txt");
                     Core.ScreenTransition("SongSelect");
                     break;

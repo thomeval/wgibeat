@@ -97,9 +97,6 @@ namespace WGiBeat.Screens
         public override void PerformAction(Action action)
         {
             int newOptionValue;
-            int player;
-            Int32.TryParse("" + action.ToString()[1], out player);
-            player--;
             var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
 
             switch (paction)
@@ -134,7 +131,7 @@ namespace WGiBeat.Screens
             switch (_selectedMenuOption)
             {
                 case MainMenuOption.START_GAME:
-                    if (Core.Songs.AllSongs().Count > 0)
+                    if (Core.Songs.Songs.Count > 0)
                     {
                         Core.ScreenTransition("NewGame");
                     }

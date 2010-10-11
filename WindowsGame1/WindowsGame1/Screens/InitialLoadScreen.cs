@@ -3,7 +3,6 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Threading;
-using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using Action=WGiBeat.Managers.Action;
 
@@ -47,7 +46,7 @@ namespace WGiBeat.Screens
             int errorCount = 0, warnCount = 0;
             var currentPos = new Vector2(_textPosition.X, _textPosition.Y);
             string[] splitChars = {"\n"};
-            var lines = AudioManager.GetLogMessages().Split(splitChars,StringSplitOptions.RemoveEmptyEntries);
+            var lines = Core.Songs.GetLogMessages().Split(splitChars,StringSplitOptions.RemoveEmptyEntries);
             _minY = Math.Min(lines.Length * -12 + 560, 40);
 
             if (_autoScroll)

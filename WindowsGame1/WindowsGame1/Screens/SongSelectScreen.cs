@@ -98,7 +98,7 @@ namespace WGiBeat.Screens
         private void CreateSongList()
         {
 
-            foreach (GameSong song in Core.Songs.AllSongs())
+            foreach (GameSong song in Core.Songs.Songs)
             {
                 _songList.Add(new SongListItem {Height = 50, Song = song, Width = 380});
             }
@@ -183,7 +183,7 @@ namespace WGiBeat.Screens
         {
             if (Crossfader.ChannelIndexCurrent != -1)
             {
-                float[] levels = Core.Songs.GetChannelWaveform(Crossfader.ChannelIndexCurrent, WAVEFORM_POINTS);
+                float[] levels = Core.Audio.GetChannelWaveform(Crossfader.ChannelIndexCurrent, WAVEFORM_POINTS);
 
                 var line = new PrimitiveLine(Core.GraphicsDevice);
                 line.Colour = Color.Black;
@@ -339,11 +339,15 @@ namespace WGiBeat.Screens
         }
         public override void PerformAction(Action action)
         {
-            int player;
+            int player = -1;
             Int32.TryParse("" + action.ToString()[1], out player);
             player--;
             var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
 
+            if ((player != -1) && (!Core.Players[player].Playing))
+            {
+                return;
+            }
             var playerOptions = (from e in _playerOptions where e.PlayerIndex == player select e).SingleOrDefault();
             switch (paction)
             {

@@ -178,7 +178,7 @@ namespace WGiBeat.Screens
             Core.Settings.Set("SongDebug", (_optionsMenu.GetByItemText("Song Debugging").SelectedValue()));
             Core.Settings.Set("SongPreview", (_optionsMenu.GetByItemText("Song Previews").SelectedValue()));
             Core.Settings.Set("FullScreen", _optionsMenu.GetByItemText("Full screen").SelectedValue());
-            Core.Songs.SetMasterVolume((float) Core.Settings.Get<double>("SongVolume"));
+            Core.Audio.SetMasterVolume((float) Core.Settings.Get<double>("SongVolume"));
             Core.GraphicsManager.IsFullScreen = Core.Settings.Get<bool>("FullScreen");
             Core.GraphicsManager.ApplyChanges();
             Core.Settings.SaveToFile("settings.txt");

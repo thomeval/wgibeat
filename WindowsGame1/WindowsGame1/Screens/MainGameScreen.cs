@@ -83,7 +83,6 @@ namespace WGiBeat.Screens
             }
 
             _gameSong = (GameSong)Core.Cookies["CurrentSong"];
-            Core.Songs.LoadSong(_gameSong);
 
             _startTime = null;
             _beatlineSet.EndingPhrase = GetEndingTimeInPhrase();
@@ -92,7 +91,7 @@ namespace WGiBeat.Screens
 
             if (Core.Cookies.ContainsKey("MenuMusicChannel"))
             {
-                Core.Songs.StopChannel((int)Core.Cookies["MenuMusicChannel"]);
+                Core.Audio.StopChannel((int)Core.Cookies["MenuMusicChannel"]);
                 Core.Cookies.Remove("MenuMusicChannel");
             }
             base.Initialize();
@@ -114,7 +113,7 @@ namespace WGiBeat.Screens
 
             if (_startTime == null)
             {
-                Core.Songs.PlaySong();
+                Core.Songs.PlaySong(_gameSong);
                 _startTime = new TimeSpan(gameTime.TotalRealTime.Ticks);
             }
 
@@ -172,7 +171,7 @@ namespace WGiBeat.Screens
             {
                 if (Core.Settings.Get<bool>("SongDebug"))
                 {
-                    AudioManager.SaveToFile(_gameSong);
+                    Core.Songs.SaveToFile(_gameSong);
                 }
 
                 Core.ScreenTransition("Evaluation");
@@ -290,7 +289,7 @@ namespace WGiBeat.Screens
                     }
                     break;
                 case "BACK":
-                    Core.Songs.StopSong();
+                    Core.Songs.StopCurrentSong();
                     Core.ScreenTransition("SongSelect");
                     break;
             }

@@ -22,7 +22,8 @@ namespace WGiBeat
         private SpriteBatch _spriteBatch;
         public SettingsManager Settings;
         public MetricsManager Metrics;
-        public AudioManager Songs;
+        public AudioManager Audio;
+        public SongManager Songs;
         public HighScoreManager HighScores;
         public CrossfaderManager Crossfader;
         public Player[] Players;
@@ -61,8 +62,9 @@ namespace WGiBeat
             Metrics = MetricsManager.Load("metrics.txt");
             Settings = SettingsManager.LoadFromFile("settings.txt");
             HighScores = HighScoreManager.LoadFromFile("Scores.conf");
-            Songs = new AudioManager();
-            Crossfader = new CrossfaderManager{AudioManager = this.Songs};
+            Audio = new AudioManager();
+            Songs = new SongManager{AudioManager = this.Audio};
+            Crossfader = new CrossfaderManager{AudioManager = this.Audio};
             TextureManager.GraphicsDevice = this.GraphicsDevice;
 
 
@@ -75,7 +77,7 @@ namespace WGiBeat
             _menuMusicManager = new MenuMusicManager
             {
                 MusicFilePath = Directory.GetCurrentDirectory() + "\\MenuMusic\\",
-                AudioManager = this.Songs,
+                AudioManager = this.Audio,
                 Crossfader = this.Crossfader
             };
             _menuMusicManager.LoadMusicList(Directory.GetCurrentDirectory() + "\\MenuMusic\\MusicList.txt");
@@ -103,7 +105,7 @@ namespace WGiBeat
             
             if (Settings.Exists("SongVolume"))
             {
-                Songs.SetMasterVolume((float) Settings.Get<double>("SongVolume"));
+                Audio.SetMasterVolume((float) Settings.Get<double>("SongVolume"));
             }
             if (Settings.Exists("FullScreen"))
             {

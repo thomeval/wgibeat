@@ -10,6 +10,12 @@ namespace WGiBeat
         /// </summary>
         static void Main(string[] args)
         {
+#if (DEBUG)
+            using (GameCore game = new GameCore())
+            {
+                game.Run();
+            }
+#else
             try
             {
                 using (GameCore game = new GameCore())
@@ -22,11 +28,8 @@ namespace WGiBeat
                 MessageBox.Show(
                     "A critical error has occurred. Please check the error.txt file created in the wgibeat folder for details. If this is a bug, please send the error.txt to a developer.");
                 SaveErrorLog(ex);
-#if (DEBUG)
-                throw;
-#endif
-
             }
+#endif
         }
 
         private static void SaveErrorLog(Exception ex)
