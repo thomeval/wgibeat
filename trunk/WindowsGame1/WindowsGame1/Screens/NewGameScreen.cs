@@ -49,17 +49,12 @@ namespace WGiBeat.Screens
                 noteSpeed.SetSelectedByValue(1.0);
                 _playerMenus[x].AddItem(noteSpeed);
 
-                var playerTeam = new MenuItem {ItemText = "Team"};
-                playerTeam.AddOption("Blue", 1);
-                playerTeam.AddOption("Red",2);
-                _playerMenus[x].AddItem(playerTeam);
-
                 _playerMenus[x].SetPosition(Core.Metrics["NewGameMenuStart", x]);
 
-                //NOTE: Uncomment this to get access to the incomplete OnScreenKeyboard. Not functional yet.
                 _playerMenus[x].AddItem(new MenuItem { ItemText = "Name Entry" });
 
                 _playerMenus[x].AddItem(new MenuItem { ItemText = "Leave" });
+                Core.Players[x].Team = 0;
             }
 
             for (int x = 0; x < 4; x++)
@@ -280,7 +275,6 @@ namespace WGiBeat.Screens
             {
                 Core.Players[x].PlayDifficulty =
                     (Difficulty)(int)_playerMenus[x].GetByItemText("Difficulty").SelectedValue();
-                Core.Players[x].Team = (int) _playerMenus[x].GetByItemText("Team").SelectedValue();
                 Core.Players[x].BeatlineSpeed = (double)_playerMenus[x].GetByItemText("Beatline Speed").SelectedValue();
             }
             Core.ScreenTransition("ModeSelect");

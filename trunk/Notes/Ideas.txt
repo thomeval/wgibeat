@@ -34,15 +34,12 @@
 -Lifebar graph (In progress)
 -Mode descriptions (Needs graphics)
 -Name list
--Beatline scaling with 1 or 2 players
--Fade out menu music when no next music.
 -Frame for song title/artist in song select
 -Add song length in song select screen.
 -Song length doesn't work properly. (Fixed?)
 -Investigate timing / press lag (Better due to framerate fix, but is it perfect?)
--Team select screen
 
----Roadmap (0.3)---
+---Roadmap (0.3 - "Delicious Disappointment")---
 -Song list sorting (0.3)(Done)
 -Player status/options indicators (Done)
 -Improved Highscore display (Done)
@@ -58,8 +55,11 @@
 -Player Label for beatlines (Done)
 -Enhance song loading (skip bad song files, display meaningful errors, etc) (Done - Basic)
 -Critical error handling (0.3)(Done)
+-Beatline scaling with 1 or 2 players (Done)
+-Fade out menu music when no next music. (Done)
+-Team select screen (Done)
 
----Roadmap (0.2)---
+---Roadmap (0.2 - "Communist Garage")---
 -Team Mode (Done)
 -Installer that works (Done)
 -Licence (Done - BSD)
@@ -74,7 +74,7 @@
 -Lifebar updates for Cooperative mode (Done)
 
 
----Roadmap (0.1)---
+---Roadmap (0.1 - "Initial Release")---
 -Complete Coop mode (Done)
 -Song Previewing (Done)
 -Mode select screen Icons (DONE)

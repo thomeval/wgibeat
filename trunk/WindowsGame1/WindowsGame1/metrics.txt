@@ -106,5 +106,10 @@ ModeSelectOptions=[20,105];
 ModeDescription=[20,310];
 ModeDescriptionBase=[0,270];
 RestrictionMessage=[510,500];
-RestrictionBase=[450,480]
+RestrictionBase=[450,480];
+
+#Team Select;
+TeamSelectScreenHeader=[0,0];
+PlayerTeamMarkers=[185,155][185,215][185,275][185,335];
+TeamScreenBackground=[10,105];
 

@@ -157,6 +157,7 @@
     <Compile Include="Screens\NewGameScreen.cs" />
     <Compile Include="Screens\OptionScreen.cs" />
     <Compile Include="Screens\SongSelectScreen.cs" />
+    <Compile Include="Screens\TeamSelectScreen.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fmodex.dll">

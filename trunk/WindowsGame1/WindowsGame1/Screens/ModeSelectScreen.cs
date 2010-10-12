@@ -53,11 +53,10 @@ namespace WGiBeat.Screens
                 Height = Core.Window.ClientBounds.Height,
                 SpriteTexture = TextureManager.Textures["allBackground"],
                 Width = Core.Window.ClientBounds.Width,
-                X = 0,
-                Y = 0
             };
 
             _headerSprite = new Sprite { SpriteTexture = TextureManager.Textures["modeSelectHeader"] };
+            _headerSprite.SetPosition(Core.Metrics["ModeSelectScreenHeader", 0]);
 
             _optionBaseSpriteMap = new SpriteMap
             {
@@ -169,12 +168,18 @@ namespace WGiBeat.Screens
         }
         public override void PerformAction(Action action)
         {
-         int player;
+         int player = -1;
             Int32.TryParse("" + action.ToString()[1], out player);
             player--;
             var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
 
             var playerOptions = (from e in _playerOptions where e.PlayerIndex == player select e).SingleOrDefault();
+
+            //Ignore inputs from players not playing EXCEPT for system keys.
+            if ((player > -1) && (playerOptions == null))
+            {
+                return;
+            }
             switch (paction)
             {
                 case "LEFT":
@@ -276,10 +281,6 @@ namespace WGiBeat.Screens
                     {
                         return "Requires at least two players.";
                     }
-                    if ((TeamCount(1) == 0 ) || TeamCount(2) == 0)
-                    {
-                        return "One team has no players.";
-                    }
                     break;
                     
                     case GameType.SYNC:
@@ -295,24 +296,22 @@ namespace WGiBeat.Screens
             return "";
         }
 
-        private decimal TeamCount(int team)
-        {
-            return (from e in Core.Players where e.Playing && e.Team == team select e).Count();
-        }
-
         private void DoAction()
         {
             if (GameTypeAllowed((GameType) _selectedGameType) == "")
             {
-                if (((GameType)_selectedGameType ) != GameType.TEAM)
-                {
-                    foreach (Player player in Core.Players)
-                    {
-                        player.Team = 0;
-                    }
-                }
+
                 Core.Cookies["CurrentGameType"] = (GameType) _selectedGameType;
-                Core.ScreenTransition("SongSelect");
+                if (((GameType)_selectedGameType) == GameType.TEAM)
+                {
+                    Core.ScreenTransition("TeamSelect");
+                }
+                else
+                {
+                    Core.ScreenTransition("SongSelect");
+                }
+
+
             }
         }
     }

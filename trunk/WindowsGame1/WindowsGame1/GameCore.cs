@@ -37,7 +37,7 @@ namespace WGiBeat
         private KeyboardState _lastKeystate;
         private GamePadState[] _lastGamePadState;
 
-        public const string VERSION_STRING = "v0.3 pre";
+        public const string VERSION_STRING = "v0.3";
         public GameCore()
         {
             GraphicsManager = new GraphicsDeviceManager(this);
@@ -245,6 +245,7 @@ namespace WGiBeat
             _screens.Add("KeyOptions", new KeyOptionScreen(this));
             _screens.Add("Options", new OptionScreen(this));
             _screens.Add("ModeSelect", new ModeSelectScreen(this));
+            _screens.Add("TeamSelect", new TeamSelectScreen(this));
             ScreenTransition("InitialLoad");
         }
 
