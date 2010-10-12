@@ -91,9 +91,13 @@ namespace WGiBeat.Drawing
             {
                 _nameBackground.ColorShading = _blueBackground;
             }
-            if (Player.Team == 2)
+            else if (Player.Team == 2)
             {
                 _nameBackground.ColorShading = _redBackground;
+            }
+            else
+            {
+                _nameBackground.ColorShading = Color.TransparentWhite;
             }
             _nameBackground.Width = this.Width - 133;
             _nameBackground.Height = this.Height - 2;

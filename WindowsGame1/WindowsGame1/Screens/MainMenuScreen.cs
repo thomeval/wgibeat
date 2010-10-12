@@ -93,7 +93,6 @@ namespace WGiBeat.Screens
             }
         }
 
-//TODO: Refactor
         public override void PerformAction(Action action)
         {
             int newOptionValue;
