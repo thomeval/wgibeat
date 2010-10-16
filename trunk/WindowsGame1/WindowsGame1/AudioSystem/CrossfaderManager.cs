@@ -39,6 +39,7 @@ namespace WGiBeat.AudioSystem
             get { return _channelIndexCurrent; }
         }
 
+
         private GameSong _currentSong;
         private double _previewTime;
 
