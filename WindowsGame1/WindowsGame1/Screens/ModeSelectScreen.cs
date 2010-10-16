@@ -20,6 +20,7 @@ namespace WGiBeat.Screens
         private readonly SineSwayParticleField _field = new SineSwayParticleField();
         private Sprite _restrictionSprite;
         private readonly List<PlayerOptionsFrame> _playerOptions = new List<PlayerOptionsFrame>();
+        private Sprite _messageBorderSprite;
 
 
         public ModeSelectScreen(GameCore core)
@@ -74,8 +75,10 @@ namespace WGiBeat.Screens
 
             _descriptionBaseSprite = new Sprite() {SpriteTexture = TextureManager.Textures["ModeDescriptionBase"]};
             _descriptionBaseSprite.SetPosition(Core.Metrics["ModeDescriptionBase",0]);
-            _restrictionSprite = new Sprite {SpriteTexture = TextureManager.Textures["RestrictionBorder"]};
-            _restrictionSprite.SetPosition(Core.Metrics["RestrictionBase", 0]);
+            _messageBorderSprite = new Sprite { SpriteTexture = TextureManager.Textures["MessageBorder"] };
+            _messageBorderSprite.SetPosition(Core.Metrics["MessageBorder", 0]);
+            _restrictionSprite = new Sprite {SpriteTexture = TextureManager.Textures["RestrictionIcon"], Width = 48, Height = 48};
+            _restrictionSprite.SetPosition(_messageBorderSprite.X + 7, _messageBorderSprite.Y + 7);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -107,6 +110,7 @@ namespace WGiBeat.Screens
             {
                 return;
             }
+            _messageBorderSprite.Draw(spriteBatch);
             _restrictionSprite.Draw(spriteBatch);
             TextureManager.DrawString(spriteBatch, restrictionMessage,"DefaultFont",Core.Metrics["RestrictionMessage",0],Color.White, FontAlign.LEFT);
         }
@@ -310,8 +314,6 @@ namespace WGiBeat.Screens
                 {
                     Core.ScreenTransition("SongSelect");
                 }
-
-
             }
         }
     }
