@@ -17,18 +17,18 @@
 -Program Icon 
 
 --Thome--
--Sync (0.3), Battle (0.4?), VS CPU game modes (0.4?)
+-Sync (0.4), Battle (0.4?), VS CPU game modes (0.4?)
 -Song Sort bookmarks / quick navigation (0.4)
--Player Profiles (Major - 0.3?)
+-Player Profiles (Major - 0.4?)
 -On screen keyboard (needed for profiles)(Done)
 -Song folders / tree (Major - 0.4?)
 -Fix song BPM frame in song select screen.
 
--Better error message when prerequisites aren't installed (0.3)
--Public domain music as a sample file? (0.3)
--Cooperative bonuses (Streaks? Sync perfects?) (0.3)
+-Better error message when prerequisites aren't installed (0.4)
+-Public domain music as a sample file? (0.4)
+-Cooperative bonuses (Streaks? Sync perfects?) (0.4)
 
--Loading screen for songs, etc (0.3)
+
 -Chance / SP gameplay (Major - Needs graphics)
 -"Performance" indicator (evaluation + ingame)
 -Lifebar graph (In progress)
@@ -53,6 +53,7 @@
 -Loop menu music (Done)
 -Rewrite options loading (Done)
 -Player Label for beatlines (Done)
+-Loading screen for songs, etc (Done)
 -Enhance song loading (skip bad song files, display meaningful errors, etc) (Done - Basic)
 -Critical error handling (0.3)(Done)
 -Beatline scaling with 1 or 2 players (Done)

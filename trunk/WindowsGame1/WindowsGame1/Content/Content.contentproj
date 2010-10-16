@@ -394,13 +394,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\RestrictionBorder.png">
-      <Name>RestrictionBorder</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Textures\ScoreBaseTeam.png">
       <Name>ScoreBaseTeam</Name>
       <Importer>TextureImporter</Importer>
@@ -506,6 +499,20 @@
     </Compile>
     <Compile Include="Textures\TeamSelectHeader.png">
       <Name>TeamSelectHeader</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\MessageBorder.png">
+      <Name>MessageBorder</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\RestrictionIcon.png">
+      <Name>RestrictionIcon</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
