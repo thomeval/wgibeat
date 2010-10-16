@@ -152,12 +152,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Audio\MenuMusic.mp3">
-      <Name>MenuMusic</Name>
-      <Importer>Mp3Importer</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <Compile Include="Fonts\LogFont.spritefont">
       <Name>LogFont</Name>
       <Importer>FontDescriptionImporter</Importer>
@@ -516,6 +510,9 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Audio\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

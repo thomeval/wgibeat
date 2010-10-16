@@ -66,6 +66,7 @@ namespace WGiBeat.AudioSystem
                 {
                     System.Diagnostics.Debug.WriteLine("MenuMusicManager: Skipping load of '" + name + "' as the file was not found.");
                     System.Diagnostics.Debug.WriteLine("Searched in: " + MusicFilePath + _musicList[name]);
+                    StopExistingMusic();
                     return;
                 }
                 if (_currentMusic == _musicList[name])
@@ -88,14 +89,15 @@ namespace WGiBeat.AudioSystem
 
         private void StopExistingMusic()
         {
-            if (_musicChannel == -1)
-            {
-                return;
-            }
+
+
             //AudioManager.StopChannel(_musicChannel);
             _musicChannel = -1;
             _currentMusic = "";
-            Crossfader.SetNewChannel(_musicChannel);
+            if (Crossfader.ChannelIndexCurrent != -1)
+            {
+                Crossfader.SetNewChannel(_musicChannel);
+            }
         }
     }
 }
