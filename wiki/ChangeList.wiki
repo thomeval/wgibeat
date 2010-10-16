@@ -1,0 +1,6 @@
+#summary List of changes between WGiBeat release versions.
+
+= Introduction =
+
+Under construction.
+
