@@ -4,37 +4,37 @@
 
 ==0.3 - "Delicious Disappointment"==
 
-* Song list can be sorted by name, artist or BPM (hold the beatline key in SongSelectScreen).
-* Player status/options indicators.
-* Difficulty and Beatline speed can be changed from SongSelectScreen (hold the select key).
-* Name entry. Highscores now save player names as well.
-* Improved Highscore display 
-* Icon for Team mode
-* Tug of war bar for team mode
-* New user-customizable system for menu music. Menu music can now be configured for each screen.
-* Spectrum analyzer in Song Select Screen.
-* Updated layout for Mode Select Screen, which now includes mode descriptions.
-* Song stops if everyone KO'ed
-* Menu music loops now.
-* Options loading has been improved and is more robust.
-* Player Label for beatlines.
-* Initial loading screen for songs, which will display any errors encountered.
-* Enhance song loading - badly written song files, missing audio files and similar errors will no longer crash the game mysteriously.
-* Critical error handling - error message is now displayed and a error dump is written to file.
-* Beatline scaling with 1 or 2 players. Where possible, a "large" beatline is used instead.
-* Menu music crossfades, either to silence, to song previews or to another menu music audio.
-* Team select screen when using Team Mode.
+ * Song list can be sorted by name, artist or BPM (hold the beatline key in SongSelectScreen).
+ * Player status/options indicators.
+ * Difficulty and Beatline speed can be changed from SongSelectScreen (hold the select key).
+ * Name entry. Highscores now save player names as well.
+ * Improved Highscore display 
+ * Icon for Team mode
+ * Tug of war bar for team mode
+ * New user-customizable system for menu music. Menu music can now be configured for each screen.
+ * Spectrum analyzer in Song Select Screen.
+ * Updated layout for Mode Select Screen, which now includes mode descriptions.
+ * Song stops if everyone KO'ed
+ * Menu music loops now.
+ * Options loading has been improved and is more robust.
+ * Player Label for beatlines.
+ * Initial loading screen for songs, which will display any errors encountered.
+ * Enhance song loading - badly written song files, missing audio files and similar errors will no longer crash the game mysteriously.
+ * Critical error handling - error message is now displayed and a error dump is written to file.
+ * Beatline scaling with 1 or 2 players. Where possible, a "large" beatline is used instead.
+ * Menu music crossfades, either to silence, to song previews or to another menu music audio.
+ * Team select screen when using Team Mode.
 
 ==0.2 - "Communist Garage"==
 
-* New game mode: Team Mode
-* Installer that works.
-* Project now licensed by the BSD license.
-* Project now hosted on Google Code.
-* Display subtitle on SongSelectScreen
-* Full screen mode
-* Framerate / smoothness improvement.
-* Prevent coop mode with 1 player.
-* Blocky Life bar, black background. Also implemented for all modes.
-* Resetting keys.
-* Other refactors and code enhancements that should not affect players.
+ * New game mode: Team Mode
+ * Installer that works.
+ * Project now licensed by the BSD license.
+ * Project now hosted on Google Code.
+ * Display subtitle on SongSelectScreen
+ * Full screen mode
+ * Framerate / smoothness improvement.
+ * Prevent coop mode with 1 player.
+ * Blocky Life bar, black background. Also implemented for all modes.
+ * Resetting keys.
+ * Other refactors and code enhancements that should not affect players.
