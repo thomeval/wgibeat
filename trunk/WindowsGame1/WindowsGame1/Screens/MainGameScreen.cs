@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Drawing.Sets;
+using WGiBeat.Managers;
 using WGiBeat.Notes;
 using Action = WGiBeat.Managers.Action;
 
@@ -27,6 +28,7 @@ namespace WGiBeat.Screens
         private int _playerCount;
         private GameSong _gameSong;
         private TimeSpan? _startTime;
+        private CPUManager _cpuManager;
         private int _displayState;
         private double _transitionTime;
         private double _lastBlazeCheck;
@@ -39,6 +41,7 @@ namespace WGiBeat.Screens
         public override void Initialize()
         {
             _playerCount = 4;
+
             _notebars = new NoteBar[_playerCount];
             _lifeBarSet = new LifeBarSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
             _levelbarSet = new LevelBarSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
@@ -48,7 +51,9 @@ namespace WGiBeat.Screens
             _beatlineSet = new BeatlineSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
 
             _beatlineSet.NoteMissed += BeatlineNoteMissed;
+            _beatlineSet.CPUNoteHit += BeatlineNoteCPUHit;
             _beatlineSet.Large = LargeBeatlinesSuitable();
+
             _displayState = 0;
             _songLoadDelay = 0.0;
             _confidence = 0;
@@ -96,6 +101,7 @@ namespace WGiBeat.Screens
             }
             base.Initialize();
         }
+
 
         private bool LargeBeatlinesSuitable()
         {
@@ -219,11 +225,15 @@ namespace WGiBeat.Screens
         public override void PerformAction(Action action)
         {
             var songDebug = Core.Settings.Get<bool>("SongDebug");
-            int player;
+            int player = -1;
             Int32.TryParse("" + action.ToString()[1], out player);
             player--;
             var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
 
+            if ((player > -1) && (Core.Players[player].CPU))
+            {
+                return;
+            }
 
             switch (paction)
             {
@@ -361,12 +371,19 @@ namespace WGiBeat.Screens
             }
             //Award Score
             ApplyJudgement(judgement, player);
+            CreateNextNoteBar(player);
+
+
+        }
+
+        private void CreateNextNoteBar(int player)
+        {
             //Create next note bar.
             var numArrow = (int)Core.Players[player].Level;
             var numReverse = (Core.Players[player].IsBlazing) ? (int)Core.Players[player].Level / 2 : 0;
             _notebars[player] = NoteBar.CreateNoteBar(numArrow, numReverse, Core.Metrics["NoteBar", player]);
-
         }
+
         #endregion
 
         #region Helper Methods
@@ -427,6 +444,22 @@ namespace WGiBeat.Screens
             var player = ((Beatline)sender).Id;
             _lifeBarSet.AdjustLife(
                 _noteJudgementSet.AwardJudgement(BeatlineNoteJudgement.MISS, player, 0, 0), player);
+        }
+
+        private void BeatlineNoteCPUHit(object sender, EventArgs e)
+        {
+            var player = ((Beatline)sender).Id;
+            var judgement = Core.CPUManager.GetNextJudgement(2, Core.Players[player].Streak);
+
+            _notebars[player].MarkAllCompleted();
+
+            if ((judgement != BeatlineNoteJudgement.MISS) && (judgement != BeatlineNoteJudgement.FAIL))
+            {
+                Core.Players[player].Momentum += MomentumIncreaseByDifficulty(Core.Players[player].PlayDifficulty);
+            }
+            //Award Score
+            ApplyJudgement(judgement, player);
+            CreateNextNoteBar(player);
         }
 
         #endregion

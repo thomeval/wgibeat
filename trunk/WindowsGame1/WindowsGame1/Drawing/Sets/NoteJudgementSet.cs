@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Notes;
 
@@ -58,6 +59,7 @@ namespace WGiBeat.Drawing.Sets
         public double AwardJudgement(BeatlineNoteJudgement judgement, int player, int numCompleted, int numNotCompleted)
         {
             double lifeAdjust = 0;
+            long scoreAdjust = 0;
             switch (judgement)
             {
                 case BeatlineNoteJudgement.IDEAL:
@@ -66,20 +68,20 @@ namespace WGiBeat.Drawing.Sets
                     decimal multiplier = Convert.ToDecimal((9 + Math.Max(1, _players[player].Streak)));
                     multiplier /= 10;
 
-                    _players[player].Score += (long)(1000 * (numCompleted) * multiplier);
+                    scoreAdjust = (long)(1000 * (numCompleted) * multiplier);
                     lifeAdjust = (1 * numCompleted);
                     break;
                 case BeatlineNoteJudgement.COOL:
-                    _players[player].Score += 750 * numCompleted;
+                    scoreAdjust = 750 * numCompleted;
                     lifeAdjust = (0.5 * numCompleted);
                     _players[player].Streak = 0;
                     break;
                 case BeatlineNoteJudgement.OK:
-                    _players[player].Score += 500 * numCompleted;
+                    scoreAdjust = 500 * numCompleted;
                     _players[player].Streak = 0;
                     break;
                 case BeatlineNoteJudgement.BAD:
-                    _players[player].Score += 250 * numCompleted;
+                    scoreAdjust = 250 * numCompleted;
                     _players[player].Streak = 0;
                     lifeAdjust = -1 * numCompleted;
                     break;
@@ -98,11 +100,22 @@ namespace WGiBeat.Drawing.Sets
 
             _players[player].Judgements[(int)judgement]++;
 
+            if (_players[player].CPU)
+            {
+                scoreAdjust *= NumHumanPlayers();
+            }
+            _players[player].Score += scoreAdjust;
+
             var newDj = new DisplayedJudgement { DisplayUntil = _phraseNumber + 0.5, Height = 40, Width = 150, Player = player, Tier = (int)judgement };
             newDj.SetPosition(_metrics["Judgement", player]);
             _displayedJudgements[player] = newDj;
 
             return lifeAdjust;
+        }
+
+        private long NumHumanPlayers()
+        {
+            return (from e in _players where e.Playing && !(e.CPU) select e).Count();
         }
 
         private void DrawStreakCounters(SpriteBatch spriteBatch)

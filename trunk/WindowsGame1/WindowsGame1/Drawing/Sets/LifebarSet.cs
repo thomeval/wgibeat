@@ -32,6 +32,7 @@ namespace WGiBeat.Drawing.Sets
             {
                 case GameType.NORMAL:
                 case GameType.TEAM:
+                case GameType.VS_CPU:
                     for (int x = 0; x < 4; x++)
                     {
                         _lifeBars[x] = new NormalLifeBar {Height = 30, Width = 260, PlayerID = x, Parent = this};
@@ -52,6 +53,7 @@ namespace WGiBeat.Drawing.Sets
             {
                 case GameType.NORMAL:
                 case GameType.TEAM:
+                case GameType.VS_CPU:
                     AdjustLifeNormal(amount, player);
                     break;
                 case GameType.COOPERATIVE:
@@ -101,7 +103,7 @@ namespace WGiBeat.Drawing.Sets
             }
 
             Players[player].Life = Math.Min(LIFE_MAX_NORMAL, Players[player].Life);
-            if (Players[player].Life <= 0)
+            if ((!Players[player].CPU) && (Players[player].Life <= 0))
             {
                 Players[player].KO = true;
                 Players[player].Life = 0;
@@ -125,6 +127,7 @@ namespace WGiBeat.Drawing.Sets
             {
                 case GameType.NORMAL:
                 case GameType.TEAM:
+                    case GameType.VS_CPU:
                     for (int x = 0; x < 4; x++)
                     {
                         if (Players[x].Playing)

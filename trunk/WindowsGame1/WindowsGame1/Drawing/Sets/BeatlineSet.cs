@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.Managers;
 using WGiBeat.Notes;
 
 
@@ -8,6 +9,7 @@ namespace WGiBeat.Drawing.Sets
     public class BeatlineSet : DrawableObject
     {
         private readonly MetricsManager _metrics;
+        private readonly CPUManager _cpuManager;
         public readonly Player[] Players;
         private readonly GameType _gameType;
         private double _lastBeatlineNote = -1;
@@ -66,6 +68,8 @@ namespace WGiBeat.Drawing.Sets
         }
 
         public event EventHandler NoteMissed;
+        public event EventHandler CPUNoteHit;
+
         public BeatlineSet()
         {
             _beatlines = new Beatline[4];
@@ -110,6 +114,18 @@ namespace WGiBeat.Drawing.Sets
 
             for (int x = 0; x < 4; x++)
             {
+                if (Players[x].CPU)
+                {
+                    var notesHit = _beatlines[x].AutoHit(phraseNumber);
+
+                    for (int y = 0; y < notesHit; y++)
+                    {
+                        if (CPUNoteHit != null)
+                        {
+                            CPUNoteHit(_beatlines[x], null);
+                        }
+                    }
+                }
                 if (Players[x].KO)
                 {
                     _beatlines[x].RemoveAll();

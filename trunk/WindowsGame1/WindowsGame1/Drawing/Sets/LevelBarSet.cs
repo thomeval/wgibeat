@@ -48,6 +48,7 @@ namespace WGiBeat.Drawing.Sets
                 case GameType.NORMAL:
                 case GameType.COOPERATIVE:
                 case GameType.TEAM:
+                case GameType.VS_CPU:
                     for (int x = 0; x < _levelBars.Length; x++)
                     {
                         if (Players[x].Playing)

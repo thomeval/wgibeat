@@ -120,7 +120,7 @@ namespace WGiBeat.Screens
             var posX = (int) Core.Metrics["ModeSelectOptions", 0].X;
             var posY = (int) Core.Metrics["ModeSelectOptions", 0].Y;
 
-            for (int x = 0; x < (int) GameType.COUNT -1; x++)
+            for (int x = 0; x < (int) GameType.COUNT; x++)
             {
                 int selected = (x == _selectedGameType) ? 1 : 0;
                 _optionBaseSpriteMap.Draw(spriteBatch, selected, 250, 160, posX, posY);
@@ -164,8 +164,8 @@ namespace WGiBeat.Screens
 
                 case GameType.TEAM:
                     return "2 to 4 players:\nTwo teams play competitively.\nThe team with the higher score wins.";
-                    case GameType.SYNC:
-                    return "2 to 4 players:\nPlayers share a single score and life bar\n All players must keep up, or fail as a group.";
+                    case GameType.VS_CPU:
+                    return "1 to 3 players:\nPlayers compete against a computer opponent.\nThe opponent is scaled to match the number of players.";
                 default:     
                     return "Game type not recognized.";
             }
@@ -257,11 +257,11 @@ namespace WGiBeat.Screens
             _selectedGameType += amount;
             if (_selectedGameType < 0)
             {
-                _selectedGameType += (int)GameType.COUNT -1;
+                _selectedGameType += (int)GameType.COUNT ;
             }
-            if (_selectedGameType >= (int)GameType.COUNT -1)
+            if (_selectedGameType >= (int)GameType.COUNT)
             {
-                _selectedGameType -= (int) GameType.COUNT -1;
+                _selectedGameType -= (int) GameType.COUNT;
             }
         }
 
@@ -287,10 +287,10 @@ namespace WGiBeat.Screens
                     }
                     break;
                     
-                    case GameType.SYNC:
-                    if (PlayerCount() < 2)
+                    case GameType.VS_CPU:
+                    if (PlayerCount() > 3)
                     {
-                        return "Requires at least two players.";
+                        return "Requires at most three players.";
                     }
                     break;
                      
@@ -306,6 +306,11 @@ namespace WGiBeat.Screens
             {
 
                 Core.Cookies["CurrentGameType"] = (GameType) _selectedGameType;
+
+                if (((GameType)_selectedGameType) == GameType.VS_CPU)
+                {
+                    SetupVSCPUMode();
+                }
                 if (((GameType)_selectedGameType) == GameType.TEAM)
                 {
                     Core.ScreenTransition("TeamSelect");
@@ -315,6 +320,29 @@ namespace WGiBeat.Screens
                     Core.ScreenTransition("SongSelect");
                 }
             }
+        }
+
+        private void SetupVSCPUMode()
+        {
+            foreach (Player player in (from e in Core.Players where e.Playing select e))
+            {
+                player.Team = 1;
+            }
+
+            var cpuDifficulty = (from e in Core.Players where e.Playing select e.PlayDifficulty).Max();
+            for (int x = 0; x < 4; x++)
+            {
+                if (!Core.Players[x].Playing)
+                {
+                    Core.Players[x].Playing = true;
+                    Core.Players[x].CPU = true;
+                    Core.Players[x].Team = 2;
+                    Core.Players[x].Name = "CPU";
+                    Core.Players[x].PlayDifficulty = cpuDifficulty;
+                    return;
+                }
+            }
+            throw new Exception("Did not setup CPU Player.");
         }
     }
 }

@@ -212,6 +212,11 @@ namespace WGiBeat.Screens
                 case CursorPosition.NOT_JOINED:
                     _cursorPositions[number] = CursorPosition.MAIN_MENU;
                     Core.Players[number].Playing = true;
+                    Core.Players[number].CPU = false;
+                    if (Core.Players[number].Name == "CPU")
+                    {
+                        Core.Players[number].Name = "";
+                    }
                     break;
                 case CursorPosition.MAIN_MENU:
                     SelectMainMenuItem(number);

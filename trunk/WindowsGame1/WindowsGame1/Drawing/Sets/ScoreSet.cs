@@ -85,7 +85,8 @@ namespace WGiBeat.Drawing.Sets
                 case GameType.COOPERATIVE:
                     DrawCoopCombinedScore(spriteBatch);
                     break;
-                    case GameType.TEAM:
+                case GameType.TEAM:
+                case GameType.VS_CPU:
                     DrawTeamCombinedScores(spriteBatch);
                     break;
             }

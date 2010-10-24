@@ -26,6 +26,8 @@ namespace WGiBeat
         public SongManager Songs;
         public HighScoreManager HighScores;
         public CrossfaderManager Crossfader;
+        public CPUManager CPUManager;
+
         public Player[] Players;
         public Dictionary<string, object> Cookies;
 
@@ -65,6 +67,9 @@ namespace WGiBeat
             Audio = new AudioManager();
             Songs = new SongManager{AudioManager = this.Audio};
             Crossfader = new CrossfaderManager{AudioManager = this.Audio};
+            CPUManager = new CPUManager();
+            CPUManager.LoadWeights("CPUSkill.txt");
+
             TextureManager.GraphicsDevice = this.GraphicsDevice;
 
 
