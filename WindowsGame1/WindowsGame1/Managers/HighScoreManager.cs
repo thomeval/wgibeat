@@ -61,9 +61,8 @@ namespace WGiBeat.Managers
                 case GameType.NORMAL:
                     for (int x = 0; x < 4; x++)
                     {
-                        if ((players[x].Playing) && (players[x].Score > highest))
+                        if (((!players[x].CPU)&& (players[x].Playing) && (players[x].Score > highest)))
                         {
-
                             highest = Math.Max(highest, players[x].Score);
                             awardedPlayer = x;
                         }
@@ -121,6 +120,7 @@ namespace WGiBeat.Managers
             switch (gameType)
             {
                 case GameType.TEAM:
+                case GameType.VS_CPU:
                     return GameType.NORMAL;
                     default:
                     return gameType;

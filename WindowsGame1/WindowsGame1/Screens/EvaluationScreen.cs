@@ -258,6 +258,7 @@ namespace WGiBeat.Screens
                case GameType.NORMAL:
                    break;
                case GameType.COOPERATIVE:
+                    //TODO: Use the combined score graphic instead.
                    var totalScore = (from e in Core.Players where e.Playing select e.Score).Sum();
                    TextureManager.DrawString(spriteBatch, "Team:","DefaultFont",
                                    Core.Metrics["EvaluationLabelTotalScore", 0], Color.Black,FontAlign.LEFT);
@@ -269,6 +270,7 @@ namespace WGiBeat.Screens
 
                    break;
                     case GameType.TEAM:
+                    case GameType.VS_CPU:
                    var teamAScore = (from e in Core.Players where (e.Playing && e.Team == 1) select e.Score).Sum();
                    var teamBScore = (from e in Core.Players where (e.Playing && e.Team == 2) select e.Score).Sum();
                    _teamScoreMeter.BlueScore = teamAScore;

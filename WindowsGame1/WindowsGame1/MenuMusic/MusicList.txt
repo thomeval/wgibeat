@@ -3,7 +3,7 @@
 #WGiBeat. Using this file, it is possible to customize and use any normal audio file as menu music. Menu music can also
 #be disabled entirely.
 #All menu music files should be placed in this folder.
-#The basic format of this file is [ScreenName] = [FileName]. [FileName] refers to the name of the music file, including extension.
+#The basic format of this file is [ScreenName] = [FileName];. [FileName] refers to the name of the music file, including extension.
 #Valid options for [ScreenName] are: Evaluation, KeyOptions, MainGame (not recommended), MainMenu,
 #ModeSelect, TeamSelect, NewGame, Options and SongSelect(not recommended).
 #All lines must end with a semicolon, and lines starting with # are ignored.

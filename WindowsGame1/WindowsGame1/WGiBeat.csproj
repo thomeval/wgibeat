@@ -99,6 +99,7 @@
     <Compile Include="AudioSystem\MenuMusicManager.cs" />
     <Compile Include="AudioSystem\CrossfaderManager.cs" />
     <Compile Include="AudioSystem\SongManager.cs" />
+    <Compile Include="Managers\CPUManager.cs" />
     <Compile Include="Drawing\Beatline.cs" />
     <Compile Include="Drawing\BpmMeter.cs" />
     <Compile Include="Drawing\CoopLifeBar.cs" />
@@ -160,6 +161,9 @@
     <Compile Include="Screens\TeamSelectScreen.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CPUSkill.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="fmodex.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

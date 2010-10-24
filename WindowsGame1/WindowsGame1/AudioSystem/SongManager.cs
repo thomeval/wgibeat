@@ -258,12 +258,14 @@ namespace WGiBeat.AudioSystem
         #endregion
 
         #region Logging
+        //TODO: Promote to GameCore
         public string GetLogMessages()
         {
             Monitor.Enter(_logMessages);
             string result = "";
-            foreach (string message in _logMessages)
+            for (int i = 0; i < _logMessages.Count; i++)
             {
+                string message = _logMessages[i];
                 result += message + "\n";
             }
             Monitor.Exit(_logMessages);

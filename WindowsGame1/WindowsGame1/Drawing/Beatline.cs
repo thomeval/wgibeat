@@ -114,8 +114,8 @@ namespace WGiBeat.Drawing
             _pulseSprite.Width = (int)(80 * (Math.Ceiling(phraseNumber) - (phraseNumber)));
             _pulseSprite.ColorShading.A = (byte)(_pulseSprite.Width * 255 / 80);
             _pulseSprite.Height = this.Height;
-            _pulseSprite.SetPosition(this.X + 30, this.Y - 5);
-            _pulseSprite.DrawTiled(spriteBatch, 83 - _pulseSprite.Width, 0, _pulseSprite.Width, 34);
+            _pulseSprite.SetPosition(this.X + 30, this.Y - 3);
+            _pulseSprite.DrawTiled(spriteBatch, 83 - _pulseSprite.Width, 0, _pulseSprite.Width, 36);
         }
 
 
@@ -258,5 +258,18 @@ namespace WGiBeat.Drawing
         }
 
 
+        public int AutoHit(double phraseNumber)
+        {
+            var passedNotes =
+                (from e in _beatlineNotes where (!e.Hit) && (CalculateHitOffset(e, phraseNumber) < 0) select e);
+            var result = passedNotes.Count();
+            foreach (BeatlineNote bln in passedNotes)
+            {
+                bln.Hit = true;
+                bln.DisplayPosition = CalculateAbsoluteBeatlinePosition(bln.Position, phraseNumber);
+                bln.Position = phraseNumber + 0.3;
+            }
+            return result;
+        }
     }
 }
