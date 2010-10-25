@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.Drawing;
 using Action=WGiBeat.Managers.Action;
 
 namespace WGiBeat.Screens
@@ -13,6 +14,8 @@ namespace WGiBeat.Screens
         public int PageNumber = 1;
         public const int TOTAL_PAGES = 2;
         public bool FirstScreen;
+        private Sprite _baseSprite;
+
         public InstructionScreen(GameCore core) : base(core)
         {
         }
@@ -20,11 +23,14 @@ namespace WGiBeat.Screens
         public override void Initialize()
         {
             InitSprites();
+            PageNumber = 1;
             base.Initialize();
         }
 
         private void InitSprites()
         {
+            _baseSprite = new Sprite { SpriteTexture = TextureManager.Textures["LoadingMessageBase"] };
+            _baseSprite.SetPosition(Core.Metrics["LoadMessageBase", 0]);
            
         }
 
@@ -39,6 +45,12 @@ namespace WGiBeat.Screens
                     DrawPage2();
                     break;
             }
+            _baseSprite.Draw(spriteBatch);
+ 
+                TextureManager.DrawString(spriteBatch, "Press start to continue.", "LargeFont", Core.Metrics["LoadMessage", 0], Color.White, FontAlign.LEFT);
+ 
+            TextureManager.DrawString(spriteBatch, String.Format("Page {0} of {1}",PageNumber, TOTAL_PAGES), "DefaultFont", Core.Metrics["LoadErrorCount", 0], Color.White, FontAlign.LEFT);
+
         }
 
         private void DrawPage1()
@@ -54,7 +66,8 @@ namespace WGiBeat.Screens
         {
             var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
 
-            string nextScreen = (bool) Core.Cookies.ContainsKey("FirstScreen") ? "InitialLoad" : "MainMenu";
+            var firstLoad = Core.Cookies.ContainsKey("FirstScreen") && (bool) Core.Cookies["FirstScreen"];
+            string nextScreen = firstLoad ? "InitialLoad" : "MainMenu";
             switch (paction)
             {
                 case "START":

@@ -39,7 +39,7 @@ namespace WGiBeat
         private KeyboardState _lastKeystate;
         private GamePadState[] _lastGamePadState;
 
-        public const string VERSION_STRING = "v0.3";
+        public const string VERSION_STRING = "v0.4 pre";
         public GameCore()
         {
             GraphicsManager = new GraphicsDeviceManager(this);
