@@ -306,7 +306,7 @@ namespace WGiBeat.Screens
             {
 
                 Core.Cookies["CurrentGameType"] = (GameType) _selectedGameType;
-
+                RemoveCPUPlayers();
                 if (((GameType)_selectedGameType) == GameType.VS_CPU)
                 {
                     SetupVSCPUMode();
@@ -318,6 +318,18 @@ namespace WGiBeat.Screens
                 else
                 {
                     Core.ScreenTransition("SongSelect");
+                }
+            }
+        }
+
+        private void RemoveCPUPlayers()
+        {
+            foreach (Player player in (from e in Core.Players where e.Playing select e))
+            {
+                if (player.CPU)
+                {
+                    player.CPU = false;
+                    player.Playing = false;
                 }
             }
         }

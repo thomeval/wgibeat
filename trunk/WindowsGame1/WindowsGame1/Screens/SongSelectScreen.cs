@@ -344,7 +344,7 @@ namespace WGiBeat.Screens
             player--;
             var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
 
-            if ((player != -1) && (!Core.Players[player].Playing))
+            if ((player != -1) && (!Core.Players[player].IsHumanPlayer))
             {
                 return;
             }
@@ -377,6 +377,7 @@ namespace WGiBeat.Screens
                     if (playerOptions.OptionChangeActive)
                     {
                         playerOptions.AdjustDifficulty(-1);
+                        CheckCPUDifficulty();
                     }
                     else if (_songSortDisplay.Active)
                     {
@@ -389,6 +390,7 @@ namespace WGiBeat.Screens
                     if (playerOptions.OptionChangeActive)
                     {
                         playerOptions.AdjustDifficulty(1);
+                        CheckCPUDifficulty();
                     }
                     else if (_songSortDisplay.Active)
                     {
@@ -407,8 +409,18 @@ namespace WGiBeat.Screens
                     StartSong();
                     break;
                 case "BACK":
-                    Core.ScreenTransition("NewGame");
+                    Core.ScreenTransition("ModeSelect");
                     break;
+            }
+        }
+
+        private void CheckCPUDifficulty()
+        {
+            var cpuDifficulty = (from e in Core.Players where e.IsHumanPlayer select e.PlayDifficulty).Max();
+
+            foreach (Player player in (from e in Core.Players where e.IsCPUPlayer select e))
+            {
+                player.PlayDifficulty = cpuDifficulty;
             }
         }
 

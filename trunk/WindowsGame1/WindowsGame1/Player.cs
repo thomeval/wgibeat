@@ -112,6 +112,17 @@ namespace WGiBeat
             get { return _lifeHistory; }
         }
 
+        public bool IsHumanPlayer
+        {
+            get { return Playing && !CPU; }
+        }
+
+        public bool IsCPUPlayer
+        {
+            get { return Playing && CPU;}
+
+        }
+
         public void RecordCurrentLife()
         {
             _lifeHistory.Add((float) Life);
