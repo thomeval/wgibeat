@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Drawing.Sets;
-using WGiBeat.Managers;
 using WGiBeat.Notes;
 using Action = WGiBeat.Managers.Action;
 
@@ -28,7 +27,6 @@ namespace WGiBeat.Screens
         private int _playerCount;
         private GameSong _gameSong;
         private TimeSpan? _startTime;
-        private CPUManager _cpuManager;
         private int _displayState;
         private double _transitionTime;
         private double _lastBlazeCheck;

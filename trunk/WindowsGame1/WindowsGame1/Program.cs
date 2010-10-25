@@ -1,6 +1,7 @@
 using System;
 using System.Windows.Forms;
 using System.IO;
+
 namespace WGiBeat
 {
     static class Program
@@ -53,5 +54,6 @@ namespace WGiBeat
 
         }
     }
+
 }
 

@@ -251,7 +251,20 @@ namespace WGiBeat
             _screens.Add("Options", new OptionScreen(this));
             _screens.Add("ModeSelect", new ModeSelectScreen(this));
             _screens.Add("TeamSelect", new TeamSelectScreen(this));
-            ScreenTransition("InitialLoad");
+            _screens.Add("Instruction", new InstructionScreen(this));
+
+            if (!Settings.Get<bool>("RunOnce"))
+            {
+                ScreenTransition("Instruction");
+                Cookies["FirstScreen"] = true;
+                Settings["RunOnce"] = true;
+                Settings.SaveToFile("settings.txt");
+            }
+            else
+            {
+                ScreenTransition("InitialLoad");
+            }
+            
         }
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace WGiBeat.Screens
         private SineSwayParticleField _field = new SineSwayParticleField();
 
         private bool _displayNoSongsError;
-        private readonly string[] _menuText = { "Start Game", "Keys", "Options", "Exit" };
+        private readonly string[] _menuText = { "Start Game", "How to play", "Keys", "Options", "Exit" };
         private Sprite _background;
         private Sprite _header;
         private Sprite _menuOptionSprite;
@@ -88,8 +88,10 @@ namespace WGiBeat.Screens
                 _menuOptionSprite.SpriteTexture = menuOption == (int)_selectedMenuOption ? TextureManager.Textures["mainMenuOptionSelected"] : TextureManager.Textures["mainMenuOption"];
                 _menuOptionSprite.SetPosition(Core.Metrics["MainMenuOptions", menuOption]);
                 _menuOptionSprite.Draw(spriteBatch);
-
-                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], _menuText[menuOption], Core.Metrics["MainMenuOptionText", menuOption], Color.Black);
+                var textPosition = Core.Metrics["MainMenuOptions", menuOption].Clone();
+                textPosition.X += 150;
+                textPosition.Y -= 0;
+                TextureManager.DrawString(spriteBatch,_menuText[menuOption],"TwoTech36",textPosition,Color.Black, FontAlign.CENTER);
             }
         }
 
@@ -139,6 +141,9 @@ namespace WGiBeat.Screens
                         _displayNoSongsError = true;
                     }
                     break;
+                case MainMenuOption.HOW_TO_PLAY:
+                    Core.ScreenTransition("Instruction");
+                    break;
                 case MainMenuOption.KEYS:
                     Core.ScreenTransition("KeyOptions");
                     break;
@@ -155,9 +160,11 @@ namespace WGiBeat.Screens
     public enum MainMenuOption
     {
         START_GAME = 0,
-        KEYS = 1,
-        OPTIONS = 2,
-        EXIT = 3,
-        COUNT = 4
+        HOW_TO_PLAY = 1,
+        KEYS = 2,
+        OPTIONS = 3,
+        EXIT = 4,
+        COUNT = 5
     }
+
 }

@@ -99,6 +99,7 @@
     <Compile Include="AudioSystem\MenuMusicManager.cs" />
     <Compile Include="AudioSystem\CrossfaderManager.cs" />
     <Compile Include="AudioSystem\SongManager.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Managers\CPUManager.cs" />
     <Compile Include="Drawing\Beatline.cs" />
     <Compile Include="Drawing\BpmMeter.cs" />
@@ -127,6 +128,7 @@
     <Compile Include="Drawing\LifeGraph.cs" />
     <Compile Include="Managers\NetManager.cs" />
     <Compile Include="Screens\InitialLoadScreen.cs" />
+    <Compile Include="Screens\InstructionScreen.cs" />
     <Compile Include="Screens\ModeSelectScreen.cs" />
     <Compile Include="Drawing\NormalLifeBar.cs" />
     <Compile Include="Drawing\PrimitiveLine.cs" />
