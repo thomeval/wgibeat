@@ -50,6 +50,7 @@ namespace WGiBeat.Managers
             sm["FullScreen"] = false;
             sm["SongDebug"] = false;
             sm["LastSongPlayed"] = 0;
+            sm["RunOnce"] = false;
             return sm;
         }
         public static SettingsManager LoadFromFile(string filename)

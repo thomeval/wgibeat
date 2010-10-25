@@ -33,8 +33,7 @@ SongDebugPhrase=[340,300];
 SongDebugLength=[550,300];
 
 #Main Menu;
-MainMenuOptions=[250,150][250,250][250,350][250,450];
-MainMenuOptionText=[270,160][270,260][270,360][270,460];
+MainMenuOptions=[250,150][250,225][250,300][250,375][250,450];
 MainMenuNoSongsError=[270,200];
 
 #Initial Load;
