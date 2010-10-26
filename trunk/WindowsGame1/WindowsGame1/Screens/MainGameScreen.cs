@@ -32,7 +32,6 @@ namespace WGiBeat.Screens
         private double _lastBlazeCheck;
         private double _lastLifeRecord;
 
-        private bool _initBusy;
         public MainGameScreen(GameCore core)
             : base(core)
         {
@@ -40,7 +39,6 @@ namespace WGiBeat.Screens
 
         public override void Initialize()
         {
-            _initBusy = true;
             _notebars = new NoteBar[PLAYER_COUNT];
             _lifeBarSet = new LifeBarSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
             _levelbarSet = new LevelBarSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
@@ -60,27 +58,9 @@ namespace WGiBeat.Screens
             _lastLifeRecord = -0.5;
             for (int x = 0; x < PLAYER_COUNT; x++)
             {
-                /*
-                if (Core.Players[x] == null)
-                {
-                    Core.Players[x] = new Player
-                                          {
-                                              Hits = 0,
-                                              Momentum = 0,
-                                              Life = 50,
-                                              Score = 0,
-                                              PlayDifficulty =
-                                                  (Difficulty)Core.Settings.Get<int>("P" + (x + 1) + "Difficulty"),
-                                              Streak = 0
-                                          };
-                }
-                else
-                {
-                 */
-                    _lifeBarSet.Reset();
-                    Core.Players[x].ResetStats();
 
-                //}
+                _lifeBarSet.Reset();
+                Core.Players[x].ResetStats();
 
                 _notebars[x] = NoteBar.CreateNoteBar((int)Core.Players[x].Level, 0);
                 _notebars[x].SetPosition(Core.Metrics["NoteBar", x]);
@@ -99,7 +79,6 @@ namespace WGiBeat.Screens
                 Core.Audio.StopChannel((int)Core.Cookies["MenuMusicChannel"]);
                 Core.Cookies.Remove("MenuMusicChannel");
             }
-            _initBusy = false;
             base.Initialize();
         }
 
@@ -468,7 +447,7 @@ namespace WGiBeat.Screens
         private void BeatlineNoteCPUHit(object sender, EventArgs e)
         {
             var player = ((Beatline)sender).Id;
-            var judgement = Core.CPUManager.GetNextJudgement(2, Core.Players[player].Streak);
+            var judgement = Core.CPUManager.GetNextJudgement(5, Core.Players[player].Streak);
 
             _notebars[player].MarkAllCompleted();
 

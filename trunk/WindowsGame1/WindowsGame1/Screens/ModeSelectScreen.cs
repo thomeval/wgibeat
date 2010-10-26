@@ -34,6 +34,7 @@ namespace WGiBeat.Screens
 
             var frameCount = 0;
             _playerOptions.Clear();
+            RemoveCPUPlayers();
             for (int x = 3; x >= 0; x--)
             {
                 if (Core.Players[x].Playing)
@@ -43,6 +44,7 @@ namespace WGiBeat.Screens
                     frameCount++;
                 }
             }
+
             base.Initialize();
         }
 
@@ -306,7 +308,6 @@ namespace WGiBeat.Screens
             {
 
                 Core.Cookies["CurrentGameType"] = (GameType) _selectedGameType;
-                RemoveCPUPlayers();
                 if (((GameType)_selectedGameType) == GameType.VS_CPU)
                 {
                     SetupVSCPUMode();

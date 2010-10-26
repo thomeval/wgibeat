@@ -43,8 +43,6 @@ namespace WGiBeat.Screens
         {
             _lifeGraph = new LifeGraph();
             _lifeGraph.LineDrawer = new PrimitiveLine(Core.GraphicsDevice);
-            _lifeGraph.Min = 0;
-            _lifeGraph.Max = 200;
             _lifeGraph.Location = -1;
             for (int x = 0; x < 4; x++)
             {

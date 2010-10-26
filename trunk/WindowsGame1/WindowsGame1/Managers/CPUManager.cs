@@ -20,6 +20,7 @@ namespace WGiBeat.Managers
 
         public void LoadWeights(string filename)
         {
+            //TODO: Implement named difficulty levels.
             SkillLevels.Clear();
             var lines = File.ReadAllLines(filename);
             string[] splitters = {"[", "]", ","};
