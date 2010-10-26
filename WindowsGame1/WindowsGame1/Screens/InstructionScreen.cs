@@ -15,6 +15,7 @@ namespace WGiBeat.Screens
         public const int TOTAL_PAGES = 2;
         public bool FirstScreen;
         private Sprite _baseSprite;
+        private Sprite[] _instructionPages;
 
         public InstructionScreen(GameCore core) : base(core)
         {
@@ -22,6 +23,7 @@ namespace WGiBeat.Screens
 
         public override void Initialize()
         {
+            
             InitSprites();
             PageNumber = 1;
             base.Initialize();
@@ -29,6 +31,11 @@ namespace WGiBeat.Screens
 
         private void InitSprites()
         {
+            _instructionPages = new Sprite[TOTAL_PAGES];
+            for (int x = 0; x < TOTAL_PAGES; x++)
+            {
+                _instructionPages[x] = new Sprite {SpriteTexture = TextureManager.Textures["InstructionPage" + (x + 1)]};
+            }
             _baseSprite = new Sprite { SpriteTexture = TextureManager.Textures["LoadingMessageBase"] };
             _baseSprite.SetPosition(Core.Metrics["LoadMessageBase", 0]);
            
@@ -36,31 +43,15 @@ namespace WGiBeat.Screens
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            switch (PageNumber)
-            {
-                case 1:
-                    DrawPage1();
-                    break;
-                case 2:
-                    DrawPage2();
-                    break;
-            }
+          
             _baseSprite.Draw(spriteBatch);
- 
-                TextureManager.DrawString(spriteBatch, "Press start to continue.", "LargeFont", Core.Metrics["LoadMessage", 0], Color.White, FontAlign.LEFT);
- 
+            _instructionPages[PageNumber-1].Draw(spriteBatch);
+            TextureManager.DrawString(spriteBatch, "Press start to continue.", "LargeFont", Core.Metrics["LoadMessage", 0], Color.White, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, String.Format("Page {0} of {1}",PageNumber, TOTAL_PAGES), "DefaultFont", Core.Metrics["LoadErrorCount", 0], Color.White, FontAlign.LEFT);
 
         }
 
-        private void DrawPage1()
-        {
-            
-        }
-        private void DrawPage2()
-        {
-            
-        }
+ 
 
         public override void PerformAction(Action action)
         {
