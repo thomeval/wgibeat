@@ -448,7 +448,6 @@ namespace WGiBeat.Screens
             //var timeElapsed = gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds;
            // var timeLeft = _gameSong.Length * 1000 - timeElapsed;
             var timeLeft = _gameSong.Length * 1000 - _timeCheck;
-            System.Diagnostics.Debug.WriteLine(timeLeft);
             return timeLeft <= 0.0;
         }
 

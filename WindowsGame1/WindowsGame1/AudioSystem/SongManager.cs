@@ -53,7 +53,7 @@ namespace WGiBeat.AudioSystem
             {
                 StopCurrentSong();
             }
-            _songChannelIndex = AudioManager.PlaySoundEffect(song.Path + "\\" + song.SongFile);
+            _songChannelIndex = AudioManager.PlaySoundEffect(song.Path + "\\" + song.SongFile,false,true);
             _currentSong = song;
         }
 

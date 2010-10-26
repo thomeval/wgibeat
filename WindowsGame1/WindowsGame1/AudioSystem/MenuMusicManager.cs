@@ -77,7 +77,7 @@ namespace WGiBeat.AudioSystem
 
                 //StopExistingMusic();
                 _currentMusic = _musicList[name];
-                _musicChannel = AudioManager.PlaySoundEffect(MusicFilePath + _musicList[name],true);
+                _musicChannel = AudioManager.PlaySoundEffect(MusicFilePath + _musicList[name],true,false);
                 Crossfader.PreviewDuration = 0;
                 Crossfader.SetNewChannel(_musicChannel);
             }

@@ -138,6 +138,7 @@ namespace WGiBeat.Screens
             {
                 case GameType.NORMAL:
                 case GameType.TEAM:
+                case GameType.VS_CPU:
                     for (int x = 0; x < 4; x++ )
                     {
                         _grades[x] = CalculateGradeIndex(x);

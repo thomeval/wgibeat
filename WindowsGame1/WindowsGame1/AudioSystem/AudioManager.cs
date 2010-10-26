@@ -61,18 +61,29 @@ namespace WGiBeat.AudioSystem
         /// value. Because it is loaded as a stream, this occurs quickly.
         /// </summary>
         /// <param name="soundPath">The path and filename to the audio file to play.</param>
-        /// <param name="loop">Whether tthe audio file should loop. Set to false for the audio file to play only once.</param>
+        /// <param name="loop">Whether the audio file should loop. Set to false for the audio file to play only once.</param>
+        /// <param name="dontStream">Whether the audio file should be loaded fully into memory before being played
+        /// (recommended for song audio), but will cause delays.</param>
         /// <returns>The channel ID allocated by Fmod to the channel. Use this to control the playback.</returns>
-        public int PlaySoundEffect(string soundPath, bool loop)
+        public int PlaySoundEffect(string soundPath, bool loop, bool dontStream)
         {
             RESULT result;
-            var mySound = GetOrCreateSound(soundPath);
+            var mySound = GetOrCreateSound(soundPath,!dontStream);
             var myChannel = new Channel();
+
+            uint mode = (uint) MODE.SOFTWARE;
 
             if (loop)
             {
-                CheckFMODErrors(mySound.setMode((uint) MODE.SOFTWARE + MODE.CREATESTREAM + (uint) MODE.LOOP_NORMAL));
+                mode += (uint)MODE.LOOP_NORMAL;
+
             }
+            if (!dontStream)
+            {
+                mode += (uint) MODE.CREATESTREAM;
+            }
+
+            CheckFMODErrors(mySound.setMode((MODE) mode));
          
             result = _fmodSystem.playSound(CHANNELINDEX.FREE, mySound, false, ref myChannel);
             CheckFMODErrors(result);
@@ -95,7 +106,7 @@ namespace WGiBeat.AudioSystem
         /// <returns>The channel ID allocated by Fmod to the channel. Use this to control the playback.</returns>
         public int PlaySoundEffect(string path)
         {
-            return PlaySoundEffect(path, false);
+            return PlaySoundEffect(path, false,false);
         }
         /// <summary>
         /// Sets the position of the sound channel given, to the position given (in milliseconds).
@@ -118,12 +129,17 @@ namespace WGiBeat.AudioSystem
         /// is created.
         /// </summary>
         /// <returns>The ID of the first free channel found.</returns>
-        private Sound GetOrCreateSound(string soundPath)
+        private Sound GetOrCreateSound(string soundPath, bool stream)
         {
             if (!_sounds.ContainsKey(soundPath))
             {
                 var mySound = new Sound();
-                var resultCode = _fmodSystem.createStream(soundPath, MODE.SOFTWARE, ref mySound);
+                uint mode = (uint) MODE.SOFTWARE;
+                if (stream)
+                {
+                    mode += (uint) MODE.CREATESTREAM;
+                }
+                var resultCode = _fmodSystem.createSound(soundPath, (MODE) mode, ref mySound);
                 CheckFMODErrors(resultCode);
                 return mySound;
             }
