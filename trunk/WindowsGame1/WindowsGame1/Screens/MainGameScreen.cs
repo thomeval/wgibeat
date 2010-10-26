@@ -24,13 +24,15 @@ namespace WGiBeat.Screens
         private NoteJudgementSet _noteJudgementSet;
         private BeatlineSet _beatlineSet;
         private NoteBar[] _notebars;
-        private int _playerCount;
+        private const int PLAYER_COUNT = 4;
         private GameSong _gameSong;
         private TimeSpan? _startTime;
         private int _displayState;
         private double _transitionTime;
         private double _lastBlazeCheck;
         private double _lastLifeRecord;
+
+        private bool _initBusy;
         public MainGameScreen(GameCore core)
             : base(core)
         {
@@ -38,9 +40,8 @@ namespace WGiBeat.Screens
 
         public override void Initialize()
         {
-            _playerCount = 4;
-
-            _notebars = new NoteBar[_playerCount];
+            _initBusy = true;
+            _notebars = new NoteBar[PLAYER_COUNT];
             _lifeBarSet = new LifeBarSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
             _levelbarSet = new LevelBarSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
             _hitsbarSet = new HitsBarSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
@@ -57,9 +58,9 @@ namespace WGiBeat.Screens
             _confidence = 0;
             _lastBlazeCheck = 0;
             _lastLifeRecord = -0.5;
-            for (int x = 0; x < _playerCount; x++)
+            for (int x = 0; x < PLAYER_COUNT; x++)
             {
-
+                /*
                 if (Core.Players[x] == null)
                 {
                     Core.Players[x] = new Player
@@ -75,10 +76,11 @@ namespace WGiBeat.Screens
                 }
                 else
                 {
+                 */
                     _lifeBarSet.Reset();
                     Core.Players[x].ResetStats();
 
-                }
+                //}
 
                 _notebars[x] = NoteBar.CreateNoteBar((int)Core.Players[x].Level, 0);
                 _notebars[x].SetPosition(Core.Metrics["NoteBar", x]);
@@ -97,6 +99,7 @@ namespace WGiBeat.Screens
                 Core.Audio.StopChannel((int)Core.Cookies["MenuMusicChannel"]);
                 Core.Cookies.Remove("MenuMusicChannel");
             }
+            _initBusy = false;
             base.Initialize();
         }
 
@@ -120,11 +123,10 @@ namespace WGiBeat.Screens
                 Core.Songs.PlaySong(_gameSong);
                 _startTime = new TimeSpan(gameTime.TotalRealTime.Ticks);
             }
-
-            CheckForEndings(gameTime);
-            SyncSong();
             _phraseNumber = 1.0 * (gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay - _gameSong.Offset * 1000) / 1000 * (_gameSong.Bpm / 240);
             _timeCheck = (int)(gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay);
+            CheckForEndings(gameTime);
+            SyncSong();
             _beatlineSet.MaintainBeatlineNotes(_phraseNumber);
             MaintainBlazings();
             RecordPlayerLife();
@@ -145,6 +147,19 @@ namespace WGiBeat.Screens
 
         private void MaintainBlazings()
         {
+            double minBlazingAmount = 0;
+
+            switch ((GameType)Core.Cookies["CurrentGameType"])
+            {
+                case GameType.NORMAL:
+                case GameType.TEAM:
+                    minBlazingAmount = 100;
+                    break;
+                case GameType.COOPERATIVE:
+                    minBlazingAmount = 60;
+                    break;
+            }
+
             if (_phraseNumber - _lastBlazeCheck > 0.25)
             {
                 _lastBlazeCheck += 0.25;
@@ -153,7 +168,8 @@ namespace WGiBeat.Screens
                     if ((Core.Players[x].IsBlazing))
                     {
                         Core.Players[x].Life--;
-                        if (Core.Players[x].Life < 100)
+
+                        if (Core.Players[x].Life < minBlazingAmount)
                         {
                             Core.Players[x].Life -= 25;
                             Core.Players[x].IsBlazing = false;
@@ -310,8 +326,13 @@ namespace WGiBeat.Screens
             {
                 case GameType.NORMAL:
                 case GameType.TEAM:
-                case GameType.COOPERATIVE:
                     if (Core.Players[player].Life > 100)
+                    {
+                        Core.Players[player].IsBlazing = true;
+                    }
+                    break;
+                case GameType.COOPERATIVE:
+                    if (Core.Players[player].Life > 60)
                     {
                         Core.Players[player].IsBlazing = true;
                     }
@@ -322,7 +343,7 @@ namespace WGiBeat.Screens
 
         private void HitArrow(Action action, int player)
         {
-            if (player >= _playerCount)
+            if (player >= PLAYER_COUNT)
             {
                 return;
             }
@@ -427,6 +448,7 @@ namespace WGiBeat.Screens
             //var timeElapsed = gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds;
            // var timeLeft = _gameSong.Length * 1000 - timeElapsed;
             var timeLeft = _gameSong.Length * 1000 - _timeCheck;
+            System.Diagnostics.Debug.WriteLine(timeLeft);
             return timeLeft <= 0.0;
         }
 
@@ -547,7 +569,7 @@ namespace WGiBeat.Screens
             {
                 return;
             }
-            for (int x = 0; x < _playerCount; x++)
+            for (int x = 0; x < PLAYER_COUNT; x++)
             {
                 if ((!Core.Players[x].KO) && (Core.Players[x].Playing))
                 {
@@ -576,7 +598,7 @@ namespace WGiBeat.Screens
 
         private void DrawKOIndicators(SpriteBatch spriteBatch)
         {
-            for (int x = 0; x < _playerCount; x++)
+            for (int x = 0; x < PLAYER_COUNT; x++)
             {
                 if (Core.Players[x].KO)
                 {
