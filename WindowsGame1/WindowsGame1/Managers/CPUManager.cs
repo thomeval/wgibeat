@@ -10,6 +10,7 @@ namespace WGiBeat.Managers
     public class CPUManager : Manager
     {
         public List<Dictionary<BeatlineNoteJudgement, double>> SkillLevels;
+        public List<string> SkillNames;
         private Random rnd;
         
         public CPUManager(LogManager log)
@@ -17,31 +18,46 @@ namespace WGiBeat.Managers
             Log = log;
             Log.AddMessage("INFO: Initializing CPU Manager...");
             SkillLevels = new List<Dictionary<BeatlineNoteJudgement, double>>();
+            SkillNames = new List<string>();
             rnd = new Random();
         }
 
         public void LoadWeights(string filename)
         {
-            //TODO: Implement named difficulty levels.
             SkillLevels.Clear();
+
             var lines = File.ReadAllLines(filename);
             string[] splitters = {"[", "]", ","};
             foreach (string line in lines)
             {
-                if ((line.Length == 0) || (line[0] == '#') || (line.IndexOf('[') == -1) || (line.IndexOf(']') == -1))
+                if ((line.Length == 0) || (line[0] == '#') || (line.IndexOf('[') == -1) || (line.IndexOf(']') == -1) || (line.IndexOf('=') == -1))
                 {
                     continue;
                 }
-                var numbers = line.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
+                var name = line.Substring(0, line.IndexOf("="));
+
+                var numbers = line.Substring(line.IndexOf("=")+1).Split(splitters, StringSplitOptions.RemoveEmptyEntries);
 
                 if (numbers.Count() < 7)
                 {
                     continue;
                 }
+                SkillNames.Add(name.ToUpper());
                 SkillLevels.Add(CreateSkillLevel(numbers));
             }
         }
 
+        public BeatlineNoteJudgement GetNextJudgement(string skillLevel, int streak)
+        {
+            int idx = SkillNames.IndexOf(skillLevel.ToUpper());
+            if (idx > -1)
+            {
+                return GetNextJudgement(idx, streak);
+            }
+
+            Log.AddMessage("ERROR: CPU Skill level '" + skillLevel +"' does not exist.");
+            return BeatlineNoteJudgement.COUNT;
+        }
         public BeatlineNoteJudgement GetNextJudgement(int level, int streak)
         {
             var total = SkillLevels[level].Values.Sum();

@@ -342,6 +342,7 @@ namespace WGiBeat.Screens
                 player.Team = 1;
             }
 
+            Core.Cookies["CPULevel"] = "Skilled";
             var cpuDifficulty = (from e in Core.Players where e.Playing select e.PlayDifficulty).Max();
             for (int x = 0; x < 4; x++)
             {
