@@ -71,14 +71,14 @@ namespace WGiBeat.AudioSystem
             {
                 if ((!Directory.Exists(MusicFilePath)) || (!File.Exists(MusicFilePath + _musicList[name])))
                 {
-                    System.Diagnostics.Debug.WriteLine("MenuMusicManager: Skipping load of '" + name + "' as the file was not found.");
-                    System.Diagnostics.Debug.WriteLine("Searched in: " + MusicFilePath + _musicList[name]);
+                    Log.AddMessage("WARN: MenuMusicManager: Skipping load of '" + name + "' as the file was not found.");
+                    Log.AddMessage("WARN: Searched in: " + MusicFilePath + _musicList[name]);
                     StopExistingMusic();
                     return;
                 }
                 if (_currentMusic == _musicList[name])
                 {
-                    System.Diagnostics.Debug.WriteLine("MenuMusicManager: Selected music is already playing. Skipping load.");
+                    Log.AddMessage("INFO: MenuMusicManager: Selected music is already playing. Skipping load.");
                     return;
                 }
 
