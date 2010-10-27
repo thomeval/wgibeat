@@ -99,6 +99,7 @@
     <Compile Include="AudioSystem\MenuMusicManager.cs" />
     <Compile Include="AudioSystem\CrossfaderManager.cs" />
     <Compile Include="AudioSystem\SongManager.cs" />
+    <Compile Include="Drawing\MovingBackground.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Managers\CPUManager.cs" />
     <Compile Include="Drawing\Beatline.cs" />
