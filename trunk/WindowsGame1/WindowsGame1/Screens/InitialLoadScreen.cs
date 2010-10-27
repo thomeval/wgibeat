@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -45,8 +46,7 @@ namespace WGiBeat.Screens
             _maxY = 40;
             int errorCount = 0, warnCount = 0;
             var currentPos = new Vector2(_textPosition.X, _textPosition.Y);
-            string[] splitChars = {"\n"};
-            var lines = Core.Songs.GetLogMessages().Split(splitChars,StringSplitOptions.RemoveEmptyEntries);
+            var lines = GetOrReuseLogMessages();
             _minY = Math.Min(lines.Length * -12 + 560, 40);
 
             if (_autoScroll)
@@ -91,6 +91,18 @@ namespace WGiBeat.Screens
             TextureManager.DrawString(spriteBatch,String.Format("{0} errors, {1} warnings",errorCount,warnCount),"DefaultFont",Core.Metrics["LoadErrorCount",0],Color.White,FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch,"" + GameCore.VERSION_STRING, "DefaultFont", Core.Metrics["LoadVersion", 0], Color.White, FontAlign.LEFT);
 
+        }
+
+        private int _lastMessageCount = -1;
+        private string[] _lastMessages = new string[1];
+        private string[] GetOrReuseLogMessages()
+        {
+            if (_lastMessageCount != Core.Log.MessageCount())
+            {
+                _lastMessageCount = Core.Log.MessageCount();
+                _lastMessages = Core.Log.GetMessages();
+            }
+            return _lastMessages;
         }
 
         public override void PerformAction(Action action)

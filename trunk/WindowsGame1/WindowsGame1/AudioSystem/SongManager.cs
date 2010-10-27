@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using WGiBeat.Managers;
 
 namespace WGiBeat.AudioSystem
 {
@@ -10,7 +11,7 @@ namespace WGiBeat.AudioSystem
 /// These files are loaded and a collection of loaded songs is managed here. Game songs can then be played 
 /// by using the PlaySong() method. The actual audio component is handled by the AudioManager.
 /// </summary>
-    public class SongManager
+    public class SongManager : Manager
     {
 
         #region Fields
@@ -18,14 +19,15 @@ namespace WGiBeat.AudioSystem
         private readonly List<GameSong> _songs = new List<GameSong>();
         private GameSong _currentSong;
         private int _songChannelIndex;
-        private readonly List<string> _logMessages;
-        public AudioManager AudioManager;
+        public AudioManager AudioManager { get; set; }
 
         #endregion
 
-        public SongManager()
+        public SongManager(LogManager log, AudioManager audioManager)
         {
-            _logMessages = new List<string>();
+            Log = log;
+            AudioManager = audioManager;
+            Log.AddMessage("INFO: Initializing Song Manager...");
         }
         /// <summary>
         /// Returns all songs stored in the Manager.
@@ -53,7 +55,7 @@ namespace WGiBeat.AudioSystem
             {
                 StopCurrentSong();
             }
-            _songChannelIndex = AudioManager.PlaySoundEffect(song.Path + "\\" + song.SongFile,false,true);
+            _songChannelIndex = AudioManager.PlaySoundEffect(song.Path + "\\" + song.SongFile, false, true);
             _currentSong = song;
         }
 
@@ -70,7 +72,7 @@ namespace WGiBeat.AudioSystem
         {
             if (_songChannelIndex != -1)
             {
-               return AudioManager.GetChannelPosition(_songChannelIndex);
+                return AudioManager.GetChannelPosition(_songChannelIndex);
             }
             return 0;
         }
@@ -107,7 +109,7 @@ namespace WGiBeat.AudioSystem
             while (folders.Count > 0)
             {
                 string currentFolder = folders[0];
-                _logMessages.Add("INFO: Loading songfiles in " + currentFolder + "\n");
+                Log.AddMessage("INFO: Loading songfiles in " + currentFolder);
                 folders.AddRange(Directory.GetDirectories(currentFolder));
                 foreach (string file in Directory.GetFiles(currentFolder, "*.sng"))
                 {
@@ -125,9 +127,9 @@ namespace WGiBeat.AudioSystem
             }
             if (_songs.Count == 0)
             {
-                _logMessages.Add(String.Format("ERROR: No valid song files loaded. WGiBeat is not playable without one!"));
+                Log.AddMessage(String.Format("ERROR: No valid song files loaded. WGiBeat is not playable without one!"));
             }
-            _logMessages.Add(String.Format("INFO: Song load completed. {0} songs loaded.", _songs.Count));
+            Log.AddMessage(String.Format("INFO: Song load completed. {0} songs loaded.", _songs.Count));
         }
 
         /// <summary>
@@ -212,11 +214,11 @@ namespace WGiBeat.AudioSystem
                 {
                     return null;
                 }
-                _logMessages.Add("INFO: Loaded " + newSong.Title + " successfully.\n");
+                Log.AddMessage("INFO: Loaded " + newSong.Title + " successfully.\n");
             }
             catch (Exception)
             {
-                _logMessages.Add("WARN: Failed to load song: " + filename + "\n");
+                Log.AddMessage("WARN: Failed to load song: " + filename + "\n");
                 return null;
             }
 
@@ -228,28 +230,28 @@ namespace WGiBeat.AudioSystem
         {
             if (string.IsNullOrEmpty(song.SongFile))
             {
-                _logMessages.Add("WARN: No audio file specified in " + filename);
+                Log.AddMessage("WARN: No audio file specified in " + filename);
                 return false;
             }
             var path = Path.GetDirectoryName(filename) + "\\" + song.SongFile;
             if (!File.Exists(path))
             {
-                _logMessages.Add("WARN: Couldn't find audio file specified: " + path);
+                Log.AddMessage("WARN: Couldn't find audio file specified: " + path);
                 return false;
             }
             if (song.Length <= 0)
             {
-                _logMessages.Add("WARN: Song length is not specified or invalid in " + filename);
+                Log.AddMessage("WARN: Song length is not specified or invalid in " + filename);
                 return false;
             }
             if (song.Bpm <= 0)
             {
-                _logMessages.Add("WARN: Song BPM is not specified or invalid in " + filename);
+                Log.AddMessage("WARN: Song BPM is not specified or invalid in " + filename);
                 return false;
             }
             if (song.Offset < 0)
             {
-                _logMessages.Add("WARN: Song offset is invalid in " + filename);
+                Log.AddMessage("WARN: Song offset is invalid in " + filename);
                 return false;
             }
             return true;
@@ -257,20 +259,5 @@ namespace WGiBeat.AudioSystem
 
         #endregion
 
-        #region Logging
-        //TODO: Promote to GameCore
-        public string GetLogMessages()
-        {
-            Monitor.Enter(_logMessages);
-            string result = "";
-            for (int i = 0; i < _logMessages.Count; i++)
-            {
-                string message = _logMessages[i];
-                result += message + "\n";
-            }
-            Monitor.Exit(_logMessages);
-            return result;
-        }
-        #endregion
     }
 }

@@ -7,7 +7,7 @@ using WGiBeat.AudioSystem;
 
 namespace WGiBeat.Managers
 {
-    public class HighScoreManager
+    public class HighScoreManager : Manager
     {
         public GameSong CurrentSong { get; set; }
 
@@ -142,20 +142,22 @@ namespace WGiBeat.Managers
             fs.Close();
         }
 
-        public static HighScoreManager LoadFromFile(string filename)
+        public static HighScoreManager LoadFromFile(string filename, LogManager log)
         {
             try
             {
-                var result = new HighScoreManager();
+                log.AddMessage("INFO: Loading high scores from: " + filename + " ...");
+                var result = new HighScoreManager {Log = log};
                 var fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
                 var bf = new BinaryFormatter();
                 result._highScoreEntries = (List<HighScoreEntry>)bf.Deserialize(fs);
                 fs.Close();
+                result.Log.AddMessage("INFO: High scores loaded successfully.");
                 return result;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error loading high scores." + ex.Message);
+                log.AddMessage("ERROR: Error loading high scores." + ex.Message);
                 return new HighScoreManager();
             }
         }

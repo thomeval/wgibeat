@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Net;
 
 namespace WGiBeat.Managers
 {
-    public class NetManager
+    public class NetManager : Manager
     {
         public void Connect(string address)
         {

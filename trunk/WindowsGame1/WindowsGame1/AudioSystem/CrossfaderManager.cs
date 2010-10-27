@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using WGiBeat.Managers;
 
 namespace WGiBeat.AudioSystem
 {
@@ -9,10 +10,13 @@ namespace WGiBeat.AudioSystem
     /// 'offset' point (representing the first playable beat of the song), for the duration specified.
     /// Crossfading between playing previews is also provided.
     /// </summary>
-    public class CrossfaderManager : IDisposable
+    public class CrossfaderManager : Manager
     {
-        public CrossfaderManager()
+        public CrossfaderManager(LogManager log, AudioManager audioManager)
         {
+            Log = log;
+            Log.AddMessage("INFO: Initializing Crossfader...");
+            AudioManager = audioManager;
             _myTimer = new Timer(UpdatePreviews,null, 0, 100);
             PreviewDuration = 10;
         }

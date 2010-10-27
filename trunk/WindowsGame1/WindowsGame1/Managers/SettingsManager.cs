@@ -8,7 +8,7 @@ namespace WGiBeat.Managers
     /// Stores all current settings relevent to the game. These settings should be accessible from anywhere in the program, and
     /// can be saved to or loaded from file.
     /// </summary>
-    public class SettingsManager
+    public class SettingsManager : Manager
     {
         private Dictionary<string, object> _settings;
 
@@ -42,8 +42,9 @@ namespace WGiBeat.Managers
         }
 
         public static SettingsManager LoadDefaults()
-        {
+        {       
             var sm = new SettingsManager();
+
             sm["SongPreview"] = true;
             sm["SongVolume"] = "0.7";
             sm["SongFolder"] = "Songs";
@@ -53,9 +54,19 @@ namespace WGiBeat.Managers
             sm["RunOnce"] = false;
             return sm;
         }
-        public static SettingsManager LoadFromFile(string filename)
+        public static SettingsManager LoadFromFile(string filename, LogManager log)
         {
+            log.AddMessage("INFO: Loading default settings...");
             var sm = LoadDefaults();
+            sm.Log = log;
+
+            sm.Log.AddMessage("INFO: Loading saved settings from: "+filename+"...");
+
+            if (!File.Exists(filename))
+            {
+                sm.Log.AddMessage("WARN: Could not load settings - file not found.");
+                return sm;
+            }
 
             string filetext = File.ReadAllText(filename);
 
@@ -100,6 +111,7 @@ namespace WGiBeat.Managers
                 }
 
             }
+            sm.Log.AddMessage("INFO: Settings loaded successfully.");
             return sm;
         }
 

@@ -7,13 +7,15 @@ using WGiBeat.Notes;
 
 namespace WGiBeat.Managers
 {
-    public class CPUManager
+    public class CPUManager : Manager
     {
         public List<Dictionary<BeatlineNoteJudgement, double>> SkillLevels;
         private Random rnd;
         
-        public CPUManager()
+        public CPUManager(LogManager log)
         {
+            Log = log;
+            Log.AddMessage("INFO: Initializing CPU Manager...");
             SkillLevels = new List<Dictionary<BeatlineNoteJudgement, double>>();
             rnd = new Random();
         }
@@ -78,7 +80,7 @@ namespace WGiBeat.Managers
             }
             catch (Exception ex)
             {
-                //TODO: Log event
+                Log.AddMessage("ERROR: Problem parsing skill level file: " + ex.Message);
                 throw;
             }
 
