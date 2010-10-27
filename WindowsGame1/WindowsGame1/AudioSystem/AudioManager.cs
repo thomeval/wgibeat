@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using FMOD;
+using WGiBeat.Managers;
 
 namespace WGiBeat.AudioSystem
 {
@@ -10,7 +11,7 @@ namespace WGiBeat.AudioSystem
     /// loaded as Sound Effects, which are streamed and handled by FMOD. The primary method for
     /// interacting with playing audio is through channel ID numbers.
     /// </summary>
-    public class AudioManager
+    public class AudioManager : Manager
     {
         #region Fields
 
@@ -22,8 +23,10 @@ namespace WGiBeat.AudioSystem
         private Channel _tmpChannel = new Channel();
         #endregion 
 
-        public AudioManager()
+        public AudioManager(LogManager log)
         {
+            Log = log;
+            Log.AddMessage("INFO: Initializing Audio Manager...");
             RESULT result;
             result = Factory.System_Create(ref _fmodSystem);
             CheckFMODErrors(result);

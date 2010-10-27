@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+
 using System.IO;
 using Microsoft.Xna.Framework;
+using WGiBeat.Managers;
 
 namespace WGiBeat.Drawing
 {
-    public class MetricsManager
+    public class MetricsManager : Manager
     {
         private readonly Dictionary<string, Vector2[]> _metrics;
 
@@ -16,10 +17,10 @@ namespace WGiBeat.Drawing
             _metrics = new Dictionary<string, Vector2[]>();
         }
 
-        public static MetricsManager Load(string filename)
+        public static MetricsManager LoadFromFile(string filename, LogManager log)
         {
-            var mm = new MetricsManager();
-
+            log.AddMessage("INFO: Loading Metrics from "+filename+"...");
+            var mm = new MetricsManager {Log = log};
 
             string filetext = File.ReadAllText(filename);
 
@@ -54,6 +55,7 @@ namespace WGiBeat.Drawing
                 mm[id] = values;
                 
             }
+            mm.Log.AddMessage("INFO: Metrics loaded successfully.");
             return mm;
         }
 

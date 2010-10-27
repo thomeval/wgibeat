@@ -12,7 +12,7 @@ namespace WGiBeat.Managers
     /// Maps keys and gamepad buttons to a set of predetermined Actions. Almost all GameScreens use Actions exclusively for input.
     /// Also allows the player to change these bindings. The bindings can be loaded from or saved to file.
     /// </summary>
-    public class KeyMappings
+    public class KeyMappings : Manager
     {
         private Dictionary<Keys, Action> _mappings = new Dictionary<Keys, Action>();
         private Dictionary<Buttons, Action>[] _buttonMappings = new Dictionary<Buttons, Action>[4];

@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using WGiBeat.Managers;
 
 namespace WGiBeat.AudioSystem
 {
 
-    public class MenuMusicManager
+    public class MenuMusicManager : Manager
     {
         private readonly Dictionary<string, string> _musicList;
         private int _musicChannel = -1;
@@ -16,19 +17,24 @@ namespace WGiBeat.AudioSystem
         public AudioManager AudioManager { get; set; }
         public CrossfaderManager Crossfader { get; set; }
         public string MusicFilePath { get; set; }
-        public MenuMusicManager()
+
+        public MenuMusicManager(LogManager log)
         {
             _musicList = new Dictionary<string, string>();
+            log.AddMessage("INFO: Initializing Menu Music Manager...");
+            Log = log;
         }
 
         public void LoadMusicList(string filepath)
         {
+            Log.AddMessage("INFO: Loading Menu Music list from "+filepath+" ...");
             var sr = File.ReadAllText(filepath);
             sr = sr.Replace("\r\n", "");
             var lines = sr.Split(';');
             if (lines[0] != "#MUSICLIST-1.0")
             {
-                throw new Exception("Music list does not have the correct header. This file must start with '#MUSICLIST-1.0;'");
+                Log.AddMessage("ERROR: Menu Music list does not have the correct header. This file must start with '#MUSICLIST-1.0;'");
+                return;
             }
 
 
@@ -49,8 +55,9 @@ namespace WGiBeat.AudioSystem
                     System.Diagnostics.Debug.WriteLine("Exception parsing menu list file: " + ex.Message);
                     System.Diagnostics.Debug.WriteLine("Tried parsing: " + lines[x]);
                 }
-
             }
+            Log.AddMessage("INFO: Menu music list loaded successfully.");
+
         }
         public void AddMenuMusic(string name, string path)
         {

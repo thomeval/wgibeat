@@ -127,6 +127,8 @@
     <Compile Include="Drawing\TeamScoreMeter.cs" />
     <Compile Include="Managers\HighScoreManager.cs" />
     <Compile Include="Drawing\LifeGraph.cs" />
+    <Compile Include="Managers\LogManager.cs" />
+    <Compile Include="Managers\Manager.cs" />
     <Compile Include="Managers\NetManager.cs" />
     <Compile Include="Screens\InitialLoadScreen.cs" />
     <Compile Include="Screens\InstructionScreen.cs" />

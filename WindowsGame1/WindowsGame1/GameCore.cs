@@ -27,6 +27,7 @@ namespace WGiBeat
         public HighScoreManager HighScores;
         public CrossfaderManager Crossfader;
         public CPUManager CPUManager;
+        public LogManager Log;
 
         public Player[] Players;
         public Dictionary<string, object> Cookies;
@@ -60,14 +61,19 @@ namespace WGiBeat
             //NOTE: Uncomment to disable vsync.
             //GraphicsManager.SynchronizeWithVerticalRetrace = false;
 
+            Log = new LogManager();
+            Log.AddMessage("INFO: Initializing Cookies...");
             Cookies = new Dictionary<string, object>();
-            Metrics = MetricsManager.Load("metrics.txt");
-            Settings = SettingsManager.LoadFromFile("settings.txt");
-            HighScores = HighScoreManager.LoadFromFile("Scores.conf");
-            Audio = new AudioManager();
-            Songs = new SongManager{AudioManager = this.Audio};
-            Crossfader = new CrossfaderManager{AudioManager = this.Audio};
-            CPUManager = new CPUManager();
+
+            Metrics = MetricsManager.LoadFromFile("metrics.txt",this.Log);
+            Settings = SettingsManager.LoadFromFile("settings.txt", this.Log);
+            HighScores = HighScoreManager.LoadFromFile("Scores.conf", this.Log);
+
+            Audio = new AudioManager(this.Log);
+            Songs = new SongManager(this.Log,this.Audio);
+            Crossfader = new CrossfaderManager(this.Log,this.Audio);
+
+            CPUManager = new CPUManager(this.Log);
             CPUManager.LoadWeights("CPUSkill.txt");
 
             TextureManager.GraphicsDevice = this.GraphicsDevice;
@@ -79,7 +85,7 @@ namespace WGiBeat
             }
 
 
-            _menuMusicManager = new MenuMusicManager
+            _menuMusicManager = new MenuMusicManager(this.Log)
             {
                 MusicFilePath = Directory.GetCurrentDirectory() + "\\MenuMusic\\",
                 AudioManager = this.Audio,
