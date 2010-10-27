@@ -447,7 +447,7 @@ namespace WGiBeat.Screens
         private void BeatlineNoteCPUHit(object sender, EventArgs e)
         {
             var player = ((Beatline)sender).Id;
-            var judgement = Core.CPUManager.GetNextJudgement(5, Core.Players[player].Streak);
+            var judgement = Core.CPUManager.GetNextJudgement(1, Core.Players[player].Streak);
 
             _notebars[player].MarkAllCompleted();
 
