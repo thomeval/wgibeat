@@ -16,6 +16,7 @@ namespace WGiBeat.Screens
         private int _selectedIndex;
         private Sprite _headerSprite;
         private Sprite _background;
+        private Sprite _spectrumBackground;
         private bool _previewStarted;
 
         private BpmMeter _bpmMeter;
@@ -92,7 +93,12 @@ namespace WGiBeat.Screens
             {
                 SpriteTexture = TextureManager.Textures["songSelectHeader"]
             };
-
+            _spectrumBackground = new Sprite
+                                      {
+                                          SpriteTexture = TextureManager.Textures["SpectrumBackground"]
+                                      };
+            _spectrumBackground.SetPosition(Core.Metrics["SelectedSongSpectrum",0]);
+            _spectrumBackground.Y -= 70;
         }
 
         private void CreateSongList()
@@ -144,14 +150,14 @@ namespace WGiBeat.Screens
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             DrawBackground(spriteBatch);
+            DrawPlayerOptions(spriteBatch);
+            DrawHighScoreFrame(spriteBatch);
+            DrawWaveForm(spriteBatch);
+            DrawBpmMeter(gameTime, spriteBatch);
+            DrawSongText(spriteBatch);
             DrawSongList(spriteBatch);
             _headerSprite.SetPosition(Core.Metrics["SongSelectScreenHeader", 0]);
             _headerSprite.Draw(spriteBatch);
-            DrawWaveForm(spriteBatch);
-            DrawPlayerOptions(spriteBatch);
-            DrawHighScoreFrame(spriteBatch);
-            DrawBpmMeter(gameTime, spriteBatch);
-            DrawSongText(spriteBatch);
             _songSortDisplay.Draw(spriteBatch);
      
 
@@ -181,23 +187,20 @@ namespace WGiBeat.Screens
 
         private void DrawWaveForm(SpriteBatch spriteBatch)
         {
+            _spectrumBackground.Draw(spriteBatch);
             if (Crossfader.ChannelIndexCurrent != -1)
             {
                 float[] levels = Core.Audio.GetChannelWaveform(Crossfader.ChannelIndexCurrent, WAVEFORM_POINTS);
 
                 var line = new PrimitiveLine(Core.GraphicsDevice);
-                line.Colour = Color.Black;
+                line.Colour = Color.White;
                 line.Position = Core.Metrics["SelectedSongSpectrum", 0];
 
-                line.AddVector(new Vector2(0, -70));
-                line.AddVector(new Vector2(200, -70));
-                line.Render(spriteBatch);
-                line.ClearVectors();
                 int posX = 0;
 
                 var averageLevels = new float[levels.Count() / WAVEFORM_CLUSTER_SIZE];
       
-                for (int x = 0; x < averageLevels.Count(); x++ )
+                for (int x = 0; x < averageLevels.Count() - 4; x++ )
                 {
                     averageLevels[x] = levels.Skip(WAVEFORM_CLUSTER_SIZE * x).Take(WAVEFORM_CLUSTER_SIZE).Average();
                    // averageLevels[x] = averageLevels[x]* 2 * (float) Math.Pow(x, 1.5);  

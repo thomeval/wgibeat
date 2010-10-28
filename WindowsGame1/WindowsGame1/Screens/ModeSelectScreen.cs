@@ -10,7 +10,7 @@ namespace WGiBeat.Screens
 {
     public class ModeSelectScreen : GameScreen
     {
-        private int _selectedGameType = 0;
+        private int _selectedGameType;
         private SpriteMap _optionBaseSpriteMap;
         private SpriteMap _optionsSpriteMap;
         private Sprite _background;
