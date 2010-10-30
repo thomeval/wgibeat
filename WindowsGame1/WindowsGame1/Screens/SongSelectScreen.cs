@@ -17,8 +17,9 @@ namespace WGiBeat.Screens
         private Sprite _headerSprite;
         private Sprite _background;
         private Sprite _spectrumBackground;
+        private Sprite _songLengthBase;
         private bool _previewStarted;
-
+        
         private BpmMeter _bpmMeter;
         private SongSortDisplay _songSortDisplay;
         private HighScoreFrame _highScoreFrame;
@@ -29,6 +30,7 @@ namespace WGiBeat.Screens
         private int _songListDrawOffset;
         private const int LISTITEMS_DRAWN = 7;
         private const double SONG_CHANGE_SPEED = 0.9;
+        private double _displayedLength;
 
         private SineSwayParticleField _field = new SineSwayParticleField();
 
@@ -75,6 +77,7 @@ namespace WGiBeat.Screens
                     _selectedIndex = _songList.IndexOf(lastSong);
                 }
 
+            _displayedLength = (_songList[_selectedIndex].Song.Length);
             InitSprites();
 
             base.Initialize();
@@ -88,6 +91,12 @@ namespace WGiBeat.Screens
                 SpriteTexture = TextureManager.Textures["allBackground"],
                 Width = Core.Window.ClientBounds.Width,
             };
+
+            _songLengthBase = new Sprite
+                                  {
+                                      SpriteTexture = TextureManager.Textures["LengthDisplayBase"]
+                                  };
+            _songLengthBase.SetPosition(Core.Metrics["SelectedSongLengthDisplay", 0]);
 
             _headerSprite = new Sprite
             {
@@ -154,6 +163,7 @@ namespace WGiBeat.Screens
             DrawHighScoreFrame(spriteBatch);
             DrawWaveForm(spriteBatch);
             DrawBpmMeter(gameTime, spriteBatch);
+            DrawLengthMeter(gameTime, spriteBatch);
             DrawSongText(spriteBatch);
             DrawSongList(spriteBatch);
             _headerSprite.SetPosition(Core.Metrics["SongSelectScreenHeader", 0]);
@@ -161,6 +171,21 @@ namespace WGiBeat.Screens
             _songSortDisplay.Draw(spriteBatch);
      
 
+        }
+
+        private void DrawLengthMeter(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+
+            _songLengthBase.Draw(spriteBatch);
+            var diff = _songList[_selectedIndex].Song.Length - _displayedLength;
+
+            _displayedLength += (diff/6);
+            var textPosition = Core.Metrics["SelectedSongLengthDisplay",0].Clone();
+            textPosition.X += 100;
+            textPosition.Y -= 0;
+            var ts = TimeSpan.FromSeconds(_displayedLength);
+
+            TextureManager.DrawString(spriteBatch, String.Format("{0}:{1:00}",ts.Minutes,ts.Seconds),"TwoTech36",textPosition,Color.Black,FontAlign.RIGHT);
         }
 
         private void DrawSongText(SpriteBatch spriteBatch)
@@ -245,7 +270,7 @@ namespace WGiBeat.Screens
             else
             {
                 var diff = _displayedBpm - _songList[_selectedIndex].Song.Bpm;
-                _displayedBpm -= diff* 0.2;
+                _displayedBpm -= diff/6;
             }
             if (_resetSongTime)
             {

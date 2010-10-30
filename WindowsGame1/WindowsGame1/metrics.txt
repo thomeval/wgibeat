@@ -92,6 +92,7 @@ PlayerOptionsFrame=[0,562][0,524][0,486][0,448];
 SelectedMode=[300,550];
 BPMMeter=[235,235];
 SelectedSongBPMDisplay=[360,325];
+SelectedSongLengthDisplay=[255,370];
 SelectedSongSubtitle=[320,235];
 SelectedSongTitle=[320,210];
 SelectedSongSpectrum=[235,330];
