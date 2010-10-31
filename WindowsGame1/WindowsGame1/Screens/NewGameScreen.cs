@@ -57,12 +57,16 @@ namespace WGiBeat.Screens
             {
                 _profileMenus[x].AddItem(new MenuItem() {ItemText = profile.Name, ItemValue = profile});
             }
+
+            _profileMenus[x].MaxVisibleItems = 8;
         }
 
         private void CreatePlayerMenu(int x)
         {
             _playerMenus[x] = new Menu();
             _playerMenus[x].AddItem(new MenuItem { ItemText = "Decision" });
+            _playerMenus[x].AddItem(new MenuItem { ItemText = "Profile" });
+
             var difficulty = new MenuItem { ItemText = "Difficulty" };
             difficulty.AddOption("Beginner", 0);
             difficulty.AddOption("Easy", 1);
@@ -82,9 +86,13 @@ namespace WGiBeat.Screens
             noteSpeed.SetSelectedByValue(1.0);
             _playerMenus[x].AddItem(noteSpeed);
 
-            _playerMenus[x].SetPosition(Core.Metrics["NewGameMenuStart", x]);
+            var awesomeness = new MenuItem {ItemText = "Awesomeness"};
+            awesomeness.AddOption("Off",false);
+            awesomeness.AddOption("On",true);
+            _playerMenus[x].AddItem(awesomeness);
 
-            _playerMenus[x].AddItem(new MenuItem { ItemText = "Profile" });
+            _playerMenus[x].SetPosition(Core.Metrics["NewGameMenuStart", x]);
+            _playerMenus[x].MaxVisibleItems = 8;
 
             _playerMenus[x].AddItem(new MenuItem { ItemText = "Leave" });
         }
