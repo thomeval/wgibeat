@@ -11,6 +11,7 @@ namespace WGiBeat.Drawing
         private readonly List<MenuItem> _menuItems;
         public int SelectedIndex { get; set; }
 
+        public int MaxVisibleItems { get; set; }
         public Menu()
         {
             SelectedIndex = 0;
@@ -19,15 +20,36 @@ namespace WGiBeat.Drawing
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            if (MaxVisibleItems == 0)
+            {
+                MaxVisibleItems = 999;
+            }
             int xOptionOffset = CalculateXOptionOffset();
             var position = new Vector2 {X = this.X, Y = this.Y};
-            foreach (MenuItem menuItem in _menuItems)
+
+            var midpoint = MaxVisibleItems/2;
+            var startItem = Math.Max(0,SelectedIndex - midpoint);
+            var lastItem = Math.Min(_menuItems.Count - 1, SelectedIndex + midpoint);
+
+            
+            while ((lastItem < _menuItems.Count -1) && ((lastItem - startItem + 1) < MaxVisibleItems))
             {
+                lastItem++;
+            }
+
+            while ((startItem > 0) && ((lastItem - startItem + 1) < MaxVisibleItems))
+            {
+                startItem--;
+            }
+
+            for (int i = startItem; i <= lastItem; i++)
+            {
+                MenuItem menuItem = _menuItems[i];
                 Color drawColor = (IsSelected(menuItem)) ? Color.Blue : Color.Black;
 
-                    spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], menuItem.ItemText, position, drawColor);
+                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], menuItem.ItemText, position, drawColor);
                 position.X += xOptionOffset;
-                    spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], menuItem.SelectedText(),position, drawColor);
+                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], menuItem.SelectedText(), position, drawColor);
                 position.X -= xOptionOffset;
 
                 position.Y += 25;
