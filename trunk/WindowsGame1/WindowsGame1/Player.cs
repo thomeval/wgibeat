@@ -16,7 +16,7 @@ namespace WGiBeat
             Judgements = new int[8];
         }
 
-        public string Name { get; set; }
+        public Profile Profile { get; set; }
         public double Life { get; set; }
         public long Score { get; set; }
         public bool IsBlazing { get; set; }
@@ -37,6 +37,7 @@ namespace WGiBeat
         }
 
         public long MaxHits { get; set; }
+        private int TotalHits { get; set; }
         public long Momentum { get; set; }
 
         private int _streak;
@@ -107,6 +108,7 @@ namespace WGiBeat
         public Difficulty PlayDifficulty { get; set; }
 
         private List<float> _lifeHistory = new List<float>();
+
         public List<float> LifeHistory
         {
             get { return _lifeHistory; }
@@ -120,6 +122,19 @@ namespace WGiBeat
         public bool IsCPUPlayer
         {
             get { return Playing && CPU;}
+
+        }
+
+        public string SafeName
+        {
+            get
+            {
+                if (Profile == null)
+                {
+                    return "";
+                }
+                return Profile.Name;
+            }
 
         }
 
@@ -190,6 +205,7 @@ namespace WGiBeat
             Score = 0;
             Hits = 0;
             MaxHits = 0;
+            TotalHits = 0;
             Streak = 0;
             MaxStreak = 0;
             Momentum = 0;
@@ -198,6 +214,20 @@ namespace WGiBeat
             _lifeHistory.Clear();
         }
         
+        public void UpdateToProfile()
+        {
+            if (Profile == null)
+            {
+                return;
+            }
+            for (int x = 0; x < Judgements.Count(); x++)
+            {
+                Profile.JudgementCounts[x] += Judgements[x];
+            }
+            Profile.TotalHits += TotalHits;
+            
+
+        }
     }
 
     public enum Difficulty

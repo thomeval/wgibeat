@@ -1,0 +1,1 @@
+﻿Profiles go in this folder. They can be moved freely between different copies of WGiBeat.

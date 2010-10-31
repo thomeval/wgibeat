@@ -9,6 +9,7 @@ namespace WGiBeat.Drawing
         private readonly List<object> _optionValues;
 
         public string ItemText { get; set; }
+        public object ItemValue { get; set; }
         private int _selectedOption;
 
         public MenuItem()

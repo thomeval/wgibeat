@@ -9,11 +9,11 @@ namespace WGiBeat.Drawing
     public class Menu : DrawableObject
     {
         private readonly List<MenuItem> _menuItems;
-        private int _selectedItem;
+        public int SelectedIndex { get; set; }
 
         public Menu()
         {
-            _selectedItem = 0;
+            SelectedIndex = 0;
             _menuItems = new List<MenuItem>();
         }
 
@@ -36,7 +36,7 @@ namespace WGiBeat.Drawing
 
         private bool IsSelected(MenuItem item)
         {
-            return _menuItems[_selectedItem] == item;
+            return _menuItems[SelectedIndex] == item;
         }
 
         private int CalculateXOptionOffset()
@@ -52,15 +52,15 @@ namespace WGiBeat.Drawing
 
         public MenuItem SelectedItem()
         {
-            return  _menuItems[_selectedItem];
+            return  _menuItems[SelectedIndex];
         }
 
         public void IncrementSelected()
         {
             if (_menuItems.Count > 0)
             {
-                _selectedItem += 1;
-                _selectedItem %= _menuItems.Count;
+                SelectedIndex += 1;
+                SelectedIndex %= _menuItems.Count;
             }
         }
 
@@ -68,10 +68,10 @@ namespace WGiBeat.Drawing
         {
             if (_menuItems.Count > 0)
             {
-                _selectedItem -= 1;
-                if (_selectedItem < 0)
+                SelectedIndex -= 1;
+                if (SelectedIndex < 0)
                 {
-                    _selectedItem = _menuItems.Count - 1;
+                    SelectedIndex = _menuItems.Count - 1;
                 }
             }
         }
@@ -85,14 +85,14 @@ namespace WGiBeat.Drawing
         {
             if (_menuItems.Count > 0)
             {
-                _menuItems[_selectedItem].DecrementSelected();
+                _menuItems[SelectedIndex].DecrementSelected();
             }
         }
         public void IncrementOption()
         {
             if (_menuItems.Count > 0)
             {
-                _menuItems[_selectedItem].IncrementSelected();
+                _menuItems[SelectedIndex].IncrementSelected();
             }
         }
 

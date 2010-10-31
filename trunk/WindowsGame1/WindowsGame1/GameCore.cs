@@ -22,6 +22,8 @@ namespace WGiBeat
         private SpriteBatch _spriteBatch;
         public SettingsManager Settings;
         public MetricsManager Metrics;
+        public ProfileManager Profiles;
+
         public AudioManager Audio;
         public SongManager Songs;
         public HighScoreManager HighScores;
@@ -68,6 +70,7 @@ namespace WGiBeat
             Metrics = MetricsManager.LoadFromFile("metrics.txt",this.Log);
             Settings = SettingsManager.LoadFromFile("settings.txt", this.Log);
             HighScores = HighScoreManager.LoadFromFile("Scores.conf", this.Log);
+            Profiles = ProfileManager.LoadFromFolder("Profiles", this.Log);
 
             Audio = new AudioManager(this.Log);
             Songs = new SongManager(this.Log,this.Audio);
