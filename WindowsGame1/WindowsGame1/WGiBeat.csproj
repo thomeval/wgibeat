@@ -130,6 +130,8 @@
     <Compile Include="Managers\LogManager.cs" />
     <Compile Include="Managers\Manager.cs" />
     <Compile Include="Managers\NetManager.cs" />
+    <Compile Include="Managers\ProfileManager.cs" />
+    <Compile Include="Profile.cs" />
     <Compile Include="Screens\InitialLoadScreen.cs" />
     <Compile Include="Screens\InstructionScreen.cs" />
     <Compile Include="Screens\ModeSelectScreen.cs" />
@@ -181,6 +183,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="metrics.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Profiles\ProfilesInfo.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="readme.txt">

@@ -34,6 +34,7 @@ namespace WGiBeat.Screens
         {
             CalculateGrades();
             SaveHighScore();
+            SaveProfiles();
             InitSprites();
             InitObjects();
             base.Initialize();
@@ -110,6 +111,14 @@ namespace WGiBeat.Screens
             //Evaluation screen needs this setting to be able to display the high score indicator.
             _highScorePlayer = Core.HighScores.UpdateHighScore(Core.Settings.Get<int>("LastSongPlayed"), Core.Players, (GameType)Core.Cookies["CurrentGameType"], _grades);
             Core.HighScores.SaveToFile("Scores.conf");
+        }
+
+        private void SaveProfiles()
+        {
+            for (int x = 0; x < 4; x++)
+            {
+                Core.Players[x].UpdateToProfile();
+            }
         }
 
         public override void PerformAction(Action action)

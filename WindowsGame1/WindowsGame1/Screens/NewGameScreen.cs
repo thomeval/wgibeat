@@ -14,6 +14,7 @@ namespace WGiBeat.Screens
 
         private readonly CursorPosition[] _cursorPositions = new CursorPosition[4];
         private readonly Menu[] _playerMenus = new Menu[4];
+        private readonly Menu[] _profileMenus = new Menu[4];
         private readonly OnScreenKeyboard[] _keyboards = new OnScreenKeyboard[4];
         public NewGameScreen(GameCore core)
             : base(core)
@@ -27,33 +28,9 @@ namespace WGiBeat.Screens
             {
                 _cursorPositions[x] = CursorPosition.NOT_JOINED;
                 Core.Players[x].Playing = false;
-
-                _playerMenus[x] = new Menu();
-                _playerMenus[x].AddItem(new MenuItem { ItemText = "Decision" });
-                var difficulty = new MenuItem { ItemText = "Difficulty" };
-                difficulty.AddOption("Beginner", 0);
-                difficulty.AddOption("Easy", 1);
-                difficulty.AddOption("Medium", 2);
-                difficulty.AddOption("Hard", 3);
-                difficulty.AddOption("Insane", 4);
-                _playerMenus[x].AddItem(difficulty);
-
-                var noteSpeed = new MenuItem { ItemText = "Beatline Speed" };
-                noteSpeed.AddOption("0.5x", 0.5);
-                noteSpeed.AddOption("1x", 1.0);
-                noteSpeed.AddOption("1.5x", 1.5);
-                noteSpeed.AddOption("2x", 2.0);
-                noteSpeed.AddOption("3x", 3.0);
-                noteSpeed.AddOption("4x", 4.0);
-                noteSpeed.AddOption("6x", 6.0);
-                noteSpeed.SetSelectedByValue(1.0);
-                _playerMenus[x].AddItem(noteSpeed);
-
-                _playerMenus[x].SetPosition(Core.Metrics["NewGameMenuStart", x]);
-
-                _playerMenus[x].AddItem(new MenuItem { ItemText = "Name Entry" });
-
-                _playerMenus[x].AddItem(new MenuItem { ItemText = "Leave" });
+                Core.Players[x].Profile = null;
+                CreatePlayerMenu(x);
+                CreateProfileMenu(x);
                 Core.Players[x].Team = 0;
             }
 
@@ -68,18 +45,77 @@ namespace WGiBeat.Screens
             base.Initialize();
         }
 
+        private void CreateProfileMenu(int x)
+        {
+            _profileMenus[x] = new Menu();
+            _profileMenus[x].SetPosition(Core.Metrics["NewGameMenuStart", x]);
+            _profileMenus[x].AddItem(new MenuItem() {ItemText = "[Create New]"});
+            _profileMenus[x].AddItem(new MenuItem() { ItemText = "[Guest]" });
+            _profileMenus[x].AddItem(new MenuItem {ItemText = "[Cancel]"});
+
+            foreach (Profile profile in Core.Profiles.GetAll())
+            {
+                _profileMenus[x].AddItem(new MenuItem() {ItemText = profile.Name, ItemValue = profile});
+            }
+        }
+
+        private void CreatePlayerMenu(int x)
+        {
+            _playerMenus[x] = new Menu();
+            _playerMenus[x].AddItem(new MenuItem { ItemText = "Decision" });
+            var difficulty = new MenuItem { ItemText = "Difficulty" };
+            difficulty.AddOption("Beginner", 0);
+            difficulty.AddOption("Easy", 1);
+            difficulty.AddOption("Medium", 2);
+            difficulty.AddOption("Hard", 3);
+            difficulty.AddOption("Insane", 4);
+            _playerMenus[x].AddItem(difficulty);
+
+            var noteSpeed = new MenuItem { ItemText = "Beatline Speed" };
+            noteSpeed.AddOption("0.5x", 0.5);
+            noteSpeed.AddOption("1x", 1.0);
+            noteSpeed.AddOption("1.5x", 1.5);
+            noteSpeed.AddOption("2x", 2.0);
+            noteSpeed.AddOption("3x", 3.0);
+            noteSpeed.AddOption("4x", 4.0);
+            noteSpeed.AddOption("6x", 6.0);
+            noteSpeed.SetSelectedByValue(1.0);
+            _playerMenus[x].AddItem(noteSpeed);
+
+            _playerMenus[x].SetPosition(Core.Metrics["NewGameMenuStart", x]);
+
+            _playerMenus[x].AddItem(new MenuItem { ItemText = "Profile" });
+
+            _playerMenus[x].AddItem(new MenuItem { ItemText = "Leave" });
+        }
+
         private void Keyboard_EntryComplete(object sender, EventArgs e)
         {
             var senderKeyboard = ((OnScreenKeyboard) sender);
             var player = senderKeyboard.Id;
-            Core.Players[player].Name = senderKeyboard.EnteredText;
+            
+            if (Core.Profiles[senderKeyboard.EnteredText] != null)
+            {
+                //TODO: Display message.
+                return;
+            }
+            var newProfile = new Profile {Name = senderKeyboard.EnteredText};
+            Core.Profiles.Add(newProfile);
+
+            Core.Players[player].Profile = newProfile;
+
+            for (int x = 0; x < 4; x++  )
+            {
+                CreateProfileMenu(x);
+            }
+            Core.Profiles.SaveToFolder("Profiles");
             _cursorPositions[player] = CursorPosition.MAIN_MENU;
         }
 
         private void Keyboard_EntryCancelled(object sender, EventArgs e)
         {
             var player = ((OnScreenKeyboard) sender).Id;
-            _cursorPositions[player] = CursorPosition.MAIN_MENU;
+            _cursorPositions[player] = CursorPosition.PROFILE_LIST;
         }
 
         private void DrawBackground(SpriteBatch spriteBatch)
@@ -118,6 +154,9 @@ namespace WGiBeat.Screens
                     case CursorPosition.MAIN_MENU:
                         _playerMenus[x].Draw(spriteBatch);
                         break;
+                    case CursorPosition.PROFILE_LIST:
+                        _profileMenus[x].Draw(spriteBatch);
+                        break;
                     case CursorPosition.KEYBOARD:
                         _keyboards[x].Draw(spriteBatch);
                         break;
@@ -128,6 +167,7 @@ namespace WGiBeat.Screens
                 }
             }
         }
+
 
         private void DrawBorders(SpriteBatch spriteBatch)
         {
@@ -166,6 +206,7 @@ namespace WGiBeat.Screens
                     else
                     {
                         _playerMenus[player].DecrementSelected();
+                        _profileMenus[player].DecrementSelected();
                     }
 
                     break;
@@ -177,6 +218,7 @@ namespace WGiBeat.Screens
                     else
                     {
                         _playerMenus[player].IncrementSelected();
+                        _profileMenus[player].IncrementSelected();
                     }
                     break;
                 case "RIGHT":
@@ -210,16 +252,15 @@ namespace WGiBeat.Screens
             switch (_cursorPositions[number])
             {
                 case CursorPosition.NOT_JOINED:
-                    _cursorPositions[number] = CursorPosition.MAIN_MENU;
+                    _cursorPositions[number] = CursorPosition.PROFILE_LIST;
                     Core.Players[number].Playing = true;
                     Core.Players[number].CPU = false;
-                    if (Core.Players[number].Name == "CPU")
-                    {
-                        Core.Players[number].Name = "";
-                    }
                     break;
                 case CursorPosition.MAIN_MENU:
                     SelectMainMenuItem(number);
+                    break;
+                    case CursorPosition.PROFILE_LIST:
+                    SelectProfileListItem(number);
                     break;
                 case CursorPosition.KEYBOARD:
                     _keyboards[number].PickSelection();
@@ -230,6 +271,49 @@ namespace WGiBeat.Screens
             }
         }
 
+        private void SelectProfileListItem(int number)
+        {
+          
+           if (_profileMenus[number].SelectedItem().ItemValue == null)
+           {
+               switch (_profileMenus[number].SelectedItem().ItemText)
+               {
+                   case "[Create New]":
+                       _cursorPositions[number] = CursorPosition.KEYBOARD;
+                       break;
+                   case "[Guest]":
+                       Core.Players[number].Profile = null;
+                       _cursorPositions[number] = CursorPosition.MAIN_MENU;
+                       break;
+                   case "[Cancel]":
+                       _cursorPositions[number] = CursorPosition.MAIN_MENU;
+                       break;
+               }
+           }
+           else
+           {
+               var newSelection = (Profile) _profileMenus[number].SelectedItem().ItemValue;
+               bool okToChange = true;
+               for (int x = 0; x < 4; x++ )
+               {
+                   if (number == x)
+                   {
+                       continue;
+                   }
+                   if (Core.Players[x].Profile == newSelection)
+                   {
+                       okToChange = false;
+                       //TODO: Display Message
+                   }
+               }
+               if (okToChange)
+               {
+                   Core.Players[number].Profile = newSelection;
+                   _cursorPositions[number] = CursorPosition.MAIN_MENU;
+               }
+           }
+        }
+
         private void SelectMainMenuItem(int number)
         {
             switch (_playerMenus[number].SelectedItem().ItemText)
@@ -237,14 +321,16 @@ namespace WGiBeat.Screens
                 case "Leave":
                     _cursorPositions[number] = CursorPosition.NOT_JOINED;
                     Core.Players[number].Playing = false;
+                    Core.Players[number].Profile = null;
                     TryToStart();
                     break;
                 case "Decision":
                     _cursorPositions[number] = CursorPosition.READY;
                     TryToStart();
                     break;
-                case "Name Entry":
-                    _cursorPositions[number] = CursorPosition.KEYBOARD;
+                case "Profile":
+                    _cursorPositions[number] = CursorPosition.PROFILE_LIST;
+                    _profileMenus[number].SelectedIndex = 0;
                     break;
             }
         }
@@ -292,5 +378,6 @@ namespace WGiBeat.Screens
         MAIN_MENU,
         READY,
         KEYBOARD,
+        PROFILE_LIST
     }
 }

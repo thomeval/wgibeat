@@ -109,7 +109,7 @@ namespace WGiBeat.Managers
                 default:
                     //Individual high score.
                     var highest = (from e in players where e.Playing select e.Score).Max();
-                    SetHighScoreEntry(CurrentSong.GetHashCode(), gameType, highest, grades[result], players[result].PlayDifficulty, players[result].Name);
+                    SetHighScoreEntry(CurrentSong.GetHashCode(), gameType, highest, grades[result], players[result].PlayDifficulty, players[result].SafeName);
                     break;
             }
             return result;

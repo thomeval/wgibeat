@@ -117,8 +117,13 @@ namespace WGiBeat.Drawing
                 _optionControlOpacity = (byte) Math.Max(0, _optionControlOpacity - 10);
             }
 
-            var playerName = string.IsNullOrEmpty(Player.Name) ? "Guest" : this.Player.Name;
-
+      
+            var playerName = (Player.Profile == null) ? "Guest" : this.Player.Profile.Name;
+            if (Player.CPU)
+            {
+                playerName = "CPU";
+            }
+            
             DrawChangeControls(spriteBatch);
             _textColor.A = (byte)(255 - _optionControlOpacity);
             var clipRect = new Rectangle {Height = this.Height, Width = this.Width - 150, X = this.X + 75, Y = this.Y};
