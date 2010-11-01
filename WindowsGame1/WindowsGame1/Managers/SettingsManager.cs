@@ -46,12 +46,13 @@ namespace WGiBeat.Managers
             var sm = new SettingsManager();
 
             sm["SongPreview"] = true;
-            sm["SongVolume"] = "0.7";
+            sm["SongVolume"] = "0.8";
             sm["SongFolder"] = "Songs";
             sm["FullScreen"] = false;
             sm["SongDebug"] = false;
             sm["LastSongPlayed"] = 0;
             sm["RunOnce"] = false;
+            sm["ProfileFolder"] = "Profiles";
             return sm;
         }
         public static SettingsManager LoadFromFile(string filename, LogManager log)

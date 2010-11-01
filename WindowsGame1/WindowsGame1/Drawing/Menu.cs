@@ -20,6 +20,8 @@ namespace WGiBeat.Drawing
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            //TODO: Draw arrows if more items above/below the menu.
+
             if (MaxVisibleItems == 0)
             {
                 MaxVisibleItems = 999;
