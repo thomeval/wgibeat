@@ -228,6 +228,27 @@ namespace WGiBeat
             
 
         }
+
+        public void UpdatePreferences()
+        {
+            if (Profile == null)
+            {
+                return;
+            }
+            Profile.LastBeatlineSpeed = BeatlineSpeed;
+            Profile.LastDifficulty = PlayDifficulty;
+
+        }
+
+        public void LoadPreferences()
+        {
+            if (Profile == null)
+            {
+                return;
+            }
+            BeatlineSpeed = Profile.LastBeatlineSpeed;
+            PlayDifficulty = Profile.LastDifficulty;
+        }
     }
 
     public enum Difficulty

@@ -59,6 +59,7 @@ namespace WGiBeat.Managers
 
                 var profile = (Profile) bf.Deserialize(fs);
                 pm.Add(profile);
+                fs.Close();
             }
             pm.Log.AddMessage("INFO: "+pm.Count +"Profiles loaded successfully.");
             return pm;
@@ -71,6 +72,7 @@ namespace WGiBeat.Managers
             {
                 var fs = File.OpenWrite(path + "\\" + profile.Name + ".prf");
                 bf.Serialize(fs,profile);
+                fs.Close();
             }
             Log.AddMessage("INFO: " + Count + "Profiles save successfully.");
         }

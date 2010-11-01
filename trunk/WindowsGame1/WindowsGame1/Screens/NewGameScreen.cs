@@ -116,7 +116,7 @@ namespace WGiBeat.Screens
             {
                 CreateProfileMenu(x);
             }
-            Core.Profiles.SaveToFolder("Profiles");
+            Core.Profiles.SaveToFolder(Core.Settings["ProfileFolder"] + "");
             _cursorPositions[player] = CursorPosition.MAIN_MENU;
         }
 
@@ -317,9 +317,17 @@ namespace WGiBeat.Screens
                if (okToChange)
                {
                    Core.Players[number].Profile = newSelection;
+                   Core.Players[number].LoadPreferences();
+                   RefereshSelectedOptions(number);
                    _cursorPositions[number] = CursorPosition.MAIN_MENU;
                }
            }
+        }
+
+        private void RefereshSelectedOptions(int number)
+        {
+            _playerMenus[number].GetByItemText("Beatline Speed").SetSelectedByValue(Core.Players[number].BeatlineSpeed);
+            _playerMenus[number].GetByItemText("Difficulty").SetSelectedByValue((int) Core.Players[number].PlayDifficulty);
         }
 
         private void SelectMainMenuItem(int number)
@@ -363,19 +371,26 @@ namespace WGiBeat.Screens
 
             if (everyoneReady)
             {
+                SavePreferencesToProfiles();
                 StartGame();
             }
         }
 
-
-        private void StartGame()
+        private void SavePreferencesToProfiles()
         {
             for (int x = 0; x < 4; x++)
             {
                 Core.Players[x].PlayDifficulty =
-                    (Difficulty)(int)_playerMenus[x].GetByItemText("Difficulty").SelectedValue();
+    (Difficulty)(int)_playerMenus[x].GetByItemText("Difficulty").SelectedValue();
                 Core.Players[x].BeatlineSpeed = (double)_playerMenus[x].GetByItemText("Beatline Speed").SelectedValue();
+                Core.Players[x].UpdatePreferences();
             }
+            Core.Profiles.SaveToFolder(Core.Settings["ProfileFolder"] + "");
+        }
+
+
+        private void StartGame()
+        {       
             Core.ScreenTransition("ModeSelect");
         }
     }

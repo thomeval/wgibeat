@@ -117,6 +117,18 @@ namespace WGiBeat.Screens
         {
             for (int x = 0; x < 4; x++)
             {
+                if (!Core.Players[x].IsHumanPlayer)
+                {
+                    continue;
+                }
+                if (Core.Players[x].KO)
+                {
+                    Core.Players[x].Profile.SongsFailed++;
+                }
+                else
+                {
+                    Core.Players[x].Profile.SongsCleared++;
+                }
                 Core.Players[x].UpdateToProfile();
             }
         }
