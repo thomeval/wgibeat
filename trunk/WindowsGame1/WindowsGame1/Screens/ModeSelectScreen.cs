@@ -21,6 +21,7 @@ namespace WGiBeat.Screens
         private Sprite _restrictionSprite;
         private readonly List<PlayerOptionsFrame> _playerOptions = new List<PlayerOptionsFrame>();
         private Sprite _messageBorderSprite;
+        private int _listDrawOffset;
 
 
         public ModeSelectScreen(GameCore core)
@@ -117,30 +118,51 @@ namespace WGiBeat.Screens
             TextureManager.DrawString(spriteBatch, restrictionMessage,"DefaultFont",Core.Metrics["RestrictionMessage",0],Color.White, FontAlign.LEFT);
         }
 
+        private const int LIST_ITEMS_DRAWN = 4;
+        public const double MODE_CHANGE_SPEED = 0.9;
+
         private void DrawModeOptions(SpriteBatch spriteBatch)
         {
-            var posX = (int) Core.Metrics["ModeSelectOptions", 0].X;
-            var posY = (int) Core.Metrics["ModeSelectOptions", 0].Y;
 
-            for (int x = 0; x < (int) GameType.COUNT; x++)
+            var midpoint = Core.Metrics["ModeSelectOptions", 0].Clone();
+            midpoint.X += _listDrawOffset;
+
+            int index = _selectedGameType;
+            //Draw selected game type.
+            _optionBaseSpriteMap.Draw(spriteBatch, 1, 250, 160, midpoint);
+            _optionsSpriteMap.Draw(spriteBatch, index, 229, 139, (int) midpoint.X + 10, (int) midpoint.Y + 10);
+
+            //Draw Mode options to the right of (after) the selected one.
+            for (int x = 1; x <= LIST_ITEMS_DRAWN; x++)
             {
-                int selected = (x == _selectedGameType) ? 1 : 0;
-                _optionBaseSpriteMap.Draw(spriteBatch, selected, 250, 160, posX, posY);
-
-                if (GameTypeAllowed((GameType)x) == "")
-                {
-                    _optionsSpriteMap.ColorShading.A = 255;
-                }
-                else
-                {
-                    _optionsSpriteMap.ColorShading.A = 64;
-                }
-                _optionsSpriteMap.Draw(spriteBatch, x, 229, 139, posX + 10, posY + 10);
-                posX += 255;
+                index = (index + 1) % (int) GameType.COUNT;
+                midpoint.X += 255;
+                _optionBaseSpriteMap.Draw(spriteBatch, 0, 250, 160, midpoint);
+                _optionsSpriteMap.Draw(spriteBatch, index, 229, 139, (int)midpoint.X + 10, (int)midpoint.Y + 10);
             }
+
+            midpoint.X -= 255 * LIST_ITEMS_DRAWN;
+            
+
+            //Draw Mode options to the left of (before) the selected one.
+            for (int x = 1; x <= LIST_ITEMS_DRAWN; x++)
+            {
+                index -= 1;
+                if (index < 0)
+                {
+                    index = (int) GameType.COUNT - 1;
+                }
+                midpoint.X -= 255;
+                _optionBaseSpriteMap.Draw(spriteBatch, 0, 250, 160, midpoint);
+                _optionsSpriteMap.Draw(spriteBatch, index, 229, 139, (int)midpoint.X + 10, (int)midpoint.Y + 10);
+            }
+
+            midpoint.X -= _listDrawOffset;
+            _listDrawOffset = (int) (_listDrawOffset* MODE_CHANGE_SPEED);
 
         }
 
+        
         private void DrawBackground(SpriteBatch spriteBatch)
         {
             _background.Draw(spriteBatch);
@@ -256,6 +278,7 @@ namespace WGiBeat.Screens
 
         private void ChangeGameType(int amount)
         {
+            _listDrawOffset += (amount*255);
             _selectedGameType += amount;
             if (_selectedGameType < 0)
             {
