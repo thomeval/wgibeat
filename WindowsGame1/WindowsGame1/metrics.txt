@@ -103,7 +103,7 @@ OptionsMenuStart=[30,100];
 
 #Mode Select;
 ModeSelectScreenHeader=[0,0];
-ModeSelectOptions=[20,105];
+ModeSelectOptions=[275,105];
 ModeDescription=[20,310];
 ModeDescriptionBase=[0,270];
 RestrictionMessage=[510,500];

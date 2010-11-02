@@ -17,30 +17,42 @@
 -Program Icon 
 
 --Thome--
--Sync (0.4), Battle (0.4?), VS CPU game modes (0.4?)
--Song Sort bookmarks / quick navigation (0.4)
--Player Profiles (Major - 0.4?)
--On screen keyboard (needed for profiles)(Done)
--Song folders / tree (Major - 0.4?)
--Fix song BPM frame in song select screen.
+-Sync (0.5?), Battle (0.5?) game modes.
+-Song Sort bookmarks / quick navigation (0.5)
 
--Better error message when prerequisites aren't installed (0.4)
--Public domain music as a sample file? (0.4)
+-Frame for song title/artist in song select (0.4)(high)
+-Adjustable CPU skill (high)
+
+-Public domain music as a sample file? (0.4 - zoran - LOL)
 -Cooperative bonuses (Streaks? Sync perfects?) (0.4)
 
-
 -Chance / SP gameplay (Major - Needs graphics)
--"Performance" indicator (evaluation + ingame)
--Lifebar graph (In progress)
--Mode descriptions (Needs graphics)
--Name list
--Frame for song title/artist in song select
--Add song length in song select screen.
+
+-Lifebar graph (In progress)(Graphics improvement)
+-Gradual lifegraph entrance
+
 -Song length doesn't work properly. (Fixed?)
 -Investigate timing / press lag (Better due to framerate fix, but is it perfect?)
 
-==0.4 - ? == (Roadmap)
+-Mode descriptions (Needs graphics) (0.5)
+-Profile stat display screen (0.5)
+- Stepmania file support? (low)
+- Redo Keys screen (double tab design) (low)
+-"Performance" indicator (evaluation + ingame)(low)
 
+==0.4 - "Temporary Laugh" == (Roadmap)
+ * New Game Mode: VS CPU Mode. Various skill levels available.
+ * Pressing BACK in Song Select Screen returns to ModeSelect.
+ * Promote logging to handle all other subsystems
+ * Bugfix: Playing two songs in a row without aborting no longer causes problems.
+ * Bugfix: highscores always having too high grade when playing VS CPU.
+ * "Welcome to WGiBeat" firstrun message.
+ * How to play screen for new players.
+ * Scalable life graph.
+ * Updates to song info display on Song Select screen.
+ * Song length displayed on Song Select screen.
+ * Profile system 
+ * Scrolling Mode Select screen.
 
 ==0.3 - "Delicious Disappointment"==
 
@@ -64,6 +76,7 @@
  * Beatline scaling with 1 or 2 players. Where possible, a "large" beatline is used instead.
  * Menu music crossfades, either to silence, to song previews or to another menu music audio.
  * Team select screen when using Team Mode.
+ * On screen keyboard for name entry
 
 ==0.2 - "Communist Garage"==
 

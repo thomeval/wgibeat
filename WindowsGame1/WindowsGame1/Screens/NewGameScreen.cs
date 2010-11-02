@@ -327,7 +327,7 @@ namespace WGiBeat.Screens
 
         private void SelectProfileListItem(int number)
         {
-          
+            _playerMenus[number].SelectedIndex = 0;
            if (_profileMenus[number].SelectedItem().ItemValue == null)
            {
                switch (_profileMenus[number].SelectedItem().ItemText)
