@@ -16,6 +16,11 @@ namespace WGiBeat.Screens
         private readonly Menu[] _playerMenus = new Menu[4];
         private readonly Menu[] _profileMenus = new Menu[4];
         private readonly OnScreenKeyboard[] _keyboards = new OnScreenKeyboard[4];
+        private Sprite _background;
+        private Sprite _messageBackground;
+        private string[] _errorMessages = new string[4];
+        private string[] _infoMessages = new string[4];
+
         public NewGameScreen(GameCore core)
             : base(core)
         {
@@ -32,31 +37,49 @@ namespace WGiBeat.Screens
                 CreatePlayerMenu(x);
                 CreateProfileMenu(x);
                 Core.Players[x].Team = 0;
-            }
+                _errorMessages[x] = "";
+                _infoMessages[x] = "";
 
-            for (int x = 0; x < 4; x++)
-            {
                 _keyboards[x] = new OnScreenKeyboard {MaxLength = 8, Id = x};
                 _keyboards[x].SetPosition(Core.Metrics["OnScreenKeyboard", x]);
                 _keyboards[x].EnteredTextPosition = Core.Metrics["OnScreenKeyboardDisplay", x];
                 _keyboards[x].EntryCancelled += Keyboard_EntryCancelled;
                 _keyboards[x].EntryComplete += Keyboard_EntryComplete;
             }
+
+            InitSprites();
             base.Initialize();
+        }
+
+        private void InitSprites()
+        {
+            _background = new Sprite
+            {
+                Height = Core.Window.ClientBounds.Height,
+                SpriteTexture = TextureManager.Textures["allBackground"],
+                Width = Core.Window.ClientBounds.Width,
+                X = 0,
+                Y = 0
+            };
+            _messageBackground = new Sprite
+                                     {
+                                         SpriteTexture = TextureManager.Textures["NewGameMessageBorder"]
+                                     };
         }
 
         private void CreateProfileMenu(int x)
         {
             _profileMenus[x] = new Menu();
             _profileMenus[x].SetPosition(Core.Metrics["NewGameMenuStart", x]);
-            _profileMenus[x].AddItem(new MenuItem() {ItemText = "[Create New]"});
-            _profileMenus[x].AddItem(new MenuItem() { ItemText = "[Guest]" });
+            _profileMenus[x].AddItem(new MenuItem {ItemText = "[Create New]"});
+            _profileMenus[x].AddItem(new MenuItem { ItemText = "[Guest]" });
             _profileMenus[x].AddItem(new MenuItem {ItemText = "[Cancel]"});
 
             foreach (Profile profile in Core.Profiles.GetAll())
             {
-                _profileMenus[x].AddItem(new MenuItem() {ItemText = profile.Name, ItemValue = profile});
+                _profileMenus[x].AddItem(new MenuItem {ItemText = profile.Name, ItemValue = profile});
             }
+
 
             _profileMenus[x].MaxVisibleItems = 8;
         }
@@ -104,7 +127,7 @@ namespace WGiBeat.Screens
             
             if (Core.Profiles[senderKeyboard.EnteredText] != null)
             {
-                //TODO: Display message.
+                _errorMessages[player] = "This name is already in use.";
                 return;
             }
             var newProfile = new Profile {Name = senderKeyboard.EnteredText};
@@ -118,6 +141,7 @@ namespace WGiBeat.Screens
             }
             Core.Profiles.SaveToFolder(Core.Settings["ProfileFolder"] + "");
             _cursorPositions[player] = CursorPosition.MAIN_MENU;
+            _errorMessages[player] = "";
         }
 
         private void Keyboard_EntryCancelled(object sender, EventArgs e)
@@ -128,17 +152,18 @@ namespace WGiBeat.Screens
 
         private void DrawBackground(SpriteBatch spriteBatch)
         {
-            var background = new Sprite
-            {
-                Height = Core.Window.ClientBounds.Height,
-                SpriteTexture = TextureManager.Textures["allBackground"],
-                Width = Core.Window.ClientBounds.Width,
-                X = 0,
-                Y = 0
-            };
 
-            background.Draw(spriteBatch);
+            _background.Draw(spriteBatch);
             _field.Draw(spriteBatch);
+
+            for (int x = 0; x < 4; x++)
+            {
+                if (Core.Players[x].Playing)
+                {
+                    _messageBackground.SetPosition(Core.Metrics["NewGameMessageBorder",x]);
+                    _messageBackground.Draw(spriteBatch);
+                }
+            }
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -146,6 +171,22 @@ namespace WGiBeat.Screens
             DrawBackground(spriteBatch);
             DrawBorders(spriteBatch);
             DrawMenus(spriteBatch);
+            DrawMessages(spriteBatch);
+        }
+
+        private void DrawMessages(SpriteBatch spriteBatch)
+        {
+            for (int x = 0; x < 4; x++)
+            {
+                var textPosition = Core.Metrics["NewGameMessageBorder", x].Clone();
+                textPosition.X += 200;
+                textPosition.Y += 5;
+                TextureManager.DrawString(spriteBatch, _infoMessages[x], "DefaultFont", textPosition, Color.White,
+                                          FontAlign.CENTER);
+                textPosition.Y += 25;
+                TextureManager.DrawString(spriteBatch,_errorMessages[x],"DefaultFont", textPosition, Color.Yellow, FontAlign.CENTER);
+            }
+
         }
 
         private void DrawMenus(SpriteBatch spriteBatch)
@@ -158,19 +199,24 @@ namespace WGiBeat.Screens
                     case CursorPosition.NOT_JOINED:
                         TextureManager.DrawString(spriteBatch,"Press Start to Join...", "LargeFont", 
                         Core.Metrics["NewGameJoinNotification", x], Color.Black,FontAlign.LEFT);
+                        _infoMessages[x] = "";
                         break;
                     case CursorPosition.MAIN_MENU:
                         _playerMenus[x].Draw(spriteBatch);
+                        _infoMessages[x] = (Core.Players[x].Profile == null) ? "No profile" : "Current profile: " + Core.Players[x].SafeName;
                         break;
                     case CursorPosition.PROFILE_LIST:
                         _profileMenus[x].Draw(spriteBatch);
+                        _infoMessages[x] = "Select a profile.";
                         break;
                     case CursorPosition.KEYBOARD:
                         _keyboards[x].Draw(spriteBatch);
+                        _infoMessages[x] = "Enter a profile name.";
                         break;
                     case CursorPosition.READY:
                         TextureManager.DrawString(spriteBatch, "Ready", "LargeFont",
                         Core.Metrics["NewGameJoinNotification", x], Color.Black, FontAlign.LEFT);
+                        _infoMessages[x] = "Waiting for other players...";
                         break;
                 }
             }
@@ -297,6 +343,7 @@ namespace WGiBeat.Screens
                        _cursorPositions[number] = CursorPosition.MAIN_MENU;
                        break;
                }
+               _errorMessages[number] = "";
            }
            else
            {
@@ -311,7 +358,7 @@ namespace WGiBeat.Screens
                    if (Core.Players[x].Profile == newSelection)
                    {
                        okToChange = false;
-                       //TODO: Display Message
+                       _errorMessages[number] = "This profile is already in use.";
                    }
                }
                if (okToChange)
@@ -320,6 +367,7 @@ namespace WGiBeat.Screens
                    Core.Players[number].LoadPreferences();
                    RefereshSelectedOptions(number);
                    _cursorPositions[number] = CursorPosition.MAIN_MENU;
+                   _errorMessages[number] = "";
                }
            }
         }
