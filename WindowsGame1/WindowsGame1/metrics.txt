@@ -58,7 +58,6 @@ EvaluationGradeBase=[220,130][620,130][220,455][620,455];
 EvaluationMaxBase=[220,50][620,50][220,375][620,375];
 EvaluationLabelTotalScore=[410,275];
 
-
 EvaluationIdeal=[120,50][520,50][120,375][520,375];
 EvaluationCool=[120,75][520,75][120,400][520,400];
 EvaluationOk=[120,100][520,100][120,425][520,425];
@@ -79,8 +78,10 @@ LifeGraph=[20,20][420,20][20,345][420,345];
 #New Game;
 NewGameJoinNotification=[50,125][450,125][50,450][450,450];
 NewGameMenuStart=[50,25][450,25][50,350][450,350];
+NewGameMessageBorder=[0,220][400,220][0,545][400,545];
 OnScreenKeyboard=[10,40][410,40][10,415][410,415];
 OnScreenKeyboardDisplay=[200,10][600,10][200,385][600,385];
+
 
 #Song Select;
 SongListMidpoint=[450,275];
