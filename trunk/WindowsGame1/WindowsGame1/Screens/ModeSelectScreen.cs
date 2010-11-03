@@ -13,6 +13,7 @@ namespace WGiBeat.Screens
         private int _selectedGameType;
         private SpriteMap _optionBaseSpriteMap;
         private SpriteMap _optionsSpriteMap;
+        private SpriteMap _edgeSpriteMap;
         private Sprite _background;
         private Sprite _headerSprite;
         private Sprite _descriptionBaseSprite;
@@ -76,6 +77,10 @@ namespace WGiBeat.Screens
                 SpriteTexture = TextureManager.Textures["ModeOptions"]
             };
 
+
+            _edgeSpriteMap = new SpriteMap
+                                 {Columns = 2, Rows = 1, SpriteTexture = TextureManager.Textures["ModeSelectEdge"]};
+
             _descriptionBaseSprite = new Sprite() {SpriteTexture = TextureManager.Textures["ModeDescriptionBase"]};
             _descriptionBaseSprite.SetPosition(Core.Metrics["ModeDescriptionBase",0]);
             _messageBorderSprite = new Sprite { SpriteTexture = TextureManager.Textures["MessageBorder"] };
@@ -96,7 +101,9 @@ namespace WGiBeat.Screens
             DrawModeOptions(spriteBatch);
             DrawModeDescription(spriteBatch);
             DrawRestriction(spriteBatch);
-           
+
+            _edgeSpriteMap.Draw(spriteBatch,0,20,160,Core.Metrics["ModeSelectEdge",0]);
+            _edgeSpriteMap.Draw(spriteBatch, 1, 20, 160, Core.Metrics["ModeSelectEdge", 1]);       
         }
 
         private void DrawModeDescription(SpriteBatch spriteBatch)
@@ -120,6 +127,7 @@ namespace WGiBeat.Screens
 
         private const int LIST_ITEMS_DRAWN = 4;
         public const double MODE_CHANGE_SPEED = 0.9;
+        private static readonly Color DisabledColor = new Color(255,255,255,64);
 
         private void DrawModeOptions(SpriteBatch spriteBatch)
         {
@@ -130,6 +138,8 @@ namespace WGiBeat.Screens
             int index = _selectedGameType;
             //Draw selected game type.
             _optionBaseSpriteMap.Draw(spriteBatch, 1, 250, 160, midpoint);
+            var allowed = String.IsNullOrEmpty(GameTypeAllowed((GameType)index));
+            _optionsSpriteMap.ColorShading = allowed ? Color.White : DisabledColor;
             _optionsSpriteMap.Draw(spriteBatch, index, 229, 139, (int) midpoint.X + 10, (int) midpoint.Y + 10);
 
             //Draw Mode options to the right of (after) the selected one.
@@ -138,6 +148,8 @@ namespace WGiBeat.Screens
                 index = (index + 1) % (int) GameType.COUNT;
                 midpoint.X += 255;
                 _optionBaseSpriteMap.Draw(spriteBatch, 0, 250, 160, midpoint);
+                allowed = String.IsNullOrEmpty(GameTypeAllowed((GameType) index));
+                _optionsSpriteMap.ColorShading = allowed ? Color.White : DisabledColor;
                 _optionsSpriteMap.Draw(spriteBatch, index, 229, 139, (int)midpoint.X + 10, (int)midpoint.Y + 10);
             }
 
@@ -154,6 +166,8 @@ namespace WGiBeat.Screens
                 }
                 midpoint.X -= 255;
                 _optionBaseSpriteMap.Draw(spriteBatch, 0, 250, 160, midpoint);
+                allowed = String.IsNullOrEmpty(GameTypeAllowed((GameType)index));
+                _optionsSpriteMap.ColorShading = allowed ? Color.White : DisabledColor;
                 _optionsSpriteMap.Draw(spriteBatch, index, 229, 139, (int)midpoint.X + 10, (int)midpoint.Y + 10);
             }
 
