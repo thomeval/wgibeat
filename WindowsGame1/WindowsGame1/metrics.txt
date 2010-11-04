@@ -85,6 +85,7 @@ OnScreenKeyboardDisplay=[200,10][600,10][200,385][600,385];
 
 #Song Select;
 SongListMidpoint=[450,275];
+SongListBackend=[450,180];
 SongSelectScreenHeader=[0,0];
 SongHighScoreFrame=[70,260];
 SongSortDisplay=[500,80];
@@ -94,8 +95,9 @@ SelectedMode=[300,550];
 BPMMeter=[235,235];
 SelectedSongBPMDisplay=[360,325];
 SelectedSongLengthDisplay=[255,370];
-SelectedSongSubtitle=[320,235];
-SelectedSongTitle=[320,210];
+SelectedSongTitle=[250,185];
+SelectedSongSubtitle=[250,210];
+SelectedSongArtist=[250,235];
 SelectedSongSpectrum=[235,330];
 
 #Options;

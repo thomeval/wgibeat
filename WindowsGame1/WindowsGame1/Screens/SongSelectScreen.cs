@@ -18,6 +18,7 @@ namespace WGiBeat.Screens
         private Sprite _background;
         private Sprite _spectrumBackground;
         private Sprite _songLengthBase;
+        private Sprite _listBackend;
         private bool _previewStarted;
         
         private BpmMeter _bpmMeter;
@@ -47,7 +48,7 @@ namespace WGiBeat.Screens
             _songSortDisplay.InitSprites();
             Crossfader = Core.Crossfader;
             _previewStarted = false;
-            _highScoreFrame = new HighScoreFrame();
+            _highScoreFrame = new HighScoreFrame {EnableFadeout = false};
             _highScoreFrame.SetPosition(Core.Metrics["SongHighScoreFrame", 0]);
             _highScoreFrame.InitSprites();
             _bpmMeter = new BpmMeter();
@@ -108,6 +109,9 @@ namespace WGiBeat.Screens
                                       };
             _spectrumBackground.SetPosition(Core.Metrics["SelectedSongSpectrum",0]);
             _spectrumBackground.Y -= 70;
+
+            _listBackend = new Sprite {SpriteTexture = TextureManager.Textures["SongListBackend"],Height=232,Width=50};
+            _listBackend.SetPosition(Core.Metrics["SongListBackend", 0]);
         }
 
         private void CreateSongList()
@@ -194,13 +198,18 @@ namespace WGiBeat.Screens
 
             if (!String.IsNullOrEmpty(currentSong.Title))
             {
-                TextureManager.DrawString(spriteBatch, currentSong.Title, "DefaultFont",
+                TextureManager.DrawString(spriteBatch, currentSong.Title, "LargeFont",
                                           Core.Metrics["SelectedSongTitle", 0], Color.Black, FontAlign.CENTER);
             }
             if (!String.IsNullOrEmpty(currentSong.Subtitle))
             {
                 TextureManager.DrawString(spriteBatch, currentSong.Subtitle, "DefaultFont",
                                           Core.Metrics["SelectedSongSubtitle", 0], Color.Black, FontAlign.CENTER);
+            }
+            if (!String.IsNullOrEmpty(currentSong.Artist))
+            {
+                TextureManager.DrawString(spriteBatch, currentSong.Artist, "DefaultFont",
+                                          Core.Metrics["SelectedSongArtist", 0], Color.Black, FontAlign.CENTER);
             }
         }
 
@@ -317,6 +326,7 @@ namespace WGiBeat.Screens
 
         private void DrawSongList(SpriteBatch spriteBatch)
         {
+            _listBackend.Draw(spriteBatch);
 
             var midpoint = Core.Metrics["SongListMidpoint", 0];
             midpoint.Y += _songListDrawOffset;

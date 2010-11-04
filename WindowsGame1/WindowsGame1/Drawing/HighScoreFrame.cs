@@ -12,6 +12,7 @@ namespace WGiBeat.Drawing
         private Sprite _baseSprite;
 
         public HighScoreEntry HighScoreEntry { get; set; }
+        public bool EnableFadeout { get; set;}
 
         private const int NUM_EVALUATIONS = 19;
 
@@ -68,6 +69,11 @@ namespace WGiBeat.Drawing
 
         private void SetOpacity()
         {
+            if (!EnableFadeout)
+            {
+                _opacity = 255;
+                return;
+            }
             if (HighScoreEntry != null)
             {
                 _opacity = (byte) Math.Min(_opacity + 10, 255);
