@@ -18,6 +18,7 @@ namespace WGiBeat.Screens
         private Sprite _background;
         private Sprite _spectrumBackground;
         private Sprite _songLengthBase;
+        private Sprite _songTitleBase;
         private Sprite _listBackend;
         private bool _previewStarted;
         
@@ -98,6 +99,8 @@ namespace WGiBeat.Screens
                                       SpriteTexture = TextureManager.Textures["LengthDisplayBase"]
                                   };
             _songLengthBase.SetPosition(Core.Metrics["SelectedSongLengthDisplay", 0]);
+            _songTitleBase = new Sprite {SpriteTexture = TextureManager.Textures["SongTitleBase"]};
+            _songTitleBase.SetPosition(Core.Metrics["SelectedSongTitleBase", 0]);
 
             _headerSprite = new Sprite
             {
@@ -194,6 +197,7 @@ namespace WGiBeat.Screens
 
         private void DrawSongText(SpriteBatch spriteBatch)
         {
+            _songTitleBase.Draw(spriteBatch);
             var currentSong = _songList[_selectedIndex].Song;
 
             if (!String.IsNullOrEmpty(currentSong.Title))
