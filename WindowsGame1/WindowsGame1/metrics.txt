@@ -95,8 +95,9 @@ SelectedMode=[300,550];
 BPMMeter=[235,235];
 SelectedSongBPMDisplay=[360,325];
 SelectedSongLengthDisplay=[255,370];
-SelectedSongTitle=[250,185];
-SelectedSongSubtitle=[250,210];
+SelectedSongTitleBase=[70,180];
+SelectedSongTitle=[250,180];
+SelectedSongSubtitle=[250,205];
 SelectedSongArtist=[250,235];
 SelectedSongSpectrum=[235,330];
 
