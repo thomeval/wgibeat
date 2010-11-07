@@ -42,7 +42,7 @@ namespace WGiBeat
         private KeyboardState _lastKeystate;
         private GamePadState[] _lastGamePadState;
 
-        public const string VERSION_STRING = "v0.4 pre";
+        public const string VERSION_STRING = "v0.4";
         public GameCore()
         {
             GraphicsManager = new GraphicsDeviceManager(this);
@@ -199,8 +199,19 @@ namespace WGiBeat
                         _activeScreen.PerformButton(button, x + 1);
                     }
                 }
+
+                foreach (Buttons button in GetPressedButtons(_lastGamePadState[x]))
+                {
+                    if (currentState.IsButtonUp(button))
+                    {
+                        _activeScreen.PerformActionReleased(KeyMappings.GetAction(button,x + 1));
+                    }
+                }
+
                 _lastGamePadState[x] = currentState;
             }
+
+
         }
 
         private List<Buttons> GetPressedButtons(GamePadState state)

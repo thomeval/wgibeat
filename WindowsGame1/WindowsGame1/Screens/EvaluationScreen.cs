@@ -117,7 +117,7 @@ namespace WGiBeat.Screens
         {
             for (int x = 0; x < 4; x++)
             {
-                if (!Core.Players[x].IsHumanPlayer)
+                if (Core.Players[x].Profile == null)
                 {
                     continue;
                 }
