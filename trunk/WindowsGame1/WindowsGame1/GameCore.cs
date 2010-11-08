@@ -211,7 +211,6 @@ namespace WGiBeat
                 _lastGamePadState[x] = currentState;
             }
 
-
         }
 
         private List<Buttons> GetPressedButtons(GamePadState state)

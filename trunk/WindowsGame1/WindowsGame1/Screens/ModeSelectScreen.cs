@@ -14,6 +14,7 @@ namespace WGiBeat.Screens
         private SpriteMap _optionBaseSpriteMap;
         private SpriteMap _optionsSpriteMap;
         private SpriteMap _edgeSpriteMap;
+        private SpriteMap _arrowSpriteMap;
         private Sprite _background;
         private Sprite _headerSprite;
         private Sprite _descriptionBaseSprite;
@@ -24,16 +25,20 @@ namespace WGiBeat.Screens
         private Sprite _messageBorderSprite;
         private int _listDrawOffset;
 
+        private bool _selectingCPUSkill;
+        private int _selectedCPUSkill = 0;
 
         public ModeSelectScreen(GameCore core)
              : base(core)
         {
         }
 
+        #region Initialization
+
         public override void Initialize()
         {
             InitSprites();
-
+            _selectingCPUSkill = false;
             var frameCount = 0;
             _playerOptions.Clear();
             RemoveCPUPlayers();
@@ -52,7 +57,6 @@ namespace WGiBeat.Screens
 
         private void InitSprites()
         {
-
             _background = new Sprite
             {
                 Height = Core.Window.ClientBounds.Height,
@@ -80,6 +84,8 @@ namespace WGiBeat.Screens
 
             _edgeSpriteMap = new SpriteMap
                                  {Columns = 2, Rows = 1, SpriteTexture = TextureManager.Textures["ModeSelectEdge"]};
+            _arrowSpriteMap = new SpriteMap()
+                                  {Columns = 4, Rows = 1, SpriteTexture = TextureManager.Textures["IndicatorArrows"]};
 
             _descriptionBaseSprite = new Sprite() {SpriteTexture = TextureManager.Textures["ModeDescriptionBase"]};
             _descriptionBaseSprite.SetPosition(Core.Metrics["ModeDescriptionBase",0]);
@@ -88,6 +94,10 @@ namespace WGiBeat.Screens
             _restrictionSprite = new Sprite {SpriteTexture = TextureManager.Textures["RestrictionIcon"], Width = 48, Height = 48};
             _restrictionSprite.SetPosition(_messageBorderSprite.X + 7, _messageBorderSprite.Y + 7);
         }
+
+        #endregion
+
+        #region Drawing
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
@@ -102,6 +112,10 @@ namespace WGiBeat.Screens
             DrawModeDescription(spriteBatch);
             DrawRestriction(spriteBatch);
 
+            if (_selectingCPUSkill)
+            {
+                DrawVSCPUDifficultySelect(spriteBatch);
+            }
             _edgeSpriteMap.Draw(spriteBatch,0,20,160,Core.Metrics["ModeSelectEdge",0]);
             _edgeSpriteMap.Draw(spriteBatch, 1, 20, 160, Core.Metrics["ModeSelectEdge", 1]);       
         }
@@ -123,6 +137,17 @@ namespace WGiBeat.Screens
             _messageBorderSprite.Draw(spriteBatch);
             _restrictionSprite.Draw(spriteBatch);
             TextureManager.DrawString(spriteBatch, restrictionMessage,"DefaultFont",Core.Metrics["RestrictionMessage",0],Color.White, FontAlign.LEFT);
+        }
+
+        private void DrawVSCPUDifficultySelect(SpriteBatch spriteBatch)
+        {
+            var message = "Select CPU Skill level:";
+            _messageBorderSprite.Draw(spriteBatch);
+            TextureManager.DrawString(spriteBatch,message,"DefaultFont",Core.Metrics["RestrictionMessage",0],Color.White,FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, Core.CPUManager.SkillNames[_selectedCPUSkill], "DefaultFont", Core.Metrics["SelectedCPUDifficulty", 0], Color.White, FontAlign.LEFT);
+            var position = Core.Metrics["SelectedCPUDifficulty", 0];
+            _arrowSpriteMap.Draw(spriteBatch,1,24,24,(int) position.X - 25, (int) position.Y);
+            _arrowSpriteMap.Draw(spriteBatch,0,24,24,(int) position.X + 220, (int) position.Y);
         }
 
         private const int LIST_ITEMS_DRAWN = 4;
@@ -190,24 +215,10 @@ namespace WGiBeat.Screens
             }
         }
 
-        private string GetModeDescription(GameType gameType)
-        {
-            switch (gameType)
-            {
-                case GameType.NORMAL:
-                    return "1 to 4 players:\nEach player plays independantly and \nis evaluated individually.";
-                case GameType.COOPERATIVE:
-                    return
-                        "2 to 4 players:\nPlay as a team to achieve high scores. \nPlayer scores and life bars are combined.";
+        #endregion
 
-                case GameType.TEAM:
-                    return "2 to 4 players:\nTwo teams play competitively.\nThe team with the higher score wins.";
-                    case GameType.VS_CPU:
-                    return "1 to 3 players:\nPlayers compete against a computer opponent.\nThe opponent is scaled to match the number of players.";
-                default:     
-                    return "Game type not recognized.";
-            }
-        }
+        #region Input Handling
+
         public override void PerformAction(Action action)
         {
          int player = -1;
@@ -229,6 +240,10 @@ namespace WGiBeat.Screens
                     {
                         playerOptions.AdjustDifficulty(-1);
                     }
+                    else if (_selectingCPUSkill)
+                    {
+                        ChangeSelectedCPUDifficulty(-1);
+                    }
                     else
                     {
                         ChangeGameType(-1);
@@ -239,6 +254,10 @@ namespace WGiBeat.Screens
                     if (playerOptions.OptionChangeActive)
                     {
                         playerOptions.AdjustDifficulty(1);
+                    }
+                    else if (_selectingCPUSkill)
+                    {
+                        ChangeSelectedCPUDifficulty(1);
                     }
                     else
                     {
@@ -303,10 +322,71 @@ namespace WGiBeat.Screens
                 _selectedGameType -= (int) GameType.COUNT;
             }
         }
+        private void ChangeSelectedCPUDifficulty(int amount)
+        {
+            _selectedCPUSkill+= amount;
+            if (_selectedCPUSkill < 0)
+            {
+                _selectedCPUSkill += Core.CPUManager.SkillLevels.Count;
+            }
+            if (_selectedCPUSkill >= Core.CPUManager.SkillLevels.Count)
+            {
+                _selectedCPUSkill -= Core.CPUManager.SkillLevels.Count;
+            }
+        }
+
+        private void DoAction()
+        {
+            if (GameTypeAllowed((GameType)_selectedGameType) == "")
+            {
+
+                Core.Cookies["CurrentGameType"] = (GameType)_selectedGameType;
+                if (((GameType)_selectedGameType) == GameType.VS_CPU)
+                {
+                    if (!_selectingCPUSkill)
+                    {
+                        SetupVSCPUMode();
+                        return;
+                    }
+                    Core.Cookies["CPUSkillLevel"] = Core.CPUManager.SkillNames[_selectedCPUSkill];
+                }
+                if (((GameType)_selectedGameType) == GameType.TEAM)
+                {
+                    Core.ScreenTransition("TeamSelect");
+                }
+                else
+                {
+                    Core.ScreenTransition("SongSelect");
+                }
+            }
+        }
+
+        #endregion
+
+        #region Helper Methods
 
         private int PlayerCount()
         {
             return (from e in Core.Players where e.Playing select e).Count();
+        }
+
+        private string GetModeDescription(GameType gameType)
+        {
+            switch (gameType)
+            {
+                case GameType.NORMAL:
+                    return "1 to 4 players:\nEach player plays independantly and \nis evaluated individually.";
+                case GameType.COOPERATIVE:
+                    return
+                        "2 to 4 players:\nPlay as a team to achieve high scores. \nPlayer scores and life bars are combined.";
+
+                case GameType.TEAM:
+                    return "2 to 4 players:\nTwo teams play competitively.\nThe team with the higher score wins.";
+                case GameType.VS_CPU:
+                    return "1 to 3 players:\nPlayers compete against a computer opponent.\nThe opponent is scaled to match the number of players.";
+                default:
+                    return "Game type not recognized.";
+            }
         }
 
         public string GameTypeAllowed(GameType gameType)
@@ -339,30 +419,9 @@ namespace WGiBeat.Screens
             return "";
         }
 
-        private void DoAction()
-        {
-            if (GameTypeAllowed((GameType) _selectedGameType) == "")
-            {
-
-                Core.Cookies["CurrentGameType"] = (GameType) _selectedGameType;
-                if (((GameType)_selectedGameType) == GameType.VS_CPU)
-                {
-                    SetupVSCPUMode();
-                }
-                if (((GameType)_selectedGameType) == GameType.TEAM)
-                {
-                    Core.ScreenTransition("TeamSelect");
-                }
-                else
-                {
-                    Core.ScreenTransition("SongSelect");
-                }
-            }
-        }
-
         private void RemoveCPUPlayers()
         {
-            foreach (Player player in (from e in Core.Players where e.Playing select e))
+            foreach (Player player in (from e in Core.Players select e))
             {
                 if (player.CPU)
                 {
@@ -379,7 +438,7 @@ namespace WGiBeat.Screens
                 player.Team = 1;
             }
 
-            Core.Cookies["CPULevel"] = "Skilled";
+            _selectingCPUSkill = true;
             var cpuDifficulty = (from e in Core.Players where e.Playing select e.PlayDifficulty).Max();
             for (int x = 0; x < 4; x++)
             {
@@ -393,7 +452,10 @@ namespace WGiBeat.Screens
                     return;
                 }
             }
+
             throw new Exception("Did not setup CPU Player.");
         }
+
+        #endregion
     }
 }

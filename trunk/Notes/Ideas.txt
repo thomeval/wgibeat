@@ -22,16 +22,13 @@
 
 -Frame for song title/artist in song select (0.4)(high)
 -Adjustable CPU skill (high)
-
 -Public domain music as a sample file? (0.4 - zoran - LOL)
 -Cooperative bonuses (Streaks? Sync perfects?) (0.4)
-
--Chance / SP gameplay (Major - Needs graphics)
-
 -Lifebar graph (In progress)(Graphics improvement)
--Gradual lifegraph entrance
 
--Song length doesn't work properly. (Fixed?)
+-Chance / SP gameplay (Major - Needs graphics)(0.5)
+-Gradual lifegraph entrance (0.5)
+
 -Investigate timing / press lag (Better due to framerate fix, but is it perfect?)
 
 -Mode descriptions (Needs graphics) (0.5)
@@ -46,6 +43,7 @@
  * Promote logging to handle all other subsystems
  * Bugfix: Playing two songs in a row without aborting no longer causes problems.
  * Bugfix: highscores always having too high grade when playing VS CPU.
+ * Bugfix: Song length not calculated properly.
  * "Welcome to WGiBeat" firstrun message.
  * How to play screen for new players.
  * Scalable life graph.
