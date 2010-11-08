@@ -112,6 +112,7 @@ ModeDescription=[20,310];
 ModeDescriptionBase=[0,270];
 RestrictionMessage=[510,500];
 MessageBorder=[450,480];
+SelectedCPUDifficulty=[510,525];
 
 #Team Select;
 TeamSelectScreenHeader=[0,0];
