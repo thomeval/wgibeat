@@ -2,6 +2,24 @@
 
 =Version History=
 
+==0.4 - "Temporary Laugh" == 
+
+ * New Game Mode: VS CPU Mode. Various skill levels available.
+ * CPU Skill levels can be customized by editing the CPUSkill.txt file.
+ * Pressing BACK in Song Select Screen returns to ModeSelect.
+ * Improved logging. During the start-up process, the initialization of all subsystems are logged. If necessary, additional logging can be added to these subsystems later.
+ * "Welcome to WGiBeat" firstrun message.
+ * How to play screen for new players.
+ * Scalable life graph.
+ * Updates to song info display on Song Select screen.
+ * Song length displayed on Song Select screen.
+ * Profile system. Users can create profiles by entering a name in-game. The profile stores gameplay options such as player name, beatline speed and difficulty. Profiles are optional. 
+ * Scrolling Mode Select screen.
+ * Bugfix: Playing two songs in a row without aborting no longer causes problems.
+ * Bugfix: highscores always having too high grade when playing VS CPU.
+ * Bugfix: Song length is now calculated properly.
+ * Bugfix: Button presses and releases are now handled properly when using a controller.
+
 ==0.3 - "Delicious Disappointment"==
 
  * Song list can be sorted by name, artist or BPM (hold the beatline key in SongSelectScreen).
