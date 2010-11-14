@@ -157,7 +157,7 @@ namespace WGiBeat.Managers
             }
             catch (Exception ex)
             {
-                log.AddMessage("ERROR: Error loading high scores." + ex.Message);
+                log.AddMessage("WARN: Error loading high scores." + ex.Message);
                 return new HighScoreManager();
             }
         }

@@ -117,14 +117,9 @@ namespace WGiBeat
             if (!passed)
                 KeyMappings.LoadDefault();
             
-            if (Settings.Exists("SongVolume"))
-            {
-                Audio.SetMasterVolume((float) Settings.Get<double>("SongVolume"));
-            }
-            if (Settings.Exists("FullScreen"))
-            {
-                GraphicsManager.IsFullScreen = Settings.Get<bool>("FullScreen");
-            }
+            Audio.SetMasterVolume((float) Settings.Get<double>("SongVolume"));
+            GraphicsManager.IsFullScreen = Settings.Get<bool>("FullScreen");
+
             GraphicsDevice.RenderState.ScissorTestEnable = true;
             GraphicsManager.ApplyChanges();
             _lastGamePadState = new GamePadState[4];
