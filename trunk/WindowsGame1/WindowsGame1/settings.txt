@@ -1,6 +1,7 @@
 ﻿#SETTINGS-1.0;
 SongFolder=Songs;
 SongDebug=false;
-SongVolume=0.7;
+SongVolume=0.8;
 FullScreen=false;
 SongPreview=true;
+ProfileFolder=Profiles;

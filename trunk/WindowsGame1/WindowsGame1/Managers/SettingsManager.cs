@@ -46,7 +46,7 @@ namespace WGiBeat.Managers
             var sm = new SettingsManager();
 
             sm["SongPreview"] = true;
-            sm["SongVolume"] = "0.8";
+            sm["SongVolume"] = 0.8;
             sm["SongFolder"] = "Songs";
             sm["FullScreen"] = false;
             sm["SongDebug"] = false;
