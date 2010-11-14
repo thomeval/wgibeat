@@ -194,7 +194,7 @@
     <Content Include="settings.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Songs\readme.txt">
+    <Content Include="Songs\songReadme.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
