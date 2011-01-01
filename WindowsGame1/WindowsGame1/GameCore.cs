@@ -73,7 +73,7 @@ namespace WGiBeat
             Profiles = ProfileManager.LoadFromFolder("Profiles", this.Log);
 
             Audio = new AudioManager(this.Log);
-            Songs = new SongManager(this.Log,this.Audio);
+            Songs = new SongManager(this.Log,this.Audio,this.Settings);
             Crossfader = new CrossfaderManager(this.Log,this.Audio);
 
             CPUManager = new CPUManager(this.Log);

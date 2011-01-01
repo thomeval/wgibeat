@@ -20,13 +20,14 @@ namespace WGiBeat.AudioSystem
         private GameSong _currentSong;
         private int _songChannelIndex;
         public AudioManager AudioManager { get; set; }
-
+        public SettingsManager SettingsManager { get; set; }
         #endregion
 
-        public SongManager(LogManager log, AudioManager audioManager)
+        public SongManager(LogManager log, AudioManager audioManager, SettingsManager settings)
         {
             Log = log;
             AudioManager = audioManager;
+            SettingsManager = settings;
             Log.AddMessage("INFO: Initializing Song Manager...");
         }
         /// <summary>
@@ -118,8 +119,7 @@ namespace WGiBeat.AudioSystem
                     {
                         continue;
                     }
-                    newSong.Path = currentFolder;
-                    newSong.DefinitionFile = Path.GetFileName(file);
+                    
                     AddSong(newSong);
 
                 }
@@ -141,7 +141,7 @@ namespace WGiBeat.AudioSystem
         public void SaveToFile(GameSong song)
         {
             var file = new FileStream(song.Path + "\\" + song.DefinitionFile, FileMode.Create, FileAccess.Write);
-            var sw = new StreamWriter(file);
+            var sw = new StreamWriter(file);         
 
             sw.WriteLine("#SONG-1.0;");
             sw.WriteLine("Title={0};", song.Title);
@@ -151,7 +151,7 @@ namespace WGiBeat.AudioSystem
             sw.WriteLine("Offset={0};", Math.Round(song.Offset, 3));
             sw.WriteLine("Length={0};", Math.Round(song.Length, 3));
             sw.WriteLine("SongFile={0};", song.SongFile);
-
+            sw.WriteLine("SongFileMD5={0};",song.SongFileMD5);
             sw.Close();
         }
 
@@ -164,8 +164,10 @@ namespace WGiBeat.AudioSystem
         /// <returns>A GameSong loaded from the file provided.</returns>
         public GameSong LoadFromFile(string filename)
         {
-            var newSong = new GameSong();
+            var newSong = GameSong.LoadDefaults();
 
+            newSong.Path = filename.Substring(0,filename.LastIndexOf("\\"));
+            newSong.DefinitionFile = Path.GetFileName(filename);
             try
             {
                 string songText = File.ReadAllText(filename);
@@ -207,6 +209,9 @@ namespace WGiBeat.AudioSystem
                             break;
                         case "SONGFILE":
                             newSong.SongFile = value;
+                            break;
+                        case "SONGFILEMD5":
+                            newSong.SongFileMD5 = value;
                             break;
                     }
                 }
@@ -253,6 +258,31 @@ namespace WGiBeat.AudioSystem
             {
                 Log.AddMessage("WARN: Song offset is invalid in " + filename);
                 return false;
+            }
+
+            switch (SettingsManager.Get<int>("SongMD5Behaviour"))
+            {
+                //CHECK
+                case 1:
+                    if (!(song.VerifyMD5()))
+                    {
+                        Log.AddMessage(
+                            "WARN: Song File MD5 checksum is invalid. This most likely means that the audio file being used has been changed. File: " +
+                            filename);
+                        return false;
+                    }
+                    break;
+                //AUTO CORRECT
+                case 2:
+                    if (!(song.VerifyMD5()))
+                    {
+                        song.SetMD5();
+                        SaveToFile(song);
+                        Log.AddMessage(
+                            "WARN: Song File MD5 checksum is invalid and has been overridden, since 'Song Audio Validation' has been set to 'auto correct'. File: " +
+                            filename);
+                    }
+                    break;
             }
             return true;
         }
