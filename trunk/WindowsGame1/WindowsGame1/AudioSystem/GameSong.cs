@@ -1,4 +1,7 @@
-﻿namespace WGiBeat.AudioSystem
+﻿using System;
+using System.IO;
+using System.Security.Cryptography;
+namespace WGiBeat.AudioSystem
 {
     /// <summary>
     /// Represents a single playable song in the game. This class includes all metadata
@@ -15,6 +18,7 @@
         public double Offset { get; set; }
         public double Length { get; set; }
         public string Path { get; set; }
+        public string SongFileMD5 { get; set; }
 
         public bool Equals(GameSong other)
         {
@@ -44,6 +48,49 @@
                 result = (result*397) ^ Length.GetHashCode();
                 return result;
             }
+        }
+
+        public static GameSong LoadDefaults()
+        {
+            var gs = new GameSong
+                         {
+                             Bpm = 0.0,
+                             DefinitionFile = null,
+                             Length = 0.0,
+                             Offset = 0.0,
+                             Path = "",
+                             SongFile = "",
+                             SongFileMD5 = "",
+                             Subtitle = "",
+                             Title = ""
+                         };
+
+            return gs;
+        }
+
+        private string CalculateMD5()
+        {
+            var md5 = MD5.Create();
+            var fs = File.Open(Path + "\\" + SongFile, FileMode.Open);
+            var temp = md5.ComputeHash(fs);
+            var output = "";
+            foreach (Byte b in temp)
+            {
+                output += b.ToString("X2");
+            }
+
+            fs.Close();
+            return output;
+        }
+        public void SetMD5()
+        {
+            SongFileMD5 = CalculateMD5();
+        }
+
+        public bool VerifyMD5()
+        {
+            var actualMD5 = CalculateMD5();
+            return actualMD5 == SongFileMD5;
         }
     }
 }
