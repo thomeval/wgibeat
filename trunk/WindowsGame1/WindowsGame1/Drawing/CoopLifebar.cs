@@ -130,15 +130,38 @@ namespace WGiBeat.Drawing
         private void DrawText(SpriteBatch spriteBatch, int player, int x, int y)
         {
             var position = new Vector2(x + 25, y);
+
             TextureManager.DrawString(spriteBatch, String.Format("{0:D3}", (int)Parent.Players[player].Life),
                     "DefaultFont",position, Color.Black,FontAlign.CENTER);
+           
+        }
+
+        private int GetBonusMultiplier()
+        {
+            var blazers = (from e in Parent.Players where e.IsBlazing select e).Count();
+            switch (blazers)
+            {
+                case 4:
+                    return 8;
+                case 3:
+                    return 4;
+                case 2:
+                    return 2;
+                  default:
+                    return 1;
+            }
+
         }
 
         private void DrawTotal(SpriteBatch spriteBatch, int x, int y)
         {
             var position = new Vector2(x, y);
+            TextureManager.DrawString(spriteBatch, GetBonusMultiplier() + "x",
+"DefaultFont", position, Color.Black, FontAlign.CENTER);
+            position.X += 40;
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("{0:D3}", (int)TotalLife()),
                     position, Color.Black);
+
         }
         private void DrawSides(SpriteBatch spriteBatch)
         {
@@ -172,7 +195,7 @@ namespace WGiBeat.Drawing
             }
 
             _middlePart.Draw(spriteBatch, playerIdx / 2, 139, 25, (this.X + this.Width - 134) / 2, posY);
-            DrawTotal(spriteBatch, (this.X + this.Width - 40) / 2, posY);
+            DrawTotal(spriteBatch, (this.X + this.Width - 90) / 2, posY);
 
         }
 

@@ -104,6 +104,10 @@ namespace WGiBeat.Drawing.Sets
             {
                 scoreAdjust *= NumHumanPlayers();
             }
+            else
+            {
+                scoreAdjust *= GetBonusMultiplier();
+            }
             _players[player].Score += scoreAdjust;
 
             var newDj = new DisplayedJudgement { DisplayUntil = _phraseNumber + 0.5, Height = 40, Width = 150, Player = player, Tier = (int)judgement };
@@ -113,6 +117,27 @@ namespace WGiBeat.Drawing.Sets
             return lifeAdjust;
         }
 
+
+        private int GetBonusMultiplier()
+        {
+            if (_gameType != GameType.COOPERATIVE)
+            {
+                return 1;
+            }
+            var blazers = (from e in _players where e.IsBlazing select e).Count();
+            switch (blazers)
+            {
+                case 4:
+                    return 8;
+                case 3:
+                    return 4;
+                case 2:
+                    return 2;
+                default:
+                    return 1;
+            }
+
+        }
         private long NumHumanPlayers()
         {
             return (from e in _players where e.Playing && !(e.CPU) select e).Count();
