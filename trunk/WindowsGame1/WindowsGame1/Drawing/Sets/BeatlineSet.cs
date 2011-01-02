@@ -42,13 +42,13 @@ namespace WGiBeat.Drawing.Sets
                 }
                 if (Large)
                 {
-                    _beatlines[1].SetPosition(_metrics["BeatlineBarBase",0]);
-                    _beatlines[3].SetPosition(_metrics["BeatlineBarBase",2]);
+                    _beatlines[1].Position = (_metrics["BeatlineBarBase",0]);
+                    _beatlines[3].Position = (_metrics["BeatlineBarBase",2]);
                 }
                 else
                 {
-                    _beatlines[1].SetPosition(_metrics["BeatlineBarBase", 1]);
-                    _beatlines[3].SetPosition(_metrics["BeatlineBarBase", 3]);
+                    _beatlines[1].Position = (_metrics["BeatlineBarBase", 1]);
+                    _beatlines[3].Position = (_metrics["BeatlineBarBase", 3]);
                 }
             }
         }
@@ -86,7 +86,7 @@ namespace WGiBeat.Drawing.Sets
             for (int x = 0; x < 4; x++)
             {
                 _beatlines[x] = new Beatline();
-                _beatlines[x].SetPosition(_metrics["BeatlineBarBase", x]);
+                _beatlines[x].Position = (_metrics["BeatlineBarBase", x]);
                 _beatlines[x].Id = x;
             }
         }

@@ -266,6 +266,7 @@ namespace WGiBeat
             _screens.Add("ModeSelect", new ModeSelectScreen(this));
             _screens.Add("TeamSelect", new TeamSelectScreen(this));
             _screens.Add("Instruction", new InstructionScreen(this));
+            _screens.Add("SongEdit", new SongEditorScreen(this));
 
             if (!Settings.Get<bool>("RunOnce"))
             {

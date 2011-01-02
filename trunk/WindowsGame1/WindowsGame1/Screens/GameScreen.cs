@@ -66,7 +66,7 @@ namespace WGiBeat.Screens
         /// Informs a GameScreen that a player has performed a specific action, and should respond accordingly.
         /// </summary>
         /// <param name="action">The action that was requested.</param>
-        public abstract void PerformAction(Managers.Action action);
+        public abstract void PerformAction(Action action);
 
 
         public virtual void PerformActionReleased(Action action)

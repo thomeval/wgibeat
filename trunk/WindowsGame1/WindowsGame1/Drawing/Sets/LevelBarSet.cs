@@ -36,7 +36,7 @@ namespace WGiBeat.Drawing.Sets
                                         Width = 216,
                                         PlayerID = x,
                                     };
-                _levelBars[x].SetPosition(_metrics["LevelBarBase",x]);
+                _levelBars[x].Position = (_metrics["LevelBarBase", x]);
                 
             }
         }

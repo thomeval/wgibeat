@@ -41,7 +41,7 @@ namespace WGiBeat.Screens
                 _infoMessages[x] = "";
 
                 _keyboards[x] = new OnScreenKeyboard {MaxLength = 8, Id = x};
-                _keyboards[x].SetPosition(Core.Metrics["OnScreenKeyboard", x]);
+                _keyboards[x].Position = (Core.Metrics["OnScreenKeyboard", x]);
                 _keyboards[x].EnteredTextPosition = Core.Metrics["OnScreenKeyboardDisplay", x];
                 _keyboards[x].EntryCancelled += Keyboard_EntryCancelled;
                 _keyboards[x].EntryComplete += Keyboard_EntryComplete;
@@ -58,8 +58,6 @@ namespace WGiBeat.Screens
                 Height = Core.Window.ClientBounds.Height,
                 SpriteTexture = TextureManager.Textures["allBackground"],
                 Width = Core.Window.ClientBounds.Width,
-                X = 0,
-                Y = 0
             };
             _messageBackground = new Sprite
                                      {
@@ -69,8 +67,7 @@ namespace WGiBeat.Screens
 
         private void CreateProfileMenu(int x)
         {
-            _profileMenus[x] = new Menu();
-            _profileMenus[x].SetPosition(Core.Metrics["NewGameMenuStart", x]);
+            _profileMenus[x] = new Menu {Width = 300, Position = (Core.Metrics["NewGameMenuStart", x]), MaxVisibleItems = 6};
             _profileMenus[x].AddItem(new MenuItem {ItemText = "[Create New]"});
             _profileMenus[x].AddItem(new MenuItem { ItemText = "[Guest]" });
             _profileMenus[x].AddItem(new MenuItem {ItemText = "[Cancel]"});
@@ -80,13 +77,11 @@ namespace WGiBeat.Screens
                 _profileMenus[x].AddItem(new MenuItem {ItemText = profile.Name, ItemValue = profile});
             }
 
-
-            _profileMenus[x].MaxVisibleItems = 8;
         }
 
         private void CreatePlayerMenu(int x)
         {
-            _playerMenus[x] = new Menu();
+            _playerMenus[x] = new Menu { Width = 300 };
             _playerMenus[x].AddItem(new MenuItem { ItemText = "Decision" });
             _playerMenus[x].AddItem(new MenuItem { ItemText = "Profile" });
 
@@ -114,8 +109,13 @@ namespace WGiBeat.Screens
             awesomeness.AddOption("On",true);
             _playerMenus[x].AddItem(awesomeness);
 
-            _playerMenus[x].SetPosition(Core.Metrics["NewGameMenuStart", x]);
-            _playerMenus[x].MaxVisibleItems = 8;
+            var disableKO = new MenuItem {ItemText = "Disable KO"};
+            disableKO.AddOption("Off",false);
+            disableKO.AddOption("On",true);
+            _playerMenus[x].AddItem(disableKO);
+
+            _playerMenus[x].Position = (Core.Metrics["NewGameMenuStart", x]);
+            _playerMenus[x].MaxVisibleItems = 6;
 
             _playerMenus[x].AddItem(new MenuItem { ItemText = "Leave" });
         }
@@ -160,7 +160,7 @@ namespace WGiBeat.Screens
             {
                 if (Core.Players[x].Playing)
                 {
-                    _messageBackground.SetPosition(Core.Metrics["NewGameMessageBorder",x]);
+                    _messageBackground.Position = (Core.Metrics["NewGameMessageBorder",x]);
                     _messageBackground.Draw(spriteBatch);
                 }
             }
@@ -376,6 +376,7 @@ namespace WGiBeat.Screens
         {
             _playerMenus[number].GetByItemText("Beatline Speed").SetSelectedByValue(Core.Players[number].BeatlineSpeed);
             _playerMenus[number].GetByItemText("Difficulty").SetSelectedByValue((int) Core.Players[number].PlayDifficulty);
+            _playerMenus[number].GetByItemText("Disable KO").SetSelectedByValue(Core.Players[number].DisableKO);
         }
 
         private void SelectMainMenuItem(int number)
@@ -431,6 +432,7 @@ namespace WGiBeat.Screens
                 Core.Players[x].PlayDifficulty =
     (Difficulty)(int)_playerMenus[x].GetByItemText("Difficulty").SelectedValue();
                 Core.Players[x].BeatlineSpeed = (double)_playerMenus[x].GetByItemText("Beatline Speed").SelectedValue();
+                Core.Players[x].DisableKO = (bool) _playerMenus[x].GetByItemText("Disable KO").SelectedValue();
                 Core.Players[x].UpdatePreferences();
             }
             Core.Profiles.SaveToFolder(Core.Settings["ProfileFolder"] + "");

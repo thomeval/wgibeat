@@ -47,7 +47,7 @@ namespace WGiBeat.Screens
                 if (Core.Players[x].Playing)
                 {
                     _playerOptions.Add(new PlayerOptionsFrame { Player = Core.Players[x], PlayerIndex = x });
-                    _playerOptions[frameCount].SetPosition(Core.Metrics["PlayerOptionsFrame", frameCount]);
+                    _playerOptions[frameCount].Position = (Core.Metrics["PlayerOptionsFrame", frameCount]);
                     frameCount++;
                 }
             }
@@ -65,7 +65,7 @@ namespace WGiBeat.Screens
             };
 
             _headerSprite = new Sprite { SpriteTexture = TextureManager.Textures["modeSelectHeader"] };
-            _headerSprite.SetPosition(Core.Metrics["ModeSelectScreenHeader", 0]);
+            _headerSprite.Position = (Core.Metrics["ModeSelectScreenHeader", 0]);
 
             _optionBaseSpriteMap = new SpriteMap
             {
@@ -86,9 +86,9 @@ namespace WGiBeat.Screens
             _arrowSpriteMap = new SpriteMap { Columns = 4, Rows = 1, SpriteTexture = TextureManager.Textures["IndicatorArrows"] };
 
             _descriptionBaseSprite = new Sprite { SpriteTexture = TextureManager.Textures["ModeDescriptionBase"] };
-            _descriptionBaseSprite.SetPosition(Core.Metrics["ModeDescriptionBase", 0]);
+            _descriptionBaseSprite.Position = (Core.Metrics["ModeDescriptionBase", 0]);
             _messageBorderSprite = new Sprite { SpriteTexture = TextureManager.Textures["MessageBorder"] };
-            _messageBorderSprite.SetPosition(Core.Metrics["MessageBorder", 0]);
+            _messageBorderSprite.Position = (Core.Metrics["MessageBorder", 0]);
             _restrictionSprite = new Sprite { SpriteTexture = TextureManager.Textures["RestrictionIcon"], Width = 48, Height = 48 };
             _restrictionSprite.SetPosition(_messageBorderSprite.X + 7, _messageBorderSprite.Y + 7);
         }
@@ -103,7 +103,7 @@ namespace WGiBeat.Screens
             _field.Draw(spriteBatch);
             DrawPlayerOptions(spriteBatch);
 
-            _headerSprite.SetPosition(Core.Metrics["ModeSelectScreenHeader", 0]);
+            _headerSprite.Position = (Core.Metrics["ModeSelectScreenHeader", 0]);
             _headerSprite.Draw(spriteBatch);
 
             DrawModeOptions(spriteBatch);

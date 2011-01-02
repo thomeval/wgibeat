@@ -63,7 +63,7 @@ namespace WGiBeat.Screens
                 Core.Players[x].ResetStats();
 
                 _notebars[x] = NoteBar.CreateNoteBar((int)Core.Players[x].Level, 0);
-                _notebars[x].SetPosition(Core.Metrics["NoteBar", x]);
+                _notebars[x].Position = (Core.Metrics["NoteBar", x]);
 
             }
 
@@ -557,7 +557,7 @@ namespace WGiBeat.Screens
                         Width = 250,
                         SpriteTexture = TextureManager.Textures["stageClearIndicator"]
                     };
-                    koSprite.SetPosition(Core.Metrics["KOIndicator", x]);
+                    koSprite.Position = (Core.Metrics["KOIndicator", x]);
                     koSprite.Draw(spriteBatch);
                 }
             }
@@ -586,7 +586,7 @@ namespace WGiBeat.Screens
                         Width = 250,
                         SpriteTexture = TextureManager.Textures["koIndicator"]
                     };
-                    koSprite.SetPosition(Core.Metrics["KOIndicator", x]);
+                    koSprite.Position = (Core.Metrics["KOIndicator", x]);
                     koSprite.Draw(spriteBatch);
                 }
             }

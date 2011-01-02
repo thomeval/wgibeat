@@ -137,12 +137,12 @@ namespace WGiBeat.Drawing.Sets
 
             if (_players[0].Playing || _players[1].Playing)
             {
-                _teamScoreMeter.SetPosition(_metrics["ScoreCombinedBase", 0]);
+                _teamScoreMeter.Position = (_metrics["ScoreCombinedBase", 0]);
                 _teamScoreMeter.Draw(spriteBatch);
             }
             if (_players[2].Playing || (_players[3].Playing))
             {
-                _teamScoreMeter.SetPosition(_metrics["ScoreCombinedBase", 1]);
+                _teamScoreMeter.Position = (_metrics["ScoreCombinedBase", 1]);
                 _teamScoreMeter.Draw(spriteBatch);
             }
             _teamScoreMeter.Update();

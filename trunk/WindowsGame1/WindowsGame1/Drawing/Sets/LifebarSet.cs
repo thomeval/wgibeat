@@ -36,7 +36,7 @@ namespace WGiBeat.Drawing.Sets
                     for (int x = 0; x < 4; x++)
                     {
                         _lifeBars[x] = new NormalLifeBar {Height = 30, Width = 260, PlayerID = x, Parent = this};
-                        _lifeBars[x].SetPosition(_metrics["NormalLifeBar", x]);
+                        _lifeBars[x].Position = (_metrics["NormalLifeBar", x]);
  
                     }
                     break;
@@ -138,13 +138,13 @@ namespace WGiBeat.Drawing.Sets
                     if (Players[0].Playing || Players[1].Playing)
                     {
                         ((CoopLifeBar) _lifeBars[0]).SideLocationTop = false;
-                        _lifeBars[0].SetPosition(_metrics["CoopLifeBar", 0]);
+                        _lifeBars[0].Position = (_metrics["CoopLifeBar", 0]);
                         _lifeBars[0].Draw(spriteBatch,gameTime);
                     }
                     if (Players[2].Playing || Players[3].Playing)
                     {
                         ((CoopLifeBar)_lifeBars[0]).SideLocationTop = true;
-                        _lifeBars[0].SetPosition(_metrics["CoopLifeBar", 1]);
+                        _lifeBars[0].Position = (_metrics["CoopLifeBar", 1]);
                         _lifeBars[0].Draw(spriteBatch, gameTime);
                     }
                     break;
