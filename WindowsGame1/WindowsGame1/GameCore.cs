@@ -230,7 +230,7 @@ namespace WGiBeat
         private void DetectKeyPresses()
         {
             KeyboardState currentState = Keyboard.GetState();
-
+            
             foreach (Keys key in currentState.GetPressedKeys())
             {
                 if (_lastKeystate.IsKeyUp(key))

@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security;
-using System.Security.Permissions;
-using System.Text;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -38,11 +33,11 @@ namespace WGiBeat.Drawing
             }
         }
 
-        public Menu FileList = new Menu();
+        public readonly Menu FileList = new Menu();
 
         public FileSelectDialog()
         {
-            FileList.TextColor = Color.White;
+            FileList.TextColor = Color.Black;
             FileList.FontName = "DefaultFont";
             FileList.MaxVisibleItems = 15;
             FileList.ItemSpacing = 18;
@@ -50,7 +45,7 @@ namespace WGiBeat.Drawing
         public override void Draw(SpriteBatch spriteBatch)
         {
             var shortPath = CurrentFolder;
-            TextureManager.DrawString(spriteBatch,shortPath,"LargeFont",this.Position,Color.White,FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch,shortPath,"LargeFont",this.Position,Color.Black,FontAlign.LEFT);
             FileList.X = this.X;
             FileList.Y = this.Y + 35;
             FileList.Width = this.Width;

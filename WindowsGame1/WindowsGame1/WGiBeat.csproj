@@ -101,6 +101,7 @@
     <Compile Include="AudioSystem\SongManager.cs" />
     <Compile Include="Drawing\FileSelectDialog.cs" />
     <Compile Include="Drawing\MovingBackground.cs" />
+    <Compile Include="Drawing\TextEntry.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Managers\CPUManager.cs" />
     <Compile Include="Drawing\Beatline.cs" />
