@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing.Sets
@@ -69,6 +70,10 @@ namespace WGiBeat.Drawing.Sets
             var limit = (theLifebar.Participants() * 100) - theLifebar.TotalLife();
             Players[player].Life += Math.Min(limit, amount);
 
+            if (AnyPlayerHasDisabledKO())
+            {
+                return;
+            }
             if (theLifebar.TotalLife() <= 0)
             {
                 for (int x = 0; x < 4; x++)
@@ -79,6 +84,12 @@ namespace WGiBeat.Drawing.Sets
                     }
                 }
             }
+        }
+
+        private bool AnyPlayerHasDisabledKO()
+        {
+            var result = (from e in Players where e.Playing && !e.CPU select e);
+            return (result.Any(e => e.DisableKO));
         }
 
         const int LIFE_MAX_NORMAL = 200;
@@ -103,7 +114,7 @@ namespace WGiBeat.Drawing.Sets
             }
 
             Players[player].Life = Math.Min(LIFE_MAX_NORMAL, Players[player].Life);
-            if ((!Players[player].CPU) && (Players[player].Life <= 0))
+            if ((!Players[player].CPU) && (Players[player].Life <= 0) && (!Players[player].DisableKO))
             {
                 Players[player].KO = true;
                 Players[player].Life = 0;
