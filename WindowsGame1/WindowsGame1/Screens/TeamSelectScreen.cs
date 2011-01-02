@@ -45,7 +45,7 @@ namespace WGiBeat.Screens
                 if (Core.Players[x].Playing)
                 {
                     _playerOptions.Add(new PlayerOptionsFrame { Player = Core.Players[x], PlayerIndex = x });
-                    _playerOptions[frameCount].SetPosition(Core.Metrics["PlayerOptionsFrame", frameCount]);
+                    _playerOptions[frameCount].Position = (Core.Metrics["PlayerOptionsFrame", frameCount]);
                     frameCount++;
                 }
             }
@@ -55,7 +55,7 @@ namespace WGiBeat.Screens
         public void InitSprites()
         {
             _headingSprite = new Sprite {SpriteTexture = TextureManager.Textures["TeamSelectHeader"]};
-            _headingSprite.SetPosition(Core.Metrics["TeamSelectScreenHeader",0]);
+            _headingSprite.Position = (Core.Metrics["TeamSelectScreenHeader", 0]);
 
             _backgroundSprite = new Sprite 
             { 
@@ -66,12 +66,12 @@ namespace WGiBeat.Screens
 
             _playerReadyMarkers = new SpriteMap { SpriteTexture = TextureManager.Textures["PlayerReady"], Columns = 1, Rows = 2 };
             _teamBorderSprite = new Sprite {SpriteTexture = TextureManager.Textures["TeamScreenBackground"]};
-            _teamBorderSprite.SetPosition(Core.Metrics["TeamScreenBackground",0]);
+            _teamBorderSprite.Position = (Core.Metrics["TeamScreenBackground", 0]);
 
             _playerMarkers = new SpriteMap
                                  {SpriteTexture = TextureManager.Textures["PlayerTeamMarkers"], Columns = 1, Rows = 4};
             _messageBorder = new Sprite {SpriteTexture = TextureManager.Textures["MessageBorder"]};
-            _messageBorder.SetPosition(Core.Metrics["MessageBorder", 0]);
+            _messageBorder.Position = (Core.Metrics["MessageBorder", 0]);
             _restrictionIcon = new Sprite() {SpriteTexture = TextureManager.Textures["RestrictionIcon"], Width = 48, Height = 48};
             _restrictionIcon.SetPosition(_messageBorder.X + 7, _messageBorder.Y + 7);
         }

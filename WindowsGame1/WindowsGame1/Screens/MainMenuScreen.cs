@@ -13,7 +13,7 @@ namespace WGiBeat.Screens
         private SineSwayParticleField _field = new SineSwayParticleField();
 
         private bool _displayNoSongsError;
-        private readonly string[] _menuText = { "Start Game", "How to play", "Keys", "Options", "Exit" };
+        private readonly string[] _menuText = { "Start Game", "How to play", "Keys", "Options", "Song Editor", "Exit" };
         private Sprite _background;
         private Sprite _header;
         private Sprite _menuOptionSprite;
@@ -86,7 +86,7 @@ namespace WGiBeat.Screens
             {
 
                 _menuOptionSprite.SpriteTexture = menuOption == (int)_selectedMenuOption ? TextureManager.Textures["mainMenuOptionSelected"] : TextureManager.Textures["mainMenuOption"];
-                _menuOptionSprite.SetPosition(Core.Metrics["MainMenuOptions", menuOption]);
+                _menuOptionSprite.Position = (Core.Metrics["MainMenuOptions", menuOption]);
                 _menuOptionSprite.Draw(spriteBatch);
                 var textPosition = Core.Metrics["MainMenuOptions", menuOption].Clone();
                 textPosition.X += 150;
@@ -150,6 +150,9 @@ namespace WGiBeat.Screens
                 case MainMenuOption.OPTIONS:
                     Core.ScreenTransition("Options");
                     break;
+                    case MainMenuOption.SONG_EDIT:
+                    Core.ScreenTransition("SongEdit");
+                    break;
                 case MainMenuOption.EXIT:
                     Core.Exit();
                     break;
@@ -163,8 +166,9 @@ namespace WGiBeat.Screens
         HOW_TO_PLAY = 1,
         KEYS = 2,
         OPTIONS = 3,
-        EXIT = 4,
-        COUNT = 5
+        SONG_EDIT = 4,
+        EXIT = 5,
+        COUNT = 6
     }
 
 }

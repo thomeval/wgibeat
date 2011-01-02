@@ -104,14 +104,14 @@ namespace WGiBeat.Drawing
 
             if (CalcDistance(curVector, pointFrom) < CORNER_SNAP_LENGTH)
             {
-                Particle.SetPosition(pointFrom);
+                Particle.Position = pointFrom;
             }
 
             Console.WriteLine("Dist = " + CalcDistance(curVector, pointTo));
             if (CalcDistance(curVector, pointTo) < 2) //CORNER_SNAP_LENGTH)
             {
                 Console.WriteLine("Changed segment");
-                Particle.SetPosition(pointTo);
+                Particle.Position = pointTo;
 
                 SegmentIndex += 1;
                 SegmentIndex = SegmentIndex % (Segments.Count - 1);

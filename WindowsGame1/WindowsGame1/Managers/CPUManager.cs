@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.IO;
 using WGiBeat.Notes;
 
@@ -9,9 +8,9 @@ namespace WGiBeat.Managers
 {
     public class CPUManager : Manager
     {
-        public List<Dictionary<BeatlineNoteJudgement, double>> SkillLevels;
-        public List<string> SkillNames;
-        private Random rnd;
+        public readonly List<Dictionary<BeatlineNoteJudgement, double>> SkillLevels;
+        public readonly List<string> SkillNames;
+        private readonly Random _rnd;
         
         public CPUManager(LogManager log)
         {
@@ -19,7 +18,7 @@ namespace WGiBeat.Managers
             Log.AddMessage("INFO: Initializing CPU Manager...");
             SkillLevels = new List<Dictionary<BeatlineNoteJudgement, double>>();
             SkillNames = new List<string>();
-            rnd = new Random();
+            _rnd = new Random();
         }
 
         public void LoadWeights(string filename)
@@ -63,7 +62,7 @@ namespace WGiBeat.Managers
             var total = SkillLevels[level].Values.Sum();
             //Exclude the last skill level value (streak max)
             total -= SkillLevels[level][BeatlineNoteJudgement.COUNT];
-            double roll = rnd.Next((int) total);
+            double roll = _rnd.Next((int) total);
             System.Diagnostics.Debug.WriteLine(roll + " / " + total);
             var judgement = -1;
             do

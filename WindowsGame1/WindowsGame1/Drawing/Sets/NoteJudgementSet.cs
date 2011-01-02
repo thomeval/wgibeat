@@ -107,7 +107,7 @@ namespace WGiBeat.Drawing.Sets
             _players[player].Score += scoreAdjust;
 
             var newDj = new DisplayedJudgement { DisplayUntil = _phraseNumber + 0.5, Height = 40, Width = 150, Player = player, Tier = (int)judgement };
-            newDj.SetPosition(_metrics["Judgement", player]);
+            newDj.Position = (_metrics["Judgement", player]);
             _displayedJudgements[player] = newDj;
 
             return lifeAdjust;

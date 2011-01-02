@@ -16,16 +16,23 @@ namespace WGiBeat.Drawing
 
         public float Rotation { get; set; }
 
-        public virtual void SetPosition(Vector2 position)
+        public Vector2 Position
         {
-            X = (int) position.X;
-            Y = (int) position.Y;
+            get
+            {
+                return new Vector2(X,Y);
+            }
+            set
+            {
+                X = (int) value.X;
+                Y = (int) value.Y;
+            }
         }
 
-        public virtual void SetPosition(int x, int y)
+        public void SetPosition(float nX, float nY)
         {
-            X = x;
-            Y = y;
+            X = (int) nX;
+            Y = (int) nY;
         }
         public abstract void Draw(SpriteBatch spriteBatch);
     }

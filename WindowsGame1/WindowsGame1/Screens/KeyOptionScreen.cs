@@ -118,7 +118,7 @@ namespace WGiBeat.Screens
             {
                 panelPosition.X = 60 + (170 * (playerOption - 1));
 
-                menuOptionSprite.SetPosition(panelPosition);
+                menuOptionSprite.Position = (panelPosition);
 
                 if (playerOption == _currentPlayer)
                 {
@@ -159,7 +159,7 @@ namespace WGiBeat.Screens
                 else
                     menuOptionSprite.SpriteTexture = TextureManager.Textures["Button_Idle"];
 
-                menuOptionSprite.SetPosition(panelPosition);
+                menuOptionSprite.Position = (panelPosition);
                 menuOptionSprite.Draw(spriteBatch);
 
                 spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], _links[menuOption].Name, textPosition,
@@ -185,7 +185,7 @@ namespace WGiBeat.Screens
 
                 foreach (Keys key in tempKeyList)
                 {
-                    menuOptionSprite.SetPosition(panelPosition);
+                    menuOptionSprite.Position = (panelPosition);
                     menuOptionSprite.Draw(spriteBatch);
                     spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Key = " + key, textPosition, Color.Black);
                     panelPosition.Y += 40;
@@ -200,7 +200,7 @@ namespace WGiBeat.Screens
                     foreach (Buttons button in buttonList)
                     {
 
-                        menuOptionSprite.SetPosition(panelPosition);
+                        menuOptionSprite.Position = (panelPosition);
                         menuOptionSprite.Draw(spriteBatch);
                         spriteBatch.DrawString(TextureManager.Fonts["LargeFont"],
                                                "Pad " + index + " = " + button, textPosition,

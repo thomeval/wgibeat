@@ -59,10 +59,10 @@ namespace WGiBeat.Screens
 
             if (_lifeGraph.Location > -1)
             {
-                _lifeGraph.SetPosition(Core.Metrics["LifeGraph", _lifeGraph.Location]);
+                _lifeGraph.Position = (Core.Metrics["LifeGraph", _lifeGraph.Location]);
             }
             _teamScoreMeter = new TeamScoreMeter();
-            _teamScoreMeter.SetPosition(Core.Metrics["EvaluationTeamScoreMeter",0]);
+            _teamScoreMeter.Position = (Core.Metrics["EvaluationTeamScoreMeter", 0]);
             _teamScoreMeter.InitSprites();
         }
 
@@ -309,7 +309,7 @@ namespace WGiBeat.Screens
                 {
                     continue;
                 }
-                _headerSprite.SetPosition(Core.Metrics["EvaluationHeader", x]);
+                _headerSprite.Position = (Core.Metrics["EvaluationHeader", x]);
                 _headerSprite.Draw(spriteBatch);
             }
 
@@ -327,7 +327,7 @@ namespace WGiBeat.Screens
                     continue;
                 }
 
-                _maxSprite.SetPosition(Core.Metrics["EvaluationMaxBase", x]);
+                _maxSprite.Position = (Core.Metrics["EvaluationMaxBase", x]);
                 _maxSprite.Draw(spriteBatch);
 
                 spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "" + Core.Players[x].MaxHits,
@@ -367,7 +367,7 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black);
                 if (_highScorePlayer != -1)
                 {
                     _recordSprite.ColorShading.A = (byte) (255*Math.Abs(Math.Sin(gameTime.TotalRealTime.TotalSeconds * 2)));
-                    _recordSprite.SetPosition(Core.Metrics["EvaluationHighScore", _highScorePlayer]);
+                    _recordSprite.Position = (Core.Metrics["EvaluationHighScore", _highScorePlayer]);
                     _recordSprite.Draw(spriteBatch);
                 }
         }
@@ -382,7 +382,7 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black);
                     continue;
                 }
 
-                _gradeBaseSprite.SetPosition(Core.Metrics["EvaluationGradeBase", x]);
+                _gradeBaseSprite.Position = (Core.Metrics["EvaluationGradeBase", x]);
                 _gradeBaseSprite.Draw(spriteBatch);
                 var gradeIndex = CalculateGradeIndex(x);
                 _gradeSpriteMap.Draw(spriteBatch, gradeIndex, 150, 52, Core.Metrics["EvaluationGrade",x]);

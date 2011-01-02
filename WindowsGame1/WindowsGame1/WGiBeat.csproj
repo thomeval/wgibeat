@@ -99,6 +99,7 @@
     <Compile Include="AudioSystem\MenuMusicManager.cs" />
     <Compile Include="AudioSystem\CrossfaderManager.cs" />
     <Compile Include="AudioSystem\SongManager.cs" />
+    <Compile Include="Drawing\FileSelectDialog.cs" />
     <Compile Include="Drawing\MovingBackground.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Managers\CPUManager.cs" />
@@ -162,8 +163,10 @@
     <Compile Include="Screens\KeyOptionScreen.cs" />
     <Compile Include="Screens\MainGameScreen.cs" />
     <Compile Include="Screens\MainMenuScreen.cs" />
+    <Compile Include="Screens\NetLobbyScreen.cs" />
     <Compile Include="Screens\NewGameScreen.cs" />
     <Compile Include="Screens\OptionScreen.cs" />
+    <Compile Include="Screens\SongEditorScreen.cs" />
     <Compile Include="Screens\SongSelectScreen.cs" />
     <Compile Include="Screens\TeamSelectScreen.cs" />
   </ItemGroup>

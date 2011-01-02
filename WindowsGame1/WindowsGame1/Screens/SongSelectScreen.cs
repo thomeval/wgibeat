@@ -45,15 +45,15 @@ namespace WGiBeat.Screens
         public override void Initialize()
         {
             _songSortDisplay = new SongSortDisplay();
-            _songSortDisplay.SetPosition(Core.Metrics["SongSortDisplay", 0]);
+            _songSortDisplay.Position = (Core.Metrics["SongSortDisplay", 0]);
             _songSortDisplay.InitSprites();
             Crossfader = Core.Crossfader;
             _previewStarted = false;
             _highScoreFrame = new HighScoreFrame {EnableFadeout = false};
-            _highScoreFrame.SetPosition(Core.Metrics["SongHighScoreFrame", 0]);
+            _highScoreFrame.Position = (Core.Metrics["SongHighScoreFrame", 0]);
             _highScoreFrame.InitSprites();
             _bpmMeter = new BpmMeter();
-            _bpmMeter.SetPosition(Core.Metrics["BPMMeter", 0]);
+            _bpmMeter.Position = (Core.Metrics["BPMMeter", 0]);
             _playerOptions.Clear();
 
             var frameCount = 0;
@@ -62,7 +62,7 @@ namespace WGiBeat.Screens
                 if (Core.Players[x].Playing)
                 {
                     _playerOptions.Add(new PlayerOptionsFrame{Player = Core.Players[x], PlayerIndex = x});
-                    _playerOptions[frameCount].SetPosition(Core.Metrics["PlayerOptionsFrame",frameCount]);
+                    _playerOptions[frameCount].Position = (Core.Metrics["PlayerOptionsFrame", frameCount]);
                     frameCount++;
                 }
             }
@@ -98,9 +98,9 @@ namespace WGiBeat.Screens
                                   {
                                       SpriteTexture = TextureManager.Textures["LengthDisplayBase"]
                                   };
-            _songLengthBase.SetPosition(Core.Metrics["SelectedSongLengthDisplay", 0]);
+            _songLengthBase.Position = (Core.Metrics["SelectedSongLengthDisplay", 0]);
             _songTitleBase = new Sprite {SpriteTexture = TextureManager.Textures["SongTitleBase"]};
-            _songTitleBase.SetPosition(Core.Metrics["SelectedSongTitleBase", 0]);
+            _songTitleBase.Position = (Core.Metrics["SelectedSongTitleBase", 0]);
 
             _headerSprite = new Sprite
             {
@@ -110,11 +110,11 @@ namespace WGiBeat.Screens
                                       {
                                           SpriteTexture = TextureManager.Textures["SpectrumBackground"]
                                       };
-            _spectrumBackground.SetPosition(Core.Metrics["SelectedSongSpectrum",0]);
+            _spectrumBackground.Position = (Core.Metrics["SelectedSongSpectrum", 0]);
             _spectrumBackground.Y -= 70;
 
             _listBackend = new Sprite {SpriteTexture = TextureManager.Textures["SongListBackend"],Height=232,Width=50};
-            _listBackend.SetPosition(Core.Metrics["SongListBackend", 0]);
+            _listBackend.Position = (Core.Metrics["SongListBackend", 0]);
         }
 
         private void CreateSongList()
@@ -173,7 +173,7 @@ namespace WGiBeat.Screens
             DrawLengthMeter(gameTime, spriteBatch);
             DrawSongText(spriteBatch);
             DrawSongList(spriteBatch);
-            _headerSprite.SetPosition(Core.Metrics["SongSelectScreenHeader", 0]);
+            _headerSprite.Position = (Core.Metrics["SongSelectScreenHeader", 0]);
             _headerSprite.Draw(spriteBatch);
             _songSortDisplay.Draw(spriteBatch);
      
@@ -334,7 +334,7 @@ namespace WGiBeat.Screens
 
             var midpoint = Core.Metrics["SongListMidpoint", 0];
             midpoint.Y += _songListDrawOffset;
-            _songList[_selectedIndex].SetPosition(midpoint);
+            _songList[_selectedIndex].Position = (midpoint);
            // 
             _songList[_selectedIndex].IsSelected = true;
             _songList[_selectedIndex].Draw(spriteBatch);
@@ -344,7 +344,7 @@ namespace WGiBeat.Screens
             {
                 midpoint.Y += 50;
                 _songList[(_selectedIndex + x) % _songList.Count].IsSelected = false;
-                _songList[(_selectedIndex + x) % _songList.Count].SetPosition(midpoint);
+                _songList[(_selectedIndex + x) % _songList.Count].Position = (midpoint);
                 _songList[(_selectedIndex + x) % _songList.Count].Draw(spriteBatch);
             }
          
@@ -361,7 +361,7 @@ namespace WGiBeat.Screens
                 }
                 midpoint.Y -= 50;
                 _songList[index].IsSelected = false;
-                _songList[index].SetPosition(midpoint);
+                _songList[index].Position = (midpoint);
                 _songList[index].Draw(spriteBatch);
             }
 
