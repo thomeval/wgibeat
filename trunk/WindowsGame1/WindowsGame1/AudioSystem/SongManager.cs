@@ -244,7 +244,7 @@ namespace WGiBeat.AudioSystem
                 Log.AddMessage("WARN: Couldn't find audio file specified: " + path);
                 return false;
             }
-            if (song.Length <= 0)
+            if ((song.Length <= 0) || (song.Length <= song.Offset))
             {
                 Log.AddMessage("WARN: Song length is not specified or invalid in " + filename);
                 return false;
@@ -262,18 +262,27 @@ namespace WGiBeat.AudioSystem
 
             switch (SettingsManager.Get<int>("SongMD5Behaviour"))
             {
-                //CHECK
+                //WARN ONLY
                 case 1:
                     if (!(song.VerifyMD5()))
                     {
                         Log.AddMessage(
-                            "WARN: Song File MD5 checksum is invalid. This most likely means that the audio file being used has been changed. File: " +
+                            "NOTE: Song File MD5 checksum is invalid. This most likely means that the wrong audio file is being used. File: " +
+                            filename);
+                    }
+                    break;
+                //WARN AND EXCLUDE
+                case 2:
+                    if (!(song.VerifyMD5()))
+                    {
+                        Log.AddMessage(
+                            "WARN: Song File MD5 checksum is invalid and was not loaded. This most likely means that the wrong audio file is being used. File: " +
                             filename);
                         return false;
                     }
                     break;
                 //AUTO CORRECT
-                case 2:
+                case 3:
                     if (!(song.VerifyMD5()))
                     {
                         song.SetMD5();

@@ -53,7 +53,7 @@ namespace WGiBeat.Managers
             sm["LastSongPlayed"] = 0;
             sm["RunOnce"] = false;
             sm["ProfileFolder"] = "Profiles";
-            sm["SongMD5Behaviour"] = 0;
+            sm["SongMD5Behaviour"] = 1;
             return sm;
         }
         public static SettingsManager LoadFromFile(string filename, LogManager log)

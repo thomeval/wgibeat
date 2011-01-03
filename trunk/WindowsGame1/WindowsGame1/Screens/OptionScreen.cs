@@ -48,8 +48,9 @@ namespace WGiBeat.Screens
 
             item = new MenuItem { ItemText = "Song Audio Validation" };
             item.AddOption("Ignore", 0);
-            item.AddOption("Check", 1);
-            item.AddOption("Auto Correct", 2);
+            item.AddOption("Warn only", 1);
+            item.AddOption("Warn and exclude",2);
+            item.AddOption("Auto Correct", 3);
 
             _optionsMenu.AddItem(item);
 

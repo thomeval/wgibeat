@@ -119,3 +119,8 @@ TeamSelectScreenHeader=[0,0];
 PlayerTeamMarkers=[185,155][185,215][185,275][185,335];
 TeamScreenBackground=[10,105];
 
+#Song Edit;
+SongEditProgress=[0,520];
+EditorMenuStart=[0,55];
+EditorHeading=[10,0];
+
