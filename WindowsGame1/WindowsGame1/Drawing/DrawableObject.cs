@@ -9,14 +9,14 @@ namespace WGiBeat.Drawing
 {
     public abstract class DrawableObject
     {
-        public int X { get; set;}
+        public virtual int X { get; set;}
         public int Y { get; set; }
         public int Height { get; set; }
         public int Width { get; set; }
 
         public float Rotation { get; set; }
 
-        public Vector2 Position
+        public virtual Vector2 Position
         {
             get
             {

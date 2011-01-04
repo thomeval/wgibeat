@@ -94,25 +94,18 @@ namespace WGiBeat.Screens
                 Width = Core.Window.ClientBounds.Width,
             };
 
-            _songLengthBase = new Sprite
-                                  {
-                                      SpriteTexture = TextureManager.Textures["LengthDisplayBase"]
-                                  };
-            _songLengthBase.Position = (Core.Metrics["SelectedSongLengthDisplay", 0]);
-            _songTitleBase = new Sprite {SpriteTexture = TextureManager.Textures["SongTitleBase"]};
-            _songTitleBase.Position = (Core.Metrics["SelectedSongTitleBase", 0]);
-
             _headerSprite = new Sprite
             {
                 SpriteTexture = TextureManager.Textures["songSelectHeader"]
             };
-            _spectrumBackground = new Sprite
-                                      {
-                                          SpriteTexture = TextureManager.Textures["SpectrumBackground"]
-                                      };
-            _spectrumBackground.Position = (Core.Metrics["SelectedSongSpectrum", 0]);
-            _spectrumBackground.Y -= 70;
+            _headerSprite.Position = (Core.Metrics["SongSelectScreenHeader", 0]);
 
+            _spectrumBackground = new Sprite
+            {
+                SpriteTexture = TextureManager.Textures["SpectrumBackground"]
+            };
+            _spectrumBackground.Position = Core.Metrics["SelectedSongSpectrum", 0];
+            _spectrumBackground.Y -= 70;
             _listBackend = new Sprite {SpriteTexture = TextureManager.Textures["SongListBackend"],Height=232,Width=50};
             _listBackend.Position = (Core.Metrics["SongListBackend", 0]);
         }
@@ -168,53 +161,13 @@ namespace WGiBeat.Screens
             DrawBackground(spriteBatch);
             DrawPlayerOptions(spriteBatch);
             DrawHighScoreFrame(spriteBatch);
+            
             DrawWaveForm(spriteBatch);
             DrawBpmMeter(gameTime, spriteBatch);
-            DrawLengthMeter(gameTime, spriteBatch);
-            DrawSongText(spriteBatch);
             DrawSongList(spriteBatch);
-            _headerSprite.Position = (Core.Metrics["SongSelectScreenHeader", 0]);
             _headerSprite.Draw(spriteBatch);
             _songSortDisplay.Draw(spriteBatch);
      
-
-        }
-
-        private void DrawLengthMeter(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-
-            _songLengthBase.Draw(spriteBatch);
-            var diff = _songList[_selectedIndex].Song.Length - _displayedLength;
-
-            _displayedLength += (diff/6);
-            var textPosition = Core.Metrics["SelectedSongLengthDisplay",0].Clone();
-            textPosition.X += 100;
-            textPosition.Y -= 0;
-            var ts = TimeSpan.FromSeconds(_displayedLength);
-
-            TextureManager.DrawString(spriteBatch, String.Format("{0}:{1:00}",ts.Minutes,ts.Seconds),"TwoTech36",textPosition,Color.Black,FontAlign.RIGHT);
-        }
-
-        private void DrawSongText(SpriteBatch spriteBatch)
-        {
-            _songTitleBase.Draw(spriteBatch);
-            var currentSong = _songList[_selectedIndex].Song;
-
-            if (!String.IsNullOrEmpty(currentSong.Title))
-            {
-                TextureManager.DrawString(spriteBatch, currentSong.Title, "LargeFont",
-                                          Core.Metrics["SelectedSongTitle", 0], Color.Black, FontAlign.CENTER);
-            }
-            if (!String.IsNullOrEmpty(currentSong.Subtitle))
-            {
-                TextureManager.DrawString(spriteBatch, currentSong.Subtitle, "DefaultFont",
-                                          Core.Metrics["SelectedSongSubtitle", 0], Color.Black, FontAlign.CENTER);
-            }
-            if (!String.IsNullOrEmpty(currentSong.Artist))
-            {
-                TextureManager.DrawString(spriteBatch, currentSong.Artist, "DefaultFont",
-                                          Core.Metrics["SelectedSongArtist", 0], Color.Black, FontAlign.CENTER);
-            }
         }
 
         private const int WAVEFORM_POINTS = 512;
@@ -276,15 +229,7 @@ namespace WGiBeat.Screens
         }
         private void DrawBpmMeter(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (_displayedBpm == 0.0)
-            {
-                _displayedBpm = _songList[_selectedIndex].Song.Bpm;
-            }
-            else
-            {
-                var diff = _displayedBpm - _songList[_selectedIndex].Song.Bpm;
-                _displayedBpm -= diff/6;
-            }
+          
             if (_resetSongTime)
             {
                 _resetSongTime = false;
@@ -293,9 +238,6 @@ namespace WGiBeat.Screens
             _bpmMeter.SongTime = (gameTime.TotalRealTime.TotalMilliseconds - _songStartTime) / 1000 * (_songList[_selectedIndex].Song.Bpm / 60);
 
             _bpmMeter.Draw(spriteBatch);
-
-            TextureManager.DrawString(spriteBatch, String.Format("{0:000.0}", _displayedBpm), "TwoTechLarge",
-                                   Core.Metrics["SelectedSongBPMDisplay", 0], Color.Black, FontAlign.RIGHT);
         }
 
         private void DrawHighScoreFrame(SpriteBatch spriteBatch)
@@ -516,7 +458,7 @@ namespace WGiBeat.Screens
 
         private void PlaySongPreview()
         {
-            _bpmMeter.Bpm = _songList[_selectedIndex].Song.Bpm;
+            _bpmMeter.DisplayedSong = _songList[_selectedIndex].Song;
             _resetSongTime = true;
             Crossfader.PreviewDuration = 10;
             var previewsOn = Core.Settings.Get<bool>("SongPreview");

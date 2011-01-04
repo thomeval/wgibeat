@@ -93,7 +93,11 @@ namespace WGiBeat.Drawing
             {
                 MenuItem menuItem = _menuItems[i];
                 Color drawColor = (IsSelected(menuItem)) ? HighlightColor : TextColor;
-
+                
+                if (!menuItem.Enabled)
+                {
+                    drawColor = new Color(drawColor, (byte)(drawColor.A/2));
+                }
                 spriteBatch.DrawString(TextureManager.Fonts[FontName], menuItem.ItemText, position, drawColor);
                 position.X += xOptionOffset;
                 spriteBatch.DrawString(TextureManager.Fonts[FontName], menuItem.SelectedText(), position, drawColor);
@@ -114,9 +118,9 @@ namespace WGiBeat.Drawing
             int maxLength = 0;
             foreach (MenuItem menuItem in _menuItems)
             {
-                maxLength = Math.Max(maxLength, menuItem.ItemText.Length);
+                maxLength = Math.Max(maxLength, (int) TextureManager.Fonts["LargeFont"].MeasureString(menuItem.ItemText).X);
             }
-            return (maxLength * 15) + 10;
+            return (maxLength) + 25;
         }
 
 
@@ -191,6 +195,14 @@ namespace WGiBeat.Drawing
         {
             _menuItems.Clear();
             SelectedIndex = 0;
+        }
+
+        public void ClearMenuOptions()
+        {
+            foreach (MenuItem mi in _menuItems)
+            {
+                mi.ClearOptions();
+            }
         }
     }
 }
