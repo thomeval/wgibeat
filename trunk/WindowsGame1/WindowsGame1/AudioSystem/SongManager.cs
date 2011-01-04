@@ -17,7 +17,6 @@ namespace WGiBeat.AudioSystem
         #region Fields
 
         private readonly List<GameSong> _songs = new List<GameSong>();
-        private GameSong _currentSong;
         private int _songChannelIndex;
         public AudioManager AudioManager { get; set; }
         public SettingsManager SettingsManager { get; set; }
@@ -39,15 +38,6 @@ namespace WGiBeat.AudioSystem
             get { return _songs;}
         }
 
-        /// <summary>
-        /// Returns the currently playing song.
-        /// </summary>
-        /// <returns>The currently playing song.</returns>
-        public GameSong CurrentSong
-        {
-            get { return _currentSong; }
-        }
-
         #region Song Operations
 
         public void PlaySong(GameSong song)
@@ -57,7 +47,7 @@ namespace WGiBeat.AudioSystem
                 StopCurrentSong();
             }
             _songChannelIndex = AudioManager.PlaySoundEffect(song.Path + "\\" + song.SongFile, false, true);
-            _currentSong = song;
+
         }
 
         public void StopCurrentSong()
@@ -231,7 +221,7 @@ namespace WGiBeat.AudioSystem
             return newSong;
         }
 
-        private bool ValidateSongFile(GameSong song, string filename)
+        public bool ValidateSongFile(GameSong song, string filename)
         {
             if (string.IsNullOrEmpty(song.SongFile))
             {
@@ -258,6 +248,15 @@ namespace WGiBeat.AudioSystem
             {
                 Log.AddMessage("WARN: Song offset is invalid in " + filename);
                 return false;
+            }
+            if (String.IsNullOrEmpty(song.Title))
+            {
+                Log.AddMessage("WARN: Song does not have a title: "+ filename);
+                return false;
+            }
+            if (String.IsNullOrEmpty(song.Artist))
+            {
+                Log.AddMessage("WARN: Song does not have an artist: "+ filename);
             }
 
             switch (SettingsManager.Get<int>("SongMD5Behaviour"))
@@ -296,7 +295,13 @@ namespace WGiBeat.AudioSystem
             return true;
         }
 
+        public bool ValidateSongFile(GameSong song)
+        {
+            return ValidateSongFile(song, song.Path + "\\" + song.DefinitionFile);
+        }
+
         #endregion
 
+ 
     }
 }

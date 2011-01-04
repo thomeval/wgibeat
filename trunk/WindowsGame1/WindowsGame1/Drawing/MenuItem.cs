@@ -10,6 +10,14 @@ namespace WGiBeat.Drawing
 
         public string ItemText { get; set; }
         public object ItemValue { get; set; }
+
+        private bool _enabled = true;
+        public bool Enabled
+        {
+            get { return _enabled; }
+            set { _enabled = value; }
+        }
+
         private int _selectedOption;
 
         public MenuItem()
@@ -32,6 +40,11 @@ namespace WGiBeat.Drawing
             _optionValues.RemoveAt(idx);
         }
 
+        public void ClearOptions()
+        {
+            _optionValues.Clear();
+            _optionDisplays.Clear();
+        }
         public void IncrementSelected()
         {
             if (_optionValues.Count > 0)

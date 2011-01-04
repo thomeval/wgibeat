@@ -92,13 +92,13 @@ SongSortDisplay=[500,80];
 SongCountDisplay=[550,100];
 PlayerOptionsFrame=[0,562][0,524][0,486][0,448];
 SelectedMode=[300,550];
-BPMMeter=[235,235];
-SelectedSongBPMDisplay=[360,325];
-SelectedSongLengthDisplay=[255,370];
-SelectedSongTitleBase=[70,180];
-SelectedSongTitle=[250,180];
-SelectedSongSubtitle=[250,205];
-SelectedSongArtist=[250,235];
+BPMMeter=[70,180];
+#SelectedSongBPMDisplay=[360,325];
+#SelectedSongLengthDisplay=[255,370];
+#SelectedSongTitleBase=[70,180];
+#SelectedSongTitle=[250,180];
+#SelectedSongSubtitle=[250,205];
+#SelectedSongArtist=[250,235];
 SelectedSongSpectrum=[235,330];
 
 #Options;
@@ -123,4 +123,5 @@ TeamScreenBackground=[10,105];
 SongEditProgress=[0,520];
 EditorMenuStart=[0,55];
 EditorHeading=[10,0];
+EditorBPMMeter=[410,90];
 

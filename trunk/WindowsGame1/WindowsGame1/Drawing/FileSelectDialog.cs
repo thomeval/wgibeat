@@ -117,6 +117,7 @@ namespace WGiBeat.Drawing
                     }
                     else
                     {
+                        
                         FileSelected(this, null);
                     }
                     break;
