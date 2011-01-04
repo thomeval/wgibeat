@@ -63,7 +63,7 @@ namespace WGiBeat
             //NOTE: Uncomment to disable vsync.
             //GraphicsManager.SynchronizeWithVerticalRetrace = false;
 
-            Log = new LogManager();
+            Log = new LogManager{Enabled = true};
             Log.AddMessage("INFO: Initializing Cookies...");
             Cookies = new Dictionary<string, object>();
 

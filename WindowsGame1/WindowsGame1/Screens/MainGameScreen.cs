@@ -70,7 +70,7 @@ namespace WGiBeat.Screens
             _gameSong = (GameSong)Core.Cookies["CurrentSong"];
 
             _startTime = null;
-            _beatlineSet.EndingPhrase = GetEndingTimeInPhrase();
+            _beatlineSet.EndingPhrase = _gameSong.GetEndingTimeInPhrase();
             _beatlineSet.Bpm = _gameSong.Bpm;
             _beatlineSet.SetSpeeds();
 
@@ -428,13 +428,6 @@ namespace WGiBeat.Screens
            // var timeLeft = _gameSong.Length * 1000 - timeElapsed;
             var timeLeft = _gameSong.Length * 1000 - _timeCheck;
             return timeLeft <= 0.0;
-        }
-
-
-        private double GetEndingTimeInPhrase()
-        {
-            //Removed _songLoadDelay here
-            return ((_gameSong.Length - _gameSong.Offset) * 1000) / 1000 * (_gameSong.Bpm / 240);
         }
 
         private void BeatlineNoteMissed(object sender, EventArgs e)
