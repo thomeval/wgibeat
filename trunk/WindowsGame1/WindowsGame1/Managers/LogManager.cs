@@ -17,6 +17,11 @@ namespace WGiBeat.Managers
             _logMessages.Add("INFO: Log initialized.");
         }
 
+        public bool Enabled
+        {
+            get; set;
+        }
+
         public void ClearMessages()
         {
             Monitor.Enter(_logMessages);
@@ -26,6 +31,10 @@ namespace WGiBeat.Managers
 
         public void AddMessage(string message)
         {
+            if (!Enabled)
+            {
+                return;
+            }
             Monitor.Enter(_logMessages);
             _logMessages.Add(message);
             Monitor.Exit(_logMessages);

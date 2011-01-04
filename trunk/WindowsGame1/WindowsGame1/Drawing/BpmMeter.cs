@@ -181,7 +181,7 @@ namespace WGiBeat.Drawing
                 _meterSprite.Draw(spriteBatch, x, this.Width, height, _baseSprite.X, _baseSprite.Y + (x * height));
             }
 
-            TextureManager.DrawString(spriteBatch, String.Format("{0:000.0}", _displayedBpm), "TwoTechLarge",
+            TextureManager.DrawString(spriteBatch, String.Format("{0:000.0}", Math.Min(999.9,_displayedBpm)), "TwoTechLarge",
                         _bpmTextPosition, Color.Black, FontAlign.RIGHT);
         }
 

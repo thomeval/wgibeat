@@ -88,7 +88,7 @@ namespace WGiBeat.Screens
             detailsMenu.AddItem(new MenuItem { ItemText = "Measure Offset", ItemValue = 6 });
             detailsMenu.AddItem(new MenuItem { ItemText = "Enter Length Manually", ItemValue = 7 });
             detailsMenu.AddItem(new MenuItem { ItemText = "Measure Length", ItemValue = 8 });
-            detailsMenu.AddItem(new MenuItem { ItemText = "Next Step", ItemValue = 9 });
+            detailsMenu.AddItem(new MenuItem { ItemText = "Next Step", ItemValue = 9, Enabled = false });
             detailsMenu.AddItem(new MenuItem { ItemText = "Back", ItemValue = 10 });
             _menus.Add("Details",detailsMenu);
 
@@ -241,7 +241,18 @@ namespace WGiBeat.Screens
                     
                     break;
                     case EditorCursorPosition.SONG_DETAILS:
-            //TODO: Complete
+                    var offsetPosition = _bpmMeter.Position.Clone();
+                    offsetPosition.X += 320;
+                    offsetPosition.Y += 120;
+                    TextureManager.DrawString(spriteBatch,String.Format("Offset: {0:0.000}",NewGameSong.Offset),"TwoTech",offsetPosition,Color.Black,FontAlign.RIGHT);
+                    if ((NewGameSong.Bpm > 0) && (NewGameSong.Length > 0))
+                    {
+                        var totalBeatlines = Math.Floor(NewGameSong.GetEndingTimeInPhrase());
+                        offsetPosition.Y -= 25;
+                        totalBeatlines = Math.Max(totalBeatlines + 1, 0);
+                        TextureManager.DrawString(spriteBatch, "Total beatlines: " + totalBeatlines, "TwoTech",
+                                                  offsetPosition, Color.Black, FontAlign.RIGHT);
+                    }
                     break;
             }
         }
@@ -251,6 +262,13 @@ namespace WGiBeat.Screens
             _menus["Basics"].GetByItemText("Next Step").Enabled = (!String.IsNullOrEmpty(_destinationFileName)) &&
                                                                   (!String.IsNullOrEmpty(_destinationFolderName)) &&
                                                                   (!String.IsNullOrEmpty(_audioFilePath));
+
+            if (_cursorPosition == EditorCursorPosition.SONG_DETAILS)
+            {
+                Core.Log.Enabled = false;
+                _menus["Details"].GetByItemText("Next Step").Enabled = Core.Songs.ValidateSongFile(NewGameSong);
+                Core.Log.Enabled = true;
+            }
         }
 
         private void DrawHeading(SpriteBatch spriteBatch)

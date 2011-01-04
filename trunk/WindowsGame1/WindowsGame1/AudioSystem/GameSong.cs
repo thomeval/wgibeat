@@ -68,6 +68,11 @@ namespace WGiBeat.AudioSystem
             return gs;
         }
 
+        public double GetEndingTimeInPhrase()
+        {
+            return ((Length - Offset) * 1000) / 1000 * (Bpm / 240);
+        }
+
         private string CalculateMD5()
         {
             var md5 = MD5.Create();
@@ -92,5 +97,6 @@ namespace WGiBeat.AudioSystem
             var actualMD5 = CalculateMD5();
             return actualMD5 == SongFileMD5;
         }
+
     }
 }
