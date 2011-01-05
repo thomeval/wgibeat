@@ -92,7 +92,7 @@ namespace WGiBeat.Screens
 
         #region Updating, Beatline maintenance
 
-        private int _timeCheck;
+        private int _timeElapsed;
 
         public override void Update(GameTime gameTime)
         {
@@ -102,8 +102,8 @@ namespace WGiBeat.Screens
                 Core.Songs.PlaySong(_gameSong);
                 _startTime = new TimeSpan(gameTime.TotalRealTime.Ticks);
             }
-            _phraseNumber = 1.0 * (gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay - _gameSong.Offset * 1000) / 1000 * (_gameSong.Bpm / 240);
-            _timeCheck = (int)(gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay);
+            _timeElapsed = (int)(gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay);
+            _phraseNumber = _gameSong.ConvertMSToPhrase(_timeElapsed);
             CheckForEndings(gameTime);
             SyncSong();
             _beatlineSet.MaintainBeatlineNotes(_phraseNumber);
@@ -196,7 +196,7 @@ namespace WGiBeat.Screens
             //as the default timing mechanism makes it jerky and slows the game down, so we attempt
             //to match current time with the song time by periodically sampling it. A hill climbing method
             // is used here.
-            var delay = Core.Songs.GetCurrentSongProgress() - _timeCheck;
+            var delay = Core.Songs.GetCurrentSongProgress() - _timeElapsed;
             if ((_confidence < 15) && (Math.Abs(delay) > 25))
             {
                 _confidence = 0;
@@ -416,7 +416,7 @@ namespace WGiBeat.Screens
 
            // var timeElapsed = gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds;
            // var timeLeft = _gameSong.Length * 1000 - timeElapsed;
-            var timeLeft = _gameSong.Length*1000 - _timeCheck;
+            var timeLeft = _gameSong.Length*1000 - _timeElapsed;
             var ts = new TimeSpan(0, 0, 0, 0, (int)timeLeft);
 
             return ts.Minutes + ":" + String.Format("{0:D2}", Math.Max(0, ts.Seconds));
@@ -426,7 +426,7 @@ namespace WGiBeat.Screens
         {
             //var timeElapsed = gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds;
            // var timeLeft = _gameSong.Length * 1000 - timeElapsed;
-            var timeLeft = _gameSong.Length * 1000 - _timeCheck;
+            var timeLeft = _gameSong.Length * 1000 - _timeElapsed;
             return timeLeft <= 0.0;
         }
 
@@ -506,8 +506,10 @@ namespace WGiBeat.Screens
 
         private readonly double[] _threshholds = { -1.00, -0.75, -0.5, -0.25, 0.0 };
 
+        //TODO: Refactor into Set.
         private void DrawCountdowns(SpriteBatch spriteBatch)
         {
+            
             for (int x = 0; x < Core.Players.Count(); x++)
             {
                 if (!Core.Players[x].Playing)

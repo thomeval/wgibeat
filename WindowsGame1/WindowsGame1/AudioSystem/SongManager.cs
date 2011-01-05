@@ -74,7 +74,7 @@ namespace WGiBeat.AudioSystem
         /// Adds a GameSong to the list of songs available.
         /// </summary>
         /// <param name="song">The GameSong to add.</param>
-        private void AddSong(GameSong song)
+        public void AddSong(GameSong song)
         {
             if (!_songs.Contains(song))
             {
