@@ -20,6 +20,7 @@ namespace WGiBeat.Drawing
 
         private SpriteMap _edgeSpriteMap;
         private SpriteMap _arrowSpriteMap;
+        private SpriteMap _sideSpriteMap;
 
         public string FontName
         {
@@ -39,6 +40,8 @@ namespace WGiBeat.Drawing
             _edgeSpriteMap = new SpriteMap{Columns = 1, Rows = 2, SpriteTexture = TextureManager.Textures["MenuEdge"]};
             _arrowSpriteMap = new SpriteMap
                                   {Columns = 4, Rows = 1, SpriteTexture = TextureManager.Textures["IndicatorArrows"]};
+            _sideSpriteMap = new SpriteMap()
+                                 {Columns = 1, Rows = 1, SpriteTexture = TextureManager.Textures["MenuSide"]};
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -116,6 +119,9 @@ namespace WGiBeat.Drawing
                 position.Y += ItemSpacing;
             }
             _animationOffset = (int) (_animationOffset * 0.4);
+
+            _sideSpriteMap.Draw(spriteBatch,0,5,bottomPosition - this.Y-30,this.X,this.Y + 30);
+            _sideSpriteMap.Draw(spriteBatch, 0, 5, bottomPosition - this.Y-30, this.X + this.Width - 5, this.Y + 30);
         }
 
         private bool IsSelected(MenuItem item)

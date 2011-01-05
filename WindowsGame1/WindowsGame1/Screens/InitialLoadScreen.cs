@@ -27,7 +27,7 @@ namespace WGiBeat.Screens
         public override void Initialize()
         {
             SongFolderPath = Directory.GetCurrentDirectory() + "\\" + Core.Settings["SongFolder"];
-            _textPosition = new Vector2(Core.Metrics["SongLoadLog", 0].X, Core.Metrics["SongLoadLog", 0].Y);
+            _textPosition = Core.Metrics["SongLoadLog", 0].Clone();
 
             _baseSprite = new Sprite {SpriteTexture = TextureManager.Textures["LoadingMessageBase"]};
             _baseSprite.Position = (Core.Metrics["LoadMessageBase", 0]);
@@ -119,10 +119,10 @@ namespace WGiBeat.Screens
                     }
                     break;
                 case "LEFT":
-                    _textPosition.X += 54;
+                    _textPosition.X = Math.Min(Core.Metrics["SongLoadLog",0].X,_textPosition.X + 54);
                     break;
                 case "RIGHT":
-                    _textPosition.X -= 54;
+                    _textPosition.X = Math.Max(-3000, _textPosition.X - 54);
                     break;
                 case "UP":
                     _textPosition.Y = Math.Min(_maxY, _textPosition.Y + 36);
