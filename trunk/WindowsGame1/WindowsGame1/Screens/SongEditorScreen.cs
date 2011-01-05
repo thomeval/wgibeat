@@ -253,6 +253,7 @@ namespace WGiBeat.Screens
             switch (_cursorPosition)
             {
                 case EditorCursorPosition.SONG_BASICS:
+                    //TODO: Fix for long filenames.
                     var currentMenu = _menus["Basics"];
                     currentMenu.ClearMenuOptions();
                     currentMenu.GetByItemText("Select Audio File").AddOption(Path.GetFileName(_audioFilePath), null);

@@ -66,7 +66,7 @@ namespace WGiBeat.Drawing
                                    Rows = 1,
                                    SpriteTexture = TextureManager.Textures["IndicatorArrows"]
                                };
-            _nameBackground = new Sprite {SpriteTexture = TextureManager.BlankTexture(300, 300)};
+            _nameBackground = new Sprite {SpriteTexture = TextureManager.BlankTexture()};
 
         }
 

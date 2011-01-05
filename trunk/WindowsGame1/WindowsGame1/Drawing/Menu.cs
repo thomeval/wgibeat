@@ -43,7 +43,7 @@ namespace WGiBeat.Drawing
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            //TODO: Draw arrows if more items above/below the menu.
+            //TODO: Draw sides
 
             if (MaxVisibleItems == 0)
             {
@@ -98,9 +98,19 @@ namespace WGiBeat.Drawing
                 {
                     drawColor = new Color(drawColor, (byte)(drawColor.A/2));
                 }
-                spriteBatch.DrawString(TextureManager.Fonts[FontName], menuItem.ItemText, position, drawColor);
+                TextureManager.DrawString(spriteBatch,menuItem.ItemText,FontName, position, drawColor, FontAlign.LEFT);
                 position.X += xOptionOffset;
-                spriteBatch.DrawString(TextureManager.Fonts[FontName], menuItem.SelectedText(), position, drawColor);
+
+                var menuOptionText = menuItem.SelectedText();
+                var textWidth = TextureManager.Fonts[FontName].MeasureString(menuOptionText).X;
+                var maxWidth = this.Width - 20 - xOptionOffset;
+                var scale = new Vector2(1.0f,1.0f);
+                scale.X = Math.Min(1.0f, maxWidth/textWidth);
+             
+                         
+                TextureManager.DrawString(spriteBatch, menuOptionText, FontName, position,scale, drawColor, FontAlign.LEFT); 
+                
+                
                 position.X -= xOptionOffset;
 
                 position.Y += ItemSpacing;
