@@ -20,7 +20,8 @@ namespace WGiBeat.Drawing
             Fonts.Add(name, font);
         }
 
-        public static void DrawString(SpriteBatch spriteBatch, string text, string fontName, Vector2 position, Color color, FontAlign align)
+        private static Vector2 noRotation = new Vector2(0, 0);
+        public static void DrawString(SpriteBatch spriteBatch, string text, string fontName, Vector2 position, Vector2 scale, Color color, FontAlign align)
         {
             var measuredPosition = new Vector2(position.X, position.Y);
             var lines = text.Split('\n');
@@ -37,12 +38,18 @@ namespace WGiBeat.Drawing
                         measuredPosition.X -= measurements.X;
                         break;
                 }
-                spriteBatch.DrawString(Fonts[fontName], line, measuredPosition, color);
+                spriteBatch.DrawString(Fonts[fontName], line, measuredPosition, color, 0.0f, noRotation, scale, SpriteEffects.None, 0.0f);
                 measuredPosition.Y += measurements.Y;
             }
         }
 
-        public static Texture2D BlankTexture(int width, int height)
+        private static Vector2 noScaling = new Vector2(1, 1);
+        public static void DrawString(SpriteBatch spriteBatch, string text, string fontName, Vector2 position, Color color, FontAlign align)
+        {
+            DrawString(spriteBatch,text,fontName,position,noScaling,color,align);
+        }
+
+        public static Texture2D BlankTexture()
         {
             var tex = new Texture2D(GraphicsDevice, 1, 1, 1, TextureUsage.None, SurfaceFormat.Color);
             var pixels = new Color[1];
