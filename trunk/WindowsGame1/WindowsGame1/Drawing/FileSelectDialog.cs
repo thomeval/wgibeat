@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing
@@ -45,7 +46,15 @@ namespace WGiBeat.Drawing
         public override void Draw(SpriteBatch spriteBatch)
         {
             var shortPath = CurrentFolder;
-            TextureManager.DrawString(spriteBatch,shortPath,"LargeFont",this.Position,Color.Black,FontAlign.LEFT);
+            var position = this.Position;
+            position.X += 5;
+
+            var pathWidth = TextureManager.Fonts["LargeFont"].MeasureString(shortPath);
+            pathWidth.X = Math.Min(1.0f,(this.Width - 10)/pathWidth.X);
+            pathWidth.Y = 1.0f;
+            
+            TextureManager.DrawString(spriteBatch,shortPath,"LargeFont",position,pathWidth,Color.Black,FontAlign.LEFT);
+            
             FileList.X = this.X;
             FileList.Y = this.Y + 35;
             FileList.Width = this.Width;

@@ -281,11 +281,45 @@ namespace WGiBeat.Screens
                     break;
                 case EditorCursorPosition.SONG_TWEAKING:
                     DrawDebugText(spriteBatch);
+                    DrawTweakControlsText(spriteBatch);
                     break;
             }
         }
 
- 
+        private void DrawTweakControlsText(SpriteBatch spriteBatch)
+        {
+            var textPosition = Core.Metrics["EditorTweakControls", 0].Clone();
+
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "F5 - Decrease BPM", textPosition, Color.Black);
+            textPosition.Y += 20;
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "F6 - Increase BPM", textPosition, Color.Black);
+            textPosition.Y += 20;
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "F7 - Decrease Offset (0.1)", textPosition, Color.Black);
+            textPosition.Y += 20;
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "F8 - Increase Offset (0.1)", textPosition, Color.Black);
+            textPosition.Y += 20;
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "F9 - Decrease Offset (0.01)", textPosition, Color.Black);
+            textPosition.Y += 20;
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "F10 - Decrease Offset (0.01)", textPosition, Color.Black);
+            textPosition.Y += 20;
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "F11 - Decrease Length", textPosition, Color.Black);
+            textPosition.Y += 20;
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "F12 - Increase Length", textPosition, Color.Black);
+
+            textPosition = Core.Metrics["EditorTweakControls", 1].Clone();
+
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "LEFT - Decrease Beatline Speed", textPosition, Color.Black);
+            textPosition.Y += 20;
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "RIGHT - Increase Beatline Speed", textPosition, Color.Black);
+            textPosition.Y += 20;
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "BEATLINE - Hit beatline", textPosition, Color.Black);
+            textPosition.Y += 20;
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "SELECT - Restart Song", textPosition, Color.Black);
+            textPosition.Y += 20;
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "START - Complete Tweaking", textPosition, Color.Black);
+        }
+
+
         private void DrawDebugText(SpriteBatch spriteBatch)
         {
 
@@ -471,7 +505,23 @@ namespace WGiBeat.Screens
                     Core.Songs.AddSong(NewGameSong);
                     _cursorPosition = EditorCursorPosition.DONE;
                     break;
+                case "LEFT":
+                    AdjustSpeed(-1);
+                    break;
+                case "RIGHT":
+                    AdjustSpeed(1);
+                    break;
             }
+        }
+
+        private readonly double[] _speedOptions = { 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0 };
+        public void AdjustSpeed(int amount)
+        {
+            var idx = Array.IndexOf(_speedOptions, Core.Players[0].BeatlineSpeed);
+            idx += amount;
+            idx = Math.Min(_speedOptions.Length - 1, Math.Max(0, idx));
+            Core.Players[0].BeatlineSpeed = _speedOptions[idx];
+            _beatlineSet.SetSpeeds();
         }
 
         private void RestartSong()
