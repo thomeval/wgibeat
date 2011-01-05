@@ -98,5 +98,10 @@ namespace WGiBeat.AudioSystem
             return actualMD5 == SongFileMD5;
         }
 
+
+        public double ConvertMSToPhrase(double milliseconds)
+        {
+            return 1.0 * (milliseconds - Offset * 1000) / 1000 * (Bpm / 240);
+        }
     }
 }

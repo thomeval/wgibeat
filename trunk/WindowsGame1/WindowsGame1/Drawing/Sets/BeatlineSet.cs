@@ -183,5 +183,10 @@ namespace WGiBeat.Drawing.Sets
                 _beatlines[x].Speed = Players[x].BeatlineSpeed;
             }
         }
+
+        public void Reset()
+        {
+            _lastBeatlineNote = -1;
+        }
     }
 }
