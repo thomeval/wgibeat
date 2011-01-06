@@ -580,6 +580,7 @@ namespace WGiBeat.Screens
                                                         _cursorPosition = EditorCursorPosition.SONG_BASICS;
                                                     };
                     _fileSelect.FileSelectCancelled += delegate { _cursorPosition = EditorCursorPosition.SONG_BASICS; };
+                  
                     break;
                 case "1":
                     ActivateTextEntryMode();

@@ -9,7 +9,10 @@ namespace WGiBeat.Drawing
 {
     public class TextEntry : DrawableObject
     {
-        private StringBuilder result = new StringBuilder();
+        private StringBuilder _result = new StringBuilder();
+        private readonly Sprite _capsLockSprite;
+        private readonly Sprite _shiftSprite;
+
         public event EventHandler EntryComplete;
         public event EventHandler EntryCancelled;
 
@@ -21,9 +24,15 @@ namespace WGiBeat.Drawing
         public Color TextColour = Color.Black;
         public string DescriptionText = "";
 
+        public TextEntry()
+        {
+            _capsLockSprite = new Sprite {SpriteTexture = TextureManager.Textures["TextEntryCaps"]};
+            _shiftSprite = new Sprite {SpriteTexture = TextureManager.Textures["TextEntryShift"]};
+
+        }
         public string EnteredText
         {
-            get { return result.ToString(); }
+            get { return _result.ToString(); }
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -31,7 +40,7 @@ namespace WGiBeat.Drawing
             var myPosition = this.Position.Clone();
 
             myPosition.X += (this.Width/2.0f);
-            TextureManager.DrawString(spriteBatch, result.ToString(), "LargeFont", myPosition,
+            TextureManager.DrawString(spriteBatch, _result.ToString(), "LargeFont", myPosition,
                           TextColour, FontAlign.CENTER);
             myPosition.Y += 25;
             foreach (string line in DescriptionText.Split('\n'))
@@ -45,16 +54,17 @@ namespace WGiBeat.Drawing
                                       TextColour, FontAlign.CENTER);
             myPosition.Y += 25;
 
-            //TODO: Make icons for Shift and Caps Lock
             if (Shift)
             {
-                TextureManager.DrawString(spriteBatch, "[SHIFT]", "DefaultFont", myPosition,
-                                    TextColour, FontAlign.CENTER);
+                _shiftSprite.Y = (int) myPosition.Y;
+                _shiftSprite.X = (int) myPosition.X - 50;
+                _shiftSprite.Draw(spriteBatch);
             }
             if (CapsLock)
             {
-                TextureManager.DrawString(spriteBatch, "[CAPS]", "DefaultFont", myPosition,
-                         TextColour, FontAlign.CENTER);
+                _capsLockSprite.Y = (int)myPosition.Y;
+                _capsLockSprite.X = (int)myPosition.X + 50;
+               _capsLockSprite.Draw(spriteBatch);
             }
 
         }
@@ -65,11 +75,11 @@ namespace WGiBeat.Drawing
             switch (key)
             {
                 case Keys.Back:
-                    if (result.Length <= 0)
+                    if (_result.Length <= 0)
                     {
                         return;
                     }
-                    result.Remove(result.Length - 1, 1);
+                    _result.Remove(_result.Length - 1, 1);
                     break;
                 case Keys.Enter:
                     if (EntryComplete != null)
@@ -118,7 +128,7 @@ namespace WGiBeat.Drawing
                         temp = "" + _uppercaseChars[idx];
                     }
                         
-                    result.Append(temp);
+                    _result.Append(temp);
                     Shift = false;
                     break;
             }
@@ -151,7 +161,7 @@ namespace WGiBeat.Drawing
 
         public void Clear()
         {
-            result = new StringBuilder();
+            _result = new StringBuilder();
         }
     }
 }

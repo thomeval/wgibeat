@@ -8,8 +8,20 @@ namespace WGiBeat.Drawing
     {
         private string _currentFolder = "C:\\";
 
-        public string[] Patterns = {"*.*"};
+        private  string[] _patterns = {"*.*"};
 
+        public string[] Patterns
+        { 
+            get
+            {
+                return _patterns;
+            }
+            set
+            {
+                _patterns = value;
+                CreateFileList(_currentFolder);
+            }
+        }
         public event EventHandler FileSelected;
         public event EventHandler FileSelectCancelled;
         public string CurrentFolder
@@ -40,8 +52,9 @@ namespace WGiBeat.Drawing
         }
 
         public readonly Menu FileList = new Menu();
+ 
 
-        //TODO: Display control help.
+ 
         public FileSelectDialog()
         {
             FileList.TextColor = Color.Black;
@@ -65,6 +78,31 @@ namespace WGiBeat.Drawing
             FileList.Y = this.Y + 35;
             FileList.Width = this.Width;
             FileList.Draw(spriteBatch);
+
+            DrawControlHelp(spriteBatch);
+        }
+
+        private void DrawControlHelp(SpriteBatch spriteBatch)
+        {
+            var position = this.Position.Clone();
+            position.X +=  (int) this.Width/2.0f;
+            position.Y += FileList.ItemSpacing*FileList.MaxVisibleItems;
+            position.Y += 110;
+
+            string[] instructions =
+                {
+                    "Use UP and DOWN to select a file or folder.",
+                    "\nUse START to pick a file or folder.",
+                    "\nUse LEFT or the '..' option to go up a folder.",
+                    "\nPress SELECT to pick a different drive.",
+                };
+
+            foreach (var line in instructions)
+            {
+                TextureManager.DrawString(spriteBatch, line, "DefaultFont", position, Color.Black,
+                                          FontAlign.CENTER);
+                position.Y += 20;
+            }
         }
 
         public void MoveSelected(int amount)
@@ -126,6 +164,8 @@ namespace WGiBeat.Drawing
             }
             catch (UnauthorizedAccessException)
             {
+                FileList.SelectedItem().ClearOptions();
+                FileList.SelectedItem().AddOption("Permission Denied",0);
                 return false;
             }
         }

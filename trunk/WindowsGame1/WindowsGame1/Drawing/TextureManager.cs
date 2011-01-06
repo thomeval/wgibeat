@@ -40,6 +40,7 @@ namespace WGiBeat.Drawing
                 }
                 spriteBatch.DrawString(Fonts[fontName], line, measuredPosition, color, 0.0f, noRotation, scale, SpriteEffects.None, 0.0f);
                 measuredPosition.Y += measurements.Y;
+                measuredPosition.X = position.X;
             }
         }
 
