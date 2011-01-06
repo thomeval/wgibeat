@@ -23,6 +23,8 @@ namespace WGiBeat.Screens
         private ScoreSet _scoreSet;
         private NoteJudgementSet _noteJudgementSet;
         private BeatlineSet _beatlineSet;
+        private CountdownSet _countdownSet;
+
         private NoteBar[] _notebars;
         private const int PLAYER_COUNT = 4;
         private GameSong _gameSong;
@@ -45,6 +47,7 @@ namespace WGiBeat.Screens
             _hitsbarSet = new HitsBarSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
             _scoreSet = new ScoreSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
             _noteJudgementSet = new NoteJudgementSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
+            _countdownSet = new CountdownSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
             _beatlineSet = new BeatlineSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
 
             _beatlineSet.NoteMissed += BeatlineNoteMissed;
@@ -504,36 +507,13 @@ namespace WGiBeat.Screens
             background.Draw(spriteBatch);
         }
 
-        private readonly double[] _threshholds = { -1.00, -0.75, -0.5, -0.25, 0.0 };
+
 
         //TODO: Refactor into Set.
         private void DrawCountdowns(SpriteBatch spriteBatch)
         {
-            
-            for (int x = 0; x < Core.Players.Count(); x++)
-            {
-                if (!Core.Players[x].Playing)
-                {
-                    continue;
-                }
-                var countdownSpriteMap = new SpriteMap
-                                             {
-                                                 Columns = 1,
-                                                 Rows = 5,
-                                                 SpriteTexture = TextureManager.Textures["countdown"]
-                                             };
+            _countdownSet.Draw(spriteBatch, _phraseNumber);
 
-                for (int y = 0; y < _threshholds.Count(); y++)
-                {
-                    if (_phraseNumber < _threshholds[y])
-                    {
-                        countdownSpriteMap.ColorShading.A = (byte)Math.Min(255, (_threshholds[y] - _phraseNumber) * 255 * 4);
-                        countdownSpriteMap.Draw(spriteBatch, y, 200, 60, Core.Metrics["Countdown", x]);
-                        break;
-                    }
-                }
-
-            }
         }
 
         private void DrawClearIndicators(SpriteBatch spriteBatch)

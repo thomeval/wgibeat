@@ -5,25 +5,17 @@ using WGiBeat.Notes;
 
 namespace WGiBeat.Drawing.Sets
 {
-    public class NoteJudgementSet :DrawableObject
+    public class NoteJudgementSet :DrawableObjectSet
     {
-        private readonly Player[] _players;
         private readonly DisplayedJudgement[] _displayedJudgements;
-        private readonly MetricsManager _metrics;
-        private readonly GameType _gameType;
         private double _phraseNumber;
 
         public static readonly int[] JudgementCutoffs = {20, 50, 125, 250,1500};
-        public NoteJudgementSet()
+
+        public NoteJudgementSet(MetricsManager metrics, Player[] players, GameType type)
+            :base(metrics,players,type)
         {
             _displayedJudgements = new DisplayedJudgement[4];
-        }
-        public NoteJudgementSet(MetricsManager metrics, Player[] players, GameType type)
-            :this()
-        {
-            _metrics = metrics;
-            _players = players;
-            _gameType = type;
 
         }
         public override void Draw(SpriteBatch spriteBatch)
@@ -63,9 +55,9 @@ namespace WGiBeat.Drawing.Sets
             switch (judgement)
             {
                 case BeatlineNoteJudgement.IDEAL:
-                    _players[player].Streak++;
+                    Players[player].Streak++;
 
-                    decimal multiplier = Convert.ToDecimal((9 + Math.Max(1, _players[player].Streak)));
+                    decimal multiplier = Convert.ToDecimal((9 + Math.Max(1, Players[player].Streak)));
                     multiplier /= 10;
 
                     scoreAdjust = (long)(1000 * (numCompleted) * multiplier);
@@ -74,33 +66,33 @@ namespace WGiBeat.Drawing.Sets
                 case BeatlineNoteJudgement.COOL:
                     scoreAdjust = 750 * numCompleted;
                     lifeAdjust = (0.5 * numCompleted);
-                    _players[player].Streak = 0;
+                    Players[player].Streak = 0;
                     break;
                 case BeatlineNoteJudgement.OK:
                     scoreAdjust = 500 * numCompleted;
-                    _players[player].Streak = 0;
+                    Players[player].Streak = 0;
                     break;
                 case BeatlineNoteJudgement.BAD:
                     scoreAdjust = 250 * numCompleted;
-                    _players[player].Streak = 0;
+                    Players[player].Streak = 0;
                     lifeAdjust = -1 * numCompleted;
                     break;
                 case BeatlineNoteJudgement.MISS:
-                    lifeAdjust = _players[player].MissedBeat();
+                    lifeAdjust = Players[player].MissedBeat();
                     break;
                 case BeatlineNoteJudgement.FAIL:
-                    _players[player].Streak = 0;
-                    lifeAdjust = 0 - (int)(1 + _players[player].PlayDifficulty) * (numNotCompleted + 1);
-                    _players[player].Momentum = (long)(_players[player].Momentum * 0.7);
+                    Players[player].Streak = 0;
+                    lifeAdjust = 0 - (int)(1 + Players[player].PlayDifficulty) * (numNotCompleted + 1);
+                    Players[player].Momentum = (long)(Players[player].Momentum * 0.7);
                     break;
                     case BeatlineNoteJudgement.COUNT:
                     //Ignore judgement
                     return 0.0;
             }
 
-            _players[player].Judgements[(int)judgement]++;
+            Players[player].Judgements[(int)judgement]++;
 
-            if (_players[player].CPU)
+            if (Players[player].CPU)
             {
                 scoreAdjust *= NumHumanPlayers();
             }
@@ -108,7 +100,7 @@ namespace WGiBeat.Drawing.Sets
             {
                 scoreAdjust *= GetBonusMultiplier();
             }
-            _players[player].Score += scoreAdjust;
+            Players[player].Score += scoreAdjust;
 
             var newDj = new DisplayedJudgement { DisplayUntil = _phraseNumber + 0.5, Height = 40, Width = 150, Player = player, Tier = (int)judgement };
             newDj.Position = (_metrics["Judgement", player]);
@@ -124,7 +116,7 @@ namespace WGiBeat.Drawing.Sets
             {
                 return 1;
             }
-            var blazers = (from e in _players where e.IsBlazing select e).Count();
+            var blazers = (from e in Players where e.IsBlazing select e).Count();
             switch (blazers)
             {
                 case 4:
@@ -140,7 +132,7 @@ namespace WGiBeat.Drawing.Sets
         }
         private long NumHumanPlayers()
         {
-            return (from e in _players where e.Playing && !(e.CPU) select e).Count();
+            return (from e in Players where e.Playing && !(e.CPU) select e).Count();
         }
 
         private void DrawStreakCounters(SpriteBatch spriteBatch)
@@ -149,7 +141,7 @@ namespace WGiBeat.Drawing.Sets
     
             for (int x = 0; x < 4; x++)
             {
-                if (_players[x].Streak > 1)
+                if (Players[x].Streak > 1)
                 {
                     
                     if (_displayedJudgements[x] == null)
@@ -162,8 +154,8 @@ namespace WGiBeat.Drawing.Sets
                     }
                     //_streakNumbers.SpriteMap.ColorShading.A = _displayedJudgements[x].Opacity;
                     streakColor.A = _displayedJudgements[x].Opacity;
-                    spriteBatch.DrawString(TextureManager.Fonts["TwoTechLarge"], "x" + _players[x].Streak,_metrics["StreakText",x],streakColor);
-                   // _streakNumbers.DrawNumber(spriteBatch, _players[x].Streak, _metrics["StreakText", x], 30, 40);
+                    spriteBatch.DrawString(TextureManager.Fonts["TwoTechLarge"], "x" + Players[x].Streak,_metrics["StreakText",x],streakColor);
+                   // _streakNumbers.DrawNumber(spriteBatch, Players[x].Streak, _metrics["StreakText", x], 30, 40);
                 }
             }
         }
