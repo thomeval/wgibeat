@@ -159,5 +159,13 @@ namespace WGiBeat.Drawing.Sets
                 }
             }
         }
+
+        public void Reset()
+        {
+            for (int x = 0; x < 4; x++)
+            {
+                _displayedJudgements[x] = null;
+            }
+        }
     }
 }

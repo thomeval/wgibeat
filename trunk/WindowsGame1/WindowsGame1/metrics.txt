@@ -124,6 +124,9 @@ SongEditProgress=[0,520];
 EditorMenuStart=[0,55];
 EditorHeading=[10,0];
 EditorBPMMeter=[410,90];
+EditorSongValidity=[410,280];
 EditorTweakControls=[25,350][425,350];
 EditorHitOffset=[50,275];
+EditorErrorMessage=[400,250];
+
 

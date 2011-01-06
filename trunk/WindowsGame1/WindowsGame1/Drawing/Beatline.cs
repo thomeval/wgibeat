@@ -271,5 +271,10 @@ namespace WGiBeat.Drawing
             }
             return result;
         }
+
+        public void ClearNotes()
+        {
+            _beatlineNotes.Clear();
+        }
     }
 }
