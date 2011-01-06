@@ -179,6 +179,10 @@ namespace WGiBeat.Drawing.Sets
         public void Reset()
         {
             _lastBeatlineNote = -1;
+            foreach (Beatline beatline in _beatlines)
+            {
+                beatline.ClearNotes();
+            }
         }
     }
 }

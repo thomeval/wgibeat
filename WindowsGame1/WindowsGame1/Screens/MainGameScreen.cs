@@ -509,7 +509,6 @@ namespace WGiBeat.Screens
 
 
 
-        //TODO: Refactor into Set.
         private void DrawCountdowns(SpriteBatch spriteBatch)
         {
             _countdownSet.Draw(spriteBatch, _phraseNumber);

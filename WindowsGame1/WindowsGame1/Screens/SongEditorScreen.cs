@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -20,8 +21,13 @@ namespace WGiBeat.Screens
         private readonly TextEntry _textEntry = new TextEntry { Width = 800, Height = 600 };
         private BeatlineSet _beatlineSet;
         private NoteJudgementSet _noteJudgementSet;
+        private CountdownSet _countdownSet;
+
         private bool _keyInput;
         private bool _ignoreNextKey;
+        private bool _songValid;
+        private bool _editMode;
+        private string _errorMessage = "";
         private EditorCursorPosition _cursorPosition;
 
         private string _audioFilePath = "";
@@ -37,6 +43,7 @@ namespace WGiBeat.Screens
         private string _textEntryDestination;
         private Sprite _editProgressBaseSprite;
         private SpriteMap _editProgressSpriteMap;
+        private SpriteMap _validitySpriteMap;
         private BpmMeter _bpmMeter;
         private double _phraseNumber;
         private double _debugLastHitOffset;
@@ -55,6 +62,7 @@ namespace WGiBeat.Screens
             _bpmMeter = new BpmMeter {Position = (Core.Metrics["EditorBPMMeter", 0])};
             _beatlineSet = new BeatlineSet(Core.Metrics, Core.Players, GameType.NORMAL) {Large = true};
             _noteJudgementSet = new NoteJudgementSet(Core.Metrics,Core.Players,GameType.NORMAL);
+            _countdownSet = new CountdownSet(Core.Metrics, Core.Players, GameType.NORMAL);
         }
 
         public void InitSprites()
@@ -68,6 +76,12 @@ namespace WGiBeat.Screens
                                              Rows = 2,
                                              SpriteTexture = TextureManager.Textures["SongEditProgress"]
                                          };
+            _validitySpriteMap = new SpriteMap
+                                     {
+                                         Columns = 1,
+                                         Rows = 2,
+                                         SpriteTexture = TextureManager.Textures["EditorSongValidity"]
+                                     };
         }
 
         private void CreateMenus()
@@ -211,6 +225,7 @@ namespace WGiBeat.Screens
             switch (_cursorPosition)
             {
                 case EditorCursorPosition.SELECT_AUDIO:
+                case EditorCursorPosition.SELECT_SONGFILE:
                     _fileSelect.Draw(spriteBatch);
                     break;
                 case EditorCursorPosition.KEY_ENTRY:
@@ -218,17 +233,19 @@ namespace WGiBeat.Screens
                     break;
                 case EditorCursorPosition.SONG_BASICS:
                     _editProgress = 1;
-
+                    TextureManager.DrawString(spriteBatch,_errorMessage,"LargeFont",Core.Metrics["EditorErrorMessage",0],Color.Red,FontAlign.CENTER);
                     break;
                 case EditorCursorPosition.SONG_DETAILS:
                     _editProgress = 2;
+                    var validIdx = _songValid ? 1 : 0;
+                    _validitySpriteMap.Draw(spriteBatch, validIdx, 195, 42, Core.Metrics["EditorSongValidity",0]);
                     _bpmMeter.Draw(spriteBatch);
-                    //TODO: Draw "valid" graphic.
                     break;
                 case EditorCursorPosition.SONG_TWEAKING:
                     _editProgress = 3;
                     _beatlineSet.Draw(spriteBatch, _phraseNumber);
                     _noteJudgementSet.Draw(spriteBatch, _phraseNumber);
+                    _countdownSet.Draw(spriteBatch,_phraseNumber);
                     break;
                 case EditorCursorPosition.DONE:
                     _editProgress = 4;
@@ -327,7 +344,7 @@ namespace WGiBeat.Screens
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Offset: {0:F3}", NewGameSong.Offset),
                     Core.Metrics["SongDebugOffset", 0], Color.Black);
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + String.Format("{0:F3}", _phraseNumber), Core.Metrics["SongDebugPhrase", 0], Color.Black);
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Speed: {0}x}", Core.Players[0].BeatlineSpeed),
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Speed: {0}x", Core.Players[0].BeatlineSpeed),
            Core.Metrics["SongDebugHitOffset", 0], Color.Black);
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Length: {0:F3}", NewGameSong.Length),
            Core.Metrics["SongDebugLength", 0], Color.Black);
@@ -339,15 +356,40 @@ namespace WGiBeat.Screens
 
         private void ValidateInputs()
         {
-            _menus["Basics"].GetByItemText("Next Step").Enabled = (!String.IsNullOrEmpty(_destinationFileName)) &&
-                                                                  (!String.IsNullOrEmpty(_destinationFolderName)) &&
-                                                                  (!String.IsNullOrEmpty(_audioFilePath));
-
-            if (_cursorPosition == EditorCursorPosition.SONG_DETAILS)
+            switch (_cursorPosition)
             {
-                Core.Log.Enabled = false;
-                _menus["Details"].GetByItemText("Next Step").Enabled = Core.Songs.ValidateSongFile(NewGameSong);
-                Core.Log.Enabled = true;
+                case EditorCursorPosition.SONG_BASICS:
+                    var invalidFilename =
+                        (from e in Path.GetInvalidFileNameChars() where _destinationFileName.Contains("" + e) select e).
+                            Any();
+                    var invalidDirname =
+                        (from e in Path.GetInvalidPathChars() where _destinationFolderName.Contains("" + e) select e).
+                            Any();
+                    _menus["Basics"].GetByItemText("Next Step").Enabled =
+                        (!String.IsNullOrEmpty(_destinationFileName)) &&
+                        (!String.IsNullOrEmpty(_destinationFolderName)) &&
+                        (!String.IsNullOrEmpty(_audioFilePath)) &&
+                        (!invalidFilename) &&
+                        (!invalidDirname);
+
+                    _errorMessage = "";
+
+                    if (invalidDirname)
+                    {
+                        _errorMessage = "Destination Folder name contains invalid characters.";
+                    }
+                    if (invalidFilename)
+                    {
+                        _errorMessage = "Destination File name contains invalid characters.";
+                    }
+                    break;
+                case EditorCursorPosition.SONG_DETAILS:                   
+                        Core.Log.Enabled = false;
+                        _songValid =
+                            _menus["Details"].GetByItemText("Next Step").Enabled =
+                            Core.Songs.ValidateSongFile(NewGameSong);
+                        Core.Log.Enabled = true;                  
+                    break;
             }
         }
 
@@ -528,6 +570,7 @@ namespace WGiBeat.Screens
 
         private void RestartSong()
         {
+            //TODO: Implement this.
             throw new NotImplementedException();
         }
 
@@ -665,6 +708,7 @@ namespace WGiBeat.Screens
                         _beatlineSet.Bpm = NewGameSong.Bpm;
                         _beatlineSet.SetSpeeds();
                         _beatlineSet.Reset();
+                        _noteJudgementSet.Reset();
                     }
                     break;
                 case 10:
@@ -788,6 +832,7 @@ namespace WGiBeat.Screens
         }
 
         private int _confidence;
+
 
         private void SyncSong()
         {
