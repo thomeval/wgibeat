@@ -16,12 +16,12 @@ namespace WGiBeat.Screens
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            throw new NotImplementedException();
+           
         }
 
         public override void PerformAction(Action action)
         {
-            throw new NotImplementedException();
+          
         }
     }
 }

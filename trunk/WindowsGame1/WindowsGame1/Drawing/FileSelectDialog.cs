@@ -1,13 +1,14 @@
 ﻿using System;
 using System.IO;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing
 {
     public class FileSelectDialog : DrawableObject
     {
-        private string _currentFolder = "C:";
+        private string _currentFolder = "C:\\";
+
+        public string[] Patterns = {"*.*"};
 
         public event EventHandler FileSelected;
         public event EventHandler FileSelectCancelled;
@@ -30,12 +31,17 @@ namespace WGiBeat.Drawing
         {
             get
             {
+                if (CurrentFolder == "")
+                {
+                    return FileList.SelectedItem().ItemText;
+                }
                 return CurrentFolder + "\\" + FileList.SelectedItem().ItemText;
             }
         }
 
         public readonly Menu FileList = new Menu();
 
+        //TODO: Display control help.
         public FileSelectDialog()
         {
             FileList.TextColor = Color.Black;
@@ -68,7 +74,11 @@ namespace WGiBeat.Drawing
 
         private void CreateFileList(string path)
         {
-
+            if (CurrentFolder == "")
+            {
+                CreateDriveList();
+                return;
+            }
             if (Directory.Exists(path))
             {
                 FileList.Clear();
@@ -82,8 +92,8 @@ namespace WGiBeat.Drawing
 
                 }
 
-                string[] patterns = {"*.mp3", "*.ogg", "*.wav"};
-                foreach (string pattern in patterns)
+                
+                foreach (string pattern in Patterns)
                 {
 
                     foreach (string file in Directory.GetFiles(path,pattern))
@@ -94,8 +104,21 @@ namespace WGiBeat.Drawing
             }
         }
 
+        private void CreateDriveList()
+        {
+            FileList.Clear();
+            foreach (string drive in Directory.GetLogicalDrives())
+            {
+                FileList.AddItem(new MenuItem {ItemText = drive, ItemValue = "DRIVE"});
+            }
+        }
+
         private bool CheckAccess(string path)
         {
+            if (path == "")
+            {
+                return true;
+            }
             try
             {
                 Directory.GetFiles(path);
@@ -119,16 +142,29 @@ namespace WGiBeat.Drawing
                 case "DOWN":
                     FileList.IncrementSelected();
                     break;
+                case "LEFT":
+                    CurrentFolder = Path.GetFullPath(CurrentFolder + "\\..");
+                    break;
                 case "START":
                     if (SelectedItemIsFolder())
                     {
-                        CurrentFolder = Path.GetFullPath(SelectedFile);
+                        if (IsRootFolder(CurrentFolder) && (FileList.SelectedItem().ItemText == ".."))
+                        {
+                            CurrentFolder = "";
+                        }
+                        else
+                        {
+                            CurrentFolder = Path.GetFullPath(SelectedFile);
+                        }
                     }
                     else
                     {
                         
                         FileSelected(this, null);
                     }
+                    break;
+                case "SELECT":
+                    CurrentFolder = "";
                     break;
                 case "BACK":
                     if (FileSelectCancelled != null)
@@ -138,6 +174,12 @@ namespace WGiBeat.Drawing
                     break;
             }
         }
+
+        private bool IsRootFolder(string folder)
+        {
+            return folder.EndsWith(":\\") && folder.Length == 3;
+        }
+
         public bool SelectedItemIsFolder()
         {
             return Directory.Exists(SelectedFile);

@@ -81,7 +81,7 @@ namespace WGiBeat.Drawing
             {
                 return 0;
             }
-            //TODO: Perfect this
+
             var amount = (Math.Log(Math.Abs(BlueScore - RedScore),10) -2) * 30;
             if (RedScore > BlueScore)
             {

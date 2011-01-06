@@ -52,10 +52,8 @@ namespace WGiBeat.Screens
 
         private void InitObjects()
         {
-            _bpmMeter = new BpmMeter();
-            _bpmMeter.Position = (Core.Metrics["EditorBPMMeter", 0]);
-            _beatlineSet = new BeatlineSet(Core.Metrics, Core.Players, GameType.NORMAL);
-            _beatlineSet.Large = true;
+            _bpmMeter = new BpmMeter {Position = (Core.Metrics["EditorBPMMeter", 0])};
+            _beatlineSet = new BeatlineSet(Core.Metrics, Core.Players, GameType.NORMAL) {Large = true};
             _noteJudgementSet = new NoteJudgementSet(Core.Metrics,Core.Players,GameType.NORMAL);
         }
 
@@ -141,6 +139,7 @@ namespace WGiBeat.Screens
 
         private void TextEntryEntryComplete(object sender, EventArgs e)
         {
+            //TODO: Check for invalid file / folder characters.
             double temp;
             switch (_textEntryDestination)
             {
@@ -224,6 +223,7 @@ namespace WGiBeat.Screens
                 case EditorCursorPosition.SONG_DETAILS:
                     _editProgress = 2;
                     _bpmMeter.Draw(spriteBatch);
+                    //TODO: Draw "valid" graphic.
                     break;
                 case EditorCursorPosition.SONG_TWEAKING:
                     _editProgress = 3;
@@ -253,7 +253,6 @@ namespace WGiBeat.Screens
             switch (_cursorPosition)
             {
                 case EditorCursorPosition.SONG_BASICS:
-                    //TODO: Fix for long filenames.
                     var currentMenu = _menus["Basics"];
                     currentMenu.ClearMenuOptions();
                     currentMenu.GetByItemText("Select Audio File").AddOption(Path.GetFileName(_audioFilePath), null);
@@ -322,16 +321,19 @@ namespace WGiBeat.Screens
 
         private void DrawDebugText(SpriteBatch spriteBatch)
         {
-
+            //TODO: Draw average hit offsets.
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("BPM: {0:F2}", NewGameSong.Bpm),
                    Core.Metrics["SongDebugBPM", 0], Color.Black);
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Offset: {0:F3}", NewGameSong.Offset),
                     Core.Metrics["SongDebugOffset", 0], Color.Black);
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + String.Format("{0:F3}", _phraseNumber), Core.Metrics["SongDebugPhrase", 0], Color.Black);
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Hitoffset: {0:F3}", _debugLastHitOffset),
-                       Core.Metrics["SongDebugHitOffset", 0], Color.Black);
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Speed: {0}x}", Core.Players[0].BeatlineSpeed),
+           Core.Metrics["SongDebugHitOffset", 0], Color.Black);
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Length: {0:F3}", NewGameSong.Length),
            Core.Metrics["SongDebugLength", 0], Color.Black);
+
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Last Hitoffset: {0:F3}", _debugLastHitOffset),
+           Core.Metrics["EditorHitOffset", 0], Color.Black);
         
         }
 
@@ -570,6 +572,7 @@ namespace WGiBeat.Screens
             switch (menu.SelectedItem().ItemValue.ToString())
             {
                 case "0":
+                    _fileSelect.Patterns = new[] { "*.mp3", "*.ogg", "*.wav" };
                     _cursorPosition = EditorCursorPosition.SELECT_AUDIO;
                     _fileSelect.FileSelected += delegate
                                                     {
@@ -681,7 +684,14 @@ namespace WGiBeat.Screens
                     _audioFilePath = "";
                     break;
                 case "1":
-                    //_activeMenu = "SelectSongFile";
+                    //TODO: Implement "Edit Existing Song"
+                    _cursorPosition = EditorCursorPosition.SELECT_SONGFILE;
+                    _fileSelect.Patterns = new[] {"*.sng"};
+                    _fileSelect.FileSelected += delegate
+                                                    {
+                                                        NewGameSong = Core.Songs.LoadFromFile(_fileSelect.SelectedFile);
+                                                        _cursorPosition = EditorCursorPosition.SONG_DETAILS;
+                                                    };
                     break;
                 case "2":
                     Core.ScreenTransition("MainMenu");
@@ -810,7 +820,8 @@ namespace WGiBeat.Screens
             SONG_BASICS,
             SONG_DETAILS,
             SONG_TWEAKING,
-            DONE
+            DONE,
+            SELECT_SONGFILE
         }
     }
 }
