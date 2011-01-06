@@ -6,12 +6,9 @@ using WGiBeat.Notes;
 
 namespace WGiBeat.Drawing.Sets
 {
-    public class BeatlineSet : DrawableObject
+    public class BeatlineSet : DrawableObjectSet
     {
-        private readonly MetricsManager _metrics;
-        private readonly CPUManager _cpuManager;
-        public readonly Player[] Players;
-        private readonly GameType _gameType;
+
         private double _lastBeatlineNote = -1;
         private readonly Beatline[] _beatlines;
 
@@ -70,17 +67,12 @@ namespace WGiBeat.Drawing.Sets
         public event EventHandler NoteMissed;
         public event EventHandler CPUNoteHit;
 
-        public BeatlineSet()
-        {
-            _beatlines = new Beatline[4];
-        }
 
         public BeatlineSet(MetricsManager metrics, Player[] players, GameType gameType)
-            : this()
+            : base(metrics,players,gameType)
         {
-            _metrics = metrics;
-            Players = players;
-            _gameType = gameType;
+            _beatlines = new Beatline[4];
+
 
 
             for (int x = 0; x < 4; x++)

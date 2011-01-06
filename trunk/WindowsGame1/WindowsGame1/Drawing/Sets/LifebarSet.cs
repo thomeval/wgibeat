@@ -4,24 +4,15 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing.Sets
 {
-    public class LifeBarSet : DrawableObject
+    public class LifeBarSet : DrawableObjectSet
     {
 
-        private readonly MetricsManager _metrics;
-        public readonly Player[] Players; 
-        private readonly GameType _gameType;
         private readonly LifeBar[] _lifeBars;
 
-        public LifeBarSet()
+        public LifeBarSet(MetricsManager metrics, Player[] players, GameType gameType)
+            :base(metrics,players,gameType)
         {
             _lifeBars = new LifeBar[4];
-        }
-        public LifeBarSet(MetricsManager metrics, Player[] players, GameType gameType)
-            :this()
-        {
-            _metrics = metrics;
-            Players = players;
-            _gameType = gameType;
             CreateLifeBars();
         }
 

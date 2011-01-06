@@ -3,28 +3,20 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing.Sets
 {
-    public class ScoreSet: DrawableObject
+    public class ScoreSet: DrawableObjectSet
     {
-        private readonly Player[] _players;
+
         private long[] _displayedScores;
-        private readonly MetricsManager _metrics;
-        private readonly GameType _gameType;
         private SpriteMap _iconSpriteMap;
         private SpriteMap _coopBaseSprite;
         private SpriteMap _individualBaseSprite;
 
         private TeamScoreMeter _teamScoreMeter;
-        private ScoreSet()
-        {
-            _displayedScores = new long[4];
-        }
 
         public ScoreSet(MetricsManager metrics, Player[] players, GameType type)
-            : this()
+            : base(metrics,players,type)
         {
-            _metrics = metrics;
-            _players = players;
-            _gameType = type;
+            _displayedScores = new long[4];
             InitSprites();
         }
 
@@ -67,11 +59,11 @@ namespace WGiBeat.Drawing.Sets
 
             for (int x = 0; x < 4; x++)
             {
-                if (! _players[x].Playing)
+                if (! Players[x].Playing)
                 {
                     continue;
                 }
-                int idx = 1 + (int)(_players[x].PlayDifficulty);
+                int idx = 1 + (int)(Players[x].PlayDifficulty);
                 _iconSpriteMap.Draw(spriteBatch, idx, 30, 30, _metrics["GameScreenPlayerDifficulties", x]);
             }
         }
@@ -97,7 +89,7 @@ namespace WGiBeat.Drawing.Sets
             long scoreText = 0;
             for (int x = 0; x < 4; x++)
             {
-                if (_players[x].Playing)
+                if (Players[x].Playing)
                 {
                     scoreText += _displayedScores[x];
                 }
@@ -105,7 +97,7 @@ namespace WGiBeat.Drawing.Sets
 
             for (int x = 0; x < 2; x++)
             {
-                if ((_players[2 * x].Playing) || (_players[(2 * x) + 1].Playing))
+                if ((Players[2 * x].Playing) || (Players[(2 * x) + 1].Playing))
                 {
 
                     _coopBaseSprite.Draw(spriteBatch, 0, 240, 40, _metrics["ScoreCombinedBase", x]);
@@ -119,13 +111,13 @@ namespace WGiBeat.Drawing.Sets
             long blueScore = 0, redScore = 0;
             for (int x = 0; x < 4; x++)
             {
-                if (_players[x].Playing)
+                if (Players[x].Playing)
                 {
-                    if (_players[x].Team == 1)
+                    if (Players[x].Team == 1)
                     {
                         blueScore += _displayedScores[x];
                     }
-                    else if (_players[x].Team == 2)
+                    else if (Players[x].Team == 2)
                     {
                         redScore += _displayedScores[x];
                     }
@@ -135,12 +127,12 @@ namespace WGiBeat.Drawing.Sets
             _teamScoreMeter.BlueScore = blueScore;
             _teamScoreMeter.RedScore = redScore;
 
-            if (_players[0].Playing || _players[1].Playing)
+            if (Players[0].Playing || Players[1].Playing)
             {
                 _teamScoreMeter.Position = (_metrics["ScoreCombinedBase", 0]);
                 _teamScoreMeter.Draw(spriteBatch);
             }
-            if (_players[2].Playing || (_players[3].Playing))
+            if (Players[2].Playing || (Players[3].Playing))
             {
                 _teamScoreMeter.Position = (_metrics["ScoreCombinedBase", 1]);
                 _teamScoreMeter.Draw(spriteBatch);
@@ -155,7 +147,7 @@ namespace WGiBeat.Drawing.Sets
             for (int x = 0; x < 4; x++)
             {
 
-                if (!_players[x].Playing)
+                if (!Players[x].Playing)
                 {
                     continue;
                 }
@@ -169,13 +161,13 @@ namespace WGiBeat.Drawing.Sets
         {
             for (int x = 0; x < 4; x++)
             {
-                if (!_players[x].Playing)
+                if (!Players[x].Playing)
                 {
                     continue;
                 }
 
-                var amount = Math.Max(25, (_players[x].Score - _displayedScores[x]) / 10);
-                _displayedScores[x] = Math.Min(_players[x].Score, _displayedScores[x] + amount);
+                var amount = Math.Max(25, (Players[x].Score - _displayedScores[x]) / 10);
+                _displayedScores[x] = Math.Min(Players[x].Score, _displayedScores[x] + amount);
             }
         }
     }

@@ -2,24 +2,15 @@
 
 namespace WGiBeat.Drawing.Sets
 {
-    public class LevelBarSet : DrawableObject 
+    public class LevelBarSet : DrawableObjectSet 
     {
 
-        private readonly MetricsManager _metrics;
-        public readonly Player[] Players;
-        private readonly GameType _gameType;
         private readonly LevelBar[] _levelBars;
 
-        public LevelBarSet()
+        public LevelBarSet(MetricsManager metrics, Player[] players, GameType gameType)
+            : base(metrics,players,gameType)
         {
             _levelBars = new LevelBar[4];
-        }
-        public LevelBarSet(MetricsManager metrics, Player[] players, GameType gameType)
-            : this()
-        {
-            _metrics = metrics;
-            Players = players;
-            _gameType = gameType;
             CreateLevelBars();
         }
 

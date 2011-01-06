@@ -3,26 +3,17 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing.Sets
 {
-    public class HitsBarSet : DrawableObject
+    public class HitsBarSet : DrawableObjectSet
     {
-        private readonly Player[] _players;
-        private readonly MetricsManager _metrics;
-        private readonly GameType _gameType;
         private readonly byte[] _opacity;
         private Color _textColor = Color.Black;
         private SpriteMap _baseSprite;
 
-        public HitsBarSet()
-        {
-            _opacity = new byte[4];
-        }
 
         public HitsBarSet(MetricsManager metrics, Player[] players, GameType type)
-            :this()
+            :base(metrics,players,type)
         {
-            _metrics = metrics;
-            _players = players;
-            _gameType = type;
+            _opacity = new byte[4];
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -46,11 +37,11 @@ namespace WGiBeat.Drawing.Sets
             }
             for (int x = 0; x < 4; x++)
             {
-                if (!_players[x].Playing)
+                if (!Players[x].Playing)
                 {
                     continue;
                 }
-                if (_players[x].Hits < 25)
+                if (Players[x].Hits < 25)
                 {
                     _opacity[x] = (byte) Math.Max(_opacity[x] - 10, 0);
                 }
@@ -63,7 +54,7 @@ namespace WGiBeat.Drawing.Sets
                 _textColor.A = _opacity[x];
                 _baseSprite.Draw(spriteBatch, x, width, height, _metrics["HitsBar" + DetermineSuffix(), x]);
 
-                spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("{0:D3}", _players[x].Hits),
+                spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("{0:D3}", Players[x].Hits),
                                        _metrics["HitsText" + DetermineSuffix(), x], _textColor);
 
             }
