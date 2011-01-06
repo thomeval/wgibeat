@@ -13,6 +13,11 @@ namespace WGiBeat.Drawing
         public event EventHandler EntryComplete;
         public event EventHandler EntryCancelled;
 
+        private readonly char[] _lowercaseChars = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '[', ']', ';', ',', '.', '/', '\'', '`','\\'};
+        private readonly char[] _uppercaseChars = {'!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '{', '}', ':', '<', '>', '?', '\"', '~','|' };
+
+        public bool Shift { get; set; }
+        public bool CapsLock { get; set; }
         public Color TextColour = Color.Black;
         public string DescriptionText = "";
 
@@ -38,6 +43,19 @@ namespace WGiBeat.Drawing
            
             TextureManager.DrawString(spriteBatch, "Press enter when done, or escape to cancel.", "DefaultFont", myPosition,
                                       TextColour, FontAlign.CENTER);
+            myPosition.Y += 25;
+
+            //TODO: Make icons for Shift and Caps Lock
+            if (Shift)
+            {
+                TextureManager.DrawString(spriteBatch, "[SHIFT]", "DefaultFont", myPosition,
+                                    TextColour, FontAlign.CENTER);
+            }
+            if (CapsLock)
+            {
+                TextureManager.DrawString(spriteBatch, "[CAPS]", "DefaultFont", myPosition,
+                         TextColour, FontAlign.CENTER);
+            }
 
         }
 
@@ -65,39 +83,69 @@ namespace WGiBeat.Drawing
                         EntryCancelled(this, null);
                     }
                     break;
+                case Keys.LeftShift:
+                case Keys.RightShift:
+                    {
+                        Shift = !Shift;
+                    }
+                    break;
+                case Keys.CapsLock:
+                    {
+                        CapsLock = !CapsLock;
+                    }
+                    break;
                 default:
                     var temp = key.ToString().ToLower();
+
                     if (temp.Length > 1)
                     {
                         temp = ResolveSpecialKey(temp);
                     }
+                    if (temp.Length < 1)
+                    {
+                        return;
+                    }
+                    //Use uppercase letters if needed.
+                    if (Shift || CapsLock)
+                    {
+                        temp = temp.ToUpper();
+                    }
+
+                    //Mimic Shift behaviour by changing inputs that correspond to Shift-capable keys.
+                    if (Shift && _lowercaseChars.Contains(temp[0]))
+                    {
+                        var idx = Array.IndexOf(_lowercaseChars, temp[0]);
+                        temp = "" + _uppercaseChars[idx];
+                    }
+                        
                     result.Append(temp);
+                    Shift = false;
                     break;
             }
         }
 
+        private readonly string[] _encryptedChars = {"space", "oemperiod", "oemcomma", "oemsemicolon","oemquotes", "oemopenbrackets", "oemclosebrackets", "oemminus", "oemplus","oemquestion", "oemblackslash", "oemtilde", "oembackslash", "oempipe"};
+        private readonly char[] _decryptedChars = { ' ', '.', ',', ';', '\'', '[',']', '-', '=','/', '\'','`', '\\','\\' };
         private string ResolveSpecialKey(string temp)
         {
             if ((temp[0] == 'd') && (Char.IsDigit(temp[1])))
             {
                 return temp[1] + "";
             }
+               if (temp.StartsWith("numpad"))
+            {
+                return "" + temp[6];
+            }
             if (temp.StartsWith("space"))
             {
                 return " ";
             }
-            if (temp.StartsWith("numpad"))
+            if (_encryptedChars.Contains(temp))
             {
-                return "" + temp[6];
+                var idx = Array.IndexOf(_encryptedChars, temp);
+                return "" + _decryptedChars[idx];
             }
-            if (temp == "oemperiod")
-            {
-                return ".";
-            }
-            if (temp == "oemcomma")
-            {
-                return ",";
-            }
+
             return "";
         }
 

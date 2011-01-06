@@ -46,7 +46,6 @@ namespace WGiBeat.Drawing
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            //TODO: Draw sides
 
             if (MaxVisibleItems == 0)
             {

@@ -114,7 +114,6 @@
     <Compile Include="Drawing\LevelBar.cs" />
     <Compile Include="Drawing\Menu.cs" />
     <Compile Include="Drawing\MenuItem.cs" />
-    <Compile Include="Drawing\Particle.cs" />
     <Compile Include="Drawing\PathFollowerParticle.cs" />
     <Compile Include="Drawing\MetricsManager.cs" />
     <Compile Include="Drawing\OnScreenKeyboard.cs" />

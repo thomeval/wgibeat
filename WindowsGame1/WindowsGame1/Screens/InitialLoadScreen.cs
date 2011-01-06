@@ -29,8 +29,11 @@ namespace WGiBeat.Screens
             SongFolderPath = Directory.GetCurrentDirectory() + "\\" + Core.Settings["SongFolder"];
             _textPosition = Core.Metrics["SongLoadLog", 0].Clone();
 
-            _baseSprite = new Sprite {SpriteTexture = TextureManager.Textures["LoadingMessageBase"]};
-            _baseSprite.Position = (Core.Metrics["LoadMessageBase", 0]);
+            _baseSprite = new Sprite
+                              {
+                                  SpriteTexture = TextureManager.Textures["LoadingMessageBase"],
+                                  Position = (Core.Metrics["LoadMessageBase", 0])
+                              };
             var thread = new Thread(LoadSongs);
             thread.Start();
             base.Initialize();
