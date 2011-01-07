@@ -75,17 +75,25 @@ namespace WGiBeat.AudioSystem
 
         private string CalculateMD5()
         {
-            var md5 = MD5.Create();
-            var fs = File.Open(Path + "\\" + SongFile, FileMode.Open);
-            var temp = md5.ComputeHash(fs);
-            var output = "";
-            foreach (Byte b in temp)
+            try
             {
-                output += b.ToString("X2");
+                var md5 = MD5.Create();
+                var fs = File.Open(Path + "\\" + SongFile, FileMode.Open);
+                var temp = md5.ComputeHash(fs);
+                var output = "";
+                foreach (Byte b in temp)
+                {
+                    output += b.ToString("X2");
+                }
+
+                fs.Close();
+                return output;
+            }
+            catch (Exception ex)
+            {
+                return "FAIL";
             }
 
-            fs.Close();
-            return output;
         }
         public void SetMD5()
         {

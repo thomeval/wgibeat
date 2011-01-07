@@ -92,7 +92,7 @@ namespace WGiBeat.AudioSystem
             CheckFMODErrors(result);
             result = myChannel.setVolume(_masterVolume);
             CheckFMODErrors(result);
-
+            
             int index = -1;
             result = myChannel.getIndex(ref index);
             CheckFMODErrors(result);
@@ -122,7 +122,7 @@ namespace WGiBeat.AudioSystem
             var resultCode = _fmodSystem.getChannel(index, ref _tmpChannel);
             CheckFMODErrors(resultCode);
 
-            var result = _tmpChannel.setPosition((uint)(position * 1000), TIMEUNIT.MS);
+            var result = _tmpChannel.setPosition((uint)(position), TIMEUNIT.MS);
             CheckFMODErrors(result);
         }
 
@@ -162,7 +162,7 @@ namespace WGiBeat.AudioSystem
             bool isPlaying = false;
             _tmpChannel.isPlaying(ref isPlaying);
             CheckFMODErrors(resultCode);
-
+            
             if (isPlaying)
             {
                 resultCode = _tmpChannel.stop();
@@ -231,6 +231,19 @@ namespace WGiBeat.AudioSystem
             CheckFMODErrors(_fmodSystem.getChannel(index, ref _tmpChannel));
             CheckFMODErrors(_tmpChannel.getPosition(ref position, TIMEUNIT.MS));
             return position;
+        }
+
+        public uint GetChannelLength(int index)
+        {
+            uint length = 0;
+            var tmpSound = new Sound();
+            CheckFMODErrors(_fmodSystem.getChannel(index, ref _tmpChannel));
+            CheckFMODErrors(_tmpChannel.getCurrentSound(ref tmpSound));
+            if (tmpSound != null)
+            {
+                CheckFMODErrors(tmpSound.getLength(ref length, TIMEUNIT.MS));
+            }
+            return length;
         }
         #endregion
 
