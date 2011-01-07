@@ -12,7 +12,7 @@ namespace WGiBeat.Drawing
     {
         public Sprite Particle { get; set; }
         public Boolean Wrap { get; set; }
-        public Double Position { get; set; }
+        public Double PathPosition { get; set; }
         public Double StepSize { get; set; }
         public Double MoveSize { get; set; }
 
@@ -64,7 +64,7 @@ namespace WGiBeat.Drawing
             };
 
             Wrap = true;
-            Position = 0.0;
+            PathPosition = 0.0;
             StepSize = 0.001;
             Points = new List<Vector2>(4);
         }
@@ -119,11 +119,11 @@ namespace WGiBeat.Drawing
             } else
                 //Console.WriteLine(SegmentIndex = PositionToSegment());
 
-                Console.WriteLine(Position);
-            Position += StepSize;
-            if (Position >= 1)
+                Console.WriteLine(PathPosition);
+            PathPosition += StepSize;
+            if (PathPosition >= 1)
             {
-                Position = 0;
+                PathPosition = 0;
                 SegmentIndex = 0;
 
                 _partX = Points[0].X;
@@ -147,7 +147,7 @@ namespace WGiBeat.Drawing
         private int PositionToSegment()
         {
             Double curLength = 0;
-            Double targetPosition = TotalLength * Position;
+            Double targetPosition = TotalLength * PathPosition;
 
             for (int i = 0; i < Points.Count; i++)
             {
