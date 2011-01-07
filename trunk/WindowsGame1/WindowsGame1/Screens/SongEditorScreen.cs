@@ -108,7 +108,7 @@ namespace WGiBeat.Screens
             basicsMenu.AddItem(new MenuItem { ItemText = "Back", ItemValue = 4 });
             _menus.Add("Basics", basicsMenu);
 
-            var detailsMenu = new Menu() { Width = 400, Position = Core.Metrics["EditorMenuStart", 0] };
+            var detailsMenu = new Menu { Width = 400, Position = Core.Metrics["EditorMenuStart", 0] };
             detailsMenu.AddItem(new MenuItem { ItemText = "Enter Title", ItemValue = 0 });
             detailsMenu.AddItem(new MenuItem { ItemText = "Enter Subtitle", ItemValue = 1 });
             detailsMenu.AddItem(new MenuItem { ItemText = "Enter Artist", ItemValue = 2 });
@@ -279,7 +279,7 @@ namespace WGiBeat.Screens
 
         private void DrawText(SpriteBatch spriteBatch)
         {
-            string instructions = "";
+            string instructions;
             switch (_cursorPosition)
             {
                 case EditorCursorPosition.SONG_BASICS:

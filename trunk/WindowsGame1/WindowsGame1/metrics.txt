@@ -69,9 +69,9 @@ EvaluationScore=[120,225][520,225][120,550][520,550];
 EvaluationGrade=[225,165][625,165][225,490][625,490];
 EvaluationMaxHits=[255,55][655,55][255,380][655,380];
 EvaluationMaxStreak=[265,85][665,85][265,410][665,410];
-EvaluationHighScore=[220,225][620,225][220,550][620,550][410,295];
-EvaluationTotalScore=[510,275];
-EvaluationTotalGrade=[610,275];
+EvaluationHighScore=[220,225][620,225][220,550][620,550][265,300];
+EvaluationTotalScore=[635,285];
+EvaluationTotalGrade=[660,275];
 EvaluationTeamScoreMeter=[410,280];
 LifeGraph=[20,20][420,20][20,345][420,345];
 
@@ -93,12 +93,6 @@ SongCountDisplay=[550,100];
 PlayerOptionsFrame=[0,562][0,524][0,486][0,448];
 SelectedMode=[300,550];
 BPMMeter=[70,180];
-#SelectedSongBPMDisplay=[360,325];
-#SelectedSongLengthDisplay=[255,370];
-#SelectedSongTitleBase=[70,180];
-#SelectedSongTitle=[250,180];
-#SelectedSongSubtitle=[250,205];
-#SelectedSongArtist=[250,235];
 SelectedSongSpectrum=[235,330];
 
 #Options;
