@@ -104,11 +104,6 @@ namespace WGiBeat.Screens
             noteSpeed.SetSelectedByValue(1.0);
             _playerMenus[x].AddItem(noteSpeed);
 
-            var awesomeness = new MenuItem {ItemText = "Awesomeness"};
-            awesomeness.AddOption("Off",false);
-            awesomeness.AddOption("On",true);
-            _playerMenus[x].AddItem(awesomeness);
-
             var disableKO = new MenuItem {ItemText = "Disable KO"};
             disableKO.AddOption("Off",false);
             disableKO.AddOption("On",true);

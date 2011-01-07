@@ -25,6 +25,8 @@ namespace WGiBeat.Screens
         private LifeGraph _lifeGraph;
         private double _lastCycle;
         private TeamScoreMeter _teamScoreMeter;
+        private Sprite _coopScoreDisplay;
+
         public EvaluationScreen(GameCore core) : base(core)
         {
         }
@@ -104,6 +106,11 @@ namespace WGiBeat.Screens
                 Rows = NUM_EVALUATIONS,
                 SpriteTexture = TextureManager.Textures["evaluationGrades"]
             };
+            _coopScoreDisplay = new Sprite
+                                    {
+                                        SpriteTexture = TextureManager.Textures["scoreBaseCombined"],
+                                        Position = Core.Metrics["EvaluationTeamScoreMeter",0]
+                                    };
         }
 
         private void SaveHighScore()
@@ -278,12 +285,10 @@ namespace WGiBeat.Screens
                case GameType.NORMAL:
                    break;
                case GameType.COOPERATIVE:
-                    //TODO: Use the combined score graphic instead.
                    var totalScore = (from e in Core.Players where e.Playing select e.Score).Sum();
-                   TextureManager.DrawString(spriteBatch, "Team:","DefaultFont",
-                                   Core.Metrics["EvaluationLabelTotalScore", 0], Color.Black,FontAlign.LEFT);
-                   TextureManager.DrawString(spriteBatch, "" + totalScore,"DefaultFont",
-                                   Core.Metrics["EvaluationTotalScore", 0], Color.Black,FontAlign.LEFT);
+                   _coopScoreDisplay.Draw(spriteBatch);
+                   TextureManager.DrawString(spriteBatch, "" + totalScore,"LargeFont",
+                                   Core.Metrics["EvaluationTotalScore", 0], Color.White,FontAlign.RIGHT);
 
                        int gradeIndex = _grades[0];
                        _gradeSpriteMap.Draw(spriteBatch, gradeIndex, 150, 52, Core.Metrics["EvaluationTotalGrade", 0]);
