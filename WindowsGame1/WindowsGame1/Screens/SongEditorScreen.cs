@@ -133,11 +133,8 @@ namespace WGiBeat.Screens
 
             _textEntry.EntryComplete += TextEntryEntryComplete;
             _textEntry.EntryCancelled += TextEntryEntryCancelled;
-
-           
+        
         }
-
-
 
         private void TextEntryEntryCancelled(object sender, EventArgs e)
         {
@@ -249,7 +246,7 @@ namespace WGiBeat.Screens
                     _validitySpriteMap.Draw(spriteBatch, validIdx, 195, 42, Core.Metrics["EditorSongValidity",0]);
                     _bpmMeter.Draw(spriteBatch);
                     break;
-                case EditorCursorPosition.SONG_TWEAKING:
+                case EditorCursorPosition.SONG_TUNING:
                     _editProgress = 3;
                     _beatlineSet.Draw(spriteBatch, _phraseNumber);
                     _noteJudgementSet.Draw(spriteBatch, _phraseNumber);
@@ -311,7 +308,7 @@ namespace WGiBeat.Screens
                                                   offsetPosition, Color.Black, FontAlign.RIGHT);
                     }
                     break;
-                case EditorCursorPosition.SONG_TWEAKING:
+                case EditorCursorPosition.SONG_TUNING:
                     DrawDebugText(spriteBatch);
                     DrawTweakControlsText(spriteBatch);
                     DrawHitOffsetText(spriteBatch);
@@ -319,7 +316,7 @@ namespace WGiBeat.Screens
                 case EditorCursorPosition.MEASURE_OFFSET:
                     instructions = "Press START or BEATLINE to mark the offset position in the song.";
                     instructions +=
-                        "This is used to record where the actual gameplay should begin,\n and should ideally be on-beat.";
+                        "\nThis is used to record where the actual gameplay should begin,\n and should ideally be on-beat.";
                     instructions += "\nPress Escape to cancel.";
 
                     TextureManager.DrawString(spriteBatch,instructions,"DefaultFont",Core.Metrics["EditorMeasureInstructions",0],Color.Black,FontAlign.CENTER);
@@ -394,7 +391,7 @@ namespace WGiBeat.Screens
             textPosition.Y += 20;
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "SELECT - Restart Song", textPosition, Color.Black);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "START - Complete Tweaking", textPosition, Color.Black);
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "START - Complete Tuning", textPosition, Color.Black);
         }
 
 
@@ -458,10 +455,13 @@ namespace WGiBeat.Screens
             switch (_cursorPosition)
             {
                 case EditorCursorPosition.MAIN_MENU:
-                    headingText = "WGiBeat Song Editor";
+                    headingText = "WGiEdit";
                     break;
                 case EditorCursorPosition.SELECT_AUDIO:
                     headingText = "Select Audio File";
+                    break;
+                case EditorCursorPosition.SELECT_SONGFILE:
+                    headingText = "Select Song To Edit";
                     break;
                 case EditorCursorPosition.SONG_BASICS:
                     headingText = "Song Basics";
@@ -469,8 +469,17 @@ namespace WGiBeat.Screens
                 case EditorCursorPosition.SONG_DETAILS:
                     headingText = "Song Details";
                     break;
-                case EditorCursorPosition.SONG_TWEAKING:
-                    headingText = "Song Tweaking";
+                    case EditorCursorPosition.MEASURE_BPM:
+                    headingText = "Measure BPM";
+                    break;
+                    case EditorCursorPosition.MEASURE_LENGTH:
+                    headingText = "Measure Length";
+                    break;
+                case EditorCursorPosition.MEASURE_OFFSET:
+                    headingText = "Measure Offset";
+                    break;
+                case EditorCursorPosition.SONG_TUNING:
+                    headingText = "Song Tuning";
                     break;
                 case EditorCursorPosition.DONE:
                     headingText = "Completed";
@@ -534,7 +543,7 @@ namespace WGiBeat.Screens
 
                     _fileSelect.PerformAction(action);
                     return;
-                case EditorCursorPosition.SONG_TWEAKING:
+                case EditorCursorPosition.SONG_TUNING:
                     PerformTweakAction(action);
                     break;
                     case EditorCursorPosition.MEASURE_BPM:
@@ -580,6 +589,8 @@ namespace WGiBeat.Screens
                     switch (_cursorPosition)
                     {
                         case EditorCursorPosition.MEASURE_BPM:
+
+                            //TODO: Complete BPM measurement tool.
                             Core.Audio.StopChannel(_audioChannel);
                             _cursorPosition = EditorCursorPosition.SONG_DETAILS;
                             _songPlaying = false;
@@ -680,8 +691,12 @@ namespace WGiBeat.Screens
 
         private void RestartSong()
         {
-            //TODO: Implement this.
-            throw new NotImplementedException();
+            _startTime = null;
+            _songPlaying = false;
+            _confidence = 0;
+            Core.Songs.StopCurrentSong();
+            _beatlineSet.Reset();
+            _noteJudgementSet.Reset();
         }
 
         private void HitBeatline()
@@ -824,7 +839,7 @@ namespace WGiBeat.Screens
                     if (Core.Songs.ValidateSongFile(NewGameSong))
                     {
                         Core.Songs.SaveToFile(NewGameSong);
-                        _cursorPosition = EditorCursorPosition.SONG_TWEAKING;
+                        _cursorPosition = EditorCursorPosition.SONG_TUNING;
                         _startTime = null;
                         _songPlaying = false;
                         _confidence = 0;
@@ -880,7 +895,6 @@ namespace WGiBeat.Screens
                     _editMode = false;
                     break;
                 case "1":
-                    //TODO: Implement "Edit Existing Song"
                     _cursorPosition = EditorCursorPosition.SELECT_SONGFILE;
                     _fileSelect.Patterns = new[] {"*.sng"};
                     _fileSelect.FileSelected += delegate
@@ -976,7 +990,7 @@ namespace WGiBeat.Screens
             }
             _timeElapsed = (int) (gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay);
 
-            if (_cursorPosition == EditorCursorPosition.SONG_TWEAKING)
+            if (_cursorPosition == EditorCursorPosition.SONG_TUNING)
             {
 
                 if (!_songPlaying)
@@ -1033,7 +1047,7 @@ namespace WGiBeat.Screens
             SELECT_SONGFILE,
             SONG_BASICS,
             SONG_DETAILS,
-            SONG_TWEAKING,
+            SONG_TUNING,
             MEASURE_BPM,
             MEASURE_OFFSET,
             MEASURE_LENGTH,
