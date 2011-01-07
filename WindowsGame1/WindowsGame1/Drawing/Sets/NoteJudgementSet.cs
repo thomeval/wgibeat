@@ -152,10 +152,10 @@ namespace WGiBeat.Drawing.Sets
                     {
                         continue;
                     }
-                    //_streakNumbers.SpriteMap.ColorShading.A = _displayedJudgements[x].Opacity;
+                  
                     streakColor.A = _displayedJudgements[x].Opacity;
                     spriteBatch.DrawString(TextureManager.Fonts["TwoTechLarge"], "x" + Players[x].Streak,_metrics["StreakText",x],streakColor);
-                   // _streakNumbers.DrawNumber(spriteBatch, Players[x].Streak, _metrics["StreakText", x], 30, 40);
+              
                 }
             }
         }

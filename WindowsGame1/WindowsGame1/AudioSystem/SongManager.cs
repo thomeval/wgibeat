@@ -40,14 +40,14 @@ namespace WGiBeat.AudioSystem
 
         #region Song Operations
 
-        public void PlaySong(GameSong song)
+        public int PlaySong(GameSong song)
         {
             if (_songChannelIndex != -1)
             {
                 StopCurrentSong();
             }
             _songChannelIndex = AudioManager.PlaySoundEffect(song.Path + "\\" + song.SongFile, false, true);
-
+            return _songChannelIndex;
         }
 
         public void StopCurrentSong()

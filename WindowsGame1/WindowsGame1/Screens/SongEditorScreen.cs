@@ -28,6 +28,7 @@ namespace WGiBeat.Screens
         private bool _songValid;
         private bool _editMode;
         private string _errorMessage = "";
+        private int _audioChannel;
         private EditorCursorPosition _cursorPosition;
 
         private string _audioFilePath = "";
@@ -54,7 +55,7 @@ namespace WGiBeat.Screens
             CreateMenus();
             InitSprites();
             InitObjects();
-
+            
         }
 
         private void InitObjects()
@@ -153,7 +154,6 @@ namespace WGiBeat.Screens
 
         private void TextEntryEntryComplete(object sender, EventArgs e)
         {
-            //TODO: Check for invalid file / folder characters.
             double temp;
             switch (_textEntryDestination)
             {
@@ -219,6 +219,7 @@ namespace WGiBeat.Screens
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+
             _backgroundSprite.Draw(spriteBatch);
             DrawHeading(spriteBatch);
 
@@ -246,6 +247,13 @@ namespace WGiBeat.Screens
                     _beatlineSet.Draw(spriteBatch, _phraseNumber);
                     _noteJudgementSet.Draw(spriteBatch, _phraseNumber);
                     _countdownSet.Draw(spriteBatch,_phraseNumber);
+                    break;
+                    case EditorCursorPosition.MEASURE_BPM:
+                    break;
+                    case EditorCursorPosition.MEASURE_OFFSET:
+                    case EditorCursorPosition.MEASURE_LENGTH:
+                    TextureManager.DrawString(spriteBatch, String.Format("{0:0.00}", _timeElapsed / 1000), "LargeFont", Core.Metrics["EditorErrorMessage", 0], Color.Black, FontAlign.CENTER);
+
                     break;
                 case EditorCursorPosition.DONE:
                     _editProgress = 4;
@@ -316,7 +324,7 @@ namespace WGiBeat.Screens
             textPosition.Y += 20;
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "F9 - Decrease Offset (0.01)", textPosition, Color.Black);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "F10 - Decrease Offset (0.01)", textPosition, Color.Black);
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "F10 - Increase Offset (0.01)", textPosition, Color.Black);
             textPosition.Y += 20;
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "F11 - Decrease Length", textPosition, Color.Black);
             textPosition.Y += 20;
@@ -476,6 +484,11 @@ namespace WGiBeat.Screens
                 case EditorCursorPosition.SONG_TWEAKING:
                     PerformTweakAction(action);
                     break;
+                    case EditorCursorPosition.MEASURE_BPM:
+                    case EditorCursorPosition.MEASURE_LENGTH:
+                    case EditorCursorPosition.MEASURE_OFFSET:
+                    PerformActionMeasurement(action);
+                    break;
             }
 
             if (_activeMenu == null)
@@ -500,6 +513,43 @@ namespace WGiBeat.Screens
                     break;
                 case "START":
                     DoMenuAction();
+                    break;
+            }
+        }
+
+        private void PerformActionMeasurement(Action action)
+        {
+            var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
+            switch (paction)
+            {
+                case "BEATLINE":
+                case "START":
+                    switch (_cursorPosition)
+                    {
+                        case EditorCursorPosition.MEASURE_BPM:
+                            Core.Audio.StopChannel(_audioChannel);
+                            _cursorPosition = EditorCursorPosition.SONG_DETAILS;
+                            _songPlaying = false;
+                            break;
+                            case EditorCursorPosition.MEASURE_LENGTH:
+                            NewGameSong.Length = Math.Round(_timeElapsed / 1000, 2);
+                            Core.Audio.StopChannel(_audioChannel);
+                            _cursorPosition = EditorCursorPosition.SONG_DETAILS;
+                            _songPlaying = false;
+                            break;
+                            case EditorCursorPosition.MEASURE_OFFSET:
+                            NewGameSong.Offset = Math.Round(_timeElapsed /1000,2);
+                            Core.Audio.StopChannel(_audioChannel);
+                            _cursorPosition = EditorCursorPosition.SONG_DETAILS;
+                            _songPlaying = false;
+                            break;
+                    }
+                    break;
+
+                case "BACK":
+                    Core.Audio.StopChannel(_audioChannel);
+                    _cursorPosition = EditorCursorPosition.SONG_DETAILS;
+                    _songPlaying = false;
                     break;
             }
         }
@@ -542,12 +592,14 @@ namespace WGiBeat.Screens
                 case "BACK":
                     Core.Songs.StopCurrentSong();
                     _cursorPosition = EditorCursorPosition.SONG_DETAILS;
+                    _songPlaying = false;
                     break;
                 case "START":
                     Core.Songs.StopCurrentSong();
                     Core.Songs.SaveToFile(NewGameSong);
                     Core.Songs.AddSong(NewGameSong);
                     _cursorPosition = EditorCursorPosition.DONE;
+                    _songPlaying = false;
                     break;
                 case "LEFT":
                     AdjustSpeed(-1);
@@ -678,16 +730,18 @@ namespace WGiBeat.Screens
 
                     break;
                 case 4:
-                    //TODO: Create Song BPM calculator.
+                    ActivateMeasureMode();
+                    _cursorPosition = EditorCursorPosition.MEASURE_BPM;
                     break;
                 case 5:
                     ActivateTextEntryMode();
                     _textEntryDestination = "SongOffset";
                     _textEntry.DescriptionText = "Enter the offset, in seconds, of the song.\n This is used to record where the actual gameplay should begin,\n and should ideally be on-beat. Decimal numbers are allowed.";
-
+                    
                     break;
                 case 6:
-                    //TODO: Create Song Offset calculator.
+                    ActivateMeasureMode();
+                    _cursorPosition = EditorCursorPosition.MEASURE_OFFSET;
                     break;
                 case 7:
                     ActivateTextEntryMode();
@@ -696,7 +750,8 @@ namespace WGiBeat.Screens
 
                     break;
                 case 8:
-                    //TODO: Create song length calculator.
+                    _cursorPosition = EditorCursorPosition.MEASURE_LENGTH;
+                    ActivateMeasureMode();
                     break;
                 case 9:
                     if (Core.Songs.ValidateSongFile(NewGameSong))
@@ -704,6 +759,8 @@ namespace WGiBeat.Screens
                         Core.Songs.SaveToFile(NewGameSong);
                         _cursorPosition = EditorCursorPosition.SONG_TWEAKING;
                         _startTime = null;
+                        _songPlaying = false;
+                        _confidence = 0;
                         _beatlineSet.EndingPhrase = NewGameSong.GetEndingTimeInPhrase();
                         _beatlineSet.Bpm = NewGameSong.Bpm;
                         _beatlineSet.SetSpeeds();
@@ -717,6 +774,24 @@ namespace WGiBeat.Screens
             }
         }
 
+        private void ActivateMeasureMode()
+        {
+            _startTime = null;
+            _songPlaying = true;
+            _audioChannel = Core.Audio.PlaySoundEffect(NewGameSong.Path + "\\" + NewGameSong.SongFile, false, false);
+            _confidence = 0;
+            //Only play the last 30 seconds of the song when measuring the length of the song.
+            if (_cursorPosition == EditorCursorPosition.MEASURE_LENGTH)
+            {
+                var songLength = Core.Audio.GetChannelLength(_audioChannel);
+                if (songLength > 30000)
+                {
+                    _timeElapsed += songLength -= 30000;
+                    Core.Audio.SetPosition(_audioChannel, songLength - 30000);
+                }
+            }
+        }
+
         private void DoMenuActionMain(Menu menu)
         {
             switch (menu.SelectedItem().ItemValue.ToString())
@@ -727,6 +802,7 @@ namespace WGiBeat.Screens
                     _destinationFileName = "";
                     _destinationFolderName = "";
                     _audioFilePath = "";
+                    _editMode = false;
                     break;
                 case "1":
                     //TODO: Implement "Edit Existing Song"
@@ -736,7 +812,12 @@ namespace WGiBeat.Screens
                                                     {
                                                         NewGameSong = Core.Songs.LoadFromFile(_fileSelect.SelectedFile);
                                                         _cursorPosition = EditorCursorPosition.SONG_DETAILS;
+                                                        _editMode = true;
                                                     };
+                    _fileSelect.FileSelectCancelled += delegate
+                                                           {
+                                                               _cursorPosition = EditorCursorPosition.MAIN_MENU;
+                                                           };
                     break;
                 case "2":
                     Core.ScreenTransition("MainMenu");
@@ -812,32 +893,42 @@ namespace WGiBeat.Screens
         private double _songLoadDelay;
         public override void Update(GameTime gameTime)
         {
+
+            if (_startTime == null)
+            {
+                _startTime = new TimeSpan(gameTime.TotalRealTime.Ticks);
+            }
+            _timeElapsed = (int) (gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay);
+
             if (_cursorPosition == EditorCursorPosition.SONG_TWEAKING)
             {
-                if (_startTime == null)
+
+                if (!_songPlaying)
                 {
                     Core.Crossfader.SetNewChannel(-1);
-                    Core.Songs.PlaySong(NewGameSong);
-                    _startTime = new TimeSpan(gameTime.TotalRealTime.Ticks);
+                    _audioChannel = Core.Songs.PlaySong(NewGameSong);
+                    _songPlaying = true;
                 }
-                _timeElapsed =
-                    (int)
-                    (gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay);
+
                 _phraseNumber = NewGameSong.ConvertMSToPhrase(_timeElapsed);
-                SyncSong();
+                
                 _beatlineSet.MaintainBeatlineNotes(_phraseNumber);
             }
-
+            if (_songPlaying )
+            {
+                SyncSong();
+            }
             base.Update(gameTime);
         }
 
         private int _confidence;
+        private bool _songPlaying;
 
 
         private void SyncSong()
         {
 
-            if (_cursorPosition != EditorCursorPosition.SONG_TWEAKING)
+            if (!_songPlaying)
             {
                 return;
             }
@@ -846,7 +937,7 @@ namespace WGiBeat.Screens
             //as the default timing mechanism makes it jerky and slows the game down, so we attempt
             //to match current time with the song time by periodically sampling it. A hill climbing method
             // is used here.
-            var delay = Core.Songs.GetCurrentSongProgress() - _timeElapsed;
+            var delay = Core.Audio.GetChannelPosition(_audioChannel) - _timeElapsed;
             if ((_confidence < 15) && (Math.Abs(delay) > 25))
             {
                 _confidence = 0;
@@ -863,11 +954,14 @@ namespace WGiBeat.Screens
             MAIN_MENU,
             KEY_ENTRY,
             SELECT_AUDIO,
+            SELECT_SONGFILE,
             SONG_BASICS,
             SONG_DETAILS,
             SONG_TWEAKING,
-            DONE,
-            SELECT_SONGFILE
+            MEASURE_BPM,
+            MEASURE_OFFSET,
+            MEASURE_LENGTH,
+            DONE
         }
     }
 }
