@@ -126,7 +126,9 @@ EditorHeading=[10,0];
 EditorBPMMeter=[410,90];
 EditorSongValidity=[410,280];
 EditorTweakControls=[25,350][425,350];
-EditorHitOffset=[50,275];
+EditorHitOffset=[20,275][20,300][200,275][200,300];
 EditorErrorMessage=[400,250];
+EditorMeasureInstructions=[400,300];
+EditorSongPhraseNumber=[280,175];
 
 

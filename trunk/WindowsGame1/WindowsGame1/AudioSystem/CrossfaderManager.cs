@@ -79,7 +79,7 @@ namespace WGiBeat.AudioSystem
                 return;
             }
             SetNewChannel(AudioManager.PlaySoundEffect(song.Path + "\\" + song.SongFile));
-            AudioManager.SetPosition(_channelIndexCurrent, song.Offset);
+            AudioManager.SetPosition(_channelIndexCurrent, song.Offset * 1000);
             _currentSong = song;
         }
 
@@ -118,7 +118,7 @@ namespace WGiBeat.AudioSystem
             AudioManager.StopChannel(tempIdx);
 
             _channelIndexCurrent = AudioManager.PlaySoundEffect(_currentSong.Path + "\\" + _currentSong.SongFile);
-            AudioManager.SetPosition(_channelIndexCurrent, _currentSong.Offset);
+            AudioManager.SetPosition(_channelIndexCurrent, _currentSong.Offset *1000);
             SetVolumes();
         }
 

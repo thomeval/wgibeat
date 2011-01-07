@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using WGiBeat.Managers;
 
@@ -86,6 +87,23 @@ namespace WGiBeat.AudioSystem
             }
         }
 
+        public void RemoveSong(GameSong song)
+        {
+            if (_songs.Contains(song))
+            {
+                _songs.Remove(song);
+            }
+            else
+            {
+                throw new Exception("SongManager does not contain song with hashcode: " + song.GetHashCode());
+            } 
+        }
+
+        public GameSong GetBySongFile(string path, string songfilename)
+        {
+            return (from e in _songs where (e.Path == path) && (e.SongFile == songfilename) select e).SingleOrDefault();
+        }
+
         /// <summary>
         /// Creates a new SongManager object, and populates its song database by
         /// parsing all valid song files (.sng) from a folder. Subfolders are also parsed.
@@ -104,7 +122,7 @@ namespace WGiBeat.AudioSystem
                 folders.AddRange(Directory.GetDirectories(currentFolder));
                 foreach (string file in Directory.GetFiles(currentFolder, "*.sng"))
                 {
-                    var newSong = LoadFromFile(file);
+                    var newSong = LoadFromFile(file,true);
                     if (newSong == null)
                     {
                         continue;
@@ -151,8 +169,9 @@ namespace WGiBeat.AudioSystem
         /// details.
         /// </summary>
         /// <param name="filename">The name of the file to load.</param>
+        /// <param name="validate">Whether validation checks should be done on the loaded song file.</param>
         /// <returns>A GameSong loaded from the file provided.</returns>
-        public GameSong LoadFromFile(string filename)
+        public GameSong LoadFromFile(string filename, bool validate)
         {
             var newSong = GameSong.LoadDefaults();
 
@@ -205,7 +224,7 @@ namespace WGiBeat.AudioSystem
                             break;
                     }
                 }
-                if (!ValidateSongFile(newSong, filename))
+                if ((validate) && (!ValidateSongFile(newSong, filename)))
                 {
                     return null;
                 }
@@ -302,6 +321,5 @@ namespace WGiBeat.AudioSystem
 
         #endregion
 
- 
     }
 }

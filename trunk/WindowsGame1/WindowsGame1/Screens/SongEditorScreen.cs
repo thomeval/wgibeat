@@ -36,18 +36,24 @@ namespace WGiBeat.Screens
         private string _destinationFolderName = "";
         private TimeSpan? _startTime;
 
-        private Sprite _backgroundSprite;
-
         private string _activeMenu;
         private int _editProgress;
         public GameSong NewGameSong;
         private string _textEntryDestination;
+
         private Sprite _editProgressBaseSprite;
+        private Sprite _backgroundSprite;
         private SpriteMap _editProgressSpriteMap;
         private SpriteMap _validitySpriteMap;
         private BpmMeter _bpmMeter;
+
         private double _phraseNumber;
         private double _debugLastHitOffset;
+
+        private double[] _hitOffsets = new double[10];
+        private int _numHits;
+        private double[] _beatTimings = new double[25];
+        private int _numBeats;
 
         public SongEditorScreen(GameCore core)
             : base(core)
@@ -64,6 +70,7 @@ namespace WGiBeat.Screens
             _beatlineSet = new BeatlineSet(Core.Metrics, Core.Players, GameType.NORMAL) {Large = true};
             _noteJudgementSet = new NoteJudgementSet(Core.Metrics,Core.Players,GameType.NORMAL);
             _countdownSet = new CountdownSet(Core.Metrics, Core.Players, GameType.NORMAL);
+
         }
 
         public void InitSprites()
@@ -275,6 +282,7 @@ namespace WGiBeat.Screens
 
         private void DrawText(SpriteBatch spriteBatch)
         {
+            string instructions = "";
             switch (_cursorPosition)
             {
                 case EditorCursorPosition.SONG_BASICS:
@@ -306,8 +314,54 @@ namespace WGiBeat.Screens
                 case EditorCursorPosition.SONG_TWEAKING:
                     DrawDebugText(spriteBatch);
                     DrawTweakControlsText(spriteBatch);
+                    DrawHitOffsetText(spriteBatch);
+                    break;
+                case EditorCursorPosition.MEASURE_OFFSET:
+                    instructions = "Press START or BEATLINE to mark the offset position in the song.";
+                    instructions +=
+                        "This is used to record where the actual gameplay should begin,\n and should ideally be on-beat.";
+                    instructions += "\nPress Escape to cancel.";
+
+                    TextureManager.DrawString(spriteBatch,instructions,"DefaultFont",Core.Metrics["EditorMeasureInstructions",0],Color.Black,FontAlign.CENTER);
+                    break;
+                case EditorCursorPosition.MEASURE_LENGTH:
+                    instructions = "Press START or BEATLINE to mark the end of the playable area of the song.";
+                    instructions +=
+                        "\nThis does not need to be on-beat, as the last beatline is calculated automatically.";
+                    instructions += "\nPress Escape to cancel.";
+
+                    TextureManager.DrawString(spriteBatch, instructions, "DefaultFont", Core.Metrics["EditorMeasureInstructions", 0], Color.Black, FontAlign.CENTER);
+                    break;
+                case EditorCursorPosition.MEASURE_BPM:
+                    instructions = "Use BEATLINE to tap the beats of the song.";
+                    instructions +=
+                        "\nThe BPM will be calculated based on the average time between taps.";
+                    instructions += "\nNote that most songs have a BPM that is a whole number.";
+                    instructions += "\nPress START to confirm the displayed BPM, or press Escape to cancel.";
+
+                    TextureManager.DrawString(spriteBatch, instructions, "DefaultFont", Core.Metrics["EditorMeasureInstructions", 0], Color.Black, FontAlign.CENTER);
                     break;
             }
+        }
+
+        private void DrawHitOffsetText(SpriteBatch spriteBatch)
+        {
+
+            TextureManager.DrawString(spriteBatch, String.Format("Last hit: {0:F3}", _hitOffsets[0]), "DefaultFont", Core.Metrics["EditorHitOffset", 0], Color.Black, FontAlign.LEFT);
+            var avg = _hitOffsets.Take(3).Average();
+            if (_numHits < 3)
+                return;
+
+            TextureManager.DrawString(spriteBatch, String.Format("Last 3 avg: {0:F3}", avg), "DefaultFont", Core.Metrics["EditorHitOffset", 1], Color.Black, FontAlign.LEFT);
+            if (_numHits < 5)
+                return;
+            avg = _hitOffsets.Take(5).Average();
+            TextureManager.DrawString(spriteBatch, String.Format("Last 5 avg: {0:F3}", avg), "DefaultFont", Core.Metrics["EditorHitOffset", 2], Color.Black, FontAlign.LEFT);
+            if (_numHits < 10)
+                return;
+            avg = _hitOffsets.Average();
+            TextureManager.DrawString(spriteBatch, String.Format("Last 10 avg: {0:F3}", avg), "DefaultFont", Core.Metrics["EditorHitOffset", 3], Color.Black, FontAlign.LEFT);
+
         }
 
         private void DrawTweakControlsText(SpriteBatch spriteBatch)
@@ -346,19 +400,16 @@ namespace WGiBeat.Screens
 
         private void DrawDebugText(SpriteBatch spriteBatch)
         {
-            //TODO: Draw average hit offsets.
+
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("BPM: {0:F2}", NewGameSong.Bpm),
                    Core.Metrics["SongDebugBPM", 0], Color.Black);
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Offset: {0:F3}", NewGameSong.Offset),
                     Core.Metrics["SongDebugOffset", 0], Color.Black);
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + String.Format("{0:F3}", _phraseNumber), Core.Metrics["SongDebugPhrase", 0], Color.Black);
+            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + String.Format("{0:F3}", _phraseNumber), Core.Metrics["EditorSongPhraseNumber", 0], Color.Black);
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Speed: {0}x", Core.Players[0].BeatlineSpeed),
            Core.Metrics["SongDebugHitOffset", 0], Color.Black);
             spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Length: {0:F3}", NewGameSong.Length),
            Core.Metrics["SongDebugLength", 0], Color.Black);
-
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Last Hitoffset: {0:F3}", _debugLastHitOffset),
-           Core.Metrics["EditorHitOffset", 0], Color.Black);
         
         }
 
@@ -479,6 +530,8 @@ namespace WGiBeat.Screens
             switch (_cursorPosition)
             {
                 case EditorCursorPosition.SELECT_AUDIO:
+                    case EditorCursorPosition.SELECT_SONGFILE:
+
                     _fileSelect.PerformAction(action);
                     return;
                 case EditorCursorPosition.SONG_TWEAKING:
@@ -597,6 +650,11 @@ namespace WGiBeat.Screens
                 case "START":
                     Core.Songs.StopCurrentSong();
                     Core.Songs.SaveToFile(NewGameSong);
+                    var oldSongFile = Core.Songs.GetBySongFile(NewGameSong.Path, NewGameSong.SongFile);
+                    if (oldSongFile != null)
+                    {
+                        Core.Songs.RemoveSong(oldSongFile);
+                    }
                     Core.Songs.AddSong(NewGameSong);
                     _cursorPosition = EditorCursorPosition.DONE;
                     _songPlaying = false;
@@ -630,7 +688,16 @@ namespace WGiBeat.Screens
         {
 
             _debugLastHitOffset = _beatlineSet.CalculateHitOffset(0, _phraseNumber);
+            _numHits = Math.Min(_hitOffsets.Length, _numHits+ 1);
+            
+            for (int x = _numHits; x > 0; x--)
+            {
+                if (x == _hitOffsets.Length)
+                    continue;
 
+                _hitOffsets[x] = _hitOffsets[x - 1];
+            }
+            _hitOffsets[0] = _debugLastHitOffset;
             var judgement = _beatlineSet.AwardJudgement(_phraseNumber, 0, true);
             if (judgement == BeatlineNoteJudgement.COUNT)
             {
@@ -766,10 +833,18 @@ namespace WGiBeat.Screens
                         _beatlineSet.SetSpeeds();
                         _beatlineSet.Reset();
                         _noteJudgementSet.Reset();
+                        _numHits = 0;
                     }
                     break;
                 case 10:
-                    _cursorPosition = EditorCursorPosition.SONG_BASICS;
+                    if (_editMode)
+                    {
+                        _cursorPosition = EditorCursorPosition.MAIN_MENU;
+                    }
+                    else
+                    {
+                        _cursorPosition = EditorCursorPosition.SONG_BASICS;
+                    }
                     break;
             }
         }
@@ -810,7 +885,8 @@ namespace WGiBeat.Screens
                     _fileSelect.Patterns = new[] {"*.sng"};
                     _fileSelect.FileSelected += delegate
                                                     {
-                                                        NewGameSong = Core.Songs.LoadFromFile(_fileSelect.SelectedFile);
+                                                        NewGameSong = Core.Songs.LoadFromFile(_fileSelect.SelectedFile,false);
+                                                        _bpmMeter.DisplayedSong = NewGameSong;
                                                         _cursorPosition = EditorCursorPosition.SONG_DETAILS;
                                                         _editMode = true;
                                                     };
