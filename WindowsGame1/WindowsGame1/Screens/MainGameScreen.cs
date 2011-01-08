@@ -579,15 +579,15 @@ namespace WGiBeat.Screens
         private void DrawDebugText(SpriteBatch spriteBatch)
         {
 
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("BPM: {0:F2}", _gameSong.Bpm),
-                   Core.Metrics["SongDebugBPM", 0], Color.Black);
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Offset: {0:F3}", _gameSong.Offset),
-                    Core.Metrics["SongDebugOffset", 0], Color.Black);
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + String.Format("{0:F3}", _phraseNumber), Core.Metrics["SongDebugPhrase", 0], Color.Black);
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Hitoffset: {0:F3}", _debugLastHitOffset),
-                       Core.Metrics["SongDebugHitOffset", 0], Color.Black);
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Length: {0:F3}", _gameSong.Length),
-           Core.Metrics["SongDebugLength", 0], Color.Black);
+            TextureManager.DrawString(spriteBatch,String.Format("{0:F3}", _phraseNumber), "DefaultFont", Core.Metrics["SongDebugPhrase", 0], Color.Black,FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, String.Format("BPM: {0:F2}", _gameSong.Bpm),
+       "DefaultFont", Core.Metrics["SongDebugBPM", 0], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, String.Format("Offset: {0:F3}", _gameSong.Offset),
+                    "DefaultFont", Core.Metrics["SongDebugOffset", 0], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, String.Format("Hitoffset: {0:F3}", _debugLastHitOffset),
+                "DefaultFont", Core.Metrics["SongDebugHitOffset", 0], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, String.Format("Length: {0:F3}", _gameSong.Length),
+                "DefaultFont", Core.Metrics["SongDebugLength", 0], Color.Black, FontAlign.LEFT);
         }
 
         private void DrawBorders(SpriteBatch spriteBatch)

@@ -397,17 +397,16 @@ namespace WGiBeat.Screens
 
         private void DrawDebugText(SpriteBatch spriteBatch)
         {
-
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("BPM: {0:F2}", NewGameSong.Bpm),
-                   Core.Metrics["SongDebugBPM", 0], Color.Black);
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Offset: {0:F3}", NewGameSong.Offset),
-                    Core.Metrics["SongDebugOffset", 0], Color.Black);
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + String.Format("{0:F3}", _phraseNumber), Core.Metrics["EditorSongPhraseNumber", 0], Color.Black);
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Speed: {0}x", Core.Players[0].BeatlineSpeed),
-           Core.Metrics["SongDebugHitOffset", 0], Color.Black);
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("Length: {0:F3}", NewGameSong.Length),
-           Core.Metrics["SongDebugLength", 0], Color.Black);
-        
+            TextureManager.DrawString(spriteBatch, String.Format("BPM: {0:F2}", NewGameSong.Bpm),
+                   "DefaultFont", Core.Metrics["SongDebugBPM", 0], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, String.Format("Offset: {0:F3}", NewGameSong.Offset),
+                    "DefaultFont", Core.Metrics["SongDebugOffset", 0], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, "" + String.Format("{0:F3}", _phraseNumber),
+                "DefaultFont", Core.Metrics["EditorSongPhraseNumber", 0], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, String.Format("Speed: {0}x", Core.Players[0].BeatlineSpeed),
+                "DefaultFont", Core.Metrics["SongDebugHitOffset", 0], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, String.Format("Length: {0:F3}", NewGameSong.Length),
+                "DefaultFont", Core.Metrics["SongDebugLength", 0], Color.Black, FontAlign.LEFT);       
         }
 
         private void ValidateInputs()
