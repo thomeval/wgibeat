@@ -81,12 +81,10 @@ namespace WGiBeat
 
             TextureManager.GraphicsDevice = this.GraphicsDevice;
 
-
             if (!Directory.Exists(Directory.GetCurrentDirectory() + "\\" + Settings["SongFolder"]))
             {
                 Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\" + Settings["SongFolder"]);
             }
-
 
             _menuMusicManager = new MenuMusicManager(this.Log)
             {
@@ -94,7 +92,7 @@ namespace WGiBeat
                 AudioManager = this.Audio,
                 Crossfader = this.Crossfader
             };
-            _menuMusicManager.LoadMusicList(Directory.GetCurrentDirectory() + "\\MenuMusic\\MusicList.txt");
+            _menuMusicManager.LoadMusicList(_menuMusicManager.MusicFilePath + "MusicList.txt");
 
             Players = new Player[4];
 

@@ -40,6 +40,7 @@ namespace WGiBeat.Screens
         private int _editProgress;
         public GameSong NewGameSong;
         private string _textEntryDestination;
+        private string _wgibeatSongsFolder;
 
         private Sprite _editProgressBaseSprite;
         private Sprite _backgroundSprite;
@@ -127,9 +128,12 @@ namespace WGiBeat.Screens
             doneMenu.AddItem(new MenuItem{ItemText = "OK", ItemValue = 0});
             _menus.Add("Done",doneMenu);
 
+            _wgibeatSongsFolder = Path.GetDirectoryName(
+Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
+            _wgibeatSongsFolder = _wgibeatSongsFolder.Replace("file:\\", "");
+
             _fileSelect.Width = 800;
             _fileSelect.Position = Core.Metrics["EditorMenuStart", 0];
-            _fileSelect.CurrentFolder = Directory.GetCurrentDirectory();
 
             _textEntry.EntryComplete += TextEntryEntryComplete;
             _textEntry.EntryCancelled += TextEntryEntryCancelled;
@@ -750,6 +754,7 @@ namespace WGiBeat.Screens
                 case "0":
                     _fileSelect.Patterns = new[] { "*.mp3", "*.ogg", "*.wav" };
                     _cursorPosition = EditorCursorPosition.SELECT_AUDIO;
+                    _fileSelect.CurrentFolder = Path.GetFullPath(_wgibeatSongsFolder + "\\..");
                     _fileSelect.FileSelected += delegate
                                                     {
                                                         _audioFilePath = _fileSelect.SelectedFile;
@@ -869,14 +874,14 @@ namespace WGiBeat.Screens
             _songPlaying = true;
             _audioChannel = Core.Audio.PlaySoundEffect(NewGameSong.Path + "\\" + NewGameSong.SongFile, false, false);
             _confidence = 0;
-            //Only play the last 30 seconds of the song when measuring the length of the song.
+            //Only play the last 15 seconds of the song when measuring the length of the song.
             if (_cursorPosition == EditorCursorPosition.MEASURE_LENGTH)
             {
                 var songLength = Core.Audio.GetChannelLength(_audioChannel);
-                if (songLength > 30000)
+                if (songLength > 15000)
                 {
-                    _timeElapsed += songLength -= 30000;
-                    Core.Audio.SetPosition(_audioChannel, songLength - 30000);
+                    _timeElapsed += songLength - 15000;
+                    Core.Audio.SetPosition(_audioChannel, songLength - 15000);
                 }
             }
         }
@@ -896,6 +901,7 @@ namespace WGiBeat.Screens
                 case "1":
                     _cursorPosition = EditorCursorPosition.SELECT_SONGFILE;
                     _fileSelect.Patterns = new[] {"*.sng"};
+                    _fileSelect.CurrentFolder = _wgibeatSongsFolder;
                     _fileSelect.FileSelected += delegate
                                                     {
                                                         NewGameSong = Core.Songs.LoadFromFile(_fileSelect.SelectedFile,false);
@@ -929,20 +935,17 @@ namespace WGiBeat.Screens
         private void CreateNewBasicGameSong()
         {
             var audioFileName = Path.GetFileName(_audioFilePath);
-            var wgibeatSongsFolder = Path.GetDirectoryName(
-         Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
-            wgibeatSongsFolder = wgibeatSongsFolder.Replace("file:\\", "");
-            Core.Log.AddMessage("INFO: Creating folder for new song: " + wgibeatSongsFolder + "\\" + _destinationFolderName);
-            if (!Directory.Exists(wgibeatSongsFolder + "\\" + _destinationFolderName))
+            Core.Log.AddMessage("INFO: Creating folder for new song: " + _wgibeatSongsFolder + "\\" + _destinationFolderName);
+            if (!Directory.Exists(_wgibeatSongsFolder + "\\" + _destinationFolderName))
             {
-                Directory.CreateDirectory(wgibeatSongsFolder + "\\" + _destinationFolderName);
+                Directory.CreateDirectory(_wgibeatSongsFolder + "\\" + _destinationFolderName);
             }
             Core.Log.AddMessage("INFO: Copying selected audio file from: " + _audioFilePath);
-            Core.Log.AddMessage("INFO: ... to: " + wgibeatSongsFolder + "\\" + _destinationFolderName + "\\" + audioFileName);
+            Core.Log.AddMessage("INFO: ... to: " + _wgibeatSongsFolder + "\\" + _destinationFolderName + "\\" + audioFileName);
 
-            if (!File.Exists(wgibeatSongsFolder + "\\" + _destinationFolderName + "\\" + audioFileName))
+            if (!File.Exists(_wgibeatSongsFolder + "\\" + _destinationFolderName + "\\" + audioFileName))
             {
-                File.Copy(_audioFilePath, wgibeatSongsFolder + "\\" + _destinationFolderName + "\\" + audioFileName);
+                File.Copy(_audioFilePath, _wgibeatSongsFolder + "\\" + _destinationFolderName + "\\" + audioFileName);
             }
 
             //Create gamesong file.
@@ -950,7 +953,7 @@ namespace WGiBeat.Screens
             NewGameSong = GameSong.LoadDefaults();
             NewGameSong.SongFile = audioFileName;
             NewGameSong.DefinitionFile = _destinationFileName;
-            NewGameSong.Path = wgibeatSongsFolder + "\\" + _destinationFolderName;
+            NewGameSong.Path = _wgibeatSongsFolder + "\\" + _destinationFolderName;
             NewGameSong.SetMD5();
             Core.Songs.SaveToFile(NewGameSong);
         }
