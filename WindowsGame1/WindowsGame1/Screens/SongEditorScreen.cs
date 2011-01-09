@@ -58,6 +58,8 @@ namespace WGiBeat.Screens
         private int _numBeats = -1;
         private double? _lastHitTime;
 
+        private const string VERSION = "v1.0";
+
         public SongEditorScreen(GameCore core)
             : base(core)
         {
@@ -125,8 +127,7 @@ namespace WGiBeat.Screens
             detailsMenu.AddItem(new MenuItem { ItemText = "Back", ItemValue = 10 });
             _menus.Add("Details", detailsMenu);
 
-            //TODO: Move this.
-            var doneMenu = new Menu {Width = 400, Position = Core.Metrics["EditorMenuStart", 0]};
+            var doneMenu = new Menu {Width = 400, Position = Core.Metrics["EditorMenuStart", 1]};
             doneMenu.AddItem(new MenuItem{ItemText = "OK", ItemValue = 0});
             _menus.Add("Done",doneMenu);
 
@@ -271,6 +272,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
                     break;
                 case EditorCursorPosition.MAIN_MENU:
                     _editProgress = 0;
+                    TextureManager.DrawString(spriteBatch,VERSION,"DefaultFont",Core.Metrics["EditorVersion",0],Color.Black,FontAlign.RIGHT);
                     break;
             }
 
@@ -363,9 +365,19 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
                     instructions +=
                         "\nThe BPM will be calculated based on the average time between taps.";
                     instructions += "\nNote that most songs have a BPM that is a whole number.";
-                    instructions += "\nPress START to confirm the displayed BPM, or press Escape to cancel.";
+                    instructions += "\nPress START to use the estimated BPM, or press Escape to cancel.";
 
                     TextureManager.DrawString(spriteBatch, instructions, "DefaultFont", Core.Metrics["EditorMeasureInstructions", 0], Color.Black, FontAlign.CENTER);
+                    break;
+                    case EditorCursorPosition.DONE:
+                    instructions = "The song has been created successfully, and saved in the designated folder.";
+                    instructions +=
+                        "\nIt is now playable by selecting it from the Song Select Screen.";
+                    instructions += "\nThe song can be edited later by selecting 'Edit Existing Song'";
+                    instructions += "\nfrom the WGiEdit main menu.";
+                    instructions += "\nPress START to return to the main menu.";
+                    TextureManager.DrawString(spriteBatch, instructions, "DefaultFont", Core.Metrics["EditorMeasureInstructions", 0], Color.Black, FontAlign.CENTER);
+
                     break;
             }
         }
