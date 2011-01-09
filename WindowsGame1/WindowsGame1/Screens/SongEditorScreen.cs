@@ -50,11 +50,13 @@ namespace WGiBeat.Screens
 
         private double _phraseNumber;
         private double _debugLastHitOffset;
+        private double _guessedBPM;
 
         private double[] _hitOffsets = new double[10];
         private int _numHits;
         private double[] _beatTimings = new double[25];
-        private int _numBeats;
+        private int _numBeats = -1;
+        private double? _lastHitTime;
 
         public SongEditorScreen(GameCore core)
             : base(core)
@@ -257,10 +259,11 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
                     _countdownSet.Draw(spriteBatch,_phraseNumber);
                     break;
                     case EditorCursorPosition.MEASURE_BPM:
+                    DrawBPMMeasurement(spriteBatch);
                     break;
                     case EditorCursorPosition.MEASURE_OFFSET:
                     case EditorCursorPosition.MEASURE_LENGTH:
-                    TextureManager.DrawString(spriteBatch, String.Format("{0:0.00}", _timeElapsed / 1000), "LargeFont", Core.Metrics["EditorErrorMessage", 0], Color.Black, FontAlign.CENTER);
+                    TextureManager.DrawString(spriteBatch, String.Format("{0:0.00}", _timeElapsed / 1000), "LargeFont", Core.Metrics["EditorMeasurementDisplay", 0], Color.Black, FontAlign.CENTER);
 
                     break;
                 case EditorCursorPosition.DONE:
@@ -279,6 +282,28 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
             {
                 _menus[_activeMenu].Draw(spriteBatch);
             }
+        }
+
+        private void DrawBPMMeasurement(SpriteBatch spriteBatch)
+        {
+            
+            TextureManager.DrawString(spriteBatch, String.Format("Last hit: {0:F1}", 60 / _beatTimings[0] * 1000), "DefaultFont", Core.Metrics["EditorBPMMeasurements", 0], Color.Black, FontAlign.LEFT);
+            var avgAmount = (_numBeats >= 5) ? String.Format("{0:F1}", 60 / _beatTimings.Take(5).Average() * 1000) : "-----" ;
+
+
+            TextureManager.DrawString(spriteBatch, "Last 5 avg: " + avgAmount, "DefaultFont", Core.Metrics["EditorBPMMeasurements", 1], Color.Black, FontAlign.LEFT);
+            
+            avgAmount = (_numBeats >= 10) ? String.Format("{0:F1}", 60 / _beatTimings.Take(10).Average() * 1000) : "-----";
+            TextureManager.DrawString(spriteBatch, "Last 10 avg: " + avgAmount, "DefaultFont", Core.Metrics["EditorBPMMeasurements", 2], Color.Black, FontAlign.LEFT);
+
+            avgAmount = (_numBeats > 0)
+                            ? String.Format("{0:F1}", 60/_beatTimings.Take(_numBeats).Average()*1000)
+                            : "-----";
+            TextureManager.DrawString(spriteBatch, "Last 25 avg: "+ avgAmount, "DefaultFont", Core.Metrics["EditorBPMMeasurements", 3], Color.Black, FontAlign.LEFT);
+
+            var roundedAmount = (_numBeats > 0) ? "" + Math.Round(60/ _beatTimings.Take(_numBeats).Average() * 1000) : "-----";
+            TextureManager.DrawString(spriteBatch, "Estimated BPM: " + roundedAmount, "TwoTech36", Core.Metrics["EditorMeasurementDisplay", 0], Color.Black, FontAlign.CENTER);
+
         }
 
         private void DrawText(SpriteBatch spriteBatch)
@@ -592,11 +617,23 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
                     switch (_cursorPosition)
                     {
                         case EditorCursorPosition.MEASURE_BPM:
+                            if (paction == "BEATLINE")
+                            {
+                                UpdateBPMMeasurement();
 
-                            //TODO: Complete BPM measurement tool.
-                            Core.Audio.StopChannel(_audioChannel);
-                            _cursorPosition = EditorCursorPosition.SONG_DETAILS;
-                            _songPlaying = false;
+                            }
+                            else if (paction == "START")
+                            {
+                                Core.Audio.StopChannel(_audioChannel);
+                                _cursorPosition = EditorCursorPosition.SONG_DETAILS;
+                                _songPlaying = false;
+                                if (_guessedBPM > 0)
+                                {
+                                    NewGameSong.Bpm = _guessedBPM;
+                                }
+                            }
+                          
+
                             break;
                             case EditorCursorPosition.MEASURE_LENGTH:
                             NewGameSong.Length = Math.Round(_timeElapsed / 1000, 2);
@@ -619,6 +656,30 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
                     _songPlaying = false;
                     break;
             }
+        }
+
+        private void UpdateBPMMeasurement()
+        {
+            _numBeats = Math.Min(_beatTimings.Length, _numBeats + 1);
+
+            if (_lastHitTime != null)
+            {
+                for (int x = _numBeats; x > 0; x--)
+                {
+                    if (x == _beatTimings.Length)
+                        continue;
+
+                    _beatTimings[x] = _beatTimings[x - 1];
+                }
+                _beatTimings[0] = _timeElapsed - _lastHitTime.Value;
+            }
+            _lastHitTime = _timeElapsed;
+
+            if (_numBeats > 0)
+            {
+                _guessedBPM = Math.Round(60/_beatTimings.Take(_numBeats).Average()*1000);
+            }
+
         }
 
         private void PerformTweakAction(Action action)
@@ -817,6 +878,9 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
                     break;
                 case 4:
                     ActivateMeasureMode();
+                    _numBeats = -1;
+                    _guessedBPM = 0;
+                    _lastHitTime = null;
                     _cursorPosition = EditorCursorPosition.MEASURE_BPM;
                     break;
                 case 5:
