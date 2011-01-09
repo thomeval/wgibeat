@@ -287,8 +287,7 @@ namespace WGiBeat
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-           // _spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-            //TODO: Experiment with using texture sizes in powers of two.
+
             _spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
             GraphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
             GraphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Wrap;

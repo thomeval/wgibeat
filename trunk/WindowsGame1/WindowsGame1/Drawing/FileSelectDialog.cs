@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing
@@ -68,10 +69,8 @@ namespace WGiBeat.Drawing
             var position = this.Position;
             position.X += 5;
 
-            var pathWidth = TextureManager.Fonts["LargeFont"].MeasureString(shortPath);
-            pathWidth.X = Math.Min(1.0f,(this.Width - 10)/pathWidth.X);
-            pathWidth.Y = 1.0f;
-            
+
+            var pathWidth = TextureManager.ScaleTextToFit(shortPath, "LargeFont", this.Width - 10, 50);
             TextureManager.DrawString(spriteBatch,shortPath,"LargeFont",position,pathWidth,Color.Black,FontAlign.LEFT);
             
             FileList.X = this.X;

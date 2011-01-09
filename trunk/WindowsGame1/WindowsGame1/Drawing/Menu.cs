@@ -104,11 +104,9 @@ namespace WGiBeat.Drawing
                 position.X += xOptionOffset;
 
                 var menuOptionText = menuItem.SelectedText();
-                var textWidth = TextureManager.Fonts[FontName].MeasureString(menuOptionText).X;
-                var maxWidth = this.Width - 20 - xOptionOffset;
-                var scale = new Vector2(1.0f,1.0f);
-                scale.X = Math.Min(1.0f, maxWidth/textWidth);
-             
+                
+                var scale = TextureManager.ScaleTextToFit(menuOptionText, FontName, this.Width - 20 - xOptionOffset,
+                                                          1000);
                          
                 TextureManager.DrawString(spriteBatch, menuOptionText, FontName, position,scale, drawColor, FontAlign.LEFT); 
                 
