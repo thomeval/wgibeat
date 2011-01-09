@@ -126,11 +126,10 @@ namespace WGiBeat.Drawing
             
             DrawChangeControls(spriteBatch);
             _textColor.A = (byte)(255 - _optionControlOpacity);
-            var clipRect = new Rectangle {Height = this.Height, Width = this.Width - 150, X = this.X + 75, Y = this.Y};
-            //  TextureManager.SetClipRectangle(this.X + 100, this.Y, this.X + this.Width - 160, this.Height);
-            TextureManager.DrawString(spriteBatch, playerName, "TwoTechLarge", _nameTextPosition, _textColor,
+            var scale = TextureManager.ScaleTextToFit(playerName, "TwoTechLarge", 310, 75);
+            TextureManager.DrawString(spriteBatch, playerName, "TwoTechLarge", _nameTextPosition, scale, _textColor,
                                       FontAlign.CENTER);
-            //  TextureManager.ResetClipRectangle();
+
         }
 
         private void DrawChangeControls(SpriteBatch spriteBatch)
@@ -152,7 +151,7 @@ namespace WGiBeat.Drawing
         private void CalculateTextPositions()
         {
             //this.X + PlayerID.Width + Difficulty Icon width + half of available name space.
-            _nameTextPosition.X = this.X + 70 + 35 + 150;
+            _nameTextPosition.X = this.X + 260;
             _nameTextPosition.Y = this.Y - 10;
             _speedTextPosition.X = this.X + this.Width - 35;
             _speedTextPosition.Y = this.Y + 10;

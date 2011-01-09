@@ -40,7 +40,7 @@ namespace WGiBeat.Screens
                 _errorMessages[x] = "";
                 _infoMessages[x] = "";
 
-                _keyboards[x] = new OnScreenKeyboard {MaxLength = 8, Id = x};
+                _keyboards[x] = new OnScreenKeyboard {MaxLength = 10, Id = x};
                 _keyboards[x].Position = (Core.Metrics["OnScreenKeyboard", x]);
                 _keyboards[x].EnteredTextPosition = Core.Metrics["OnScreenKeyboardDisplay", x];
                 _keyboards[x].EntryCancelled += Keyboard_EntryCancelled;

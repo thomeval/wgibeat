@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -29,6 +30,7 @@ namespace WGiBeat.Drawing
             foreach (string line in lines)
             {
                 var measurements = Fonts[fontName].MeasureString(line);
+                measurements *= scale;
                 switch (align)
                 {
                     case FontAlign.CENTER:
@@ -48,6 +50,25 @@ namespace WGiBeat.Drawing
         public static void DrawString(SpriteBatch spriteBatch, string text, string fontName, Vector2 position, Color color, FontAlign align)
         {
             DrawString(spriteBatch,text,fontName,position,noScaling,color,align);
+        }
+
+        public static Vector2 ScaleTextToFit(string text, string fontName, Vector2 maxSize)
+        {
+            if (!Fonts.ContainsKey(fontName))
+            {
+                throw new ArgumentException("TextureManager does not contain a font called: " + fontName);
+            }
+            var actualSize =  Fonts[fontName].MeasureString(text);
+            var result = new Vector2(maxSize.X/actualSize.X, maxSize.Y/actualSize.Y);
+
+            result.X = Math.Min(1.0f, result.X);
+            result.Y = Math.Min(1.0f, result.Y);
+            return result;
+        }
+
+        public static Vector2 ScaleTextToFit(string text, string fontName, int width, int height)
+        {
+            return ScaleTextToFit(text, fontName, new Vector2(width, height));
         }
 
         public static Texture2D BlankTexture()
@@ -84,6 +105,7 @@ namespace WGiBeat.Drawing
             GraphicsDevice.RenderState.ScissorTestEnable = false;
         }
          */
+
     }
 
     public enum FontAlign
