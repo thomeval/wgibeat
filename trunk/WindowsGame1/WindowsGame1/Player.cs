@@ -212,6 +212,7 @@ namespace WGiBeat
             Momentum = 0;
             Life = 50;
             KO = false;
+            IsBlazing = false;
             _lifeHistory.Clear();
         }
         
