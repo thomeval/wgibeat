@@ -16,6 +16,17 @@ namespace WGiBeat.Drawing
             Textures.Add(name, tex);
         }
 
+        //TODO: Test compatibility and convert if possible.
+        public static void CreateAndAddTexture(string filename)
+        {
+            CreateAndAddTexture(filename, System.IO.Path.GetFileNameWithoutExtension(filename));   
+        }
+        public static void CreateAndAddTexture(string filename, string assetName)
+        {
+            var newTexture = Texture2D.FromFile(GraphicsDevice, filename);
+            Textures.Add(assetName,newTexture);
+        }
+
         public static void AddFont(string name, SpriteFont font)
         {
             Fonts.Add(name, font);

@@ -26,6 +26,7 @@ namespace WGiBeat.Screens
         private CountdownSet _countdownSet;
 
         private NoteBar[] _notebars;
+        private PerformanceBar _performanceBar;
         private const int PLAYER_COUNT = 4;
         private GameSong _gameSong;
         private TimeSpan? _startTime;
@@ -42,6 +43,10 @@ namespace WGiBeat.Screens
         public override void Initialize()
         {
             _notebars = new NoteBar[PLAYER_COUNT];
+            _performanceBar = new PerformanceBar
+                                  {Width = 350, Players = Core.Players};
+            var freeLocation = _performanceBar.GetFreeLocation((GameType) Core.Cookies["CurrentGameType"] == GameType.COOPERATIVE);
+            _performanceBar.Position = Core.Metrics["PerformanceBar", freeLocation];
             _lifeBarSet = new LifeBarSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
             _levelbarSet = new LevelBarSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
             _hitsbarSet = new HitsBarSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
@@ -481,6 +486,7 @@ namespace WGiBeat.Screens
             _scoreSet.Draw(spriteBatch);
             _noteJudgementSet.Draw(spriteBatch, _phraseNumber);
             _beatlineSet.Draw(spriteBatch, _phraseNumber);
+            _performanceBar.Draw(spriteBatch);
 
             if (_phraseNumber < 0)
             {

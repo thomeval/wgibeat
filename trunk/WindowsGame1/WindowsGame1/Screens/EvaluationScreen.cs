@@ -183,7 +183,7 @@ namespace WGiBeat.Screens
                 //Fail
                 return NUM_EVALUATIONS - 1;
             }
-            double percentage = CalculatePercentage(player);
+            double percentage = Core.Players[player].CalculatePercentage();
 
             return PercentageToGradeIndex(percentage);
         }
@@ -200,30 +200,6 @@ namespace WGiBeat.Screens
             return NUM_EVALUATIONS - 2;
         }
 
-        private double CalculatePercentage(int playerindex)
-        {
-            int[] judgements = Core.Players[playerindex].Judgements;
-
-            // Ideal + Cool + OK + Bad + Fail + Miss
-            int maxPossible = judgements[0] + judgements[1] + judgements[2] + judgements[3] + judgements[4] +
-                              judgements[5];
-            maxPossible *= 8;
-
-            //Ideals
-            int playerScore = judgements[0] * 8;
-            //Cools
-            playerScore += judgements[1] * 6;
-            //OKs
-            playerScore += judgements[2] * 3;
-            //Bads
-            playerScore += judgements[3];
-            //Fails
-            playerScore += judgements[4] * -4;
-            //Faults
-            playerScore += judgements[6] * -1;
-
-            return 100.0 * playerScore / maxPossible;
-        }
 
         private double CalculateTeamPercentage()
         {
@@ -233,7 +209,7 @@ namespace WGiBeat.Screens
             {
                 if (Core.Players[x].Playing)
                 {
-                    totalPerc += CalculatePercentage(x);
+                    totalPerc += Core.Players[x].CalculatePercentage();
                     participants += 1;
                 }
             }
