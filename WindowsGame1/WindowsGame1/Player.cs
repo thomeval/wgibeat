@@ -108,7 +108,7 @@ namespace WGiBeat
 
         public Difficulty PlayDifficulty { get; set; }
 
-        private List<float> _lifeHistory = new List<float>();
+        private readonly List<float> _lifeHistory = new List<float>();
 
         public List<float> LifeHistory
         {
@@ -249,6 +249,30 @@ namespace WGiBeat
             }
             BeatlineSpeed = Profile.LastBeatlineSpeed;
             PlayDifficulty = Profile.LastDifficulty;
+        }
+
+        public double CalculatePercentage()
+        {
+
+            // Ideal + Cool + OK + Bad + Fail + Miss
+            int maxPossible = Judgements[0] + Judgements[1] + Judgements[2] + Judgements[3] + Judgements[4] +
+                              Judgements[5];
+            maxPossible *= 8;
+
+            //Ideals
+            int playerScore = Judgements[0] * 8;
+            //Cools
+            playerScore += Judgements[1] * 6;
+            //OKs
+            playerScore += Judgements[2] * 3;
+            //Bads
+            playerScore += Judgements[3];
+            //Fails
+            playerScore += Judgements[4] * -4;
+            //Faults
+            playerScore += Judgements[6] * -1;
+
+            return 100.0 * playerScore / maxPossible;
         }
     }
 

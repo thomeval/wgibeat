@@ -365,7 +365,7 @@ namespace WGiBeat.Screens
 
         private int PlayerCount()
         {
-            return (from e in Core.Players where e.Playing select e).Count();
+            return (from e in Core.Players where (e.IsHumanPlayer) select e).Count();
         }
 
         private string GetModeDescription(GameType gameType)
