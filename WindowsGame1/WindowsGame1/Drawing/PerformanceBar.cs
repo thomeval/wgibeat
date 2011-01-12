@@ -15,6 +15,7 @@ namespace WGiBeat.Drawing
         private SpriteMap _leftSpriteMap;
         private Sprite _middleSprite;
         private Sprite _rightSprite;
+        private Sprite _headerSprite;
 
         public PerformanceBar()
         {
@@ -36,7 +37,8 @@ namespace WGiBeat.Drawing
                                      Rows = 5
                                  };
             _middleSprite = new Sprite {SpriteTexture = TextureManager.Textures["PerformanceBarMiddle"]};
-            _rightSprite = new Sprite() {SpriteTexture = TextureManager.Textures["PerformanceBarRight"]};
+            _rightSprite = new Sprite {SpriteTexture = TextureManager.Textures["PerformanceBarRight"]};
+            _headerSprite = new Sprite {SpriteTexture = TextureManager.Textures["PerformanceBarHeader"]};
         }
 
         
@@ -44,9 +46,12 @@ namespace WGiBeat.Drawing
         {
             var position = this.Position.Clone();
             var barWidth = this.Width - 120;
-            var percentageText = "";
-            //TODO: Draw heading
-            position.Y += 25;
+            var headerOffset = (this.Width/2.0f) - (_headerSprite.Width / 2.0f);
+            position.X += headerOffset;
+            _headerSprite.Position = position;
+            _headerSprite.Draw(spriteBatch);
+            position.X -= headerOffset;
+            position.Y += 30;
 
 
             for (int x = 0; x < Players.Length; x++)
@@ -56,6 +61,7 @@ namespace WGiBeat.Drawing
 
                 _rightSprite.Position = position.Clone();
                 _rightSprite.X += this.Width - 70;
+
                 var totalBeatlines = (from e in Players[x].Judgements select e).Take(6).Sum();
 
                 var idx = (Players[x].IsCPUPlayer) ? 4 : x;
@@ -67,6 +73,8 @@ namespace WGiBeat.Drawing
                 _middleSprite.Position = position.Clone();
 
                 var maxWidth = barWidth;
+                var percentageText = " -----";
+
                 if (totalBeatlines >= 5)
                 {
                     _partsSpriteMap.ColorShading.A = Opacity;
@@ -83,12 +91,14 @@ namespace WGiBeat.Drawing
                 }
                 else
                 {
-                    percentageText = " -----";
+                   
                     Opacity = 0;
                 }
                 _middleSprite.Draw(spriteBatch);
 
                 _rightSprite.Draw(spriteBatch);
+                _rightSprite.X += 10;
+                _rightSprite.Y += 5;
                 TextureManager.DrawString(spriteBatch, percentageText, "DefaultFont", _rightSprite.Position, Color.Black, FontAlign.LEFT);
 
                 position.X = this.Position.X;
