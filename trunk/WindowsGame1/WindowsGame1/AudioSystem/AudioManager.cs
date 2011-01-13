@@ -261,7 +261,7 @@ namespace WGiBeat.AudioSystem
             StopSong();
             _currentSong = song;
             RESULT result;
-            result = _fmodSystem.createSound(song.Path + "\\" + song.SongFile, MODE.SOFTWARE, ref _fmodSound);
+            result = _fmodSystem.createSound(song.Path + "\\" + song.AudioFile, MODE.SOFTWARE, ref _fmodSound);
             CheckFMODErrors(result);
         }
 
