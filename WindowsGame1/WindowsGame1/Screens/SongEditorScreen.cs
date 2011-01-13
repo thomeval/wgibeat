@@ -15,7 +15,7 @@ namespace WGiBeat.Screens
 {
     public class SongEditorScreen : GameScreen
     {
-
+        #region Fields
         private readonly Dictionary<string, Menu> _menus = new Dictionary<string, Menu>();
         private readonly FileSelectDialog _fileSelect = new FileSelectDialog();
         private readonly TextEntry _textEntry = new TextEntry { Width = 800, Height = 600 };
@@ -60,6 +60,10 @@ namespace WGiBeat.Screens
 
         private const string VERSION = "v1.0";
 
+        #endregion
+
+        #region Initialization Code
+
         public SongEditorScreen(GameCore core)
             : base(core)
         {
@@ -67,6 +71,17 @@ namespace WGiBeat.Screens
             InitSprites();
             InitObjects();
             
+        }
+
+        public override void Initialize()
+        {
+            _cursorPosition = EditorCursorPosition.MAIN_MENU;
+            foreach (Player player in Core.Players)
+            {
+                player.Playing = false;
+            }
+            Core.Players[0].Playing = true;
+            base.Initialize();
         }
 
         private void InitObjects()
@@ -102,7 +117,8 @@ namespace WGiBeat.Screens
             var mainMenu = new Menu { Width = 800, Position = Core.Metrics["EditorMenuStart", 0] };
             mainMenu.AddItem(new MenuItem { ItemText = "Create New Song", ItemValue = 0 });
             mainMenu.AddItem(new MenuItem { ItemText = "Edit Existing Song", ItemValue = 1 });
-            mainMenu.AddItem(new MenuItem { ItemText = "Exit", ItemValue = 2 });
+            mainMenu.AddItem(new MenuItem { ItemText = "Delete Song", ItemValue = 2 });
+            mainMenu.AddItem(new MenuItem { ItemText = "Exit", ItemValue = 3 });
             _menus.Add("Main", mainMenu);
 
             var basicsMenu = new Menu { Width = 800, Position = Core.Metrics["EditorMenuStart", 0] };
@@ -127,6 +143,13 @@ namespace WGiBeat.Screens
             detailsMenu.AddItem(new MenuItem { ItemText = "Back", ItemValue = 10 });
             _menus.Add("Details", detailsMenu);
 
+            var deleteDetailsMenu = new Menu { Width = 400, Position = Core.Metrics["EditorMenuStart", 0] };
+            deleteDetailsMenu.AddItem(new MenuItem { ItemText = "Delete Song File", ItemValue = 0 });
+            deleteDetailsMenu.AddItem(new MenuItem { ItemText = "Delete Song And Audio", ItemValue = 1 });
+            deleteDetailsMenu.AddItem(new MenuItem { ItemText = "Cancel", ItemValue = 2 });
+            deleteDetailsMenu.SelectedIndex = 2;
+            _menus.Add("DeleteDetails",deleteDetailsMenu);
+
             var doneMenu = new Menu {Width = 400, Position = Core.Metrics["EditorMenuStart", 1]};
             doneMenu.AddItem(new MenuItem{ItemText = "OK", ItemValue = 0});
             _menus.Add("Done",doneMenu);
@@ -140,14 +163,17 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
 
             _textEntry.EntryComplete += TextEntryEntryComplete;
             _textEntry.EntryCancelled += TextEntryEntryCancelled;
-        
+
         }
 
+        #endregion
+
+        #region Text Entry Handlers
         private void TextEntryEntryCancelled(object sender, EventArgs e)
         {
             switch (_textEntryDestination)
             {
-                case "SongFile":
+                case "AudioFile":
                 case "SongFolder":
                     _cursorPosition = EditorCursorPosition.SONG_BASICS;
                     break;
@@ -168,7 +194,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
             double temp;
             switch (_textEntryDestination)
             {
-                case "SongFile":
+                case "AudioFile":
                     _destinationFileName = _textEntry.EnteredText;
                     if (!_destinationFileName.EndsWith(".sng"))
                     {
@@ -218,16 +244,10 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
             _keyInput = false;
         }
 
-        public override void Initialize()
-        {
-            _cursorPosition = EditorCursorPosition.MAIN_MENU;
-            foreach (Player player in Core.Players)
-            {
-                player.Playing = false;
-            }
-            Core.Players[0].Playing = true;
-            base.Initialize();
-        }
+        #endregion
+
+        #region Drawing
+
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
 
@@ -238,6 +258,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
             {
                 case EditorCursorPosition.SELECT_AUDIO:
                 case EditorCursorPosition.SELECT_SONGFILE:
+                case EditorCursorPosition.SELECT_SONGFILE_DELETE:
                     _fileSelect.Draw(spriteBatch);
                     break;
                 case EditorCursorPosition.KEY_ENTRY:
@@ -248,10 +269,12 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
                     TextureManager.DrawString(spriteBatch,_errorMessage,"LargeFont",Core.Metrics["EditorErrorMessage",0],Color.Red,FontAlign.CENTER);
                     break;
                 case EditorCursorPosition.SONG_DETAILS:
+                case EditorCursorPosition.SONG_DETAILS_DELETE:
                     _editProgress = 2;
                     var validIdx = _songValid ? 1 : 0;
                     _validitySpriteMap.Draw(spriteBatch, validIdx, 195, 42, Core.Metrics["EditorSongValidity",0]);
                     _bpmMeter.Draw(spriteBatch);
+                    TextureManager.DrawString(spriteBatch, _errorMessage, "LargeFont", Core.Metrics["EditorErrorMessage", 0], Color.Red, FontAlign.CENTER);
                     break;
                 case EditorCursorPosition.SONG_TUNING:
                     _editProgress = 3;
@@ -292,7 +315,6 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
             TextureManager.DrawString(spriteBatch, String.Format("Last hit: {0:F1}", 60 / _beatTimings[0] * 1000), "DefaultFont", Core.Metrics["EditorBPMMeasurements", 0], Color.Black, FontAlign.LEFT);
             var avgAmount = (_numBeats >= 5) ? String.Format("{0:F1}", 60 / _beatTimings.Take(5).Average() * 1000) : "-----" ;
 
-
             TextureManager.DrawString(spriteBatch, "Last 5 avg: " + avgAmount, "DefaultFont", Core.Metrics["EditorBPMMeasurements", 1], Color.Black, FontAlign.LEFT);
             
             avgAmount = (_numBeats >= 10) ? String.Format("{0:F1}", 60 / _beatTimings.Take(10).Average() * 1000) : "-----";
@@ -310,7 +332,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
 
         private void DrawText(SpriteBatch spriteBatch)
         {
-            string instructions;
+            string instructions = "";
             switch (_cursorPosition)
             {
                 case EditorCursorPosition.SONG_BASICS:
@@ -326,6 +348,8 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
 
                     break;
                 case EditorCursorPosition.SONG_DETAILS:
+                case EditorCursorPosition.SONG_DETAILS_DELETE:
+
                     var offsetPosition = _bpmMeter.Position.Clone();
                     offsetPosition.X += 320;
                     offsetPosition.Y += 120;
@@ -350,7 +374,6 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
                         "\nThis is used to record where the actual gameplay should begin,\n and should ideally be on-beat.";
                     instructions += "\nPress Escape to cancel.";
 
-                    TextureManager.DrawString(spriteBatch,instructions,"DefaultFont",Core.Metrics["EditorMeasureInstructions",0],Color.Black,FontAlign.CENTER);
                     break;
                 case EditorCursorPosition.MEASURE_LENGTH:
                     instructions = "Press START or BEATLINE to mark the end of the playable area of the song.";
@@ -358,7 +381,6 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
                         "\nThis does not need to be on-beat, as the last beatline is calculated automatically.";
                     instructions += "\nPress Escape to cancel.";
 
-                    TextureManager.DrawString(spriteBatch, instructions, "DefaultFont", Core.Metrics["EditorMeasureInstructions", 0], Color.Black, FontAlign.CENTER);
                     break;
                 case EditorCursorPosition.MEASURE_BPM:
                     instructions = "Use BEATLINE to tap the beats of the song.";
@@ -367,7 +389,6 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
                     instructions += "\nNote that most songs have a BPM that is a whole number.";
                     instructions += "\nPress START to use the estimated BPM, or press Escape to cancel.";
 
-                    TextureManager.DrawString(spriteBatch, instructions, "DefaultFont", Core.Metrics["EditorMeasureInstructions", 0], Color.Black, FontAlign.CENTER);
                     break;
                     case EditorCursorPosition.DONE:
                     instructions = "The song has been created successfully, and saved in the designated folder.";
@@ -376,10 +397,14 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
                     instructions += "\nThe song can be edited later by selecting 'Edit Existing Song'";
                     instructions += "\nfrom the WGiEdit main menu.";
                     instructions += "\nPress START to return to the main menu.";
-                    TextureManager.DrawString(spriteBatch, instructions, "DefaultFont", Core.Metrics["EditorMeasureInstructions", 0], Color.Black, FontAlign.CENTER);
-
+                    break;
+                    case EditorCursorPosition.DONE_DELETE:
+                    instructions = "The song has been deleted successfully.";
+                    instructions += "\nPress START to return to the main menu.";
                     break;
             }
+            TextureManager.DrawString(spriteBatch, instructions, "DefaultFont", Core.Metrics["EditorMeasureInstructions", 0], Color.Black, FontAlign.CENTER);
+
         }
 
         private void DrawHitOffsetText(SpriteBatch spriteBatch)
@@ -450,45 +475,6 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
                 "DefaultFont", Core.Metrics["SongDebugLength", 0], Color.Black, FontAlign.LEFT);       
         }
 
-        private void ValidateInputs()
-        {
-            switch (_cursorPosition)
-            {
-                case EditorCursorPosition.SONG_BASICS:
-                    var invalidFilename =
-                        (from e in Path.GetInvalidFileNameChars() where _destinationFileName.Contains("" + e) select e).
-                            Any();
-                    var invalidDirname =
-                        (from e in Path.GetInvalidPathChars() where _destinationFolderName.Contains("" + e) select e).
-                            Any();
-                    _menus["Basics"].GetByItemText("Next Step").Enabled =
-                        (!String.IsNullOrEmpty(_destinationFileName)) &&
-                        (!String.IsNullOrEmpty(_destinationFolderName)) &&
-                        (!String.IsNullOrEmpty(_audioFilePath)) &&
-                        (!invalidFilename) &&
-                        (!invalidDirname);
-
-                    _errorMessage = "";
-
-                    if (invalidDirname)
-                    {
-                        _errorMessage = "Destination Folder name contains invalid characters.";
-                    }
-                    if (invalidFilename)
-                    {
-                        _errorMessage = "Destination File name contains invalid characters.";
-                    }
-                    break;
-                case EditorCursorPosition.SONG_DETAILS:                   
-                        Core.Log.Enabled = false;
-                        _songValid =
-                            _menus["Details"].GetByItemText("Next Step").Enabled =
-                            Core.Songs.ValidateSongFile(NewGameSong);
-                        Core.Log.Enabled = true;                  
-                    break;
-            }
-        }
-
         private void DrawHeading(SpriteBatch spriteBatch)
         {
             var headingText = "";
@@ -508,6 +494,10 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
                     break;
                 case EditorCursorPosition.SONG_DETAILS:
                     headingText = "Song Details";
+                    break;
+                case EditorCursorPosition.SONG_DETAILS_DELETE:
+                case EditorCursorPosition.SELECT_SONGFILE_DELETE:
+                    headingText = "Delete Song";
                     break;
                     case EditorCursorPosition.MEASURE_BPM:
                     headingText = "Measure BPM";
@@ -554,24 +544,23 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
             }
         }
 
-        private void SetActiveMenu()
+        #endregion
+
+        #region Action Performers
+
+        public override void PerformKey(Microsoft.Xna.Framework.Input.Keys key)
         {
-            _activeMenu = null;
-            switch (_cursorPosition)
+            if (!_keyInput)
             {
-                case EditorCursorPosition.MAIN_MENU:
-                    _activeMenu = "Main";
-                    break;
-                case EditorCursorPosition.SONG_BASICS:
-                    _activeMenu = "Basics";
-                    break;
-                case EditorCursorPosition.SONG_DETAILS:
-                    _activeMenu = "Details";
-                    break;
-                    case EditorCursorPosition.DONE:
-                    _activeMenu = "Done";
-                    break;
+                return;
             }
+            if (_ignoreNextKey)
+            {
+                _ignoreNextKey = false;
+                return;
+            }
+            _textEntry.PerformKey(key);
+            base.PerformKey(key);
         }
 
         public override void PerformAction(Action action)
@@ -579,12 +568,12 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
             switch (_cursorPosition)
             {
                 case EditorCursorPosition.SELECT_AUDIO:
-                    case EditorCursorPosition.SELECT_SONGFILE:
-
+                case EditorCursorPosition.SELECT_SONGFILE:
+                case EditorCursorPosition.SELECT_SONGFILE_DELETE:
                     _fileSelect.PerformAction(action);
                     return;
                 case EditorCursorPosition.SONG_TUNING:
-                    PerformTweakAction(action);
+                    PerformActionTweak(action);
                     break;
                     case EditorCursorPosition.MEASURE_BPM:
                     case EditorCursorPosition.MEASURE_LENGTH:
@@ -670,31 +659,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
             }
         }
 
-        private void UpdateBPMMeasurement()
-        {
-            _numBeats = Math.Min(_beatTimings.Length, _numBeats + 1);
-
-            if (_lastHitTime != null)
-            {
-                for (int x = _numBeats; x > 0; x--)
-                {
-                    if (x == _beatTimings.Length)
-                        continue;
-
-                    _beatTimings[x] = _beatTimings[x - 1];
-                }
-                _beatTimings[0] = _timeElapsed - _lastHitTime.Value;
-            }
-            _lastHitTime = _timeElapsed;
-
-            if (_numBeats > 0)
-            {
-                _guessedBPM = Math.Round(60/_beatTimings.Take(_numBeats).Average()*1000);
-            }
-
-        }
-
-        private void PerformTweakAction(Action action)
+        private void PerformActionTweak(Action action)
         {
             var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
             switch (paction)
@@ -737,7 +702,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
                 case "START":
                     Core.Songs.StopCurrentSong();
                     Core.Songs.SaveToFile(NewGameSong);
-                    var oldSongFile = Core.Songs.GetBySongFile(NewGameSong.Path, NewGameSong.SongFile);
+                    var oldSongFile = Core.Songs.GetBySongFile(NewGameSong.Path, NewGameSong.AudioFile);
                     if (oldSongFile != null)
                     {
                         Core.Songs.RemoveSong(oldSongFile);
@@ -754,6 +719,32 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
                     break;
             }
         }
+
+        private void UpdateBPMMeasurement()
+        {
+            _numBeats = Math.Min(_beatTimings.Length, _numBeats + 1);
+
+            if (_lastHitTime != null)
+            {
+                for (int x = _numBeats; x > 0; x--)
+                {
+                    if (x == _beatTimings.Length)
+                        continue;
+
+                    _beatTimings[x] = _beatTimings[x - 1];
+                }
+                _beatTimings[0] = _timeElapsed - _lastHitTime.Value;
+            }
+            _lastHitTime = _timeElapsed;
+
+            if (_numBeats > 0)
+            {
+                _guessedBPM = Math.Round(60 / _beatTimings.Take(_numBeats).Average() * 1000);
+            }
+
+        }
+
+        #region Tweak Action Helpers
 
         private readonly double[] _speedOptions = { 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0 };
         public void AdjustSpeed(int amount)
@@ -798,6 +789,10 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
             _noteJudgementSet.AwardJudgement(judgement, 0, 1,0);
         }
 
+        #endregion
+#endregion
+
+        #region Menu Action Handlers
 
         private void DoMenuAction()
         {
@@ -812,10 +807,39 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
                 case "Details":
                     DoMenuActionDetails(_menus[_activeMenu]);
                     break;
+                case "DeleteDetails":
+                    DoMenuActionDeleteDetails(_menus[_activeMenu]);
+                    break;
                 case "SongTweak":
                     break;
                 case "Done":
                     DoMenuActionDone(_menus[_activeMenu]);
+                    break;
+            }
+        }
+
+        private void DoMenuActionMain(Menu menu)
+        {
+            switch (menu.SelectedItem().ItemValue.ToString())
+            {
+                case "0":
+                    NewGameSong = new GameSong();
+                    _cursorPosition = EditorCursorPosition.SONG_BASICS;
+                    _destinationFileName = "";
+                    _destinationFolderName = "";
+                    _audioFilePath = "";
+                    _editMode = false;
+                    break;
+                case "1":
+                    _cursorPosition = EditorCursorPosition.SELECT_SONGFILE;
+                    ActivateEditMode(EditorCursorPosition.SONG_DETAILS);
+                    break;
+                case "2":
+                    _cursorPosition = EditorCursorPosition.SELECT_SONGFILE_DELETE;
+                    ActivateEditMode(EditorCursorPosition.SONG_DETAILS_DELETE);
+                    break;
+                case "3":
+                    Core.ScreenTransition("MainMenu");
                     break;
             }
         }
@@ -846,11 +870,12 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
                     ActivateTextEntryMode();
                     _textEntry.DescriptionText =
                         "Enter the name of the song file (.sng) that will be created.\n The name has no effect on gameplay.";
-                    _textEntryDestination = "SongFile";
+                    _textEntryDestination = "AudioFile";
                     break;
                 case "3":
                     if (_menus["Basics"].GetByItemText("Next Step").Enabled)
                     {
+                        _errorMessage = "";
                         CreateNewBasicGameSong();
                         _bpmMeter.DisplayedSong = NewGameSong;
                         _cursorPosition = EditorCursorPosition.SONG_DETAILS;
@@ -944,54 +969,26 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
             }
         }
 
-        private void ActivateMeasureMode()
+        private void DoMenuActionDeleteDetails(Menu menu)
         {
-            _startTime = null;
-            _songPlaying = true;
-            _audioChannel = Core.Audio.PlaySoundEffect(NewGameSong.Path + "\\" + NewGameSong.SongFile, false, false);
-            _confidence = 0;
-            //Only play the last 15 seconds of the song when measuring the length of the song.
-            if (_cursorPosition == EditorCursorPosition.MEASURE_LENGTH)
+            switch ((int) menu.SelectedItem().ItemValue)
             {
-                var songLength = Core.Audio.GetChannelLength(_audioChannel);
-                if (songLength > 15000)
-                {
-                    _timeElapsed += songLength - 15000;
-                    Core.Audio.SetPosition(_audioChannel, songLength - 15000);
-                }
-            }
-        }
-
-        private void DoMenuActionMain(Menu menu)
-        {
-            switch (menu.SelectedItem().ItemValue.ToString())
-            {
-                case "0":
-                    NewGameSong = new GameSong();
-                    _cursorPosition = EditorCursorPosition.SONG_BASICS;
-                    _destinationFileName = "";
-                    _destinationFolderName = "";
-                    _audioFilePath = "";
-                    _editMode = false;
+                case 0:
+                    _errorMessage = Core.Songs.DeleteSongFile(NewGameSong, false);
+                    if (String.IsNullOrEmpty(_errorMessage))
+                    {
+                        _cursorPosition = EditorCursorPosition.DONE_DELETE;
+                    }
                     break;
-                case "1":
-                    _cursorPosition = EditorCursorPosition.SELECT_SONGFILE;
-                    _fileSelect.Patterns = new[] {"*.sng"};
-                    _fileSelect.CurrentFolder = _wgibeatSongsFolder;
-                    _fileSelect.FileSelected += delegate
-                                                    {
-                                                        NewGameSong = Core.Songs.LoadFromFile(_fileSelect.SelectedFile,false);
-                                                        _bpmMeter.DisplayedSong = NewGameSong;
-                                                        _cursorPosition = EditorCursorPosition.SONG_DETAILS;
-                                                        _editMode = true;
-                                                    };
-                    _fileSelect.FileSelectCancelled += delegate
-                                                           {
-                                                               _cursorPosition = EditorCursorPosition.MAIN_MENU;
-                                                           };
+                case 1:
+                    _errorMessage = Core.Songs.DeleteSongFile(NewGameSong, true);
+                    if (String.IsNullOrEmpty(_errorMessage))
+                    {
+                        _cursorPosition = EditorCursorPosition.DONE_DELETE;
+                    }
                     break;
-                case "2":
-                    Core.ScreenTransition("MainMenu");
+                case 2:
+                    _cursorPosition = EditorCursorPosition.MAIN_MENU;
                     break;
             }
         }
@@ -1007,6 +1004,10 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
            }
 
         }
+
+        #endregion
+
+        #region Misc Helpers
 
         private void CreateNewBasicGameSong()
         {
@@ -1027,12 +1028,79 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
             //Create gamesong file.
             //Calculate MD5 and save .sng file.
             NewGameSong = GameSong.LoadDefaults();
-            NewGameSong.SongFile = audioFileName;
+            NewGameSong.AudioFile = audioFileName;
             NewGameSong.DefinitionFile = _destinationFileName;
             NewGameSong.Path = _wgibeatSongsFolder + "\\" + _destinationFolderName;
             NewGameSong.SetMD5();
             Core.Songs.SaveToFile(NewGameSong);
         }
+
+        private void ValidateInputs()
+        {
+            switch (_cursorPosition)
+            {
+                case EditorCursorPosition.SONG_BASICS:
+                    var invalidFilename =
+                        (from e in Path.GetInvalidFileNameChars() where _destinationFileName.Contains("" + e) select e).
+                            Any();
+                    var invalidDirname =
+                        (from e in Path.GetInvalidPathChars() where _destinationFolderName.Contains("" + e) select e).
+                            Any();
+                    _menus["Basics"].GetByItemText("Next Step").Enabled =
+                        (!String.IsNullOrEmpty(_destinationFileName)) &&
+                        (!String.IsNullOrEmpty(_destinationFolderName)) &&
+                        (!String.IsNullOrEmpty(_audioFilePath)) &&
+                        (!invalidFilename) &&
+                        (!invalidDirname);
+
+                    _errorMessage = "";
+
+                    if (invalidDirname)
+                    {
+                        _errorMessage = "Destination Folder name contains invalid characters.";
+                    }
+                    if (invalidFilename)
+                    {
+                        _errorMessage = "Destination File name contains invalid characters.";
+                    }
+                    break;
+                case EditorCursorPosition.SONG_DETAILS:
+                    Core.Log.Enabled = false;
+                    _songValid =
+                        _menus["Details"].GetByItemText("Next Step").Enabled =
+                        Core.Songs.ValidateSongFile(NewGameSong);
+                    Core.Log.Enabled = true;
+                    break;
+            }
+        }
+
+        private void SetActiveMenu()
+        {
+            _activeMenu = null;
+            switch (_cursorPosition)
+            {
+                case EditorCursorPosition.MAIN_MENU:
+                    _activeMenu = "Main";
+                    break;
+                case EditorCursorPosition.SONG_BASICS:
+                    _activeMenu = "Basics";
+                    break;
+                case EditorCursorPosition.SONG_DETAILS:
+                    _activeMenu = "Details";
+                    break;
+                    case EditorCursorPosition.SONG_DETAILS_DELETE:
+                    _activeMenu = "DeleteDetails";
+                    break;
+                case EditorCursorPosition.DONE:
+                case EditorCursorPosition.DONE_DELETE:
+                    _activeMenu = "Done";
+                    break;
+            }
+        }
+
+        #endregion
+
+        #region Mode Activator Helpers
 
         private void ActivateTextEntryMode()
         {
@@ -1042,20 +1110,44 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
             _cursorPosition = EditorCursorPosition.KEY_ENTRY;
         }
 
-        public override void PerformKey(Microsoft.Xna.Framework.Input.Keys key)
+        private void ActivateMeasureMode()
         {
-            if (!_keyInput)
+            _startTime = null;
+            _songPlaying = true;
+            _audioChannel = Core.Audio.PlaySoundEffect(NewGameSong.Path + "\\" + NewGameSong.AudioFile, false, false);
+            _confidence = 0;
+            //Only play the last 15 seconds of the song when measuring the length of the song.
+            if (_cursorPosition == EditorCursorPosition.MEASURE_LENGTH)
             {
-                return;
+                var songLength = Core.Audio.GetChannelLength(_audioChannel);
+                if (songLength > 15000)
+                {
+                    _timeElapsed += songLength - 15000;
+                    Core.Audio.SetPosition(_audioChannel, songLength - 15000);
+                }
             }
-            if (_ignoreNextKey)
-            {
-                _ignoreNextKey = false;
-                return;
-            }
-            _textEntry.PerformKey(key);
-            base.PerformKey(key);
         }
+
+        private void ActivateEditMode(EditorCursorPosition position)
+        {
+            _fileSelect.Patterns = new[] { "*.sng" };
+            _fileSelect.CurrentFolder = _wgibeatSongsFolder;
+            _fileSelect.FileSelected += delegate
+            {
+                NewGameSong = Core.Songs.LoadFromFile(_fileSelect.SelectedFile, false);
+                _bpmMeter.DisplayedSong = NewGameSong;
+                _cursorPosition = position;
+                _editMode = true;
+            };
+            _fileSelect.FileSelectCancelled += delegate
+            {
+                _cursorPosition = EditorCursorPosition.MAIN_MENU;
+            };
+        }
+
+        #endregion
+
+        #region Song Syncing
 
         private double _timeElapsed;
         private double _songLoadDelay;
@@ -1092,7 +1184,6 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
         private int _confidence;
         private bool _songPlaying;
 
-
         private void SyncSong()
         {
 
@@ -1117,19 +1208,24 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
             }
         }
 
+        #endregion
+
         private enum EditorCursorPosition
         {
             MAIN_MENU,
             KEY_ENTRY,
             SELECT_AUDIO,
             SELECT_SONGFILE,
+            SELECT_SONGFILE_DELETE,
             SONG_BASICS,
             SONG_DETAILS,
+            SONG_DETAILS_DELETE,
             SONG_TUNING,
             MEASURE_BPM,
             MEASURE_OFFSET,
             MEASURE_LENGTH,
-            DONE
+            DONE,
+            DONE_DELETE
         }
     }
 }

@@ -91,7 +91,6 @@ namespace WGiBeat.Drawing
                 }
                 else
                 {
-                   
                     Opacity = 0;
                 }
                 _middleSprite.Draw(spriteBatch);

@@ -12,13 +12,13 @@ namespace WGiBeat.AudioSystem
         public string Title { get; set; }
         public string Subtitle { get; set; }
         public string Artist { get; set; }
-        public string SongFile { get; set; }
+        public string AudioFile { get; set; }
         public string DefinitionFile { get; set; }
         public double Bpm { get; set; }
         public double Offset { get; set; }
         public double Length { get; set; }
         public string Path { get; set; }
-        public string SongFileMD5 { get; set; }
+        public string AudioFileMD5 { get; set; }
 
         public bool Equals(GameSong other)
         {
@@ -42,7 +42,7 @@ namespace WGiBeat.AudioSystem
                 int result = (Title != null ? Title.GetHashCode() : 0);
                 result = (result * 397) ^ (Subtitle != null ? Subtitle.GetHashCode() : 0);
                 result = (result*397) ^ (Artist != null ? Artist.GetHashCode() : 0);
-                result = (result*397) ^ (SongFile != null ? SongFile.GetHashCode() : 0);
+                result = (result*397) ^ (AudioFile != null ? AudioFile.GetHashCode() : 0);
                 result = (result*397) ^ Bpm.GetHashCode();
                 result = (result*397) ^ Offset.GetHashCode();
                 result = (result*397) ^ Length.GetHashCode();
@@ -59,8 +59,8 @@ namespace WGiBeat.AudioSystem
                              Length = 0.0,
                              Offset = 0.0,
                              Path = "",
-                             SongFile = "",
-                             SongFileMD5 = "",
+                             AudioFile = "",
+                             AudioFileMD5 = "",
                              Subtitle = "",
                              Title = ""
                          };
@@ -78,7 +78,7 @@ namespace WGiBeat.AudioSystem
             try
             {
                 var md5 = MD5.Create();
-                var fs = File.Open(Path + "\\" + SongFile, FileMode.Open);
+                var fs = File.Open(Path + "\\" + AudioFile, FileMode.Open);
                 var temp = md5.ComputeHash(fs);
                 var output = "";
                 foreach (Byte b in temp)
@@ -97,13 +97,13 @@ namespace WGiBeat.AudioSystem
         }
         public void SetMD5()
         {
-            SongFileMD5 = CalculateMD5();
+            AudioFileMD5 = CalculateMD5();
         }
 
         public bool VerifyMD5()
         {
             var actualMD5 = CalculateMD5();
-            return actualMD5 == SongFileMD5;
+            return actualMD5 == AudioFileMD5;
         }
 
 
