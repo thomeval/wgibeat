@@ -12,7 +12,6 @@ namespace WGiBeat.Drawing
         private Sprite _baseSprite;
         private Sprite _songLengthBase;
         private Sprite _songTitleBase;
-        private Sprite _spectrumBackground;
 
         public GameSong DisplayedSong { get; set; }
 

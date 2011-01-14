@@ -84,8 +84,6 @@ namespace WGiBeat.AudioSystem
             _channelPrevVolume = _channelCurrentVolume;
             _channelIndexCurrent = channelId;
             _previewTime = 0.0;
-            System.Diagnostics.Debug.WriteLine("Channel update: Current: " + _channelIndexCurrent + " / Prev: " +
-                                               _channelIndexPrev);
             SetVolumes();
             
 
@@ -174,6 +172,7 @@ namespace WGiBeat.AudioSystem
                 AudioManager.StopChannel(_channelIndexCurrent);
                 _channelIndexCurrent = -1;
             }
+            _currentSong = null;
         }
 
     }

@@ -6,7 +6,7 @@ namespace WGiBeat.Drawing
 {
     public class SineSwayParticle : DrawableObject
     {
-        public Double Position { get; set; } //Between 0 and 1.
+        public Double ParticlePosition { get; set; } //Between 0 and 1.
         public Double Frequency { get; set; }
         public Boolean Vertical { get; set; }
         public Double StepSize { get; set; }
@@ -27,7 +27,7 @@ namespace WGiBeat.Drawing
 
         public SineSwayParticle(Double startPosition, Double frequency, Boolean vertical, Double stepSize, Double shift, Color shade, String particleShape, int particleSize)
         {
-            Position = startPosition;
+            ParticlePosition = startPosition;
             Frequency = frequency;
             Shift = shift;
             StepSize = stepSize;
@@ -50,17 +50,17 @@ namespace WGiBeat.Drawing
 
         private void Step()
         {
-            Position += StepSize;
+            ParticlePosition += StepSize;
 
-            if (Position >= 1)
-                Position -= 1;
+            if (ParticlePosition >= 1)
+                ParticlePosition -= 1;
 
         }
 
         private Vector2 GetVector()
         {
-            var widthAlt  = (int) (Math.Sin((Position + Shift) * Math.PI * 2 * Frequency) * Width);
-            var heightAlt = (int) (Position * Height);
+            var widthAlt  = (int) (Math.Sin((ParticlePosition + Shift) * Math.PI * 2 * Frequency) * Width);
+            var heightAlt = (int) (ParticlePosition * Height);
 
             if (Vertical)
                 return new Vector2(X + widthAlt, Y + heightAlt);

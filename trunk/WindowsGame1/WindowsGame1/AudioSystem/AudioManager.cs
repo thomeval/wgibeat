@@ -97,7 +97,6 @@ namespace WGiBeat.AudioSystem
             result = myChannel.getIndex(ref index);
             CheckFMODErrors(result);
 
-            System.Diagnostics.Debug.WriteLine("Channel allocated: "  + index);
             return index;
         }
 
@@ -183,8 +182,6 @@ namespace WGiBeat.AudioSystem
                 CheckFMODErrors(_tmpChannel.getCurrentSound(ref tmpSound));
                 resultCode = _tmpChannel.stop();
                 CheckFMODErrors(resultCode);
-
-                //TODO: Fix why this causes problems.
                 CheckFMODErrors(tmpSound.release());
             }
             Monitor.Exit(_tmpChannel);

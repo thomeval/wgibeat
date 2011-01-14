@@ -17,8 +17,6 @@ namespace WGiBeat.Screens
         private Sprite _headerSprite;
         private Sprite _background;
         private Sprite _spectrumBackground;
-        private Sprite _songLengthBase;
-        private Sprite _songTitleBase;
         private Sprite _listBackend;
         private bool _previewStarted;
         
@@ -32,7 +30,6 @@ namespace WGiBeat.Screens
         private int _songListDrawOffset;
         private const int LISTITEMS_DRAWN = 7;
         private const double SONG_CHANGE_SPEED = 0.9;
-        private double _displayedLength;
 
         private SineSwayParticleField _field = new SineSwayParticleField();
 
@@ -79,7 +76,6 @@ namespace WGiBeat.Screens
                     _selectedIndex = _songList.IndexOf(lastSong);
                 }
 
-            _displayedLength = (_songList[_selectedIndex].Song.Length);
             InitSprites();
 
             base.Initialize();
@@ -174,7 +170,6 @@ namespace WGiBeat.Screens
         private const int WAVEFORM_CLUSTER_SIZE = 16;
         private readonly float[] _maxLevels = new float[WAVEFORM_POINTS / WAVEFORM_CLUSTER_SIZE];
         private readonly float[] _dropSpeed = new float[WAVEFORM_POINTS / WAVEFORM_CLUSTER_SIZE];
-        private double _displayedBpm;
 
         private void DrawWaveForm(SpriteBatch spriteBatch)
         {

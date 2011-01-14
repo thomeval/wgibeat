@@ -63,7 +63,6 @@ namespace WGiBeat.Managers
             //Exclude the last skill level value (streak max)
             total -= SkillLevels[level][BeatlineNoteJudgement.COUNT];
             double roll = _rnd.Next((int) total);
-            System.Diagnostics.Debug.WriteLine(roll + " / " + total);
             var judgement = -1;
             do
             {

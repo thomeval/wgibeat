@@ -89,7 +89,7 @@ namespace WGiBeat.AudioSystem
                 fs.Close();
                 return output;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "FAIL";
             }

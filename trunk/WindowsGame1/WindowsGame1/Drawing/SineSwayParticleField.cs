@@ -121,7 +121,7 @@ namespace WGiBeat.Drawing
 
             particle.Frequency = MinFrequency + (_rand.NextDouble() * (MaxFrequency - MinFrequency));
             particle.Shift = MinShift + (_rand.NextDouble() * (MaxShift - MinShift));
-            particle.Position = MinPosition + (_rand.NextDouble() * (MaxPosition - MinPosition));
+            particle.ParticlePosition = MinPosition + (_rand.NextDouble() * (MaxPosition - MinPosition));
 
             particle.X = _rand.Next(MinX, MaxX);
             particle.Y = _rand.Next(MinY, MaxY);
