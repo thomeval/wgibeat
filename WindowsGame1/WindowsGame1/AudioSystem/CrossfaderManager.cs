@@ -28,15 +28,9 @@ namespace WGiBeat.AudioSystem
         private float _channelPrevVolume = 1.0f;
         private float _channelCurrentVolume = 1.0f;
 
-        public int ChannelIndexPrevious
-        {
-            get { return _channelIndexPrev; }
-            set
-            {
-                _channelIndexPrev = value;
-                _channelPrevVolume = AudioManager.GetChannelVolume(_channelIndexPrev);
-            } 
-        }
+        private bool _pendingChanges;
+        private bool _stopBoth;
+        private int _pendingNewChannel;
 
         public int ChannelIndexCurrent
         {
@@ -78,8 +72,10 @@ namespace WGiBeat.AudioSystem
             {
                 return;
             }
-            SetNewChannel(AudioManager.PlaySoundEffect(song.Path + "\\" + song.AudioFile));
-            AudioManager.SetPosition(_channelIndexCurrent, song.Offset * 1000);
+            var channelId = AudioManager.PlaySoundEffect(song.Path + "\\" + song.AudioFile);
+            SetNewChannel(channelId);
+            AudioManager.SetPosition(channelId, song.Offset * 1000);
+            AudioManager.SetChannelVolume(channelId, 0.0f);
             _currentSong = song;
         }
 
@@ -90,17 +86,36 @@ namespace WGiBeat.AudioSystem
         /// <param name="channelId"></param>
         public void SetNewChannel(int channelId)
         {
-            _currentSong = null;
+           // if (_updateInProgress)
+         //   {
+                _pendingChanges = true;
+                _pendingNewChannel = channelId;
+                System.Diagnostics.Debug.WriteLine("Channel update delayed due to bad timing.  " + channelId);
+        //    }
+       //     else
+       //     {
+      //          CommitNewChannel(channelId);
+       //     }
+            
+
+        }
+
+        private void CommitNewChannel(int channelId)
+        {
+            //_currentSong = null;
             if (_channelIndexPrev > -1)
             {
                 AudioManager.StopChannel(_channelIndexPrev);
             }
-                _channelIndexPrev = _channelIndexCurrent;
-                _channelPrevVolume = _channelCurrentVolume;
+            _channelIndexPrev = _channelIndexCurrent;
+            _channelPrevVolume = _channelCurrentVolume;
             _channelIndexCurrent = channelId;
             _previewTime = 0.0;
+            System.Diagnostics.Debug.WriteLine("Channel update: Current: " + _channelIndexCurrent + " / Prev: " +
+                                               _channelIndexPrev);
             SetVolumes();
         }
+
         /// <summary>
         /// Restarts the preview of the current song. Used when the preview is completed
         /// but not stopped.
@@ -112,13 +127,8 @@ namespace WGiBeat.AudioSystem
                 return;
             }
             
-            //Indicate that the current channel index is invalid.
-            int tempIdx = _channelIndexCurrent;
-            _channelIndexCurrent = -1;
-            AudioManager.StopChannel(tempIdx);
-
-            _channelIndexCurrent = AudioManager.PlaySoundEffect(_currentSong.Path + "\\" + _currentSong.AudioFile);
-            AudioManager.SetPosition(_channelIndexCurrent, _currentSong.Offset *1000);
+            AudioManager.SetPosition(_channelIndexCurrent, _currentSong.Offset*1000);
+            _previewTime = 0.0;
             SetVolumes();
         }
 
@@ -131,7 +141,18 @@ namespace WGiBeat.AudioSystem
         {
             if (!_updateInProgress)
             {
+
                 _updateInProgress = true;
+
+                if (_pendingChanges)
+                {
+                    if (_stopBoth)
+                    {
+                        DoStopBoth();
+                    }
+                    _pendingChanges = false;
+                    CommitNewChannel(_pendingNewChannel);
+                }
                 _previewTime = (_previewTime + 0.1);
 
                 if ((PreviewDuration > 0 )&&(_previewTime >= PreviewDuration))
@@ -140,8 +161,15 @@ namespace WGiBeat.AudioSystem
                     ReplaySameSong();
                 }
                 _channelPrevVolume = Math.Max(0.0f, _channelPrevVolume - 0.05f);
+                
+                if ((_channelIndexPrev != -1 ) && (_channelPrevVolume == 0.0f))
+                {
+                    AudioManager.StopChannel(_channelIndexPrev);
+                    _channelIndexPrev = -1;
+                }
                 SetVolumes();
                 _updateInProgress = false;
+
             }
         }
 
@@ -170,5 +198,26 @@ namespace WGiBeat.AudioSystem
             }
         }
 
+        public void StopBoth()
+        {
+            _stopBoth = true;
+            _pendingChanges = true;
+        }
+
+        private void DoStopBoth()
+        {
+            if (_channelIndexPrev != -1)
+            {
+                AudioManager.StopChannel(_channelIndexPrev);
+                _channelIndexPrev = -1;
+            }
+            if (_channelIndexCurrent != -1)
+            {
+                AudioManager.StopChannel(_channelIndexCurrent);
+                _channelIndexCurrent = -1;
+            }
+            _stopBoth = false;
+            _pendingChanges = false;
+        }
     }
 }

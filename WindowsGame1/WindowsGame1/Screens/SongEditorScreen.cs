@@ -48,7 +48,7 @@ namespace WGiBeat.Screens
         private SpriteMap _validitySpriteMap;
         private BpmMeter _bpmMeter;
 
-        private double _phraseNumber;
+        private double _phraseNumber = -1;
         private double _debugLastHitOffset;
         private double _guessedBPM;
 
@@ -95,7 +95,7 @@ namespace WGiBeat.Screens
 
         public void InitSprites()
         {
-            _backgroundSprite = new Sprite { SpriteTexture = TextureManager.Textures["allBackground"] };
+            _backgroundSprite = new Sprite { SpriteTexture = TextureManager.Textures["allBackground"], Height = 800 };
             _editProgressBaseSprite = new Sprite { SpriteTexture = TextureManager.Textures["SongEditProgressBase"] };
             _editProgressBaseSprite.Position = (Core.Metrics["SongEditProgress", 0]);
             _editProgressSpriteMap = new SpriteMap
@@ -274,7 +274,13 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
                     var validIdx = _songValid ? 1 : 0;
                     _validitySpriteMap.Draw(spriteBatch, validIdx, 195, 42, Core.Metrics["EditorSongValidity",0]);
                     _bpmMeter.Draw(spriteBatch);
-                    TextureManager.DrawString(spriteBatch, _errorMessage, "LargeFont", Core.Metrics["EditorErrorMessage", 0], Color.Red, FontAlign.CENTER);
+                    if (!String.IsNullOrEmpty(_errorMessage))
+                    {
+                        var scale = TextureManager.ScaleTextToFit(_errorMessage, "DefaultFont", 790, 100);
+                        TextureManager.DrawString(spriteBatch, "An error has occurred:", "LargeFont", Core.Metrics["EditorErrorMessage", 0], Color.Red, FontAlign.CENTER);
+                        TextureManager.DrawString(spriteBatch, _errorMessage, "DefaultFont", Core.Metrics["EditorErrorMessage", 1],scale, Color.Red, FontAlign.CENTER);
+
+                    }
                     break;
                 case EditorCursorPosition.SONG_TUNING:
                     _editProgress = 3;
@@ -917,6 +923,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
                     ActivateMeasureMode();
                     _numBeats = -1;
                     _guessedBPM = 0;
+                    Core.Players[0].Streak = 0;
                     _lastHitTime = null;
                     _cursorPosition = EditorCursorPosition.MEASURE_BPM;
                     break;
@@ -990,6 +997,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
                 case 2:
                     _cursorPosition = EditorCursorPosition.MAIN_MENU;
                     break;
+
             }
         }
 

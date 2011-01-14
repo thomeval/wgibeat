@@ -432,7 +432,7 @@ namespace WGiBeat.Screens
 
         private void StartSong()
         {
-            Crossfader.SetNewChannel(-1);
+            Crossfader.StopBoth();
             Core.Cookies["CurrentSong"] = _songList[_selectedIndex].Song;
             Core.Settings.Set("LastSongPlayed", _songList[_selectedIndex].Song.GetHashCode());
             Core.ScreenTransition("MainGame");

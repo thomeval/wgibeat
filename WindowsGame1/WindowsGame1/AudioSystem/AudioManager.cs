@@ -97,6 +97,7 @@ namespace WGiBeat.AudioSystem
             result = myChannel.getIndex(ref index);
             CheckFMODErrors(result);
 
+            System.Diagnostics.Debug.WriteLine("Channel allocated: "  + index);
             return index;
         }
 
@@ -144,17 +145,28 @@ namespace WGiBeat.AudioSystem
                 }
                 var resultCode = _fmodSystem.createSound(soundPath, (MODE) mode, ref mySound);
                 CheckFMODErrors(resultCode);
+                _sounds.Add(soundPath, mySound);
                 return mySound;
             }
             return _sounds[soundPath];
         }
 
+        public void ReleaseSound(string soundPath)
+        {
+            var sound = _sounds[soundPath];
+
+            if (sound != null)
+            {
+                CheckFMODErrors(sound.release());
+            }
+        }
         /// <summary>
         /// Stops playback of the a channel (and hence its audio), given its channel ID.
         /// </summary>
         /// <param name="index">The ID of the channel to stop.</param>
         public void StopChannel(int index)
         {
+
             var resultCode = _fmodSystem.getChannel(index, ref _tmpChannel);
             CheckFMODErrors(resultCode);
 
@@ -165,8 +177,13 @@ namespace WGiBeat.AudioSystem
             
             if (isPlaying)
             {
+                Sound tmpSound = new Sound();
+                CheckFMODErrors(_tmpChannel.getCurrentSound(ref tmpSound));
                 resultCode = _tmpChannel.stop();
                 CheckFMODErrors(resultCode);
+
+                //TODO: Fix why this causes problems.
+                CheckFMODErrors(tmpSound.release());
             }
             Monitor.Exit(_tmpChannel);
         }

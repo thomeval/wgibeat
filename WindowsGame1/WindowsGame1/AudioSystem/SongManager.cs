@@ -252,10 +252,17 @@ namespace WGiBeat.AudioSystem
                     RemoveSong(existingSongFile);
                 }
                 File.Delete(song.Path + "\\" + song.DefinitionFile);
-                if (deleteAudio)
+                if ((deleteAudio) && File.Exists(song.Path + "\\" + song.AudioFile))
                 {
+                    AudioManager.ReleaseSound(song.Path + "\\" + song.AudioFile);
                     File.Delete(song.Path + "\\" + song.AudioFile);
+
+                    if (Directory.GetFiles(song.Path).Length == 0)
+                    {
+                        Directory.Delete(song.Path);
+                    }
                 }
+               
                 return "";
             }
             catch (Exception ex)

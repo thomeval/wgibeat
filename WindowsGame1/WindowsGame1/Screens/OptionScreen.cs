@@ -54,6 +54,11 @@ namespace WGiBeat.Screens
 
             _optionsMenu.AddItem(item);
 
+            item = new MenuItem() {ItemText = "Save Game Log"};
+            item.AddOption("Off",false);
+            item.AddOption("On",true);
+            _optionsMenu.AddItem(item);
+
             item = new MenuItem {ItemText = "Reset Keys" };
             _optionsMenu.AddItem(item);
             item = new MenuItem {ItemText = "Save"};
@@ -167,6 +172,7 @@ namespace WGiBeat.Screens
                 _optionsMenu.GetByItemText("Song Previews").SetSelectedByValue(Core.Settings.Get<object>("SongPreview"));
                 _optionsMenu.GetByItemText("Full screen").SetSelectedByValue(Core.Settings.Get<object>("FullScreen"));
                 _optionsMenu.GetByItemText("Song Audio Validation").SetSelectedByValue(Core.Settings.Get<object>("SongMD5Behaviour"));
+                _optionsMenu.GetByItemText("Save Game Log").SetSelectedByValue(Core.Settings.Get<object>("SaveLog"));
             }
             catch (Exception ex)
             {
@@ -187,9 +193,12 @@ namespace WGiBeat.Screens
             Core.Settings.Set("SongPreview", (_optionsMenu.GetByItemText("Song Previews").SelectedValue()));
             Core.Settings.Set("FullScreen", _optionsMenu.GetByItemText("Full screen").SelectedValue());
             Core.Settings.Set("SongMD5Behaviour", _optionsMenu.GetByItemText("Song Audio Validation").SelectedValue());
+            Core.Settings.Set("SaveLog", _optionsMenu.GetByItemText("Save Game Log").SelectedValue());
+
             Core.Audio.SetMasterVolume((float) Core.Settings.Get<double>("SongVolume"));
+            Core.Log.SaveLog = Core.Settings.Get<bool>("SaveLog");
             Core.GraphicsManager.IsFullScreen = Core.Settings.Get<bool>("FullScreen");
-            Core.GraphicsManager.ApplyChanges();
+            Core.GraphicsManager.ApplyChanges();     
             Core.Settings.SaveToFile("settings.txt");
 
         }

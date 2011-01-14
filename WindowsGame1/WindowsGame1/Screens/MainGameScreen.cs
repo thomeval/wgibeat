@@ -82,11 +82,13 @@ namespace WGiBeat.Screens
             _beatlineSet.Bpm = _gameSong.Bpm;
             _beatlineSet.SetSpeeds();
 
+            /*
             if (Core.Cookies.ContainsKey("MenuMusicChannel"))
             {
                 Core.Audio.StopChannel((int)Core.Cookies["MenuMusicChannel"]);
                 Core.Cookies.Remove("MenuMusicChannel");
             }
+             */
             base.Initialize();
         }
 

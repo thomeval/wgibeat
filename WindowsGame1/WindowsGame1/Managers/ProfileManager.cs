@@ -61,7 +61,7 @@ namespace WGiBeat.Managers
                 pm.Add(profile);
                 fs.Close();
             }
-            pm.Log.AddMessage("INFO: "+pm.Count +"Profiles loaded successfully.");
+            pm.Log.AddMessage("INFO: "+pm.Count +" Profiles loaded successfully.");
             return pm;
         }
 
@@ -74,7 +74,7 @@ namespace WGiBeat.Managers
                 bf.Serialize(fs,profile);
                 fs.Close();
             }
-            Log.AddMessage("INFO: " + Count + "Profiles save successfully.");
+            Log.AddMessage("INFO: " + Count + " Profiles save successfully.");
         }
 
     }
