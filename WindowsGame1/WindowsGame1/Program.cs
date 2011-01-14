@@ -12,7 +12,7 @@ namespace WGiBeat
         static void Main(string[] args)
         {
 #if (DEBUG)
-            using (GameCore game = new GameCore())
+            using (var game = new GameCore())
             {
                 game.Run();
                 game.Log.SaveToFile();
@@ -23,12 +23,13 @@ namespace WGiBeat
                 using (GameCore game = new GameCore())
                 {
                     game.Run();
+                    game.Log.SaveToFile();
                 }
             }
              catch (Exception ex)
             {
                 MessageBox.Show(
-                    "A critical error has occurred. Please check the error.txt file created in the wgibeat folder for details. If this is a bug, please send the error.txt to a developer.");
+                    "A critical error has occurred. Please check the error.txt and log.txt files created in the wgibeat folder for details. If this is a bug, please send these files to a developer.");
                 SaveErrorLog(ex);
             }
 #endif

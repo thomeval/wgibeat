@@ -172,6 +172,7 @@ namespace WGiBeat
             DetectButtonPresses();
 
             _activeScreen.Update(gameTime);
+            Crossfader.Update(gameTime.TotalRealTime.TotalSeconds);
             base.Update(gameTime);
         }
 
