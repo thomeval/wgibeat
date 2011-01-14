@@ -135,8 +135,11 @@ namespace WGiBeat.AudioSystem
         /// <returns>The ID of the first free channel found.</returns>
         private Sound GetOrCreateSound(string soundPath, bool stream)
         {
-            if (!_sounds.ContainsKey(soundPath))
+            if (_sounds.ContainsKey(soundPath))
             {
+                _sounds.Remove(soundPath);
+            }
+
                 var mySound = new Sound();
                 uint mode = (uint) MODE.SOFTWARE;
                 if (stream)
@@ -147,8 +150,7 @@ namespace WGiBeat.AudioSystem
                 CheckFMODErrors(resultCode);
                 _sounds.Add(soundPath, mySound);
                 return mySound;
-            }
-            return _sounds[soundPath];
+
         }
 
         public void ReleaseSound(string soundPath)
