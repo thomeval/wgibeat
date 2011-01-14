@@ -3,8 +3,6 @@
 -Path following particle.
 -Deleting key links.
 
--Song select screen. items. Bar at bottom. / top (mode select, too). Meter for song speed.
-
 -Evaluation screen, lot of work. 80% Done
 
 -Option screen. Title. Menu design, animated.
@@ -17,40 +15,60 @@
 -Program Icon 
 
 --Thome--
--Sync (0.5?), Battle (0.5?) game modes.
--Song Sort bookmarks / quick navigation (0.5)
+-Sync (0.6?), Battle (0.6?) game modes.
+-Song Sort bookmarks / quick navigation (0.6)
 
--Frame for song title/artist in song select (0.4)(high)
--Adjustable CPU skill (high)
 -Public domain music as a sample file? (0.4 - zoran - LOL)
--Cooperative bonuses (Streaks? Sync perfects?) (0.4)
+-Cooperative bonuses (Streaks? Sync perfects?) (0.6)
 -Lifebar graph (In progress)(Graphics improvement)
 
--Chance / SP gameplay (Major - Needs graphics)(0.5)
--Gradual lifegraph entrance (0.5)
+-Chance / SP gameplay (Major - Needs graphics)(0.6)
+-Gradual lifegraph entrance (0.6)
 
 -Investigate timing / press lag (Better due to framerate fix, but is it perfect?)
+- BPM meter doesn't animate on-beat. (0.6)
 
--Mode descriptions (Needs graphics) (0.5)
--Profile stat display screen (0.5)
+- Mode descriptions (Needs graphics) (0.6)
+- Profile stat display screen (0.6)
 - Stepmania file support? (low)
-- Redo Keys screen (double tab design) (low)
--"Performance" indicator (evaluation + ingame)(low)
+- Redo Keys screen (double tab design) (medium,0.6)
 
-==0.4 - "Temporary Laugh" == (Roadmap)
+- Spectrum below time left in MainGameScreen (low)
+- Adjustable audio playback start positions.
+- Record average late/early beatline hits.
+- Option descriptions.
+- Netplay (major, low)
+- Flashing hits counter (milestones)
+- Auto join in NewGameScreen. (0.6)
+- Indicate CPU players in beatlines, player options frame and score bar. (0.6)
+
+- Remove .xnb texture requirement. (high, 0.6)
+
+==0.5 - "Handicapped Doubt" ==
+ * Song audio validation by using MD5. This makes it easier to ensure that the correct audio (.mp3) file is used when playing a song, especially when song files (.sng) are distributed.
+ * Song Editor: named WGiEdit.
+ * Delete song in WGiEdit.
+ * Performance indicator
+ * Bugfix: Playing VS CPU mode with 3 players is now possible.
+
+==0.4 - "Temporary Laugh" == 
+
  * New Game Mode: VS CPU Mode. Various skill levels available.
+ * CPU Skill levels can be customized by editing the CPUSkill.txt file.
  * Pressing BACK in Song Select Screen returns to ModeSelect.
- * Promote logging to handle all other subsystems
- * Bugfix: Playing two songs in a row without aborting no longer causes problems.
- * Bugfix: highscores always having too high grade when playing VS CPU.
- * Bugfix: Song length not calculated properly.
+ * Improved logging. During the start-up process, the initialization of all subsystems are logged. If necessary, additional logging can be added to these subsystems later.
  * "Welcome to WGiBeat" firstrun message.
  * How to play screen for new players.
  * Scalable life graph.
  * Updates to song info display on Song Select screen.
  * Song length displayed on Song Select screen.
- * Profile system 
+ * Profile system. Users can create profiles by entering a name in-game. The profile stores gameplay options such as player name, beatline speed and difficulty. Profiles are optional. 
  * Scrolling Mode Select screen.
+ * Added "Disable KO" option to prevent failing a song if desired.
+ * Bugfix: Playing two songs in a row without aborting no longer causes problems.
+ * Bugfix: highscores always having too high grade when playing VS CPU.
+ * Bugfix: Song length is now calculated properly.
+ * Bugfix: Button presses and releases are now handled properly when using a controller.
 
 ==0.3 - "Delicious Disappointment"==
 
