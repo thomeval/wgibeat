@@ -15,6 +15,7 @@ namespace WGiBeat
             using (GameCore game = new GameCore())
             {
                 game.Run();
+                game.Log.SaveToFile();
             }
 #else
             try

@@ -54,6 +54,7 @@ namespace WGiBeat.Managers
             sm["RunOnce"] = false;
             sm["ProfileFolder"] = "Profiles";
             sm["SongMD5Behaviour"] = 1;
+            sm["SaveLog"] = true;
             return sm;
         }
         public static SettingsManager LoadFromFile(string filename, LogManager log)

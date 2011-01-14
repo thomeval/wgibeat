@@ -66,6 +66,13 @@ namespace WGiBeat.AudioSystem
 
         public void ChangeMusic(string name)
         {
+            if (name == "SongSelect")
+            {
+                //The Song Select screen takes over the Crossfader at this point for song previews.
+                _currentMusic = "";
+                _musicChannel = -1;
+                return;
+            }
 
             if (_musicList.ContainsKey(name))
             {

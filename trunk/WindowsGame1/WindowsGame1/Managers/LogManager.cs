@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 
@@ -11,6 +13,7 @@ namespace WGiBeat.Managers
     {
         private readonly List<string> _logMessages;
 
+        public bool SaveLog { get; set; }
         public LogManager()
         {
             _logMessages = new List<string>();
@@ -54,6 +57,17 @@ namespace WGiBeat.Managers
             int result = _logMessages.Count;
             Monitor.Exit(_logMessages);
             return result;
+        }
+
+        public void SaveToFile()
+        {
+            if (SaveLog)
+            {
+                var filename  = Path.GetDirectoryName(
+                    Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\log.txt";
+                filename = filename.Replace("file:\\", "");
+                File.WriteAllLines(filename, _logMessages.ToArray());
+            }
         }
     }
 }
