@@ -176,7 +176,7 @@ namespace WGiBeat.Screens
             _spectrumBackground.Draw(spriteBatch);
             if (Crossfader.ChannelIndexCurrent != -1)
             {
-                float[] levels = Core.Audio.GetChannelWaveform(Crossfader.ChannelIndexCurrent, WAVEFORM_POINTS);
+                float[] levels = Core.Audio.GetChannelSpectrum(Crossfader.ChannelIndexCurrent, WAVEFORM_POINTS);
 
                 var line = new PrimitiveLine(Core.GraphicsDevice);
                 line.Colour = Color.White;

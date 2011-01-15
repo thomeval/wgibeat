@@ -152,6 +152,10 @@ namespace WGiBeat.AudioSystem
 
         }
 
+        /// <summary>
+        /// Releases a loaded audio file from FMOD's control. A previously loaded sound file cannot be deleted until released in this way.
+        /// </summary>
+        /// <param name="soundPath">The path and filename of the audio file to release.</param>
         public void ReleaseSound(string soundPath)
         {
             var sound = _sounds[soundPath];
@@ -249,6 +253,11 @@ namespace WGiBeat.AudioSystem
             return position;
         }
 
+        /// <summary>
+        /// Gets the length of the sound playing in a given Channel ID.
+        /// </summary>
+        /// <param name="index">The ID of the desired channel.</param>
+        /// <returns>The length of the sound playing in the given Channel ID, in milliseconds.</returns>
         public uint GetChannelLength(int index)
         {
             uint length = 0;
@@ -263,38 +272,15 @@ namespace WGiBeat.AudioSystem
         }
         #endregion
 
-        #region Song Playback System
-
-
-        /*
         /// <summary>
-        /// Loads a GameSong into memory. Only one GameSong is loaded at a time.
-        /// Note that this method can take some time to complete.
+        /// Calculates and returns a sound spectrum of the a given Channel ID, based on the sound currently
+        /// playing in that channel.
         /// </summary>
-        /// <param name="song"></param>
-        public void LoadSong(GameSong song)
-        {
-            StopSong();
-            _currentSong = song;
-            RESULT result;
-            result = _fmodSystem.createSound(song.Path + "\\" + song.AudioFile, MODE.SOFTWARE, ref _fmodSound);
-            CheckFMODErrors(result);
-        }
-
-        /// <summary>
-        /// Starts playing the latest GameSong loaded with LoadSong(), using the master volume.
-        /// </summary>
-        public void PlaySong()
-        {
-            RESULT result;
-            result = _fmodSystem.playSound(FMOD.CHANNELINDEX.FREE, _fmodSound, false, ref _fmodChannel);
-            _fmodChannel.setVolume(_masterVolume);
-            CheckFMODErrors(result);
-        }
-         */
-        #endregion
-
-        public float[] GetChannelWaveform(int index, int numPoints)
+        /// <param name="index">The ID of the desired channel.</param>
+        /// <param name="numPoints">The number of points of the spectrum to return. Must be a power of 2. Higher numbers will take
+        /// more memory and have more lag, but will be more accurate.</param>
+        /// <returns>The sound spectrum of the currently playing sound in the given Channel ID, as an array of decimal numbers.</returns>
+        public float[] GetChannelSpectrum(int index, int numPoints)
         {
             var returnData = new float[numPoints];
 
