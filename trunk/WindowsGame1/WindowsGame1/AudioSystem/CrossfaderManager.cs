@@ -73,7 +73,7 @@ namespace WGiBeat.AudioSystem
         /// Changes the currently playing sound channel to a new one. This method
         /// should be used if a non-GameSong sound is to be used and crossfaded out.
         /// </summary>
-        /// <param name="channelId"></param>
+        /// <param name="channelId">The ID of the channel to use as the new current Channel.</param>
         public void SetNewChannel(int channelId)
         {
             if (_channelIndexPrev > -1)
@@ -86,7 +86,6 @@ namespace WGiBeat.AudioSystem
             _previewTime = 0.0;
             SetVolumes();
             
-
         }
 
         /// <summary>
@@ -105,6 +104,11 @@ namespace WGiBeat.AudioSystem
             SetVolumes();
         }
 
+        /// <summary>
+        /// Updates the CrossFader with the current GameTime. This needs to be called frequently for the Crossfader
+        /// to be effective.
+        /// </summary>
+        /// <param name="gameTime">The total amount of time since the start of the program, in seconds.</param>
         public void Update(double gameTime)
         {
             var timeElapsed = gameTime - _lastUpdate;
@@ -160,6 +164,9 @@ namespace WGiBeat.AudioSystem
             }
         }
 
+        /// <summary>
+        /// Stops both the current channel, as well as the previous channel, instantly.
+        /// </summary>
         public void StopBoth()
         {
             if (_channelIndexPrev != -1)

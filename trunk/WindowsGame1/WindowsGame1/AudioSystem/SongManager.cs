@@ -41,6 +41,12 @@ namespace WGiBeat.AudioSystem
 
         #region Song Operations
 
+        /// <summary>
+        /// Begins playback of a specific GameSong. The song's audio is loaded into memory, which will
+        /// cause noticable loading time but improve performance during gameplay.
+        /// </summary>
+        /// <param name="song">The GameSong to begin playback.</param>
+        /// <returns>The Channel ID used by the AudioManager for playback of the song's audio.</returns>
         public int PlaySong(GameSong song)
         {
             if (_songChannelIndex != -1)
@@ -51,6 +57,9 @@ namespace WGiBeat.AudioSystem
             return _songChannelIndex;
         }
 
+        /// <summary>
+        /// Stops playback of the currently playing GameSong, instantly.
+        /// </summary>
         public void StopCurrentSong()
         {
             if (_songChannelIndex != -1)
@@ -60,6 +69,10 @@ namespace WGiBeat.AudioSystem
             _songChannelIndex = -1;
         }
 
+        /// <summary>
+        /// Returns the current progress of the currently playing GameSong's audio.
+        /// </summary>
+        /// <returns>The current position of the currently playing GameSong's audio, in milliseconds.</returns>
         public uint GetCurrentSongProgress()
         {
             if (_songChannelIndex != -1)
@@ -72,7 +85,7 @@ namespace WGiBeat.AudioSystem
 
         #region File Operations
         /// <summary>
-        /// Adds a GameSong to the list of songs available.
+        /// Adds a GameSong to the list of songs available. GameSongs are checked for uniqueness by their Hashcode.
         /// </summary>
         /// <param name="song">The GameSong to add.</param>
         public void AddSong(GameSong song)
@@ -87,6 +100,11 @@ namespace WGiBeat.AudioSystem
             }
         }
 
+        /// <summary>
+        /// Removes a GameSong from the list of playable songs. The given GameSong's Hashcode is used to find which 
+        /// song should be removed.
+        /// </summary>
+        /// <param name="song">The GameSong to remove.</param>
         public void RemoveSong(GameSong song)
         {
             if (_songs.Contains(song))
@@ -99,6 +117,14 @@ namespace WGiBeat.AudioSystem
             } 
         }
 
+        /// <summary>
+        /// Returns that GameSong loaded into the list of songs that has the same physical location and definition file (.sng) 
+        /// as the given path and filename.
+        /// </summary>
+        /// <param name="path">The path of the definition file.</param>
+        /// <param name="songfilename">The name of the definition (.sng) file.</param>
+        /// <returns>The GameSong loaded into the list of songs that has the same physical location and definition file as the given
+        /// path and filename, or null if no match is found.</returns>
         public GameSong GetBySongFile(string path, string songfilename)
         {
             return (from e in _songs where (e.Path == path) && (e.AudioFile == songfilename) select e).SingleOrDefault();
@@ -129,7 +155,6 @@ namespace WGiBeat.AudioSystem
                     }
                     
                     AddSong(newSong);
-
                 }
                 folders.RemoveAt(0);
             }
@@ -226,7 +251,7 @@ namespace WGiBeat.AudioSystem
                             break;
                     }
                 }
-                if ((validate) && (!ValidateSongFile(newSong, filename)))
+                if ((validate) && (!ValidateSongFile(newSong)))
                 {
                     return null;
                 }
@@ -238,9 +263,9 @@ namespace WGiBeat.AudioSystem
                 return null;
             }
 
-
             return newSong;
         }
+
 
         public string DeleteSongFile(GameSong song, bool deleteAudio)
         {
@@ -271,14 +296,23 @@ namespace WGiBeat.AudioSystem
             }
 
         }
-        public bool ValidateSongFile(GameSong song, string filename)
+
+        /// <summary>
+        /// Performs a variety of validation checks on a given GameSong, to determine whether it is valid and
+        /// playable. The physical location of the .sng file is determined from the provided GameSong's 
+        /// Path and DefinitionFile properties.
+        /// </summary>
+        /// <param name="song">The GameSong to check for validity.</param>
+        /// <returns>Whether the GameSong provided is valid and playable.</returns>
+        public bool ValidateSongFile(GameSong song)
         {
+            var filename = song.Path + "\\" +  song.DefinitionFile;
             if (string.IsNullOrEmpty(song.AudioFile))
             {
                 Log.AddMessage("WARN: No audio file specified in " + filename);
                 return false;
             }
-            var path = Path.GetDirectoryName(filename) + "\\" + song.AudioFile;
+            var path = song.Path + "\\" + song.AudioFile;
             if (!File.Exists(path))
             {
                 Log.AddMessage("WARN: Couldn't find audio file specified: " + path);
@@ -345,10 +379,6 @@ namespace WGiBeat.AudioSystem
             return true;
         }
 
-        public bool ValidateSongFile(GameSong song)
-        {
-            return ValidateSongFile(song, song.Path + "\\" + song.DefinitionFile);
-        }
 
         #endregion
 
