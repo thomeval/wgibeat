@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 
 namespace WGiBeat.Managers
@@ -14,6 +11,10 @@ namespace WGiBeat.Managers
         private readonly List<string> _logMessages;
 
         public bool SaveLog { get; set; }
+
+        //TODO: Complete this.
+
+        public LogLevel LogLevel { get; set; }
         public LogManager()
         {
             _logMessages = new List<string>();
@@ -69,5 +70,13 @@ namespace WGiBeat.Managers
                 File.WriteAllLines(filename, _logMessages.ToArray());
             }
         }
+    }
+    public enum LogLevel
+    {
+        ERROR,
+        WARN,
+        NOTE,
+        INFO,
+        DEBUG
     }
 }

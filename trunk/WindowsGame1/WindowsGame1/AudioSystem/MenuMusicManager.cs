@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using WGiBeat.Managers;
 
 namespace WGiBeat.AudioSystem
@@ -25,6 +24,12 @@ namespace WGiBeat.AudioSystem
             Log = log;
         }
 
+        /// <summary>
+        /// Loads the list of Menu music files from the given filepath. This file must begin
+        /// with this header: #MUSICLIST-1.0; See MusicList.txt included for an example of the
+        /// file's format.
+        /// </summary>
+        /// <param name="filepath">The path of the file to load as a menu music list.</param>
         public void LoadMusicList(string filepath)
         {
             Log.AddMessage("INFO: Loading Menu Music list from "+filepath+" ...");
@@ -36,7 +41,6 @@ namespace WGiBeat.AudioSystem
                 Log.AddMessage("ERROR: Menu Music list does not have the correct header. This file must start with '#MUSICLIST-1.0;'");
                 return;
             }
-
 
             for (int x = 1; x < lines.Count(); x++)
             {
@@ -89,7 +93,6 @@ namespace WGiBeat.AudioSystem
                     return;
                 }
 
-                //StopExistingMusic();
                 _currentMusic = _musicList[name];
                 _musicChannel = AudioManager.PlaySoundEffect(MusicFilePath + _musicList[name],true,false);
                 Crossfader.PreviewDuration = 0;
@@ -104,8 +107,6 @@ namespace WGiBeat.AudioSystem
         private void StopExistingMusic()
         {
 
-
-            //AudioManager.StopChannel(_musicChannel);
             _musicChannel = -1;
             _currentMusic = "";
             if (Crossfader.ChannelIndexCurrent != -1)

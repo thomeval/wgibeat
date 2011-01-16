@@ -314,6 +314,7 @@ namespace WGiBeat
             _screens[screen].Initialize();
             _activeScreen = _screens[screen];
             _menuMusicManager.ChangeMusic(screen);
+            Log.AddMessage("INFO: Screen transition to: " + screen);
         }
     }
 }

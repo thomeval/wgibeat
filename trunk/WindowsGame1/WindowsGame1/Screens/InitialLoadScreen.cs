@@ -62,6 +62,8 @@ namespace WGiBeat.Screens
                 switch (line.Substring(0,4))
                 {
                     case "DEBU":
+                        drawColor = Color.Gray;
+                        break;
                     case "NOTE":
                         drawColor = Color.Cyan;
                         break;

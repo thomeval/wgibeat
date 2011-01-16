@@ -266,7 +266,17 @@ namespace WGiBeat.AudioSystem
             return newSong;
         }
 
-
+        /// <summary>
+        /// Physically deletes a song file. This will also remove it from the list of
+        /// loaded GameSongs. The song file is located by the GameSong's DefinitionFile
+        /// and Path fields.
+        /// </summary>
+        /// <param name="song">The GameSong to remove and delete.</param>
+        /// <param name="deleteAudio">Whether the GameSong's audio file should be deleted as well.</param>
+        /// <remarks>If deleteAudio is set to true and the folder containing the SongFile is empty
+        /// after the deletion, that folder will be deleted as well.</remarks>
+        /// <returns>"" if deletion was successful, or the error message encountered if something
+        /// went wrong.</returns>
         public string DeleteSongFile(GameSong song, bool deleteAudio)
         {
             try
@@ -378,7 +388,6 @@ namespace WGiBeat.AudioSystem
             }
             return true;
         }
-
 
         #endregion
 
