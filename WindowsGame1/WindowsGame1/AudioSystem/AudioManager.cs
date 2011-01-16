@@ -232,7 +232,7 @@ namespace WGiBeat.AudioSystem
         {
             _masterVolume = volume;
 
-            ChannelGroup masterGroup = new ChannelGroup();
+            var masterGroup = new ChannelGroup();
             var resultCode = _fmodSystem.getMasterChannelGroup(ref masterGroup);
             CheckFMODErrors(resultCode);
 

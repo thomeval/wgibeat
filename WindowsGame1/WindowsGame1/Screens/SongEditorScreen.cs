@@ -706,6 +706,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
                     _songPlaying = false;
                     break;
                 case "START":
+                    Core.Log.AddMessage(String.Format("DEBUG: Attempting to save song tweaks to: {0}\\{1}",NewGameSong.Path,NewGameSong.DefinitionFile));
                     Core.Songs.StopCurrentSong();
                     Core.Songs.SaveToFile(NewGameSong);
                     var oldSongFile = Core.Songs.GetBySongFile(NewGameSong.Path, NewGameSong.AudioFile);
@@ -716,6 +717,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
                     Core.Songs.AddSong(NewGameSong);
                     _cursorPosition = EditorCursorPosition.DONE;
                     _songPlaying = false;
+                    Core.Log.AddMessage(String.Format("DEBUG: SongFile '{0}' was saved successfully!", NewGameSong.DefinitionFile));
                     break;
                 case "LEFT":
                     AdjustSpeed(-1);
@@ -881,10 +883,12 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
                 case "3":
                     if (_menus["Basics"].GetByItemText("Next Step").Enabled)
                     {
+                        Core.Log.AddMessage(String.Format("DEBUG: Attempting to create a basic new GameSong at: {0}\\{1}", _destinationFolderName, _destinationFileName));
                         _errorMessage = "";
                         CreateNewBasicGameSong();
                         _bpmMeter.DisplayedSong = NewGameSong;
                         _cursorPosition = EditorCursorPosition.SONG_DETAILS;
+
                     }
                     break;
                 case "4":
@@ -950,6 +954,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
                 case 9:
                     if (Core.Songs.ValidateSongFile(NewGameSong))
                     {
+                        Core.Log.AddMessage(String.Format("DEBUG: Attempting to save song details to: {0}\\{1}", NewGameSong.Path, NewGameSong.DefinitionFile));
                         Core.Songs.SaveToFile(NewGameSong);
                         _cursorPosition = EditorCursorPosition.SONG_TUNING;
                         _startTime = null;
