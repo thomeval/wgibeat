@@ -21,6 +21,12 @@ namespace WGiBeat.Managers
             _rnd = new Random();
         }
 
+        /// <summary>
+        /// Loads a list of CPU skill levels from file. This file contains the 'weights' of
+        /// each skill level, which correspond with the probability of the CPU player getting
+        /// each BeatlineNoteJudgement.
+        /// </summary>
+        /// <param name="filename">The file to load CPU skill level weights from.</param>
         public void LoadWeights(string filename)
         {
             SkillLevels.Clear();
@@ -46,6 +52,15 @@ namespace WGiBeat.Managers
             }
         }
 
+        /// <summary>
+        /// Determines the next beatline judgement that the CPU obtained, by using
+        /// weighted randomness. The skill level provided should have already been
+        /// defined and loaded from file.
+        /// </summary>
+        /// <param name="skillLevel">The name of the skill level the CPU is using.</param>
+        /// <param name="streak">The current streak of the CPU. The maximum streak of the CPU
+        /// is limited and also defined in the CPU weights file.</param>
+        /// <returns>The BeatlineNoteJudgement obtained by the CPU.</returns>
         public BeatlineNoteJudgement GetNextJudgement(string skillLevel, int streak)
         {
             int idx = SkillNames.IndexOf(skillLevel.ToUpper());
@@ -57,6 +72,15 @@ namespace WGiBeat.Managers
             Log.AddMessage("ERROR: CPU Skill level '" + skillLevel +"' does not exist.");
             return BeatlineNoteJudgement.COUNT;
         }
+
+        /// <summary>
+        /// Determines the next beatline judgement that the CPU obtained, by using
+        /// weighted randomness. The skill level used is the index provided.
+        /// </summary>
+        /// <param name="level">The index of the skill level the CPU is using.</param>
+        /// <param name="streak">The current streak of the CPU. The maximum streak of the CPU
+        /// is limited and also defined in the CPU weights file.</param>
+        /// <returns>The BeatlineNoteJudgement obtained by the CPU.</returns>
         public BeatlineNoteJudgement GetNextJudgement(int level, int streak)
         {
             var total = SkillLevels[level].Values.Sum();
@@ -80,6 +104,14 @@ namespace WGiBeat.Managers
             
         }
 
+        /// <summary>
+        /// Creates a single skill level from an array (or similar) of numbers.
+        /// These numbers are the probabilities that the CPU will obtain an
+        /// IDEAL, COOL, OK, BAD, MISS, and FAIL, using that skill level, in order.
+        /// In addition, the maximum streak allowed should be the seventh number.
+        /// </summary>
+        /// <param name="levels">An array of numbers (or similar) to use as skill level weights.</param>
+        /// <returns>A new skill level, as a Dictionary.</returns>
         private Dictionary<BeatlineNoteJudgement, double> CreateSkillLevel(IEnumerable<string> levels)
         {
             var result = new Dictionary<BeatlineNoteJudgement, double>();

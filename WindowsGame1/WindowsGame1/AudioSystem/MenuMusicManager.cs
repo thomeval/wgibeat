@@ -6,7 +6,12 @@ using WGiBeat.Managers;
 
 namespace WGiBeat.AudioSystem
 {
-
+    /// <summary>
+    /// A Manager that is responsible for playing music during the different screens of the game.
+    /// The music to be played during each screen is determined by the contents of the MusicFilePath
+    /// field. The manager also uses the Crossfader to facilitate crossfading when the menu music is
+    /// scheduled to change.
+    /// </summary>
     public class MenuMusicManager : Manager
     {
         private readonly Dictionary<string, string> _musicList;
@@ -34,7 +39,8 @@ namespace WGiBeat.AudioSystem
         {
             Log.AddMessage("INFO: Loading Menu Music list from "+filepath+" ...");
             var sr = File.ReadAllText(filepath);
-            sr = sr.Replace("\r\n", "");
+            sr = sr.Replace("\n", "");
+            sr = sr.Replace("\r", "");
             var lines = sr.Split(';');
             if (lines[0] != "#MUSICLIST-1.0")
             {
@@ -61,13 +67,22 @@ namespace WGiBeat.AudioSystem
                 }
             }
             Log.AddMessage("INFO: Menu music list loaded successfully.");
-
         }
+
+        /// <summary>
+        /// Adds a single audio file as a menu music item, with the given screen name and file path.
+        /// </summary>
+        /// <param name="name">The name of the screen during which the music should play.</param>
+        /// <param name="path">The path and filename of the audio file to play as menu music.</param>
         public void AddMenuMusic(string name, string path)
         {
             _musicList.Add(name, path);
         }
 
+        /// <summary>
+        /// Changes the currently playing menu music to the music assigned to the given (screen) name.
+        /// </summary>
+        /// <param name="name">The (screen) name to use as the new playing menu music.</param>
         public void ChangeMusic(string name)
         {
             if (name == "SongSelect")
@@ -104,6 +119,9 @@ namespace WGiBeat.AudioSystem
             }
         }
 
+        /// <summary>
+        /// Stops the currently playing menu music.
+        /// </summary>
         private void StopExistingMusic()
         {
 
