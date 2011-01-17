@@ -73,10 +73,10 @@ namespace WGiBeat.Managers
     }
     public enum LogLevel
     {
-        ERROR,
-        WARN,
-        NOTE,
-        INFO,
-        DEBUG
+        ERROR = 4,
+        WARN = 3,
+        NOTE = 2,
+        INFO = 1,
+        DEBUG = 0
     }
 }

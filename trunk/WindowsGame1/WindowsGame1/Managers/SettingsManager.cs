@@ -10,7 +10,7 @@ namespace WGiBeat.Managers
     /// </summary>
     public class SettingsManager : Manager
     {
-        private Dictionary<string, object> _settings;
+        private readonly Dictionary<string, object> _settings;
 
         public SettingsManager()
         {
@@ -57,6 +57,7 @@ namespace WGiBeat.Managers
             sm["SaveLog"] = true;
             return sm;
         }
+
         public static SettingsManager LoadFromFile(string filename, LogManager log)
         {
             log.AddMessage("INFO: Loading default settings...");
