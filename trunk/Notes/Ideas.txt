@@ -41,6 +41,8 @@
 - Flashing hits counter (milestones)
 - Auto join in NewGameScreen. (0.6)
 - Indicate CPU players in beatlines, player options frame and score bar. (0.6)
+- Why is a song invalid in WGiEdit?
+- Improve Log Manager (setting level, etc)
 
 - Remove .xnb texture requirement. (high, 0.6)
 
