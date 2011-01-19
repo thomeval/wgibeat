@@ -17,48 +17,55 @@ namespace WGiBeat.Drawing
             _metrics = new Dictionary<string, Vector2[]>();
         }
 
-        public static MetricsManager LoadFromFile(string filename, LogManager log)
+        public void LoadFromFile(string filename)
         {
-            log.AddMessage("INFO: Loading Metrics from "+filename+"...");
-            var mm = new MetricsManager {Log = log};
+            Log.AddMessage("INFO: Loading Metrics from " + filename + "...");
+            try
+            {
+                string filetext = File.ReadAllText(filename);
+                LoadFromText(filetext);
+            }
+            catch (FileNotFoundException)
+            {
+                Log.AddMessage("WARN: Failed to load metrics due to file not found error: " + filename);
+            }
 
-            string filetext = File.ReadAllText(filename);
+            Log.AddMessage("INFO: Metrics loaded successfully.");
+        }
+        private void LoadFromText(string text)
+        {
 
-
-            if (filetext.Substring(0, 8) != "#METRICS")
+            if (text.Substring(0, 8) != "#METRICS")
             {
                 throw new FileLoadException("File requested is not a valid metrics file.");
             }
-            filetext = filetext.Replace("\n", "");
-            filetext = filetext.Replace("\r", "");
-            filetext = filetext.Substring(filetext.IndexOf(';')+1);
+            text = text.Replace("\n", "");
+            text = text.Replace("\r", "");
+            text = text.Substring(text.IndexOf(';') + 1);
 
-            string[] rules = filetext.Split(';');
+            string[] rules = text.Split(';');
 
             foreach (string rule in rules)
             {
                 if ((rule.Length < 1) || (rule[0] == '#'))
                     continue;
 
-                string id = rule.Substring(0,rule.IndexOf('='));
+                string id = rule.Substring(0, rule.IndexOf('='));
 
-                string[] svalues = rule.Substring(rule.IndexOf('=') + 1).Split(new[] {'[', ']', ','},StringSplitOptions.RemoveEmptyEntries);
+                string[] svalues = rule.Substring(rule.IndexOf('=') + 1).Split(new[] { '[', ']', ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-                var values = new Vector2[svalues.Count()/2];
-                for (int i = 0; i < (svalues.Count()/2); i ++)
+                var values = new Vector2[svalues.Count() / 2];
+                for (int i = 0; i < (svalues.Count() / 2); i++)
                 {
-                    int x = Convert.ToInt32(svalues[2*i]);
-                    int y = Convert.ToInt32(svalues[(2*i) + 1]);
+                    int x = Convert.ToInt32(svalues[2 * i]);
+                    int y = Convert.ToInt32(svalues[(2 * i) + 1]);
                     values[i] = new Vector2(x, y);
-                    
-                }
-                mm[id] = values;
-                
-            }
-            mm.Log.AddMessage("INFO: Metrics loaded successfully.");
-            return mm;
-        }
 
+                }
+                this[id] = values;
+
+            }
+        }
         public Vector2 this [string id, int player]
     {
             get
