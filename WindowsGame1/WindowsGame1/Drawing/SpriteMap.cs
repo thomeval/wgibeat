@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing
@@ -42,6 +43,11 @@ namespace WGiBeat.Drawing
             xOffset *= xSize;
             var sourceRect = new Rectangle{Height = ySize, Width = xSize, X = xOffset, Y = yOffset};
             return sourceRect;
+        }
+
+        public void Draw(SpriteBatch spriteBatch, int cellnumber, int x, int y)
+        {
+            Draw(spriteBatch,cellnumber,SpriteTexture.Width / Columns, SpriteTexture.Height / Rows,x,y);
         }
     }
 }

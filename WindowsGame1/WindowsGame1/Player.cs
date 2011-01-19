@@ -14,6 +14,7 @@ namespace WGiBeat
         public Player()
         {
             Judgements = new int[8];
+            BeatlineSpeed = 1.0;
         }
 
         public Profile Profile { get; set; }
