@@ -55,6 +55,7 @@ namespace WGiBeat.Managers
             sm["ProfileFolder"] = "Profiles";
             sm["SongMD5Behaviour"] = 1;
             sm["SaveLog"] = true;
+            sm["Theme"] = "Default";
             return sm;
         }
 

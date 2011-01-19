@@ -59,6 +59,14 @@ namespace WGiBeat.Screens
             item.AddOption("On",true);
             _optionsMenu.AddItem(item);
 
+            item = new MenuItem() {ItemText = "Theme"};
+            foreach (string dir in System.IO.Directory.GetDirectories(Core.WgibeatRootFolder + "\\Content\\Textures"))
+            {
+                var dirname = dir.Substring(dir.LastIndexOf("\\") + 1);
+                item.AddOption(dirname, dirname);
+            }
+            _optionsMenu.AddItem(item);
+
             item = new MenuItem {ItemText = "Reset Keys" };
             _optionsMenu.AddItem(item);
             item = new MenuItem {ItemText = "Save"};
@@ -173,6 +181,7 @@ namespace WGiBeat.Screens
                 _optionsMenu.GetByItemText("Full screen").SetSelectedByValue(Core.Settings.Get<object>("FullScreen"));
                 _optionsMenu.GetByItemText("Song Audio Validation").SetSelectedByValue(Core.Settings.Get<object>("SongMD5Behaviour"));
                 _optionsMenu.GetByItemText("Save Game Log").SetSelectedByValue(Core.Settings.Get<object>("SaveLog"));
+                _optionsMenu.GetByItemText("Theme").SetSelectedByValue(Core.Settings.Get<object>("Theme"));
             }
             catch (Exception ex)
             {
@@ -194,9 +203,12 @@ namespace WGiBeat.Screens
             Core.Settings.Set("FullScreen", _optionsMenu.GetByItemText("Full screen").SelectedValue());
             Core.Settings.Set("SongMD5Behaviour", _optionsMenu.GetByItemText("Song Audio Validation").SelectedValue());
             Core.Settings.Set("SaveLog", _optionsMenu.GetByItemText("Save Game Log").SelectedValue());
-
+            Core.Settings.Set("Theme",_optionsMenu.GetByItemText("Theme").SelectedValue());
             Core.Audio.SetMasterVolume((float) Core.Settings.Get<double>("SongVolume"));
             Core.Log.SaveLog = Core.Settings.Get<bool>("SaveLog");
+
+            Core.LoadCurrentTheme();
+
             Core.GraphicsManager.IsFullScreen = Core.Settings.Get<bool>("FullScreen");
             Core.GraphicsManager.ApplyChanges();     
             Core.Settings.SaveToFile("settings.txt");

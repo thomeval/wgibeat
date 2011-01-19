@@ -154,9 +154,7 @@ namespace WGiBeat.Screens
             doneMenu.AddItem(new MenuItem{ItemText = "OK", ItemValue = 0});
             _menus.Add("Done",doneMenu);
 
-            _wgibeatSongsFolder = Path.GetDirectoryName(
-Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\Songs";
-            _wgibeatSongsFolder = _wgibeatSongsFolder.Replace("file:\\", "");
+            _wgibeatSongsFolder = Core.WgibeatRootFolder + "\\Songs";
 
             _fileSelect.Width = 800;
             _fileSelect.Position = Core.Metrics["EditorMenuStart", 0];

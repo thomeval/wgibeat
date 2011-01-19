@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -16,16 +17,37 @@ namespace WGiBeat.Drawing
             Textures.Add(name, tex);
         }
 
-        //TODO: Test compatibility and convert if possible.
         public static void CreateAndAddTexture(string filename)
         {
-            CreateAndAddTexture(filename, System.IO.Path.GetFileNameWithoutExtension(filename));   
+            CreateAndAddTexture(filename, Path.GetFileNameWithoutExtension(filename));   
         }
+
         public static void CreateAndAddTexture(string filename, string assetName)
         {
             var newTexture = Texture2D.FromFile(GraphicsDevice, filename);
-            Textures.Add(assetName,newTexture);
+            if (!Textures.ContainsKey(assetName))
+            {
+                Textures.Add(assetName, newTexture);
+            }
+            else
+            {
+                Textures[assetName] = newTexture;
+            }
         }
+
+        public static void LoadTheme(string foldername)
+        {
+            string[] validExtensions = {".bmp", ".png", ".jpg", ".jpeg"};
+
+            foreach (string file in Directory.GetFiles(foldername))
+            {
+               if (validExtensions.Contains(Path.GetExtension(file)))
+               {
+                   CreateAndAddTexture(file);
+               }
+            }
+        }
+
 
         public static void AddFont(string name, SpriteFont font)
         {

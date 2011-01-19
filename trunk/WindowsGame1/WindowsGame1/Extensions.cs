@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 
 namespace WGiBeat
 {
@@ -11,6 +12,12 @@ namespace WGiBeat
             result.X = vector.X;
             result.Y = vector.Y;
             return result;
+        }
+
+        //Not a part of .NET??!
+        public static bool Contains(this string[] array, string item)
+        {
+            return Array.IndexOf(array, item) != -1;
         }
     }
 }

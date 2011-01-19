@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -41,8 +42,9 @@ namespace WGiBeat
 
         private KeyboardState _lastKeystate;
         private GamePadState[] _lastGamePadState;
+        public string WgibeatRootFolder;
 
-        public const string VERSION_STRING = "v0.5";
+        public const string VERSION_STRING = "v0.6 pre";
         public GameCore()
         {
             GraphicsManager = new GraphicsDeviceManager(this);
@@ -62,6 +64,10 @@ namespace WGiBeat
             this.IsFixedTimeStep = false;
             //NOTE: Uncomment to disable vsync.
             //GraphicsManager.SynchronizeWithVerticalRetrace = false;
+
+            WgibeatRootFolder = Path.GetDirectoryName(
+Assembly.GetAssembly(typeof(GameCore)).CodeBase);
+            WgibeatRootFolder = WgibeatRootFolder.Replace("file:\\", "");
 
             Log = new LogManager{Enabled = true, SaveLog = true};
             Log.AddMessage("INFO: Initializing Cookies...");
@@ -134,17 +140,30 @@ namespace WGiBeat
             // Create a new SpriteBatch, which can be used to draw textures.
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            /*
             var files = Directory.GetFiles(Content.RootDirectory + "/Textures", "*.xnb");
             foreach (string file in files)
             {
                 TextureManager.AddTexture(Path.GetFileNameWithoutExtension(file), Content.Load<Texture2D>("Textures/" + Path.GetFileNameWithoutExtension(file)));
             }
+            */
+            LoadCurrentTheme();
 
-            files = Directory.GetFiles(Content.RootDirectory + "/Fonts", "*.xnb");
+            var files = Directory.GetFiles(Content.RootDirectory + "/Fonts", "*.xnb");
             foreach (string file in files)
             {
                 TextureManager.AddFont(Path.GetFileNameWithoutExtension(file), Content.Load<SpriteFont>("Fonts/" + Path.GetFileNameWithoutExtension(file)));
             }
+        }
+
+        public void LoadCurrentTheme()
+        {
+            var themeFolder = WgibeatRootFolder + "\\Content\\Textures\\";
+            if (!(Settings.Get<string>("Theme") == "Default"))
+            {
+                TextureManager.LoadTheme(themeFolder + "Default");
+            }
+            TextureManager.LoadTheme(themeFolder + Settings.Get<string>("Theme"));
         }
 
         /// <summary>
