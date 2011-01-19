@@ -479,7 +479,7 @@
     <Content Include="MenuMusic\MusicList.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="metrics.txt">
+    <Content Include="Content\Textures\Default\metrics.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Profiles\ProfilesInfo.txt">

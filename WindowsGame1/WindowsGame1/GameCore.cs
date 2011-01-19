@@ -73,7 +73,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             Log.AddMessage("INFO: Initializing Cookies...");
             Cookies = new Dictionary<string, object>();
 
-            Metrics = MetricsManager.LoadFromFile("metrics.txt",this.Log);
+            Metrics = new MetricsManager { Log = this.Log };
             Settings = SettingsManager.LoadFromFile("settings.txt", this.Log);
             HighScores = HighScoreManager.LoadFromFile("Scores.conf", this.Log);
             Profiles = ProfileManager.LoadFromFolder("Profiles", this.Log);
@@ -87,14 +87,16 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
 
             TextureManager.GraphicsDevice = this.GraphicsDevice;
 
-            if (!Directory.Exists(Directory.GetCurrentDirectory() + "\\" + Settings["SongFolder"]))
+            if (!Directory.Exists(WgibeatRootFolder + "\\" + Settings["SongFolder"]))
             {
-                Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\" + Settings["SongFolder"]);
+                Directory.CreateDirectory(WgibeatRootFolder + "\\" + Settings["SongFolder"]);
             }
+
+            LoadCurrentTheme();
 
             _menuMusicManager = new MenuMusicManager(this.Log)
             {
-                MusicFilePath = Directory.GetCurrentDirectory() + "\\MenuMusic\\",
+                MusicFilePath = WgibeatRootFolder + "\\MenuMusic\\",
                 AudioManager = this.Audio,
                 Crossfader = this.Crossfader
             };
@@ -140,13 +142,6 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             // Create a new SpriteBatch, which can be used to draw textures.
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            /*
-            var files = Directory.GetFiles(Content.RootDirectory + "/Textures", "*.xnb");
-            foreach (string file in files)
-            {
-                TextureManager.AddTexture(Path.GetFileNameWithoutExtension(file), Content.Load<Texture2D>("Textures/" + Path.GetFileNameWithoutExtension(file)));
-            }
-            */
             LoadCurrentTheme();
 
             var files = Directory.GetFiles(Content.RootDirectory + "/Fonts", "*.xnb");
@@ -162,8 +157,10 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             if (!(Settings.Get<string>("Theme") == "Default"))
             {
                 TextureManager.LoadTheme(themeFolder + "Default");
+                Metrics.LoadFromFile(themeFolder + "Default\\metrics.txt");
             }
             TextureManager.LoadTheme(themeFolder + Settings.Get<string>("Theme"));
+            Metrics.LoadFromFile(themeFolder + Settings.Get<string>("Theme") + "\\metrics.txt");
         }
 
         /// <summary>
