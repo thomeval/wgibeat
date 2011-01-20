@@ -98,6 +98,9 @@ namespace WGiBeat.Screens
         public override void PerformAction(Action action)
         {
             int newOptionValue;
+            int player = -1;
+            Int32.TryParse("" + action.ToString()[1], out player);
+            player--;
             var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
 
             switch (paction)
@@ -116,10 +119,10 @@ namespace WGiBeat.Screens
                     _selectedMenuOption = (MainMenuOption)newOptionValue;
                     break;
                 case "START":
-                     MenuOptionSelected();
+                     MenuOptionSelected(player);
                     break;
                 case "BEATLINE":
-                    MenuOptionSelected();
+                    MenuOptionSelected(player);
                     break;
                 case "BACK":
                     Core.Exit();
@@ -127,13 +130,14 @@ namespace WGiBeat.Screens
             }
         }
 
-        private void MenuOptionSelected()
+        private void MenuOptionSelected(int player)
         {
             switch (_selectedMenuOption)
             {
                 case MainMenuOption.START_GAME:
                     if (Core.Songs.Songs.Count > 0)
                     {
+                        Core.Cookies["JoiningPlayer"] =  player;
                         Core.ScreenTransition("NewGame");
                     }
                     else

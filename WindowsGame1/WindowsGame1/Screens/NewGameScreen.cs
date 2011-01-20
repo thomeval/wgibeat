@@ -47,6 +47,12 @@ namespace WGiBeat.Screens
                 _keyboards[x].EntryComplete += Keyboard_EntryComplete;
             }
 
+            if (Core.Cookies.ContainsKey("JoiningPlayer"))
+            {
+                var player = (int) Core.Cookies["JoiningPlayer"];
+                StartPressed(player);
+                Core.Cookies.Remove("JoiningPlayer");
+            }
             InitSprites();
             base.Initialize();
         }

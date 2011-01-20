@@ -1,5 +1,5 @@
 ﻿#CPUSKILL-1.0;
-#Format: Each line is considered a skill level. These can be in any level, but having them in order of increasing
+#Format: Each line is considered a skill level. These can be in any order, but having them in order of increasing
 #skill level is recommended. The skill levels are defined by specifying the weights (likelihood) of each judgement type.
 #These weights do not have to add up to 100. The heigher the weight specified for a specific judgement, the more likely
 #the CPU will attain this judgement while playing on the given skill level.
