@@ -110,7 +110,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
                 Players[x].ResetStats();
             }
 
-            Boolean passed = KeyMappings.LoadFromFile("Keys.conf");
+            bool passed = KeyMappings.LoadFromFile("Keys.conf");
 
             if (!passed)
                 KeyMappings.LoadDefault();
