@@ -82,13 +82,6 @@ namespace WGiBeat.Screens
             _beatlineSet.Bpm = _gameSong.Bpm;
             _beatlineSet.SetSpeeds();
 
-            /*
-            if (Core.Cookies.ContainsKey("MenuMusicChannel"))
-            {
-                Core.Audio.StopChannel((int)Core.Cookies["MenuMusicChannel"]);
-                Core.Cookies.Remove("MenuMusicChannel");
-            }
-             */
             base.Initialize();
         }
 
@@ -507,7 +500,7 @@ namespace WGiBeat.Screens
             var background = new Sprite
             {
                 Height = Core.Window.ClientBounds.Height,
-                SpriteTexture = TextureManager.Textures["allBackground"],
+                SpriteTexture = TextureManager.Textures["MainGameScreenBackground"],
                 Width = Core.Window.ClientBounds.Width,
                 X = 0,
                 Y = 0
