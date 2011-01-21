@@ -79,7 +79,7 @@ namespace WGiBeat.Screens
                               {
                                   Height = Core.Window.ClientBounds.Height,
                                   Width = Core.Window.ClientBounds.Width,
-                                  SpriteTexture = TextureManager.Textures["allBackground"]
+                                  SpriteTexture = TextureManager.Textures["AllBackground"]
                               };
 
             _maxSprite = new Sprite

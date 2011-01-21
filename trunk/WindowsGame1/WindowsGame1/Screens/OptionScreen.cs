@@ -90,7 +90,7 @@ namespace WGiBeat.Screens
             var background = new Sprite
             {
                 Height = Core.Window.ClientBounds.Height,
-                SpriteTexture = TextureManager.Textures["allBackground"],
+                SpriteTexture = TextureManager.Textures["AllBackground"],
                 Width = Core.Window.ClientBounds.Width,
             };
 

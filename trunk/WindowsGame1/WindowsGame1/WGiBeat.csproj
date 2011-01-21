@@ -174,8 +174,8 @@
     <Compile Include="Screens\TeamSelectScreen.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Textures\Default\allBackground.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="Content\Textures\Default\AllBackground.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\Arrows.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

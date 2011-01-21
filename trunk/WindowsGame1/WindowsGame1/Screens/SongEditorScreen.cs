@@ -95,7 +95,7 @@ namespace WGiBeat.Screens
 
         public void InitSprites()
         {
-            _backgroundSprite = new Sprite { SpriteTexture = TextureManager.Textures["allBackground"], Height = 800 };
+            _backgroundSprite = new Sprite { SpriteTexture = TextureManager.Textures["AllBackground"], Height = 800 };
             _editProgressBaseSprite = new Sprite { SpriteTexture = TextureManager.Textures["SongEditProgressBase"] };
             _editProgressBaseSprite.Position = (Core.Metrics["SongEditProgress", 0]);
             _editProgressSpriteMap = new SpriteMap
