@@ -47,6 +47,7 @@ namespace WGiBeat.Screens
         private Sprite _backgroundSprite;
         private SpriteMap _editProgressSpriteMap;
         private SpriteMap _validitySpriteMap;
+        private Sprite _validityTextBaseSprite;
         private BpmMeter _bpmMeter;
 
         private double _phraseNumber = -1;
@@ -111,6 +112,11 @@ namespace WGiBeat.Screens
                                          Rows = 2,
                                          SpriteTexture = TextureManager.Textures["EditorSongValidity"]
                                      };
+            _validityTextBaseSprite = new Sprite
+                                          {
+                                              SpriteTexture = TextureManager.Textures["EditorValidityTextBase"],
+                                              Position = (Core.Metrics["EditorSongValidityMessageBase", 0])
+                                          };
         }
 
         private void CreateMenus()
@@ -273,6 +279,7 @@ namespace WGiBeat.Screens
                     var validIdx = _songValid ? 1 : 0;
                     _validitySpriteMap.Draw(spriteBatch, validIdx, 195, 42, Core.Metrics["EditorSongValidity",0]);
                     _bpmMeter.Draw(spriteBatch);
+                    DrawBPMMeterExtras(spriteBatch);
                     if (!String.IsNullOrEmpty(_errorMessage))
                     {
                         var scale = TextureManager.ScaleTextToFit(_errorMessage, "DefaultFont", 790, 100);
@@ -312,6 +319,11 @@ namespace WGiBeat.Screens
             {
                 _menus[_activeMenu].Draw(spriteBatch);
             }
+        }
+
+        private void DrawBPMMeterExtras(SpriteBatch spriteBatch)
+        {
+            _validityTextBaseSprite.Draw(spriteBatch);
         }
 
         private void DrawBPMMeasurement(SpriteBatch spriteBatch)
