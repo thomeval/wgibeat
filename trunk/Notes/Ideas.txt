@@ -39,10 +39,12 @@
 - Option descriptions.
 - Netplay (major, low)
 - Flashing hits counter (milestones)
-- Auto join in NewGameScreen. (0.6) (Done)
-- Indicate CPU players in beatlines, player options frame and score bar. (0.6)
-- Why is a song invalid in WGiEdit? (Done)
 - Improve Log Manager (setting level, etc)
+
+- Auto join in NewGameScreen. (0.6) (Done)
+- Indicate CPU players in beatlines, player options frame and score bar. (Done)
+- Why is a song invalid in WGiEdit? (Done)
+
 
 - Remove .xnb texture requirement. (Done)
 
