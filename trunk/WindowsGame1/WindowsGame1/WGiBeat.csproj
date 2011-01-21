@@ -216,6 +216,9 @@
     <Content Include="Content\Textures\Default\EditorSongValidity.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Textures\Default\EditorValidityTextBase.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Textures\Default\evaluationGradeBase.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
