@@ -51,7 +51,7 @@ namespace WGiBeat.Drawing.Sets
             {
                 SpriteTexture = TextureManager.Textures["scoreBase"],
                 Columns = 1,
-                Rows = 4
+                Rows = 5
             };
         }
         private void DrawPlayerDifficulties(SpriteBatch spriteBatch)
@@ -64,6 +64,7 @@ namespace WGiBeat.Drawing.Sets
                     continue;
                 }
                 int idx = 1 + (int)(Players[x].PlayDifficulty);
+ 
                 _iconSpriteMap.Draw(spriteBatch, idx, 30, 30, _metrics["GameScreenPlayerDifficulties", x]);
             }
         }
@@ -151,7 +152,8 @@ namespace WGiBeat.Drawing.Sets
                 {
                     continue;
                 }
-                _individualBaseSprite.Draw(spriteBatch, x, 240, 40, _metrics["ScoreBase", x]);
+                var idx = (Players[x].IsCPUPlayer) ? 4 : x;
+                _individualBaseSprite.Draw(spriteBatch, idx, 240, 40, _metrics["ScoreBase", x]);
                 TextureManager.DrawString(spriteBatch, "" + _displayedScores[x], "LargeFont",
                                       _metrics["ScoreText", x], Color.White,FontAlign.RIGHT);
             }

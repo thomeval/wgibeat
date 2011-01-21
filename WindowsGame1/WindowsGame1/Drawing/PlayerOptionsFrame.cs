@@ -45,7 +45,7 @@ namespace WGiBeat.Drawing
             _backgrounds = new SpriteMap
                                {
                                    Columns = 1,
-                                   Rows = 4,
+                                   Rows = 5,
                                    SpriteTexture = TextureManager.Textures["PlayerOptionsFrame"]
                                };
             _speedBlocks = new SpriteMap
@@ -73,7 +73,8 @@ namespace WGiBeat.Drawing
         public override void Draw(SpriteBatch spriteBatch)
         {
 
-            _backgrounds.Draw(spriteBatch, PlayerIndex, this.Width, this.Height, this.X, this.Y);
+            var idx = Player.IsCPUPlayer ? 4 : PlayerIndex;
+            _backgrounds.Draw(spriteBatch, idx, this.Width, this.Height, this.X, this.Y);
             _difficultyIcons.Draw(spriteBatch, (int)Player.PlayDifficulty + 1, 32, 32, this.X + 65, this.Y + 3);
 
             DrawNameBackgrounds(spriteBatch);
