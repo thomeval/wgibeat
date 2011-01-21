@@ -250,9 +250,23 @@ namespace WGiBeat.AudioSystem
                             break;
                     }
                 }
-                if ((validate) && (!ValidateSongFile(newSong)))
+                if (validate)
                 {
-                    return null;
+                    string message;
+                    bool validated = ValidateSongFile(newSong, out message);
+                    if (validated)
+                    {
+                        if (message != "No errors found.")
+                        {
+                            Log.AddMessage("NOTE: " + message + " In: " + newSong.Path + "\\" + newSong.DefinitionFile);
+                        }
+
+                    }
+                    else
+                    {
+                        Log.AddMessage("WARN: " + message + " In: " + newSong.Path + "\\" + newSong.DefinitionFile);
+                        return null;
+                    }
                 }
                 Log.AddMessage("INFO: Loaded " + newSong.Title + " successfully.\n");
             }
@@ -312,44 +326,45 @@ namespace WGiBeat.AudioSystem
         /// Path and DefinitionFile properties.
         /// </summary>
         /// <param name="song">The GameSong to check for validity.</param>
+        /// <param name="message">A message explaining why the song is invalid (output parameter)</param>
         /// <returns>Whether the GameSong provided is valid and playable.</returns>
-        public bool ValidateSongFile(GameSong song)
+        public bool ValidateSongFile(GameSong song, out string message)
         {
-            var filename = song.Path + "\\" +  song.DefinitionFile;
+            message = "No errors found.";
             if (string.IsNullOrEmpty(song.AudioFile))
-            {
-                Log.AddMessage("WARN: No audio file specified in " + filename);
+            {       
+                message = "No audio file specified.";
                 return false;
             }
             var path = song.Path + "\\" + song.AudioFile;
             if (!File.Exists(path))
             {
-                Log.AddMessage("WARN: Couldn't find audio file specified: " + path);
+                message = "Couldn't find audio file specified." + path;
                 return false;
             }
             if ((song.Length <= 0) || (song.Length <= song.Offset))
             {
-                Log.AddMessage("WARN: Song length is not specified or invalid in " + filename);
+                message = "Length is not specified or invalid.";
                 return false;
             }
             if (song.Bpm <= 0)
             {
-                Log.AddMessage("WARN: Song BPM is not specified or invalid in " + filename);
+                message = "BPM is not specified or invalid.";
                 return false;
             }
             if (song.Offset < 0)
             {
-                Log.AddMessage("WARN: Song offset is invalid in " + filename);
+                message = "Offset is invalid.";
                 return false;
             }
             if (String.IsNullOrEmpty(song.Title))
             {
-                Log.AddMessage("WARN: Song does not have a title: "+ filename);
+                message = "Song does not have a title.";
                 return false;
             }
             if (String.IsNullOrEmpty(song.Artist))
             {
-                Log.AddMessage("WARN: Song does not have an artist: "+ filename);
+                message = "Song does not have an artist.";
             }
 
             switch (SettingsManager.Get<int>("SongMD5Behaviour"))
@@ -358,18 +373,16 @@ namespace WGiBeat.AudioSystem
                 case 1:
                     if (!(song.VerifyMD5()))
                     {
-                        Log.AddMessage(
-                            "NOTE: Audio File MD5 checksum is invalid. This most likely means that the wrong audio file is being used. File: " +
-                            filename);
+                        message =
+                            "Audio File MD5 checksum is invalid. This most likely means that the wrong audio file is being used.";
                     }
                     break;
                 //WARN AND EXCLUDE
                 case 2:
                     if (!(song.VerifyMD5()))
                     {
-                        Log.AddMessage(
-                            "WARN: Audio File MD5 checksum is invalid and was not loaded. This most likely means that the wrong audio file is being used. File: " +
-                            filename);
+                        message = 
+                            "Audio File MD5 checksum is invalid and was not loaded. This most likely means that the wrong audio file is being used.";
                         return false;
                     }
                     break;
@@ -379,15 +392,19 @@ namespace WGiBeat.AudioSystem
                     {
                         song.SetMD5();
                         SaveToFile(song);
-                        Log.AddMessage(
-                            "WARN: Audio File MD5 checksum is invalid and has been overridden, since 'Song Audio Validation' has been set to 'auto correct'. File: " +
-                            filename);
+                        message = 
+                            "Audio File MD5 checksum is invalid and has been overridden, since 'Song Audio Validation' has been set to 'auto correct'.";
                     }
                     break;
             }
             return true;
         }
 
+        public bool ValidateSongFile(GameSong song)
+        {
+            string dummy;
+            return ValidateSongFile(song, out dummy);
+        }
         #endregion
 
     }

@@ -28,6 +28,7 @@ namespace WGiBeat.Screens
         private bool _songValid;
         private bool _editMode;
         private string _errorMessage = "";
+        private string _validityMessage = "";
         private int _audioChannel;
         private EditorCursorPosition _cursorPosition;
 
@@ -366,6 +367,7 @@ namespace WGiBeat.Screens
                         TextureManager.DrawString(spriteBatch, "Total beatlines: " + totalBeatlines, "TwoTech",
                                                   offsetPosition, Color.Black, FontAlign.RIGHT);
                     }
+                    TextureManager.DrawString(spriteBatch, _validityMessage, "DefaultFont", Core.Metrics["EditorSongValidityMessage",0],Color.Black, FontAlign.CENTER);
                     break;
                 case EditorCursorPosition.SONG_TUNING:
                     DrawDebugText(spriteBatch);
@@ -950,6 +952,7 @@ namespace WGiBeat.Screens
                     ActivateMeasureMode();
                     break;
                 case 9:
+                    
                     if (Core.Songs.ValidateSongFile(NewGameSong))
                     {
                         Core.Log.AddMessage(String.Format("DEBUG: Attempting to save song details to: {0}\\{1}", NewGameSong.Path, NewGameSong.DefinitionFile));
@@ -1075,12 +1078,10 @@ namespace WGiBeat.Screens
                         _errorMessage = "Destination File name contains invalid characters.";
                     }
                     break;
-                case EditorCursorPosition.SONG_DETAILS:
-                    Core.Log.Enabled = false;
+                case EditorCursorPosition.SONG_DETAILS:             
                     _songValid =
                         _menus["Details"].GetByItemText("Next Step").Enabled =
-                        Core.Songs.ValidateSongFile(NewGameSong);
-                    Core.Log.Enabled = true;
+                        Core.Songs.ValidateSongFile(NewGameSong, out _validityMessage);
                     break;
             }
         }
@@ -1149,6 +1150,7 @@ namespace WGiBeat.Screens
                 _bpmMeter.DisplayedSong = NewGameSong;
                 _cursorPosition = position;
                 _editMode = true;
+                NewGameSong.SetMD5();
             };
             _fileSelect.FileSelectCancelled += delegate
             {
