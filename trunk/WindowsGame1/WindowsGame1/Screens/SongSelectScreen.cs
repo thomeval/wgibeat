@@ -64,10 +64,7 @@ namespace WGiBeat.Screens
                 }
             }
 
-                if (_songList.Count == 0)
-                {
-                    CreateSongList();
-                }
+                CreateSongList();
 
                 var lastSongHash = Core.Settings.Get<int>("LastSongPlayed");
                 var lastSong = (from e in _songList where e.Song.GetHashCode() == lastSongHash select e).FirstOrDefault();
@@ -108,7 +105,7 @@ namespace WGiBeat.Screens
 
         private void CreateSongList()
         {
-
+            _songList.Clear();
             foreach (GameSong song in Core.Songs.Songs)
             {
                 _songList.Add(new SongListItem {Height = 50, Song = song, Width = 380});

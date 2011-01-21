@@ -442,7 +442,7 @@ namespace WGiBeat.Screens
 
         private void BeatlineNoteCPUHit(object sender, EventArgs e)
         {
-            var player = ((Beatline)sender).Id;
+            var player = (int) sender;
             var judgement = Core.CPUManager.GetNextJudgement(Core.Cookies["CPUSkillLevel"].ToString(), Core.Players[player].Streak);
 
             _notebars[player].MarkAllCompleted();

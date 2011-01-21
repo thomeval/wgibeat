@@ -64,13 +64,13 @@ namespace WGiBeat.Drawing
             {
                 SpriteTexture = TextureManager.Textures["BeatMeter"],
                 Columns = 1,
-                Rows = 4
+                Rows = 5
             };
             _largeBaseSprite = new SpriteMap
             {
                 SpriteTexture = TextureManager.Textures["BeatMeterLarge"],
                 Columns = 1,
-                Rows = 4
+                Rows = 5
             };
         }
 
