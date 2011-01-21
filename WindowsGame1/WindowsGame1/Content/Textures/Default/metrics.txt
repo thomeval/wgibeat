@@ -31,7 +31,7 @@ SongDebugOffset=[410,300];
 SongDebugHitOffset=[550,275];
 SongDebugPhrase=[340,300];
 SongDebugLength=[550,300];
-PerformanceBar=[25,50][425,50][25,400][425,400][-1000,-1000];
+PerformanceBar=[25,50][425,50][25,410][425,410][-1000,-1000];
 
 #Main Menu;
 MainMenuOptions=[250,150][250,225][250,285][250,345][250,405][250,465];

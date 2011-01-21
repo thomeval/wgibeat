@@ -73,8 +73,6 @@ namespace WGiBeat.Drawing.Sets
         {
             _beatlines = new Beatline[4];
 
-
-
             for (int x = 0; x < 4; x++)
             {
                 _beatlines[x] = new Beatline();
@@ -108,13 +106,14 @@ namespace WGiBeat.Drawing.Sets
             {
                 if (Players[x].CPU)
                 {
+                    _beatlines[x].Id = 4;
                     var notesHit = _beatlines[x].AutoHit(phraseNumber);
 
                     for (int y = 0; y < notesHit; y++)
                     {
                         if (CPUNoteHit != null)
                         {
-                            CPUNoteHit(_beatlines[x], null);
+                            CPUNoteHit(x, null);
                         }
                     }
                 }
