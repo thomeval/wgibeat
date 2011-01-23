@@ -137,5 +137,8 @@ KeyOptionGridSide=[25,150];
 KeyOptionGridSideText=[215,155];
 KeyOptionGridInside=[225,150];
 KeyOptionGridInsideSize=[550,325];
+KeyOptionGridBorder=[221,146];
 KeyOptionGridBindings=[250,175];
+KeyOptionInstructionText=[400,560];
+KeyOptionInstructionBase=[0,550];
 

@@ -22,14 +22,15 @@ namespace WGiBeat.Screens
     public class KeyOptionScreen : GameScreen
     {
         private int _currentPlayer = 1;
-        private int _selectedAction = 0;
+        private int _selectedAction;
 
         private Sprite _backgroundSprite;
         private Sprite _headerSprite;
         private SpriteMap _gridInsideSpriteMap;
         private SpriteMap _gridTopSpriteMap;
         private SpriteMap _gridSideSpriteMap;
-        private Sprite _keyInstructionsBaseSprite;
+        private Sprite _gridBorderSprite;
+        private Sprite _instructionBaseSprite;
 
         private readonly List<ActionBinding> _actionBindings = new List<ActionBinding>();
 
@@ -87,6 +88,16 @@ namespace WGiBeat.Screens
                                            TrimX = 1,
                                            TrimY = 1
                                        };
+            _gridBorderSprite = new Sprite
+                                    {
+                                        SpriteTexture = TextureManager.Textures["KeyOptionGridBorder"],
+                                        Position = Core.Metrics["KeyOptionGridBorder",0]
+                                    };
+            _instructionBaseSprite = new Sprite
+                                         {
+                                             SpriteTexture = TextureManager.Textures["KeyOptionInstructionBase"],
+                                             Position = Core.Metrics["KeyOptionInstructionBase",0]
+                                         };
         }
 
         #endregion
@@ -103,14 +114,14 @@ namespace WGiBeat.Screens
         private void DrawBackground(SpriteBatch spriteBatch)
         {
             _backgroundSprite.Draw(spriteBatch);
+            _field.Draw(spriteBatch);
+            _instructionBaseSprite.Draw(spriteBatch);
         }
 
         private Vector2 _actionPosition;
         private Vector2 _textPosition;
         private void DrawOverlay(SpriteBatch spriteBatch)
         {
-
-            _field.Draw(spriteBatch);
             _headerSprite.Draw(spriteBatch);
 
             //Draw Grid top
@@ -144,6 +155,9 @@ namespace WGiBeat.Screens
             var size = Core.Metrics["KeyOptionGridInsideSize", 0];
             _gridInsideSpriteMap.Draw(spriteBatch, _currentPlayer - 1, (int)size.X, (int)size.Y, Core.Metrics["KeyOptionGridInside", 0]);
 
+            //Draw Border
+            _gridBorderSprite.Draw(spriteBatch);
+
             //Draw Bindings.
             _bindingPosition = Core.Metrics["KeyOptionGridBindings", 0].Clone();
             foreach (ActionBinding ab in _actionBindings)
@@ -152,7 +166,6 @@ namespace WGiBeat.Screens
                 ab.Draw(spriteBatch);
                 _bindingPosition.Y += 50;
             }
-
         }
 
         private void DrawText(SpriteBatch spriteBatch)
@@ -166,7 +179,7 @@ namespace WGiBeat.Screens
                 instructionText += "Press your START button to add a key to the selected action.";
             }
 
-            spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], instructionText, new Vector2(60, 530), Color.Red);
+            TextureManager.DrawString(spriteBatch,instructionText, "LargeFont", Core.Metrics["KeyOptionInstructionText",0], Color.White,FontAlign.CENTER);
         }
 
         #endregion
