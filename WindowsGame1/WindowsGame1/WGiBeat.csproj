@@ -99,6 +99,7 @@
     <Compile Include="AudioSystem\MenuMusicManager.cs" />
     <Compile Include="AudioSystem\CrossfaderManager.cs" />
     <Compile Include="AudioSystem\SongManager.cs" />
+    <Compile Include="Drawing\ActionBinding.cs" />
     <Compile Include="Drawing\PerformanceBar.cs" />
     <Compile Include="Drawing\Sets\CountdownSet.cs" />
     <Compile Include="Drawing\FileSelectDialog.cs" />
@@ -174,6 +175,9 @@
     <Compile Include="Screens\TeamSelectScreen.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Textures\Default\ActionBindingBase.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Textures\Default\AllBackground.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
