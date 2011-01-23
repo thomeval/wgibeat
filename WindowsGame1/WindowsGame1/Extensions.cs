@@ -15,9 +15,13 @@ namespace WGiBeat
         }
 
         //Not a part of .NET??!
-        public static bool Contains(this string[] array, string item)
+        public static bool Contains<T>(this T[] array, T item)
         {
             return Array.IndexOf(array, item) != -1;
+        }
+        public static int IndexOf<T> (this T[] array, T item)
+        {
+            return Array.IndexOf(array, item);
         }
     }
 }

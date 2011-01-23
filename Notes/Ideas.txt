@@ -1,5 +1,5 @@
 --Zoran--
--Icons for controller buttons
+
 -Path following particle.
 -Deleting key links.
 
@@ -31,7 +31,6 @@
 - Mode descriptions (Needs graphics) (0.6)
 - Profile stat display screen (0.6)
 - Stepmania file support? (low)
-- Redo Keys screen (double tab design) (medium,0.6)
 
 - Spectrum below time left in MainGameScreen (low)
 - Adjustable audio playback start positions.
@@ -44,9 +43,11 @@
 - Auto join in NewGameScreen. (0.6) (Done)
 - Indicate CPU players in beatlines, player options frame and score bar. (Done)
 - Why is a song invalid in WGiEdit? (Done)
-
-
+- Icons for controller buttons (Done)
+- Icons for controller numbers. (Done)
+- Keyboard icon. (Done)
 - Remove .xnb texture requirement. (Done)
+- Redo Keys screen (double tab design) (Done)
 
 ==0.5 - "Handicapped Doubt" ==
  *   Song audio validation by using MD5. This makes it easier to ensure that the correct audio (.mp3) file is used when playing a song, especially when song files (.sng) are distributed.
