@@ -23,7 +23,7 @@ namespace WGiBeat.Screens
     {
         private int _currentPlayer = 1;
         private int _selectedAction = 0;
-      
+
         private Sprite _backgroundSprite;
         private Sprite _headerSprite;
         private SpriteMap _gridInsideSpriteMap;
@@ -31,21 +31,10 @@ namespace WGiBeat.Screens
         private SpriteMap _gridSideSpriteMap;
         private Sprite _keyInstructionsBaseSprite;
 
-        private List<ActionBinding> _actionBindings = new List<ActionBinding>();
+        private readonly List<ActionBinding> _actionBindings = new List<ActionBinding>();
 
-        private string[] _actions = {"LEFT", "RIGHT", "UP", "DOWN", "BEATLINE", "START", "SELECT","Reset Defaults"};
-        private int _normalActionCount = 7;
-
-        private readonly ButtonLink[] _links =  {
-                                         new ButtonLink(Action.P1_LEFT,     Action.P2_LEFT,     Action.P3_LEFT,     Action.P4_LEFT,     "Left"),
-                                         new ButtonLink(Action.P1_RIGHT,    Action.P2_RIGHT,    Action.P3_RIGHT,    Action.P4_RIGHT,    "Right"),
-                                         new ButtonLink(Action.P1_UP,       Action.P2_UP,       Action.P3_UP,       Action.P4_UP,       "Up"),
-                                         new ButtonLink(Action.P1_DOWN,     Action.P2_DOWN,     Action.P3_DOWN,     Action.P4_DOWN,     "Down"),
-                                         new ButtonLink(Action.P1_BEATLINE, Action.P2_BEATLINE, Action.P3_BEATLINE, Action.P4_BEATLINE, "Beatline"),
-                                         new ButtonLink(Action.P1_START,    Action.P2_START,    Action.P3_START,    Action.P4_START,    "Start"),
-                                         new ButtonLink(Action.P1_SELECT,   Action.P2_SELECT,   Action.P3_SELECT,   Action.P4_SELECT,   "Select"),
-                                         new ButtonLink(Action.P1_SELECT,   Action.P2_SELECT,   Action.P3_SELECT,   Action.P4_SELECT,   "Set Defaults"),
-                                        };
+        private readonly string[] _actions = { "LEFT", "RIGHT", "UP", "DOWN", "BEATLINE", "START", "SELECT", "Reset Defaults" };
+        private const int _normalActionCount = 7;
 
         private SineSwayParticleField _field = new SineSwayParticleField();
         private Vector2 _bindingPosition;
@@ -100,7 +89,7 @@ namespace WGiBeat.Screens
                                        };
         }
 
-#endregion
+        #endregion
 
         #region Drawing
 
@@ -125,23 +114,23 @@ namespace WGiBeat.Screens
             _headerSprite.Draw(spriteBatch);
 
             //Draw Grid top
-            for (int x = 0; x < 4; x++ )
+            for (int x = 0; x < 4; x++)
             {
                 var idx = x;
-                if (x != (_currentPlayer-1))
+                if (x != (_currentPlayer - 1))
                 {
                     idx += 4;
                 }
-                _gridTopSpriteMap.Draw(spriteBatch,idx,Core.Metrics["KeyOptionGridTop",x]);
+                _gridTopSpriteMap.Draw(spriteBatch, idx, Core.Metrics["KeyOptionGridTop", x]);
             }
 
             //Draw Grid Side
 
-            _actionPosition = Core.Metrics["KeyOptionGridSide", 0].Clone();        
+            _actionPosition = Core.Metrics["KeyOptionGridSide", 0].Clone();
             _textPosition = Core.Metrics["KeyOptionGridSideText", 0].Clone();
             for (int x = 0; x < _actions.Length; x++)
             {
-                var idx = _currentPlayer-1;
+                var idx = _currentPlayer - 1;
                 if (x != _selectedAction)
                 {
                     idx += 4;
@@ -153,7 +142,7 @@ namespace WGiBeat.Screens
             }
             //Draw Grid Inside
             var size = Core.Metrics["KeyOptionGridInsideSize", 0];
-            _gridInsideSpriteMap.Draw(spriteBatch,_currentPlayer-1,(int) size.X,(int) size.Y,Core.Metrics["KeyOptionGridInside",0]);
+            _gridInsideSpriteMap.Draw(spriteBatch, _currentPlayer - 1, (int)size.X, (int)size.Y, Core.Metrics["KeyOptionGridInside", 0]);
 
             //Draw Bindings.
             _bindingPosition = Core.Metrics["KeyOptionGridBindings", 0].Clone();
@@ -163,7 +152,7 @@ namespace WGiBeat.Screens
                 ab.Draw(spriteBatch);
                 _bindingPosition.Y += 50;
             }
-                  
+
         }
 
         private void DrawText(SpriteBatch spriteBatch)
@@ -171,17 +160,16 @@ namespace WGiBeat.Screens
             string instructionText = "";
 
             if (State.CurrentState == 3)
-                instructionText = "Press key to add to Player " + _currentPlayer + "'s" + " action '" + _links[_selectedAction].Name +
-                                  "'";
+                instructionText += "Press the key to use for the selected action, or Escape to cancel.";
             else
             {
-                instructionText = "Press your START button to add a key to the selected action.";
+                instructionText += "Press your START button to add a key to the selected action.";
             }
 
             spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], instructionText, new Vector2(60, 530), Color.Red);
         }
 
-#endregion
+        #endregion
 
         #region Input
 
@@ -193,8 +181,15 @@ namespace WGiBeat.Screens
                     State.CurrentState = 3;
                     break;
                 case 3:
+                    if (key == Keys.Escape)
+                    {
+                        State.CurrentState = 1;
+                        return;
+                    }
+                    var actionStr = String.Format("P{0}_{1}", _currentPlayer, (_actions[_selectedAction]));
+                    var convertedAction = (Action)Enum.Parse(typeof(Action), actionStr);
 
-                    Core.KeyMappings.SetKey(key, _links[_selectedAction].GetAction(_currentPlayer));
+                    Core.KeyMappings.SetKey(key, convertedAction);
                     Core.KeyMappings.SaveToFile("Keys.conf");
                     State.CurrentState = 1;
                     CreateBindingList();
@@ -211,7 +206,10 @@ namespace WGiBeat.Screens
                     break;
                 case 3:
 
-                    Core.KeyMappings.SetButton(buttons, playerIndex, _links[_selectedAction].GetAction(_currentPlayer));
+                    var actionStr = String.Format("P{0}_{1}", _currentPlayer, (_actions[_selectedAction]));
+                    var convertedAction = (Action)Enum.Parse(typeof(Action), actionStr);
+
+                    Core.KeyMappings.SetButton(buttons, playerIndex, convertedAction);
                     Core.KeyMappings.SaveToFile("Keys.conf");
                     State.CurrentState = 1;
                     CreateBindingList();
@@ -221,73 +219,53 @@ namespace WGiBeat.Screens
 
         public override void PerformAction(Action action)
         {
-            //TODO: Redo by splitting pnumber and paction.
-            if (action == Action.SYSTEM_BACK)
-                Core.ScreenTransition("MainMenu");
-            else
+            if (State.CurrentState != 1)
             {
-                
-                if (State.CurrentState != 1)
-                {
-                    return;
-                }
-
-                switch (action)
-                    {
-                        case Action.P1_UP:
-                        case Action.P2_UP:
-                        case Action.P3_UP:
-                        case Action.P4_UP:
-                            _selectedAction--;
-
-                            if (_selectedAction < 0)
-                                _selectedAction = _actions.Length;
-
-                            break;
-
-                        case Action.P1_DOWN:
-                        case Action.P2_DOWN:
-                        case Action.P3_DOWN:
-                        case Action.P4_DOWN:
-                            _selectedAction++;
-
-                            if (_selectedAction >= _actions.Length + 1)
-                                _selectedAction = 0;
-
-                            break;
-
-                        case Action.P1_LEFT:
-                        case Action.P2_LEFT:
-                        case Action.P3_LEFT:
-                        case Action.P4_LEFT:
-
-                            _currentPlayer--;
-
-                            if (_currentPlayer < 1)
-                                _currentPlayer = 4;
-                            break;
-
-                        case Action.P1_RIGHT:
-                        case Action.P2_RIGHT:
-                        case Action.P3_RIGHT:
-                        case Action.P4_RIGHT:
-
-                            _currentPlayer++;
-
-                            if (_currentPlayer > 4)
-                                _currentPlayer = 1;
-                            break;
-
-                        case Action.P1_START:
-                        case Action.P2_START:
-                        case Action.P3_START:
-                        case Action.P4_START:
-
-                            StartPressed();
-                            break;
-                    }
-                CreateBindingList();
+                return;
             }
+            var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
+
+            switch (paction)
+            {
+                case "UP":
+                    _selectedAction--;
+
+                    if (_selectedAction < 0)
+                        _selectedAction = _actions.Length - 1;
+
+                    break;
+
+                case "DOWN":
+                    _selectedAction++;
+
+                    if (_selectedAction >= _actions.Length)
+                        _selectedAction = 0;
+
+                    break;
+
+                case "LEFT":
+                    _currentPlayer--;
+
+                    if (_currentPlayer < 1)
+                        _currentPlayer = 4;
+                    break;
+
+                case "RIGHT":
+                    _currentPlayer++;
+
+                    if (_currentPlayer > 4)
+                        _currentPlayer = 1;
+                    break;
+
+                case "START":
+                    StartPressed();
+                    break;
+                case "BACK":
+                    Core.ScreenTransition("MainMenu");
+                    break;
+            }
+            CreateBindingList();
+
         }
 
         private void StartPressed()
@@ -315,65 +293,26 @@ namespace WGiBeat.Screens
             }
 
             var actionStr = String.Format("P{0}_{1}", _currentPlayer, (_actions[_selectedAction]));
-            var convertedAction = (Action) Enum.Parse(typeof (Action), actionStr);
+            var convertedAction = (Action)Enum.Parse(typeof(Action), actionStr);
             var keys = Core.KeyMappings.GetKeys(convertedAction);
-            
+
             foreach (Keys key in keys)
             {
-                var newBinding = new ActionBinding {ControllerNumber = 0, Height = 45, Width = 230, Key = key};
+                var newBinding = new ActionBinding { ControllerNumber = 0, Height = 45, Width = 230, Key = key };
                 _actionBindings.Add(newBinding);
             }
             for (int num = 1; num < 5; num++)
             {
-                var buttons = Core.KeyMappings.GetButtons(convertedAction,num);
+                var buttons = Core.KeyMappings.GetButtons(convertedAction, num);
                 foreach (Buttons button in buttons)
                 {
-                    var newBinding = new ActionBinding
-                                         {ControllerNumber = num, Height = 45, Width = 230, Button = button};
+                    var newBinding = new ActionBinding { ControllerNumber = num, Height = 45, Width = 230, Button = button };
                     _actionBindings.Add(newBinding);
                 }
             }
 
         }
         #endregion
-
-        private struct ButtonLink
-        {
-            private Action P1Action { get; set; }
-            private Action P2Action { get; set; }
-            private Action P3Action { get; set; }
-            private Action P4Action { get; set; }
-
-            public String Name { get; set; }
-
-            public ButtonLink(Action p1, Action p2, Action p3, Action p4, String name)
-                : this() //May be unecessary.
-            {
-                P1Action = p1;
-                P2Action = p2;
-                P3Action = p3;
-                P4Action = p4;
-                Name = name;
-
-            }
-
-            public Action GetAction(int player)
-            {
-                switch (player)
-                {
-                    case 1:
-                        return P1Action;
-                    case 2:
-                        return P2Action;
-                    case 3:
-                        return P3Action;
-                    case 4:
-                        return P4Action;
-                }
-
-                return Action.NONE;
-            }
-        }
 
     }
 }
