@@ -11,6 +11,14 @@ namespace WGiBeat.Drawing
         public Color ColorShading = Color.White;
         public int Columns { get; set; }
         public int Rows { get; set; }
+        public int TrimX { get; set; }
+        public int TrimY { get; set; }
+
+        public SpriteMap()
+        {
+            Columns = 1;
+            Rows = 1;
+        }
 
         public void Draw(SpriteBatch spriteBatch, int cellnumber, int width, int height, int x, int y)
         {
@@ -27,11 +35,21 @@ namespace WGiBeat.Drawing
         }
         private Rectangle CalculateSourceRectangle(int cellnumber)
         {
+     
             int xOffset = 0, yOffset = 0;
             int xSize = 0, ySize = 0;
 
             xSize = SpriteTexture.Width / Columns;
             ySize = SpriteTexture.Height / Rows;
+
+            if (ySize - TrimY <= 0)
+            {
+                throw new Exception("Y Trim exceeds image cell size. Reduce the trim or enlarge the image.");
+            }
+            if (xSize - TrimX <= 0)
+            {
+                throw new Exception("X Trim exceeds image cell size. Reduce the trim or enlarge the image.");
+            }
 
             while (cellnumber >= Columns)
             {
@@ -41,6 +59,11 @@ namespace WGiBeat.Drawing
             xOffset = cellnumber;
             yOffset *= ySize;
             xOffset *= xSize;
+            ySize -= 2 * TrimY;
+            xSize -= 2*TrimX;
+            xOffset += TrimX;
+            yOffset += TrimY;
+
             var sourceRect = new Rectangle{Height = ySize, Width = xSize, X = xOffset, Y = yOffset};
             return sourceRect;
         }
@@ -48,6 +71,11 @@ namespace WGiBeat.Drawing
         public void Draw(SpriteBatch spriteBatch, int cellnumber, int x, int y)
         {
             Draw(spriteBatch,cellnumber,SpriteTexture.Width / Columns, SpriteTexture.Height / Rows,x,y);
+        }
+
+        public void Draw(SpriteBatch spriteBatch, int cellnumber, Vector2 position)
+        {
+            Draw(spriteBatch, cellnumber, SpriteTexture.Width / Columns, SpriteTexture.Height / Rows, position);
         }
     }
 }
