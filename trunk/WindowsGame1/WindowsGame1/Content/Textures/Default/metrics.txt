@@ -131,5 +131,10 @@ EditorBPMMeasurements=[200,200][200,225][500,200][500,225];
 EditorMeasurementDisplay=[400,250];
 EditorVersion=[795,575];
 
-
+#Key Options;
+KeyOptionGridTop=[225,100][300,100][375,100][450,100];
+KeyOptionGridSide=[25,150];
+KeyOptionGridSideText=[215,155];
+KeyOptionGridInside=[225,150];
+KeyOptionGridInsideSize=[550,325];
 

@@ -21,15 +21,24 @@ namespace WGiBeat.Screens
     public class KeyOptionScreen : GameScreen
     {
         private int _currentPlayer = 1;
-        private int _selectedMenuOption = 0;
-        //private Boolean LastActionSide = false;
-
+        private int _selectedAction = 0;
+       
         private static int _rowOne = 95;
         private static int _rowTwo = 160;
         private static int _columnOne = 100;
         private static int _columnTwo = 400;
 
+        private Sprite _backgroundSprite;
+        private Sprite _headerSprite;
+        private SpriteMap _gridInsideSpriteMap;
+        private SpriteMap _gridTopSpriteMap;
+        private SpriteMap _gridSideSpriteMap;
+        private SpriteMap _keyBindingSpriteMap;
+        private SpriteMap _controllerNumberSpriteMap;
+        private SpriteMap _controllerButtonsSpriteMap;
+        private Sprite _keyInstructionsBaseSprite;
 
+        private string[] _actions = {"LEFT", "RIGHT", "UP", "DOWN", "BEATLINE", "START", "SELECT"};
         private readonly ButtonLink[] _links =  {
                                          new ButtonLink(Action.P1_LEFT,     Action.P2_LEFT,     Action.P3_LEFT,     Action.P4_LEFT,     "Left"),
                                          new ButtonLink(Action.P1_RIGHT,    Action.P2_RIGHT,    Action.P3_RIGHT,    Action.P4_RIGHT,    "Right"),
@@ -48,60 +57,82 @@ namespace WGiBeat.Screens
         {
         }
 
+        public override void Initialize()
+        {
+            InitSprites();
+  
+        }
+
+        private void InitSprites()
+        {
+
+            _backgroundSprite = new Sprite
+            {
+                Height = Core.Window.ClientBounds.Height,
+                SpriteTexture = TextureManager.Textures["AllBackground"],
+                Width = Core.Window.ClientBounds.Width,
+            };
+
+            _headerSprite = new Sprite
+            {
+                SpriteTexture = TextureManager.Textures["keyOptionHeader"],
+            };
+
+            _gridTopSpriteMap = new SpriteMap
+                                    {
+                                        Columns = 4,
+                                        Rows = 2,
+                                        SpriteTexture = TextureManager.Textures["KeyOptionGridTop"]
+                                    };
+            _gridSideSpriteMap = new SpriteMap
+                                     {
+                                         Columns = 4,
+                                         Rows = 2,
+                                         SpriteTexture = TextureManager.Textures["KeyOptionGridSide"]
+                                     };
+            _gridInsideSpriteMap = new SpriteMap
+                                       {
+                                           Columns = 1,
+                                           Rows = 4,
+                                           SpriteTexture = TextureManager.Textures["KeyOptionGridInside"],
+                                           TrimX = 1,
+                                           TrimY = 1
+                                       };
+        }
+
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Current player: Player" + _currentPlayer, new Vector2(50, 110), Color.Black);
             DrawBackground(spriteBatch);
             DrawOverlay(spriteBatch);
         }
 
         private void DrawBackground(SpriteBatch spriteBatch)
         {
-            var background = new Sprite
-            {
-                Height = Core.Window.ClientBounds.Height,
-                SpriteTexture = TextureManager.Textures["AllBackground"],
-                Width = Core.Window.ClientBounds.Width,
-                X = 0,
-                Y = 0
-            };
 
-            background.Draw(spriteBatch);
+            _backgroundSprite.Draw(spriteBatch);
         }
 
         private void DrawOverlay(SpriteBatch spriteBatch)
         {
 
-            DrawBackground(spriteBatch);
 
             _field.Draw(spriteBatch);
-
-            var header = new Sprite
-                             {
-                                 SpriteTexture = TextureManager.Textures["keyOptionHeader"],
-                                 X = 0,
-                                 Y = 0
-                             };
-
-            header.Draw(spriteBatch);
+            _headerSprite.Draw(spriteBatch);
 
             String instructionText = "";
 
             if (State.CurrentState == 3)
-                instructionText = "Press key to add to Player " + _currentPlayer+ "'s" + " action '" + _links[_selectedMenuOption].Name +
+                instructionText = "Press key to add to Player " + _currentPlayer+ "'s" + " action '" + _links[_selectedAction].Name +
                                   "'";
             else
             {
-                instructionText = "Press your start button to add a key to the selected action.";
+                instructionText = "Press your START button to add a key to the selected action.";
             }
 
             spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], instructionText, new Vector2(60, 530), Color.Red);
 
 
-
-
             var panelPosition = new Vector2(0, _rowOne);
-            var textPosition = new Vector2(0, 0);
 
             var menuOptionSprite = new Sprite
                                        {
@@ -112,36 +143,42 @@ namespace WGiBeat.Screens
 
 
 
-            //Draw player list.
+            //Draw Grid top
 
-            for (int playerOption = 1; playerOption <= 4; playerOption++)
+            for (int x = 0; x < 4; x++ )
             {
-                panelPosition.X = 60 + (170 * (playerOption - 1));
-
-                menuOptionSprite.Position = (panelPosition);
-
-                if (playerOption == _currentPlayer)
+                var idx = x;
+                if (x != (_currentPlayer-1))
                 {
-                    menuOptionSprite.SpriteTexture = TextureManager.Textures["mainMenuOptionSelected"];
-                    menuOptionSprite.Height = menuOptionSprite.Height;
+                    idx += 4;
                 }
-                else
-                {
-                    menuOptionSprite.SpriteTexture = TextureManager.Textures["mainMenuOption"];
-                }
-
-
-                menuOptionSprite.Draw(spriteBatch);
-                textPosition.X = panelPosition.X + 32;
-                textPosition.Y = panelPosition.Y + 10;
-                spriteBatch.DrawString(TextureManager.Fonts["LargeFont"], "Player " + playerOption, textPosition,
-                                       Color.Black);
-
+                _gridTopSpriteMap.Draw(spriteBatch,idx,Core.Metrics["KeyOptionGridTop",x]);
             }
+            //Draw Grid Side
 
+            var actionPosition = Core.Metrics["KeyOptionGridSide", 0].Clone();
+            var textPosition = Core.Metrics["KeyOptionGridSideText", 0].Clone();
+            for (int x = 0; x < _actions.Length; x++)
+            {
+                var idx = _currentPlayer-1;
+                if (x != _selectedAction)
+                {
+                    idx += 4;
+                }
+                _gridSideSpriteMap.Draw(spriteBatch, idx, actionPosition);
+                TextureManager.DrawString(spriteBatch, _actions[x], "LargeFont", textPosition, Color.Black, FontAlign.RIGHT);
+                actionPosition.Y += 40;
+                textPosition.Y += 40;
+            }
+            //Draw Grid Inside
+            var size = Core.Metrics["KeyOptionGridInsideSize", 0];
+            _gridInsideSpriteMap.Draw(spriteBatch,_currentPlayer-1,(int) size.X,(int) size.Y,Core.Metrics["KeyOptionGridInside",0]);
 
+            //Draw Bindings.
+
+            
             //Draw options.
-
+            /*
             panelPosition.X = _columnOne;
             textPosition.X = _columnOne + 20;
 
@@ -154,7 +191,7 @@ namespace WGiBeat.Screens
                 panelPosition.Y = _rowTwo + (40 * menuOption);
                 textPosition.Y = panelPosition.Y + 5;
 
-                if (menuOption == _selectedMenuOption)
+                if (menuOption == _selectedAction)
                     menuOptionSprite.SpriteTexture = TextureManager.Textures["Button_Active"];
                 else
                     menuOptionSprite.SpriteTexture = TextureManager.Textures["Button_Idle"];
@@ -166,7 +203,7 @@ namespace WGiBeat.Screens
                                        Color.Black);
 
             }
-
+            */
 
 
             //Draw listed keys.
@@ -179,9 +216,9 @@ namespace WGiBeat.Screens
 
             menuOptionSprite.Width = 300;
 
-            if (_selectedMenuOption != _links.Length - 1)
+            if (_selectedAction != _links.Length - 1)
             {
-                Keys[] tempKeyList = Core.KeyMappings.GetKeys(_links[_selectedMenuOption].GetAction(_currentPlayer));
+                Keys[] tempKeyList = Core.KeyMappings.GetKeys(_links[_selectedAction].GetAction(_currentPlayer));
 
                 foreach (Keys key in tempKeyList)
                 {
@@ -195,7 +232,7 @@ namespace WGiBeat.Screens
 
                 for (int index = 1; index < 4; index++)
                 {
-                    var buttonList = Core.KeyMappings.GetButtons(_links[_selectedMenuOption].GetAction(_currentPlayer),
+                    var buttonList = Core.KeyMappings.GetButtons(_links[_selectedAction].GetAction(_currentPlayer),
                                                                  index);
                     foreach (Buttons button in buttonList)
                     {
@@ -221,7 +258,7 @@ namespace WGiBeat.Screens
                     break;
                 case 3:
 
-                    Core.KeyMappings.SetKey(key, _links[_selectedMenuOption].GetAction(_currentPlayer));
+                    Core.KeyMappings.SetKey(key, _links[_selectedAction].GetAction(_currentPlayer));
                     Core.KeyMappings.SaveToFile("Keys.conf");
 
                     //_selectChange = false;
@@ -240,7 +277,7 @@ namespace WGiBeat.Screens
                     break;
                 case 3:
 
-                    Core.KeyMappings.SetButton(buttons, playerIndex, _links[_selectedMenuOption].GetAction(_currentPlayer));
+                    Core.KeyMappings.SetButton(buttons, playerIndex, _links[_selectedAction].GetAction(_currentPlayer));
                     Core.KeyMappings.SaveToFile("Keys.conf");
 
                     //_selectChange = false;
@@ -267,10 +304,10 @@ namespace WGiBeat.Screens
                         case Action.P2_UP:
                         case Action.P3_UP:
                         case Action.P4_UP:
-                            _selectedMenuOption--;
+                            _selectedAction--;
 
-                            if (_selectedMenuOption < 0)
-                                _selectedMenuOption = _links.Length - 1;
+                            if (_selectedAction < 0)
+                                _selectedAction = _links.Length - 1;
 
                             break;
 
@@ -278,10 +315,10 @@ namespace WGiBeat.Screens
                         case Action.P2_DOWN:
                         case Action.P3_DOWN:
                         case Action.P4_DOWN:
-                            _selectedMenuOption++;
+                            _selectedAction++;
 
-                            if (_selectedMenuOption >= _links.Length)
-                                _selectedMenuOption = 0;
+                            if (_selectedAction >= _links.Length)
+                                _selectedAction = 0;
 
                             break;
 
@@ -317,7 +354,7 @@ namespace WGiBeat.Screens
                         case Action.P3_START:
                         case Action.P4_START:
 
-                            if (_selectedMenuOption == _links.Length - 1)
+                            if (_selectedAction == _links.Length - 1)
                             {
                                 Core.KeyMappings.LoadDefault();
                                 Core.KeyMappings.SaveToFile("Keys.conf");
