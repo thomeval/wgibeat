@@ -217,6 +217,21 @@ namespace WGiBeat.Managers
         }
 
 
+        public void Unset(Keys key)
+        {
+            if (_mappings.ContainsKey(key))
+            {
+                _mappings.Remove(key);
+            }
+        }
+
+        public void Unset(Buttons button, int number)
+        {
+            if (_buttonMappings[number - 1].ContainsKey(button))
+            {
+                _buttonMappings[number - 1].Remove(button);
+            }
+        }
     }
 
     /// <summary>

@@ -40,8 +40,7 @@ namespace WGiBeat.Drawing
             _edgeSpriteMap = new SpriteMap{Columns = 1, Rows = 2, SpriteTexture = TextureManager.Textures["MenuEdge"]};
             _arrowSpriteMap = new SpriteMap
                                   {Columns = 4, Rows = 1, SpriteTexture = TextureManager.Textures["IndicatorArrows"]};
-            _sideSpriteMap = new SpriteMap()
-                                 {Columns = 1, Rows = 1, SpriteTexture = TextureManager.Textures["MenuSide"]};
+            _sideSpriteMap = new SpriteMap {Columns = 1, Rows = 1, SpriteTexture = TextureManager.Textures["MenuSide"]};
         }
 
         public override void Draw(SpriteBatch spriteBatch)
