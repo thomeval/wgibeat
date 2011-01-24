@@ -15,7 +15,7 @@ namespace WGiBeat.Managers
         public CPUManager(LogManager log)
         {
             Log = log;
-            Log.AddMessage("INFO: Initializing CPU Manager...");
+            Log.AddMessage("Initializing CPU Manager...",LogLevel.INFO);
             SkillLevels = new List<Dictionary<BeatlineNoteJudgement, double>>();
             SkillNames = new List<string>();
             _rnd = new Random();
@@ -69,7 +69,7 @@ namespace WGiBeat.Managers
                 return GetNextJudgement(idx, streak);
             }
 
-            Log.AddMessage("ERROR: CPU Skill level '" + skillLevel +"' does not exist.");
+            Log.AddMessage("CPU Skill level '" + skillLevel +"' does not exist.",LogLevel.ERROR);
             return BeatlineNoteJudgement.COUNT;
         }
 
@@ -126,7 +126,7 @@ namespace WGiBeat.Managers
             }
             catch (Exception ex)
             {
-                Log.AddMessage("ERROR: Problem parsing skill level file: " + ex.Message);
+                Log.AddMessage("Problem parsing skill level file: " + ex.Message,LogLevel.ERROR);
                 throw;
             }
 

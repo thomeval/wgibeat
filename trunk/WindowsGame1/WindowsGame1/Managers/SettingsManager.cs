@@ -55,21 +55,22 @@ namespace WGiBeat.Managers
             sm["ProfileFolder"] = "Profiles";
             sm["SongMD5Behaviour"] = 1;
             sm["SaveLog"] = true;
+            sm["LogLevel"] = 2;
             sm["Theme"] = "Default";
             return sm;
         }
 
         public static SettingsManager LoadFromFile(string filename, LogManager log)
         {
-            log.AddMessage("INFO: Loading default settings...");
+            log.AddMessage("Loading default settings...", LogLevel.INFO);
             var sm = LoadDefaults();
             sm.Log = log;
 
-            sm.Log.AddMessage("INFO: Loading saved settings from: "+filename+"...");
+            sm.Log.AddMessage("Loading saved settings from: " + filename + "...", LogLevel.INFO);
 
             if (!File.Exists(filename))
             {
-                sm.Log.AddMessage("WARN: Could not load settings - file not found.");
+                sm.Log.AddMessage("Could not load settings - file not found.", LogLevel.WARN);
                 return sm;
             }
 
@@ -116,7 +117,7 @@ namespace WGiBeat.Managers
                 }
 
             }
-            sm.Log.AddMessage("INFO: Settings loaded successfully.");
+            sm.Log.AddMessage("Settings loaded successfully.", LogLevel.INFO);
             return sm;
         }
 
@@ -127,7 +128,7 @@ namespace WGiBeat.Managers
 
         public void SaveToFile(string filename)
         {
-            string outText = "#SETTINGS-1.0;";
+            string outText = "#SETTINGS-1.1;";
 
             foreach (string rule in _settings.Keys)
             {

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
 using Action=WGiBeat.Managers.Action;
+using LogLevel = WGiBeat.Managers.LogLevel;
 
 namespace WGiBeat.Screens
 {
@@ -54,12 +55,20 @@ namespace WGiBeat.Screens
 
             _optionsMenu.AddItem(item);
 
-            item = new MenuItem() {ItemText = "Save Game Log"};
+            item = new MenuItem {ItemText = "Save Game Log"};
             item.AddOption("Off",false);
             item.AddOption("On",true);
             _optionsMenu.AddItem(item);
 
-            item = new MenuItem() {ItemText = "Theme"};
+            item = new MenuItem {ItemText = "Logging Level"};
+            item.AddOption("Errors only", LogLevel.ERROR);
+            item.AddOption("Warnings and errors", LogLevel.WARN);
+            item.AddOption("Notes or above", LogLevel.NOTE);
+            item.AddOption("Info or above", LogLevel.INFO);
+            item.AddOption("Debug or above", LogLevel.DEBUG);
+            _optionsMenu.AddItem(item);
+
+            item = new MenuItem {ItemText = "Theme"};
             foreach (string dir in System.IO.Directory.GetDirectories(Core.WgibeatRootFolder + "\\Content\\Textures"))
             {
                 var dirname = dir.Substring(dir.LastIndexOf("\\") + 1);
@@ -181,6 +190,7 @@ namespace WGiBeat.Screens
                 _optionsMenu.GetByItemText("Full screen").SetSelectedByValue(Core.Settings.Get<object>("FullScreen"));
                 _optionsMenu.GetByItemText("Song Audio Validation").SetSelectedByValue(Core.Settings.Get<object>("SongMD5Behaviour"));
                 _optionsMenu.GetByItemText("Save Game Log").SetSelectedByValue(Core.Settings.Get<object>("SaveLog"));
+                _optionsMenu.GetByItemText("Logging Level").SetSelectedByValue((LogLevel) (Core.Settings.Get<object>("LogLevel")));
                 _optionsMenu.GetByItemText("Theme").SetSelectedByValue(Core.Settings.Get<object>("Theme"));
             }
             catch (Exception ex)
@@ -203,8 +213,10 @@ namespace WGiBeat.Screens
             Core.Settings.Set("FullScreen", _optionsMenu.GetByItemText("Full screen").SelectedValue());
             Core.Settings.Set("SongMD5Behaviour", _optionsMenu.GetByItemText("Song Audio Validation").SelectedValue());
             Core.Settings.Set("SaveLog", _optionsMenu.GetByItemText("Save Game Log").SelectedValue());
+            Core.Settings.Set("LogLevel", (int) _optionsMenu.GetByItemText("Logging Level").SelectedValue());
             Core.Settings.Set("Theme",_optionsMenu.GetByItemText("Theme").SelectedValue());
             Core.Audio.SetMasterVolume((float) Core.Settings.Get<double>("SongVolume"));
+            Core.Log.LogLevel = (LogLevel) Core.Settings.Get<int>("LogLevel");
             Core.Log.SaveLog = Core.Settings.Get<bool>("SaveLog");
 
             Core.LoadCurrentTheme();

@@ -69,12 +69,13 @@ namespace WGiBeat
 Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             WgibeatRootFolder = WgibeatRootFolder.Replace("file:\\", "");
 
-            Log = new LogManager{Enabled = true, SaveLog = true};
-            Log.AddMessage("INFO: Initializing Cookies...");
+            Log = new LogManager{Enabled = true, SaveLog = true, LogLevel = LogLevel.INFO};
+            Log.AddMessage("Initializing Cookies...",LogLevel.INFO);
             Cookies = new Dictionary<string, object>();
 
             Metrics = new MetricsManager { Log = this.Log };
             Settings = SettingsManager.LoadFromFile("settings.txt", this.Log);
+            Log.LogLevel = (LogLevel) Settings.Get<int>("LogLevel");
             HighScores = HighScoreManager.LoadFromFile("Scores.conf", this.Log);
             Profiles = ProfileManager.LoadFromFolder("Profiles", this.Log);
 
@@ -322,7 +323,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             _screens[screen].Initialize();
             _activeScreen = _screens[screen];
             _menuMusicManager.ChangeMusic(screen);
-            Log.AddMessage("INFO: Screen transition to: " + screen);
+            Log.AddMessage("Screen transition to: " + screen,LogLevel.INFO);
         }
     }
 }

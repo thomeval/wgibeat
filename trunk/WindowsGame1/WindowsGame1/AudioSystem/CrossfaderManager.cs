@@ -14,7 +14,7 @@ namespace WGiBeat.AudioSystem
         public CrossfaderManager(LogManager log, AudioManager audioManager)
         {
             Log = log;
-            Log.AddMessage("INFO: Initializing Crossfader...");
+            Log.AddMessage("Initializing Crossfader...", LogLevel.INFO);
             AudioManager = audioManager;
             PreviewDuration = 10;
         }

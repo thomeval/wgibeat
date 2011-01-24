@@ -25,7 +25,7 @@ namespace WGiBeat.AudioSystem
         public MenuMusicManager(LogManager log)
         {
             _musicList = new Dictionary<string, string>();
-            log.AddMessage("INFO: Initializing Menu Music Manager...");
+            log.AddMessage("Initializing Menu Music Manager...", LogLevel.INFO);
             Log = log;
         }
 
@@ -37,14 +37,14 @@ namespace WGiBeat.AudioSystem
         /// <param name="filepath">The path of the file to load as a menu music list.</param>
         public void LoadMusicList(string filepath)
         {
-            Log.AddMessage("INFO: Loading Menu Music list from "+filepath+" ...");
+            Log.AddMessage("Loading Menu Music list from " + filepath + " ...", LogLevel.INFO);
             var sr = File.ReadAllText(filepath);
             sr = sr.Replace("\n", "");
             sr = sr.Replace("\r", "");
             var lines = sr.Split(';');
             if (lines[0] != "#MUSICLIST-1.0")
             {
-                Log.AddMessage("ERROR: Menu Music list does not have the correct header. This file must start with '#MUSICLIST-1.0;'");
+                Log.AddMessage("Menu Music list does not have the correct header. This file must start with '#MUSICLIST-1.0;'", LogLevel.ERROR);
                 return;
             }
 
@@ -66,7 +66,7 @@ namespace WGiBeat.AudioSystem
                     System.Diagnostics.Debug.WriteLine("Tried parsing: " + lines[x]);
                 }
             }
-            Log.AddMessage("INFO: Menu music list loaded successfully.");
+            Log.AddMessage("Menu music list loaded successfully.",LogLevel.INFO);
         }
 
         /// <summary>
@@ -97,14 +97,14 @@ namespace WGiBeat.AudioSystem
             {
                 if ((!Directory.Exists(MusicFilePath)) || (!File.Exists(MusicFilePath + _musicList[name])))
                 {
-                    Log.AddMessage("WARN: MenuMusicManager: Skipping load of '" + name + "' as the file was not found.");
-                    Log.AddMessage("WARN: Searched in: " + MusicFilePath + _musicList[name]);
+                    Log.AddMessage("MenuMusicManager: Skipping load of '" + name + "' as the file was not found.",LogLevel.WARN);
+                    Log.AddMessage("Searched in: " + MusicFilePath + _musicList[name],LogLevel.WARN);
                     StopExistingMusic();
                     return;
                 }
                 if (_currentMusic == _musicList[name])
                 {
-                    Log.AddMessage("INFO: MenuMusicManager: Selected music is already playing. Skipping load.");
+                    Log.AddMessage("MenuMusicManager: Selected music is already playing. Skipping load.",LogLevel.INFO);
                     return;
                 }
 
