@@ -19,7 +19,7 @@ namespace WGiBeat.Drawing
 
         public void LoadFromFile(string filename)
         {
-            Log.AddMessage("INFO: Loading Metrics from " + filename + "...");
+            Log.AddMessage("Loading Metrics from " + filename + "...", LogLevel.INFO);
             try
             {
                 string filetext = File.ReadAllText(filename);
@@ -27,10 +27,10 @@ namespace WGiBeat.Drawing
             }
             catch (FileNotFoundException)
             {
-                Log.AddMessage("WARN: Failed to load metrics due to file not found error: " + filename);
+                Log.AddMessage("Failed to load metrics due to file not found error: " + filename, LogLevel.WARN);
             }
 
-            Log.AddMessage("INFO: Metrics loaded successfully.");
+            Log.AddMessage("Metrics loaded successfully.",LogLevel.INFO);
         }
         private void LoadFromText(string text)
         {

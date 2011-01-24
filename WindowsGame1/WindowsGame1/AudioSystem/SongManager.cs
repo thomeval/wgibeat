@@ -27,7 +27,7 @@ namespace WGiBeat.AudioSystem
             Log = log;
             AudioManager = audioManager;
             SettingsManager = settings;
-            Log.AddMessage("INFO: Initializing Song Manager...");
+            Log.AddMessage("Initializing Song Manager...",LogLevel.INFO);
         }
         /// <summary>
         /// Returns all songs stored in the Manager.
@@ -143,7 +143,7 @@ namespace WGiBeat.AudioSystem
             while (folders.Count > 0)
             {
                 string currentFolder = folders[0];
-                Log.AddMessage("INFO: Loading songfiles in " + currentFolder);
+                Log.AddMessage("Loading songfiles in " + currentFolder,LogLevel.INFO);
                 folders.AddRange(Directory.GetDirectories(currentFolder));
                 foreach (string file in Directory.GetFiles(currentFolder, "*.sng"))
                 {
@@ -159,9 +159,9 @@ namespace WGiBeat.AudioSystem
             }
             if (_songs.Count == 0)
             {
-                Log.AddMessage(String.Format("ERROR: No valid song files loaded. WGiBeat is not playable without one!"));
+                Log.AddMessage(String.Format("No valid song files loaded. WGiBeat is not playable without one!"),LogLevel.ERROR);
             }
-            Log.AddMessage(String.Format("INFO: Song load completed. {0} songs loaded.", _songs.Count));
+            Log.AddMessage(String.Format("Song load completed. {0} songs loaded.", _songs.Count),LogLevel.NOTE);
         }
 
         /// <summary>
@@ -258,21 +258,21 @@ namespace WGiBeat.AudioSystem
                     {
                         if (message != "No errors found.")
                         {
-                            Log.AddMessage("NOTE: " + message + " In: " + newSong.Path + "\\" + newSong.DefinitionFile);
+                            Log.AddMessage("" + message + " In: " + newSong.Path + "\\" + newSong.DefinitionFile,LogLevel.NOTE);
                         }
 
                     }
                     else
                     {
-                        Log.AddMessage("WARN: " + message + " In: " + newSong.Path + "\\" + newSong.DefinitionFile);
+                        Log.AddMessage("" + message + " In: " + newSong.Path + "\\" + newSong.DefinitionFile,LogLevel.WARN);
                         return null;
                     }
                 }
-                Log.AddMessage("INFO: Loaded " + newSong.Title + " successfully.\n");
+                Log.AddMessage("Loaded " + newSong.Title + " successfully.\n",LogLevel.INFO);
             }
             catch (Exception)
             {
-                Log.AddMessage("WARN: Failed to load song: " + filename + "\n");
+                Log.AddMessage("Failed to load song: " + filename + "\n",LogLevel.WARN);
                 return null;
             }
 

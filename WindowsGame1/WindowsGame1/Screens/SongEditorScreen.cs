@@ -10,6 +10,7 @@ using WGiBeat.Drawing;
 using WGiBeat.Drawing.Sets;
 using WGiBeat.Notes;
 using Action = WGiBeat.Managers.Action;
+using LogLevel = WGiBeat.Managers.LogLevel;
 
 namespace WGiBeat.Screens
 {
@@ -718,7 +719,7 @@ namespace WGiBeat.Screens
                     _songPlaying = false;
                     break;
                 case "START":
-                    Core.Log.AddMessage(String.Format("DEBUG: Attempting to save song tweaks to: {0}\\{1}",NewGameSong.Path,NewGameSong.DefinitionFile));
+                    Core.Log.AddMessage(String.Format("Attempting to save song tweaks to: {0}\\{1}",NewGameSong.Path,NewGameSong.DefinitionFile),LogLevel.DEBUG);
                     Core.Songs.StopCurrentSong();
                     Core.Songs.SaveToFile(NewGameSong);
                     var oldSongFile = Core.Songs.GetBySongFile(NewGameSong.Path, NewGameSong.AudioFile);
@@ -729,7 +730,7 @@ namespace WGiBeat.Screens
                     Core.Songs.AddSong(NewGameSong);
                     _cursorPosition = EditorCursorPosition.DONE;
                     _songPlaying = false;
-                    Core.Log.AddMessage(String.Format("DEBUG: SongFile '{0}' was saved successfully!", NewGameSong.DefinitionFile));
+                    Core.Log.AddMessage(String.Format("SongFile '{0}' was saved successfully!", NewGameSong.DefinitionFile),LogLevel.DEBUG);
                     break;
                 case "LEFT":
                     AdjustSpeed(-1);
@@ -895,7 +896,7 @@ namespace WGiBeat.Screens
                 case "3":
                     if (_menus["Basics"].GetByItemText("Next Step").Enabled)
                     {
-                        Core.Log.AddMessage(String.Format("DEBUG: Attempting to create a basic new GameSong at: {0}\\{1}", _destinationFolderName, _destinationFileName));
+                        Core.Log.AddMessage(String.Format("Attempting to create a basic new GameSong at: {0}\\{1}", _destinationFolderName, _destinationFileName),LogLevel.DEBUG);
                         _errorMessage = "";
                         CreateNewBasicGameSong();
                         _bpmMeter.DisplayedSong = NewGameSong;
@@ -967,7 +968,7 @@ namespace WGiBeat.Screens
                     
                     if (Core.Songs.ValidateSongFile(NewGameSong))
                     {
-                        Core.Log.AddMessage(String.Format("DEBUG: Attempting to save song details to: {0}\\{1}", NewGameSong.Path, NewGameSong.DefinitionFile));
+                        Core.Log.AddMessage(String.Format("DEBUG: Attempting to save song details to: {0}\\{1}", NewGameSong.Path, NewGameSong.DefinitionFile), LogLevel.DEBUG);
                         Core.Songs.SaveToFile(NewGameSong);
                         _cursorPosition = EditorCursorPosition.SONG_TUNING;
                         _startTime = null;
@@ -1038,13 +1039,14 @@ namespace WGiBeat.Screens
         private void CreateNewBasicGameSong()
         {
             var audioFileName = Path.GetFileName(_audioFilePath);
-            Core.Log.AddMessage("INFO: Creating folder for new song: " + _wgibeatSongsFolder + "\\" + _destinationFolderName);
+
+            Core.Log.AddMessage("Creating folder for new song: " + _wgibeatSongsFolder + "\\" + _destinationFolderName, LogLevel.DEBUG);
             if (!Directory.Exists(_wgibeatSongsFolder + "\\" + _destinationFolderName))
             {
                 Directory.CreateDirectory(_wgibeatSongsFolder + "\\" + _destinationFolderName);
             }
-            Core.Log.AddMessage("INFO: Copying selected audio file from: " + _audioFilePath);
-            Core.Log.AddMessage("INFO: ... to: " + _wgibeatSongsFolder + "\\" + _destinationFolderName + "\\" + audioFileName);
+            Core.Log.AddMessage("Copying selected audio file from: " + _audioFilePath, LogLevel.DEBUG);
+            Core.Log.AddMessage(" ... to: " + _wgibeatSongsFolder + "\\" + _destinationFolderName + "\\" + audioFileName, LogLevel.DEBUG);
 
             if (!File.Exists(_wgibeatSongsFolder + "\\" + _destinationFolderName + "\\" + audioFileName))
             {
@@ -1059,6 +1061,7 @@ namespace WGiBeat.Screens
             NewGameSong.Path = _wgibeatSongsFolder + "\\" + _destinationFolderName;
             NewGameSong.SetMD5();
             Core.Songs.SaveToFile(NewGameSong);
+            Core.Log.AddMessage("New basic game song created successfully.", LogLevel.INFO);
         }
 
         private void ValidateInputs()

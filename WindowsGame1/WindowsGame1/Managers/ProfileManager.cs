@@ -44,13 +44,13 @@ namespace WGiBeat.Managers
         public static ProfileManager LoadFromFolder(string path, LogManager log)
         {
             var pm = new ProfileManager();
-            log.AddMessage("INFO: Loading profiles from " + Path.GetFullPath(path) + " ...");
+            log.AddMessage("Loading profiles from " + Path.GetFullPath(path) + " ...", LogLevel.INFO);
             pm.Log = log;
             var bf = new BinaryFormatter();
 
             if (!Directory.Exists(path))
             {
-                pm.Log.AddMessage("WARN: Folder '" + Path.GetFullPath(path) + "' doesn't exist.");
+                pm.Log.AddMessage("Folder '" + Path.GetFullPath(path) + "' doesn't exist.", LogLevel.WARN);
                 return pm;
             }
             foreach (string file in Directory.GetFiles(path,"*.prf"))
@@ -61,7 +61,7 @@ namespace WGiBeat.Managers
                 pm.Add(profile);
                 fs.Close();
             }
-            pm.Log.AddMessage("INFO: "+pm.Count +" Profiles loaded successfully.");
+            pm.Log.AddMessage(""+pm.Count +" Profiles loaded successfully.",LogLevel.INFO);
             return pm;
         }
 
@@ -74,7 +74,7 @@ namespace WGiBeat.Managers
                 bf.Serialize(fs,profile);
                 fs.Close();
             }
-            Log.AddMessage("INFO: " + Count + " Profiles save successfully.");
+            Log.AddMessage("" + Count + " Profiles save successfully.",LogLevel.INFO);
         }
 
     }

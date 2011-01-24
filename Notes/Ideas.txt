@@ -1,8 +1,5 @@
 --Zoran--
 
--Path following particle.
--Deleting key links.
-
 -Evaluation screen, lot of work. 80% Done
 
 -Option screen. Title. Menu design, animated.
@@ -16,7 +13,10 @@
 
 --Thome--
 -Sync (0.6?), Battle (0.6?) game modes.
--Song Sort bookmarks / quick navigation (0.6)
+-Song Sort bookmarks / quick navigation (low)
+- Netplay (major, low)
+- Stepmania file support? (low)
+- Spectrum below time left in MainGameScreen (low)
 
 -Public domain music as a sample file? (0.4 - zoran - LOL)
 -Cooperative bonuses (Streaks? Sync perfects?) (0.6)
@@ -25,20 +25,17 @@
 -Chance / SP gameplay (Major - Needs graphics)(0.6)
 -Gradual lifegraph entrance (0.6)
 
--Investigate timing / press lag (Better due to framerate fix, but is it perfect?)
 - BPM meter doesn't animate on-beat. (0.6)
 
 - Mode descriptions (Needs graphics) (0.6)
 - Profile stat display screen (0.6)
-- Stepmania file support? (low)
 
-- Spectrum below time left in MainGameScreen (low)
 - Adjustable audio playback start positions.
 - Record average late/early beatline hits.
 - Option descriptions.
-- Netplay (major, low)
+
 - Flashing hits counter (milestones)
-- Improve Log Manager (setting level, etc)
+
 
 - Auto join in NewGameScreen. (0.6) (Done)
 - Indicate CPU players in beatlines, player options frame and score bar. (Done)
@@ -48,6 +45,9 @@
 - Keyboard icon. (Done)
 - Remove .xnb texture requirement. (Done)
 - Redo Keys screen (double tab design) (Done)
+- Deleting key links. (Done)
+- Improved Log Manager (setting level, datestamp) (Done)
+- Logging level can be changed from the options menu.
 
 ==0.5 - "Handicapped Doubt" ==
  *   Song audio validation by using MD5. This makes it easier to ensure that the correct audio (.mp3) file is used when playing a song, especially when song files (.sng) are distributed.

@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections;
-using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Threading;
 using WGiBeat.Drawing;
+using WGiBeat.Managers;
 using Action=WGiBeat.Managers.Action;
 
 namespace WGiBeat.Screens
@@ -18,7 +17,7 @@ namespace WGiBeat.Screens
         private Sprite _baseSprite;
         private bool _autoScroll = true;
 
-        public string SongFolderPath { get; set; }
+        private string _songFolderPath;
 
         public InitialLoadScreen(GameCore core) : base(core)
         {
@@ -26,7 +25,7 @@ namespace WGiBeat.Screens
 
         public override void Initialize()
         {
-            SongFolderPath = Directory.GetCurrentDirectory() + "\\" + Core.Settings["SongFolder"];
+            _songFolderPath = Core.WgibeatRootFolder + "\\" + Core.Settings["SongFolder"];
             _textPosition = Core.Metrics["SongLoadLog", 0].Clone();
 
             _baseSprite = new Sprite
@@ -41,7 +40,7 @@ namespace WGiBeat.Screens
 
         public void LoadSongs()
         {
-            Core.Songs.LoadFromFolder(SongFolderPath);
+            Core.Songs.LoadFromFolder(_songFolderPath);
             _doneLoading = true;
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -49,29 +48,29 @@ namespace WGiBeat.Screens
             _maxY = 40;
             int errorCount = 0, warnCount = 0;
             var currentPos = new Vector2(_textPosition.X, _textPosition.Y);
-            var lines = GetOrReuseLogMessages();
-            _minY = Math.Min(lines.Length * -12 + 560, 40);
+            var entries = GetOrReuseLogMessages();
+            _minY = Math.Min(entries.Length * -12 + 555, 40);
 
             if (_autoScroll)
             {
                  _textPosition.Y = _minY;
             }
-            foreach (string line in lines)
+            foreach (LogEntry entry in entries)
             {
                 Color drawColor;
-                switch (line.Substring(0,4))
+                switch (entry.Level)
                 {
-                    case "DEBU":
+                    case LogLevel.DEBUG:
                         drawColor = Color.Gray;
                         break;
-                    case "NOTE":
+                    case LogLevel.NOTE:
                         drawColor = Color.Cyan;
                         break;
-                    case "WARN":
+                    case LogLevel.WARN:
                         drawColor = Color.Yellow;
                         warnCount++;
                         break;
-                    case "ERRO":
+                    case LogLevel.ERROR:
                         drawColor = Color.Red;
                         errorCount++;
                         break;
@@ -79,7 +78,7 @@ namespace WGiBeat.Screens
                         drawColor = Color.White;
                         break;
                 }
-                TextureManager.DrawString(spriteBatch, line, "LogFont",
+                TextureManager.DrawString(spriteBatch, entry.ToString(), "LogFont",
                                           currentPos, drawColor, FontAlign.LEFT);
                 currentPos.Y += 12;
 
@@ -100,8 +99,8 @@ namespace WGiBeat.Screens
         }
 
         private int _lastMessageCount = -1;
-        private string[] _lastMessages = new string[1];
-        private string[] GetOrReuseLogMessages()
+        private LogEntry[] _lastMessages = new LogEntry[1];
+        private LogEntry[] GetOrReuseLogMessages()
         {
             if (_lastMessageCount != Core.Log.MessageCount())
             {

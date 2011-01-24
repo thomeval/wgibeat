@@ -26,7 +26,7 @@ namespace WGiBeat.AudioSystem
         public AudioManager(LogManager log)
         {
             Log = log;
-            Log.AddMessage("INFO: Initializing Audio Manager...");
+            Log.AddMessage("Initializing Audio Manager...",LogLevel.INFO);
             RESULT result;
             result = Factory.System_Create(ref _fmodSystem);
             CheckFMODErrors(result);

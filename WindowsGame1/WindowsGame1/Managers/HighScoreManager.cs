@@ -146,18 +146,18 @@ namespace WGiBeat.Managers
         {
             try
             {
-                log.AddMessage("INFO: Loading high scores from: " + filename + " ...");
+                log.AddMessage("Loading high scores from: " + filename + " ...",LogLevel.INFO);
                 var result = new HighScoreManager {Log = log};
                 var fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
                 var bf = new BinaryFormatter();
                 result._highScoreEntries = (List<HighScoreEntry>)bf.Deserialize(fs);
                 fs.Close();
-                result.Log.AddMessage("INFO: High scores loaded successfully.");
+                result.Log.AddMessage("High scores loaded successfully.", LogLevel.INFO);
                 return result;
             }
             catch (Exception ex)
             {
-                log.AddMessage("WARN: Error loading high scores." + ex.Message);
+                log.AddMessage("Error loading high scores." + ex.Message, LogLevel.WARN);
                 return new HighScoreManager();
             }
         }
