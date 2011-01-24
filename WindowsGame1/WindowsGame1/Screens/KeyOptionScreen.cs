@@ -176,10 +176,10 @@ namespace WGiBeat.Screens
                 instructionText += "Press the key to use for the selected action, or Escape to cancel.";
             else
             {
-                instructionText += "Press your START button to add a key to the selected action.";
+                instructionText += "START: Add binding. SELECT: Remove bindings. Press Escape when done.";
             }
-
-            TextureManager.DrawString(spriteBatch,instructionText, "LargeFont", Core.Metrics["KeyOptionInstructionText",0], Color.White,FontAlign.CENTER);
+            var scale = TextureManager.ScaleTextToFit(instructionText, "LargeFont", 780, 100);
+            TextureManager.DrawString(spriteBatch,instructionText, "LargeFont", Core.Metrics["KeyOptionInstructionText",0], scale, Color.White,FontAlign.CENTER);
         }
 
         #endregion
@@ -273,12 +273,32 @@ namespace WGiBeat.Screens
                 case "START":
                     StartPressed();
                     break;
+                case "SELECT":
+                    RemoveBindings();
+                    break;
                 case "BACK":
                     Core.ScreenTransition("MainMenu");
                     break;
             }
             CreateBindingList();
 
+        }
+
+        private void RemoveBindings()
+        {
+            foreach (ActionBinding ab in _actionBindings)
+            {
+                if (ab.ControllerNumber == 0)
+                {
+                    Core.KeyMappings.Unset(ab.Key);
+                }
+                else
+                {
+                    Core.KeyMappings.Unset(ab.Button, ab.ControllerNumber);
+                }
+            }
+            CreateBindingList();
+            Core.KeyMappings.SaveToFile("Keys.conf");
         }
 
         private void StartPressed()

@@ -16,7 +16,7 @@ namespace WGiBeat.Drawing
         private static SpriteMap _controllerNumberSpriteMap;
         private static SpriteMap _controllerButtonsSpriteMap;
 
-        private Buttons[] _buttonsLookup = {
+        private readonly Buttons[] _buttonsLookup = {
                                                Buttons.A, Buttons.B, Buttons.X, Buttons.Y, Buttons.LeftShoulder,
                                                Buttons.RightShoulder, Buttons.LeftTrigger, Buttons.RightTrigger,
                                                Buttons.Back, Buttons.Start, Buttons.DPadDown, Buttons.DPadLeft,
