@@ -65,7 +65,7 @@ namespace WGiBeat.Screens
 
             _headerSprite = new Sprite
             {
-                SpriteTexture = TextureManager.Textures["keyOptionHeader"],
+                SpriteTexture = TextureManager.Textures["KeyOptionHeader"],
             };
 
             _gridTopSpriteMap = new SpriteMap
