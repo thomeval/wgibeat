@@ -55,9 +55,9 @@ namespace WGiBeat.Screens
         private double _debugLastHitOffset;
         private double _guessedBPM;
 
-        private double[] _hitOffsets = new double[10];
+        private readonly double[] _hitOffsets = new double[10];
         private int _numHits;
-        private double[] _beatTimings = new double[25];
+        private readonly double[] _beatTimings = new double[25];
         private int _numBeats = -1;
         private double? _lastHitTime;
 
