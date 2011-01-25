@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
-using Action=WGiBeat.Managers.Action;
+using Action = WGiBeat.Managers.Action;
 using LogLevel = WGiBeat.Managers.LogLevel;
 
 namespace WGiBeat.Screens
@@ -10,11 +10,14 @@ namespace WGiBeat.Screens
     public class OptionScreen : GameScreen
     {
         private readonly Menu _optionsMenu;
-        private Boolean _keyReset = false;
 
-        private SineSwayParticleField _field = new SineSwayParticleField();
+        private readonly SineSwayParticleField _field = new SineSwayParticleField();
+        private Sprite _background;
+        private Sprite _header;
+        private Sprite _optionBaseSprite;
 
-        public OptionScreen(GameCore core) : base(core)
+        public OptionScreen(GameCore core)
+            : base(core)
         {
             _optionsMenu = new Menu { Width = 700 };
             BuildMenu();
@@ -23,7 +26,7 @@ namespace WGiBeat.Screens
 
         private void BuildMenu()
         {
-            var item = new MenuItem {ItemText = "Song Volume"};
+            var item = new MenuItem { ItemText = "Song Volume" };
             item.AddOption("0%", "0.00001");
 
             for (int x = 1; x < 11; x++)
@@ -32,9 +35,9 @@ namespace WGiBeat.Screens
             }
             _optionsMenu.AddItem(item);
 
-            item = new MenuItem {ItemText = "Song Debugging"};
+            item = new MenuItem { ItemText = "Song Debugging" };
             item.AddOption("Off", false);
-            item.AddOption("On",true);
+            item.AddOption("On", true);
             _optionsMenu.AddItem(item);
 
             item = new MenuItem { ItemText = "Song Previews" };
@@ -42,7 +45,7 @@ namespace WGiBeat.Screens
             item.AddOption("On", true);
             _optionsMenu.AddItem(item);
 
-            item = new MenuItem {ItemText = "Full screen"};
+            item = new MenuItem { ItemText = "Full screen" };
             item.AddOption("Off", false);
             item.AddOption("On", true);
             _optionsMenu.AddItem(item);
@@ -50,17 +53,17 @@ namespace WGiBeat.Screens
             item = new MenuItem { ItemText = "Song Audio Validation" };
             item.AddOption("Ignore", 0);
             item.AddOption("Warn only", 1);
-            item.AddOption("Warn and exclude",2);
+            item.AddOption("Warn and exclude", 2);
             item.AddOption("Auto Correct", 3);
 
             _optionsMenu.AddItem(item);
 
-            item = new MenuItem {ItemText = "Save Game Log"};
-            item.AddOption("Off",false);
-            item.AddOption("On",true);
+            item = new MenuItem { ItemText = "Save Game Log" };
+            item.AddOption("Off", false);
+            item.AddOption("On", true);
             _optionsMenu.AddItem(item);
 
-            item = new MenuItem {ItemText = "Logging Level"};
+            item = new MenuItem { ItemText = "Logging Level" };
             item.AddOption("Errors only", LogLevel.ERROR);
             item.AddOption("Warnings and errors", LogLevel.WARN);
             item.AddOption("Notes or above", LogLevel.NOTE);
@@ -68,7 +71,7 @@ namespace WGiBeat.Screens
             item.AddOption("Debug or above", LogLevel.DEBUG);
             _optionsMenu.AddItem(item);
 
-            item = new MenuItem {ItemText = "Theme"};
+            item = new MenuItem { ItemText = "Theme" };
             foreach (string dir in System.IO.Directory.GetDirectories(Core.WgibeatRootFolder + "\\Content\\Textures"))
             {
                 var dirname = dir.Substring(dir.LastIndexOf("\\") + 1);
@@ -76,45 +79,60 @@ namespace WGiBeat.Screens
             }
             _optionsMenu.AddItem(item);
 
-            item = new MenuItem {ItemText = "Reset Keys" };
+            item = new MenuItem { ItemText = "Save" };
             _optionsMenu.AddItem(item);
-            item = new MenuItem {ItemText = "Save"};
-            _optionsMenu.AddItem(item);
-            item = new MenuItem {ItemText = "Cancel"};
+            item = new MenuItem { ItemText = "Cancel" };
             _optionsMenu.AddItem(item);
         }
 
         public override void Initialize()
         {
             LoadOptions();
+            InitSprites();
             base.Initialize();
         }
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            DrawBackground(spriteBatch);
-        }
 
-        private void DrawBackground(SpriteBatch spriteBatch)
+        private void InitSprites()
         {
-            var background = new Sprite
+            _background = new Sprite
             {
                 Height = Core.Window.ClientBounds.Height,
                 SpriteTexture = TextureManager.Textures["AllBackground"],
                 Width = Core.Window.ClientBounds.Width,
             };
-
-            background.Draw(spriteBatch);
-            _field.Draw(spriteBatch);
-
-            var header = new Sprite
+            _header = new Sprite
             {
                 SpriteTexture = TextureManager.Textures["optionsHeader"],
             };
+            _optionBaseSprite = new Sprite
+                                    {
+                                        SpriteTexture = TextureManager.Textures["OptionDescriptionBase"],
+                                        Position = Core.Metrics["OptionsDescriptionBase",0]
+                                    };
+        }
 
-            background.Draw(spriteBatch);
-            header.Draw(spriteBatch);
-
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            DrawBackground(spriteBatch);
             _optionsMenu.Draw(spriteBatch);
+            DrawOptionDescription(spriteBatch);
+        }
+
+        private void DrawOptionDescription(SpriteBatch spriteBatch)
+        {
+            _optionBaseSprite.Draw(spriteBatch);
+            var optionText = Core.Text["Option" + _optionsMenu.SelectedIndex];
+            TextureManager.DrawString(spriteBatch, optionText, "DefaultFont", Core.Metrics["OptionsDescription", 0], Color.White, FontAlign.CENTER);
+        }
+
+        private void DrawBackground(SpriteBatch spriteBatch)
+        {
+
+
+            _background.Draw(spriteBatch);
+            _field.Draw(spriteBatch);
+            _header.Draw(spriteBatch);
+
         }
 
         public override void PerformAction(Action action)
@@ -159,7 +177,7 @@ namespace WGiBeat.Screens
                 case Action.P4_BEATLINE:
                     DoAction();
                     break;
-                   
+
             }
         }
 
@@ -167,9 +185,6 @@ namespace WGiBeat.Screens
         {
             switch (_optionsMenu.SelectedItem().ItemText)
             {
-                case "Reset Keys":
-                    _keyReset = !_keyReset;
-                    break;
                 case "Save":
                     SaveOptions();
                     Core.ScreenTransition("MainMenu");
@@ -190,7 +205,7 @@ namespace WGiBeat.Screens
                 _optionsMenu.GetByItemText("Full screen").SetSelectedByValue(Core.Settings.Get<object>("FullScreen"));
                 _optionsMenu.GetByItemText("Song Audio Validation").SetSelectedByValue(Core.Settings.Get<object>("SongMD5Behaviour"));
                 _optionsMenu.GetByItemText("Save Game Log").SetSelectedByValue(Core.Settings.Get<object>("SaveLog"));
-                _optionsMenu.GetByItemText("Logging Level").SetSelectedByValue((LogLevel) (Core.Settings.Get<object>("LogLevel")));
+                _optionsMenu.GetByItemText("Logging Level").SetSelectedByValue((LogLevel)(Core.Settings.Get<object>("LogLevel")));
                 _optionsMenu.GetByItemText("Theme").SetSelectedByValue(Core.Settings.Get<object>("Theme"));
             }
             catch (Exception ex)
@@ -201,28 +216,23 @@ namespace WGiBeat.Screens
         }
         private void SaveOptions()
         {
-            if (_keyReset)
-            {
-                Core.KeyMappings.LoadDefault();
-                Core.KeyMappings.SaveToFile("Keys.conf");
-            }
 
-            Core.Settings.Set("SongVolume",(Convert.ToDouble(_optionsMenu.GetByItemText("Song Volume").SelectedValue())));
+            Core.Settings.Set("SongVolume", (Convert.ToDouble(_optionsMenu.GetByItemText("Song Volume").SelectedValue())));
             Core.Settings.Set("SongDebug", (_optionsMenu.GetByItemText("Song Debugging").SelectedValue()));
             Core.Settings.Set("SongPreview", (_optionsMenu.GetByItemText("Song Previews").SelectedValue()));
             Core.Settings.Set("FullScreen", _optionsMenu.GetByItemText("Full screen").SelectedValue());
             Core.Settings.Set("SongMD5Behaviour", _optionsMenu.GetByItemText("Song Audio Validation").SelectedValue());
             Core.Settings.Set("SaveLog", _optionsMenu.GetByItemText("Save Game Log").SelectedValue());
-            Core.Settings.Set("LogLevel", (int) _optionsMenu.GetByItemText("Logging Level").SelectedValue());
-            Core.Settings.Set("Theme",_optionsMenu.GetByItemText("Theme").SelectedValue());
-            Core.Audio.SetMasterVolume((float) Core.Settings.Get<double>("SongVolume"));
-            Core.Log.LogLevel = (LogLevel) Core.Settings.Get<int>("LogLevel");
+            Core.Settings.Set("LogLevel", (int)_optionsMenu.GetByItemText("Logging Level").SelectedValue());
+            Core.Settings.Set("Theme", _optionsMenu.GetByItemText("Theme").SelectedValue());
+            Core.Audio.SetMasterVolume((float)Core.Settings.Get<double>("SongVolume"));
+            Core.Log.LogLevel = (LogLevel)Core.Settings.Get<int>("LogLevel");
             Core.Log.SaveLog = Core.Settings.Get<bool>("SaveLog");
 
             Core.LoadCurrentTheme();
 
             Core.GraphicsManager.IsFullScreen = Core.Settings.Get<bool>("FullScreen");
-            Core.GraphicsManager.ApplyChanges();     
+            Core.GraphicsManager.ApplyChanges();
             Core.Settings.SaveToFile("settings.txt");
 
         }
