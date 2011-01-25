@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using WGiBeat.Helpers;
@@ -8,8 +7,7 @@ using Action=WGiBeat.Managers.Action;
 namespace WGiBeat.Screens
 {
     public abstract class GameScreen : GameComponent
-    {
-        //UNSURE: What is this??? Zoran needs to explain himself.
+    {        
         protected FiniteState State = new FiniteState(1);
         protected readonly GameCore Core;
 
@@ -17,23 +15,6 @@ namespace WGiBeat.Screens
         {
             Core = core;
         }
-
-        // <summary>
-        // Allows the game component to perform any initialization it needs to before starting
-        // to run.  This is where it can query for any required services and load content.
-        // </summary>
-        //public override void Initialize()
-        //{
-        //    base.Initialize();
-        //}
-        // <summary>
-        // Allows the game component to update itself.
-        // </summary>
-        // <param name="gameTime">Provides a snapshot of timing values.</param>
-        //public override void Update(GameTime gameTime)
-        //{
-        //    base.Update(gameTime);
-        //}
 
         /// <summary>
         /// Informs a GameScreen that a specific key has been pressed. Unless necessary, use PerformAction() instead.
@@ -51,7 +32,7 @@ namespace WGiBeat.Screens
         /// <param name="playerIndex">The player number of the controller (1-4).</param>
         public virtual void PerformButton(Buttons buttons, int playerIndex)
         {
-            //Virtual since its optional for GameScreens.
+            //Virtual since it is optional for GameScreens.
         }
 
         /// <summary>

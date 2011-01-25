@@ -98,6 +98,8 @@ SelectedSongSpectrum=[235,330];
 
 #Options;
 OptionsMenuStart=[50,100];
+OptionsDescription=[400,520];
+OptionsDescriptionBase=[0,480];
 
 #Mode Select;
 ModeSelectScreenHeader=[0,0];

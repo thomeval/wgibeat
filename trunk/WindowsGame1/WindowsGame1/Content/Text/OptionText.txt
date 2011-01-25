@@ -1,0 +1,11 @@
+﻿#TEXT-1.0;
+Option0=Adjust the volume of all game audio.
+Option1=Allows adjustments to be made to a song's BPM, length and offset during gameplay.\nUse the F7 to F12 keys.
+Option2=Determines whether a preview of a chosen song is played in the Song Select Screen.
+Option3=Switches between windowed and full-screen mode.
+Option4=This affects how the game treats MD5 validation of audio (.mp3) files. \nSet to 'Ignore' to disable and decrease initial loading times.\nSet to 'Auto Correct' to correct invalid MD5 hashes automatically.
+Option5=If enabled, the game log (displayed when the game is started)\n is saved to log.txt when the game is closed. It is helpful for troubleshooting.
+Option6=This option determines how much information is logged.\n Setting this to 'Debug or Above' will cause all log information to be recored. \nHigher levels will result in less information.
+Option7=This changes the currently active theme.\n Themes are stored in separate folders in the Content\Textures folder.
+Option8=Saves all changes made and returns to the main menu.
+Option9=Discards all changes made and returns to the main menu.

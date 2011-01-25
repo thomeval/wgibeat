@@ -136,6 +136,7 @@
     <Compile Include="Managers\Manager.cs" />
     <Compile Include="Managers\NetManager.cs" />
     <Compile Include="Managers\ProfileManager.cs" />
+    <Compile Include="Managers\TextManager.cs" />
     <Compile Include="Profile.cs" />
     <Compile Include="Screens\InitialLoadScreen.cs" />
     <Compile Include="Screens\InstructionScreen.cs" />
@@ -175,6 +176,12 @@
     <Compile Include="Screens\TeamSelectScreen.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Textures\Default\OptionDescriptionBase.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Text\OptionText.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Textures\Default\ActionBindingBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

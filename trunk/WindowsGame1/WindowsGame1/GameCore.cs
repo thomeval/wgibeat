@@ -31,6 +31,7 @@ namespace WGiBeat
         public CrossfaderManager Crossfader;
         public CPUManager CPUManager;
         public LogManager Log;
+        public TextManager Text;
 
         public Player[] Players;
         public Dictionary<string, object> Cookies;
@@ -74,10 +75,11 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             Cookies = new Dictionary<string, object>();
 
             Metrics = new MetricsManager { Log = this.Log };
-            Settings = SettingsManager.LoadFromFile("settings.txt", this.Log);
+            Settings = SettingsManager.LoadFromFile(WgibeatRootFolder + "\\settings.txt", this.Log);
             Log.LogLevel = (LogLevel) Settings.Get<int>("LogLevel");
-            HighScores = HighScoreManager.LoadFromFile("Scores.conf", this.Log);
-            Profiles = ProfileManager.LoadFromFolder("Profiles", this.Log);
+            HighScores = HighScoreManager.LoadFromFile(WgibeatRootFolder + "\\Scores.conf", this.Log);
+            Profiles = ProfileManager.LoadFromFolder(WgibeatRootFolder + "\\Profiles", this.Log);
+            Text = TextManager.LoadFromFile(WgibeatRootFolder + "\\Content\\Text\\OptionText.txt",this.Log);
 
             Audio = new AudioManager(this.Log);
             Songs = new SongManager(this.Log,this.Audio,this.Settings);

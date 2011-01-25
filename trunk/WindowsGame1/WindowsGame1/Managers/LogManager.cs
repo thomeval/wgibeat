@@ -14,8 +14,6 @@ namespace WGiBeat.Managers
      
         public bool SaveLog { get; set; }
 
-        //TODO: Complete this.
-
         public LogLevel LogLevel { get; set; }
         public LogManager()
         {
