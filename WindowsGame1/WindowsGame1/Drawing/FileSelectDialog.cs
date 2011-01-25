@@ -223,6 +223,11 @@ namespace WGiBeat.Drawing
         {
             return Directory.Exists(SelectedFile);
         }
-        
+
+        public void ResetEvents()
+        {
+            FileSelected = null;
+            FileSelectCancelled = null;
+        }
     }
 }

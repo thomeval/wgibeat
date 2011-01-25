@@ -61,7 +61,7 @@ namespace WGiBeat.Screens
         private int _numBeats = -1;
         private double? _lastHitTime;
 
-        private const string VERSION = "v1.0";
+        private const string VERSION = "v1.1";
 
         #endregion
 
@@ -873,6 +873,7 @@ namespace WGiBeat.Screens
                     _fileSelect.Patterns = new[] { "*.mp3", "*.ogg", "*.wav" };
                     _cursorPosition = EditorCursorPosition.SELECT_AUDIO;
                     _fileSelect.CurrentFolder = Path.GetFullPath(_wgibeatSongsFolder + "\\..");
+                    _fileSelect.ResetEvents();
                     _fileSelect.FileSelected += delegate
                                                     {
                                                         _audioFilePath = _fileSelect.SelectedFile;
@@ -1039,7 +1040,7 @@ namespace WGiBeat.Screens
         private void CreateNewBasicGameSong()
         {
             var audioFileName = Path.GetFileName(_audioFilePath);
-
+            
             Core.Log.AddMessage("Creating folder for new song: " + _wgibeatSongsFolder + "\\" + _destinationFolderName, LogLevel.DEBUG);
             if (!Directory.Exists(_wgibeatSongsFolder + "\\" + _destinationFolderName))
             {
@@ -1061,7 +1062,48 @@ namespace WGiBeat.Screens
             NewGameSong.Path = _wgibeatSongsFolder + "\\" + _destinationFolderName;
             NewGameSong.SetMD5();
             Core.Songs.SaveToFile(NewGameSong);
+
+            //Read audio metadata
+            AddAudioMetaData();
             Core.Log.AddMessage("New basic game song created successfully.", LogLevel.INFO);
+        }
+
+        private void AddAudioMetaData()
+        {
+
+            var tags = Core.Audio.GetAudioFileMetadata(_audioFilePath);
+            var titleTag = "";
+            if (tags.ContainsKey("TITLE"))
+            {
+                titleTag = tags["TITLE"];
+            }
+            if (tags.ContainsKey("TIT2"))
+            {
+                titleTag = tags["TIT2"];
+            }
+
+            titleTag = titleTag.Replace("[", "(");
+            titleTag = titleTag.Replace("]", ")");
+
+            if (titleTag.IndexOf("(") < titleTag.IndexOf(")"))
+            {
+                var length = titleTag.LastIndexOf(")") - titleTag.IndexOf("(") + 1;
+                NewGameSong.Subtitle = titleTag.Substring(titleTag.IndexOf("("), length);
+                NewGameSong.Title = titleTag.Substring(0, titleTag.IndexOf("("));
+            }
+            else
+            {
+                NewGameSong.Title = tags["TITLE"];
+            }
+
+            if (tags.ContainsKey("ARTIST"))
+            {
+                NewGameSong.Artist = tags["ARTIST"];
+            }
+            if (tags.ContainsKey("TPE1"))
+            {
+                NewGameSong.Artist = tags["TPE1"];
+            }
         }
 
         private void ValidateInputs()
@@ -1159,6 +1201,7 @@ namespace WGiBeat.Screens
         {
             _fileSelect.Patterns = new[] { "*.sng" };
             _fileSelect.CurrentFolder = _wgibeatSongsFolder;
+            _fileSelect.ResetEvents();
             _fileSelect.FileSelected += delegate
             {
                 NewGameSong = Core.Songs.LoadFromFile(_fileSelect.SelectedFile, false);
