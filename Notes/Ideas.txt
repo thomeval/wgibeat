@@ -12,15 +12,14 @@
 -Program Icon 
 
 --Thome--
--Sync (0.6?), Battle (0.6?) game modes.
+-Sync (0.6?), Battle (0.7?) game modes.
 -Song Sort bookmarks / quick navigation (low)
 - Netplay (major, low)
 - Stepmania file support? (low)
-- Spectrum below time left in MainGameScreen (low)
 
--Public domain music as a sample file? (0.4 - zoran - LOL)
+-Public domain music as a sample file? (0.6 - zoran - LOL)
 -Cooperative bonuses (Streaks? Sync perfects?) (0.6)
--Lifebar graph (In progress)(Graphics improvement)
+-Life graph (In progress)(Graphics improvement)
 
 -Chance / SP gameplay (Major - Needs graphics)(0.6)
 -Gradual lifegraph entrance (0.6)
@@ -28,11 +27,10 @@
 - BPM meter doesn't animate on-beat. (0.6)
 
 - Mode descriptions (Needs graphics) (0.6)
-- Profile stat display screen (0.6)
+- Profile stat display screen (0.6)(How???)
 
 - Adjustable audio playback start positions.
 - Record average late/early beatline hits.
-- Option descriptions.
 
 - Flashing hits counter (milestones)
 
@@ -48,6 +46,8 @@
 - Deleting key links. (Done)
 - Improved Log Manager (setting level, datestamp) (Done)
 - Logging level can be changed from the options menu.
+- Option descriptions. (Done)
+- When creating a song in WGiEdit, the title and artist are read from the audio file's ID tag. (Done)
 
 ==0.5 - "Handicapped Doubt" ==
  *   Song audio validation by using MD5. This makes it easier to ensure that the correct audio (.mp3) file is used when playing a song, especially when song files (.sng) are distributed.
