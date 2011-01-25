@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using FMOD;
 using WGiBeat.Managers;
@@ -100,6 +103,38 @@ namespace WGiBeat.AudioSystem
             return index;
         }
 
+        public Dictionary<string,string> GetAudioFileMetadata(string filename)
+        {
+            var result = new Dictionary<string, string>();
+            var mySound = new Sound();
+            CheckFMODErrors(_fmodSystem.createStream(filename, MODE.SOFTWARE, ref mySound));
+            int tagsCount = 0, tagsUpdated = 0;
+            CheckFMODErrors(mySound.getNumTags(ref tagsCount, ref tagsUpdated));
+            var tagResult = new TAG();
+
+            for (int x = 0; x < tagsCount; x++)
+            {
+                CheckFMODErrors(mySound.getTag(null,x,ref tagResult));
+                string data = "";
+                switch (tagResult.datatype)
+                {
+                    case TAGDATATYPE.STRING:
+                        data = Marshal.PtrToStringAnsi(tagResult.data);
+                        break;
+                    case TAGDATATYPE.STRING_UTF16:
+                        data = Marshal.PtrToStringUni(tagResult.data);
+                        //Strip out non-ASCII chars.
+                        data = new string((from e in data where  e < 129 select e).ToArray());
+                        break;
+
+                }
+
+                result[tagResult.name.ToUpper()] =  data;
+            }
+            CheckFMODErrors(mySound.release());
+            return result;
+
+        }
         /// <summary>
         /// Loads and immediately plays any audio file given, as a stream. Each sound effect is
         /// given its own channel - the channel allocated to the provided audio file is the return
@@ -182,10 +217,9 @@ namespace WGiBeat.AudioSystem
             
             if (isPlaying)
             {
-                Sound tmpSound = new Sound();
+                var tmpSound = new Sound();
                 CheckFMODErrors(_tmpChannel.getCurrentSound(ref tmpSound));
-                resultCode = _tmpChannel.stop();
-                CheckFMODErrors(resultCode);
+                CheckFMODErrors(_tmpChannel.stop());
                 CheckFMODErrors(tmpSound.release());
             }
             Monitor.Exit(_tmpChannel);
@@ -218,9 +252,7 @@ namespace WGiBeat.AudioSystem
         {
             var resultCode = _fmodSystem.getChannel(index, ref _tmpChannel);
             CheckFMODErrors(resultCode);
-
-            resultCode = _tmpChannel.setVolume(_masterVolume * volume);
-            CheckFMODErrors(resultCode);
+            CheckFMODErrors(_tmpChannel.setVolume(_masterVolume * volume));
         }
 
         /// <summary>
@@ -233,10 +265,8 @@ namespace WGiBeat.AudioSystem
             _masterVolume = volume;
 
             var masterGroup = new ChannelGroup();
-            var resultCode = _fmodSystem.getMasterChannelGroup(ref masterGroup);
-            CheckFMODErrors(resultCode);
-
-            masterGroup.setVolume(_masterVolume);
+            CheckFMODErrors(_fmodSystem.getMasterChannelGroup(ref masterGroup));
+            CheckFMODErrors(masterGroup.setVolume(_masterVolume));
         }
 
 
