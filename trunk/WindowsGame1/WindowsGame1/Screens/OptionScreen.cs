@@ -102,7 +102,7 @@ namespace WGiBeat.Screens
             };
             _header = new Sprite
             {
-                SpriteTexture = TextureManager.Textures["optionsHeader"],
+                SpriteTexture = TextureManager.Textures["OptionsHeader"],
             };
             _optionBaseSprite = new Sprite
                                     {

@@ -64,7 +64,7 @@ namespace WGiBeat.Screens
                 Width = Core.Window.ClientBounds.Width,
             };
 
-            _headerSprite = new Sprite { SpriteTexture = TextureManager.Textures["modeSelectHeader"] };
+            _headerSprite = new Sprite { SpriteTexture = TextureManager.Textures["ModeSelectHeader"] };
             _headerSprite.Position = (Core.Metrics["ModeSelectScreenHeader", 0]);
 
             _optionBaseSpriteMap = new SpriteMap

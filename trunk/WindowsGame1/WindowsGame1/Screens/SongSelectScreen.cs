@@ -89,7 +89,7 @@ namespace WGiBeat.Screens
 
             _headerSprite = new Sprite
             {
-                SpriteTexture = TextureManager.Textures["songSelectHeader"]
+                SpriteTexture = TextureManager.Textures["SongSelectHeader"]
             };
             _headerSprite.Position = (Core.Metrics["SongSelectScreenHeader", 0]);
 
