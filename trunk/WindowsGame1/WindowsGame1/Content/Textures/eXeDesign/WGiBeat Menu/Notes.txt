@@ -1,0 +1,14 @@
+A completely new Theme by eXeCutor18 (aka Nathan)
+
+There will need to be a few metrics to change for this or to create a new metrics file all together. I wouldn't have a clue how to create / change them. I was hoping you will do this for me Thome x)
+
+Anyhow hope you like it!
+Feel free to update this with suggestions and any questions you may have.
+
+I moved my old theme textures into a new folder.
+
+P.S. The text on the menu buttons (start game, etc) in the preview image have been put on there for preview purposes only and is not in the other textures. It will proberly need more things doing to it to get it to look like that when put into the game, if all you need is more texture files for each text please say and i will create them.
+
+
+Comments:
+
