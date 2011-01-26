@@ -28,19 +28,19 @@ namespace WGiBeat.Notes
 
         public void InitSprites()
         {
-            _barSpriteMiddle = new Sprite { Height = 40, SpriteTexture = TextureManager.Textures["noteBarMiddle"] };
+            _barSpriteMiddle = new Sprite { Height = 40, SpriteTexture = TextureManager.Textures("noteBarMiddle") };
             _barSpriteLeft = new Sprite
             {
                 Height = 40,
                 Width = 16,
 
-                SpriteTexture = TextureManager.Textures["noteBarLeft"]
+                SpriteTexture = TextureManager.Textures("noteBarLeft")
             };
             _barSpriteRight = new Sprite
             {
                 Height = 40,
                 Width = 16,
-                SpriteTexture = TextureManager.Textures["noteBarRight"]
+                SpriteTexture = TextureManager.Textures("noteBarRight")
             };
         }
         public int NumberCompleted()
@@ -146,7 +146,7 @@ namespace WGiBeat.Notes
             _barSpriteRight.Draw(sb);
             _barSpriteMiddle.Draw(sb);
 
-            var sprite = new SpriteMap { SpriteTexture = TextureManager.Textures["Arrows"], Columns = 4, Rows = 3 };
+            var sprite = new SpriteMap { SpriteTexture = TextureManager.Textures("Arrows"), Columns = 4, Rows = 3 };
             foreach (Note note in Notes)
             {
 

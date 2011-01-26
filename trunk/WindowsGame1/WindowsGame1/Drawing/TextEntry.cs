@@ -26,8 +26,8 @@ namespace WGiBeat.Drawing
 
         public TextEntry()
         {
-            _capsLockSprite = new Sprite {SpriteTexture = TextureManager.Textures["TextEntryCaps"]};
-            _shiftSprite = new Sprite {SpriteTexture = TextureManager.Textures["TextEntryShift"]};
+            _capsLockSprite = new Sprite {SpriteTexture = TextureManager.Textures("TextEntryCaps")};
+            _shiftSprite = new Sprite {SpriteTexture = TextureManager.Textures("TextEntryShift")};
 
         }
         public string EnteredText

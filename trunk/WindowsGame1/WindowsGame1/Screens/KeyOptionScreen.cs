@@ -59,43 +59,43 @@ namespace WGiBeat.Screens
             _backgroundSprite = new Sprite
             {
                 Height = Core.Window.ClientBounds.Height,
-                SpriteTexture = TextureManager.Textures["AllBackground"],
+                SpriteTexture = TextureManager.Textures("AllBackground"),
                 Width = Core.Window.ClientBounds.Width,
             };
 
             _headerSprite = new Sprite
             {
-                SpriteTexture = TextureManager.Textures["KeyOptionHeader"],
+                SpriteTexture = TextureManager.Textures("KeyOptionHeader"),
             };
 
             _gridTopSpriteMap = new SpriteMap
                                     {
                                         Columns = 4,
                                         Rows = 2,
-                                        SpriteTexture = TextureManager.Textures["KeyOptionGridTop"]
+                                        SpriteTexture = TextureManager.Textures("KeyOptionGridTop")
                                     };
             _gridSideSpriteMap = new SpriteMap
                                      {
                                          Columns = 4,
                                          Rows = 2,
-                                         SpriteTexture = TextureManager.Textures["KeyOptionGridSide"]
+                                         SpriteTexture = TextureManager.Textures("KeyOptionGridSide")
                                      };
             _gridInsideSpriteMap = new SpriteMap
                                        {
                                            Columns = 1,
                                            Rows = 4,
-                                           SpriteTexture = TextureManager.Textures["KeyOptionGridInside"],
+                                           SpriteTexture = TextureManager.Textures("KeyOptionGridInside"),
                                            TrimX = 1,
                                            TrimY = 1
                                        };
             _gridBorderSprite = new Sprite
                                     {
-                                        SpriteTexture = TextureManager.Textures["KeyOptionGridBorder"],
+                                        SpriteTexture = TextureManager.Textures("KeyOptionGridBorder"),
                                         Position = Core.Metrics["KeyOptionGridBorder",0]
                                     };
             _instructionBaseSprite = new Sprite
                                          {
-                                             SpriteTexture = TextureManager.Textures["KeyOptionInstructionBase"],
+                                             SpriteTexture = TextureManager.Textures("KeyOptionInstructionBase"),
                                              Position = Core.Metrics["KeyOptionInstructionBase",0]
                                          };
         }

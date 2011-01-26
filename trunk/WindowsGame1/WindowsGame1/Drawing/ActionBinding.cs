@@ -32,23 +32,23 @@ namespace WGiBeat.Drawing
         }
         private void InitSprites()
         {
-            _backgroundSprite = new Sprite { SpriteTexture = TextureManager.Textures["ActionBindingBase"]};
+            _backgroundSprite = new Sprite { SpriteTexture = TextureManager.Textures("ActionBindingBase")};
             _controllerNumberSpriteMap = new SpriteMap
                                                            {
                                                                Columns = 4,
                                                                Rows = 1,
-                                                               SpriteTexture = TextureManager.Textures["KeyOptionControllerPlayerIcons"]
+                                                               SpriteTexture = TextureManager.Textures("KeyOptionControllerPlayerIcons")
                                                            };
             _controllerButtonsSpriteMap = new SpriteMap
                                               {
                                                   Columns = 5,
                                                   Rows = 5,
                                                   SpriteTexture =
-                                                      TextureManager.Textures["KeyOptionControllerButtonIcons"]
+                                                      TextureManager.Textures("KeyOptionControllerButtonIcons")
                                               };
             _keyboardIcon = new Sprite
                                 {
-                                    SpriteTexture = TextureManager.Textures["KeyOptionKeyboardIcon"],
+                                    SpriteTexture = TextureManager.Textures("KeyOptionKeyboardIcon"),
                                     Width = 35,
                                     Height = 30
                                 };

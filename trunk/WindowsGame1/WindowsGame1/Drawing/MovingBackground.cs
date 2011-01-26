@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing
@@ -25,15 +22,15 @@ namespace WGiBeat.Drawing
         {
             Move();
 
-            base.DrawTiled(spriteBatch,(int) _offsetX,(int) _offsetY, Width, Height);
+            DrawTiled(spriteBatch,(int) _offsetX,(int) _offsetY, Width, Height);
         }
 
         private void Move()
         {
             if (this.SpriteTexture != null)
             {
-                _offsetX = (_offsetX + Math.Sin(Direction)*Speed) % Width;
-                _offsetY = (_offsetY + Math.Cos(Direction) * Speed) % Height;
+                _offsetX = (_offsetX + Math.Sin(Direction) * Speed) % SpriteTexture.Width;
+                _offsetY = (_offsetY + Math.Cos(Direction) * Speed) % SpriteTexture.Height;
             }
         }
     }

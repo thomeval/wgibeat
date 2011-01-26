@@ -60,36 +60,36 @@ namespace WGiBeat.Screens
             _background = new Sprite
             {
                 Height = Core.Window.ClientBounds.Height,
-                SpriteTexture = TextureManager.Textures["AllBackground"],
+                SpriteTexture = TextureManager.Textures("AllBackground"),
                 Width = Core.Window.ClientBounds.Width,
             };
 
-            _headerSprite = new Sprite { SpriteTexture = TextureManager.Textures["ModeSelectHeader"] };
+            _headerSprite = new Sprite { SpriteTexture = TextureManager.Textures("ModeSelectHeader") };
             _headerSprite.Position = (Core.Metrics["ModeSelectScreenHeader", 0]);
 
             _optionBaseSpriteMap = new SpriteMap
             {
                 Columns = 2,
                 Rows = 1,
-                SpriteTexture = TextureManager.Textures["ModeOptionBase"]
+                SpriteTexture = TextureManager.Textures("ModeOptionBase")
             };
 
             _optionsSpriteMap = new SpriteMap
             {
                 Columns = 1,
                 Rows = (int)GameType.COUNT,
-                SpriteTexture = TextureManager.Textures["ModeOptions"]
+                SpriteTexture = TextureManager.Textures("ModeOptions")
             };
 
 
-            _edgeSpriteMap = new SpriteMap { Columns = 2, Rows = 1, SpriteTexture = TextureManager.Textures["ModeSelectEdge"] };
-            _arrowSpriteMap = new SpriteMap { Columns = 4, Rows = 1, SpriteTexture = TextureManager.Textures["IndicatorArrows"] };
+            _edgeSpriteMap = new SpriteMap { Columns = 2, Rows = 1, SpriteTexture = TextureManager.Textures("ModeSelectEdge") };
+            _arrowSpriteMap = new SpriteMap { Columns = 4, Rows = 1, SpriteTexture = TextureManager.Textures("IndicatorArrows") };
 
-            _descriptionBaseSprite = new Sprite { SpriteTexture = TextureManager.Textures["ModeDescriptionBase"] };
+            _descriptionBaseSprite = new Sprite { SpriteTexture = TextureManager.Textures("ModeDescriptionBase") };
             _descriptionBaseSprite.Position = (Core.Metrics["ModeDescriptionBase", 0]);
-            _messageBorderSprite = new Sprite { SpriteTexture = TextureManager.Textures["MessageBorder"] };
+            _messageBorderSprite = new Sprite { SpriteTexture = TextureManager.Textures("MessageBorder") };
             _messageBorderSprite.Position = (Core.Metrics["MessageBorder", 0]);
-            _restrictionSprite = new Sprite { SpriteTexture = TextureManager.Textures["RestrictionIcon"], Width = 48, Height = 48 };
+            _restrictionSprite = new Sprite { SpriteTexture = TextureManager.Textures("RestrictionIcon"), Width = 48, Height = 48 };
             _restrictionSprite.SetPosition(_messageBorderSprite.X + 7, _messageBorderSprite.Y + 7);
         }
 

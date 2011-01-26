@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Notes;
@@ -51,7 +49,7 @@ namespace WGiBeat.Drawing
         private void InitSprites()
         {
             _specialChars = new SpriteMap
-                                {Columns = 3, Rows = 1, SpriteTexture = TextureManager.Textures["KeyboardIcons"]};
+                                {Columns = 3, Rows = 1, SpriteTexture = TextureManager.Textures("KeyboardIcons")};
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -71,11 +69,11 @@ namespace WGiBeat.Drawing
                 drawPosition.Y = (this.Y) + (SpacingY*(counter/Columns));
                 if (counter == _selectedIndex)
                 {
-                    spriteBatch.DrawString(TextureManager.Fonts["TwoTech"], c.ToString(), drawPosition, HighlightColor);
+                    spriteBatch.DrawString(TextureManager.Fonts("TwoTech"), c.ToString(), drawPosition, HighlightColor);
                 }
                 else
                 {
-                    spriteBatch.DrawString(TextureManager.Fonts["TwoTech"], c.ToString(), drawPosition, BaseColor);                  
+                    spriteBatch.DrawString(TextureManager.Fonts("TwoTech"), c.ToString(), drawPosition, BaseColor);                  
                 }
 
                 counter++;

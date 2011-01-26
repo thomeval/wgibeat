@@ -29,26 +29,26 @@ namespace WGiBeat.Drawing
             {
                 Height = this.Height,
                 Width = this.Width,
-                SpriteTexture = TextureManager.Textures["coopLifebarBase"]
+                SpriteTexture = TextureManager.Textures("CoopLifebarBase")
             };
 
             _gridPart = new Sprite
             {
                 X = this.X + 2,
                 Y = this.Y + 3,
-                SpriteTexture = TextureManager.Textures["lifeBarGridBase"]
+                SpriteTexture = TextureManager.Textures("LifeBarGridBase")
             };
 
             _sidePart = new SpriteMap()
                             {
-                                SpriteTexture = TextureManager.Textures["lifeBarBaseSide"],
+                                SpriteTexture = TextureManager.Textures("lifeBarBaseSide"),
                                 Rows = 2,
                                 Columns = 1
                             };
 
-            _middlePart = new SpriteMap { Columns = 1, Rows = 2, SpriteTexture = TextureManager.Textures["coopLifebarMiddle"] };
+            _middlePart = new SpriteMap { Columns = 1, Rows = 2, SpriteTexture = TextureManager.Textures("coopLifebarMiddle") };
 
-            _frontPart = new SpriteMap { Columns = 1, Rows = 4, SpriteTexture = TextureManager.Textures["lifeBarFront"] };
+            _frontPart = new SpriteMap { Columns = 1, Rows = 4, SpriteTexture = TextureManager.Textures("lifeBarFront") };
 
         }
 
@@ -159,7 +159,7 @@ namespace WGiBeat.Drawing
             TextureManager.DrawString(spriteBatch, GetBonusMultiplier() + "x",
 "DefaultFont", position, Color.Black, FontAlign.CENTER);
             position.X += 40;
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("{0:D3}", (int)TotalLife()),
+            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), String.Format("{0:D3}", (int)TotalLife()),
                     position, Color.Black);
 
         }

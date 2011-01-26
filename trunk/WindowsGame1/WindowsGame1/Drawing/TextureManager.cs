@@ -8,13 +8,21 @@ namespace WGiBeat.Drawing
 {
     public static class TextureManager
     {
-        public static Dictionary<string, Texture2D> Textures = new Dictionary<string, Texture2D>();
-        public static Dictionary<string, SpriteFont> Fonts = new Dictionary<string, SpriteFont>();
+        private static readonly Dictionary<string, Texture2D> _textures = new Dictionary<string, Texture2D>();
+        private static readonly Dictionary<string, SpriteFont> _fonts = new Dictionary<string, SpriteFont>();
         public static GraphicsDevice GraphicsDevice;
 
+        public static Texture2D Textures(string id)
+        {
+            return _textures[id.ToUpper()];
+        }
+        public static SpriteFont Fonts(string id)
+        {
+            return _fonts[id.ToUpper()];
+        }
         public static void AddTexture(string name, Texture2D tex)
         {
-            Textures.Add(name, tex);
+            _textures.Add(name, tex);
         }
 
         public static void CreateAndAddTexture(string filename)
@@ -22,16 +30,18 @@ namespace WGiBeat.Drawing
             CreateAndAddTexture(filename, Path.GetFileNameWithoutExtension(filename));   
         }
 
+        
         public static void CreateAndAddTexture(string filename, string assetName)
         {
             var newTexture = Texture2D.FromFile(GraphicsDevice, filename);
-            if (!Textures.ContainsKey(assetName))
+            assetName = assetName.ToUpper();
+            if (!_textures.ContainsKey(assetName))
             {
-                Textures.Add(assetName, newTexture);
+                _textures.Add(assetName, newTexture);
             }
             else
             {
-                Textures[assetName] = newTexture;
+                _textures[assetName] = newTexture;
             }
         }
 
@@ -51,18 +61,18 @@ namespace WGiBeat.Drawing
 
         public static void AddFont(string name, SpriteFont font)
         {
-            Fonts.Add(name, font);
+            _fonts.Add(name.ToUpper(), font);
         }
 
-        private static Vector2 noRotation = new Vector2(0, 0);
+        private static readonly Vector2 _noRotation = new Vector2(0, 0);
         public static void DrawString(SpriteBatch spriteBatch, string text, string fontName, Vector2 position, Vector2 scale, Color color, FontAlign align)
         {
             var measuredPosition = new Vector2(position.X, position.Y);
             var lines = text.Split('\n');
-
+            fontName = fontName.ToUpper();
             foreach (string line in lines)
             {
-                var measurements = Fonts[fontName].MeasureString(line);
+                var measurements = _fonts[fontName].MeasureString(line);
                 measurements *= scale;
                 switch (align)
                 {
@@ -73,25 +83,26 @@ namespace WGiBeat.Drawing
                         measuredPosition.X -= measurements.X;
                         break;
                 }
-                spriteBatch.DrawString(Fonts[fontName], line, measuredPosition, color, 0.0f, noRotation, scale, SpriteEffects.None, 0.0f);
+                spriteBatch.DrawString(_fonts[fontName], line, measuredPosition, color, 0.0f, _noRotation, scale, SpriteEffects.None, 0.0f);
                 measuredPosition.Y += measurements.Y;
                 measuredPosition.X = position.X;
             }
         }
 
-        private static Vector2 noScaling = new Vector2(1, 1);
+        private static readonly Vector2 _noScaling = new Vector2(1, 1);
         public static void DrawString(SpriteBatch spriteBatch, string text, string fontName, Vector2 position, Color color, FontAlign align)
         {
-            DrawString(spriteBatch,text,fontName,position,noScaling,color,align);
+            DrawString(spriteBatch,text,fontName,position,_noScaling,color,align);
         }
 
         public static Vector2 ScaleTextToFit(string text, string fontName, Vector2 maxSize)
         {
-            if (!Fonts.ContainsKey(fontName))
+            fontName = fontName.ToUpper();
+            if (!_fonts.ContainsKey(fontName))
             {
                 throw new ArgumentException("TextureManager does not contain a font called: " + fontName);
             }
-            var actualSize =  Fonts[fontName].MeasureString(text);
+            var actualSize = _fonts[fontName].MeasureString(text);
             var result = new Vector2(maxSize.X/actualSize.X, maxSize.Y/actualSize.Y);
 
             result.X = Math.Min(1.0f, result.X);

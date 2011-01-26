@@ -154,7 +154,7 @@ namespace WGiBeat.Drawing.Sets
                     }
                   
                     streakColor.A = _displayedJudgements[x].Opacity;
-                    spriteBatch.DrawString(TextureManager.Fonts["TwoTechLarge"], "x" + Players[x].Streak,_metrics["StreakText",x],streakColor);
+                    spriteBatch.DrawString(TextureManager.Fonts("TwoTechLarge"), "x" + Players[x].Streak,_metrics["StreakText",x],streakColor);
               
                 }
             }

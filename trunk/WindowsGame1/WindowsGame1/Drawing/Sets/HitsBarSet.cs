@@ -49,12 +49,12 @@ namespace WGiBeat.Drawing.Sets
                 {
                     _opacity[x] = (byte) Math.Min(_opacity[x] + 10, 255);
                 }
-                _baseSprite.SpriteTexture = TextureManager.Textures["hitsBar" + DetermineSuffix()];
+                _baseSprite.SpriteTexture = TextureManager.Textures("hitsBar" + DetermineSuffix());
                 _baseSprite.ColorShading.A = _opacity[x];
                 _textColor.A = _opacity[x];
                 _baseSprite.Draw(spriteBatch, x, width, height, _metrics["HitsBar" + DetermineSuffix(), x]);
 
-                spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], String.Format("{0:D3}", Players[x].Hits),
+                spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), String.Format("{0:D3}", Players[x].Hits),
                                        _metrics["HitsText" + DetermineSuffix(), x], _textColor);
 
             }

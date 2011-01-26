@@ -36,12 +36,12 @@ namespace WGiBeat.Drawing.Sets
             {
                 Columns = 1,
                 Rows = (int)Difficulty.COUNT + 1,
-                SpriteTexture = TextureManager.Textures["playerDifficulties"]
+                SpriteTexture = TextureManager.Textures("playerDifficulties")
             };
 
             _coopBaseSprite = new SpriteMap
             {
-                SpriteTexture = TextureManager.Textures["scoreBaseCombined"],
+                SpriteTexture = TextureManager.Textures("scoreBaseCombined"),
                 Columns = 1,
                 Rows = 1
             };
@@ -49,7 +49,7 @@ namespace WGiBeat.Drawing.Sets
             _teamScoreMeter.InitSprites();
             _individualBaseSprite = new SpriteMap
             {
-                SpriteTexture = TextureManager.Textures["scoreBase"],
+                SpriteTexture = TextureManager.Textures("scoreBase"),
                 Columns = 1,
                 Rows = 5
             };

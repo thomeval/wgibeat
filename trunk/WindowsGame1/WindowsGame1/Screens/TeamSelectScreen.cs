@@ -54,25 +54,25 @@ namespace WGiBeat.Screens
         }
         public void InitSprites()
         {
-            _headingSprite = new Sprite {SpriteTexture = TextureManager.Textures["TeamSelectHeader"]};
+            _headingSprite = new Sprite {SpriteTexture = TextureManager.Textures("TeamSelectHeader")};
             _headingSprite.Position = (Core.Metrics["TeamSelectScreenHeader", 0]);
 
             _backgroundSprite = new Sprite 
             { 
-                SpriteTexture = TextureManager.Textures["AllBackground"], 
+                SpriteTexture = TextureManager.Textures("AllBackground"), 
                 Height = Core.Window.ClientBounds.Height, 
                 Width = Core.Window.ClientBounds.Width, 
             };
 
-            _playerReadyMarkers = new SpriteMap { SpriteTexture = TextureManager.Textures["PlayerReady"], Columns = 1, Rows = 2 };
-            _teamBorderSprite = new Sprite {SpriteTexture = TextureManager.Textures["TeamScreenBackground"]};
+            _playerReadyMarkers = new SpriteMap { SpriteTexture = TextureManager.Textures("PlayerReady"), Columns = 1, Rows = 2 };
+            _teamBorderSprite = new Sprite {SpriteTexture = TextureManager.Textures("TeamScreenBackground")};
             _teamBorderSprite.Position = (Core.Metrics["TeamScreenBackground", 0]);
 
             _playerMarkers = new SpriteMap
-                                 {SpriteTexture = TextureManager.Textures["PlayerTeamMarkers"], Columns = 1, Rows = 4};
-            _messageBorder = new Sprite {SpriteTexture = TextureManager.Textures["MessageBorder"]};
+                                 {SpriteTexture = TextureManager.Textures("PlayerTeamMarkers"), Columns = 1, Rows = 4};
+            _messageBorder = new Sprite {SpriteTexture = TextureManager.Textures("MessageBorder")};
             _messageBorder.Position = (Core.Metrics["MessageBorder", 0]);
-            _restrictionIcon = new Sprite() {SpriteTexture = TextureManager.Textures["RestrictionIcon"], Width = 48, Height = 48};
+            _restrictionIcon = new Sprite() {SpriteTexture = TextureManager.Textures("RestrictionIcon"), Width = 48, Height = 48};
             _restrictionIcon.SetPosition(_messageBorder.X + 7, _messageBorder.Y + 7);
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)

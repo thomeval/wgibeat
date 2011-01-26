@@ -39,23 +39,23 @@ namespace WGiBeat.Screens
             _background = new Sprite
             {
                 Height = Core.Window.ClientBounds.Height,
-                SpriteTexture = TextureManager.Textures["MainMenuBackground"],
+                SpriteTexture = TextureManager.Textures("MainMenuBackground"),
                 Width = Core.Window.ClientBounds.Width
             };
             _foreground = new Sprite
             {
                 Height = Core.Window.ClientBounds.Height,
-                SpriteTexture = TextureManager.Textures["MainMenuForeground"],
+                SpriteTexture = TextureManager.Textures("MainMenuForeground"),
                 Width = Core.Window.ClientBounds.Width
             };
             _header = new Sprite
             {
-                SpriteTexture = TextureManager.Textures["mainMenuHeader"]
+                SpriteTexture = TextureManager.Textures("mainMenuHeader")
             };
             _menuOptionSprite = new Sprite
             {
                 Height = 50,
-                SpriteTexture = TextureManager.Textures["mainMenuOption"],
+                SpriteTexture = TextureManager.Textures("mainMenuOption"),
                 Width = 300
             };
         }
@@ -65,7 +65,7 @@ namespace WGiBeat.Screens
 
             if (_displayNoSongsError)
             {
-                spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"],"Error: No songs loaded", Core.Metrics["MainMenuNoSongsError",0],Color.Black);
+                spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"),"Error: No songs loaded", Core.Metrics["MainMenuNoSongsError",0],Color.Black);
             }
         }
 
@@ -85,7 +85,7 @@ namespace WGiBeat.Screens
             for (int menuOption = 0; menuOption < (int)MainMenuOption.COUNT; menuOption++)
             {
 
-                _menuOptionSprite.SpriteTexture = menuOption == (int)_selectedMenuOption ? TextureManager.Textures["mainMenuOptionSelected"] : TextureManager.Textures["mainMenuOption"];
+                _menuOptionSprite.SpriteTexture = menuOption == (int)_selectedMenuOption ? TextureManager.Textures("mainMenuOptionSelected") : TextureManager.Textures("mainMenuOption");
                 _menuOptionSprite.Position = (Core.Metrics["MainMenuOptions", menuOption]);
                 _menuOptionSprite.Draw(spriteBatch);
                 var textPosition = Core.Metrics["MainMenuOptions", menuOption].Clone();

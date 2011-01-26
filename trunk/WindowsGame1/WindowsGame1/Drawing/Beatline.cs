@@ -52,23 +52,23 @@ namespace WGiBeat.Drawing
             {
                 Columns = 1,
                 Rows = 5,
-                SpriteTexture = TextureManager.Textures["BeatMarkers"],
+                SpriteTexture = TextureManager.Textures("BeatMarkers"),
 
             };
 
             _pulseSprite = new Sprite
             {
-                SpriteTexture = TextureManager.Textures["BeatFlame"]
+                SpriteTexture = TextureManager.Textures("BeatFlame")
             };
             _baseSprite = new SpriteMap
             {
-                SpriteTexture = TextureManager.Textures["BeatMeter"],
+                SpriteTexture = TextureManager.Textures("BeatMeter"),
                 Columns = 1,
                 Rows = 5
             };
             _largeBaseSprite = new SpriteMap
             {
-                SpriteTexture = TextureManager.Textures["BeatMeterLarge"],
+                SpriteTexture = TextureManager.Textures("BeatMeterLarge"),
                 Columns = 1,
                 Rows = 5
             };

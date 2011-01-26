@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
@@ -60,7 +58,7 @@ namespace WGiBeat.Drawing
 
             Particle = new Sprite() //temp
             {
-                SpriteTexture = TextureManager.Textures["Particle_1"]
+                SpriteTexture = TextureManager.Textures("Particle_1")
             };
 
             Wrap = true;
@@ -158,13 +156,6 @@ namespace WGiBeat.Drawing
             }
 
             return -1; //Something went really really bad here :p
-        }
-
-
-        private Boolean CalcSnap()
-        {
-            //if 
-            return false; //NOT IMPLEMENTED
         }
 
         public void RecalcSegments()

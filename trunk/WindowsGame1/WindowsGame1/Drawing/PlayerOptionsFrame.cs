@@ -46,25 +46,25 @@ namespace WGiBeat.Drawing
                                {
                                    Columns = 1,
                                    Rows = 5,
-                                   SpriteTexture = TextureManager.Textures["PlayerOptionsFrame"]
+                                   SpriteTexture = TextureManager.Textures("PlayerOptionsFrame")
                                };
             _speedBlocks = new SpriteMap
                                {
                                    Columns = 1,
                                    Rows = 7,
-                                   SpriteTexture = TextureManager.Textures["PlayerOptionsSpeedBlocks"]
+                                   SpriteTexture = TextureManager.Textures("PlayerOptionsSpeedBlocks")
                                };
             _difficultyIcons = new SpriteMap
                                 {
                                     Columns = 1,
                                     Rows = (int)Difficulty.COUNT + 1,
-                                    SpriteTexture = TextureManager.Textures["playerDifficulties"]
+                                    SpriteTexture = TextureManager.Textures("playerDifficulties")
                                 };
             _indicatorArrows = new SpriteMap
                                {
                                    Columns = 4,
                                    Rows = 1,
-                                   SpriteTexture = TextureManager.Textures["IndicatorArrows"]
+                                   SpriteTexture = TextureManager.Textures("IndicatorArrows")
                                };
             _nameBackground = new Sprite {SpriteTexture = TextureManager.BlankTexture()};
 
