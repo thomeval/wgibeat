@@ -15,7 +15,7 @@ namespace WGiBeat.Drawing
         {
             if (_judgementSprite == null)
             {
-                _judgementSprite = new SpriteMap {Columns = 1, Rows = (int) BeatlineNoteJudgement.COUNT, SpriteTexture = TextureManager.Textures["noteJudgements"]};
+                _judgementSprite = new SpriteMap {Columns = 1, Rows = (int) BeatlineNoteJudgement.COUNT, SpriteTexture = TextureManager.Textures("noteJudgements")};
             }
             _judgementSprite.ColorShading.A = Opacity;
 

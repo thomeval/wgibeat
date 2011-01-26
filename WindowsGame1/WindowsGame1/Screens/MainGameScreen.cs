@@ -500,7 +500,7 @@ namespace WGiBeat.Screens
             var background = new Sprite
             {
                 Height = Core.Window.ClientBounds.Height,
-                SpriteTexture = TextureManager.Textures["MainGameScreenBackground"],
+                SpriteTexture = TextureManager.Textures("MainGameScreenBackground"),
                 Width = Core.Window.ClientBounds.Width,
                 X = 0,
                 Y = 0
@@ -530,7 +530,7 @@ namespace WGiBeat.Screens
                     {
                         Height = 150,
                         Width = 250,
-                        SpriteTexture = TextureManager.Textures["StageClearIndicator"]
+                        SpriteTexture = TextureManager.Textures("StageClearIndicator")
                     };
                     koSprite.Position = (Core.Metrics["KOIndicator", x]);
                     koSprite.Draw(spriteBatch);
@@ -541,11 +541,11 @@ namespace WGiBeat.Screens
 
         private void DrawSongInfo(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + CalculateTimeLeft()
+            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "" + CalculateTimeLeft()
 , Core.Metrics["SongTimeLeft", 0], Color.Black);
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + _gameSong.Title
+            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "" + _gameSong.Title
 , Core.Metrics["SongTitle", 0], Color.Black);
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "" + _gameSong.Artist
+            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "" + _gameSong.Artist
 , Core.Metrics["SongArtist", 0], Color.Black);
         }
 
@@ -559,7 +559,7 @@ namespace WGiBeat.Screens
                     {
                         Height = 150,
                         Width = 250,
-                        SpriteTexture = TextureManager.Textures["koIndicator"]
+                        SpriteTexture = TextureManager.Textures("koIndicator")
                     };
                     koSprite.Position = (Core.Metrics["KOIndicator", x]);
                     koSprite.Draw(spriteBatch);

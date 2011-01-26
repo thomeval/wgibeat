@@ -133,7 +133,7 @@ namespace WGiBeat.Drawing
 
             if (RandomizeTextures) //Hacky. Must fix.
             {
-                particle.Particle.SpriteTexture = TextureManager.Textures[_textureList[_rand.Next(0, 5)]];
+                particle.Particle.SpriteTexture = TextureManager.Textures(_textureList[_rand.Next(0, 5)]);
             }
         }
         public override void Draw(SpriteBatch spriteBatch)

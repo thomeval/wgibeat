@@ -83,23 +83,23 @@ namespace WGiBeat.Screens
             _background = new Sprite
             {
                 Height = Core.Window.ClientBounds.Height,
-                SpriteTexture = TextureManager.Textures["AllBackground"],
+                SpriteTexture = TextureManager.Textures("AllBackground"),
                 Width = Core.Window.ClientBounds.Width,
             };
 
             _headerSprite = new Sprite
-            {
-                SpriteTexture = TextureManager.Textures["SongSelectHeader"]
-            };
-            _headerSprite.Position = (Core.Metrics["SongSelectScreenHeader", 0]);
+                                {
+                                    SpriteTexture = TextureManager.Textures("SongSelectHeader"),
+                                    Position = (Core.Metrics["SongSelectScreenHeader", 0])
+                                };
 
             _spectrumBackground = new Sprite
-            {
-                SpriteTexture = TextureManager.Textures["SpectrumBackground"]
-            };
-            _spectrumBackground.Position = Core.Metrics["SelectedSongSpectrum", 0];
+                                      {
+                                          SpriteTexture = TextureManager.Textures("SpectrumBackground"),
+                                          Position = Core.Metrics["SelectedSongSpectrum", 0]
+                                      };
             _spectrumBackground.Y -= 70;
-            _listBackend = new Sprite {SpriteTexture = TextureManager.Textures["SongListBackend"],Height=232,Width=50};
+            _listBackend = new Sprite {SpriteTexture = TextureManager.Textures("SongListBackend"),Height=232,Width=50};
             _listBackend.Position = (Core.Metrics["SongListBackend", 0]);
         }
 

@@ -97,16 +97,16 @@ namespace WGiBeat.Screens
             _background = new Sprite
             {
                 Height = Core.Window.ClientBounds.Height,
-                SpriteTexture = TextureManager.Textures["AllBackground"],
+                SpriteTexture = TextureManager.Textures("AllBackground"),
                 Width = Core.Window.ClientBounds.Width,
             };
             _header = new Sprite
             {
-                SpriteTexture = TextureManager.Textures["OptionsHeader"],
+                SpriteTexture = TextureManager.Textures("OptionsHeader"),
             };
             _optionBaseSprite = new Sprite
                                     {
-                                        SpriteTexture = TextureManager.Textures["OptionDescriptionBase"],
+                                        SpriteTexture = TextureManager.Textures("OptionDescriptionBase"),
                                         Position = Core.Metrics["OptionsDescriptionBase",0]
                                     };
         }

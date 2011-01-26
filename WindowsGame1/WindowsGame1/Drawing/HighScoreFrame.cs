@@ -36,15 +36,15 @@ namespace WGiBeat.Drawing
             {
                 Columns = 1,
                 Rows = (int)Difficulty.COUNT + 1,
-                SpriteTexture = TextureManager.Textures["playerDifficulties"]
+                SpriteTexture = TextureManager.Textures("playerDifficulties")
             };
             _gradeSpriteMap = new SpriteMap
             {
                 Columns = 1,
                 Rows = NUM_EVALUATIONS,
-                SpriteTexture = TextureManager.Textures["evaluationGrades"]
+                SpriteTexture = TextureManager.Textures("evaluationGrades")
             };
-            _baseSprite = new Sprite { SpriteTexture = TextureManager.Textures["HighScoreFrame"] };
+            _baseSprite = new Sprite { SpriteTexture = TextureManager.Textures("HighScoreFrame") };
         }
 
         public override void Draw(SpriteBatch spriteBatch)

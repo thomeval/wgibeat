@@ -98,24 +98,24 @@ namespace WGiBeat.Screens
 
         public void InitSprites()
         {
-            _backgroundSprite = new Sprite { SpriteTexture = TextureManager.Textures["AllBackground"], Height = 800 };
-            _editProgressBaseSprite = new Sprite { SpriteTexture = TextureManager.Textures["SongEditProgressBase"] };
+            _backgroundSprite = new Sprite { SpriteTexture = TextureManager.Textures("AllBackground"), Height = 800 };
+            _editProgressBaseSprite = new Sprite { SpriteTexture = TextureManager.Textures("SongEditProgressBase") };
             _editProgressBaseSprite.Position = (Core.Metrics["SongEditProgress", 0]);
             _editProgressSpriteMap = new SpriteMap
                                          {
                                              Columns = 4,
                                              Rows = 2,
-                                             SpriteTexture = TextureManager.Textures["SongEditProgress"]
+                                             SpriteTexture = TextureManager.Textures("SongEditProgress")
                                          };
             _validitySpriteMap = new SpriteMap
                                      {
                                          Columns = 1,
                                          Rows = 2,
-                                         SpriteTexture = TextureManager.Textures["EditorSongValidity"]
+                                         SpriteTexture = TextureManager.Textures("EditorSongValidity")
                                      };
             _validityTextBaseSprite = new Sprite
                                           {
-                                              SpriteTexture = TextureManager.Textures["EditorValidityTextBase"],
+                                              SpriteTexture = TextureManager.Textures("EditorValidityTextBase"),
                                               Position = (Core.Metrics["EditorSongValidityMessageBase", 0])
                                           };
         }
@@ -450,33 +450,33 @@ namespace WGiBeat.Screens
         {
             var textPosition = Core.Metrics["EditorTweakControls", 0].Clone();
 
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "F5 - Decrease BPM", textPosition, Color.Black);
+            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "F5 - Decrease BPM", textPosition, Color.Black);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "F6 - Increase BPM", textPosition, Color.Black);
+            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "F6 - Increase BPM", textPosition, Color.Black);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "F7 - Decrease Offset (0.1)", textPosition, Color.Black);
+            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "F7 - Decrease Offset (0.1)", textPosition, Color.Black);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "F8 - Increase Offset (0.1)", textPosition, Color.Black);
+            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "F8 - Increase Offset (0.1)", textPosition, Color.Black);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "F9 - Decrease Offset (0.01)", textPosition, Color.Black);
+            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "F9 - Decrease Offset (0.01)", textPosition, Color.Black);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "F10 - Increase Offset (0.01)", textPosition, Color.Black);
+            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "F10 - Increase Offset (0.01)", textPosition, Color.Black);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "F11 - Decrease Length", textPosition, Color.Black);
+            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "F11 - Decrease Length", textPosition, Color.Black);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "F12 - Increase Length", textPosition, Color.Black);
+            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "F12 - Increase Length", textPosition, Color.Black);
 
             textPosition = Core.Metrics["EditorTweakControls", 1].Clone();
 
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "LEFT - Decrease Beatline Speed", textPosition, Color.Black);
+            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "LEFT - Decrease Beatline Speed", textPosition, Color.Black);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "RIGHT - Increase Beatline Speed", textPosition, Color.Black);
+            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "RIGHT - Increase Beatline Speed", textPosition, Color.Black);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "BEATLINE - Hit beatline", textPosition, Color.Black);
+            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "BEATLINE - Hit beatline", textPosition, Color.Black);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "SELECT - Restart Song", textPosition, Color.Black);
+            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "SELECT - Restart Song", textPosition, Color.Black);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts["DefaultFont"], "START - Complete Tuning", textPosition, Color.Black);
+            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "START - Complete Tuning", textPosition, Color.Black);
         }
 
 

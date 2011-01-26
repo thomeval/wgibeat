@@ -75,14 +75,14 @@ namespace WGiBeat.Drawing
         {
             _baseSprite = new Sprite
             {
-                SpriteTexture = TextureManager.Textures["levelBarBase"]
+                SpriteTexture = TextureManager.Textures("LevelBarBase")
             };
 
             _barSprite = new SpriteMap
             {
                 Columns = 1,
                 Rows = 12,
-                SpriteTexture = TextureManager.Textures["levelBarFronts"]
+                SpriteTexture = TextureManager.Textures("LevelBarFronts")
             };
             _spritesInit = true;
         }

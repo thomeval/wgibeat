@@ -57,18 +57,18 @@ namespace WGiBeat.Drawing
             {
                 Columns = 1,
                 Rows = BpmLevels.Count(),
-                SpriteTexture = TextureManager.Textures["BpmMeterOverlay"]
+                SpriteTexture = TextureManager.Textures("BpmMeterOverlay")
             };
             _baseSprite = new Sprite
             {
-                SpriteTexture = TextureManager.Textures["BpmMeterBase"]
+                SpriteTexture = TextureManager.Textures("BpmMeterBase")
             };
             _songLengthBase = new Sprite
             {
-                SpriteTexture = TextureManager.Textures["LengthDisplayBase"]
+                SpriteTexture = TextureManager.Textures("LengthDisplayBase")
             };
 
-            _songTitleBase = new Sprite { SpriteTexture = TextureManager.Textures["SongTitleBase"] };
+            _songTitleBase = new Sprite { SpriteTexture = TextureManager.Textures("SongTitleBase") };
 
             RepositionSprites();
         }

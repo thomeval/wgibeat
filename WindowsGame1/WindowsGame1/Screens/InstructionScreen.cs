@@ -29,13 +29,13 @@ namespace WGiBeat.Screens
         private void InitSprites()
         {
             _background = new MovingBackground
-                              {Direction = Math.PI / 4, Speed = 0.4, SpriteTexture = TextureManager.Textures["MovingBackground1"], Width = 800, Height = 600};
+                              {Direction = Math.PI / 4, Speed = 0.5, SpriteTexture = TextureManager.Textures("MovingBackground1"), Width = 800, Height = 600};
             _instructionPages = new Sprite[TOTAL_PAGES];
             for (int x = 0; x < TOTAL_PAGES; x++)
             {
-                _instructionPages[x] = new Sprite {SpriteTexture = TextureManager.Textures["InstructionPage" + (x + 1)]};
+                _instructionPages[x] = new Sprite {SpriteTexture = TextureManager.Textures("InstructionPage" + (x + 1))};
             }
-            _baseSprite = new Sprite { SpriteTexture = TextureManager.Textures["LoadingMessageBase"] };
+            _baseSprite = new Sprite { SpriteTexture = TextureManager.Textures("LoadingMessageBase") };
             _baseSprite.Position = (Core.Metrics["LoadMessageBase", 0]);
            
         }

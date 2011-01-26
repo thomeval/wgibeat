@@ -25,9 +25,9 @@ namespace WGiBeat.Drawing
         }
         public void InitSprites()
         {
-            _backgroundSprite = new Sprite {SpriteTexture = TextureManager.Textures["SongSortBackground"]};
-            _arrowSprites = new SpriteMap {SpriteTexture = TextureManager.Textures["IndicatorArrows"], Columns=4, Rows = 1};
-            _listBackgroundSprite = new Sprite {SpriteTexture = TextureManager.Textures["SongSortListBackground"]};
+            _backgroundSprite = new Sprite {SpriteTexture = TextureManager.Textures("SongSortBackground")};
+            _arrowSprites = new SpriteMap {SpriteTexture = TextureManager.Textures("IndicatorArrows"), Columns=4, Rows = 1};
+            _listBackgroundSprite = new Sprite {SpriteTexture = TextureManager.Textures("SongSortListBackground")};
             _textPosition = new Vector2();
         }
         public override void Draw(SpriteBatch spriteBatch)

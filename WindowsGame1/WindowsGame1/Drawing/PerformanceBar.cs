@@ -26,19 +26,19 @@ namespace WGiBeat.Drawing
         {
             _partsSpriteMap = new SpriteMap
                                   {
-                                      SpriteTexture = TextureManager.Textures["PerformanceBarParts"],
+                                      SpriteTexture = TextureManager.Textures("PerformanceBarParts"),
                                       Columns = 1,
                                       Rows = 6
                                   };
             _leftSpriteMap = new SpriteMap
                                  {
-                                     SpriteTexture = TextureManager.Textures["PerformanceBarLeft"],
+                                     SpriteTexture = TextureManager.Textures("PerformanceBarLeft"),
                                      Columns = 1,
                                      Rows = 5
                                  };
-            _middleSprite = new Sprite {SpriteTexture = TextureManager.Textures["PerformanceBarMiddle"]};
-            _rightSprite = new Sprite {SpriteTexture = TextureManager.Textures["PerformanceBarRight"]};
-            _headerSprite = new Sprite {SpriteTexture = TextureManager.Textures["PerformanceBarHeader"]};
+            _middleSprite = new Sprite {SpriteTexture = TextureManager.Textures("PerformanceBarMiddle")};
+            _rightSprite = new Sprite {SpriteTexture = TextureManager.Textures("PerformanceBarRight")};
+            _headerSprite = new Sprite {SpriteTexture = TextureManager.Textures("PerformanceBarHeader")};
         }
 
         

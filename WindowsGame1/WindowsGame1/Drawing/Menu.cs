@@ -16,7 +16,7 @@ namespace WGiBeat.Drawing
         public Color HighlightColor = Color.Blue;
         public Color TextColor = Color.Black;
         private string _fontName = "LargeFont";
-        private int _animationOffset = 0;
+        private int _animationOffset;
 
         private SpriteMap _edgeSpriteMap;
         private SpriteMap _arrowSpriteMap;
@@ -37,10 +37,10 @@ namespace WGiBeat.Drawing
 
         private void InitSprites()
         {
-            _edgeSpriteMap = new SpriteMap{Columns = 1, Rows = 2, SpriteTexture = TextureManager.Textures["MenuEdge"]};
+            _edgeSpriteMap = new SpriteMap{Columns = 1, Rows = 2, SpriteTexture = TextureManager.Textures("MenuEdge")};
             _arrowSpriteMap = new SpriteMap
-                                  {Columns = 4, Rows = 1, SpriteTexture = TextureManager.Textures["IndicatorArrows"]};
-            _sideSpriteMap = new SpriteMap {Columns = 1, Rows = 1, SpriteTexture = TextureManager.Textures["MenuSide"]};
+                                  {Columns = 4, Rows = 1, SpriteTexture = TextureManager.Textures("IndicatorArrows")};
+            _sideSpriteMap = new SpriteMap {Columns = 1, Rows = 1, SpriteTexture = TextureManager.Textures("MenuSide")};
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -130,7 +130,7 @@ namespace WGiBeat.Drawing
             int maxLength = 0;
             foreach (MenuItem menuItem in _menuItems)
             {
-                maxLength = Math.Max(maxLength, (int) TextureManager.Fonts["LargeFont"].MeasureString(menuItem.ItemText).X);
+                maxLength = Math.Max(maxLength, (int) TextureManager.Fonts("LargeFont").MeasureString(menuItem.ItemText).X);
             }
             return (maxLength) + 25;
         }

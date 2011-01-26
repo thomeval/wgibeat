@@ -35,7 +35,7 @@ namespace WGiBeat.Drawing
 
             Particle = new Sprite //temp
                             {
-                                SpriteTexture = TextureManager.Textures[particleShape],
+                                SpriteTexture = TextureManager.Textures(particleShape),
                                 ColorShading = shade
                             };
 
