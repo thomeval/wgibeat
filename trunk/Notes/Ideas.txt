@@ -28,10 +28,10 @@
 
 - Mode descriptions (Needs graphics) (0.6)
 - Profile stat display screen (0.6)(How???)
+- Move text in mode select and wgiedit to TextManager.
 
-- Adjustable audio playback start positions.
 - Record average late/early beatline hits.
-
+- 
 - Flashing hits counter (milestones)
 
 
@@ -48,6 +48,8 @@
 - Logging level can be changed from the options menu.
 - Option descriptions. (Done)
 - When creating a song in WGiEdit, the title and artist are read from the audio file's ID tag. (Done)
+- Removed case sensitivity of theme graphics.
+- Adjustable audio playback start position using the AudioStart field. (Done)
 
 ==0.5 - "Handicapped Doubt" ==
  *   Song audio validation by using MD5. This makes it easier to ensure that the correct audio (.mp3) file is used when playing a song, especially when song files (.sng) are distributed.
