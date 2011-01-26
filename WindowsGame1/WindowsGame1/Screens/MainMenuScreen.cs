@@ -54,9 +54,7 @@ namespace WGiBeat.Screens
             };
             _menuOptionSprite = new Sprite
             {
-                Height = 50,
-                SpriteTexture = TextureManager.Textures("MainMenuOption"),
-                Width = 300
+                SpriteTexture = TextureManager.Textures("MainMenuOption")
             };
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -89,8 +87,8 @@ namespace WGiBeat.Screens
                 _menuOptionSprite.Position = (Core.Metrics["MainMenuOptions", menuOption]);
                 _menuOptionSprite.Draw(spriteBatch);
                 var textPosition = Core.Metrics["MainMenuOptions", menuOption].Clone();
-                textPosition.X += 150;
-                textPosition.Y -= 0;
+                textPosition.X +=  _menuOptionSprite.Width / 2 ;
+                textPosition.Y += _menuOptionSprite.Height / 2 - 25;
                 TextureManager.DrawString(spriteBatch,_menuText[menuOption],"TwoTech36",textPosition,Color.Black, FontAlign.CENTER);
             }
         }
