@@ -50,12 +50,12 @@ namespace WGiBeat.Screens
             };
             _header = new Sprite
             {
-                SpriteTexture = TextureManager.Textures("mainMenuHeader")
+                SpriteTexture = TextureManager.Textures("MainMenuHeader")
             };
             _menuOptionSprite = new Sprite
             {
                 Height = 50,
-                SpriteTexture = TextureManager.Textures("mainMenuOption"),
+                SpriteTexture = TextureManager.Textures("MainMenuOption"),
                 Width = 300
             };
         }

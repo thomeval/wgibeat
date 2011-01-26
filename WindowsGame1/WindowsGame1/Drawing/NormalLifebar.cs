@@ -62,19 +62,19 @@ namespace WGiBeat.Drawing
                 Width = this.Width,
                 X = this.X,
                 Y = this.Y,
-                SpriteTexture = TextureManager.Textures("lifeBarBase")
+                SpriteTexture = TextureManager.Textures("LifeBarBase")
             };
 
             _sidePart = new SpriteMap
                             {
-                                SpriteTexture = TextureManager.Textures("lifeBarBaseSide"),
+                                SpriteTexture = TextureManager.Textures("LifeBarBaseSide"),
                                 Columns=1,
                                 Rows=2
                             };
 
             _frontPart = new SpriteMap
             {
-                SpriteTexture = TextureManager.Textures("lifeBarFront"),
+                SpriteTexture = TextureManager.Textures("LifeBarFront"),
                 Columns = 1,
                 Rows = 4
             };
@@ -84,7 +84,7 @@ namespace WGiBeat.Drawing
                 Height = this.Height - 6,
                 X = this.X + 3,
                 Y = this.Y + 3,
-                SpriteTexture = TextureManager.Textures("lifeBarOvercharge")
+                SpriteTexture = TextureManager.Textures("LifeBarOvercharge")
             };
 
             _gridPart = new Sprite
@@ -93,7 +93,7 @@ namespace WGiBeat.Drawing
                                 Width = this.Width - 4,
                                 X = this.X + 2,
                                 Y = this.Y + 3,
-                                SpriteTexture = TextureManager.Textures("lifeBarGridBase")
+                                SpriteTexture = TextureManager.Textures("LifeBarGridBase")
                             };
 
         }

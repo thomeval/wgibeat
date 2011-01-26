@@ -22,7 +22,7 @@ namespace WGiBeat.Drawing.Sets
             {
                 Columns = 1,
                 Rows = 5,
-                SpriteTexture = TextureManager.Textures("countdown")
+                SpriteTexture = TextureManager.Textures("Countdown")
             };
         }
 

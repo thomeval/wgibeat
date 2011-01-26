@@ -58,7 +58,7 @@ namespace WGiBeat.Drawing
                                 {
                                     Columns = 1,
                                     Rows = (int)Difficulty.COUNT + 1,
-                                    SpriteTexture = TextureManager.Textures("playerDifficulties")
+                                    SpriteTexture = TextureManager.Textures("PlayerDifficulties")
                                 };
             _indicatorArrows = new SpriteMap
                                {

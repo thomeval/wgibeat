@@ -39,16 +39,16 @@ namespace WGiBeat.Drawing
                 SpriteTexture = TextureManager.Textures("LifeBarGridBase")
             };
 
-            _sidePart = new SpriteMap()
+            _sidePart = new SpriteMap
                             {
-                                SpriteTexture = TextureManager.Textures("lifeBarBaseSide"),
+                                SpriteTexture = TextureManager.Textures("LifeBarBaseSide"),
                                 Rows = 2,
                                 Columns = 1
                             };
 
-            _middlePart = new SpriteMap { Columns = 1, Rows = 2, SpriteTexture = TextureManager.Textures("coopLifebarMiddle") };
+            _middlePart = new SpriteMap { Columns = 1, Rows = 2, SpriteTexture = TextureManager.Textures("CoopLifebarMiddle") };
 
-            _frontPart = new SpriteMap { Columns = 1, Rows = 4, SpriteTexture = TextureManager.Textures("lifeBarFront") };
+            _frontPart = new SpriteMap { Columns = 1, Rows = 4, SpriteTexture = TextureManager.Textures("LifeBarFront") };
 
         }
 
