@@ -530,7 +530,7 @@ namespace WGiBeat.Screens
                     {
                         Height = 150,
                         Width = 250,
-                        SpriteTexture = TextureManager.Textures["stageClearIndicator"]
+                        SpriteTexture = TextureManager.Textures["StageClearIndicator"]
                     };
                     koSprite.Position = (Core.Metrics["KOIndicator", x]);
                     koSprite.Draw(spriteBatch);

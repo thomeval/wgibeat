@@ -52,7 +52,7 @@ namespace WGiBeat.Drawing
             {
                 Columns = 1,
                 Rows = 5,
-                SpriteTexture = TextureManager.Textures["beatMarkers"],
+                SpriteTexture = TextureManager.Textures["BeatMarkers"],
 
             };
 

@@ -197,7 +197,7 @@
     <Content Include="Content\Textures\Default\BeatFlame.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\beatMarkers.png">
+    <Content Include="Content\Textures\Default\BeatMarkers.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\BeatMeter.png">
@@ -315,9 +315,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\lifeBarBaseSide.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Textures\Default\lifeBarBaseSideUp.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\lifeBarFront.png">
@@ -482,10 +479,7 @@
     <Content Include="Content\Textures\Default\SpectrumBackground.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\stageClearIndicator.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Textures\Default\streakNumbers.png">
+    <Content Include="Content\Textures\Default\StageClearIndicator.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\TeamScreenBackground.png">

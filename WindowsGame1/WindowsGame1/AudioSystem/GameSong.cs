@@ -25,6 +25,7 @@ namespace WGiBeat.AudioSystem
         public double Bpm { get; set; }
         public double Offset { get; set; }
         public double Length { get; set; }
+        public double AudioStart { get; set; }
         public string Path { get; set; }
 
         /// <summary>
@@ -81,6 +82,7 @@ namespace WGiBeat.AudioSystem
                              DefinitionFile = null,
                              Length = 0.0,
                              Offset = 0.0,
+                             AudioStart = 0.0,
                              Path = "",
                              AudioFile = "",
                              AudioFileMD5 = "",
