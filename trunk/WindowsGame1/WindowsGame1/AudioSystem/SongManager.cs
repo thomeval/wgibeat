@@ -53,6 +53,8 @@ namespace WGiBeat.AudioSystem
                 StopCurrentSong();
             }
             _songChannelIndex = AudioManager.PlaySoundEffect(song.Path + "\\" + song.AudioFile, false, true);
+            //TODO: Fade in if appropriate.
+            AudioManager.SetPosition(_songChannelIndex,Math.Max(0.0,1000 * (song.AudioStart - 0.5)));
             return _songChannelIndex;
         }
 
@@ -181,6 +183,7 @@ namespace WGiBeat.AudioSystem
             sw.WriteLine("Artist={0};", song.Artist);
             sw.WriteLine("Bpm={0};", Math.Round(song.Bpm, 2));
             sw.WriteLine("Offset={0};", Math.Round(song.Offset, 3));
+            sw.WriteLine("AudioStart={0};", Math.Round(song.AudioStart,3));
             sw.WriteLine("Length={0};", Math.Round(song.Length, 3));
             sw.WriteLine("AudioFile={0};", song.AudioFile);
             sw.WriteLine("AudioFileMD5={0};",song.AudioFileMD5);
@@ -233,6 +236,9 @@ namespace WGiBeat.AudioSystem
                             break;
                         case "OFFSET":
                             newSong.Offset = Convert.ToDouble(value);
+                            break;
+                        case "AUDIOSTART":
+                            newSong.AudioStart = Convert.ToDouble(value);
                             break;
                         case "LENGTH":
                             newSong.Length = Convert.ToDouble(value);
@@ -342,6 +348,20 @@ namespace WGiBeat.AudioSystem
                 message = "Couldn't find audio file specified." + path;
                 return false;
             }
+            if (String.IsNullOrEmpty(song.Title))
+            {
+                message = "Song does not have a title.";
+                return false;
+            }
+            if (String.IsNullOrEmpty(song.Artist))
+            {
+                message = "Song does not have an artist.";
+            }
+            if (song.Offset < 0)
+            {
+                message = "Offset position is invalid.";
+                return false;
+            }
             if ((song.Length <= 0) || (song.Length <= song.Offset))
             {
                 message = "Length is not specified or invalid.";
@@ -352,19 +372,10 @@ namespace WGiBeat.AudioSystem
                 message = "BPM is not specified or invalid.";
                 return false;
             }
-            if (song.Offset < 0)
+
+            if ((song.AudioStart < 0.0) || (song.AudioStart > song.Offset))
             {
-                message = "Offset is invalid.";
-                return false;
-            }
-            if (String.IsNullOrEmpty(song.Title))
-            {
-                message = "Song does not have a title.";
-                return false;
-            }
-            if (String.IsNullOrEmpty(song.Artist))
-            {
-                message = "Song does not have an artist.";
+                message = "Audio start position is invalid. Must be earlier than offset.";
             }
 
             switch (SettingsManager.Get<int>("SongMD5Behaviour"))
