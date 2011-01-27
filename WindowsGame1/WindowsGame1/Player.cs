@@ -22,6 +22,7 @@ namespace WGiBeat
         public long Score { get; set; }
         public bool IsBlazing { get; set; }
         public int Team { get; set; }
+        public long PlayTime { get; set; }
 
         private long _hits;
         public long Hits
@@ -175,7 +176,7 @@ namespace WGiBeat
         {
 
             Momentum = (long)(Momentum * 0.8);
-           // Judgements[(int) BeatlineNoteJudgement.MISS]++;
+           
             var result = 0;
             switch (PlayDifficulty)
             {
@@ -214,6 +215,7 @@ namespace WGiBeat
             Life = 50;
             KO = false;
             IsBlazing = false;
+            PlayTime = 0;
             _lifeHistory.Clear();
         }
         
@@ -228,7 +230,7 @@ namespace WGiBeat
                 Profile.JudgementCounts[x] += Judgements[x];
             }
             Profile.TotalHits += TotalHits;
-            
+            Profile.TotalPlayTime += PlayTime;
 
         }
 
@@ -240,6 +242,7 @@ namespace WGiBeat
             }
             Profile.LastBeatlineSpeed = BeatlineSpeed;
             Profile.LastDifficulty = PlayDifficulty;
+            Profile.DisableKO = DisableKO;
 
         }
 
@@ -251,6 +254,7 @@ namespace WGiBeat
             }
             BeatlineSpeed = Profile.LastBeatlineSpeed;
             PlayDifficulty = Profile.LastDifficulty;
+            DisableKO = Profile.DisableKO;
         }
 
         public double CalculatePercentage()

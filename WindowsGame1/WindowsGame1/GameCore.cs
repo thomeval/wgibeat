@@ -277,6 +277,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             _screens.Add("TeamSelect", new TeamSelectScreen(this));
             _screens.Add("Instruction", new InstructionScreen(this));
             _screens.Add("SongEdit", new SongEditorScreen(this));
+            _screens.Add("Stats", new StatsScreen(this));
 
             if (!Settings.Get<bool>("RunOnce"))
             {

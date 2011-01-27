@@ -10,10 +10,10 @@ namespace WGiBeat.Screens
     {
         private MainMenuOption _selectedMenuOption;
 
-        private SineSwayParticleField _field = new SineSwayParticleField();
+        private readonly SineSwayParticleField _field = new SineSwayParticleField();
 
         private bool _displayNoSongsError;
-        private readonly string[] _menuText = { "Start Game", "How to play", "Keys", "Options", "Song Editor", "Exit" };
+        private readonly string[] _menuText = { "Start Game", "Stats","How to play", "Keys", "Options", "Song Editor", "Exit" };
         private Sprite _background;
         private Sprite _header;
         private Sprite _menuOptionSprite;
@@ -22,11 +22,6 @@ namespace WGiBeat.Screens
         public MainMenuScreen(GameCore core)
             : base(core)
         {
-        }
-
-        public override void Update(GameTime gameTime)        
-        {            
-            base.Update(gameTime);
         }
 
         public override void Initialize()
@@ -87,7 +82,7 @@ namespace WGiBeat.Screens
                 _menuOptionSprite.Position = (Core.Metrics["MainMenuOptions", menuOption]);
                 _menuOptionSprite.Draw(spriteBatch);
                 var textPosition = Core.Metrics["MainMenuOptions", menuOption].Clone();
-                textPosition.X +=  _menuOptionSprite.Width / 2 ;
+                textPosition.X +=  _menuOptionSprite.Width / 2 - 0 ;
                 textPosition.Y += _menuOptionSprite.Height / 2 - 25;
                 TextureManager.DrawString(spriteBatch,_menuText[menuOption],"TwoTech36",textPosition,Color.Black, FontAlign.CENTER);
             }
@@ -143,6 +138,9 @@ namespace WGiBeat.Screens
                         _displayNoSongsError = true;
                     }
                     break;
+                case MainMenuOption.STATS:
+                    Core.ScreenTransition("Stats");
+                    break;
                 case MainMenuOption.HOW_TO_PLAY:
                     Core.ScreenTransition("Instruction");
                     break;
@@ -165,12 +163,13 @@ namespace WGiBeat.Screens
     public enum MainMenuOption
     {
         START_GAME = 0,
-        HOW_TO_PLAY = 1,
-        KEYS = 2,
-        OPTIONS = 3,
-        SONG_EDIT = 4,
-        EXIT = 5,
-        COUNT = 6
+        STATS = 1,
+        HOW_TO_PLAY = 2,
+        KEYS = 3,
+        OPTIONS = 4,
+        SONG_EDIT = 5,
+        EXIT = 6,
+        COUNT = 7
     }
 
 }

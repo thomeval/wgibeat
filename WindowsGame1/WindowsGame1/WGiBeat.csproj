@@ -173,6 +173,7 @@
     <Compile Include="Screens\OptionScreen.cs" />
     <Compile Include="Screens\SongEditorScreen.cs" />
     <Compile Include="Screens\SongSelectScreen.cs" />
+    <Compile Include="Screens\StatsScreen.cs" />
     <Compile Include="Screens\TeamSelectScreen.cs" />
   </ItemGroup>
   <ItemGroup>

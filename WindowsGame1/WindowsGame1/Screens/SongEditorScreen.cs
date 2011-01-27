@@ -1093,7 +1093,7 @@ namespace WGiBeat.Screens
             }
             else
             {
-                NewGameSong.Title = tags["TITLE"];
+                NewGameSong.Title = titleTag;
             }
 
             if (tags.ContainsKey("ARTIST"))
