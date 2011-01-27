@@ -56,9 +56,11 @@ namespace WGiBeat.AudioSystem
         /// will be crossfaded out.
         /// </summary>
         /// <param name="song">The GameSong to preview.</param>
-        public void SetPreviewedSong(GameSong song)
+        /// <param name="force">Whether the provided game song should be played regardless of whether it 
+        /// was already playing.</param>
+        public void SetPreviewedSong(GameSong song, bool force)
         {
-            if (_currentSong == song)
+            if ((_currentSong == song) && !force)
             {
                 return;
             }

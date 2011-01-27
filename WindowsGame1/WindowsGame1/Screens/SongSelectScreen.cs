@@ -50,6 +50,7 @@ namespace WGiBeat.Screens
             _songSortDisplay.InitSprites();
             Crossfader = Core.Crossfader;
             _previewStarted = false;
+            
             _highScoreFrame = new HighScoreFrame
                                   {
                                       EnableFadeout = false,
@@ -335,7 +336,7 @@ namespace WGiBeat.Screens
 
                 if (previewsOn)
                 {
-                    Crossfader.SetPreviewedSong(CurrentSong);
+                    Crossfader.SetPreviewedSong(CurrentSong,true);
                 }
             }
 
