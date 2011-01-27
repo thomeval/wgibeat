@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
-using WGiBeat.Managers;
 using WGiBeat.Notes;
 
 
@@ -75,9 +74,7 @@ namespace WGiBeat.Drawing.Sets
 
             for (int x = 0; x < 4; x++)
             {
-                _beatlines[x] = new Beatline();
-                _beatlines[x].Position = (_metrics["BeatlineBarBase", x]);
-                _beatlines[x].Id = x;
+                _beatlines[x] = new Beatline {Position = (_metrics["BeatlineBarBase", x]), Id = x};
             }
         }
 

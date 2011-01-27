@@ -35,6 +35,11 @@ namespace WGiBeat.Screens
 
         public CrossfaderManager Crossfader;
 
+        protected GameSong CurrentSong
+        {
+            get { return _songList[_selectedIndex].Song; }
+        }
+
         public SongSelectScreen(GameCore core) : base(core)
         {           
         }
@@ -122,7 +127,7 @@ namespace WGiBeat.Screens
 
         private void SortSongList()
         {
-            int currentSelection = _songList[_selectedIndex].Song.GetHashCode();
+            int currentSelection = CurrentSong.GetHashCode();
             switch (_songSortDisplay.SongSortMode)
             {
                 case SongSortMode.TITLE:
@@ -181,9 +186,11 @@ namespace WGiBeat.Screens
             {
                 float[] levels = Core.Audio.GetChannelSpectrum(Crossfader.ChannelIndexCurrent, WAVEFORM_POINTS);
 
-                var line = new PrimitiveLine(Core.GraphicsDevice);
-                line.Colour = Color.White;
-                line.Position = Core.Metrics["SelectedSongSpectrum", 0];
+                var line = new PrimitiveLine(Core.GraphicsDevice)
+                               {
+                                   Colour = Color.White,
+                                   Position = Core.Metrics["SelectedSongSpectrum", 0]
+                               };
 
                 int posX = 0;
 
@@ -227,13 +234,19 @@ namespace WGiBeat.Screens
         }
         private void DrawBpmMeter(GameTime gameTime, SpriteBatch spriteBatch)
         {
-          
-            if (_resetSongTime)
+
+        //    var timeElapsed = gameTime.TotalRealTime.TotalMilliseconds - _songStartTime + CurrentSong.Offset * 1000;
+            if (Core.Settings.Get<bool>("SongPreview"))
             {
-                _resetSongTime = false;
-                _songStartTime = gameTime.TotalRealTime.TotalMilliseconds;
+                var actualTime = Core.Audio.GetChannelPosition(Crossfader.ChannelIndexCurrent);
+                _bpmMeter.SongTime = CurrentSong.ConvertMSToPhrase(actualTime)*4;
             }
-            _bpmMeter.SongTime = (gameTime.TotalRealTime.TotalMilliseconds - _songStartTime) / 1000 * (_songList[_selectedIndex].Song.Bpm / 60);
+            else
+            {
+                _bpmMeter.SongTime = 0;
+            }
+//            TextureManager.DrawString(spriteBatch,String.Format("{0:F3}",CurrentSong.ConvertMSToPhrase(timeElapsed) * 2),"DefaultFont", new Vector2(50,100),Color.Black,FontAlign.LEFT );
+//            TextureManager.DrawString(spriteBatch, String.Format("{0:F3}", CurrentSong.ConvertMSToPhrase(actualTime) * 2), "DefaultFont", new Vector2(50, 120), Color.Black, FontAlign.LEFT);
 
             _bpmMeter.Draw(spriteBatch);
         }
@@ -275,7 +288,6 @@ namespace WGiBeat.Screens
             var midpoint = Core.Metrics["SongListMidpoint", 0];
             midpoint.Y += _songListDrawOffset;
             _songList[_selectedIndex].Position = (midpoint);
-           // 
             _songList[_selectedIndex].IsSelected = true;
             _songList[_selectedIndex].Draw(spriteBatch);
 
@@ -315,10 +327,20 @@ namespace WGiBeat.Screens
             if (!_previewStarted)
             {
                 _previewStarted = true;
-                PlaySongPreview();
+                _bpmMeter.DisplayedSong = CurrentSong;
+                _songStartTime = gameTime.TotalRealTime.TotalMilliseconds;
+                Crossfader.PreviewDuration = 10;
+                var previewsOn = Core.Settings.Get<bool>("SongPreview");
+
+                if (previewsOn)
+                {
+                    Crossfader.SetPreviewedSong(CurrentSong);
+                }
             }
+
             base.Update(gameTime);
         }
+
         public override void PerformAction(Action action)
         {
             int player = -1;
@@ -431,8 +453,8 @@ namespace WGiBeat.Screens
         private void StartSong()
         {
             Crossfader.StopBoth();
-            Core.Cookies["CurrentSong"] = _songList[_selectedIndex].Song;
-            Core.Settings.Set("LastSongPlayed", _songList[_selectedIndex].Song.GetHashCode());
+            Core.Cookies["CurrentSong"] = CurrentSong;
+            Core.Settings.Set("LastSongPlayed", CurrentSong.GetHashCode());
             Core.ScreenTransition("MainGame");
         }
 
@@ -443,28 +465,16 @@ namespace WGiBeat.Screens
             {
                 _selectedIndex = _songList.Count - 1;
             }
-            PlaySongPreview();
+            _previewStarted = false;
             _songListDrawOffset -= 50;
         }
 
         private void MoveSelectionDown()
         {
             _selectedIndex = (_selectedIndex + 1)%_songList.Count();
-            PlaySongPreview();
+            _previewStarted = false;
             _songListDrawOffset += 50;
         }
 
-        private void PlaySongPreview()
-        {
-            _bpmMeter.DisplayedSong = _songList[_selectedIndex].Song;
-            _resetSongTime = true;
-            Crossfader.PreviewDuration = 10;
-            var previewsOn = Core.Settings.Get<bool>("SongPreview");
-
-            if (previewsOn)
-            {
-                Crossfader.SetPreviewedSong(_songList[_selectedIndex].Song);
-            }
-        }
     } 
 }
