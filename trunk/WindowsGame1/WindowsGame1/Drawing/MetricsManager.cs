@@ -30,7 +30,7 @@ namespace WGiBeat.Drawing
                 Log.AddMessage("Failed to load metrics due to file not found error: " + filename, LogLevel.WARN);
             }
 
-            Log.AddMessage("Metrics loaded successfully.",LogLevel.INFO);
+            Log.AddMessage("Metrics loaded successfully.", LogLevel.INFO);
         }
         private void LoadFromText(string text)
         {
@@ -66,11 +66,21 @@ namespace WGiBeat.Drawing
 
             }
         }
-        public Vector2 this [string id, int player]
-    {
+
+        public Vector2 this[string id, int player]
+        {
             get
             {
-                return _metrics[id][player];
+                try
+                {
+                    return _metrics[id][player];
+                }
+                catch (Exception)
+                {
+                    Log.AddMessage(String.Format("Metrics entry {0}[{1}] doesn't exist in metrics file.",id,player),LogLevel.ERROR);
+                }
+                return new Vector2();
+                
             }
             set
             {
@@ -81,7 +91,7 @@ namespace WGiBeat.Drawing
                 _metrics[id][player] = value;
             }
 
-    }
+        }
         private Vector2[] this[string id]
         {
             get

@@ -17,9 +17,15 @@ namespace WGiBeat
 
         public Difficulty LastDifficulty { get; set; }
         public double LastBeatlineSpeed { get; set; }
+        public bool DisableKO { get; set; }
 
         public long SongsCleared { get; set; }
         public long SongsFailed { get; set; }
+
+        public double TotalPlayTime { get; set; }
+
+        public double AverageHitOffset { get; set; }
+        public long HitOffsetCount { get; set; }
 
         public Profile()
         {
@@ -36,6 +42,19 @@ namespace WGiBeat
             LastBeatlineSpeed = (double) si.GetValue("LastBeatlineSpeed", typeof (double));
             SongsCleared = (long) si.GetValue("SongsCleared", typeof (long));
             SongsFailed = (long) si.GetValue("SongsFailed", typeof (long));
+            try
+            {
+                TotalPlayTime = (double)si.GetValue("TotalPlayTime", typeof(double));
+                AverageHitOffset = si.GetDouble("AverageHitOffset");
+                HitOffsetCount = si.GetInt64("HitOffsetCount");
+                DisableKO = si.GetBoolean("DisableKO");
+            }
+            catch (Exception)
+            {
+                
+                
+            }
+ 
         }
 
         public void GetObjectData(SerializationInfo si, StreamingContext sc)
@@ -48,6 +67,10 @@ namespace WGiBeat
             si.AddValue("LastBeatlineSpeed",LastBeatlineSpeed);
             si.AddValue("SongsCleared",SongsCleared);
             si.AddValue("SongsFailed",SongsFailed);
+            si.AddValue("TotalPlayTime",TotalPlayTime);
+            si.AddValue("AverageHitOffset",AverageHitOffset);
+            si.AddValue("HitOffsetCount",HitOffsetCount);
+            si.AddValue("DisableKO",DisableKO);
         }
 
     }

@@ -82,9 +82,22 @@ namespace WGiBeat.Screens
             _beatlineSet.Bpm = _gameSong.Bpm;
             _beatlineSet.SetSpeeds();
 
+            InitSprites();
+
             base.Initialize();
         }
 
+        private void InitSprites()
+        {
+            _clearSprite = new Sprite
+                               {
+                                   SpriteTexture = TextureManager.Textures("StageClearIndicator")
+                               };
+            _koSprite = new Sprite
+                            {
+                                SpriteTexture = TextureManager.Textures("KOIndicator")
+                            };
+        }
 
         private bool LargeBeatlinesSuitable()
         {
@@ -112,7 +125,19 @@ namespace WGiBeat.Screens
             _beatlineSet.MaintainBeatlineNotes(_phraseNumber);
             MaintainBlazings();
             RecordPlayerLife();
+            RecordPlayerPlayTime(gameTime.ElapsedRealTime.TotalMilliseconds);
             base.Update(gameTime);
+        }
+
+        private void RecordPlayerPlayTime(double milliseconds)
+        {
+            foreach (Player player in Core.Players)
+            {
+                if (!player.IsHumanPlayer)
+                {
+                    player.PlayTime += (long) milliseconds;
+                }
+            }
         }
 
         private void RecordPlayerLife()
@@ -186,6 +211,8 @@ namespace WGiBeat.Screens
         }
 
         private int _confidence;
+        private Sprite _koSprite;
+        private Sprite _clearSprite;
 
         private void SyncSong()
         {
@@ -502,18 +529,13 @@ namespace WGiBeat.Screens
                 Height = Core.Window.ClientBounds.Height,
                 SpriteTexture = TextureManager.Textures("MainGameScreenBackground"),
                 Width = Core.Window.ClientBounds.Width,
-                X = 0,
-                Y = 0
             };
             background.Draw(spriteBatch);
         }
 
-
-
         private void DrawCountdowns(SpriteBatch spriteBatch)
         {
             _countdownSet.Draw(spriteBatch, _phraseNumber);
-
         }
 
         private void DrawClearIndicators(SpriteBatch spriteBatch)
@@ -526,47 +548,34 @@ namespace WGiBeat.Screens
             {
                 if ((!Core.Players[x].KO) && (Core.Players[x].Playing))
                 {
-                    var koSprite = new Sprite
-                    {
-                        Height = 150,
-                        Width = 250,
-                        SpriteTexture = TextureManager.Textures("StageClearIndicator")
-                    };
-                    koSprite.Position = (Core.Metrics["KOIndicator", x]);
-                    koSprite.Draw(spriteBatch);
+                    _clearSprite.Position = (Core.Metrics["KOIndicator", x]);
+                    _clearSprite.Draw(spriteBatch);
                 }
             }
-        }
-
-
-        private void DrawSongInfo(SpriteBatch spriteBatch)
-        {
-            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "" + CalculateTimeLeft()
-, Core.Metrics["SongTimeLeft", 0], Color.Black);
-            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "" + _gameSong.Title
-, Core.Metrics["SongTitle", 0], Color.Black);
-            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "" + _gameSong.Artist
-, Core.Metrics["SongArtist", 0], Color.Black);
         }
 
         private void DrawKOIndicators(SpriteBatch spriteBatch)
         {
+
             for (int x = 0; x < PLAYER_COUNT; x++)
             {
                 if (Core.Players[x].KO)
                 {
-                    var koSprite = new Sprite
-                    {
-                        Height = 150,
-                        Width = 250,
-                        SpriteTexture = TextureManager.Textures("koIndicator")
-                    };
-                    koSprite.Position = (Core.Metrics["KOIndicator", x]);
-                    koSprite.Draw(spriteBatch);
+                    _koSprite.Position = (Core.Metrics["KOIndicator", x]);
+                    _koSprite.Draw(spriteBatch);
                 }
             }
         }
 
+        private void DrawSongInfo(SpriteBatch spriteBatch)
+        {
+            TextureManager.DrawString(spriteBatch, "DefaultFont", "" + CalculateTimeLeft()
+                , Core.Metrics["SongTimeLeft", 0], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, "DefaultFont", "" + _gameSong.Title
+                , Core.Metrics["SongTitle", 0], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, "DefaultFont", "" + _gameSong.Artist
+                , Core.Metrics["SongArtist", 0], Color.Black, FontAlign.LEFT);
+        }
 
         private void DrawText(SpriteBatch spriteBatch)
         {
@@ -579,7 +588,6 @@ namespace WGiBeat.Screens
 
         private void DrawDebugText(SpriteBatch spriteBatch)
         {
-
             TextureManager.DrawString(spriteBatch,String.Format("{0:F3}", _phraseNumber), "DefaultFont", Core.Metrics["SongDebugPhrase", 0], Color.Black,FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, String.Format("BPM: {0:F2}", _gameSong.Bpm),
        "DefaultFont", Core.Metrics["SongDebugBPM", 0], Color.Black, FontAlign.LEFT);
@@ -606,7 +614,6 @@ namespace WGiBeat.Screens
             brush.Render(spriteBatch);
 
             brush.ClearVectors();
-
         }
 
         #endregion
