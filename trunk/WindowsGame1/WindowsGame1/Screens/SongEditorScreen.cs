@@ -429,20 +429,20 @@ namespace WGiBeat.Screens
         private void DrawHitOffsetText(SpriteBatch spriteBatch)
         {
 
-            TextureManager.DrawString(spriteBatch, String.Format("Last hit: {0:F3}", _hitOffsets[0]), "DefaultFont", Core.Metrics["EditorHitOffset", 0], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, String.Format("Last hit: {0:F2} ms", _hitOffsets[0]), "DefaultFont", Core.Metrics["EditorHitOffset", 0], Color.Black, FontAlign.LEFT);
             var avg = _hitOffsets.Take(3).Average();
             if (_numHits < 3)
                 return;
 
-            TextureManager.DrawString(spriteBatch, String.Format("Last 3 avg: {0:F3}", avg), "DefaultFont", Core.Metrics["EditorHitOffset", 1], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, String.Format("Last 3 avg: {0:F2} ms", avg), "DefaultFont", Core.Metrics["EditorHitOffset", 1], Color.Black, FontAlign.LEFT);
             if (_numHits < 5)
                 return;
             avg = _hitOffsets.Take(5).Average();
-            TextureManager.DrawString(spriteBatch, String.Format("Last 5 avg: {0:F3}", avg), "DefaultFont", Core.Metrics["EditorHitOffset", 2], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, String.Format("Last 5 avg: {0:F2} ms", avg), "DefaultFont", Core.Metrics["EditorHitOffset", 2], Color.Black, FontAlign.LEFT);
             if (_numHits < 10)
                 return;
             avg = _hitOffsets.Average();
-            TextureManager.DrawString(spriteBatch, String.Format("Last 10 avg: {0:F3}", avg), "DefaultFont", Core.Metrics["EditorHitOffset", 3], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, String.Format("Last 10 avg: {0:F2} ms", avg), "DefaultFont", Core.Metrics["EditorHitOffset", 3], Color.Black, FontAlign.LEFT);
 
         }
 
@@ -484,13 +484,13 @@ namespace WGiBeat.Screens
         {
             TextureManager.DrawString(spriteBatch, String.Format("BPM: {0:F2}", NewGameSong.Bpm),
                    "DefaultFont", Core.Metrics["SongDebugBPM", 0], Color.Black, FontAlign.LEFT);
-            TextureManager.DrawString(spriteBatch, String.Format("Offset: {0:F3}", NewGameSong.Offset),
+            TextureManager.DrawString(spriteBatch, String.Format("Offset: {0:F3}s", NewGameSong.Offset),
                     "DefaultFont", Core.Metrics["SongDebugOffset", 0], Color.Black, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, "" + String.Format("{0:F3}", _phraseNumber),
                 "DefaultFont", Core.Metrics["EditorSongPhraseNumber", 0], Color.Black, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, String.Format("Speed: {0}x", Core.Players[0].BeatlineSpeed),
                 "DefaultFont", Core.Metrics["SongDebugHitOffset", 0], Color.Black, FontAlign.LEFT);
-            TextureManager.DrawString(spriteBatch, String.Format("Length: {0:F3}", NewGameSong.Length),
+            TextureManager.DrawString(spriteBatch, String.Format("Length: {0:F3}s", NewGameSong.Length),
                 "DefaultFont", Core.Metrics["SongDebugLength", 0], Color.Black, FontAlign.LEFT);       
         }
 
@@ -782,6 +782,7 @@ namespace WGiBeat.Screens
             _startTime = null;
             _songPlaying = false;
             _confidence = 0;
+            Core.Players[0].Streak = 0;
             Core.Songs.StopCurrentSong();
             _beatlineSet.Reset();
             _noteJudgementSet.Reset();
@@ -1228,6 +1229,7 @@ namespace WGiBeat.Screens
             if (_startTime == null)
             {
                 _startTime = new TimeSpan(gameTime.TotalRealTime.Ticks);
+                _songLoadDelay = 0;
             }
             _timeElapsed = (int) (gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay);
 

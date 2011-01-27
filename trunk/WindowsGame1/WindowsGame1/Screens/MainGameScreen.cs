@@ -200,7 +200,7 @@ namespace WGiBeat.Screens
                 {
                     Core.Songs.SaveToFile(_gameSong);
                 }
-
+                
                 Core.ScreenTransition("Evaluation");
             }
         }
@@ -328,6 +328,7 @@ namespace WGiBeat.Screens
             }
 
         }
+
 
         private void ToggleBlazing(int player)
         {
@@ -569,12 +570,12 @@ namespace WGiBeat.Screens
 
         private void DrawSongInfo(SpriteBatch spriteBatch)
         {
-            TextureManager.DrawString(spriteBatch, "DefaultFont", "" + CalculateTimeLeft()
-                , Core.Metrics["SongTimeLeft", 0], Color.Black, FontAlign.LEFT);
-            TextureManager.DrawString(spriteBatch, "DefaultFont", "" + _gameSong.Title
-                , Core.Metrics["SongTitle", 0], Color.Black, FontAlign.LEFT);
-            TextureManager.DrawString(spriteBatch, "DefaultFont", "" + _gameSong.Artist
-                , Core.Metrics["SongArtist", 0], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, "" + CalculateTimeLeft(), "DefaultFont",
+                Core.Metrics["SongTimeLeft", 0], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, _gameSong.Title, "DefaultFont",
+                Core.Metrics["SongTitle", 0], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, _gameSong.Artist, "DefaultFont", 
+                Core.Metrics["SongArtist", 0], Color.Black, FontAlign.LEFT);
         }
 
         private void DrawText(SpriteBatch spriteBatch)
