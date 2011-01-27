@@ -165,7 +165,7 @@ namespace WGiBeat.AudioSystem
         /// <returns>The phrase number converted from the given milliseconds.</returns>
         public double ConvertMSToPhrase(double milliseconds)
         {
-            return 1.0 * (milliseconds - Offset * 1000) / 1000 * (Bpm / 240);
+            return (milliseconds - Offset * 1000.0) / 1000.0 * (Bpm / 240.0);
         }
     }
 }
