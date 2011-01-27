@@ -24,16 +24,17 @@
 -Chance / SP gameplay (Major - Needs graphics)(0.6)
 -Gradual lifegraph entrance (0.6)
 
-- BPM meter doesn't animate on-beat. (0.6)
+- BPM meter doesn't animate on-beat. (0.6)(Attempted, failed)
 
 - Mode descriptions (Needs graphics) (0.6)
-- Profile stat display screen (0.6)(How???)
+- Profile stat display screen (0.6)
 - Move text in mode select and wgiedit to TextManager.
 
 - Record average late/early beatline hits.
-- 
-- Flashing hits counter (milestones)
-
+- WGiEdit - add AudioStart support
+- WGiEdit - song timeline 
+- Update player-action combination into object.
+- Song previews dont play when entering song select for the 2nd time.
 
 - Auto join in NewGameScreen. (0.6) (Done)
 - Indicate CPU players in beatlines, player options frame and score bar. (Done)
@@ -50,6 +51,9 @@
 - When creating a song in WGiEdit, the title and artist are read from the audio file's ID tag. (Done)
 - Removed case sensitivity of theme graphics.
 - Adjustable audio playback start position using the AudioStart field. (Done)
+- Flashing hits counter (milestones) (Done)
+- Bugfix - WGiEdit: Missing beatline notes have been resolved in Tuning step.
+- Bugfix - WGiEdit: Streaks now reset correctly.
 
 ==0.5 - "Handicapped Doubt" ==
  *   Song audio validation by using MD5. This makes it easier to ensure that the correct audio (.mp3) file is used when playing a song, especially when song files (.sng) are distributed.

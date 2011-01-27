@@ -236,8 +236,9 @@ namespace WGiBeat.Screens
         {
 
         //    var timeElapsed = gameTime.TotalRealTime.TotalMilliseconds - _songStartTime + CurrentSong.Offset * 1000;
-            if (Core.Settings.Get<bool>("SongPreview"))
+            if (Core.Settings.Get<bool>("SongPreview") && Crossfader.ChannelIndexCurrent > -1)
             {
+
                 var actualTime = Core.Audio.GetChannelPosition(Crossfader.ChannelIndexCurrent);
                 _bpmMeter.SongTime = CurrentSong.ConvertMSToPhrase(actualTime)*4;
             }
