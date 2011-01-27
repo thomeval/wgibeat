@@ -31,7 +31,7 @@ namespace WGiBeat.Screens
         private const int LISTITEMS_DRAWN = 7;
         private const double SONG_CHANGE_SPEED = 0.9;
 
-        private SineSwayParticleField _field = new SineSwayParticleField();
+        private readonly SineSwayParticleField _field = new SineSwayParticleField();
 
         public CrossfaderManager Crossfader;
 
@@ -41,16 +41,17 @@ namespace WGiBeat.Screens
 
         public override void Initialize()
         {
-            _songSortDisplay = new SongSortDisplay();
-            _songSortDisplay.Position = (Core.Metrics["SongSortDisplay", 0]);
+            _songSortDisplay = new SongSortDisplay {Position = (Core.Metrics["SongSortDisplay", 0])};
             _songSortDisplay.InitSprites();
             Crossfader = Core.Crossfader;
             _previewStarted = false;
-            _highScoreFrame = new HighScoreFrame {EnableFadeout = false};
-            _highScoreFrame.Position = (Core.Metrics["SongHighScoreFrame", 0]);
+            _highScoreFrame = new HighScoreFrame
+                                  {
+                                      EnableFadeout = false,
+                                      Position = (Core.Metrics["SongHighScoreFrame", 0])
+                                  };
             _highScoreFrame.InitSprites();
-            _bpmMeter = new BpmMeter();
-            _bpmMeter.Position = (Core.Metrics["BPMMeter", 0]);
+            _bpmMeter = new BpmMeter {Position = (Core.Metrics["BPMMeter", 0])};
             _playerOptions.Clear();
 
             var frameCount = 0;
@@ -99,8 +100,13 @@ namespace WGiBeat.Screens
                                           Position = Core.Metrics["SelectedSongSpectrum", 0]
                                       };
             _spectrumBackground.Y -= 70;
-            _listBackend = new Sprite {SpriteTexture = TextureManager.Textures("SongListBackend"),Height=232,Width=50};
-            _listBackend.Position = (Core.Metrics["SongListBackend", 0]);
+            _listBackend = new Sprite
+                               {
+                                   SpriteTexture = TextureManager.Textures("SongListBackend"),
+                                   Height = 232,
+                                   Width = 50,
+                                   Position = (Core.Metrics["SongListBackend", 0])
+                               };
         }
 
         private void CreateSongList()
