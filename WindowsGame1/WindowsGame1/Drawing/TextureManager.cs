@@ -123,6 +123,23 @@ namespace WGiBeat.Drawing
             tex.SetData(pixels);
             return tex;
         }
+
+        public static Texture2D CreateWhiteMask(string assetName)
+        {
+            var source = Textures(assetName);
+            var result = new Texture2D(GraphicsDevice,source.Width,source.Height);
+            var pixels = new Color[source.Width*source.Height];
+            Textures(assetName).GetData(pixels);
+            for (int x = 0; x < pixels.Length; x++)
+            {
+                var pixel = pixels[x];
+                pixel.R = 255;
+                pixel.B = 255;
+                pixel.G = 255;
+            }
+            result.SetData(pixels);
+            return result;
+        }
         /*
         public static void DrawStringClipped(string text, string fontName, Vector2 position, Color color, FontAlign align, Rectangle clip)
         {
