@@ -177,6 +177,9 @@
     <Compile Include="Screens\TeamSelectScreen.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Textures\Default\EditorBackground.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Textures\Default\ModeSelectHeader.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
