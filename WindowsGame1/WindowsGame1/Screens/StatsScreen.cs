@@ -130,7 +130,7 @@ namespace WGiBeat.Screens
             var playTime = new TimeSpan(0, 0, 0, 0, (int) profile.TotalPlayTime);
            // positions[1].X += 50;
 
-           TextureManager.DrawString(spriteBatch, String.Format("{0}h:{1}m:{2}s ", playTime.Hours, playTime.Minutes,playTime.Seconds), "LargeFont", positions[1], Color.Black, FontAlign.LEFT);
+           TextureManager.DrawString(spriteBatch, String.Format("{0}h:{1:00}m:{2:00}s ", playTime.Hours, playTime.Minutes,playTime.Seconds), "LargeFont", positions[1], Color.Black, FontAlign.LEFT);
            // positions[1].X -= 50;
             positions[0].Y += 25;
             positions[1].Y += 25;
@@ -157,7 +157,7 @@ namespace WGiBeat.Screens
                                           positions[0], Color.Black, FontAlign.LEFT);
                 TextureManager.DrawString(spriteBatch, profile.JudgementCounts[x] + "", "DefaultFont",
                                           positions[1], Color.Black, FontAlign.LEFT);
-                TextureManager.DrawString(spriteBatch, "100%", "DefaultFont",
+                TextureManager.DrawString(spriteBatch, String.Format("{0:P0}", 1.0 * profile.JudgementCounts[x] / totalBeatlines), "DefaultFont",
                                           positions[2], Color.Black, FontAlign.LEFT);
                 positions[0].Y += 20;
                 
@@ -166,6 +166,7 @@ namespace WGiBeat.Screens
             positions[1].Y = positions[0].Y;
 
             var totalArrows = profile.TotalHits + profile.JudgementCounts[(int) BeatlineNoteJudgement.COUNT];
+            string percentage;
             TextureManager.DrawString(spriteBatch, "Total arrows:", "LargeFont", positions[0], Color.Black, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, "" + totalArrows, "LargeFont", positions[1], Color.Black, FontAlign.LEFT);
             positions[0].Y += 25;
@@ -174,7 +175,8 @@ namespace WGiBeat.Screens
 
             TextureManager.DrawString(spriteBatch, "Hits", "DefaultFont", positions[0], Color.Black, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, "" + profile.TotalHits, "DefaultFont", positions[1], Color.Black, FontAlign.LEFT);
-            TextureManager.DrawString(spriteBatch, "100%", "DefaultFont", positions[2], Color.Black, FontAlign.LEFT);
+            percentage = String.Format("{0:P0}", 1.0*profile.TotalHits/totalArrows);
+            TextureManager.DrawString(spriteBatch, percentage, "DefaultFont", positions[2], Color.Black, FontAlign.LEFT);
             positions[0].Y += 20;
             positions[1].Y = positions[0].Y;
             positions[2].Y = positions[0].Y;
@@ -182,7 +184,8 @@ namespace WGiBeat.Screens
             TextureManager.DrawString(spriteBatch, "Faults", "DefaultFont", positions[0], Color.Black, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, "" + profile.JudgementCounts[(int)BeatlineNoteJudgement.COUNT], "DefaultFont", 
                 positions[1], Color.Black, FontAlign.LEFT);
-            TextureManager.DrawString(spriteBatch, "100%", "DefaultFont", positions[2], Color.Black, FontAlign.LEFT);
+            percentage = String.Format("{0:P0}", 1.0 * profile.JudgementCounts[(int)BeatlineNoteJudgement.COUNT] / totalArrows);
+            TextureManager.DrawString(spriteBatch, percentage, "DefaultFont", positions[2], Color.Black, FontAlign.LEFT);
             positions[0].Y += 20;
             positions[1].Y = positions[0].Y;
             positions[2].Y = positions[0].Y;

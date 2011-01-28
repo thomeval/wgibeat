@@ -51,8 +51,8 @@ namespace WGiBeat
             }
             catch (Exception)
             {
-                
-                
+
+                throw;  
             }
  
         }
