@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.AudioSystem;
@@ -98,9 +97,12 @@ namespace WGiBeat.Screens
 
         public void InitSprites()
         {
-            _backgroundSprite = new Sprite { SpriteTexture = TextureManager.Textures("AllBackground"), Height = 800 };
-            _editProgressBaseSprite = new Sprite { SpriteTexture = TextureManager.Textures("SongEditProgressBase") };
-            _editProgressBaseSprite.Position = (Core.Metrics["SongEditProgress", 0]);
+            _backgroundSprite = new Sprite { SpriteTexture = TextureManager.Textures("EditorBackground"), Height = 800 };
+            _editProgressBaseSprite = new Sprite
+                                          {
+                                              SpriteTexture = TextureManager.Textures("SongEditProgressBase"),
+                                              Position = (Core.Metrics["SongEditProgress", 0])
+                                          };
             _editProgressSpriteMap = new SpriteMap
                                          {
                                              Columns = 4,

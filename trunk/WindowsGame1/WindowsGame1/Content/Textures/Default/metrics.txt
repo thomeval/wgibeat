@@ -148,6 +148,6 @@ KeyOptionInstructionBase=[0,550];
 StatsInstructionText=[200,560][600,560];
 StatsInstructionBase=[0,550];
 StatsJoinMessage=[200,300][600,300];
-StatsColumns=[25,125][200,125][300,125][425,125][600,125][700,125];
+StatsColumns=[25,125][250,125][325,125][425,125][650,125][725,125];
 StatsProfileMenu=[25,100][425,100];
 

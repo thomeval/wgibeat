@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
+using WGiBeat.Notes;
 using Action=WGiBeat.Managers.Action;
 
 namespace WGiBeat.Screens
@@ -9,10 +12,10 @@ namespace WGiBeat.Screens
     public class StatsScreen : GameScreen
     {
 
-        private int[] _activePlayers;
-        private int[] _scrollPosition;
-        private Profile[] _activeProfiles;
-        private Menu[] _profileMenus;
+        private readonly int[] _activePlayers;
+        private readonly int[] _scrollPosition;
+        private readonly Profile[] _activeProfiles;
+        private readonly Menu[] _profileMenus;
         private Sprite _headerSprite;
         private Sprite _instructionBaseSprite;
         private Sprite _backgroundSprite;
@@ -110,10 +113,8 @@ namespace WGiBeat.Screens
                     case StatsScreenState.VIEWING_STATS:
                         DrawStats(spriteBatch,x, (Profile) _profileMenus[x].SelectedItem().ItemValue);
                         TextureManager.DrawString(spriteBatch, "START: Change profile", "DefaultFont", Core.Metrics["StatsInstructionText", x], Color.White, FontAlign.CENTER);
-
                         break;
-                    
-               
+  
                 }
             }
         }
@@ -127,10 +128,65 @@ namespace WGiBeat.Screens
             positions[1].Y += 40;
            TextureManager.DrawString(spriteBatch,"Total play time:","LargeFont",positions[0],Color.Black, FontAlign.LEFT);
             var playTime = new TimeSpan(0, 0, 0, 0, (int) profile.TotalPlayTime);
-            positions[1].X += 50;
+           // positions[1].X += 50;
 
            TextureManager.DrawString(spriteBatch, String.Format("{0}h:{1}m:{2}s ", playTime.Hours, playTime.Minutes,playTime.Seconds), "LargeFont", positions[1], Color.Black, FontAlign.LEFT);
-            positions[1].X -= 50;
+           // positions[1].X -= 50;
+            positions[0].Y += 25;
+            positions[1].Y += 25;
+
+            TextureManager.DrawString(spriteBatch, "Songs cleared:", "LargeFont", positions[0], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, "" + profile.SongsCleared, "LargeFont", positions[1], Color.Black, FontAlign.LEFT);
+            positions[0].Y += 25;
+            positions[1].Y += 25;
+            TextureManager.DrawString(spriteBatch, "Songs failed:", "LargeFont", positions[0], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, "" + profile.SongsFailed, "LargeFont", positions[1], Color.Black, FontAlign.LEFT);
+
+            positions[0].Y += 50;
+            positions[1].Y += 50;
+            var totalBeatlines = profile.JudgementCounts.Sum() - profile.JudgementCounts[(int) BeatlineNoteJudgement.COUNT];
+            TextureManager.DrawString(spriteBatch, "Total beatlines:","LargeFont", positions[0],Color.Black,FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, "" + totalBeatlines, "LargeFont", positions[1], Color.Black, FontAlign.LEFT);
+            positions[0].Y += 25;
+            for (int x = 0; x < (int) BeatlineNoteJudgement.COUNT; x++)
+            {
+
+                positions[1].Y = positions[0].Y;
+                positions[2].Y = positions[0].Y;
+                TextureManager.DrawString(spriteBatch, ((BeatlineNoteJudgement) x).ToString(), "DefaultFont",
+                                          positions[0], Color.Black, FontAlign.LEFT);
+                TextureManager.DrawString(spriteBatch, profile.JudgementCounts[x] + "", "DefaultFont",
+                                          positions[1], Color.Black, FontAlign.LEFT);
+                TextureManager.DrawString(spriteBatch, "100%", "DefaultFont",
+                                          positions[2], Color.Black, FontAlign.LEFT);
+                positions[0].Y += 20;
+                
+            }
+            positions[0].Y += 25;
+            positions[1].Y = positions[0].Y;
+
+            var totalArrows = profile.TotalHits + profile.JudgementCounts[(int) BeatlineNoteJudgement.COUNT];
+            TextureManager.DrawString(spriteBatch, "Total arrows:", "LargeFont", positions[0], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, "" + totalArrows, "LargeFont", positions[1], Color.Black, FontAlign.LEFT);
+            positions[0].Y += 25;
+            positions[1].Y = positions[0].Y;
+            positions[2].Y = positions[0].Y;
+
+            TextureManager.DrawString(spriteBatch, "Hits", "DefaultFont", positions[0], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, "" + profile.TotalHits, "DefaultFont", positions[1], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, "100%", "DefaultFont", positions[2], Color.Black, FontAlign.LEFT);
+            positions[0].Y += 20;
+            positions[1].Y = positions[0].Y;
+            positions[2].Y = positions[0].Y;
+
+            TextureManager.DrawString(spriteBatch, "Faults", "DefaultFont", positions[0], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, "" + profile.JudgementCounts[(int)BeatlineNoteJudgement.COUNT], "DefaultFont", 
+                positions[1], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, "100%", "DefaultFont", positions[2], Color.Black, FontAlign.LEFT);
+            positions[0].Y += 20;
+            positions[1].Y = positions[0].Y;
+            positions[2].Y = positions[0].Y;
+            
         }
 
 
