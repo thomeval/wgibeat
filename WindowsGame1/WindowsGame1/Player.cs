@@ -39,7 +39,7 @@ namespace WGiBeat
         }
 
         public long MaxHits { get; set; }
-        private int TotalHits { get; set; }
+        public int TotalHits { get; set; }
         public long Momentum { get; set; }
 
         private int _streak;

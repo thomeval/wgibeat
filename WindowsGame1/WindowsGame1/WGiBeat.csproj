@@ -183,6 +183,15 @@
     <Content Include="Content\Textures\Default\OptionDescriptionBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Textures\Default\StatsBackground.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Default\StatsHeader.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Default\StatsInstructionBase.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Text\OptionText.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
