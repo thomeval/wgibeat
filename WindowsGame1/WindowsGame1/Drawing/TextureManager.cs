@@ -49,13 +49,27 @@ namespace WGiBeat.Drawing
         {
             string[] validExtensions = {".bmp", ".png", ".jpg", ".jpeg"};
 
-            foreach (string file in Directory.GetFiles(foldername))
+            var folders = new Stack<string>();
+            folders.Push(foldername);
+            while (folders.Count > 0)
             {
-               if (validExtensions.Contains(Path.GetExtension(file)))
-               {
-                   CreateAndAddTexture(file);
-               }
+                var currentFolder = folders.Pop();
+                foreach (string folder in Directory.GetDirectories(currentFolder))
+                {
+                    folders.Push(folder);
+                }
+
+                foreach (string file in Directory.GetFiles(currentFolder))
+                {
+                    if (validExtensions.Contains(Path.GetExtension(file)))
+                    {
+                        CreateAndAddTexture(file);
+                    }
+                }
+                
+
             }
+  
         }
 
 
