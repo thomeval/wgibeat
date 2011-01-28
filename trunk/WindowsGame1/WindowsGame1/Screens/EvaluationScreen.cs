@@ -137,6 +137,7 @@ namespace WGiBeat.Screens
                     Core.Players[x].Profile.SongsCleared++;
                 }
                 Core.Players[x].UpdateToProfile();
+                Core.Profiles.SaveToFolder(Core.WgibeatRootFolder + "\\" + Core.Settings["ProfileFolder"]);
             }
         }
 
