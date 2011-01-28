@@ -133,7 +133,7 @@ namespace WGiBeat.Screens
         {
             foreach (Player player in Core.Players)
             {
-                if (!player.IsHumanPlayer)
+                if (player.IsHumanPlayer)
                 {
                     player.PlayTime += (long) milliseconds;
                 }
@@ -366,6 +366,7 @@ namespace WGiBeat.Screens
             {
                 _notebars[player].MarkCurrentCompleted();
                 Core.Players[player].Hits++;
+                Core.Players[player].TotalHits++;
             }
             else if (_notebars[player].CurrentNote() != null)
             {
