@@ -2,22 +2,20 @@
 
 -Evaluation screen, lot of work. 80% Done
 
--Option screen. Title. Menu design, animated.
-
--New difficulty icons?
--Replace graphics to use correct font
--Sparks along UI. Over the wires.
--Graphics for On Screen Keyboard
+-New difficulty icons? (0.7)
+-Replace graphics to use correct font (in progress)
 -Graphics for chance / SP gameplay
 -Program Icon 
 
 --Thome--
--Sync (0.6?), Battle (0.7?) game modes.
--Song Sort bookmarks / quick navigation (low)
+- Sync (0.7?), Battle (0.7?) game modes.
+- Song Sort bookmarks / quick navigation (low)
 - Netplay (major, low)
 - Stepmania file support? (low)
+- WGiEdit - add AudioStart support (0.7)
+- WGiEdit - song timeline (0.7)
 
--Public domain music as a sample file? (0.6 - zoran - LOL)
+-Public domain music as a sample file? (0.6 - zoran - LOL) ** Blocker **
 -Cooperative bonuses (Streaks? Sync perfects?) (0.6)
 -Life graph (In progress)(Graphics improvement)
 
@@ -27,15 +25,14 @@
 - BPM meter doesn't animate on-beat. (0.6)(Attempted, failed)
 
 - Mode descriptions (Needs graphics) (0.6)
-- Profile stat display screen (0.6)
 - Move text in mode select and wgiedit to TextManager.
 
 - Record average late/early beatline hits.
-- WGiEdit - add AudioStart support
-- WGiEdit - song timeline 
 - Update player-action combination into object.
-- Song previews dont play when entering song select for the 2nd time.
 
+
+
+==0.6 - "Exotic Economist" ==
 - Auto join in NewGameScreen. (0.6) (Done)
 - Indicate CPU players in beatlines, player options frame and score bar. (Done)
 - Why is a song invalid in WGiEdit? (Done)
@@ -52,8 +49,11 @@
 - Removed case sensitivity of theme graphics.
 - Adjustable audio playback start position using the AudioStart field. (Done)
 - Flashing hits counter (milestones) (Done)
-- Bugfix - WGiEdit: Missing beatline notes have been resolved in Tuning step.
-- Bugfix - WGiEdit: Streaks now reset correctly.
+- Profile stat display screen (Done)
+- Added graphics to Menus, Text Entry and On Screen Keyboard. (Done)
+- Bugfix - WGiEdit: Missing beatline notes have been resolved in Tuning step. (Done)
+- Bugfix - WGiEdit: Streaks now reset correctly. (Done)
+- Bugfix - Song previews dont play when entering song select for the 2nd time. (Done)
 
 ==0.5 - "Handicapped Doubt" ==
  *   Song audio validation by using MD5. This makes it easier to ensure that the correct audio (.mp3) file is used when playing a song, especially when song files (.sng) are distributed.

@@ -10,7 +10,6 @@ namespace WGiBeat.Drawing
     {
         private readonly char[] _chars = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9','_'};
         public string EnteredText { get; set; }
-        public Vector2 EnteredTextPosition { get; set; }
 
         public Color HighlightColor { get; set; }
         public Color BaseColor  {get; set;}
@@ -20,6 +19,8 @@ namespace WGiBeat.Drawing
         public int MaxLength { get; set; }
         private int _selectedIndex;
         private SpriteMap _specialChars;
+        private SpriteMap _barSideSpriteMap;
+        private Sprite _barMiddleSprite;
 
         public event EventHandler EntryComplete;
         public event EventHandler EntryCancelled;
@@ -36,7 +37,6 @@ namespace WGiBeat.Drawing
         public OnScreenKeyboard()
         {
             EnteredText = "";
-            EnteredTextPosition = new Vector2(0, 0);
             HighlightColor = Color.Blue;
             BaseColor = Color.Black;
             Columns = 10;
@@ -50,23 +50,48 @@ namespace WGiBeat.Drawing
         {
             _specialChars = new SpriteMap
                                 {Columns = 3, Rows = 1, SpriteTexture = TextureManager.Textures("KeyboardIcons")};
+            _barSideSpriteMap = new SpriteMap
+            {
+                SpriteTexture = TextureManager.Textures("TextEntryBarSide"),
+                Rows = 2,
+                Columns = 1
+            };
+            _barMiddleSprite = new Sprite { SpriteTexture = TextureManager.Textures("TextEntryBarMiddle") };
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-           TextureManager.DrawString(spriteBatch,EnteredText,"TwoTech", EnteredTextPosition, BaseColor,FontAlign.CENTER);
+            DrawEnteredTextBar(spriteBatch,this.Position.Clone());
+            var enteredTextPosition = this.Position.Clone();
+            enteredTextPosition.X += this.Width/2;
+           TextureManager.DrawString(spriteBatch,EnteredText,"TwoTech", enteredTextPosition, BaseColor,FontAlign.CENTER);
 
             DrawKeyboard(spriteBatch);
         }
 
+        private void DrawEnteredTextBar(SpriteBatch spriteBatch, Vector2 position)
+        {
+            position.X += 25;
+            _barSideSpriteMap.Draw(spriteBatch, 0, position);
+            position.X += 35;
+            _barMiddleSprite.Width = this.Width - 120;
+            _barMiddleSprite.Position = position;
+            _barMiddleSprite.Draw(spriteBatch);
+            position.X += this.Width - 120;
+            _barSideSpriteMap.Draw(spriteBatch, 1, position);
+
+        }
+
         private void DrawKeyboard(SpriteBatch spriteBatch)
         {
-            var drawPosition = new Vector2(this.X, this.Y);
+            var initialPosition = this.Position.Clone();
+            var drawPosition = this.Position.Clone();
+            initialPosition.Y += 35;
             int counter = 0;
             foreach (char c in _chars)
             {
-                drawPosition.X = (this.X) + (SpacingX*(counter%Columns));
-                drawPosition.Y = (this.Y) + (SpacingY*(counter/Columns));
+                drawPosition.X = (initialPosition.X) + (SpacingX*(counter%Columns));
+                drawPosition.Y = (initialPosition.Y) + (SpacingY*(counter/Columns));
                 if (counter == _selectedIndex)
                 {
                     spriteBatch.DrawString(TextureManager.Fonts("TwoTech"), c.ToString(), drawPosition, HighlightColor);
@@ -79,11 +104,10 @@ namespace WGiBeat.Drawing
                 counter++;
             }
 
-
             for (int x = 0; x < 3; x++)
             {
-                drawPosition.X = (this.X) + (SpacingX * (counter % Columns));
-                drawPosition.Y = (this.Y) + (SpacingY * (counter / Columns));
+                drawPosition.X = (initialPosition.X) + (SpacingX * (counter % Columns));
+                drawPosition.Y = (initialPosition.Y) + (SpacingY * (counter / Columns));
                 _specialChars.ColorShading = (_selectedIndex == _chars.Count() + x) ? HighlightColor : BaseColor;
                 _specialChars.Draw(spriteBatch,x,25,25, (int) drawPosition.X, (int) drawPosition.Y);
                 counter++;
