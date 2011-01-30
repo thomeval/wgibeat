@@ -64,6 +64,7 @@ namespace WGiBeat.Screens
             _confidence = 0;
             _lastBlazeCheck = 0;
             _lastLifeRecord = -0.5;
+            
             for (int x = 0; x < PLAYER_COUNT; x++)
             {
 
@@ -124,9 +125,32 @@ namespace WGiBeat.Screens
             SyncSong();
             _beatlineSet.MaintainBeatlineNotes(_phraseNumber);
             MaintainBlazings();
+            MaintainCPUArrows();
             RecordPlayerLife();
             RecordPlayerPlayTime(gameTime.ElapsedRealTime.TotalMilliseconds);
             base.Update(gameTime);
+        }
+
+        private void MaintainCPUArrows()
+        {
+            for (int x = 0; x < 3; x++)
+            {
+                if (!Core.Players[x].IsCPUPlayer)
+                {
+                    continue;
+                }
+
+                var nextHit = 1.0 * (_notebars[x].NumberCompleted() + 1) / (_notebars[x].Notes.Count() + 1);
+                var phraseDecimal = _phraseNumber - Math.Floor(_phraseNumber);
+
+                if (phraseDecimal > nextHit)
+                {
+                    System.Diagnostics.Debug.WriteLine("PD: "+ phraseDecimal + " / NH: " + nextHit);
+                    _notebars[x].MarkCurrentCompleted();
+                    Core.Players[x].Hits++;
+                }
+                
+            }
         }
 
         private void RecordPlayerPlayTime(double milliseconds)
@@ -353,10 +377,6 @@ namespace WGiBeat.Screens
 
         private void HitArrow(Action action, int player)
         {
-            if (player >= PLAYER_COUNT)
-            {
-                return;
-            }
             if ((Core.Players[player].KO) || (!Core.Players[player].Playing))
             {
                 return;
