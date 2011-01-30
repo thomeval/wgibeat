@@ -18,9 +18,13 @@ namespace WGiBeat.Screens
         private readonly OnScreenKeyboard[] _keyboards = new OnScreenKeyboard[4];
         private Sprite _background;
         private Sprite _messageBackground;
-        private string[] _errorMessages = new string[4];
-        private string[] _infoMessages = new string[4];
+        private readonly string[] _errorMessages = new string[4];
+        private readonly string[] _infoMessages = new string[4];
 
+        private readonly Color[] _backgroundColors = {
+                                                new Color(255, 128, 128), new Color(128, 128, 255),
+                                                new Color(128, 255, 128), new Color(255, 255, 128)
+                                            };
         public NewGameScreen(GameCore core)
             : base(core)
         {
@@ -40,9 +44,13 @@ namespace WGiBeat.Screens
                 _errorMessages[x] = "";
                 _infoMessages[x] = "";
 
-                _keyboards[x] = new OnScreenKeyboard {MaxLength = 10, Id = x};
-                _keyboards[x].Position = (Core.Metrics["OnScreenKeyboard", x]);
-                _keyboards[x].EnteredTextPosition = Core.Metrics["OnScreenKeyboardDisplay", x];
+                _keyboards[x] = new OnScreenKeyboard
+                                    {
+                                        MaxLength = 10,
+                                        Id = x,
+                                        Position = (Core.Metrics["OnScreenKeyboard", x]),
+                                        Width = 400
+                                    };
                 _keyboards[x].EntryCancelled += Keyboard_EntryCancelled;
                 _keyboards[x].EntryComplete += Keyboard_EntryComplete;
             }
@@ -78,6 +86,7 @@ namespace WGiBeat.Screens
             _profileMenus[x].AddItem(new MenuItem { ItemText = "[Guest]" });
             _profileMenus[x].AddItem(new MenuItem {ItemText = "[Cancel]"});
 
+            _profileMenus[x].SelectedItemBackgroundColor = _backgroundColors[x];
             foreach (Profile profile in Core.Profiles.GetAll())
             {
                 _profileMenus[x].AddItem(new MenuItem {ItemText = profile.Name, ItemValue = profile});
@@ -90,7 +99,7 @@ namespace WGiBeat.Screens
             _playerMenus[x] = new Menu { Width = 300 };
             _playerMenus[x].AddItem(new MenuItem { ItemText = "Decision" });
             _playerMenus[x].AddItem(new MenuItem { ItemText = "Profile" });
-
+            _playerMenus[x].SelectedItemBackgroundColor = _backgroundColors[x];
             var difficulty = new MenuItem { ItemText = "Difficulty" };
             difficulty.AddOption("Beginner", 0);
             difficulty.AddOption("Easy", 1);

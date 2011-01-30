@@ -4,13 +4,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 
 namespace WGiBeat.Managers
 {
     public class ProfileManager : Manager
     {
-        private List<Profile> _profiles;
+        private readonly List<Profile> _profiles;
 
         public ProfileManager()
         {

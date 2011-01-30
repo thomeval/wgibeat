@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -10,8 +11,10 @@ namespace WGiBeat.Drawing
     public class TextEntry : DrawableObject
     {
         private StringBuilder _result = new StringBuilder();
-        private readonly Sprite _capsLockSprite;
-        private readonly Sprite _shiftSprite;
+        private Sprite _capsLockSprite;
+        private Sprite _shiftSprite;
+        private SpriteMap _barSideSpriteMap;
+        private Sprite _barMiddleSprite;
 
         public event EventHandler EntryComplete;
         public event EventHandler EntryCancelled;
@@ -26,10 +29,22 @@ namespace WGiBeat.Drawing
 
         public TextEntry()
         {
-            _capsLockSprite = new Sprite {SpriteTexture = TextureManager.Textures("TextEntryCaps")};
-            _shiftSprite = new Sprite {SpriteTexture = TextureManager.Textures("TextEntryShift")};
-
+            InitSprites();
         }
+
+        private void InitSprites()
+        {
+            _capsLockSprite = new Sprite { SpriteTexture = TextureManager.Textures("TextEntryCaps") };
+            _shiftSprite = new Sprite { SpriteTexture = TextureManager.Textures("TextEntryShift") };
+            _barSideSpriteMap = new SpriteMap
+                                    {
+                                        SpriteTexture = TextureManager.Textures("TextEntryBarSide"),
+                                        Rows = 2,
+                                        Columns = 1
+                                    };
+            _barMiddleSprite = new Sprite {SpriteTexture = TextureManager.Textures("TextEntryBarMiddle")};
+        }
+
         public string EnteredText
         {
             get { return _result.ToString(); }
@@ -39,10 +54,12 @@ namespace WGiBeat.Drawing
         {
             var myPosition = this.Position.Clone();
 
+            DrawEnteredTextBar(spriteBatch, myPosition.Clone());
             myPosition.X += (this.Width/2.0f);
+            
             TextureManager.DrawString(spriteBatch, _result.ToString(), "LargeFont", myPosition,
                           TextColour, FontAlign.CENTER);
-            myPosition.Y += 25;
+            myPosition.Y += 40;
             foreach (string line in DescriptionText.Split('\n'))
             {
                 TextureManager.DrawString(spriteBatch, line, "DefaultFont", myPosition,
@@ -66,6 +83,19 @@ namespace WGiBeat.Drawing
                 _capsLockSprite.X = (int)myPosition.X + 50;
                _capsLockSprite.Draw(spriteBatch);
             }
+
+        }
+
+        private void DrawEnteredTextBar(SpriteBatch spriteBatch, Vector2 position)
+        {
+            position.X += 25;
+            _barSideSpriteMap.Draw(spriteBatch,0,position);
+            position.X += 35;
+            _barMiddleSprite.Width = this.Width - 120;
+            _barMiddleSprite.Position = position;
+            _barMiddleSprite.Draw(spriteBatch);
+            position.X += this.Width - 120;
+            _barSideSpriteMap.Draw(spriteBatch,1,position);
 
         }
 
