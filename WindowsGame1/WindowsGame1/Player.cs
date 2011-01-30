@@ -23,6 +23,7 @@ namespace WGiBeat
         public bool IsBlazing { get; set; }
         public int Team { get; set; }
         public long PlayTime { get; set; }
+        public double LastCPUArrowHit { get; set; }
 
         private long _hits;
         public long Hits
@@ -216,6 +217,7 @@ namespace WGiBeat
             KO = false;
             IsBlazing = false;
             PlayTime = 0;
+            LastCPUArrowHit = 0.0;
             _lifeHistory.Clear();
         }
         
