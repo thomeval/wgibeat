@@ -47,7 +47,7 @@ namespace WGiBeat.Managers
             return tm;
         }
 
-        private void AddResource(string filename)
+        public void AddResource(string filename)
         {
             Log.AddMessage(String.Format("Loading Text resources from {0} ...", filename), LogLevel.INFO);
 
