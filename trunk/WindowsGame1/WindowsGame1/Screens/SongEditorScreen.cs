@@ -181,7 +181,7 @@ namespace WGiBeat.Screens
         {
             switch (_textEntryDestination)
             {
-                case "AudioFile":
+                case "DefinitionFile":
                 case "SongFolder":
                     _cursorPosition = EditorCursorPosition.SONG_BASICS;
                     break;
@@ -202,7 +202,7 @@ namespace WGiBeat.Screens
             double temp;
             switch (_textEntryDestination)
             {
-                case "AudioFile":
+                case "DefinitionFile":
                     _destinationFileName = _textEntry.EnteredText;
                     if (!_destinationFileName.EndsWith(".sng"))
                     {
@@ -390,38 +390,19 @@ namespace WGiBeat.Screens
                     DrawHitOffsetText(spriteBatch);
                     break;
                 case EditorCursorPosition.MEASURE_OFFSET:
-                    instructions = "Press START or BEATLINE to mark the offset position in the song.";
-                    instructions +=
-                        "\nThis is used to record where the actual gameplay should begin,\n and should ideally be on-beat.";
-                    instructions += "\nPress Escape to cancel.";
-
+                    instructions = Core.Text["EditorMeasureOffset"];
                     break;
                 case EditorCursorPosition.MEASURE_LENGTH:
-                    instructions = "Press START or BEATLINE to mark the end of the playable area of the song.";
-                    instructions +=
-                        "\nThis does not need to be on-beat, as the last beatline is calculated automatically.";
-                    instructions += "\nPress Escape to cancel.";
-
+                    instructions = Core.Text["EditorMeasureLength"];
                     break;
                 case EditorCursorPosition.MEASURE_BPM:
-                    instructions = "Use BEATLINE to tap the beats of the song.";
-                    instructions +=
-                        "\nThe BPM will be calculated based on the average time between taps.";
-                    instructions += "\nNote that most songs have a BPM that is a whole number.";
-                    instructions += "\nPress START to use the estimated BPM, or press Escape to cancel.";
-
+                    instructions = Core.Text["EditorMeasureBPM"];
                     break;
                     case EditorCursorPosition.DONE:
-                    instructions = "The song has been created successfully, and saved in the designated folder.";
-                    instructions +=
-                        "\nIt is now playable by selecting it from the Song Select Screen.";
-                    instructions += "\nThe song can be edited later by selecting 'Edit Existing Song'";
-                    instructions += "\nfrom the WGiEdit main menu.";
-                    instructions += "\nPress START to return to the main menu.";
+                    instructions = Core.Text["EditorDoneCreating"];
                     break;
                     case EditorCursorPosition.DONE_DELETE:
-                    instructions = "The song has been deleted successfully.";
-                    instructions += "\nPress START to return to the main menu.";
+                    instructions = Core.Text["EditorDoneDeleting"];
                     break;
             }
             TextureManager.DrawString(spriteBatch, instructions, "DefaultFont", Core.Metrics["EditorMeasureInstructions", 0], Color.Black, FontAlign.CENTER);
@@ -887,15 +868,14 @@ namespace WGiBeat.Screens
                     break;
                 case "1":
                     ActivateTextEntryMode();
-                    _textEntry.DescriptionText =
-                        "Enter the name of the folder where this song will be stored.\n It will be created if it doesn't exist.";
+                    _textEntry.DescriptionText = Core.Text["EditorEnterDestinationFolder"];
+                        
                     _textEntryDestination = "SongFolder";
                     break;
                 case "2":
                     ActivateTextEntryMode();
-                    _textEntry.DescriptionText =
-                        "Enter the name of the song file (.sng) that will be created.\n The name has no effect on gameplay.";
-                    _textEntryDestination = "AudioFile";
+                    _textEntry.DescriptionText = Core.Text["EditorEnterDestinationFile"];                  
+                    _textEntryDestination = "DefinitionFile";
                     break;
                 case "3":
                     if (_menus["Basics"].GetByItemText("Next Step").Enabled)
@@ -921,23 +901,23 @@ namespace WGiBeat.Screens
                 case 0:
                     ActivateTextEntryMode();
                     _textEntryDestination = "SongTitle";
-                    _textEntry.DescriptionText = "Enter the title of the song.";
+                    _textEntry.DescriptionText = Core.Text["EditorEnterSongTitle"];
                     break;
                 case 1:
                     ActivateTextEntryMode();
                     _textEntryDestination = "SongSubtitle";
-                    _textEntry.DescriptionText = "(Optional) Enter the second title line of the song.\nUse this for very long titles, or to denote different mixes of the same song.";
+                    _textEntry.DescriptionText = Core.Text["EditorEnterSongSubtitle"];
                     break;
                 case 2:
                     ActivateTextEntryMode();
                     _textEntryDestination = "SongArtist";
-                    _textEntry.DescriptionText = "Enter the name of the artist that created the audio of this song.";
+                    _textEntry.DescriptionText = Core.Text["EditorEnterSongArtist"];
 
                     break;
                 case 3:
                     ActivateTextEntryMode();
                     _textEntryDestination = "SongBPM";
-                    _textEntry.DescriptionText = "Enter the BPM (Beats per minute) of the song.\n This is used to record the speed of the song.\n Decimal numbers are allowed.";
+                    _textEntry.DescriptionText = Core.Text["EditorEnterSongBPM"];
 
                     break;
                 case 4:
@@ -951,7 +931,7 @@ namespace WGiBeat.Screens
                 case 5:
                     ActivateTextEntryMode();
                     _textEntryDestination = "SongOffset";
-                    _textEntry.DescriptionText = "Enter the offset, in seconds, of the song.\n This is used to record where the actual gameplay should begin,\n and should ideally be on-beat. Decimal numbers are allowed.";
+                    _textEntry.DescriptionText = Core.Text["EditorEnterSongOffset"];
                     
                     break;
                 case 6:
@@ -961,8 +941,7 @@ namespace WGiBeat.Screens
                 case 7:
                     ActivateTextEntryMode();
                     _textEntryDestination = "SongLength";
-                    _textEntry.DescriptionText = "Enter the length, in seconds, of the song.\n This is used to record where the end of the playable area of a song.\n This point is measured from the start of the audio file (not the offset), \nand does not need to be on-beat. Decimal numbers are allowed.";
-
+                    _textEntry.DescriptionText = Core.Text["EditorEnterSongLength"];
                     break;
                 case 8:
                     _cursorPosition = EditorCursorPosition.MEASURE_LENGTH;

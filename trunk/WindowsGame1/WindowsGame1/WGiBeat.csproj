@@ -204,6 +204,9 @@
     <Content Include="Content\Textures\Default\TextEntryBarSide.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Text\EditorText.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Text\OptionText.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
