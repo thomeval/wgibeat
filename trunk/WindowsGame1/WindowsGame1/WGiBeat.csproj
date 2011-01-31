@@ -207,6 +207,9 @@
     <Content Include="Content\Text\EditorText.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Text\ModeText.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Text\OptionText.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

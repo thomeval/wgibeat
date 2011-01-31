@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
 using Action = WGiBeat.Managers.Action;
+using WGiBeat.Managers;
 
 namespace WGiBeat.Screens
 {
@@ -64,8 +65,11 @@ namespace WGiBeat.Screens
                 Width = Core.Window.ClientBounds.Width,
             };
 
-            _headerSprite = new Sprite { SpriteTexture = TextureManager.Textures("ModeSelectHeader") };
-            _headerSprite.Position = (Core.Metrics["ModeSelectScreenHeader", 0]);
+            _headerSprite = new Sprite
+                                {
+                                    SpriteTexture = TextureManager.Textures("ModeSelectHeader"),
+                                    Position = (Core.Metrics["ModeSelectScreenHeader", 0])
+                                };
 
             _optionBaseSpriteMap = new SpriteMap
             {
@@ -85,10 +89,16 @@ namespace WGiBeat.Screens
             _edgeSpriteMap = new SpriteMap { Columns = 2, Rows = 1, SpriteTexture = TextureManager.Textures("ModeSelectEdge") };
             _arrowSpriteMap = new SpriteMap { Columns = 4, Rows = 1, SpriteTexture = TextureManager.Textures("IndicatorArrows") };
 
-            _descriptionBaseSprite = new Sprite { SpriteTexture = TextureManager.Textures("ModeDescriptionBase") };
-            _descriptionBaseSprite.Position = (Core.Metrics["ModeDescriptionBase", 0]);
-            _messageBorderSprite = new Sprite { SpriteTexture = TextureManager.Textures("MessageBorder") };
-            _messageBorderSprite.Position = (Core.Metrics["MessageBorder", 0]);
+            _descriptionBaseSprite = new Sprite
+                                         {
+                                             SpriteTexture = TextureManager.Textures("ModeDescriptionBase"),
+                                             Position = (Core.Metrics["ModeDescriptionBase", 0])
+                                         };
+            _messageBorderSprite = new Sprite
+                                       {
+                                           SpriteTexture = TextureManager.Textures("MessageBorder"),
+                                           Position = (Core.Metrics["MessageBorder", 0])
+                                       };
             _restrictionSprite = new Sprite { SpriteTexture = TextureManager.Textures("RestrictionIcon"), Width = 48, Height = 48 };
             _restrictionSprite.SetPosition(_messageBorderSprite.X + 7, _messageBorderSprite.Y + 7);
         }
@@ -139,9 +149,9 @@ namespace WGiBeat.Screens
 
         private void DrawVSCPUDifficultySelect(SpriteBatch spriteBatch)
         {
-            var message = "Select CPU Skill level:";
+            var message = "";
             _messageBorderSprite.Draw(spriteBatch);
-            TextureManager.DrawString(spriteBatch, message, "DefaultFont", Core.Metrics["RestrictionMessage", 0], Color.White, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, Core.Text["ModeSelectCPULevel"], "DefaultFont", Core.Metrics["RestrictionMessage", 0], Color.White, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, Core.CPUManager.SkillNames[_selectedCPUSkill], "DefaultFont", Core.Metrics["SelectedCPUDifficulty", 0], Color.White, FontAlign.LEFT);
             var position = Core.Metrics["SelectedCPUDifficulty", 0];
             _arrowSpriteMap.Draw(spriteBatch, 1, 24, 24, (int)position.X - 25, (int)position.Y);
@@ -150,7 +160,7 @@ namespace WGiBeat.Screens
 
         private const int LIST_ITEMS_DRAWN = 4;
         public const double MODE_CHANGE_SPEED = 0.9;
-        private static readonly Color DisabledColor = new Color(255, 255, 255, 64);
+        private static readonly Color _disabledColor = new Color(255, 255, 255, 64);
 
         private void DrawModeOptions(SpriteBatch spriteBatch)
         {
@@ -162,7 +172,7 @@ namespace WGiBeat.Screens
             //Draw selected game type.
             _optionBaseSpriteMap.Draw(spriteBatch, 1, 250, 160, midpoint);
             var allowed = String.IsNullOrEmpty(GameTypeAllowed((GameType)index));
-            _optionsSpriteMap.ColorShading = allowed ? Color.White : DisabledColor;
+            _optionsSpriteMap.ColorShading = allowed ? Color.White : _disabledColor;
             _optionsSpriteMap.Draw(spriteBatch, index, 229, 139, (int)midpoint.X + 10, (int)midpoint.Y + 10);
 
             //Draw Mode options to the right of (after) the selected one.
@@ -172,7 +182,7 @@ namespace WGiBeat.Screens
                 midpoint.X += 255;
                 _optionBaseSpriteMap.Draw(spriteBatch, 0, 250, 160, midpoint);
                 allowed = String.IsNullOrEmpty(GameTypeAllowed((GameType)index));
-                _optionsSpriteMap.ColorShading = allowed ? Color.White : DisabledColor;
+                _optionsSpriteMap.ColorShading = allowed ? Color.White : _disabledColor;
                 _optionsSpriteMap.Draw(spriteBatch, index, 229, 139, (int)midpoint.X + 10, (int)midpoint.Y + 10);
             }
 
@@ -190,7 +200,7 @@ namespace WGiBeat.Screens
                 midpoint.X -= 255;
                 _optionBaseSpriteMap.Draw(spriteBatch, 0, 250, 160, midpoint);
                 allowed = String.IsNullOrEmpty(GameTypeAllowed((GameType)index));
-                _optionsSpriteMap.ColorShading = allowed ? Color.White : DisabledColor;
+                _optionsSpriteMap.ColorShading = allowed ? Color.White : _disabledColor;
                 _optionsSpriteMap.Draw(spriteBatch, index, 229, 139, (int)midpoint.X + 10, (int)midpoint.Y + 10);
             }
 
@@ -373,15 +383,14 @@ namespace WGiBeat.Screens
             switch (gameType)
             {
                 case GameType.NORMAL:
-                    return "1 to 4 players:\nEach player plays independantly and \nis evaluated individually.";
+                    return Core.Text["ModeSelectNormal"];
                 case GameType.COOPERATIVE:
-                    return
-                        "2 to 4 players:\nPlay as a team to achieve high scores. \nPlayer scores and life bars are combined.";
+                    return Core.Text["ModeSelectCoop"];
 
                 case GameType.TEAM:
-                    return "2 to 4 players:\nTwo teams play competitively.\nThe team with the higher score wins.";
+                    return Core.Text["ModeSelectTeam"];
                 case GameType.VS_CPU:
-                    return "1 to 3 players:\nPlayers compete against a computer opponent.\nThe opponent is scaled to match the number of players.";
+                    return Core.Text["ModeSelectVSCPU"];
                 default:
                     return "Game type not recognized.";
             }
@@ -450,8 +459,7 @@ namespace WGiBeat.Screens
                     return;
                 }
             }
-
-            throw new Exception("Did not setup CPU Player.");
+            Core.Log.AddMessage("Failed to add CPU Player.",LogLevel.ERROR);
         }
 
         #endregion

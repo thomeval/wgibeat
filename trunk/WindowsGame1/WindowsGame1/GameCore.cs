@@ -81,6 +81,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             Profiles = ProfileManager.LoadFromFolder(WgibeatRootFolder + "\\Profiles", this.Log);
             Text = TextManager.LoadFromFile(WgibeatRootFolder + "\\Content\\Text\\OptionText.txt",this.Log);
             Text.AddResource(WgibeatRootFolder + "\\Content\\Text\\EditorText.txt");
+            Text.AddResource(WgibeatRootFolder + "\\Content\\Text\\ModeText.txt");
 
             Audio = new AudioManager(this.Log);
             Songs = new SongManager(this.Log,this.Audio,this.Settings);
