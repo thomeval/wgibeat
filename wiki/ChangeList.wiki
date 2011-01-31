@@ -26,7 +26,7 @@
  * Bugfix: Song length is now calculated properly.
  * Bugfix: Button presses and releases are now handled properly when using a controller.
 
-==0.3 - "Delicious Disappointment"==
+==0.3 (r222) - "Delicious Disappointment"==
 
  * Song list can be sorted by name, artist or BPM (hold the beatline key in SongSelectScreen).
  * Player status/options indicators.
@@ -49,7 +49,7 @@
  * Menu music crossfades, either to silence, to song previews or to another menu music audio.
  * Team select screen when using Team Mode.
 
-==0.2 - "Communist Garage"==
+==0.2 (r190)- "Communist Garage"==
 
  * New game mode: Team Mode
  * Installer that works.
