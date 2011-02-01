@@ -1,0 +1,11 @@
+#summary Explanation of how Themes work in WGiBeat (v0.6 or later)
+#labels Documentation
+
+= Introduction =
+
+This page contains an explanation on how themes work in WGiBeat. A theme is a collection of graphics that change the appearance of WGiBeat when used. Note that theme support is only available in version 0.6 or later.
+
+
+= Details =
+
+This page will be completed after the release of 0.6. Theme support is already active in svn versions, but no support will be provided.
