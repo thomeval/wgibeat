@@ -31,6 +31,7 @@ namespace WGiBeat.Screens
         public readonly Color[] LineColours = {Color.Red, Color.Blue, Color.Green, Color.Yellow};
         private readonly float[][] _lineData;
         private int _topLine;
+        private double _drawProgress;
 
         public PrimitiveLine LineDrawer;
 
@@ -59,6 +60,7 @@ namespace WGiBeat.Screens
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
+            _drawProgress += 0.5;
             CalculateMinMax();
             DrawPlayerLines(spriteBatch);
             DrawAxis(spriteBatch);
@@ -129,7 +131,8 @@ namespace WGiBeat.Screens
                 loopedOnce = true;
                 LineDrawer.ClearVectors();
                 LineDrawer.Colour = LineColours[x];
-                for (int y = 0; y < _lineData[x].Length; y++)
+                var limit = Math.Min(_lineData[x].Length, _drawProgress);
+                for (int y = 0; y < limit; y++)
                 {
                     float posY = this.Y + this.Height - 7;
                     posY += Math.Max(_lineData[x][y] - _min, 0) * -tickY;

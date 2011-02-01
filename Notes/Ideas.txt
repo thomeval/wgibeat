@@ -9,7 +9,7 @@
 - WGiEdit - add AudioStart support (0.7)
 - WGiEdit - song timeline (0.7)
 - New difficulty icons? (0.7)
--Graphics for blazing mode gameplay
+- Graphics for blazing mode gameplay
 - Record average late/early beatline hits.
 - BPM meter doesn't animate on-beat. (Attempted, failed)
 
@@ -21,8 +21,6 @@
 - Gradual lifegraph entrance (0.6)
 
 - Mode descriptions (Needs graphics) (0.6)
-
-- Replace graphics to use correct font (in progress)
 
 - Update player-action combination into object.
 - Program Icon 
@@ -47,6 +45,7 @@
 - Flashing hits counter (milestones) (Done)
 - Profile stat display screen (Done)
 - Added graphics to Menus, Text Entry and On Screen Keyboard. (Done)
+- Updated heading graphics to use the correct font.
 - Externalized explanatory text in Mode Select, WGiEdit and Options to external file.
 - Bugfix - WGiEdit: Missing beatline notes have been resolved in Tuning step. (Done)
 - Bugfix - WGiEdit: Streaks now reset correctly. (Done)
