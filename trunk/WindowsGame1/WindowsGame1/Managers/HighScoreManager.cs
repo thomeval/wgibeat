@@ -61,7 +61,7 @@ namespace WGiBeat.Managers
                 case GameType.NORMAL:
                     for (int x = 0; x < 4; x++)
                     {
-                        if (((!players[x].CPU)&& (players[x].Playing) && (players[x].Score > highest)))
+                        if (players[x].IsHumanPlayer && (players[x].Score > highest))
                         {
                             highest = Math.Max(highest, players[x].Score);
                             awardedPlayer = x;
@@ -108,7 +108,7 @@ namespace WGiBeat.Managers
                     break;
                 default:
                     //Individual high score.
-                    var highest = (from e in players where e.Playing select e.Score).Max();
+                    var highest = players[result].Score;
                     SetHighScoreEntry(CurrentSong.GetHashCode(), gameType, highest, grades[result], players[result].PlayDifficulty, players[result].SafeName);
                     break;
             }

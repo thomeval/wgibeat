@@ -15,7 +15,7 @@ namespace WGiBeat.Screens
         private int _highScorePlayer;
         private const int NUM_EVALUATIONS = 19;
 
-        private SineSwayParticleField _field = new SineSwayParticleField();
+        private readonly SineSwayParticleField _field = new SineSwayParticleField();
         private Sprite _background;
         private SpriteMap _gradeSpriteMap;
         private Sprite _headerSprite;
@@ -44,9 +44,11 @@ namespace WGiBeat.Screens
 
         private void InitObjects()
         {
-            _lifeGraph = new LifeGraph();
-            _lifeGraph.LineDrawer = new PrimitiveLine(Core.GraphicsDevice);
-            _lifeGraph.Location = -1;
+            _lifeGraph = new LifeGraph
+                             {
+                                 LineDrawer = new PrimitiveLine(Core.GraphicsDevice),
+                                 Location = -1
+                             };
             for (int x = 0; x < 4; x++)
             {
                 if (Core.Players[x].Playing)
@@ -63,8 +65,10 @@ namespace WGiBeat.Screens
             {
                 _lifeGraph.Position = (Core.Metrics["LifeGraph", _lifeGraph.Location]);
             }
-            _teamScoreMeter = new TeamScoreMeter();
-            _teamScoreMeter.Position = (Core.Metrics["EvaluationTeamScoreMeter", 0]);
+            _teamScoreMeter = new TeamScoreMeter
+                                  {
+                                      Position = (Core.Metrics["EvaluationTeamScoreMeter", 0])
+                                  };
             _teamScoreMeter.InitSprites();
         }
 
@@ -73,7 +77,7 @@ namespace WGiBeat.Screens
 
             _headerSprite = new Sprite
             {
-                SpriteTexture = TextureManager.Textures("evaluationHeader")
+                SpriteTexture = TextureManager.Textures("EvaluationHeader")
             };
             _background = new Sprite
                               {
@@ -85,11 +89,11 @@ namespace WGiBeat.Screens
             _maxSprite = new Sprite
             {
                 Width = 160,
-                SpriteTexture = TextureManager.Textures("evaluationMaxBase")
+                SpriteTexture = TextureManager.Textures("EvaluationMaxBase")
             };
             _recordSprite = new Sprite
             {
-                SpriteTexture = TextureManager.Textures("evaluationHighScore"),
+                SpriteTexture = TextureManager.Textures("EvaluationHighScore"),
                 Height = 25,
                 Width = 130
             };
@@ -97,18 +101,18 @@ namespace WGiBeat.Screens
             {
                 Height = 90,
                 Width = 160,
-                SpriteTexture = TextureManager.Textures("evaluationGradeBase")
+                SpriteTexture = TextureManager.Textures("EvaluationGradeBase")
             };
 
             _gradeSpriteMap = new SpriteMap
             {
                 Columns = 1,
                 Rows = NUM_EVALUATIONS,
-                SpriteTexture = TextureManager.Textures("evaluationGrades")
+                SpriteTexture = TextureManager.Textures("EvaluationGrades")
             };
             _coopScoreDisplay = new Sprite
                                     {
-                                        SpriteTexture = TextureManager.Textures("scoreBaseCombined"),
+                                        SpriteTexture = TextureManager.Textures("ScoreBaseCombined"),
                                         Position = Core.Metrics["EvaluationTeamScoreMeter",0]
                                     };
         }

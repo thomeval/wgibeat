@@ -273,7 +273,7 @@ namespace WGiBeat.Screens
         {
             var songDebug = Core.Settings.Get<bool>("SongDebug");
 
-            if ((inputAction.Player > 0) && (Core.Players[inputAction.Player].CPU))
+            if ((inputAction.Player > 0) && (Core.Players[inputAction.Player - 1].CPU))
             {
                 return;
             }
