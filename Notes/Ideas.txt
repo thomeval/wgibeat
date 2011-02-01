@@ -12,19 +12,17 @@
 - Graphics for blazing mode gameplay
 - Record average late/early beatline hits.
 - BPM meter doesn't animate on-beat. (Attempted, failed)
+- More Cooperative bonuses (Streaks? Sync perfects?) (0.7)
 
 ==TODO==
-- Cooperative bonuses (Streaks? Sync perfects?) (0.6)
+
 - Life graph (In progress)(Graphics improvement)
 
-- Chance / SP gameplay (Major - Needs graphics)(0.6)
-- Gradual lifegraph entrance (0.6)
-
 - Mode descriptions (Needs graphics) (0.6)
-
-- Update player-action combination into object.
+- Main Menu screen foreground graphics.
 - Program Icon 
 - Redo Evaluation screen
+- Split Px test in ScoreBase and add to evaluation screen.
 
 ==0.6 - "Exotic Economist" ==
 - Auto join in NewGameScreen. (0.6) (Done)
@@ -46,6 +44,8 @@
 - Profile stat display screen (Done)
 - Added graphics to Menus, Text Entry and On Screen Keyboard. (Done)
 - Updated heading graphics to use the correct font.
+- IIDX style Gradual lifegraph entrance
+- Internal update on how input is handled in the game. In the best case scenario, this should not be noticable by end users.
 - Externalized explanatory text in Mode Select, WGiEdit and Options to external file.
 - Bugfix - WGiEdit: Missing beatline notes have been resolved in Tuning step. (Done)
 - Bugfix - WGiEdit: Streaks now reset correctly. (Done)

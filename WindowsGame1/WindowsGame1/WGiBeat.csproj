@@ -190,6 +190,9 @@
     <Content Include="Content\Textures\Default\OptionDescriptionBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Textures\Default\PlayerIdentifiers.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Textures\Default\StatsBackground.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
