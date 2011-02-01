@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
-using Action=WGiBeat.Managers.Action;
+using WGiBeat.Managers;
 
 namespace WGiBeat.Screens
 {
@@ -54,8 +54,11 @@ namespace WGiBeat.Screens
         }
         public void InitSprites()
         {
-            _headingSprite = new Sprite {SpriteTexture = TextureManager.Textures("TeamSelectHeader")};
-            _headingSprite.Position = (Core.Metrics["TeamSelectScreenHeader", 0]);
+            _headingSprite = new Sprite
+                                 {
+                                     SpriteTexture = TextureManager.Textures("TeamSelectHeader"),
+                                     Position = (Core.Metrics["TeamSelectScreenHeader", 0])
+                                 };
 
             _backgroundSprite = new Sprite 
             { 
@@ -65,14 +68,22 @@ namespace WGiBeat.Screens
             };
 
             _playerReadyMarkers = new SpriteMap { SpriteTexture = TextureManager.Textures("PlayerReady"), Columns = 1, Rows = 2 };
-            _teamBorderSprite = new Sprite {SpriteTexture = TextureManager.Textures("TeamScreenBackground")};
-            _teamBorderSprite.Position = (Core.Metrics["TeamScreenBackground", 0]);
+            _teamBorderSprite = new Sprite
+                                    {
+                                        SpriteTexture = TextureManager.Textures("TeamScreenBackground"),
+                                        Position = (Core.Metrics["TeamScreenBackground", 0])
+                                    };
 
             _playerMarkers = new SpriteMap
-                                 {SpriteTexture = TextureManager.Textures("PlayerTeamMarkers"), Columns = 1, Rows = 4};
-            _messageBorder = new Sprite {SpriteTexture = TextureManager.Textures("MessageBorder")};
-            _messageBorder.Position = (Core.Metrics["MessageBorder", 0]);
-            _restrictionIcon = new Sprite() {SpriteTexture = TextureManager.Textures("RestrictionIcon"), Width = 48, Height = 48};
+                                 {
+                                     SpriteTexture = TextureManager.Textures("PlayerTeamMarkers"), Columns = 1, Rows = 4
+                                 };
+            _messageBorder = new Sprite
+                                 {
+                                     SpriteTexture = TextureManager.Textures("MessageBorder"),
+                                     Position = (Core.Metrics["MessageBorder", 0])
+                                 };
+            _restrictionIcon = new Sprite {SpriteTexture = TextureManager.Textures("RestrictionIcon"), Width = 48, Height = 48};
             _restrictionIcon.SetPosition(_messageBorder.X + 7, _messageBorder.Y + 7);
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -140,68 +151,65 @@ namespace WGiBeat.Screens
 
         }
 
-        public override void PerformAction(Action action)
+        public override void PerformAction(InputAction inputAction)
         {
-            int player = -1;
-            Int32.TryParse("" + action.ToString()[1], out player);
-            player--;
-            var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
-            var pof = (from e in _playerOptions where e.PlayerIndex == player select e).SingleOrDefault();
 
+            var optionsFrame = (from e in _playerOptions where e.PlayerIndex == inputAction.Player select e).SingleOrDefault();
+            var playerIdx = inputAction.Player - 1;
             //Ignore inputs from players not playing EXCEPT for system keys.
-            if ((player > -1) && (pof == null))
+            if ((inputAction.Player > 0) && (optionsFrame == null))
             {
                 return;
             }
-            switch (paction)
+            switch (inputAction.Action)
             {
                 case "LEFT":
-                    if (!pof.OptionChangeActive) 
+                    if (!optionsFrame.OptionChangeActive) 
                     {
-                        if (!_ready[player])
+                        if (!_ready[playerIdx])
                         {
-                            Core.Players[player].Team = Core.Players[player].Team == 2 ? 0 : 1;
+                            Core.Players[playerIdx].Team = Core.Players[playerIdx].Team == 2 ? 0 : 1;
                         }
                     }
                     else
                     {
-                        pof.AdjustDifficulty(-1);   
+                        optionsFrame.AdjustDifficulty(-1);   
                     }
                     break;
                 case "RIGHT":
-                    if (!pof.OptionChangeActive)
+                    if (!optionsFrame.OptionChangeActive)
                     {
-                        if (!_ready[player])
+                        if (!_ready[playerIdx])
                         {
-                            Core.Players[player].Team = Core.Players[player].Team == 1 ? 0 : 2;
+                            Core.Players[playerIdx].Team = Core.Players[playerIdx].Team == 1 ? 0 : 2;
                         }
                     }
                     else
                     {
-                        pof.AdjustDifficulty(1);   
+                        optionsFrame.AdjustDifficulty(1);   
                     }
                     break;
                 case "UP":
-                    if (pof.OptionChangeActive)
+                    if (optionsFrame.OptionChangeActive)
                     {
-                        pof.AdjustSpeed(1);
+                        optionsFrame.AdjustSpeed(1);
                     }
                     break;
                 case "DOWN":
-                    if (pof.OptionChangeActive)
+                    if (optionsFrame.OptionChangeActive)
                     {
-                        pof.AdjustSpeed(-1);
+                        optionsFrame.AdjustSpeed(-1);
                     }
                     break;
                 case "START":
-                    if (Core.Players[player].Team != 0)
+                    if (Core.Players[playerIdx].Team != 0)
                     {
-                        _ready[player] = !_ready[player];
+                        _ready[playerIdx] = !_ready[playerIdx];
                         TryToStart();
                     }
                     break;
                 case "SELECT":
-                    pof.OptionChangeActive = true;
+                    optionsFrame.OptionChangeActive = true;
                     break;
                 case "BACK":
                     for (int x = 0; x < 4; x++ )
@@ -214,15 +222,11 @@ namespace WGiBeat.Screens
 
         }
 
-        public override void PerformActionReleased(Action action)
+        public override void PerformActionReleased(InputAction inputAction)
         {
-            int player;
-            Int32.TryParse("" + action.ToString()[1], out player);
-            player--;
-            var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
 
-            var playerOptions = (from e in _playerOptions where e.PlayerIndex == player select e).SingleOrDefault();
-            switch (paction)
+            var playerOptions = (from e in _playerOptions where e.PlayerIndex == inputAction.Player -1 select e).SingleOrDefault();
+            switch (inputAction.Action)
             {
                 case "SELECT":
                     if (playerOptions != null)

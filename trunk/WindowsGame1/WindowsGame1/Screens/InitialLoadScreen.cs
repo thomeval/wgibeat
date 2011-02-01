@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Threading;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
-using Action=WGiBeat.Managers.Action;
 
 namespace WGiBeat.Screens
 {
@@ -110,11 +109,10 @@ namespace WGiBeat.Screens
             return _lastMessages;
         }
 
-        public override void PerformAction(Action action)
+        public override void PerformAction(InputAction inputAction)
         {
-            var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
 
-            switch (paction)
+            switch (inputAction.Action)
             {
                 case "START":
                     if (_doneLoading)

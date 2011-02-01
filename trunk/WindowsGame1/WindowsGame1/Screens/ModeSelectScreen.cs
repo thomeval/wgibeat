@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
-using Action = WGiBeat.Managers.Action;
 using WGiBeat.Managers;
 
 namespace WGiBeat.Screens
@@ -149,7 +148,6 @@ namespace WGiBeat.Screens
 
         private void DrawVSCPUDifficultySelect(SpriteBatch spriteBatch)
         {
-            var message = "";
             _messageBorderSprite.Draw(spriteBatch);
             TextureManager.DrawString(spriteBatch, Core.Text["ModeSelectCPULevel"], "DefaultFont", Core.Metrics["RestrictionMessage", 0], Color.White, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, Core.CPUManager.SkillNames[_selectedCPUSkill], "DefaultFont", Core.Metrics["SelectedCPUDifficulty", 0], Color.White, FontAlign.LEFT);
@@ -227,21 +225,18 @@ namespace WGiBeat.Screens
 
         #region Input Handling
 
-        public override void PerformAction(Action action)
+        public override void PerformAction(InputAction inputAction)
         {
-            int player = -1;
-            Int32.TryParse("" + action.ToString()[1], out player);
-            player--;
-            var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
 
-            var playerOptions = (from e in _playerOptions where e.PlayerIndex == player select e).SingleOrDefault();
+            var playerIdx = inputAction.Player - 1;
+            var playerOptions = (from e in _playerOptions where e.PlayerIndex == playerIdx select e).SingleOrDefault();
 
             //Ignore inputs from players not playing EXCEPT for system keys.
-            if ((player > -1) && (playerOptions == null))
+            if ((inputAction.Player > 0) && (playerOptions == null))
             {
                 return;
             }
-            switch (paction)
+            switch (inputAction.Action)
             {
                 case "LEFT":
                     if (playerOptions.OptionChangeActive)
@@ -298,15 +293,12 @@ namespace WGiBeat.Screens
             }
         }
 
-        public override void PerformActionReleased(Action action)
+        public override void PerformActionReleased(InputAction inputAction)
         {
-            int player;
-            Int32.TryParse("" + action.ToString()[1], out player);
-            player--;
-            var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
 
-            var playerOptions = (from e in _playerOptions where e.PlayerIndex == player select e).SingleOrDefault();
-            switch (paction)
+
+            var playerOptions = (from e in _playerOptions where e.PlayerIndex == inputAction.Player - 1 select e).SingleOrDefault();
+            switch (inputAction.Action)
             {
                 case "SELECT":
                     if (playerOptions != null)

@@ -7,8 +7,8 @@ using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Drawing.Sets;
+using WGiBeat.Managers;
 using WGiBeat.Notes;
-using Action = WGiBeat.Managers.Action;
 using LogLevel = WGiBeat.Managers.LogLevel;
 
 namespace WGiBeat.Screens
@@ -565,22 +565,22 @@ namespace WGiBeat.Screens
             base.PerformKey(key);
         }
 
-        public override void PerformAction(Action action)
+        public override void PerformAction(InputAction inputAction)
         {
             switch (_cursorPosition)
             {
                 case EditorCursorPosition.SELECT_AUDIO:
                 case EditorCursorPosition.SELECT_SONGFILE:
                 case EditorCursorPosition.SELECT_SONGFILE_DELETE:
-                    _fileSelect.PerformAction(action);
+                    _fileSelect.PerformAction(inputAction);
                     return;
                 case EditorCursorPosition.SONG_TUNING:
-                    PerformActionTweak(action);
+                    PerformActionTweak(inputAction);
                     break;
                     case EditorCursorPosition.MEASURE_BPM:
                     case EditorCursorPosition.MEASURE_LENGTH:
                     case EditorCursorPosition.MEASURE_OFFSET:
-                    PerformActionMeasurement(action);
+                    PerformActionMeasurement(inputAction);
                     break;
             }
 
@@ -588,9 +588,8 @@ namespace WGiBeat.Screens
             {
                 return;
             }
-            var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
-
-            switch (paction)
+            
+            switch (inputAction.Action)
             {
                 case "LEFT":
                     _menus[_activeMenu].DecrementOption();
@@ -610,22 +609,21 @@ namespace WGiBeat.Screens
             }
         }
 
-        private void PerformActionMeasurement(Action action)
+        private void PerformActionMeasurement(InputAction inputAction)
         {
-            var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
-            switch (paction)
+
+            switch (inputAction.Action)
             {
                 case "BEATLINE":
                 case "START":
                     switch (_cursorPosition)
                     {
                         case EditorCursorPosition.MEASURE_BPM:
-                            if (paction == "BEATLINE")
+                            if (inputAction.Action == "BEATLINE")
                             {
                                 UpdateBPMMeasurement();
-
                             }
-                            else if (paction == "START")
+                            else if (inputAction.Action == "START")
                             {
                                 Core.Audio.StopChannel(_audioChannel);
                                 _cursorPosition = EditorCursorPosition.SONG_DETAILS;
@@ -634,16 +632,16 @@ namespace WGiBeat.Screens
                                 {
                                     NewGameSong.Bpm = _guessedBPM;
                                 }
-                            }
-                          
-
+                            }                     
                             break;
+
                             case EditorCursorPosition.MEASURE_LENGTH:
                             NewGameSong.Length = Math.Round(_timeElapsed / 1000, 2);
                             Core.Audio.StopChannel(_audioChannel);
                             _cursorPosition = EditorCursorPosition.SONG_DETAILS;
                             _songPlaying = false;
                             break;
+
                             case EditorCursorPosition.MEASURE_OFFSET:
                             NewGameSong.Offset = Math.Round(_timeElapsed /1000,2);
                             Core.Audio.StopChannel(_audioChannel);
@@ -661,10 +659,10 @@ namespace WGiBeat.Screens
             }
         }
 
-        private void PerformActionTweak(Action action)
+        private void PerformActionTweak(InputAction inputAction)
         {
-            var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
-            switch (paction)
+
+            switch (inputAction.Action)
             {
                 case "BEATLINE":
                     HitBeatline();

@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
+using WGiBeat.Managers;
 using WGiBeat.Notes;
-using Action=WGiBeat.Managers.Action;
 
 namespace WGiBeat.Screens
 {
@@ -194,23 +193,19 @@ namespace WGiBeat.Screens
 
 
 
-        public override void PerformAction(Action action)
+        public override void PerformAction(InputAction inputAction)
         {
-            int player;
-            Int32.TryParse("" + action.ToString()[1], out player);
-            player--;
-            var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
 
-            switch (paction)
+            switch (inputAction.Action)
             {
                 case "START":
-                    StartPressed(player);
+                    StartPressed(inputAction.Player);
                     break;
                 case "UP":
-                    MoveScrollPosition(player,-1);
+                    MoveScrollPosition(inputAction.Player, -1);
                     break;
                 case "DOWN":
-                    MoveScrollPosition(player, 1);
+                    MoveScrollPosition(inputAction.Player, 1);
                     break;
                 case "BACK":
                     Core.ScreenTransition("MainMenu");

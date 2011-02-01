@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
-using Action=WGiBeat.Managers.Action;
+using WGiBeat.Managers;
 
 namespace WGiBeat.Screens
 {
@@ -52,13 +52,12 @@ namespace WGiBeat.Screens
 
  
 
-        public override void PerformAction(Action action)
+        public override void PerformAction(InputAction inputAction)
         {
-            var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
 
             var firstLoad = Core.Cookies.ContainsKey("FirstScreen") && (bool) Core.Cookies["FirstScreen"];
             string nextScreen = firstLoad ? "InitialLoad" : "MainMenu";
-            switch (paction)
+            switch (inputAction.Action)
             {
                 case "START":
                     if (PageNumber < TOTAL_PAGES)
