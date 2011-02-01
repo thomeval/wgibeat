@@ -154,8 +154,9 @@ namespace WGiBeat.Screens
         public override void PerformAction(InputAction inputAction)
         {
 
-            var optionsFrame = (from e in _playerOptions where e.PlayerIndex == inputAction.Player select e).SingleOrDefault();
             var playerIdx = inputAction.Player - 1;
+            var optionsFrame = (from e in _playerOptions where e.PlayerIndex == playerIdx select e).SingleOrDefault();
+
             //Ignore inputs from players not playing EXCEPT for system keys.
             if ((inputAction.Player > 0) && (optionsFrame == null))
             {

@@ -99,8 +99,6 @@ namespace WGiBeat.Screens
             };
             _gradeBaseSprite = new Sprite
             {
-                Height = 90,
-                Width = 160,
                 SpriteTexture = TextureManager.Textures("EvaluationGradeBase")
             };
 
