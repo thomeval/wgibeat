@@ -9,7 +9,8 @@ namespace WGiBeat.Drawing.Sets
         private long[] _displayedScores;
         private SpriteMap _iconSpriteMap;
         private SpriteMap _coopBaseSprite;
-        private SpriteMap _individualBaseSprite;
+        private Sprite _individualBaseSprite;
+        private SpriteMap _playerIdentifierSpriteMap;
 
         private TeamScoreMeter _teamScoreMeter;
 
@@ -36,22 +37,26 @@ namespace WGiBeat.Drawing.Sets
             {
                 Columns = 1,
                 Rows = (int)Difficulty.COUNT + 1,
-                SpriteTexture = TextureManager.Textures("playerDifficulties")
+                SpriteTexture = TextureManager.Textures("PlayerDifficulties")
             };
 
             _coopBaseSprite = new SpriteMap
             {
-                SpriteTexture = TextureManager.Textures("scoreBaseCombined"),
+                SpriteTexture = TextureManager.Textures("ScoreBaseCombined"),
                 Columns = 1,
                 Rows = 1
             };
             _teamScoreMeter = new TeamScoreMeter();
             _teamScoreMeter.InitSprites();
-            _individualBaseSprite = new SpriteMap
+            _playerIdentifierSpriteMap = new SpriteMap
             {
-                SpriteTexture = TextureManager.Textures("scoreBase"),
+                SpriteTexture = TextureManager.Textures("PlayerIdentifiers"),
                 Columns = 1,
                 Rows = 5
+            };
+            _individualBaseSprite = new Sprite
+            {
+                SpriteTexture = TextureManager.Textures("ScoreBase"),
             };
         }
         private void DrawPlayerDifficulties(SpriteBatch spriteBatch)
@@ -153,7 +158,14 @@ namespace WGiBeat.Drawing.Sets
                     continue;
                 }
                 var idx = (Players[x].IsCPUPlayer) ? 4 : x;
-                _individualBaseSprite.Draw(spriteBatch, idx, 240, 40, _metrics["ScoreBase", x]);
+                _individualBaseSprite.Position = _metrics["ScoreBase", x];
+                _individualBaseSprite.Draw(spriteBatch);
+
+                var identifierPosition = _metrics["ScoreBase", x].Clone();
+                identifierPosition.X += 12;
+                identifierPosition.Y += 5;
+                _playerIdentifierSpriteMap.Draw(spriteBatch,idx,identifierPosition);
+
                 TextureManager.DrawString(spriteBatch, "" + _displayedScores[x], "LargeFont",
                                       _metrics["ScoreText", x], Color.White,FontAlign.RIGHT);
             }

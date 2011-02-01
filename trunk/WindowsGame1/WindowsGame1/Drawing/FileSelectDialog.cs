@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing
@@ -171,9 +170,8 @@ namespace WGiBeat.Drawing
 
         public void PerformAction(Managers.InputAction inputAction)
         {
-            var paction = inputAction.ToString().Substring(inputAction.ToString().IndexOf("_") + 1);
-
-            switch (paction)
+            
+            switch (inputAction.Action)
             {
                 case "UP":
                     FileList.DecrementSelected();

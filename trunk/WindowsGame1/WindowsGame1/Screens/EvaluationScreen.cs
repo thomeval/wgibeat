@@ -26,6 +26,7 @@ namespace WGiBeat.Screens
         private double _lastCycle;
         private TeamScoreMeter _teamScoreMeter;
         private Sprite _coopScoreDisplay;
+        private SpriteMap _identifiersSpriteMap;
 
         public EvaluationScreen(GameCore core) : base(core)
         {
@@ -88,7 +89,6 @@ namespace WGiBeat.Screens
 
             _maxSprite = new Sprite
             {
-                Width = 160,
                 SpriteTexture = TextureManager.Textures("EvaluationMaxBase")
             };
             _recordSprite = new Sprite
@@ -113,6 +113,12 @@ namespace WGiBeat.Screens
                                         SpriteTexture = TextureManager.Textures("ScoreBaseCombined"),
                                         Position = Core.Metrics["EvaluationTeamScoreMeter",0]
                                     };
+            _identifiersSpriteMap = new SpriteMap()
+                                        {
+                                            SpriteTexture = TextureManager.Textures("PlayerIdentifiers"),
+                                            Rows = 5,
+                                            Columns = 1
+                                        };
         }
 
         private void SaveHighScore()
@@ -290,8 +296,10 @@ namespace WGiBeat.Screens
                 {
                     continue;
                 }
+                var idx = Core.Players[x].IsCPUPlayer ? 4 : x;
                 _headerSprite.Position = (Core.Metrics["EvaluationHeader", x]);
                 _headerSprite.Draw(spriteBatch);
+                _identifiersSpriteMap.Draw(spriteBatch,idx,_headerSprite.X + 10, _headerSprite.Y);
             }
 
             DrawHighScoreNotification(spriteBatch, gameTime);

@@ -145,7 +145,6 @@ namespace WGiBeat.Screens
 
                 if (phraseDecimal > nextHit)
                 {
-                    System.Diagnostics.Debug.WriteLine("PD: "+ phraseDecimal + " / NH: " + nextHit);
                     _notebars[x].MarkCurrentCompleted();
                     Core.Players[x].Hits++;
                 }
