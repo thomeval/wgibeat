@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Action=WGiBeat.Managers.Action;
+using WGiBeat.Managers;
 
 namespace WGiBeat.Screens
 {
@@ -19,7 +19,7 @@ namespace WGiBeat.Screens
            
         }
 
-        public override void PerformAction(Action action)
+        public override void PerformAction(InputAction inputAction)
         {
           
         }

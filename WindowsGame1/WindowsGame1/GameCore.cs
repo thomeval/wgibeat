@@ -9,7 +9,6 @@ using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
 using WGiBeat.Screens;
-using Action=WGiBeat.Managers.Action;
 
 namespace WGiBeat
 {
@@ -32,6 +31,7 @@ namespace WGiBeat
         public CPUManager CPUManager;
         public LogManager Log;
         public TextManager Text;
+        public KeyMappings KeyMappings; //Changed to public, for GameScreen access.
 
         public Player[] Players;
         public Dictionary<string, object> Cookies;
@@ -39,7 +39,7 @@ namespace WGiBeat
         private Dictionary<string, GameScreen> _screens;
         private GameScreen _activeScreen;
         private MenuMusicManager _menuMusicManager; 
-        public readonly KeyMappings KeyMappings = new KeyMappings(); //Changed to public, for GameScreen access.
+        
 
         private KeyboardState _lastKeystate;
         private GamePadState[] _lastGamePadState;
@@ -115,6 +115,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
                 Players[x].ResetStats();
             }
 
+            KeyMappings = new KeyMappings(this.Log);
             bool passed = KeyMappings.LoadFromFile("Keys.conf");
 
             if (!passed)
@@ -200,7 +201,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
 
                     if (_lastGamePadState[x].IsButtonUp(button))
                     {
-                        if (KeyMappings.GetAction(button,x + 1) != Action.NONE)
+                        if (KeyMappings.GetAction(button,x + 1) != null)
                             _activeScreen.PerformAction(KeyMappings.GetAction(button,x + 1));
 
                         _activeScreen.PerformButton(button, x + 1);
@@ -247,7 +248,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             {
                 if (_lastKeystate.IsKeyUp(key))
                 {
-                    if (KeyMappings.GetAction(key) != Action.NONE)
+                    if (KeyMappings.GetAction(key) != null)
                         _activeScreen.PerformAction(KeyMappings.GetAction(key));
 
                     _activeScreen.PerformKey(key);
@@ -256,7 +257,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
 
             foreach (Keys key in _lastKeystate.GetPressedKeys())
             {
-                if (currentState.IsKeyUp(key))
+                if ((currentState.IsKeyUp(key)) && (KeyMappings.GetAction(key) != null))
                 {
                     _activeScreen.PerformActionReleased(KeyMappings.GetAction(key));
                 }

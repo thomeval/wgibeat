@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
-using Action = WGiBeat.Managers.Action;
+using WGiBeat.Managers;
 using LogLevel = WGiBeat.Managers.LogLevel;
 
 namespace WGiBeat.Screens
@@ -135,49 +135,30 @@ namespace WGiBeat.Screens
 
         }
 
-        public override void PerformAction(Action action)
+        public override void PerformAction(InputAction inputAction)
         {
-            switch (action)
+            switch (inputAction.Action)
             {
-                case Action.P1_LEFT:
-                case Action.P2_LEFT:
-                case Action.P3_LEFT:
-                case Action.P4_LEFT:
+                case "LEFT":
                     _optionsMenu.DecrementOption();
                     break;
-                case Action.P1_RIGHT:
-                case Action.P2_RIGHT:
-                case Action.P3_RIGHT:
-                case Action.P4_RIGHT:
+                case "RIGHT":
                     _optionsMenu.IncrementOption();
                     break;
-                case Action.P1_UP:
-                case Action.P2_UP:
-                case Action.P3_UP:
-                case Action.P4_UP:
+                case "UP":
                     _optionsMenu.DecrementSelected();
                     break;
-                case Action.P1_DOWN:
-                case Action.P2_DOWN:
-                case Action.P3_DOWN:
-                case Action.P4_DOWN:
+                case "DOWN":
                     _optionsMenu.IncrementSelected();
                     break;
-                case (Action.SYSTEM_BACK):
+                case "BACK":
                     Core.ScreenTransition("MainMenu");
                     break;
 
-                case Action.P1_START:
-                case Action.P2_START:
-                case Action.P3_START:
-                case Action.P4_START:
-                case Action.P1_BEATLINE:
-                case Action.P2_BEATLINE:
-                case Action.P3_BEATLINE:
-                case Action.P4_BEATLINE:
+                case "START":
+                case "BEATLINE":
                     DoAction();
                     break;
-
             }
         }
 

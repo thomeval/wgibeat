@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
-using Action=WGiBeat.Managers.Action;
 
 namespace WGiBeat.Screens
 {
@@ -25,8 +24,6 @@ namespace WGiBeat.Screens
         private HighScoreFrame _highScoreFrame;
         private readonly List<PlayerOptionsFrame> _playerOptions = new List<PlayerOptionsFrame>();
 
-        private bool _resetSongTime = true;
-        private double _songStartTime;
         private int _songListDrawOffset;
         private const int LISTITEMS_DRAWN = 7;
         private const double SONG_CHANGE_SPEED = 0.9;
@@ -330,7 +327,6 @@ namespace WGiBeat.Screens
             {
                 _previewStarted = true;
                 _bpmMeter.DisplayedSong = CurrentSong;
-                _songStartTime = gameTime.TotalRealTime.TotalMilliseconds;
                 Crossfader.PreviewDuration = 10;
                 var previewsOn = Core.Settings.Get<bool>("SongPreview");
 
@@ -343,19 +339,15 @@ namespace WGiBeat.Screens
             base.Update(gameTime);
         }
 
-        public override void PerformAction(Action action)
+        public override void PerformAction(InputAction inputAction)
         {
-            int player = -1;
-            Int32.TryParse("" + action.ToString()[1], out player);
-            player--;
-            var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
 
-            if ((player != -1) && (!Core.Players[player].IsHumanPlayer))
+            if ((inputAction.Player != 0) && (!Core.Players[inputAction.Player - 1].IsHumanPlayer))
             {
                 return;
             }
-            var playerOptions = (from e in _playerOptions where e.PlayerIndex == player select e).SingleOrDefault();
-            switch (paction)
+            var playerOptions = (from e in _playerOptions where e.PlayerIndex == inputAction.Player - 1 select e).SingleOrDefault();
+            switch (inputAction.Action)
             {
                 case "UP":
                     if ((playerOptions != null) && (playerOptions.OptionChangeActive))
@@ -430,15 +422,11 @@ namespace WGiBeat.Screens
             }
         }
 
-        public override void PerformActionReleased(Action action)
+        public override void PerformActionReleased(InputAction inputAction)
         {
-            int player;
-            Int32.TryParse("" + action.ToString()[1], out player);
-            player--;
-            var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
 
-            var playerOptions = (from e in _playerOptions where e.PlayerIndex == player select e).SingleOrDefault();
-            switch (paction)
+            var playerOptions = (from e in _playerOptions where e.PlayerIndex == inputAction.Player - 1 select e).SingleOrDefault();
+            switch (inputAction.Action)
             {
                 case "SELECT":
                     if (playerOptions != null)

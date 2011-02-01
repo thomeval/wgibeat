@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
-using Action=WGiBeat.Managers.Action;
+using WGiBeat.Managers;
 
 namespace WGiBeat.Screens
 {
@@ -141,15 +141,12 @@ namespace WGiBeat.Screens
             }
         }
 
-        public override void PerformAction(Action action)
+        public override void PerformAction(InputAction inputAction)
         {
-            switch (action)
+            switch (inputAction.Action)
             {
-                case Action.P1_START:
-                case Action.P2_START:
-                case Action.P3_START:
-                case Action.P4_START:
-                case Action.SYSTEM_BACK:
+                case "START":
+                case "BACK":
                     Core.Songs.StopCurrentSong();
                     Core.Settings.SaveToFile("settings.txt");
                     Core.ScreenTransition("SongSelect");

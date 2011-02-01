@@ -169,9 +169,9 @@ namespace WGiBeat.Drawing
             }
         }
 
-        public void PerformAction(Managers.Action action)
+        public void PerformAction(Managers.InputAction inputAction)
         {
-            var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
+            var paction = inputAction.ToString().Substring(inputAction.ToString().IndexOf("_") + 1);
 
             switch (paction)
             {

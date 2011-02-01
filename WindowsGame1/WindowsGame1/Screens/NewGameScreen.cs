@@ -3,8 +3,8 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
+using WGiBeat.Managers;
 using WGiBeat.Notes;
-using Action = WGiBeat.Managers.Action;
 
 namespace WGiBeat.Screens
 {
@@ -160,6 +160,16 @@ namespace WGiBeat.Screens
             _cursorPositions[player] = CursorPosition.PROFILE_LIST;
         }
 
+        #region Drawing
+
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            DrawBackground(spriteBatch);
+            DrawBorders(spriteBatch);
+            DrawMenus(spriteBatch);
+            DrawMessages(spriteBatch);
+        }
+
         private void DrawBackground(SpriteBatch spriteBatch)
         {
 
@@ -170,18 +180,10 @@ namespace WGiBeat.Screens
             {
                 if (Core.Players[x].Playing)
                 {
-                    _messageBackground.Position = (Core.Metrics["NewGameMessageBorder",x]);
+                    _messageBackground.Position = (Core.Metrics["NewGameMessageBorder", x]);
                     _messageBackground.Draw(spriteBatch);
                 }
             }
-        }
-
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            DrawBackground(spriteBatch);
-            DrawBorders(spriteBatch);
-            DrawMenus(spriteBatch);
-            DrawMessages(spriteBatch);
         }
 
         private void DrawMessages(SpriteBatch spriteBatch)
@@ -250,59 +252,59 @@ namespace WGiBeat.Screens
             brush.ClearVectors();
         }
 
-        public override void PerformAction(Action action)
-        {
-            int player;
-            Int32.TryParse("" + action.ToString()[1], out player);
-            player--;
-            var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
+#endregion
 
-            switch (paction)
+        #region Input handling
+
+        public override void PerformAction(InputAction inputAction)
+        {
+            var playerIdx = inputAction.Player - 1;
+            switch (inputAction.Action)
             {
                 case "START":
-                    StartPressed(player);
+                    StartPressed(playerIdx);
                     break;
                 case "UP":
-                    if (_cursorPositions[player] == CursorPosition.KEYBOARD)
+                    if (_cursorPositions[playerIdx] == CursorPosition.KEYBOARD)
                     {
-                        _keyboards[player].MoveSelection(NoteDirection.UP);
+                        _keyboards[playerIdx].MoveSelection(NoteDirection.UP);
                     }
                     else
                     {
-                        _playerMenus[player].DecrementSelected();
-                        _profileMenus[player].DecrementSelected();
+                        _playerMenus[playerIdx].DecrementSelected();
+                        _profileMenus[playerIdx].DecrementSelected();
                     }
 
                     break;
                 case "DOWN":
-                    if (_cursorPositions[player] == CursorPosition.KEYBOARD)
+                    if (_cursorPositions[playerIdx] == CursorPosition.KEYBOARD)
                     {
-                        _keyboards[player].MoveSelection(NoteDirection.DOWN);
+                        _keyboards[playerIdx].MoveSelection(NoteDirection.DOWN);
                     }
                     else
                     {
-                        _playerMenus[player].IncrementSelected();
-                        _profileMenus[player].IncrementSelected();
+                        _playerMenus[playerIdx].IncrementSelected();
+                        _profileMenus[playerIdx].IncrementSelected();
                     }
                     break;
                 case "RIGHT":
-                    if (_cursorPositions[player] == CursorPosition.KEYBOARD)
+                    if (_cursorPositions[playerIdx] == CursorPosition.KEYBOARD)
                     {
-                        _keyboards[player].MoveSelection(NoteDirection.RIGHT);
+                        _keyboards[playerIdx].MoveSelection(NoteDirection.RIGHT);
                     }
                     else
                     {
-                        _playerMenus[player].IncrementOption();
+                        _playerMenus[playerIdx].IncrementOption();
                     }
                     break;
                 case "LEFT":
-                    if (_cursorPositions[player] == CursorPosition.KEYBOARD)
+                    if (_cursorPositions[playerIdx] == CursorPosition.KEYBOARD)
                     {
-                        _keyboards[player].MoveSelection(NoteDirection.LEFT);
+                        _keyboards[playerIdx].MoveSelection(NoteDirection.LEFT);
                     }
                     else
                     {
-                        _playerMenus[player].DecrementOption();
+                        _playerMenus[playerIdx].DecrementOption();
                     }
                     break;
                 case "BACK":
@@ -453,6 +455,8 @@ namespace WGiBeat.Screens
         {       
             Core.ScreenTransition("ModeSelect");
         }
+        #endregion
+
     }
 
     enum CursorPosition

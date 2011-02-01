@@ -14,87 +14,100 @@ namespace WGiBeat.Managers
     /// </summary>
     public class KeyMappings : Manager
     {
-        private Dictionary<Keys, Action> _mappings = new Dictionary<Keys, Action>();
-        private Dictionary<Buttons, Action>[] _buttonMappings = new Dictionary<Buttons, Action>[4];
+        private Dictionary<Keys, InputAction> _mappings = new Dictionary<Keys, InputAction>();
+        private Dictionary<Buttons, InputAction>[] _buttonMappings = new Dictionary<Buttons, InputAction>[4];
         private static String DEFAULT_KEYFILE = "Keys.conf";
 
-        public KeyMappings()
+        public KeyMappings(LogManager log)
         {
+            this.Log = log;
             for (int x =0; x < 4; x++)
             {
-                _buttonMappings[x] = new Dictionary<Buttons, Action>();
+                _buttonMappings[x] = new Dictionary<Buttons, InputAction>();
             }
         }
         public void LoadDefault()
         {
+            Log.AddMessage("Loading default key configuration.",LogLevel.INFO);
             _mappings.Clear(); //Assumes that loading default means overriding previous settings.
-            _buttonMappings[0].Clear(); //Assumes that loading default means overriding previous settings.
+            for (int x = 0; x < 4; x++)
+            {
+                _buttonMappings[x].Clear(); //Assumes that loading default means overriding previous settings.
+            }
 
-            _mappings = new Dictionary<Keys, Action>();
-            _mappings.Add(Keys.A,Action.P1_LEFT);
-            _mappings.Add(Keys.W, Action.P1_UP);
-            _mappings.Add(Keys.S, Action.P1_DOWN);
-            _mappings.Add(Keys.D, Action.P1_RIGHT);
-            _mappings.Add(Keys.Space, Action.P1_BEATLINE);
-            _mappings.Add(Keys.Q, Action.P1_START);
-            _mappings.Add(Keys.E, Action.P1_SELECT);
+            _mappings = new Dictionary<Keys, InputAction>();
+            _mappings.Add(Keys.A, new InputAction {Player = 1, Action = "LEFT"});
+            _mappings.Add(Keys.W, new InputAction { Player = 1, Action = "UP" });
+            _mappings.Add(Keys.S, new InputAction { Player = 1, Action = "DOWN" });
+            _mappings.Add(Keys.D, new InputAction { Player = 1, Action = "RIGHT" });
+            _mappings.Add(Keys.Space, new InputAction { Player = 1, Action = "BEATLINE" });
+            _mappings.Add(Keys.Q, new InputAction { Player = 1, Action = "START" });
+            _mappings.Add(Keys.E, new InputAction { Player = 1, Action = "SELECT" });
 
-            _mappings.Add(Keys.Left, Action.P2_LEFT);
-            _mappings.Add(Keys.Right, Action.P2_RIGHT);
-            _mappings.Add(Keys.Up, Action.P2_UP);
-            _mappings.Add(Keys.Down, Action.P2_DOWN);
-            _mappings.Add(Keys.NumPad0, Action.P2_BEATLINE);
-            _mappings.Add(Keys.NumPad1, Action.P2_START);
-            _mappings.Add(Keys.NumPad2, Action.P2_SELECT);
+            _mappings.Add(Keys.Left, new InputAction { Player = 2, Action = "LEFT" });
+            _mappings.Add(Keys.Right, new InputAction { Player = 2, Action = "RIGHT" });
+            _mappings.Add(Keys.Up, new InputAction { Player = 2, Action = "UP" });
+            _mappings.Add(Keys.Down, new InputAction { Player = 2, Action = "DOWN" });
+            _mappings.Add(Keys.NumPad0, new InputAction { Player = 2, Action = "BEATLINE" });
+            _mappings.Add(Keys.NumPad1, new InputAction { Player = 2, Action = "START" });
+            _mappings.Add(Keys.NumPad2, new InputAction { Player = 2, Action = "SELECT" });
 
-            _mappings.Add(Keys.NumPad4, Action.P3_LEFT);
-            _mappings.Add(Keys.NumPad6, Action.P3_RIGHT);
-            _mappings.Add(Keys.NumPad8, Action.P3_UP);
-            _mappings.Add(Keys.NumPad5, Action.P3_DOWN);
-            _mappings.Add(Keys.Insert, Action.P3_BEATLINE);
-            _mappings.Add(Keys.PageDown, Action.P3_START);
-            _mappings.Add(Keys.PageUp, Action.P3_SELECT);
+            _mappings.Add(Keys.NumPad4, new InputAction { Player = 3, Action = "LEFT" });
+            _mappings.Add(Keys.NumPad6, new InputAction { Player = 3, Action = "RIGHT" });
+            _mappings.Add(Keys.NumPad8, new InputAction { Player = 3, Action = "UP" });
+            _mappings.Add(Keys.NumPad5, new InputAction { Player = 3, Action = "DOWN" });
+            _mappings.Add(Keys.Insert, new InputAction { Player = 3, Action = "BEATLINE" });
+            _mappings.Add(Keys.PageDown, new InputAction { Player = 3, Action = "START" });
+            _mappings.Add(Keys.PageUp, new InputAction { Player = 3, Action = "SELECT" });
 
-            _mappings.Add(Keys.Add, Action.P4_START);
+            _mappings.Add(Keys.Add, new InputAction{Player = 4, Action = "START"});
 
-            _mappings.Add(Keys.F5, Action.SYSTEM_BPM_DECREASE);
-            _mappings.Add(Keys.F6, Action.SYSTEM_BPM_INCREASE);
-            _mappings.Add(Keys.F7, Action.SYSTEM_OFFSET_DECREASE_BIG);
-            _mappings.Add(Keys.F8, Action.SYSTEM_OFFSET_INCREASE_BIG);
-            _mappings.Add(Keys.F9, Action.SYSTEM_OFFSET_DECREASE_SMALL);
-            _mappings.Add(Keys.F10, Action.SYSTEM_OFFSET_INCREASE_SMALL);
-            _mappings.Add(Keys.F11, Action.SYSTEM_LENGTH_DECREASE);
-            _mappings.Add(Keys.F12, Action.SYSTEM_LENGTH_INCREASE);
-            _mappings.Add(Keys.Escape, Action.SYSTEM_BACK);
+            _mappings.Add(Keys.F5, new InputAction { Action = "BPM_DECREASE" });
+            _mappings.Add(Keys.F6, new InputAction { Action = "BPM_INCREASE" });
+            _mappings.Add(Keys.F7, new InputAction { Action = "OFFSET_DECREASE_BIG" });
+            _mappings.Add(Keys.F8, new InputAction { Action = "OFFSET_INCREASE_BIG" });
+            _mappings.Add(Keys.F9, new InputAction { Action = "OFFSET_DECREASE_SMALL" });
+            _mappings.Add(Keys.F10, new InputAction { Action = "OFFSET_INCREASE_SMALL" });
+            _mappings.Add(Keys.F11, new InputAction { Action = "LENGTH_DECREASE" });
+            _mappings.Add(Keys.F12, new InputAction { Action = "LENGTH_INCREASE" });
+            _mappings.Add(Keys.Escape, new InputAction{Action = "BACK"});
 
-            _buttonMappings[0].Add(Buttons.X, Action.P4_LEFT);
-            _buttonMappings[0].Add(Buttons.B, Action.P4_RIGHT);
-            _buttonMappings[0].Add(Buttons.Y, Action.P4_UP);
-            _buttonMappings[0].Add(Buttons.A, Action.P4_DOWN);
-            _buttonMappings[0].Add(Buttons.LeftShoulder, Action.P4_BEATLINE);
-            _buttonMappings[0].Add(Buttons.RightShoulder, Action.P4_BEATLINE);
-            _buttonMappings[0].Add(Buttons.Start, Action.P4_START);
-            _buttonMappings[0].Add(Buttons.Back, Action.P4_SELECT);
+            _buttonMappings[0].Add(Buttons.X, new InputAction{ Player = 4, Action = "LEFT" });
+            _buttonMappings[0].Add(Buttons.B, new InputAction { Player = 4, Action = "RIGHT" });
+            _buttonMappings[0].Add(Buttons.Y, new InputAction { Player = 4, Action = "UP" });
+            _buttonMappings[0].Add(Buttons.A, new InputAction { Player = 4, Action = "DOWN" });
+            _buttonMappings[0].Add(Buttons.LeftShoulder, new InputAction { Player = 4, Action = "BEATLINE" });
+            _buttonMappings[0].Add(Buttons.RightShoulder, new InputAction { Player = 4, Action = "BEATLINE" });
+            _buttonMappings[0].Add(Buttons.Start, new InputAction { Player = 4, Action = "START" });
+            _buttonMappings[0].Add(Buttons.Back, new InputAction { Player = 4, Action = "SELECT" });
 
         }
 
-        public Boolean LoadFromFile(string filename)
+        public bool LoadFromFile(string filename)
         {
             if (File.Exists(filename))
             {
+                FileStream fs = null;
                 try
                 {
-                    var fs = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.Read);
+                    Log.AddMessage("Loading saved key configuration from: " + filename, LogLevel.INFO);
+                    fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
                     var bf = new BinaryFormatter();
-                    _mappings = (Dictionary<Keys, Action>)bf.Deserialize(fs);
-                    _buttonMappings = (Dictionary<Buttons, Action>[])bf.Deserialize(fs);
+                    _mappings = (Dictionary<Keys, InputAction>)bf.Deserialize(fs);
+                    _buttonMappings = (Dictionary<Buttons, InputAction>[])bf.Deserialize(fs);
                     fs.Close();
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Error reading Keys.conf file: " + ex.Message);
-
+                    Log.AddMessage("Failed to load saved key configuration: " + ex.Message, LogLevel.WARN);
                     return false;
+                }
+                finally
+                {
+                    if (fs != null)
+                    {
+                        fs.Close();
+                    }
                 }
 
                 return true;
@@ -115,14 +128,8 @@ namespace WGiBeat.Managers
 
             try
             {
-                fs = new FileStream(filename, FileMode.Open, FileAccess.Write);
-                bf = new BinaryFormatter();
-                bf.Serialize(fs, _mappings);
-                bf.Serialize(fs, _buttonMappings);
-            }
-            catch (Exception)
-            {
-                fs = new FileStream(filename, FileMode.CreateNew, FileAccess.Write);
+                Log.AddMessage("Saving Key Configuration.", LogLevel.DEBUG);
+                fs = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.Write);
                 bf = new BinaryFormatter();
                 bf.Serialize(fs, _mappings);
                 bf.Serialize(fs, _buttonMappings);
@@ -135,75 +142,77 @@ namespace WGiBeat.Managers
             
         }
 
-        public Keys GetKey(Action action)
+        public Keys GetKey(InputAction inputAction)
         {
-            return (from e in _mappings.Keys where _mappings[e] == action select e).SingleOrDefault();
+            return (from e in _mappings.Keys where _mappings[e].Equals(inputAction) select e).SingleOrDefault();
         }
 
-        public Keys[] GetKeys(Action action)
+        public Keys[] GetKeys(InputAction inputAction)
         {
-            return (from e in _mappings.Keys where _mappings[e] == action select e).ToArray();
+            return (from e in _mappings.Keys where _mappings[e].Equals(inputAction) select e).ToArray();
         }
 
-        public Buttons[] GetButtons(Action action, int controllerNumber)
+        public Buttons[] GetButtons(InputAction inputAction, int controllerNumber)
         {
-            if (!_buttonMappings[controllerNumber -1].ContainsValue(action))
+            if (!_buttonMappings[controllerNumber -1].ContainsValue(inputAction))
             {
                 return new Buttons[0];
             }
             return
                 (from e in _buttonMappings[controllerNumber - 1].Keys
-                 where _buttonMappings[controllerNumber - 1][e] == action
+                 where _buttonMappings[controllerNumber - 1][e].Equals(inputAction)
                  select e).ToArray();
         }
-        public void SetKey(Keys key, Action action)
+        public void SetKey(Keys key, int player, string command)
         {
-            if (action == Action.NONE)
+            if (command == "NONE")
             {
                 //Unassigns a key.
                 _mappings.Remove(key);
             }
             else if (_mappings.ContainsKey(key))
             {
-                //Changes a key already assigned to a different Action.
-                _mappings[key] = action;
+                //Changes a key already assigned to a different InputAction.
+                _mappings[key].Action = command;
+                _mappings[key].Player = player;
             }
             else
             {
-                //Assigns an Action to a free key.
-                _mappings.Add(key, action);
+                //Assigns an InputAction to a free key.
+                _mappings.Add(key, new InputAction { Player = player, Action = command });
             }
         }
 
-        public void SetButton(Buttons button, int controllerNumber, Action action)
+        public void SetButton(Buttons button, int controllerNumber, int player, string command)
         {
             if ((controllerNumber > 4) || (controllerNumber < 1))
             {
                 throw new ArgumentException("Controller number must be between 1 and 4.");
             }
-            if (action == Action.NONE)
+            if (command == "NONE")
             {
                 _buttonMappings[controllerNumber - 1].Remove(button);
             }
             else if (_buttonMappings[controllerNumber - 1].ContainsKey(button))
             {
-                _buttonMappings[controllerNumber - 1][button] = action;
+                _buttonMappings[controllerNumber - 1][button].Player = player;
+                _buttonMappings[controllerNumber - 1][button].Action = command;
             }
             else
             {
-                _buttonMappings[controllerNumber - 1].Add(button, action);
+                _buttonMappings[controllerNumber - 1].Add(button, new InputAction{Player = player, Action = command});
             }
         }
-        public Action GetAction(Keys key)
+        public InputAction GetAction(Keys key)
         {
             if (!_mappings.ContainsKey(key))
             {
-                return Action.NONE;
+                return null;
             }
             return _mappings[key];
         }
 
-        public Action GetAction(Buttons button, int controllerNumber)
+        public InputAction GetAction(Buttons button, int controllerNumber)
         {
             if ((controllerNumber > 4) || (controllerNumber < 1))
             {
@@ -211,7 +220,7 @@ namespace WGiBeat.Managers
             }
             if (!_buttonMappings[controllerNumber-1].ContainsKey(button))
             {
-                return Action.NONE;
+                return null;
             }
             return _buttonMappings[controllerNumber - 1][button];
         }
@@ -237,51 +246,5 @@ namespace WGiBeat.Managers
     /// <summary>
     /// All predetermined Actions that are valid inputs for the game.
     /// </summary>
-    public enum Action
-    {
-        P1_LEFT,
-        P1_RIGHT,
-        P1_UP,
-        P1_DOWN,
-        P1_BEATLINE,
-        P1_START,
-        P1_SELECT,
-        
-        P2_LEFT,
-        P2_RIGHT,
-        P2_UP,
-        P2_DOWN,
-        P2_BEATLINE,
-        P2_START,
-        P2_SELECT,
-
-        P3_LEFT,
-        P3_RIGHT,
-        P3_UP,
-        P3_DOWN,
-        P3_BEATLINE,
-        P3_START,
-        P3_SELECT,
-
-        P4_LEFT,
-        P4_RIGHT,
-        P4_UP,
-        P4_DOWN,
-        P4_BEATLINE,
-        P4_START,
-        P4_SELECT,
-
-        SYSTEM_BPM_INCREASE,
-        SYSTEM_BPM_DECREASE,
-        SYSTEM_OFFSET_INCREASE_BIG,
-        SYSTEM_OFFSET_INCREASE_SMALL,
-        SYSTEM_OFFSET_DECREASE_BIG,
-        SYSTEM_OFFSET_DECREASE_SMALL,
-        SYSTEM_LENGTH_DECREASE,
-        SYSTEM_LENGTH_INCREASE,
-        SYSTEM_BACK,
-
-        NONE
-
-    }
+   
 }

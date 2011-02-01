@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
 using Microsoft.Xna.Framework.Input;
-using Action = WGiBeat.Managers.Action;
+using WGiBeat.Managers;
 
 
 /* Instructions
@@ -199,10 +199,8 @@ namespace WGiBeat.Screens
                         State.CurrentState = 1;
                         return;
                     }
-                    var actionStr = String.Format("P{0}_{1}", _currentPlayer, (_actions[_selectedAction]));
-                    var convertedAction = (Action)Enum.Parse(typeof(Action), actionStr);
 
-                    Core.KeyMappings.SetKey(key, convertedAction);
+                    Core.KeyMappings.SetKey(key, _currentPlayer, _actions[_selectedAction]);
                     Core.KeyMappings.SaveToFile("Keys.conf");
                     State.CurrentState = 1;
                     CreateBindingList();
@@ -210,7 +208,7 @@ namespace WGiBeat.Screens
             }
         }
 
-        public override void PerformButton(Buttons buttons, int playerIndex)
+        public override void PerformButton(Buttons buttons, int controllerNumber)
         {
             switch (State.CurrentState)
             {
@@ -219,10 +217,7 @@ namespace WGiBeat.Screens
                     break;
                 case 3:
 
-                    var actionStr = String.Format("P{0}_{1}", _currentPlayer, (_actions[_selectedAction]));
-                    var convertedAction = (Action)Enum.Parse(typeof(Action), actionStr);
-
-                    Core.KeyMappings.SetButton(buttons, playerIndex, convertedAction);
+                    Core.KeyMappings.SetButton(buttons, controllerNumber, _currentPlayer, _actions[_selectedAction]);
                     Core.KeyMappings.SaveToFile("Keys.conf");
                     State.CurrentState = 1;
                     CreateBindingList();
@@ -230,15 +225,14 @@ namespace WGiBeat.Screens
             }
         }
 
-        public override void PerformAction(Action action)
+        public override void PerformAction(InputAction inputAction)
         {
             if (State.CurrentState != 1)
             {
                 return;
             }
-            var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
 
-            switch (paction)
+            switch (inputAction.Action)
             {
                 case "UP":
                     _selectedAction--;
@@ -325,9 +319,8 @@ namespace WGiBeat.Screens
                 return;
             }
 
-            var actionStr = String.Format("P{0}_{1}", _currentPlayer, (_actions[_selectedAction]));
-            var convertedAction = (Action)Enum.Parse(typeof(Action), actionStr);
-            var keys = Core.KeyMappings.GetKeys(convertedAction);
+            var inputAction = new InputAction {Action = _actions[_selectedAction], Player = _currentPlayer};
+            var keys = Core.KeyMappings.GetKeys(inputAction);
 
             foreach (Keys key in keys)
             {
@@ -336,7 +329,7 @@ namespace WGiBeat.Screens
             }
             for (int num = 1; num < 5; num++)
             {
-                var buttons = Core.KeyMappings.GetButtons(convertedAction, num);
+                var buttons = Core.KeyMappings.GetButtons(inputAction, num);
                 foreach (Buttons button in buttons)
                 {
                     var newBinding = new ActionBinding { ControllerNumber = num, Height = 45, Width = 230, Button = button };

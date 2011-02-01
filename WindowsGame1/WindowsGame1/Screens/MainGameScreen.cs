@@ -5,8 +5,8 @@ using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Drawing.Sets;
+using WGiBeat.Managers;
 using WGiBeat.Notes;
-using Action = WGiBeat.Managers.Action;
 
 namespace WGiBeat.Screens
 {
@@ -266,36 +266,32 @@ namespace WGiBeat.Screens
 
         #region Actions/Input
         /// <summary>
-        /// Executes whenever the key has been pressed that corresponds to some action in the game.
+        /// Executes whenever the key has been pressed that corresponds to some inputAction in the game.
         /// </summary>
-        /// <param name="action">The Action that the user has requested.</param>
-        public override void PerformAction(Action action)
+        /// <param name="inputAction">The Action that the user has requested.</param>
+        public override void PerformAction(InputAction inputAction)
         {
             var songDebug = Core.Settings.Get<bool>("SongDebug");
-            int player = -1;
-            Int32.TryParse("" + action.ToString()[1], out player);
-            player--;
-            var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
 
-            if ((player > -1) && (Core.Players[player].CPU))
+            if ((inputAction.Player > 0) && (Core.Players[inputAction.Player].CPU))
             {
                 return;
             }
 
-            switch (paction)
+            switch (inputAction.Action)
             {
                 case "LEFT":
                 case "RIGHT":
                 case "UP":
                 case "DOWN":
-                    HitArrow(action, player);
+                    HitArrow(inputAction);
                     break;
 
                 case "BEATLINE":
-                    HitBeatline(player);
+                    HitBeatline(inputAction.Player - 1);
                     break;
                 case "SELECT":
-                    ToggleBlazing(player);
+                    ToggleBlazing(inputAction.Player - 1);
                     break;
                 case  "BPM_DECREASE":
                     if (songDebug)
@@ -375,14 +371,15 @@ namespace WGiBeat.Screens
 
         }
 
-        private void HitArrow(Action action, int player)
+        private void HitArrow(InputAction inputAction)
         {
+            var player = inputAction.Player - 1;
             if ((Core.Players[player].KO) || (!Core.Players[player].Playing))
             {
                 return;
             }
 
-            if ((_notebars[player].CurrentNote() != null) && (Note.ActionToDirection(action) == _notebars[player].CurrentNote().Direction))
+            if ((_notebars[player].CurrentNote() != null) && (Note.ActionToDirection(inputAction) == _notebars[player].CurrentNote().Direction))
             {
                 _notebars[player].MarkCurrentCompleted();
                 Core.Players[player].Hits++;

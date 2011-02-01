@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using WGiBeat.Helpers;
-using Action=WGiBeat.Managers.Action;
+using WGiBeat.Managers;
 
 namespace WGiBeat.Screens
 {
@@ -29,8 +29,8 @@ namespace WGiBeat.Screens
         /// use PerformAction() instead.
         /// </summary>
         /// <param name="buttons">The button that was pressed,</param>
-        /// <param name="playerIndex">The player number of the controller (1-4).</param>
-        public virtual void PerformButton(Buttons buttons, int playerIndex)
+        /// <param name="controllerNumber">The player number of the controller (1-4).</param>
+        public virtual void PerformButton(Buttons buttons, int controllerNumber)
         {
             //Virtual since it is optional for GameScreens.
         }
@@ -44,13 +44,13 @@ namespace WGiBeat.Screens
         public abstract void Draw(GameTime gameTime, SpriteBatch spriteBatch);
 
         /// <summary>
-        /// Informs a GameScreen that a player has performed a specific action, and should respond accordingly.
+        /// Informs a GameScreen that a player has performed a specific inputAction, and should respond accordingly.
         /// </summary>
-        /// <param name="action">The action that was requested.</param>
-        public abstract void PerformAction(Action action);
+        /// <param name="inputAction">The action that was requested.</param>
+        public abstract void PerformAction(InputAction inputAction);
 
 
-        public virtual void PerformActionReleased(Action action)
+        public virtual void PerformActionReleased(InputAction inputAction)
         {
             //Virtual since it is optional for GameScreens.
         }

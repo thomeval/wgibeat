@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
-using Action=WGiBeat.Managers.Action;
+using WGiBeat.Managers;
 
 namespace WGiBeat.Screens
 {
@@ -88,15 +88,11 @@ namespace WGiBeat.Screens
             }
         }
 
-        public override void PerformAction(Action action)
+        public override void PerformAction(InputAction inputAction)
         {
             int newOptionValue;
-            int player = -1;
-            Int32.TryParse("" + action.ToString()[1], out player);
-            player--;
-            var paction = action.ToString().Substring(action.ToString().IndexOf("_") + 1);
 
-            switch (paction)
+            switch (inputAction.Action)
             {
                 case "UP":
                     newOptionValue = (int)_selectedMenuOption - 1;
@@ -112,10 +108,10 @@ namespace WGiBeat.Screens
                     _selectedMenuOption = (MainMenuOption)newOptionValue;
                     break;
                 case "START":
-                     MenuOptionSelected(player);
+                     MenuOptionSelected(inputAction.Player - 1);
                     break;
                 case "BEATLINE":
-                    MenuOptionSelected(player);
+                    MenuOptionSelected(inputAction.Player - 1);
                     break;
                 case "BACK":
                     Core.Exit();

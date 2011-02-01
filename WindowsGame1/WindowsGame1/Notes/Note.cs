@@ -1,4 +1,4 @@
-﻿using Action=WGiBeat.Managers.Action;
+﻿using WGiBeat.Managers;
 
 namespace WGiBeat.Notes
 {
@@ -13,29 +13,17 @@ namespace WGiBeat.Notes
         public bool Reverse;
         public bool Completed;
 
-        public static NoteDirection ActionToDirection(Action action)
+        public static NoteDirection ActionToDirection(InputAction inputAction)
         {
-            switch (action)
+            switch (inputAction.Action)
             {
-                case Action.P1_LEFT:
-                case Action.P2_LEFT:
-                case Action.P3_LEFT:
-                case Action.P4_LEFT:
+                case "LEFT":
                     return NoteDirection.LEFT;
-                case Action.P1_RIGHT:
-                case Action.P2_RIGHT:
-                case Action.P3_RIGHT:
-                case Action.P4_RIGHT:
+                case "RIGHT":
                     return NoteDirection.RIGHT;
-                case Action.P1_UP:
-                case Action.P2_UP:
-                case Action.P3_UP:
-                case Action.P4_UP:
+                case "UP":
                     return NoteDirection.UP;
-                case Action.P1_DOWN:
-                case Action.P2_DOWN:
-                case Action.P3_DOWN:
-                case Action.P4_DOWN:
+                case "DOWN":
                     return NoteDirection.DOWN;
                 default:
                     return NoteDirection.COUNT;
