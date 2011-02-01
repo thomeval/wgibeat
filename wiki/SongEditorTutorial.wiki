@@ -1,0 +1,6 @@
+#summary An explanation of how to use WGiEdit.
+#labels Documentation
+
+= Introduction =
+
+Page under construction.
