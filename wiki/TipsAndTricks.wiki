@@ -1,0 +1,14 @@
+#summary Useful information for getting the most out of WGiBeat.
+
+= Introduction =
+
+This page contains some of the less obvious features of WGiBeat. Most players will benefit from knowing this information. More will be added as features are implemented or updated.
+
+==Changing difficulty or beatline speed easily==
+The beatline speed and difficulty for each player is displayed on many screens at the bottom of the screen, along with the associated profile name (if any). 
+[http://code.google.com/svn/wiki/LabelledPOF.png]
+
+When this frame is visible, press and hold the SELECT key. The current difficulty and beatline speed will then be displayed as text next to the icons. While holding the SELECT key, press LEFT or RIGHT to change your difficulty, or UP and DOWN to change your beatline speed.
+[http://code.google.com/svn/wiki/POFAdjustMode.png]
+
+This can be done from any screen that displays the Player Options Frame, including the Song Select and Mode Select screens.
