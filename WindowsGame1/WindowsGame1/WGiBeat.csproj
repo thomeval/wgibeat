@@ -376,9 +376,6 @@
     <Content Include="Content\Textures\Default\mainMenuOption.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\mainMenuOptionSelected.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\Textures\Default\MenuEdge.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
