@@ -181,6 +181,9 @@
     <Content Include="Content\Textures\Default\EditorBackground.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Textures\Default\LifeGraphCorners.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Textures\Default\LifeGraphMiddle.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
