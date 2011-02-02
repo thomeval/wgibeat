@@ -40,6 +40,7 @@ namespace WGiBeat.Screens
         private SpriteMap _xborder;
         private SpriteMap _yborder;
         private Sprite _backgroundSprite;
+        private SpriteMap _cornerSpriteMap;
 
         public float[] this[int index]
         {
@@ -75,6 +76,10 @@ namespace WGiBeat.Screens
                                         SpriteTexture = TextureManager.Textures("LifeGraphMiddle"),
                                         Position = this.Position
                                     };
+            _cornerSpriteMap = new SpriteMap
+                                   {
+                                       Columns = 2, Rows = 2, SpriteTexture = TextureManager.Textures("LifeGraphCorners")
+                                   };
         }
         public void CycleTopLine()
         {
@@ -189,6 +194,10 @@ namespace WGiBeat.Screens
             _xborder.Draw(spriteBatch,0,20, this.Height,this.X + this.Width, this.Y);
             _yborder.Draw(spriteBatch,0,this.Width,20,this.X, this.Y - 20);
             _yborder.Draw(spriteBatch,1, this.Width, 20, this.X, this.Y + this.Height);
+            _cornerSpriteMap.Draw(spriteBatch,0,this.X - 20, this.Y - 20);
+            _cornerSpriteMap.Draw(spriteBatch, 1, this.X + this.Width, this.Y - 20);
+            _cornerSpriteMap.Draw(spriteBatch, 2, this.X - 20, this.Y +this.Height);
+            _cornerSpriteMap.Draw(spriteBatch, 3, this.X + this.Width, this.Y  + this.Height);
         }
 
         private void DrawAxis(SpriteBatch spriteBatch)

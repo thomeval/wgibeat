@@ -5,7 +5,7 @@
 - Stepmania file support? (low)
 
 ==Delayed==
-- Sync (0.7?), Battle (0.7?) game modes.
+- Sync (0.7?), Battle (0.7?) Tag Team (0.7) game modes.
 - WGiEdit - add AudioStart support (0.7)
 - WGiEdit - song timeline (0.7)
 - New difficulty icons? (0.7)
@@ -14,15 +14,19 @@
 - BPM meter doesn't animate on-beat. (Attempted, failed)
 - More Cooperative bonuses (Streaks? Sync perfects?) (0.7)
 
+
+==Post Release==
+- Wiki page for WGiEdit and how songs work.
+- Wiki page for tips and tricks (changing bpm, value of miss, etc)
+- More sample songs
+- Investigate RoundLine
+
 ==TODO==
 
-- Life graph (In progress)(Graphics improvement)
-
 - Mode descriptions (Needs graphics) (0.6)
-- Main Menu screen foreground graphics.
 - Program Icon 
 - Redo Evaluation screen
-- Split Px test in ScoreBase and add to evaluation screen.
+- Life graph (In progress)(Graphics improvement)
 
 ==0.6 - "Exotic Economist" ==
 - Auto join in NewGameScreen. (0.6) (Done)
@@ -44,9 +48,10 @@
 - Profile stat display screen (Done)
 - Added graphics to Menus, Text Entry and On Screen Keyboard. (Done)
 - Updated heading graphics to use the correct font.
-- IIDX style Gradual lifegraph entrance
+- IIDX style Gradual lifegraph entrance.
 - Internal update on how input is handled in the game. In the best case scenario, this should not be noticable by end users.
 - Externalized explanatory text in Mode Select, WGiEdit and Options to external file.
+- Player numbers are now shown in the Evaluation Screen.
 - Bugfix - WGiEdit: Missing beatline notes have been resolved in Tuning step. (Done)
 - Bugfix - WGiEdit: Streaks now reset correctly. (Done)
 - Bugfix - Song previews dont play when entering song select for the 2nd time. (Done)

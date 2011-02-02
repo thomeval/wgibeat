@@ -1,4 +1,0 @@
-====Zoran====
-1) PlayerDifficultiesFrame graphic has improper width (must be divisible by 4)
-
-====Thome====
