@@ -16,7 +16,7 @@ namespace WGiBeat.Screens
         private readonly string[] _menuText = { "Start Game", "Stats","How to play", "Keys", "Options", "Song Editor", "Exit" };
         private Sprite _background;
         private Sprite _header;
-        private Sprite _menuOptionSprite;
+        private SpriteMap _menuOptionSprite;
         private Sprite _foreground;
 
         public MainMenuScreen(GameCore core)
@@ -47,9 +47,11 @@ namespace WGiBeat.Screens
             {
                 SpriteTexture = TextureManager.Textures("MainMenuHeader")
             };
-            _menuOptionSprite = new Sprite
+            _menuOptionSprite = new SpriteMap
             {
-                SpriteTexture = TextureManager.Textures("MainMenuOption")
+                SpriteTexture = TextureManager.Textures("MainMenuOption"),
+                Columns = 1,
+                Rows = 2
             };
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -78,12 +80,11 @@ namespace WGiBeat.Screens
             for (int menuOption = 0; menuOption < (int)MainMenuOption.COUNT; menuOption++)
             {
 
-                _menuOptionSprite.SpriteTexture = menuOption == (int)_selectedMenuOption ? TextureManager.Textures("mainMenuOptionSelected") : TextureManager.Textures("mainMenuOption");
-                _menuOptionSprite.Position = (Core.Metrics["MainMenuOptions", menuOption]);
-                _menuOptionSprite.Draw(spriteBatch);
+                var idx = (menuOption == (int) _selectedMenuOption) ? 1 : 0;
+                _menuOptionSprite.Draw(spriteBatch,idx,Core.Metrics["MainMenuOptions",menuOption]);
                 var textPosition = Core.Metrics["MainMenuOptions", menuOption].Clone();
-                textPosition.X +=  _menuOptionSprite.Width / 2 - 0 ;
-                textPosition.Y += _menuOptionSprite.Height / 2 - 25;
+                textPosition.X +=  _menuOptionSprite.SpriteTexture.Width / 2 - 0 ;
+                textPosition.Y += _menuOptionSprite.SpriteTexture.Height / 4 - 25;
                 TextureManager.DrawString(spriteBatch,_menuText[menuOption],"TwoTech36",textPosition,Color.Black, FontAlign.CENTER);
             }
         }
