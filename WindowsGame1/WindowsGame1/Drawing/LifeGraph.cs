@@ -16,8 +16,11 @@ namespace WGiBeat.Screens
                 _lineData[x] = new float[0];
             }
             this.Width = 360;
-            this.Height = 200;
+            this.Height = 235;
+            InitSprites();
         }
+
+        
 
         private int _max;
         private int _min;
@@ -34,6 +37,9 @@ namespace WGiBeat.Screens
         private double _drawProgress;
 
         public PrimitiveLine LineDrawer;
+        private SpriteMap _xborder;
+        private SpriteMap _yborder;
+        private Sprite _backgroundSprite;
 
         public float[] this[int index]
         {
@@ -47,7 +53,29 @@ namespace WGiBeat.Screens
             }
         }
 
+        public void InitSprites()
+        {
+            _yborder = new SpriteMap
+                           {
+                               Columns = 2,
+                               Rows = 1,
+                               TrimX = 1,
+                               SpriteTexture = TextureManager.Textures("LifegraphYBorder")
+                           };
+            _xborder = new SpriteMap
+            {
+                Columns = 1,
+                Rows = 2,
+                TrimY = 1,
+                SpriteTexture = TextureManager.Textures("LifegraphXBorder")
 
+            };
+            _backgroundSprite = new Sprite()
+                                    {
+                                        SpriteTexture = TextureManager.Textures("LifeGraphMiddle"),
+                                        Position = this.Position
+                                    };
+        }
         public void CycleTopLine()
         {
             var temp = _topLine;
@@ -61,6 +89,7 @@ namespace WGiBeat.Screens
         public override void Draw(SpriteBatch spriteBatch)
         {
             _drawProgress += 0.5;
+            _backgroundSprite.Draw(spriteBatch);
             CalculateMinMax();
             DrawPlayerLines(spriteBatch);
             DrawAxis(spriteBatch);
@@ -119,7 +148,7 @@ namespace WGiBeat.Screens
 
         private void DrawPlayerLines(SpriteBatch spriteBatch)
         {
-            LineDrawer.Width = 3;
+            LineDrawer.Width = 2;
             int maxLength = (from e in _lineData select e.Length).Max() - 1;
 
             float tickX = (float)this.Width / maxLength;
@@ -147,7 +176,7 @@ namespace WGiBeat.Screens
         private void DrawBorder(SpriteBatch spriteBatch)
         {
             LineDrawer.Colour = Color.Black;
-            LineDrawer.Width = 5;
+            LineDrawer.Width = 1;
             LineDrawer.ClearVectors();
             LineDrawer.AddVector(new Vector2(this.X, this.Y));
             LineDrawer.AddVector(new Vector2(this.X + this.Width, this.Y));
@@ -155,11 +184,16 @@ namespace WGiBeat.Screens
             LineDrawer.AddVector(new Vector2(this.X, this.Y + this.Height));
             LineDrawer.AddVector(new Vector2(this.X, this.Y));
             LineDrawer.Render(spriteBatch);
+
+            _xborder.Draw(spriteBatch,1,20,this.Height,this.X - 20, this.Y);
+            _xborder.Draw(spriteBatch,0,20, this.Height,this.X + this.Width, this.Y);
+            _yborder.Draw(spriteBatch,0,this.Width,20,this.X, this.Y - 20);
+            _yborder.Draw(spriteBatch,1, this.Width, 20, this.X, this.Y + this.Height);
         }
 
         private void DrawAxis(SpriteBatch spriteBatch)
         {
-            LineDrawer.Colour = Color.Black;
+            LineDrawer.Colour = Color.White;
             LineDrawer.ClearVectors();
             LineDrawer.Width = 1;
             float tickY = (float)this.Height / (_max - _min);
@@ -187,8 +221,8 @@ namespace WGiBeat.Screens
             _maxLabelPosition.Y = this.Y + 2;
             _minLabelPosition.X = this.X + 7;
             _minLabelPosition.Y = this.Y + this.Height - 26;
-            TextureManager.DrawString(spriteBatch, "" + _min, "DefaultFont",_minLabelPosition,Color.Black, FontAlign.LEFT);
-            TextureManager.DrawString(spriteBatch, "" + _max, "DefaultFont", _maxLabelPosition, Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, "" + _min, "DefaultFont",_minLabelPosition,Color.White, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, "" + _max, "DefaultFont", _maxLabelPosition, Color.White, FontAlign.LEFT);
         }
     }
 }
