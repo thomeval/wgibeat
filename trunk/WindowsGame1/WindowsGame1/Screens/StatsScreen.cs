@@ -19,6 +19,7 @@ namespace WGiBeat.Screens
         private Sprite _instructionBaseSprite;
         private Sprite _backgroundSprite;
         private PrimitiveLine _line;
+        private readonly SineSwayParticleField _field = new SineSwayParticleField();
 
         private const int MAX_SCROLL = 5;
         public StatsScreen(GameCore core) : base(core)
@@ -62,7 +63,12 @@ namespace WGiBeat.Screens
 
         private void InitSprites()
         {
-            _backgroundSprite = new Sprite {SpriteTexture = TextureManager.Textures("StatsBackground")};
+            _backgroundSprite = new Sprite
+                                    {
+                                        SpriteTexture = TextureManager.Textures("StatsBackground"),
+                                        Height = Core.Window.ClientBounds.Height,
+                                        Width = Core.Window.ClientBounds.Width
+                                    };
             _headerSprite = new Sprite {SpriteTexture = TextureManager.Textures("StatsHeader")};
             _instructionBaseSprite = new Sprite {SpriteTexture = TextureManager.Textures("StatsInstructionBase"),
             Position = Core.Metrics["StatsInstructionBase",0]
@@ -72,6 +78,7 @@ namespace WGiBeat.Screens
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             _backgroundSprite.Draw(spriteBatch);
+            _field.Draw(spriteBatch);
             DrawBorder(spriteBatch);
             DrawHeader(spriteBatch);
             DrawText(spriteBatch);
