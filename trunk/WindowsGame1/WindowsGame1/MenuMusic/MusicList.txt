@@ -8,9 +8,13 @@
 #ModeSelect, TeamSelect, NewGame, Options and SongSelect(not recommended).
 #All lines must end with a semicolon, and lines starting with # are ignored.
 #The same music file can be used for multiple screens.;
-MainMenu=MenuMusic.mp3;
-NewGame=MenuMusic.mp3;
-ModeSelect=MenuMusic.mp3;
-TeamSelect=MenuMusic.mp3;
-KeyOptions=MenuMusic.mp3;
-Options=MenuMusic.mp3;
+#The following lines are examples. Remove the # at the start to configure WGiBeat to play "MenuMusic.mp3"
+#on every screen as the menu music, assuming that this file exists in this folder.
+#MainMenu=MenuMusic.mp3;
+#NewGame=MenuMusic.mp3;
+#ModeSelect=MenuMusic.mp3;
+#TeamSelect=MenuMusic.mp3;
+#KeyOptions=MenuMusic.mp3;
+#Options=MenuMusic.mp3;
+#Stats=MenuMusic.mp3;
+#Instruction=MenuMusic.mp3;
