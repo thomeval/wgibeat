@@ -74,7 +74,7 @@ namespace WGiBeat.Screens
             _backgroundSprite = new Sprite()
                                     {
                                         SpriteTexture = TextureManager.Textures("LifeGraphMiddle"),
-                                        Position = this.Position
+                                        
                                     };
             _cornerSpriteMap = new SpriteMap
                                    {
@@ -94,10 +94,11 @@ namespace WGiBeat.Screens
         public override void Draw(SpriteBatch spriteBatch)
         {
             _drawProgress += 0.5;
+            _backgroundSprite.Position = this.Position;
             _backgroundSprite.Draw(spriteBatch);
             CalculateMinMax();
-            DrawPlayerLines(spriteBatch);
             DrawAxis(spriteBatch);
+            DrawPlayerLines(spriteBatch);
             DrawLabels(spriteBatch);
             DrawBorder(spriteBatch);
         }

@@ -77,7 +77,8 @@ namespace WGiBeat.Drawing
                 }
                 catch (Exception)
                 {
-                    Log.AddMessage(String.Format("Metrics entry {0}[{1}] doesn't exist in metrics file.",id,player),LogLevel.ERROR);
+                    //TODO: Let this only happen once.
+                    Log.AddMessage(String.Format("Metrics entry {0}[{1}] doesn't exist in the metrics file.",id,player),LogLevel.ERROR);
                 }
                 return new Vector2();
                 

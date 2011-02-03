@@ -193,6 +193,7 @@
     <Content Include="Content\Textures\Default\LifeGraphYBorder.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Textures\Default\MainMenuForeground.png" />
     <Content Include="Content\Textures\Default\MenuSelectedItem.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -377,9 +378,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\MainMenuBackground.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Textures\Default\MainMenuForeground.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\mainMenuHeader.png">
