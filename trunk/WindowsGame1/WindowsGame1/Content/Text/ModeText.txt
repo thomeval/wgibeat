@@ -3,4 +3,4 @@ ModeSelectCPULevel=Select CPU Skill level:
 ModeSelectNormal=1 to 4 players:\nEach player plays independantly and \nis evaluated individually.
 ModeSelectCoop=2 to 4 players:\nPlay as a team to achieve high scores. \nPlayer scores and life bars are combined.
 ModeSelectTeam=2 to 4 players:\nTwo teams play competitively.\nThe team with the higher score wins.
-ModeSelectVSCPU=1 to 3 players:\nPlayers compete against a computer opponent.\nThe opponent is scaled to match the number of players.
+ModeSelectVSCPU=1 to 3 players:\nPlayers compete against a computer opponent.\nThe opponent is scaled to match the number \nof players.

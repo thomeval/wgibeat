@@ -197,6 +197,9 @@
     <Content Include="Content\Textures\Default\MenuSelectedItem.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Textures\Default\ModeDescriptionPreviews.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Textures\Default\ModeSelectHeader.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
