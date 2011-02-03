@@ -3,6 +3,7 @@
 - Netplay (major, low)
 - Song Sort bookmarks / quick navigation (low)
 - Stepmania file support? (low)
+- Update notification.
 
 ==Delayed==
 - Sync (0.7?), Battle (0.7?) Tag Team (0.7) game modes.
@@ -20,6 +21,7 @@
 - Wiki page for tips and tricks (changing bpm, value of miss, etc)
 - More sample songs
 - Investigate RoundLine
+- Twitter and Facebook.
 
 ==TODO==
 

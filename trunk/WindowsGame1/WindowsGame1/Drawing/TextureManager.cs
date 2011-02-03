@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.Managers;
 
 namespace WGiBeat.Drawing
 {
@@ -11,9 +12,17 @@ namespace WGiBeat.Drawing
         private static readonly Dictionary<string, Texture2D> _textures = new Dictionary<string, Texture2D>();
         private static readonly Dictionary<string, SpriteFont> _fonts = new Dictionary<string, SpriteFont>();
         public static GraphicsDevice GraphicsDevice;
+        public static LogManager Log;
 
         public static Texture2D Textures(string id)
         {
+            if (!_textures.ContainsKey(id.ToUpper()))
+            {
+                //TODO: Let this only happen once.
+                //TODO: Add fallback missing graphic.
+                Log.AddMessage(String.Format("Texture {0} is missing.",id.ToUpper()),LogLevel.ERROR);   
+                return new Texture2D(GraphicsDevice,1,1);
+            }
             return _textures[id.ToUpper()];
         }
         public static SpriteFont Fonts(string id)

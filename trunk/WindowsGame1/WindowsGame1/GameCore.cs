@@ -45,7 +45,7 @@ namespace WGiBeat
         private GamePadState[] _lastGamePadState;
         public string WgibeatRootFolder;
 
-        public const string VERSION_STRING = "v0.6 pre";
+        public const string VERSION_STRING = "v0.6";
         public GameCore()
         {
             GraphicsManager = new GraphicsDeviceManager(this);
@@ -74,6 +74,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             Log.AddMessage("Initializing Cookies...",LogLevel.INFO);
             Cookies = new Dictionary<string, object>();
 
+            TextureManager.Log = Log;
             Metrics = new MetricsManager { Log = this.Log };
             Settings = SettingsManager.LoadFromFile(WgibeatRootFolder + "\\settings.txt", this.Log);
             Log.LogLevel = (LogLevel) Settings.Get<int>("LogLevel");
