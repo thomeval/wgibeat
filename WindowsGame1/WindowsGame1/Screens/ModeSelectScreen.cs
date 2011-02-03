@@ -15,6 +15,7 @@ namespace WGiBeat.Screens
         private SpriteMap _optionsSpriteMap;
         private SpriteMap _edgeSpriteMap;
         private SpriteMap _arrowSpriteMap;
+        private SpriteMap _previewsSpriteMap;
         private Sprite _background;
         private Sprite _headerSprite;
         private Sprite _descriptionBaseSprite;
@@ -84,6 +85,12 @@ namespace WGiBeat.Screens
                 SpriteTexture = TextureManager.Textures("ModeOptions")
             };
 
+            _previewsSpriteMap = new SpriteMap
+                                     {
+                                         Columns = 1,
+                                         Rows = (int) GameType.COUNT,
+                                         SpriteTexture = TextureManager.Textures("ModeDescriptionPreviews")
+                                     };
 
             _edgeSpriteMap = new SpriteMap { Columns = 2, Rows = 1, SpriteTexture = TextureManager.Textures("ModeSelectEdge") };
             _arrowSpriteMap = new SpriteMap { Columns = 4, Rows = 1, SpriteTexture = TextureManager.Textures("IndicatorArrows") };
@@ -132,6 +139,7 @@ namespace WGiBeat.Screens
             _descriptionBaseSprite.Draw(spriteBatch);
             var gameType = (GameType)_selectedGameType;
             TextureManager.DrawString(spriteBatch, GetModeDescription(gameType), "DefaultFont", Core.Metrics["ModeDescription", 0], Color.Black, FontAlign.LEFT);
+            _previewsSpriteMap.Draw(spriteBatch,_selectedGameType,Core.Metrics["ModeDescriptionPreview",0]);
         }
 
         private void DrawRestriction(SpriteBatch spriteBatch)

@@ -38,6 +38,12 @@ namespace WGiBeat.Managers
         public void AddMessage(string message, LogLevel level)
         {
             AddMessage(new LogEntry{Message = message, Level = level});
+#if DEBUG
+            if (level == Managers.LogLevel.ERROR)
+            {
+                throw new Exception(message);
+            }
+#endif
         }
 
         public void AddMessage(LogEntry logEntry)

@@ -42,11 +42,11 @@ namespace WGiBeat.Drawing
             xSize = SpriteTexture.Width / Columns;
             ySize = SpriteTexture.Height / Rows;
 
-            if (ySize - TrimY <= 0)
+            if (ySize - TrimY < 0)
             {
                 throw new Exception("Y Trim exceeds image cell size. Reduce the trim or enlarge the image.");
             }
-            if (xSize - TrimX <= 0)
+            if (xSize - TrimX < 0)
             {
                 throw new Exception("X Trim exceeds image cell size. Reduce the trim or enlarge the image.");
             }

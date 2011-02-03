@@ -27,8 +27,7 @@
 
 - Mode descriptions (Needs graphics) (0.6)
 - Program Icon 
-- Redo Evaluation screen
-- Life graph (In progress)(Graphics improvement)
+
 
 ==0.6 - "Exotic Economist" ==
 - Auto join in NewGameScreen. (0.6) (Done)
@@ -54,6 +53,8 @@
 - Internal update on how input is handled in the game. In the best case scenario, this should not be noticable by end users.
 - Externalized explanatory text in Mode Select, WGiEdit and Options to external file.
 - Player numbers are now shown in the Evaluation Screen.
+- Missing textures or metrics no longer cause WGiBeat to crash.
+- Graphics update to evaluation screen (especially the life graph).
 - Bugfix - WGiEdit: Missing beatline notes have been resolved in Tuning step. (Done)
 - Bugfix - WGiEdit: Streaks now reset correctly. (Done)
 - Bugfix - Song previews dont play when entering song select for the 2nd time. (Done)
