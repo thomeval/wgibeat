@@ -1,6 +1,6 @@
 ﻿#TEXT-1.0;
 Option0=Adjust the volume of all game audio.
-Option1=Allows adjustments to be made to a song's BPM, length and offset during gameplay.\nUse the F7 to F12 keys.
+Option1=Allows adjustments to be made to a song's BPM, length and offset during gameplay.\nUse the F5 to F12 keys.
 Option2=Determines whether a preview of a chosen song is played in the Song Select Screen.
 Option3=Switches between windowed and full-screen mode.
 Option4=This affects how the game treats MD5 validation of audio (.mp3) files. \nSet to 'Ignore' to disable and decrease initial loading times.\nSet to 'Auto Correct' to correct invalid MD5 hashes automatically.

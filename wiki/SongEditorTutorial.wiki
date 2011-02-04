@@ -3,4 +3,25 @@
 
 = Introduction =
 
-Page under construction.
+*Page under construction.*
+
+Since public release, WGiBeat has always had the ability to load user-created songs (since WGiBeat did not include any songs with it, this was a requirement). Earlier versions of WGiBeat required players to create song files manually by copying the relevant audio file into a folder, and creating a .sng file using a text editor. Although this is still possible, the introduction of the built-in song editor WGiEdit in v0.5 made adding and editing songs much easier.
+
+Before explaining the use of WGiEdit, it is necessary to explain how WGiBeat itself works with songs. In order for WGiBeat to use any song, it needs three pieces of information:
+
+ * What is the BPM (tempo) of the song?
+ * When (relative to the song) should the gameplay begin?
+ * When (relative to the song) should the gameplay end?
+
+These three pieces of information need to be provided by the player. They are referred to as the "BPM", "Offset", and "Length" respectively. Other information, such as the title and artist of the song also need to be provided (so that the song displays correctly in the Song Select screen) but have minimal effect on gameplay.    
+
+ 
+[http://wgibeat.googlecode.com/svn/wiki/SongPartitionDiagram.png]
+
+In the above diagram, the song's audio is divided into four sections:
+ * The audio in Section A occurs before the AudioStart point and is skipped by WGiBeat. Note that the AudioStart point can be zero (at the start of the song), meaning that no part of the song is skipped.
+ * The audio in Section B occurs between the AudioStart and Offset points (hence the offset *must* be greater than the AudioStart point). This represents the audio that is played before the first beatline of the song (this is when the "Ready" message and countdown are displayed). It is suggested that this section be between 3 and 12 seconds long.
+ * The audio in Section C represents the playable portion of the song, between the Offset and Length points. Beatlines are generated in this portion. Their frequency is determined by the song's BPM.
+ * The audio in Section D represents the audio that is played after the song is considered completed. Since the gameplay has ended, no beatlines appear beyond this point, but the audio will continue playing (typically into the evaluation screen).
+ 
+    
