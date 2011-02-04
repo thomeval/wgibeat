@@ -30,13 +30,22 @@ Once enabled, the song's current BPM, length, offset and phrase number (position
 
 The following keys can be used to adjust the BPM, length or offset of the song. These are the same as the keys used during the "Tuning" step in WGiEdit. Changes are saved once the song gameplay is completed (when the evaluation screen is displayed).
 
-F5 - Decrease BPM by 0.1
-F6 - Increase BPM by 0.1
-F7 - Decrease Offset by 0.1
-F8 - Increase Offset by 0.1
-F9 - Decrease Offset by 0.01
-F10 - Increase Offset by 0.01
-F11 - Decrease Length by 0.1 
-F12 - Increase Length by 0.1
+ * F5 - Decrease BPM by 0.1
+ * F6 - Increase BPM by 0.1
+ * F7 - Decrease Offset by 0.1
+ * F8 - Increase Offset by 0.1
+ * F9 - Decrease Offset by 0.01
+ * F10 - Increase Offset by 0.01
+ * F11 - Decrease Length by 0.1 
+ * F12 - Increase Length by 0.1
 
 IMPORTANT: Once changes are made to a song's BPM, length or offset, all of the song's high scores will be invalidated. This is by design to avoid cheating.
+
+==Fail, Fault or Miss?==
+WGiBeat has three different types of player mistakes.
+
+ * If a player presses the wrong arrow key, this counts as a fault. A fault breaks the player's hit counter, resets the player's progress towards completing a set or arrow hits, and costs a small amount of life.
+ * If a player ignores a beatline, this counts as a miss. A miss costs life, but does not reset a player's arrow set progress, hit counter or beatline streak.
+ * If a player attempts to hit a beatline before hitting all shown arrows, this counts as a Fail. A fail costs life (depending on the number of incomplete arrows) and resets a player's arrow progress and beatline streak.
+
+Normally, when having to choose between the three, it is better to hit arrows slower but more accurately, and accepting a miss. This gives the player extra time to complete the arrow set, before the next beatline. Note that amount of damage dealt by the three types of mistakes is higher for higher difficulty levels.
