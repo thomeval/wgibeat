@@ -18,46 +18,44 @@
 
 ==Post Release==
 - Wiki page for WGiEdit and how songs work.
-- Wiki page for tips and tricks (changing bpm, value of miss, etc)
+- Wiki page for tips and tricks (song debugging, value of miss, etc)
 - More sample songs
 - Investigate RoundLine
 - Twitter and Facebook.
 
 ==TODO==
 
-- Mode descriptions (Needs graphics) (0.6)
-- Program Icon 
-
 
 ==0.6 - "Exotic Economist" ==
-- Auto join in NewGameScreen. (0.6) (Done)
-- Indicate CPU players in beatlines, player options frame and score bar. (Done)
-- Why is a song invalid in WGiEdit? (Done)
-- Icons for controller buttons (Done)
-- Icons for controller numbers. (Done)
-- Keyboard icon. (Done)
-- Remove .xnb texture requirement. (Done)
-- Redo Keys screen (double tab design) (Done)
-- Deleting key links. (Done)
-- Improved Log Manager (setting level, datestamp) (Done)
-- Logging level can be changed from the options menu.
-- Option descriptions. (Done)
-- When creating a song in WGiEdit, the title and artist are read from the audio file's ID tag. (Done)
-- Removed case sensitivity of theme graphics.
-- Adjustable audio playback start position using the AudioStart field. (Done)
-- Flashing hits counter (milestones) (Done)
-- Profile stat display screen (Done)
-- Added graphics to Menus, Text Entry and On Screen Keyboard. (Done)
-- Updated heading graphics to use the correct font.
-- IIDX style Gradual lifegraph entrance.
-- Internal update on how input is handled in the game. In the best case scenario, this should not be noticable by end users.
-- Externalized explanatory text in Mode Select, WGiEdit and Options to external file.
-- Player numbers are now shown in the Evaluation Screen.
-- Missing textures or metrics no longer cause WGiBeat to crash.
-- Graphics update to evaluation screen (especially the life graph).
-- Bugfix - WGiEdit: Missing beatline notes have been resolved in Tuning step. (Done)
-- Bugfix - WGiEdit: Streaks now reset correctly. (Done)
-- Bugfix - Song previews dont play when entering song select for the 2nd time. (Done)
+ * (Includes WGiEdit v1.1)
+ * When selecting "Start Game" from the main menu, the player that pressed Start joins automatically in the next screen.
+ * CPU players are indicated in beatlines, player options frames and score bars. 
+ * Icons are displaed for controller buttons, and controller numbers.
+ * Textures are no longer stored as .xnb files, and can be editted normally.
+ * WGiBeat now supports themes! Please see [this page] for more information.
+ * Removed case sensitivity of texture files.
+ * The Key Configuration screen has been revamped with revised graphics.
+ * Added graphics to Menus, Text Entry and On Screen Keyboard.
+ * Updated all heading graphics to use the correct font.
+ * Missing textures or metrics no longer cause WGiBeat to crash.
+ * Graphics update to evaluation screen (especially the life graph).
+ * IIDX style gradual lifegraph entrance.
+ * key bindings can now be deleted more individually from the Key Configuration screen.
+ * The hits counter flashes when reaching certain milestones.
+ * The Log manager has been improved to include datestamps. In addition, the logging level can be changed from the options menu.
+ * The Option Screen now has descriptions for each option.
+ * A song's audio playback starting position can be adjusted by using the AudioStart field (for songs with very late Offset positions). 
+ * Profiles stats can now be viewed from the Stats screen, available from the Main Menu.
+ * Internal update on how input is handled in the game. In the best case scenario, this should not be noticable by end users.
+ * Externalized explanatory text in Mode Select, WGiEdit and Options to external file.
+ * Player numbers are now shown in the Evaluation Screen.
+ * Mode select screen now has preview graphics for each mode.
+ * WGiBeat now has a unique program icon, which is also now displayed on the created start menu shortcut.
+ * WGiEdit: A message is now displayed explaining why is song is marked 'invalid'.
+ * WGiEdit: When creating a song, the title and artist are read from the audio file's ID tag.
+ * Bugfix - WGiEdit: Missing beatline notes have been resolved in the Tuning step. 
+ * Bugfix - WGiEdit: Streaks now reset correctly.
+ * Bugfix - Song previews now play correctly when entering song select for the 2nd time.
 
 ==0.5 - "Handicapped Doubt" ==
  *   Song audio validation by using MD5. This makes it easier to ensure that the correct audio (.mp3) file is used when playing a song, especially when song files (.sng) are distributed.
