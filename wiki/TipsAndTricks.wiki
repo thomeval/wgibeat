@@ -30,4 +30,13 @@ Once enabled, the song's current BPM, length, offset and phrase number (position
 
 The following keys can be used to adjust the BPM, length or offset of the song. These are the same as the keys used during the "Tuning" step in WGiEdit. Changes are saved once the song gameplay is completed (when the evaluation screen is displayed).
 
+F5 - Decrease BPM by 0.1
+F6 - Increase BPM by 0.1
+F7 - Decrease Offset by 0.1
+F8 - Increase Offset by 0.1
+F9 - Decrease Offset by 0.01
+F10 - Increase Offset by 0.01
+F11 - Decrease Length by 0.1 
+F12 - Increase Length by 0.1
+
 IMPORTANT: Once changes are made to a song's BPM, length or offset, all of the song's high scores will be invalidated. This is by design to avoid cheating.
