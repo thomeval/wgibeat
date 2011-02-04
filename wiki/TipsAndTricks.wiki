@@ -15,3 +15,19 @@ When this frame is visible, press and hold the SELECT key. The current difficult
 [http://wgibeat.googlecode.com/svn/wiki/POFAdjustMode.png]
 
 This can be done from any screen that displays the Player Options Frame, including the Song Select and Mode Select screens.
+
+==Changing the song sort order==
+The song sort order is displayed near the top right corner of the song select screen. By default, songs are sorted alphabetically by title. To change this, hold the BEATLINE key, and press left or right. Any player can do this.
+
+[http://wgibeat.googlecode.com/svn/wiki/SongSortAdjustMode.png]
+
+==Song Debugging==
+Song debugging is a useful feature that allows players to change the offset, BPM or length of a song on-the-fly while it is being played. This is most useful to fine-tune a song that is not synchronized properly. By default, song debugging is disabled, and must be enabled from the options menu by setting "Song Debugging" to "On". 
+
+Once enabled, the song's current BPM, length, offset and phrase number (position) will be displayed in the middle frame of the screen during gameplay. 
+
+[http://wgibeat.googlecode.com/svn/wiki/SongDebugDisplay.png]
+
+The following keys can be used to adjust the BPM, length or offset of the song. These are the same as the keys used during the "Tuning" step in WGiEdit. Changes are saved once the song gameplay is completed (when the evaluation screen is displayed).
+
+IMPORTANT: Once changes are made to a song's BPM, length or offset, all of the song's high scores will be invalidated. This is by design to avoid cheating.
