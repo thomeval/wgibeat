@@ -8,7 +8,7 @@
  * CPU players are indicated in beatlines, player options frames and score bars. 
  * Icons are displaed for controller buttons, and controller numbers.
  * Textures are no longer stored as .xnb files, and can be editted normally.
- * WGiBeat now supports themes! Please see [this page] for more information.
+ * WGiBeat now supports themes! Please see [ThemeTutorial this page] for more information.
  * Removed case sensitivity of texture files.
  * The Key Configuration screen has been revamped with revised graphics.
  * Added graphics to Menus, Text Entry and On Screen Keyboard.
