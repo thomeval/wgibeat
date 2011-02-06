@@ -20,15 +20,17 @@ All WGiBeat themes are stored in the Content\Textures subfolder. The only theme 
 
 The Default theme also contains a metrics.txt file, which defines the position of graphics on the screen. This can be edited using any text editor. The format of the metrics file is as follows:
 
+{{{
 #METRICS-1.0;
 ItemName1=[x,y][x,y];
 ItemName2=[x,y];
 etc.
+}}}
 
  * The file must begin with #METRICS-1.0; on the first line.
  * Every line must end with a semicolon.
  * Any other line beginning with a '#' is ignored (however, they must also end in a semicolon).
- * Metric definitions consist of a name, and [x,y] coordinate pairs. The number of coordinate pairs vary depending on how many are needed. For example, there are four pairs for defining the position of each player's score display.
+ * Metric definitions consist of a name, and {{{[x,y]}}} coordinate pairs. The number of coordinate pairs vary depending on how many are needed. For example, there are four pairs for defining the position of each player's score display.
  * The names are hard-coded and must be correct to be recognized by WGiBeat. They should also have the correct case.
 
 = Notes =
