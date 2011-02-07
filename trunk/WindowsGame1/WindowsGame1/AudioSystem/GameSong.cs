@@ -28,6 +28,8 @@ namespace WGiBeat.AudioSystem
         public double AudioStart { get; set; }
         public string Path { get; set; }
 
+        public bool ReadOnly { get; set; }
+
         /// <summary>
         /// The MD5 hash of the correct MD5 file. This is checked with the actual MD5 calculated at runtime, and
         /// mismatches are reported.
@@ -165,7 +167,12 @@ namespace WGiBeat.AudioSystem
         /// <returns>The phrase number converted from the given milliseconds.</returns>
         public double ConvertMSToPhrase(double milliseconds)
         {
-            return (milliseconds - Offset * 1000.0) / 1000.0 * (Bpm / 240.0);
+            return (milliseconds - (Offset * 1000.0)) / 1000.0 * (Bpm / 240.0);
+        }
+
+        public double ConvertPhraseToMS(double phrase)
+        {
+            return ((phrase * 1000 * 240.0) / Bpm) + (Offset * 1000);
         }
     }
 }
