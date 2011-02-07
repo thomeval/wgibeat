@@ -12,6 +12,7 @@ namespace WGiBeat.AudioSystem.Loaders
         private readonly string[] _notes;
         private readonly string[] _preferredNoteOrder = {"Hard", "Challenge", "Medium", "Easy", "Beginner", "Edit"};
 
+        private double _stopTotals;
         public SMFileLoader()
         {
             _notes = new string[_preferredNoteOrder.Length];
@@ -23,6 +24,7 @@ namespace WGiBeat.AudioSystem.Loaders
 
             try
             {
+                _stopTotals = 0.0;
                 var newSong = new GameSong{ReadOnly = true};
                 string songText = File.ReadAllText(filename);
                 songText = songText.Replace("\r", "\n");
@@ -81,6 +83,27 @@ namespace WGiBeat.AudioSystem.Loaders
                         case "#NOTES":
                             AddNotes(value);
                             break;
+                        case "#STOPS":
+                            if (String.IsNullOrEmpty(value))
+                            {
+                                continue;
+                            }
+                            var stopPairs = new Dictionary<double, double>();
+                            var stopText = value.Split(',');
+                            
+                            foreach (string stopItem in stopText)
+                            {
+                                double position = Convert.ToDouble(stopItem.Substring(0, stopItem.IndexOf("=")));
+                                double bvalue = Convert.ToDouble(stopItem.Substring(stopItem.IndexOf("=") + 1));
+                                stopPairs.Add(position, bvalue);
+                                _stopTotals += bvalue;
+                            }
+                            if (stopPairs.Keys.Count > 0)
+                            {
+                                Log.AddMessage(filename + " has Stops and will not work correctly in WGiBeat! ", LogLevel.WARN);
+                            }
+
+                            break;
                     }
 
                 }
@@ -88,12 +111,19 @@ namespace WGiBeat.AudioSystem.Loaders
                 var selectedNotes = (from e in _notes where e != null select e).First();
 
 
-                var startPhrase = AdjustOffset(newSong, selectedNotes);
+                
                 newSong.Offset += OffsetAdjust;
+
                 if (newSong.Length == 0)
                 {
-                    CalculateLength(newSong, selectedNotes, startPhrase);
-                }
+                    CalculateLength(newSong, selectedNotes);
+                    newSong.Length += _stopTotals;
+                    newSong.Length += OffsetAdjust;
+                } 
+                
+                //Length calculation needs the ORIGINAL offset, so this must be done after it.
+                AdjustOffset(newSong, selectedNotes);
+
                 newSong.Path = Path.GetDirectoryName(filename);
                 newSong.DefinitionFile = Path.GetFileName(filename);
 
@@ -139,11 +169,22 @@ namespace WGiBeat.AudioSystem.Loaders
             return idx;
         }
 
-        private void CalculateLength(GameSong song, string notes, double startPhrase)
+        private void CalculateLength(GameSong song, string notes)
         {
-            var breaks = (from e in notes where e == ',' select e).Count();
-            song.Length = song.ConvertPhraseToMS(breaks - startPhrase + 0.5) / 1000.0;
-            Log.AddMessage(String.Format("Song notes end at phrase {0}. Length set to {1}. ", breaks, song.Length), LogLevel.DEBUG);
+            var lines = notes.Split(',');
+            var idx = 0;
+            for (int x = lines.Length -1; x >= 0; x--)
+            {
+                //Extension method
+                if (lines[x].ToCharArray().ContainsAny('1', '2'))
+                {
+                    idx = x;
+                    break;
+                }
+            }
+
+            song.Length = song.ConvertPhraseToMS(idx + 0.5) / 1000.0;
+            Log.AddMessage(String.Format("Song notes end at phrase {0}. Length set to {1}. ", idx, song.Length), LogLevel.DEBUG);
         }
     }
 }

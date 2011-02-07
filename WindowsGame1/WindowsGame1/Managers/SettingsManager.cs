@@ -57,7 +57,7 @@ namespace WGiBeat.Managers
             sm["SaveLog"] = true;
             sm["LogLevel"] = 2;
             sm["Theme"] = "Default";
-            sm["LoaderOffsetAdjustment"] = 0.15;
+            sm["LoaderOffsetAdjustment"] = 0.13;
             return sm;
         }
 
