@@ -96,6 +96,7 @@
     <Compile Include="AudioSystem\FMOD\fmod_errors.cs" />
     <Compile Include="AudioSystem\FMOD\fmod_memoryinfo.cs" />
     <Compile Include="AudioSystem\HighScoreEntry.cs" />
+    <Compile Include="AudioSystem\Loaders\SNGFileLoader.cs" />
     <Compile Include="AudioSystem\MenuMusicManager.cs" />
     <Compile Include="AudioSystem\CrossfaderManager.cs" />
     <Compile Include="AudioSystem\SongManager.cs" />
@@ -107,6 +108,8 @@
     <Compile Include="Drawing\Sets\DrawableObjectSet.cs" />
     <Compile Include="Drawing\TextEntry.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="AudioSystem\Loaders\SMFileLoader.cs" />
+    <Compile Include="AudioSystem\Loaders\SongFileLoader.cs" />
     <Compile Include="Managers\InputAction.cs" />
     <Compile Include="Managers\CPUManager.cs" />
     <Compile Include="Drawing\Beatline.cs" />

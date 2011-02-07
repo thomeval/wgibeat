@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using WGiBeat.AudioSystem.Loaders;
 using WGiBeat.Managers;
 
 namespace WGiBeat.AudioSystem
 {
-/// <summary>
-/// A manager that specifically handles parsing, saving, storage and validation of Song Files (.sng files). 
-/// These files are loaded and a collection of loaded songs is managed here. Game songs can then be played 
-/// by using the PlaySong() method. The actual audio component is handled by the AudioManager.
-/// </summary>
+    /// <summary>
+    /// A manager that specifically handles parsing, saving, storage and validation of Song Files (.sng files). 
+    /// These files are loaded and a collection of loaded songs is managed here. Game songs can then be played 
+    /// by using the PlaySong() method. The actual audio component is handled by the AudioManager.
+    /// </summary>
     public class SongManager : Manager
     {
 
@@ -20,6 +21,7 @@ namespace WGiBeat.AudioSystem
         private int _songChannelIndex;
         public AudioManager AudioManager { get; set; }
         public SettingsManager SettingsManager { get; set; }
+        public Dictionary<string, SongFileLoader> Loaders = new Dictionary<string, SongFileLoader>();
         #endregion
 
         public SongManager(LogManager log, AudioManager audioManager, SettingsManager settings)
@@ -27,15 +29,24 @@ namespace WGiBeat.AudioSystem
             Log = log;
             AudioManager = audioManager;
             SettingsManager = settings;
-            Log.AddMessage("Initializing Song Manager...",LogLevel.INFO);
+            Log.AddMessage("Initializing Song Manager...", LogLevel.INFO);
+            CreateLoaders();
         }
+
+        private void CreateLoaders()
+        {
+            Loaders.Add("*.sng",new SNGFileLoader {Log = this.Log, Pattern = "*.sng"});
+            Loaders.Add("*.sm", new SMFileLoader { Log = this.Log, Pattern = "*.sm", OffsetAdjust = SettingsManager.Get<double>("LoaderOffsetAdjustment") });
+           
+        }
+
         /// <summary>
         /// Returns all songs stored in the Manager.
         /// </summary>
         /// <returns>A list of all stored GameSongs.</returns>
         public List<GameSong> Songs
         {
-            get { return _songs;}
+            get { return _songs; }
         }
 
         #region Song Operations
@@ -54,7 +65,7 @@ namespace WGiBeat.AudioSystem
             }
             _songChannelIndex = AudioManager.PlaySoundEffect(song.Path + "\\" + song.AudioFile, false, true);
             //TODO: Fade in if appropriate.
-            AudioManager.SetPosition(_songChannelIndex,Math.Max(0.0,1000 * (song.AudioStart - 0.5)));
+            AudioManager.SetPosition(_songChannelIndex, Math.Max(0.0, 1000 * (song.AudioStart - 0.5)));
             return _songChannelIndex;
         }
 
@@ -115,7 +126,7 @@ namespace WGiBeat.AudioSystem
             else
             {
                 throw new Exception("SongManager does not contain song with hashcode: " + song.GetHashCode());
-            } 
+            }
         }
 
         /// <summary>
@@ -136,34 +147,55 @@ namespace WGiBeat.AudioSystem
         /// parsing all valid song files (.sng) from a folder. Subfolders are also parsed.
         /// </summary>
         /// <param name="path">The path containing song files to parse.</param>
-        /// <returns>A new SongManager instance, containing GameSongs for any .sng files parsed.</returns>
+        /// <returns>A new SongManager instance, containing GameSongs for any song files parsed.</returns>
         public void LoadFromFolder(string path)
         {
-            var folders = new List<string>();
-            folders.Add(path);
+            var folders = new List<string> {path};
 
             while (folders.Count > 0)
             {
                 string currentFolder = folders[0];
-                Log.AddMessage("Loading songfiles in " + currentFolder,LogLevel.INFO);
+                Log.AddMessage("Loading songfiles in " + currentFolder, LogLevel.INFO);
                 folders.AddRange(Directory.GetDirectories(currentFolder));
-                foreach (string file in Directory.GetFiles(currentFolder, "*.sng"))
+                var selectedPattern = "";
+
+                //Determine which Loader to use. WGiBeat only loads one type of file from
+                //a folder to prevent duplicates. The .sng format is its first choice. 
+                foreach (SongFileLoader sfl in Loaders.Values)
                 {
-                    var newSong = LoadFromFile(file,true);
-                    if (newSong == null)
+                    if (Directory.GetFiles(currentFolder,sfl.Pattern).Count() != 0)
                     {
-                        continue;
+                        selectedPattern = sfl.Pattern;
                     }
-                    
-                    AddSong(newSong);
+                }
+
+                //Load whatever it found. Skip the folder otherwise.
+                if (!String.IsNullOrEmpty(selectedPattern))
+                {
+                    LoadFromFolder(currentFolder, selectedPattern);
                 }
                 folders.RemoveAt(0);
             }
+
             if (_songs.Count == 0)
             {
-                Log.AddMessage(String.Format("No valid song files loaded. WGiBeat is not playable without one!"),LogLevel.ERROR);
+                Log.AddMessage(String.Format("No valid song files loaded. WGiBeat is not playable without one!"), LogLevel.ERROR);
             }
-            Log.AddMessage(String.Format("Song load completed. {0} songs loaded.", _songs.Count),LogLevel.NOTE);
+            Log.AddMessage(String.Format("Song load completed. {0} songs loaded.", _songs.Count), LogLevel.NOTE);
+        }
+
+        private void LoadFromFolder(string path, string pattern)
+        {
+            foreach (string file in Directory.GetFiles(path, pattern))
+            {
+                var newSong = LoadFromFile(file, true);
+                if (newSong == null)
+                {
+                    continue;
+                }
+
+                AddSong(newSong);
+            }
         }
 
         /// <summary>
@@ -174,8 +206,12 @@ namespace WGiBeat.AudioSystem
         /// <param name="song">The GameSong to save to file.</param>
         public void SaveToFile(GameSong song)
         {
+            if (song.ReadOnly)
+            {
+                return;
+            }
             var file = new FileStream(song.Path + "\\" + song.DefinitionFile, FileMode.Create, FileAccess.Write);
-            var sw = new StreamWriter(file);         
+            var sw = new StreamWriter(file);
 
             sw.WriteLine("#SONG-1.0;");
             sw.WriteLine("Title={0};", song.Title);
@@ -183,104 +219,54 @@ namespace WGiBeat.AudioSystem
             sw.WriteLine("Artist={0};", song.Artist);
             sw.WriteLine("Bpm={0};", Math.Round(song.Bpm, 2));
             sw.WriteLine("Offset={0};", Math.Round(song.Offset, 3));
-            sw.WriteLine("AudioStart={0};", Math.Round(song.AudioStart,3));
+            sw.WriteLine("AudioStart={0};", Math.Round(song.AudioStart, 3));
             sw.WriteLine("Length={0};", Math.Round(song.Length, 3));
             sw.WriteLine("AudioFile={0};", song.AudioFile);
-            sw.WriteLine("AudioFileMD5={0};",song.AudioFileMD5);
+            sw.WriteLine("AudioFileMD5={0};", song.AudioFileMD5);
             sw.Close();
         }
 
         /// <summary>
-        /// Loads a single GameSong from a file. The file should be a .sng file, and conform
-        /// to the song file standard. See the readme.txt in the /Songs folder for more
-        /// details.
+        /// Loads a single GameSong from a file. The file should be a file that WGiBeat can recognize, and conform
+        /// to the appropriate song file standard. See the readme.txt in the /Songs folder for more
+        /// details. WGiBeat's standard for song files are '.sng' files.
         /// </summary>
         /// <param name="filename">The name of the file to load.</param>
         /// <param name="validate">Whether validation checks should be done on the loaded song file.</param>
         /// <returns>A GameSong loaded from the file provided.</returns>
         public GameSong LoadFromFile(string filename, bool validate)
         {
-            var newSong = GameSong.LoadDefaults();
+            var pattern = "*" + Path.GetExtension(filename);
+            var newSong = Loaders[pattern].LoadFromFile(filename);
 
-            newSong.Path = filename.Substring(0,filename.LastIndexOf("\\"));
-            newSong.DefinitionFile = Path.GetFileName(filename);
-            try
+            if (newSong == null)
             {
-                string songText = File.ReadAllText(filename);
-
-                songText = songText.Replace("\r", "");
-                songText = songText.Replace("\n", "");
-
-                string[] rules = songText.Split(';');
-
-                foreach (string rule in rules)
-                {
-                    if ((rule.Length == 0) || (rule[0] == '#'))
-                    {
-                        continue;
-                    }
-
-                    string field = rule.Substring(0, rule.IndexOf("=")).ToUpper();
-                    string value = rule.Substring(rule.IndexOf("=") + 1);
-
-                    switch (field.ToUpper())
-                    {
-                        case "TITLE":
-                            newSong.Title = value;
-                            break;
-                        case "SUBTITLE":
-                            newSong.Subtitle = value;
-                            break;
-                        case "ARTIST":
-                            newSong.Artist = value;
-                            break;
-                        case "OFFSET":
-                            newSong.Offset = Convert.ToDouble(value);
-                            break;
-                        case "AUDIOSTART":
-                            newSong.AudioStart = Convert.ToDouble(value);
-                            break;
-                        case "LENGTH":
-                            newSong.Length = Convert.ToDouble(value);
-                            break;
-                        case "BPM":
-                            newSong.Bpm = Convert.ToDouble(value);
-                            break;
-                        case "SONGFILE":
-                        case "AUDIOFILE":
-                            newSong.AudioFile = value;
-                            break;
-                        case "SONGFILEMD5":
-                        case "AUDIOFILEMD5":
-                            newSong.AudioFileMD5 = value;
-                            break;
-                    }
-                }
+                return null;
+            }
                 if (validate)
                 {
                     string message;
                     bool validated = ValidateSongFile(newSong, out message);
+
+                    //Even if the song file is validated, there may be important information.
+                    //Log a warning message if validation failed, or a note if validation succeeded with a
+                    //message.
                     if (validated)
                     {
                         if (message != "No errors found.")
                         {
-                            Log.AddMessage("" + message + " In: " + newSong.Path + "\\" + newSong.DefinitionFile,LogLevel.NOTE);
+                            Log.AddMessage("" + message + " In: " + newSong.Path + "\\" + newSong.DefinitionFile, LogLevel.NOTE);
                         }
 
                     }
                     else
                     {
-                        Log.AddMessage("" + message + " In: " + newSong.Path + "\\" + newSong.DefinitionFile,LogLevel.WARN);
+                        Log.AddMessage("" + message + " In: " + newSong.Path + "\\" + newSong.DefinitionFile, LogLevel.WARN);
                         return null;
                     }
                 }
-                Log.AddMessage("Loaded " + newSong.Title + " successfully.\n",LogLevel.INFO);
-            }
-            catch (Exception)
-            {
-                Log.AddMessage("Failed to load song: " + filename + "\n",LogLevel.WARN);
-                return null;
-            }
+                Log.AddMessage("Loaded " + newSong.Title + " successfully.\n", LogLevel.INFO);
+
 
             return newSong;
         }
@@ -316,7 +302,7 @@ namespace WGiBeat.AudioSystem
                         Directory.Delete(song.Path);
                     }
                 }
-               
+
                 return "";
             }
             catch (Exception ex)
@@ -338,7 +324,7 @@ namespace WGiBeat.AudioSystem
         {
             message = "No errors found.";
             if (string.IsNullOrEmpty(song.AudioFile))
-            {       
+            {
                 message = "No audio file specified.";
                 return false;
             }
@@ -392,7 +378,7 @@ namespace WGiBeat.AudioSystem
                 case 2:
                     if (!(song.VerifyMD5()))
                     {
-                        message = 
+                        message =
                             "Audio File MD5 checksum is invalid and was not loaded. This most likely means that the wrong audio file is being used.";
                         return false;
                     }
@@ -403,7 +389,7 @@ namespace WGiBeat.AudioSystem
                     {
                         song.SetMD5();
                         SaveToFile(song);
-                        message = 
+                        message =
                             "Audio File MD5 checksum is invalid and has been overridden, since 'Song Audio Validation' has been set to 'auto correct'.";
                     }
                     break;

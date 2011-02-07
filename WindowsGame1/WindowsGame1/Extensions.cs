@@ -23,5 +23,19 @@ namespace WGiBeat
         {
             return Array.IndexOf(array, item);
         }
+
+        public static bool ContainsAny<T>(this T[] array, params T[] items)
+        {
+            
+            foreach (T item in items)
+            {
+                if (array.Contains(item))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    
     }
 }

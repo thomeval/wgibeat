@@ -31,6 +31,7 @@ namespace WGiBeat.Drawing
         }
         public static void AddTexture(string name, Texture2D tex)
         {
+            
             _textures.Add(name, tex);
         }
 
