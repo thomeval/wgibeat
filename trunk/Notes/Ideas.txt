@@ -14,7 +14,9 @@
 - Record average late/early beatline hits.
 - BPM meter doesn't animate on-beat. (Attempted, failed)
 - More Cooperative bonuses (Streaks? Sync perfects?) (0.7)
-
+- Gradual Desync of certain SM songs? Permanant hill climbing?
+- Perfect length calculation.
+- Fix for long song titles
 
 ==Post Release==
 - Wiki page for WGiEdit and how songs work.

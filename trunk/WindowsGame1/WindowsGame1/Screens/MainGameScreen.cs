@@ -250,8 +250,9 @@ namespace WGiBeat.Screens
             //to match current time with the song time by periodically sampling it. A hill climbing method
             // is used here.
             var delay = Core.Songs.GetCurrentSongProgress() - _timeElapsed;
-            if ((_confidence < 15) && (Math.Abs(delay) > 25))
+            if ((Math.Abs(delay) > 20))
             {
+                System.Diagnostics.Debug.WriteLine(delay);
                 _confidence = 0;
                 _songLoadDelay += delay / 2.0;
             }
@@ -259,6 +260,7 @@ namespace WGiBeat.Screens
             {
                 _confidence++;
             }
+
         }
 
         #endregion
