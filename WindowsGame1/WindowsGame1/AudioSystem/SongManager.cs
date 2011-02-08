@@ -178,6 +178,7 @@ namespace WGiBeat.AudioSystem
                     if (Directory.GetFiles(currentFolder,sfl.Pattern).Count() != 0)
                     {
                         selectedPattern = sfl.Pattern;
+                        break;
                     }
                 }
 

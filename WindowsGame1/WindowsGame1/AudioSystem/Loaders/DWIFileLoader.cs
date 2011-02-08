@@ -122,11 +122,12 @@ namespace WGiBeat.AudioSystem.Loaders
 
                 newSong.Path = Path.GetDirectoryName(filename);
                 newSong.DefinitionFile = Path.GetFileName(filename);
-
                 if ((String.IsNullOrEmpty(newSong.AudioFile) ))
                 {
                     newSong.AudioFile = FindUndefinedAudioFile(newSong.Path, newSong.DefinitionFile);
                 }
+                newSong.SetMD5();
+
                 return newSong;
             }
             catch (Exception ex)

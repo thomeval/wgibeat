@@ -109,8 +109,6 @@ namespace WGiBeat.AudioSystem.Loaders
                 }
 
                 var selectedNotes = (from e in _notes where e != null select e).First();
-
-
                 
                 newSong.Offset += OffsetAdjust;
 
@@ -126,6 +124,7 @@ namespace WGiBeat.AudioSystem.Loaders
 
                 newSong.Path = Path.GetDirectoryName(filename);
                 newSong.DefinitionFile = Path.GetFileName(filename);
+                newSong.SetMD5();
 
                 return newSong;
             }
