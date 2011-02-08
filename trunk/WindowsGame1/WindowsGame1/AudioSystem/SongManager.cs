@@ -36,8 +36,20 @@ namespace WGiBeat.AudioSystem
         private void CreateLoaders()
         {
             Loaders.Add("*.sng",new SNGFileLoader {Log = this.Log, Pattern = "*.sng"});
-            Loaders.Add("*.sm", new SMFileLoader { Log = this.Log, Pattern = "*.sm", OffsetAdjust = SettingsManager.Get<double>("LoaderOffsetAdjustment") });
-           
+            Loaders.Add("*.sm",
+                        new SMFileLoader
+                            {
+                                Log = this.Log,
+                                Pattern = "*.sm",
+                                OffsetAdjust = SettingsManager.Get<double>("LoaderOffsetAdjustment")
+                            });
+            Loaders.Add("*.dwi",
+                        new DWIFileLoader
+                            {
+                                Log = this.Log,
+                                Pattern = "*.dwi",
+                                OffsetAdjust = SettingsManager.Get<double>("LoaderOffsetAdjustment")
+                            });
         }
 
         /// <summary>

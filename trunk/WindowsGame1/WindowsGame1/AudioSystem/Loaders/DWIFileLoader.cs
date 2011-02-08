@@ -2,25 +2,27 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using LogLevel = WGiBeat.Managers.LogLevel;
 
 namespace WGiBeat.AudioSystem.Loaders
 {
-    public class SMFileLoader : SongFileLoader
+    public class DWIFileLoader : SongFileLoader
     {
-        private readonly string[] _notes;
-        private readonly string[] _preferredNoteOrder = {"Hard", "Challenge", "Medium", "Easy", "Beginner", "Edit"};
+         private readonly string[] _notes;
+        private readonly string[] _preferredNoteOrder = {"MANIAC", "SMANIAC", "ANOTHER", "BASIC", "BEGINNER", "EDIT"};
 
         private double _stopTotals;
-        public SMFileLoader()
+
+        public DWIFileLoader()
         {
             _notes = new string[_preferredNoteOrder.Length];
         }
 
         public override GameSong LoadFromFile(string filename)
         {
-            Log.AddMessage("Converting SM File: " + filename, LogLevel.NOTE);
+            Log.AddMessage("Converting DWI File: " + filename, LogLevel.NOTE);
 
             try
             {
@@ -46,22 +48,20 @@ namespace WGiBeat.AudioSystem.Loaders
                     switch (field.ToUpper())
                     {
                         case "#TITLE":
+                            //TODO: Use WGiEdit Auto-subtitlizer
                             newSong.Title = value;
-                            break;
-                        case "#SUBTITLE":
-                            newSong.Subtitle = value;
                             break;
                         case "#ARTIST":
                             newSong.Artist = value;
                             break;
-                        case "#OFFSET":
-                            newSong.Offset = -1 * Convert.ToDouble(value);
+                        case "#GAP":
+                            newSong.Offset = Convert.ToDouble(value) / 1000.0;
                             break;
-                        case "#MUSICLENGTH":
-                            //TODO: Some songs don't have this.
-                            newSong.Length = Convert.ToDouble(value);
+                        case "#BPM":
+                            newSong.Bpm = Convert.ToDouble(value);
                             break;
-                        case "#BPMS":
+
+                        case "#CHANGEBPM":
                             var bpmPairs = new Dictionary<double, double>();
                             var bpmText = value.Split(',');
 
@@ -69,21 +69,22 @@ namespace WGiBeat.AudioSystem.Loaders
                             {
                                 double position = Convert.ToDouble(bpmItem.Substring(0, bpmItem.IndexOf("=")));
                                 double bvalue = Convert.ToDouble(bpmItem.Substring(bpmItem.IndexOf("=") + 1));
-                                bpmPairs.Add(position,bvalue);
+                                bpmPairs.Add(position, bvalue);
                             }
                             if (bpmPairs.Keys.Count > 1)
                             {
-                             Log.AddMessage(filename + " has multiple BPMs and will not work correctly in WGiBeat! ", LogLevel.WARN);   
+                                Log.AddMessage(filename + " has multiple BPMs and will not work correctly in WGiBeat! ", LogLevel.WARN);
                             }
-                            newSong.Bpm = bpmPairs[0.0];
+                            
                             break;
-                        case "#MUSIC":
+
+                        case "#FILE":
                             newSong.AudioFile = value;
                             break;
-                        case "#NOTES":
+                        case "#SINGLE":
                             AddNotes(value);
                             break;
-                        case "#STOPS":
+                        case "#FREEZE":
                             if (String.IsNullOrEmpty(value))
                             {
                                 continue;
@@ -110,16 +111,11 @@ namespace WGiBeat.AudioSystem.Loaders
 
                 var selectedNotes = (from e in _notes where e != null select e).First();
 
-
-                
                 newSong.Offset += OffsetAdjust;
 
-                if (newSong.Length == 0)
-                {
-                    CalculateLength(newSong, selectedNotes);
-                    newSong.Length += _stopTotals;
-                    newSong.Length += OffsetAdjust;
-                } 
+                CalculateLength(newSong, selectedNotes);
+                newSong.Length += _stopTotals;
+                newSong.Length += OffsetAdjust;
                 
                 //Length calculation needs the ORIGINAL offset, so this must be done after it.
                 AdjustOffset(newSong, selectedNotes);
@@ -127,6 +123,10 @@ namespace WGiBeat.AudioSystem.Loaders
                 newSong.Path = Path.GetDirectoryName(filename);
                 newSong.DefinitionFile = Path.GetFileName(filename);
 
+                if ((String.IsNullOrEmpty(newSong.AudioFile) ))
+                {
+                    newSong.AudioFile = FindUndefinedAudioFile(newSong.Path, newSong.DefinitionFile);
+                }
                 return newSong;
             }
             catch (Exception ex)
@@ -137,53 +137,112 @@ namespace WGiBeat.AudioSystem.Loaders
 
         }
 
+        private string FindUndefinedAudioFile(string path, string defFile)
+        {
+            var possibility = Path.GetFileNameWithoutExtension(defFile) + ".mp3";
+             if (File.Exists(path + "\\" + possibility))
+             {
+                 return Path.GetFileName(possibility);
+             }
+
+            string[] validExtensions = {"*.mp3", "*.ogg", "*.wma"};
+
+            foreach (string ext in validExtensions)
+            {
+                var files = Directory.GetFiles(path, ext);
+                if (files.Count() > 0)
+                {
+                    return Path.GetFileName(files[0]);
+                }
+            }
+
+            return "";
+        }
+
         private void AddNotes(string value)
         {
             value = value.Replace(" ", "");
             var parts = value.Split(':');
-            //Only consider Single steps
-            if ((parts.Length < 6) || (!parts[0].Equals("dance-single",StringComparison.InvariantCultureIgnoreCase)))
+            if (parts.Length < 3)
             {
                 return;
             }
 
             //Add the note chart found to the dictionary (indexed by their difficulty).
-            _notes[_preferredNoteOrder.IndexOf(parts[2])] = parts[5];
+            _notes[_preferredNoteOrder.IndexOf(parts[0])] = parts[2];
         }
 
         private void AdjustOffset(GameSong song, string notes)
         {
-            var lines = notes.Split(',');
-            var idx = 0;
-            for (int x = 0; x < lines.Length; x++)
-            {
-                //Extension method
-                if (lines[x].ToCharArray().ContainsAny('1','2'))
-                {
-                    idx = x;
-                    break;
-                }
-            }
-            song.Offset = song.ConvertPhraseToMS(idx) / 1000.0;
-            Log.AddMessage(String.Format("Song notes start at phrase {0}. Offset set to {1}. ",idx,song.Offset),LogLevel.DEBUG);
+            var startPhrase = ParseNoteString(notes, true);
+            song.Offset = song.ConvertPhraseToMS(startPhrase) / 1000.0;
+            Log.AddMessage(String.Format("Song notes start at phrase {0}. Offset set to {1}. ", startPhrase, song.Offset), LogLevel.DEBUG);
         }
 
         private void CalculateLength(GameSong song, string notes)
         {
-            var lines = notes.Split(',');
-            var idx = 0;
-            for (int x = lines.Length -1; x >= 0; x--)
+
+            var endPhrase = ParseNoteString(notes, false);
+            song.Length = song.ConvertPhraseToMS(endPhrase + 0.5) / 1000.0;
+            Log.AddMessage(String.Format("Song notes end at phrase {0}. Length set to {1}. ", endPhrase, song.Length), LogLevel.DEBUG);
+        }
+
+        public int ParseNoteString(string notes, bool start)
+        {
+            //Remove 'complex' notes into simpler ones.
+            notes = Regex.Replace(notes, "<(.)+>", "1");
+
+            var startPoint = 0.0;
+            var phraseNumber = 0.0;
+            var increment = 0.125;
+            var skipNext = false;
+            foreach (char note in notes)
             {
-                //Extension method
-                if (lines[x].ToCharArray().ContainsAny('1', '2'))
+                if (skipNext)
                 {
-                    idx = x;
-                    break;
+                    skipNext = false;
+                    continue;
                 }
+
+                switch (note)
+                {
+                    case '!':
+                        skipNext = true;
+                        break;
+                    case '(':
+                        increment = 1.0/16;
+                        break;
+                    case '[':
+                        increment = 1.0/24;
+                        break;
+                    case '{':
+                        increment = 1.0/64;
+                        break;
+                    case '`':
+                        increment = 1.0/192;
+                        break;
+
+                    case ')':
+                    case ']':
+                    case '}':
+                    case '\'':                       
+                        increment = 1.0 / 8;
+                        break;
+                        default:
+
+                        if ((note != '0') && start)
+                        {
+                            startPoint = phraseNumber;
+                            return (int)Math.Floor(startPoint);
+                        }
+                        phraseNumber += increment;
+                        break;
+
+                }             
             }
 
-            song.Length = song.ConvertPhraseToMS(idx + 0.5) / 1000.0;
-            Log.AddMessage(String.Format("Song notes end at phrase {0}. Length set to {1}. ", idx, song.Length), LogLevel.DEBUG);
+            return (int)Math.Floor(phraseNumber);
         }
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -24,6 +25,9 @@ namespace WGiBeat.AudioSystem
         private const int CHANNEL_COUNT = 8;
         private float _masterVolume = 1.0f;
         private Channel _tmpChannel = new Channel();
+
+        //TODO: Use this
+        public string FallbackSound { get; set; }
         #endregion 
 
         public AudioManager(LogManager log)
@@ -73,6 +77,10 @@ namespace WGiBeat.AudioSystem
         /// <returns>The channel ID allocated by Fmod to the channel. Use this to control the playback.</returns>
         public int PlaySoundEffect(string soundPath, bool loop, bool dontStream)
         {
+            if (!File.Exists(soundPath))
+            {
+                return PlayFallbackSoundEffect();
+            }
             RESULT result;
             var mySound = GetOrCreateSound(soundPath,!dontStream);
             var myChannel = new Channel();
@@ -90,16 +98,41 @@ namespace WGiBeat.AudioSystem
             }
 
             CheckFMODErrors(mySound.setMode((MODE) mode));
-         
-            result = _fmodSystem.playSound(CHANNELINDEX.FREE, mySound, false, ref myChannel);
-            CheckFMODErrors(result);
-            result = myChannel.setVolume(_masterVolume);
-            CheckFMODErrors(result);
+
+                result = _fmodSystem.playSound(CHANNELINDEX.FREE, mySound, false, ref myChannel);
+                CheckFMODErrors(result);
+                result = myChannel.setVolume(_masterVolume);
+                CheckFMODErrors(result);
+
+
             
             int index = -1;
             result = myChannel.getIndex(ref index);
             CheckFMODErrors(result);
 
+            return index;
+        }
+
+
+        public int PlayFallbackSoundEffect()
+        {
+            if (!File.Exists(FallbackSound))
+            {
+                return -1;
+            }
+            const MODE MODE = (MODE.SOFTWARE + (uint)MODE.LOOP_NORMAL + (uint)MODE.CREATESTREAM);
+
+            var mySound = new Sound();
+            CheckFMODErrors(_fmodSystem.createSound(FallbackSound, MODE, ref mySound));
+            CheckFMODErrors(mySound.setMode(MODE));
+
+            var myChannel = new Channel();
+
+            CheckFMODErrors(_fmodSystem.playSound(CHANNELINDEX.FREE, mySound, false, ref myChannel));
+            CheckFMODErrors(myChannel.setVolume(_masterVolume));
+            
+            int index = -1;
+            CheckFMODErrors(myChannel.getIndex(ref index));
             return index;
         }
 

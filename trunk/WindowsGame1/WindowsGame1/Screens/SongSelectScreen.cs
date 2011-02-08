@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -444,6 +445,15 @@ namespace WGiBeat.Screens
         {
             Crossfader.StopBoth();
             Core.Cookies["CurrentSong"] = CurrentSong;
+            
+            if (Core.Cookies.ContainsKey("Panic"))
+            {
+                Core.Cookies.Remove("Panic");
+            }
+            if (!File.Exists(CurrentSong.Path + "\\" + CurrentSong.AudioFile))
+            {
+                Core.Cookies.Add("Panic",true);
+            }
             Core.Settings.Set("LastSongPlayed", CurrentSong.GetHashCode());
             Core.ScreenTransition("MainGame");
         }
