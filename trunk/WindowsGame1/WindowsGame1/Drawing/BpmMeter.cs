@@ -111,23 +111,28 @@ namespace WGiBeat.Drawing
             _songTitleBase.Draw(spriteBatch);
 
             var textPosition = _songTitleBase.Position.Clone();
-            textPosition.X += 180;
+            Vector2 scale;
+            textPosition.X += 185;
             if (!String.IsNullOrEmpty(DisplayedSong.Title))
             {
+                scale = TextureManager.ScaleTextToFit(DisplayedSong.Title, "LargeFont", 350, 100);
                 TextureManager.DrawString(spriteBatch, DisplayedSong.Title, "LargeFont",
-                                          textPosition, Color.Black, FontAlign.CENTER);
+                                          textPosition, scale, Color.Black, FontAlign.CENTER);
             }
+            textPosition.X += 5;
             textPosition.Y += 25;
             if (!String.IsNullOrEmpty(DisplayedSong.Subtitle))
             {
+                scale = TextureManager.ScaleTextToFit(DisplayedSong.Subtitle, "DefaultFont", 360, 100);
                 TextureManager.DrawString(spriteBatch, DisplayedSong.Subtitle, "DefaultFont",
-                                          textPosition, Color.Black, FontAlign.CENTER);
+                                          textPosition, scale, Color.Black, FontAlign.CENTER);
             }
             textPosition.Y += 30;
             if (!String.IsNullOrEmpty(DisplayedSong.Artist))
             {
+                scale = TextureManager.ScaleTextToFit(DisplayedSong.Artist, "DefaultFont", 360, 100);
                 TextureManager.DrawString(spriteBatch, DisplayedSong.Artist, "DefaultFont",
-                                          textPosition, Color.Black, FontAlign.CENTER);
+                                          textPosition, scale, Color.Black, FontAlign.CENTER);
             }
         }
 

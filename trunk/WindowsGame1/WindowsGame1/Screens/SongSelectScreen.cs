@@ -118,7 +118,7 @@ namespace WGiBeat.Screens
             _songList.Clear();
             foreach (GameSong song in Core.Songs.Songs)
             {
-                _songList.Add(new SongListItem {Height = 50, Song = song, Width = 380});
+                _songList.Add(new SongListItem {Height = 50, Song = song, Width = 380, TextMaxWidth = 330});
             }
             SortSongList();
             _highScoreFrame.HighScoreEntry = GetDisplayedHighScore((GameType)Core.Cookies["CurrentGameType"]);

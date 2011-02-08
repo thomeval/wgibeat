@@ -81,16 +81,16 @@ namespace WGiBeat.Drawing
 
             _overchargePart = new Sprite
             {
-                Height = this.Height - 6,
+                Height = this.Height - 18,
                 X = this.X + 3,
-                Y = this.Y + 3,
+                Y = this.Y + 15,
                 SpriteTexture = TextureManager.Textures("LifeBarOvercharge")
             };
 
             _gridPart = new Sprite
                             {
                                 Height = this.Height - 6,
-                                Width = this.Width - 4,
+                                Width = this.Width - 3,
                                 X = this.X + 2,
                                 Y = this.Y + 3,
                                 SpriteTexture = TextureManager.Textures("LifeBarGridBase")
@@ -146,7 +146,7 @@ namespace WGiBeat.Drawing
             //Draw the overcharge above the normal bar.
             if (_displayedLife > 100)
             {
-                _overchargePart.Width = (int)((this.Width - 5) / LIFEBAR_CAPACITY * (_displayedLife - 100));
+                _overchargePart.Width = (int)((this.Width - 4) / LIFEBAR_CAPACITY * (_displayedLife - 100));
                 _overchargePart.ColorShading.A = Convert.ToByte((_displayedLife - 100) * 2.55);
                 _overchargePart.ColorShading.A = Math.Max(_overchargePart.ColorShading.A, (byte) 80);
                 if (_overchargePart.Width > 0)
@@ -156,7 +156,7 @@ namespace WGiBeat.Drawing
                 }
             }
 
-            _gridPart.Draw(spriteBatch);
+            _gridPart.DrawTiled(spriteBatch,0,0,this.Width-3,this.Height-6);
             DrawText(spriteBatch, _sidePos);
             _overchargeTextureOffset = (_overchargeTextureOffset + 0.5) % OVERCHARGE_OFFSET_CLIP;
         }
