@@ -84,7 +84,10 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             Text.AddResource(WgibeatRootFolder + "\\Content\\Text\\EditorText.txt");
             Text.AddResource(WgibeatRootFolder + "\\Content\\Text\\ModeText.txt");
 
-            Audio = new AudioManager(this.Log);
+            Audio = new AudioManager(this.Log)
+                        {
+                            FallbackSound = (WgibeatRootFolder + "\\Content\\Audio\\Fallback.ogg")
+                        };
             Songs = new SongManager(this.Log,this.Audio,this.Settings);
             Crossfader = new CrossfaderManager(this.Log,this.Audio);
 

@@ -23,10 +23,10 @@ namespace WGiBeat.Drawing
         }
         public void InitSprites()
         {
-            _teamBaseSprite = new Sprite() { SpriteTexture = TextureManager.Textures("ScoreBaseTeam") };
-            _teamGridSprite = new Sprite() {SpriteTexture = TextureManager.Textures("ScoreGridTeam")};
-            _tugBlueSprite = new Sprite() {SpriteTexture = TextureManager.Textures("TugOfWarBlue")};
-            _tugRedSprite = new Sprite() {SpriteTexture = TextureManager.Textures("TugOfWarRed")};
+            _teamBaseSprite = new Sprite { SpriteTexture = TextureManager.Textures("ScoreBaseTeam") };
+            _teamGridSprite = new Sprite {SpriteTexture = TextureManager.Textures("ScoreGridTeam")};
+            _tugBlueSprite = new Sprite {SpriteTexture = TextureManager.Textures("TugOfWarBlue")};
+            _tugRedSprite = new Sprite {SpriteTexture = TextureManager.Textures("TugOfWarRed")};
         }
 
         public void Update()

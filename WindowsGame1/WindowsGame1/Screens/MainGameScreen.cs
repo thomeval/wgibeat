@@ -79,6 +79,7 @@ namespace WGiBeat.Screens
             _gameSong = (GameSong)Core.Cookies["CurrentSong"];
 
             _startTime = null;
+            _panic = Core.Cookies.ContainsKey("Panic");
             _beatlineSet.EndingPhrase = _gameSong.GetEndingTimeInPhrase();
             _beatlineSet.Bpm = _gameSong.Bpm;
             _beatlineSet.SetSpeeds();
@@ -236,11 +237,12 @@ namespace WGiBeat.Screens
         private int _confidence;
         private Sprite _koSprite;
         private Sprite _clearSprite;
+        private bool _panic;
 
         private void SyncSong()
         {
 
-            if (_displayState != 0)
+            if ((_displayState != 0) || (_panic))
             {
                 return;
             }
@@ -252,13 +254,7 @@ namespace WGiBeat.Screens
             var delay = Core.Songs.GetCurrentSongProgress() - _timeElapsed;
             if ((Math.Abs(delay) > 20))
             {
-                System.Diagnostics.Debug.WriteLine(delay);
-                _confidence = 0;
                 _songLoadDelay += delay / 2.0;
-            }
-            else if (_confidence < 15)
-            {
-                _confidence++;
             }
 
         }
