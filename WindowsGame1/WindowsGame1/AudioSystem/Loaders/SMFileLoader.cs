@@ -78,7 +78,9 @@ namespace WGiBeat.AudioSystem.Loaders
                             }
                             if (bpmPairs.Keys.Count > 1)
                             {
-                             Log.AddMessage(filename + " has multiple BPMs and will not work correctly in WGiBeat! ", LogLevel.WARN);   
+                             Log.AddMessage(filename + " has multiple BPMs and will not work correctly in WGiBeat! ", LogLevel.WARN);  
+                                if (!AllowProblematic)
+                                    return null;
                             }
                             newSong.Bpm = bpmPairs[0.0];
                             break;
@@ -106,6 +108,8 @@ namespace WGiBeat.AudioSystem.Loaders
                             if (stopPairs.Keys.Count > 0)
                             {
                                 Log.AddMessage(filename + " has Stops and will not work correctly in WGiBeat! ", LogLevel.WARN);
+                                if (!AllowProblematic)
+                                    return null;
                             }
 
                             break;
