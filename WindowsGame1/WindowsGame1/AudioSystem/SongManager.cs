@@ -21,9 +21,20 @@ namespace WGiBeat.AudioSystem
         private int _songChannelIndex;
         public AudioManager AudioManager { get; set; }
         public SettingsManager SettingsManager { get; set; }
-        public Dictionary<string, SongFileLoader> Loaders = new Dictionary<string, SongFileLoader>();
+        public readonly Dictionary<string, SongFileLoader> Loaders = new Dictionary<string, SongFileLoader>();
+
+        /// <summary>
+        /// Returns all songs stored in the Manager.
+        /// </summary>
+        /// <returns>A list of all stored GameSongs.</returns>
+        public List<GameSong> Songs
+        {
+            get { return _songs; }
+        }
+
         #endregion
 
+        #region Initialization
         public SongManager(LogManager log, AudioManager audioManager, SettingsManager settings)
         {
             Log = log;
@@ -52,14 +63,7 @@ namespace WGiBeat.AudioSystem
                             });
         }
 
-        /// <summary>
-        /// Returns all songs stored in the Manager.
-        /// </summary>
-        /// <returns>A list of all stored GameSongs.</returns>
-        public List<GameSong> Songs
-        {
-            get { return _songs; }
-        }
+        #endregion
 
         #region Song Operations
 
@@ -104,6 +108,27 @@ namespace WGiBeat.AudioSystem
                 return AudioManager.GetChannelPosition(_songChannelIndex);
             }
             return 0;
+        }
+
+        /// <summary>
+        /// Automatically splits a song's title into a title and subtitle, by checking if any
+        /// brackets are used. A song with a title "Example (Awesome Mix)" would have its title
+        /// changed to "Example" with "(Awesome Mix)" moved to the Subtitle field. This method
+        /// has no effect on very long titles with no brackets.
+        /// </summary>
+        /// <param name="song">The game that needs to have its title split.</param>
+        public static void SplitTitle(GameSong song)
+        {
+            var title = song.Title;
+            title = title.Replace("[", "(");
+            title = title.Replace("]", ")");
+
+            if (title.IndexOf("(") < title.IndexOf(")"))
+            {
+                var length = title.LastIndexOf(")") - title.IndexOf("(") + 1;
+                song.Subtitle = title.Substring(title.IndexOf("("), length);
+                song.Title = title.Substring(0, title.IndexOf("("));
+            }
         }
         #endregion
 
@@ -155,20 +180,20 @@ namespace WGiBeat.AudioSystem
         }
 
         /// <summary>
-        /// Creates a new SongManager object, and populates its song database by
-        /// parsing all valid song files (.sng) from a folder. Subfolders are also parsed.
+        /// Populates this SongManager's song database by parsing all valid song files 
+        /// (file types for which it has a loader) from a folder. Subfolders are also parsed.
         /// </summary>
         /// <param name="path">The path containing song files to parse.</param>
-        /// <returns>A new SongManager instance, containing GameSongs for any song files parsed.</returns>
-        public void LoadFromFolder(string path)
+        public void LoadFromFolder(params string[] path)
         {
-            var folders = new List<string> {path};
+            var folders = new List<string>();
+            folders.AddRange(path);
 
             while (folders.Count > 0)
             {
                 string currentFolder = folders[0];
                 Log.AddMessage("Loading songfiles in " + currentFolder, LogLevel.INFO);
-                folders.AddRange(Directory.GetDirectories(currentFolder));
+                folders.InsertRange(0,Directory.GetDirectories(currentFolder));
                 var selectedPattern = "";
 
                 //Determine which Loader to use. WGiBeat only loads one type of file from
@@ -187,7 +212,7 @@ namespace WGiBeat.AudioSystem
                 {
                     LoadFromFolder(currentFolder, selectedPattern);
                 }
-                folders.RemoveAt(0);
+                folders.Remove(currentFolder);
             }
 
             if (_songs.Count == 0)

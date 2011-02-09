@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Threading;
@@ -24,7 +25,7 @@ namespace WGiBeat.Screens
 
         public override void Initialize()
         {
-            _songFolderPath = Core.WgibeatRootFolder + "\\" + Core.Settings["SongFolder"];
+            _songFolderPath = "" + Core.Settings["SongFolder"];
             _textPosition = Core.Metrics["SongLoadLog", 0].Clone();
 
             _baseSprite = new Sprite
@@ -39,7 +40,20 @@ namespace WGiBeat.Screens
 
         public void LoadSongs()
         {
-            Core.Songs.LoadFromFolder(_songFolderPath);
+            string[] paths = _songFolderPath.Split('|');
+
+            foreach (string path in paths)
+            {
+                if (!Path.IsPathRooted(path))
+                {
+                   Core.Songs.LoadFromFolder(Core.WgibeatRootFolder + "\\" + path);
+                }
+                else
+                {
+                    Core.Songs.LoadFromFolder(path);
+                }
+               
+            }
             _doneLoading = true;
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)

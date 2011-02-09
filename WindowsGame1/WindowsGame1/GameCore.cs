@@ -96,11 +96,12 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
 
             TextureManager.GraphicsDevice = this.GraphicsDevice;
 
+            /*
             if (!Directory.Exists(WgibeatRootFolder + "\\" + Settings["SongFolder"]))
             {
                 Directory.CreateDirectory(WgibeatRootFolder + "\\" + Settings["SongFolder"]);
             }
-
+            */
             LoadCurrentTheme();
 
             _menuMusicManager = new MenuMusicManager(this.Log)

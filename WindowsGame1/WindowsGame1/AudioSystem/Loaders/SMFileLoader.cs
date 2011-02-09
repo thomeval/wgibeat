@@ -7,6 +7,12 @@ using LogLevel = WGiBeat.Managers.LogLevel;
 
 namespace WGiBeat.AudioSystem.Loaders
 {
+
+
+    /// <summary>
+    /// A loader designed to load the .sm file format into WGiBeat. This format is the preferred file format of the
+    /// advanced open-source rhythm game, Stepmania.
+    /// </summary>
     public class SMFileLoader : SongFileLoader
     {
         private readonly string[] _notes;
@@ -58,7 +64,6 @@ namespace WGiBeat.AudioSystem.Loaders
                             newSong.Offset = -1 * Convert.ToDouble(value);
                             break;
                         case "#MUSICLENGTH":
-                            //TODO: Some songs don't have this.
                             newSong.Length = Convert.ToDouble(value);
                             break;
                         case "#BPMS":
@@ -126,6 +131,10 @@ namespace WGiBeat.AudioSystem.Loaders
                 newSong.DefinitionFile = Path.GetFileName(filename);
                 newSong.SetMD5();
 
+                if (String.IsNullOrEmpty(newSong.AudioFile))
+                {
+                    newSong.AudioFile = FindUndefinedAudioFile(newSong.Path, newSong.DefinitionFile);
+                }
                 return newSong;
             }
             catch (Exception ex)
