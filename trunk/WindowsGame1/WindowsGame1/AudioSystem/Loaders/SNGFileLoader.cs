@@ -67,6 +67,11 @@ namespace WGiBeat.AudioSystem.Loaders
                             break;
                     }
                 }
+
+                if (String.IsNullOrEmpty(newSong.AudioFile))
+                {
+                    newSong.AudioFile = FindUndefinedAudioFile(newSong.Path, newSong.DefinitionFile);
+                }
                 return newSong;
             }
             catch (Exception)

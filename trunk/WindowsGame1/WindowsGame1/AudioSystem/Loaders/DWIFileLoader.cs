@@ -8,11 +8,14 @@ using LogLevel = WGiBeat.Managers.LogLevel;
 
 namespace WGiBeat.AudioSystem.Loaders
 {
+    /// <summary>
+    /// A loader designed to load the .dwi file format into WGiBeat. This format is the preferred file format of the
+    /// DDR based rhythm game, Dance With Intensity.
+    /// </summary>
     public class DWIFileLoader : SongFileLoader
     {
-         private readonly string[] _notes;
+        private readonly string[] _notes;
         private readonly string[] _preferredNoteOrder = {"MANIAC", "SMANIAC", "ANOTHER", "BASIC", "BEGINNER", "EDIT"};
-
         private double _stopTotals;
 
         public DWIFileLoader()
@@ -48,8 +51,8 @@ namespace WGiBeat.AudioSystem.Loaders
                     switch (field.ToUpper())
                     {
                         case "#TITLE":
-                            //TODO: Use WGiEdit Auto-subtitlizer
                             newSong.Title = value;
+                            SongManager.SplitTitle(newSong);
                             break;
                         case "#ARTIST":
                             newSong.Artist = value;
@@ -122,6 +125,7 @@ namespace WGiBeat.AudioSystem.Loaders
 
                 newSong.Path = Path.GetDirectoryName(filename);
                 newSong.DefinitionFile = Path.GetFileName(filename);
+
                 if ((String.IsNullOrEmpty(newSong.AudioFile) ))
                 {
                     newSong.AudioFile = FindUndefinedAudioFile(newSong.Path, newSong.DefinitionFile);
@@ -132,33 +136,12 @@ namespace WGiBeat.AudioSystem.Loaders
             }
             catch (Exception ex)
             {
-                Log.AddMessage("Failed to load SM File." + ex.Message, LogLevel.WARN);
+                Log.AddMessage("Failed to load DWI File." + ex.Message, LogLevel.WARN);
                 return null;
             }
 
         }
 
-        private string FindUndefinedAudioFile(string path, string defFile)
-        {
-            var possibility = Path.GetFileNameWithoutExtension(defFile) + ".mp3";
-             if (File.Exists(path + "\\" + possibility))
-             {
-                 return Path.GetFileName(possibility);
-             }
-
-            string[] validExtensions = {"*.mp3", "*.ogg", "*.wma"};
-
-            foreach (string ext in validExtensions)
-            {
-                var files = Directory.GetFiles(path, ext);
-                if (files.Count() > 0)
-                {
-                    return Path.GetFileName(files[0]);
-                }
-            }
-
-            return "";
-        }
 
         private void AddNotes(string value)
         {

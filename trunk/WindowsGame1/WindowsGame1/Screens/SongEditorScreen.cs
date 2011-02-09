@@ -1062,19 +1062,9 @@ namespace WGiBeat.Screens
                 titleTag = tags["TIT2"];
             }
 
-            titleTag = titleTag.Replace("[", "(");
-            titleTag = titleTag.Replace("]", ")");
+            NewGameSong.Title = titleTag;
 
-            if (titleTag.IndexOf("(") < titleTag.IndexOf(")"))
-            {
-                var length = titleTag.LastIndexOf(")") - titleTag.IndexOf("(") + 1;
-                NewGameSong.Subtitle = titleTag.Substring(titleTag.IndexOf("("), length);
-                NewGameSong.Title = titleTag.Substring(0, titleTag.IndexOf("("));
-            }
-            else
-            {
-                NewGameSong.Title = titleTag;
-            }
+            SongManager.SplitTitle(NewGameSong);
 
             if (tags.ContainsKey("ARTIST"))
             {
