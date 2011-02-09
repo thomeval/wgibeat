@@ -58,6 +58,7 @@ namespace WGiBeat.Managers
             sm["LogLevel"] = 2;
             sm["Theme"] = "Default";
             sm["LoaderOffsetAdjustment"] = 0.13;
+            sm["AllowProblematicSongs"] = false;
             return sm;
         }
 

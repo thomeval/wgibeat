@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Threading;
@@ -56,20 +57,25 @@ namespace WGiBeat.Screens
             }
             _doneLoading = true;
         }
+
+        private const int MAX_VISIBLE_ENTRIES = 75;
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             _maxY = 40;
-            int errorCount = 0, warnCount = 0;
+            
             var currentPos = new Vector2(_textPosition.X, _textPosition.Y);
             var entries = GetOrReuseLogMessages();
-            _minY = Math.Min(entries.Length * -12 + 555, 40);
+
+            var startEntry = Math.Max(0, entries.Length - MAX_VISIBLE_ENTRIES);
+            _minY = Math.Min((entries.Length - startEntry) * -12 + 555, 40);
 
             if (_autoScroll)
             {
                  _textPosition.Y = _minY;
             }
-            foreach (LogEntry entry in entries)
+            for (int i = startEntry; i < entries.Length; i++)
             {
+                LogEntry entry = entries[i];
                 Color drawColor;
                 switch (entry.Level)
                 {
@@ -81,20 +87,17 @@ namespace WGiBeat.Screens
                         break;
                     case LogLevel.WARN:
                         drawColor = Color.Yellow;
-                        warnCount++;
                         break;
                     case LogLevel.ERROR:
                         drawColor = Color.Red;
-                        errorCount++;
                         break;
-                     default:
+                    default:
                         drawColor = Color.White;
                         break;
                 }
                 TextureManager.DrawString(spriteBatch, entry.ToString(), "LogFont",
                                           currentPos, drawColor, FontAlign.LEFT);
                 currentPos.Y += 12;
-
             }
 
             _baseSprite.Draw(spriteBatch);
@@ -106,7 +109,9 @@ namespace WGiBeat.Screens
             {
                 TextureManager.DrawString(spriteBatch, "Loading...", "LargeFont", Core.Metrics["LoadMessage", 0], Color.White, FontAlign.LEFT);
             }
-            TextureManager.DrawString(spriteBatch,String.Format("{0} errors, {1} warnings",errorCount,warnCount),"DefaultFont",Core.Metrics["LoadErrorCount",0],Color.White,FontAlign.LEFT);
+            var errorCount = (from e in entries where e.Level == LogLevel.ERROR select e).Count();
+            var warnCount = (from e in entries where e.Level == LogLevel.WARN select e).Count();
+            TextureManager.DrawString(spriteBatch,String.Format("{0} songs, {1} errors, {2} warnings",Core.Songs.Songs.Count, errorCount,warnCount),"DefaultFont",Core.Metrics["LoadErrorCount",0],Color.White,FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch,"" + GameCore.VERSION_STRING, "DefaultFont", Core.Metrics["LoadVersion", 0], Color.White, FontAlign.LEFT);
 
         }

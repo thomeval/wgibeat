@@ -14,6 +14,7 @@ namespace WGiBeat.AudioSystem.Loaders
         public LogManager Log { get; set; }
         public string Pattern { get; set; }
         public double OffsetAdjust { get; set; }
+        public bool AllowProblematic { get; set; }
 
         public abstract GameSong LoadFromFile(string filename);
 

@@ -79,6 +79,10 @@ namespace WGiBeat.Screens
             }
             _optionsMenu.AddItem(item);
 
+            item = new MenuItem {ItemText = "Allow Problematic Songs"};
+            item.AddOption("Off", false);
+            item.AddOption("On", true);
+
             item = new MenuItem { ItemText = "Save" };
             _optionsMenu.AddItem(item);
             item = new MenuItem { ItemText = "Cancel" };
@@ -188,6 +192,7 @@ namespace WGiBeat.Screens
                 _optionsMenu.GetByItemText("Save Game Log").SetSelectedByValue(Core.Settings.Get<object>("SaveLog"));
                 _optionsMenu.GetByItemText("Logging Level").SetSelectedByValue((LogLevel)(Core.Settings.Get<object>("LogLevel")));
                 _optionsMenu.GetByItemText("Theme").SetSelectedByValue(Core.Settings.Get<object>("Theme"));
+                _optionsMenu.GetByItemText("Allow Problematic Songs").SetSelectedByValue(Core.Settings.Get<object>("AllowProblematicSongs"));
             }
             catch (Exception ex)
             {
@@ -206,6 +211,7 @@ namespace WGiBeat.Screens
             Core.Settings.Set("SaveLog", _optionsMenu.GetByItemText("Save Game Log").SelectedValue());
             Core.Settings.Set("LogLevel", (int)_optionsMenu.GetByItemText("Logging Level").SelectedValue());
             Core.Settings.Set("Theme", _optionsMenu.GetByItemText("Theme").SelectedValue());
+            Core.Settings.Set("AllowProblematicSongs",_optionsMenu.GetByItemText("Allow Problematic Songs").SelectedValue());
             Core.Audio.SetMasterVolume((float)Core.Settings.Get<double>("SongVolume"));
             Core.Log.LogLevel = (LogLevel)Core.Settings.Get<int>("LogLevel");
             Core.Log.SaveLog = Core.Settings.Get<bool>("SaveLog");
