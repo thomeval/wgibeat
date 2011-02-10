@@ -52,14 +52,16 @@ namespace WGiBeat.AudioSystem
                             {
                                 Log = this.Log,
                                 Pattern = "*.sm",
-                                OffsetAdjust = SettingsManager.Get<double>("LoaderOffsetAdjustment")
+                                OffsetAdjust = SettingsManager.Get<double>("LoaderOffsetAdjustment"),
+                                AllowProblematic = SettingsManager.Get<bool>("AllowProblematicSongs")
                             });
             Loaders.Add("*.dwi",
                         new DWIFileLoader
                             {
                                 Log = this.Log,
                                 Pattern = "*.dwi",
-                                OffsetAdjust = SettingsManager.Get<double>("LoaderOffsetAdjustment")
+                                OffsetAdjust = SettingsManager.Get<double>("LoaderOffsetAdjustment"),
+                                AllowProblematic = SettingsManager.Get<bool>("AllowProblematicSongs")
                             });
         }
 
