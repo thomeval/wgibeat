@@ -82,6 +82,7 @@ namespace WGiBeat.Screens
             item = new MenuItem {ItemText = "Allow Problematic Songs"};
             item.AddOption("Off", false);
             item.AddOption("On", true);
+            _optionsMenu.AddItem(item);
 
             item = new MenuItem { ItemText = "Save" };
             _optionsMenu.AddItem(item);

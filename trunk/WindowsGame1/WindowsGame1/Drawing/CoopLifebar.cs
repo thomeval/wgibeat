@@ -16,6 +16,7 @@ namespace WGiBeat.Drawing
         private Sprite _gridPart;
         private SpriteMap _middlePart;
         private SpriteMap _frontPart;
+        private Sprite _overchargePart;
 
         public CoopLifeBar()
         {
@@ -50,70 +51,112 @@ namespace WGiBeat.Drawing
 
             _frontPart = new SpriteMap { Columns = 1, Rows = 4, SpriteTexture = TextureManager.Textures("LifeBarFront") };
 
+            _overchargePart = new Sprite
+                                  {
+                                      SpriteTexture = TextureManager.Textures("LifeBarOvercharge"),
+                                      Width = this.Width = 4,
+                                      Height = this.Height - 12
+                                  };
         }
 
         const double BEAT_FRACTION_SEVERITY = 0.3;
-        private const int FRONT_WIDTH = 4;
+        private const int BLOCK_WIDTH = 4;
         private int _blocksCount;
+
         public override void Draw(SpriteBatch spriteBatch, double gameTime)
         {
             DrawBase(spriteBatch);
             DrawSides(spriteBatch);
 
-            _blocksCount = (int)Math.Ceiling((this.Width - 6.00) / FRONT_WIDTH);
-            var beatFraction = GetBeatFraction(gameTime);
-            double penaltyMx = Math.Max(0, TotalLife() / TotalPositive());
 
+            var beatFraction = GetBeatFraction(gameTime);
+
+            int[] blockAssignments = AssignBlocks(beatFraction);
             
             int posX = this.X + 3;
-            double capacity = 100.0 * Participants();
-            for (int x = 0; x < 4; x++)
-            {
-                if (!Parent.Players[x].Playing)
-                {
-                    continue;
-                }
-  
-                var displayedLife = Parent.Players[x].Life;
-                displayedLife *= (1 - beatFraction) * penaltyMx;
-                //Draw each block in sequence. Either in colour, or black depending on the Player's life.
-                var highestBlock = GetHighestBlockLevel(x);
 
-                for (int y = 0; y <= highestBlock; y++)
+ 
+                for (int y = 0; y < blockAssignments.Length; y++)
                 {
-                    if (posX >= this.Width)
-                    {
-                        break;
-                    }
-                    var minLife = capacity/_blocksCount*y;
-                    if (displayedLife > minLife)
+  
+                    if ((blockAssignments[y] < 10) && (blockAssignments[y] > -1))
                     {
                         _frontPart.ColorShading = Color.White;
                     }
-                    else if (y == highestBlock)
+                    else if (blockAssignments[y] >= 10)
                     {
                         _frontPart.ColorShading = Color.DarkGray;
+                        blockAssignments[y] -= 10;
                     }
                     else
                     {
                         _frontPart.ColorShading = Color.Black;
                     }
-                    _frontPart.Draw(spriteBatch, x, FRONT_WIDTH, this.Height - 6, posX + (FRONT_WIDTH*y), this.Y + 3);
-                    
+                    _frontPart.Draw(spriteBatch, blockAssignments[y], BLOCK_WIDTH, this.Height - 6, posX + (BLOCK_WIDTH*y), this.Y + 3);                 
                 }
-                posX += FRONT_WIDTH * (highestBlock+1);
 
-            }
-            _frontPart.ColorShading = Color.Black;
-            while (posX < this.Width)
-            {
-                _frontPart.Draw(spriteBatch,0,FRONT_WIDTH, this.Height - 6, posX,this.Y + 3);
-                posX += FRONT_WIDTH;
-            }
-            _gridPart.SetPosition(this.X+2,this.Y+3);
+            DrawGrid(spriteBatch);
+        }
+
+        private void DrawGrid(SpriteBatch spriteBatch)
+        {
+
+            _gridPart.SetPosition(this.X + 2, this.Y + 3);
             _gridPart.Width = this.Width - 4;
             _gridPart.Height = this.Height - 4;
-            _gridPart.DrawTiled(spriteBatch,0,0,this.Width-4,this.Height-4);
+            _gridPart.DrawTiled(spriteBatch, 0, 0, this.Width - 4, this.Height - 4);
+        }
+
+        private int[] AssignBlocks(double beatFraction)
+        {
+            _blocksCount = (int)Math.Ceiling((this.Width - 6.00) / BLOCK_WIDTH);
+            var result = new int[_blocksCount];
+            var capacity = 100.0 * Participants();
+            double penaltyMx = Math.Max(0, TotalLife() / TotalPositive());
+
+            var position = 0;
+
+            for (int x = 0; x < result.Length; x++ )
+            {
+                result[x] = -1;
+            }
+                for (int x = 0; x < 4; x++)
+                {
+                    if (!Parent.Players[x].Playing)
+                    {
+                        continue;
+                    }
+
+                    var displayedLife = Parent.Players[x].Life;
+                    displayedLife *= (1 - beatFraction) * penaltyMx;
+                    //Draw each block in sequence. Either in colour, or black depending on the Player's life.
+                    var highestBlock = GetHighestBlockLevel(x);
+
+                    for (int y = 0; y <= highestBlock; y++)
+                    {
+                        if (position + y >= result.Length)
+                        {
+                            result[position + y - 1] = 10 + x;
+                            break;
+                        }
+
+                        var minLife = capacity / _blocksCount * y;
+                        if (displayedLife > minLife)
+                        {
+                            result[position + y] = x;
+                        }
+                        else if (y == highestBlock)
+                        {
+                            result[position + y] = 10 + x;
+                        }
+
+                    }
+                    position += highestBlock + 1;
+
+                }
+
+            return result;
+
         }
 
         public override void Draw(SpriteBatch spriteBatch)
