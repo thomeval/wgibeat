@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using FMOD;
 using WGiBeat.Managers;
@@ -26,7 +25,6 @@ namespace WGiBeat.AudioSystem
         private float _masterVolume = 1.0f;
         private Channel _tmpChannel = new Channel();
 
-        //TODO: Use this
         public string FallbackSound { get; set; }
         #endregion 
 
@@ -34,11 +32,8 @@ namespace WGiBeat.AudioSystem
         {
             Log = log;
             Log.AddMessage("Initializing Audio Manager...",LogLevel.INFO);
-            RESULT result;
-            result = Factory.System_Create(ref _fmodSystem);
-            CheckFMODErrors(result);
-            result = _fmodSystem.init(CHANNEL_COUNT, INITFLAGS.NORMAL, (IntPtr)null);
-            CheckFMODErrors(result);
+            CheckFMODErrors(Factory.System_Create(ref _fmodSystem));
+            CheckFMODErrors(_fmodSystem.init(CHANNEL_COUNT, INITFLAGS.NORMAL, (IntPtr)null));
         }
 
         #region Helpers
@@ -53,9 +48,6 @@ namespace WGiBeat.AudioSystem
             {
                 case RESULT.OK:
                     //Everything is fine.
-                    break;
-                case RESULT.ERR_CHANNEL_STOLEN:
-                    System.Diagnostics.Debug.WriteLine("Channel steal detected. Ignoring");
                     break;
                 default:
                     throw new Exception("FMOD error: " + Error.String(result));
@@ -81,11 +73,11 @@ namespace WGiBeat.AudioSystem
             {
                 return PlayFallbackSoundEffect();
             }
-            RESULT result;
+
             var mySound = GetOrCreateSound(soundPath,!dontStream);
             var myChannel = new Channel();
 
-            uint mode = (uint) MODE.SOFTWARE;
+            var mode = (uint) MODE.SOFTWARE;
 
             if (loop)
             {
@@ -98,17 +90,10 @@ namespace WGiBeat.AudioSystem
             }
 
             CheckFMODErrors(mySound.setMode((MODE) mode));
-
-                result = _fmodSystem.playSound(CHANNELINDEX.FREE, mySound, false, ref myChannel);
-                CheckFMODErrors(result);
-                result = myChannel.setVolume(_masterVolume);
-                CheckFMODErrors(result);
-
-
-            
+            CheckFMODErrors(_fmodSystem.playSound(CHANNELINDEX.FREE, mySound, false, ref myChannel));
+            CheckFMODErrors(myChannel.setVolume(_masterVolume));
             int index = -1;
-            result = myChannel.getIndex(ref index);
-            CheckFMODErrors(result);
+            CheckFMODErrors(myChannel.getIndex(ref index));
 
             return index;
         }
@@ -141,6 +126,7 @@ namespace WGiBeat.AudioSystem
             var result = new Dictionary<string, string>();
             var mySound = new Sound();
             CheckFMODErrors(_fmodSystem.createStream(filename, MODE.SOFTWARE, ref mySound));
+
             int tagsCount = 0, tagsUpdated = 0;
             CheckFMODErrors(mySound.getNumTags(ref tagsCount, ref tagsUpdated));
             var tagResult = new TAG();
@@ -187,11 +173,8 @@ namespace WGiBeat.AudioSystem
         /// <param name="position">The position, in milliseconds, to set the channel to.</param>
         public void SetPosition(int index, double position)
         {
-            var resultCode = _fmodSystem.getChannel(index, ref _tmpChannel);
-            CheckFMODErrors(resultCode);
-
-            var result = _tmpChannel.setPosition((uint)(position), TIMEUNIT.MS);
-            CheckFMODErrors(result);
+            CheckFMODErrors(_fmodSystem.getChannel(index, ref _tmpChannel));
+            CheckFMODErrors(_tmpChannel.setPosition((uint)(position), TIMEUNIT.MS));
         }
 
         /// <summary>
@@ -208,13 +191,13 @@ namespace WGiBeat.AudioSystem
             }
 
                 var mySound = new Sound();
-                uint mode = (uint) MODE.SOFTWARE;
+                var mode = (uint) MODE.SOFTWARE;
                 if (stream)
                 {
                     mode += (uint) MODE.CREATESTREAM;
                 }
-                var resultCode = _fmodSystem.createSound(soundPath, (MODE) mode, ref mySound);
-                CheckFMODErrors(resultCode);
+
+                CheckFMODErrors(_fmodSystem.createSound(soundPath, (MODE) mode, ref mySound));
                 _sounds.Add(soundPath, mySound);
                 return mySound;
 
@@ -240,13 +223,12 @@ namespace WGiBeat.AudioSystem
         public void StopChannel(int index)
         {
 
-            var resultCode = _fmodSystem.getChannel(index, ref _tmpChannel);
-            CheckFMODErrors(resultCode);
+            CheckFMODErrors(_fmodSystem.getChannel(index, ref _tmpChannel));
 
             Monitor.Enter(_tmpChannel);
             bool isPlaying = false;
-            _tmpChannel.isPlaying(ref isPlaying);
-            CheckFMODErrors(resultCode);
+            
+            CheckFMODErrors(_tmpChannel.isPlaying(ref isPlaying));
             
             if (isPlaying)
             {
@@ -266,12 +248,10 @@ namespace WGiBeat.AudioSystem
         /// <returns>The current volume of the channel, between 0.0 and 1.0.</returns>
         public float GetChannelVolume(int index)
         {
-            var resultCode = _fmodSystem.getChannel(index, ref _tmpChannel);
-            CheckFMODErrors(resultCode);
+            CheckFMODErrors(_fmodSystem.getChannel(index, ref _tmpChannel));
 
             float volume = 0.0f;
-            resultCode = _tmpChannel.getVolume(ref volume);
-            CheckFMODErrors(resultCode);
+            CheckFMODErrors(_tmpChannel.getVolume(ref volume));
             return volume;
         }
 
@@ -283,8 +263,7 @@ namespace WGiBeat.AudioSystem
         /// <param name="volume">The volume to set this channel to. 0 to mute, 1.0 for maximum volume.</param>
         public void SetChannelVolume(int index, float volume)
         {
-            var resultCode = _fmodSystem.getChannel(index, ref _tmpChannel);
-            CheckFMODErrors(resultCode);
+            CheckFMODErrors(_fmodSystem.getChannel(index, ref _tmpChannel));
             CheckFMODErrors(_tmpChannel.setVolume(_masterVolume * volume));
         }
 
@@ -314,6 +293,14 @@ namespace WGiBeat.AudioSystem
             CheckFMODErrors(_fmodSystem.getChannel(index, ref _tmpChannel));
             CheckFMODErrors(_tmpChannel.getPosition(ref position, TIMEUNIT.MS));
             return position;
+        }
+
+        public bool IsChannelPlaying(int index)
+        {
+            bool playing = false;
+            CheckFMODErrors(_fmodSystem.getChannel(index, ref _tmpChannel));
+            CheckFMODErrors(_tmpChannel.isPlaying(ref playing));
+            return playing;
         }
 
         /// <summary>
@@ -347,11 +334,8 @@ namespace WGiBeat.AudioSystem
         {
             var returnData = new float[numPoints];
 
-            var resultCode = _fmodSystem.getChannel(index, ref _tmpChannel);
-            CheckFMODErrors(resultCode);
-
-            resultCode = _tmpChannel.getSpectrum(returnData, numPoints, 0, DSP_FFT_WINDOW.RECT);
-            CheckFMODErrors(resultCode);
+            CheckFMODErrors(_fmodSystem.getChannel(index, ref _tmpChannel));
+            CheckFMODErrors(_tmpChannel.getSpectrum(returnData, numPoints, 0, DSP_FFT_WINDOW.RECT));
 
             return returnData;
         }

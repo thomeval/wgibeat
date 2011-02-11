@@ -59,6 +59,7 @@ namespace WGiBeat.Managers
             sm["Theme"] = "Default";
             sm["LoaderOffsetAdjustment"] = 0.13;
             sm["AllowProblematicSongs"] = false;
+            sm["ConvertToSNG"] = false;
             return sm;
         }
 
