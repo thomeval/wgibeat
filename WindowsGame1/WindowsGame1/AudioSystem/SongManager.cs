@@ -18,7 +18,7 @@ namespace WGiBeat.AudioSystem
         #region Fields
 
         private readonly List<GameSong> _songs = new List<GameSong>();
-        private int _songChannelIndex;
+        private int _songChannelIndex = -1;
         public AudioManager AudioManager { get; set; }
         public SettingsManager SettingsManager { get; set; }
         public readonly Dictionary<string, SongFileLoader> Loaders = new Dictionary<string, SongFileLoader>();
@@ -46,14 +46,15 @@ namespace WGiBeat.AudioSystem
 
         private void CreateLoaders()
         {
-            Loaders.Add("*.sng",new SNGFileLoader {Log = this.Log, Pattern = "*.sng"});
+            Loaders.Add("*.sng",new SNGFileLoader {Log = this.Log, Pattern = "*.sng", ConvertToSNG = true});
             Loaders.Add("*.sm",
                         new SMFileLoader
                             {
                                 Log = this.Log,
                                 Pattern = "*.sm",
                                 OffsetAdjust = SettingsManager.Get<double>("LoaderOffsetAdjustment"),
-                                AllowProblematic = SettingsManager.Get<bool>("AllowProblematicSongs")
+                                AllowProblematic = SettingsManager.Get<bool>("AllowProblematicSongs"),
+                                ConvertToSNG = SettingsManager.Get<bool>("ConvertToSNG")
                             });
             Loaders.Add("*.dwi",
                         new DWIFileLoader
@@ -61,7 +62,8 @@ namespace WGiBeat.AudioSystem
                                 Log = this.Log,
                                 Pattern = "*.dwi",
                                 OffsetAdjust = SettingsManager.Get<double>("LoaderOffsetAdjustment"),
-                                AllowProblematic = SettingsManager.Get<bool>("AllowProblematicSongs")
+                                AllowProblematic = SettingsManager.Get<bool>("AllowProblematicSongs"),
+                                ConvertToSNG = SettingsManager.Get<bool>("ConvertToSNG")
                             });
         }
 
@@ -112,6 +114,15 @@ namespace WGiBeat.AudioSystem
             return 0;
         }
 
+        public bool IsCurrentSongPlaying()
+        {
+            if (_songChannelIndex == -1)
+            {
+                return false;
+            }
+            return AudioManager.IsChannelPlaying(_songChannelIndex);
+        }
+
         /// <summary>
         /// Automatically splits a song's title into a title and subtitle, by checking if any
         /// brackets are used. A song with a title "Example (Awesome Mix)" would have its title
@@ -147,7 +158,7 @@ namespace WGiBeat.AudioSystem
             }
             else
             {
-                throw new Exception("SongManager already contains song with hashcode: " + song.GetHashCode());
+                Log.AddMessage("Cannot load songfile because another copy is already loaded: " + song.Path + "\\" + song.DefinitionFile, LogLevel.WARN);
             }
         }
 
@@ -240,30 +251,12 @@ namespace WGiBeat.AudioSystem
 
         /// <summary>
         /// Saves a GameSong object to a file. Note that the filename is taken from the GameSong
-        /// object itself. Most useful for saving edits made to song file during runtime
-        /// (such as Song Debugging).
+        /// object itself. 
         /// </summary>
         /// <param name="song">The GameSong to save to file.</param>
         public void SaveToFile(GameSong song)
         {
-            if (song.ReadOnly)
-            {
-                return;
-            }
-            var file = new FileStream(song.Path + "\\" + song.DefinitionFile, FileMode.Create, FileAccess.Write);
-            var sw = new StreamWriter(file);
-
-            sw.WriteLine("#SONG-1.0;");
-            sw.WriteLine("Title={0};", song.Title);
-            sw.WriteLine("Subtitle={0};", song.Subtitle);
-            sw.WriteLine("Artist={0};", song.Artist);
-            sw.WriteLine("Bpm={0};", Math.Round(song.Bpm, 2));
-            sw.WriteLine("Offset={0};", Math.Round(song.Offset, 3));
-            sw.WriteLine("AudioStart={0};", Math.Round(song.AudioStart, 3));
-            sw.WriteLine("Length={0};", Math.Round(song.Length, 3));
-            sw.WriteLine("AudioFile={0};", song.AudioFile);
-            sw.WriteLine("AudioFileMD5={0};", song.AudioFileMD5);
-            sw.Close();
+            Loaders["*.sng"].SaveToFile(song);
         }
 
         /// <summary>

@@ -45,7 +45,7 @@ namespace WGiBeat
         private GamePadState[] _lastGamePadState;
         public string WgibeatRootFolder;
 
-        public const string VERSION_STRING = "v0.6";
+        public const string VERSION_STRING = "v0.65";
         public GameCore()
         {
             GraphicsManager = new GraphicsDeviceManager(this);
@@ -96,12 +96,6 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
 
             TextureManager.GraphicsDevice = this.GraphicsDevice;
 
-            /*
-            if (!Directory.Exists(WgibeatRootFolder + "\\" + Settings["SongFolder"]))
-            {
-                Directory.CreateDirectory(WgibeatRootFolder + "\\" + Settings["SongFolder"]);
-            }
-            */
             LoadCurrentTheme();
 
             _menuMusicManager = new MenuMusicManager(this.Log)

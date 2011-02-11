@@ -17,7 +17,7 @@ namespace WGiBeat.AudioSystem.Loaders
     {
         private readonly string[] _notes;
         private readonly string[] _preferredNoteOrder = {"Hard", "Challenge", "Medium", "Easy", "Beginner", "Edit"};
-
+        private GameSong _newSong;
         private double _stopTotals;
         public SMFileLoader()
         {
@@ -31,115 +31,39 @@ namespace WGiBeat.AudioSystem.Loaders
             try
             {
                 _stopTotals = 0.0;
-                var newSong = new GameSong{ReadOnly = true};
+                _newSong = new GameSong{ReadOnly = true};
                 string songText = File.ReadAllText(filename);
-                songText = songText.Replace("\r", "\n");
-                songText = Regex.Replace(songText, "/{2}(.)*(\\n)+", "");
-                songText = songText.Replace("\n", "");
-
-                string[] rules = songText.Split(';');
-
-                foreach (string rule in rules)
-                {
-                    if (rule.IndexOf('#') < 0)
-                    {
-                        continue;
-                    }
-                    var startpoint = rule.IndexOf("#");
-                    string field = rule.Substring(startpoint, rule.IndexOf(":") - startpoint).ToUpper();
-                    string value = rule.Substring(rule.IndexOf(":") + 1);
-
-                    switch (field.ToUpper())
-                    {
-                        case "#TITLE":
-                            newSong.Title = value;
-                            break;
-                        case "#SUBTITLE":
-                            newSong.Subtitle = value;
-                            break;
-                        case "#ARTIST":
-                            newSong.Artist = value;
-                            break;
-                        case "#OFFSET":
-                            newSong.Offset = -1 * Convert.ToDouble(value);
-                            break;
-                        case "#MUSICLENGTH":
-                            newSong.Length = Convert.ToDouble(value);
-                            break;
-                        case "#BPMS":
-                            var bpmPairs = new Dictionary<double, double>();
-                            var bpmText = value.Split(',');
-
-                            foreach (string bpmItem in bpmText)
-                            {
-                                double position = Convert.ToDouble(bpmItem.Substring(0, bpmItem.IndexOf("=")));
-                                double bvalue = Convert.ToDouble(bpmItem.Substring(bpmItem.IndexOf("=") + 1));
-                                bpmPairs.Add(position,bvalue);
-                            }
-                            if (bpmPairs.Keys.Count > 1)
-                            {
-                             Log.AddMessage(filename + " has multiple BPMs and will not work correctly in WGiBeat! ", LogLevel.WARN);  
-                                if (!AllowProblematic)
-                                    return null;
-                            }
-                            newSong.Bpm = bpmPairs[0.0];
-                            break;
-                        case "#MUSIC":
-                            newSong.AudioFile = value;
-                            break;
-                        case "#NOTES":
-                            AddNotes(value);
-                            break;
-                        case "#STOPS":
-                            if (String.IsNullOrEmpty(value))
-                            {
-                                continue;
-                            }
-                            var stopPairs = new Dictionary<double, double>();
-                            var stopText = value.Split(',');
-                            
-                            foreach (string stopItem in stopText)
-                            {
-                                double position = Convert.ToDouble(stopItem.Substring(0, stopItem.IndexOf("=")));
-                                double bvalue = Convert.ToDouble(stopItem.Substring(stopItem.IndexOf("=") + 1));
-                                stopPairs.Add(position, bvalue);
-                                _stopTotals += bvalue;
-                            }
-                            if (stopPairs.Keys.Count > 0)
-                            {
-                                Log.AddMessage(filename + " has Stops and will not work correctly in WGiBeat! ", LogLevel.WARN);
-                                if (!AllowProblematic)
-                                    return null;
-                            }
-
-                            break;
-                    }
-
-                }
+                ParseText(songText,filename);
 
                 var selectedNotes = (from e in _notes where e != null select e).First();
                 
-                newSong.Offset += OffsetAdjust;
+                _newSong.Offset += OffsetAdjust;
 
-                if (newSong.Length == 0)
+                if (_newSong.Length == 0)
                 {
-                    CalculateLength(newSong, selectedNotes);
-                    newSong.Length += _stopTotals;
-                    newSong.Length += OffsetAdjust;
+                    CalculateLength(_newSong, selectedNotes);
+                    _newSong.Length += _stopTotals;
+                    _newSong.Length += OffsetAdjust;
                 } 
                 
                 //Length calculation needs the ORIGINAL offset, so this must be done after it.
-                AdjustOffset(newSong, selectedNotes);
+                AdjustOffset(_newSong, selectedNotes);
 
-                newSong.Path = Path.GetDirectoryName(filename);
-                newSong.DefinitionFile = Path.GetFileName(filename);
-                newSong.SetMD5();
+                _newSong.Path = Path.GetDirectoryName(filename);
+                _newSong.DefinitionFile = Path.GetFileName(filename);
+                _newSong.SetMD5();
 
-                if (String.IsNullOrEmpty(newSong.AudioFile))
+                if (String.IsNullOrEmpty(_newSong.AudioFile))
                 {
-                    newSong.AudioFile = FindUndefinedAudioFile(newSong.Path, newSong.DefinitionFile);
+                    _newSong.AudioFile = FindUndefinedAudioFile(_newSong.Path, _newSong.DefinitionFile);
                 }
-                return newSong;
+
+                if (ConvertToSNG)
+                {
+                    _newSong.ReadOnly = false;
+                    SaveToFile(_newSong);
+                }
+                return _newSong;
             }
             catch (Exception ex)
             {
@@ -147,6 +71,104 @@ namespace WGiBeat.AudioSystem.Loaders
                 return null;
             }
 
+        }
+
+        #region Helpers
+
+        private void ParseText(string songText, string filename)
+        {
+            songText = songText.Replace("\r", "\n");
+            songText = Regex.Replace(songText, "/{2}(.)*(\\n)+", "");
+            songText = songText.Replace("\n", "");
+
+            string[] rules = songText.Split(';');
+
+            foreach (string rule in rules)
+            {
+                if (rule.IndexOf('#') < 0)
+                {
+                    continue;
+                }
+                var startpoint = rule.IndexOf("#");
+                string field = rule.Substring(startpoint, rule.IndexOf(":") - startpoint).ToUpper();
+                string value = rule.Substring(rule.IndexOf(":") + 1);
+
+                switch (field.ToUpper())
+                {
+                    case "#TITLE":
+                        _newSong.Title = value;
+                        break;
+                    case "#SUBTITLE":
+                        _newSong.Subtitle = value;
+                        break;
+                    case "#ARTIST":
+                        _newSong.Artist = value;
+                        break;
+                    case "#OFFSET":
+                        _newSong.Offset = -1 * Convert.ToDouble(value);
+                        break;
+                    case "#MUSICLENGTH":
+                        _newSong.Length = Convert.ToDouble(value);
+                        break;
+                    case "#BPMS":
+                        ParseBPMs(value,filename);
+                        break;
+                    case "#MUSIC":
+                        _newSong.AudioFile = value;
+                        break;
+                    case "#NOTES":
+                        AddNotes(value);
+                        break;
+                    case "#STOPS":
+                      ParseStops(value,filename);
+                        break;
+                }
+
+            }
+
+        }
+
+        private void ParseStops(string value, string filename)
+        {
+            if (String.IsNullOrEmpty(value))
+            {
+                return;
+            }
+            var stopPairs = new Dictionary<double, double>();
+            var stopText = value.Split(',');
+
+            foreach (string stopItem in stopText)
+            {
+                double position = Convert.ToDouble(stopItem.Substring(0, stopItem.IndexOf("=")));
+                double bvalue = Convert.ToDouble(stopItem.Substring(stopItem.IndexOf("=") + 1));
+                stopPairs.Add(position, bvalue);
+                _stopTotals += bvalue;
+            }
+            if (stopPairs.Keys.Count > 0)
+            {
+                if (!AllowProblematic)
+                    throw new Exception(filename + " has Stops and will not work correctly in WGiBeat!");
+            }
+
+        }
+
+        private void ParseBPMs(string value, string filename)
+        {
+            var bpmPairs = new Dictionary<double, double>();
+            var bpmText = value.Split(',');
+
+            foreach (string bpmItem in bpmText)
+            {
+                double position = Convert.ToDouble(bpmItem.Substring(0, bpmItem.IndexOf("=")));
+                double bvalue = Convert.ToDouble(bpmItem.Substring(bpmItem.IndexOf("=") + 1));
+                bpmPairs.Add(position, bvalue);
+            }
+            if (bpmPairs.Keys.Count > 1)
+            {
+                if (!AllowProblematic)
+                    throw new Exception(filename + " has multiple BPMs and will not work correctly in WGiBeat! ");
+            }
+            _newSong.Bpm = bpmPairs[0.0];
         }
 
         private void AddNotes(string value)
@@ -197,5 +219,8 @@ namespace WGiBeat.AudioSystem.Loaders
             song.Length = song.ConvertPhraseToMS(idx + 0.5) / 1000.0;
             Log.AddMessage(String.Format("Song notes end at phrase {0}. Length set to {1}. ", idx, song.Length), LogLevel.DEBUG);
         }
+
+        #endregion
+
     }
 }

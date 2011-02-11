@@ -242,7 +242,7 @@ namespace WGiBeat.Screens
         private void SyncSong()
         {
 
-            if ((_displayState != 0) || (_panic))
+            if ((_displayState != 0) || (_panic) || (!Core.Songs.IsCurrentSongPlaying()))
             {
                 return;
             }

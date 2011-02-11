@@ -319,10 +319,10 @@ namespace WGiBeat.Screens
                 _maxSprite.Position = (Core.Metrics["EvaluationMaxBase", x]);
                 _maxSprite.Draw(spriteBatch);
 
-                spriteBatch.DrawString(TextureManager.Fonts("LargeFont"), "" + Core.Players[x].MaxHits,
-Core.Metrics["EvaluationMaxHits", x], Color.Black);
-                spriteBatch.DrawString(TextureManager.Fonts("LargeFont"), "" + Core.Players[x].MaxStreak,
- Core.Metrics["EvaluationMaxStreak", x], Color.Black);
+                TextureManager.DrawString(spriteBatch, "" + Core.Players[x].MaxHits, "LargeFont",
+Core.Metrics["EvaluationMaxHits", x], Color.Black, FontAlign.CENTER);
+                TextureManager.DrawString(spriteBatch, "" + Core.Players[x].MaxStreak, "LargeFont",
+ Core.Metrics["EvaluationMaxStreak", x], Color.Black, FontAlign.CENTER);
             }
         }
 
