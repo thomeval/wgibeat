@@ -2,6 +2,16 @@
 
 =Version History=
 
+==0.65 (r391) - "Executive Dancer" ==
+ * Support for .sm and dwi files! Note that the results can vary between perfect and completely unplayable depending on how the particular stepfile was made. Also, there is no support for BPM changes or stops.
+ * Option to allow/disallow problematic .sm and .dwi files
+ * Song title and artist display in Song Select screen now resize long titles.
+ * Small graphics fix to normal life bar.
+ * WGiBeat will no longer crash if a song is deleted, then chosen in the Song Select screen. However, it will punish such incidents.
+ * Support for multiple song folders defined in settings.txt (separate with '|')
+ * Bugfix: Coop lifebar doesn't overflow anymore when full.
+ * Bugfix: Main game screen no longer freezes when a song's audio is longer than its length field.
+
 ==0.6 (r374) - "Exotic Economist" ==
  * (Includes WGiEdit v1.1)
  * When selecting "Start Game" from the main menu, the player that pressed Start joins automatically in the next screen.
