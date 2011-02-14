@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 namespace WGiBeat.Managers
@@ -32,6 +33,8 @@ namespace WGiBeat.Managers
         {
             return _settings.ContainsKey(id);
         }
+
+     
         public T Get<T>(string id)
         {
             return (T) _settings[id];
@@ -104,7 +107,7 @@ namespace WGiBeat.Managers
                 {
                     sm[id] = boolAttempt;
                 }
-                else if (double.TryParse(value,out doubleAttempt))
+                else if (double.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture.NumberFormat, out doubleAttempt))
                 {
                     if (IsDecimal(doubleAttempt))
                     {
