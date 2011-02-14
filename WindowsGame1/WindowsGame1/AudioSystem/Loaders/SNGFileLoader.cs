@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using LogLevel = WGiBeat.Managers.LogLevel;
 
@@ -43,16 +44,16 @@ namespace WGiBeat.AudioSystem.Loaders
                             newSong.Artist = value;
                             break;
                         case "OFFSET":
-                            newSong.Offset = Convert.ToDouble(value);
+                            newSong.Offset = Convert.ToDouble(value, CultureInfo.InvariantCulture.NumberFormat);
                             break;
                         case "AUDIOSTART":
-                            newSong.AudioStart = Convert.ToDouble(value);
+                            newSong.AudioStart = Convert.ToDouble(value, CultureInfo.InvariantCulture.NumberFormat);
                             break;
                         case "LENGTH":
-                            newSong.Length = Convert.ToDouble(value);
+                            newSong.Length = Convert.ToDouble(value, CultureInfo.InvariantCulture.NumberFormat);
                             break;
                         case "BPM":
-                            newSong.Bpm = Convert.ToDouble(value);
+                            newSong.Bpm = Convert.ToDouble(value, CultureInfo.InvariantCulture.NumberFormat);
                             break;
                         case "SONGFILE":
                         case "AUDIOFILE":
@@ -71,9 +72,10 @@ namespace WGiBeat.AudioSystem.Loaders
                 }
                 return newSong;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Log.AddMessage("Failed to load song: " + filename + "\n", LogLevel.WARN);
+                Log.AddException(ex);
+                Log.AddMessage("Failed to load song: " + filename + " ", LogLevel.WARN);
                 return null;
             }
         }

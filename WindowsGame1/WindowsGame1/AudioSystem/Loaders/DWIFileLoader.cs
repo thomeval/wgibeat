@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -63,6 +64,7 @@ namespace WGiBeat.AudioSystem.Loaders
             }
             catch (Exception ex)
             {
+                Log.AddException(ex);
                 Log.AddMessage("Failed to load DWI File." + ex.Message, LogLevel.WARN);
                 return null;
             }
@@ -93,16 +95,17 @@ namespace WGiBeat.AudioSystem.Loaders
                 {
                     case "#TITLE":
                         _newSong.Title = value;
+                        Log.AddMessage("Attempting to split title: " + value, LogLevel.DEBUG);
                         SongManager.SplitTitle(_newSong);
                         break;
                     case "#ARTIST":
                         _newSong.Artist = value;
                         break;
                     case "#GAP":
-                        _newSong.Offset = Convert.ToDouble(value) / 1000.0;
+                        _newSong.Offset = Convert.ToDouble(value, CultureInfo.InvariantCulture.NumberFormat) / 1000.0;
                         break;
                     case "#BPM":
-                        _newSong.Bpm = Convert.ToDouble(value);
+                        _newSong.Bpm = Convert.ToDouble(value, CultureInfo.InvariantCulture.NumberFormat);
                         break;
 
                     case "#CHANGEBPM":
@@ -135,9 +138,9 @@ namespace WGiBeat.AudioSystem.Loaders
 
             foreach (string stopItem in stopText)
             {
-                double position = Convert.ToDouble(stopItem.Substring(0, stopItem.IndexOf("=")));
-                double bvalue = Convert.ToDouble(stopItem.Substring(stopItem.IndexOf("=") + 1));
-                stopPairs.Add(position, bvalue);
+                double position = Convert.ToDouble(stopItem.Substring(0, stopItem.IndexOf("=")), CultureInfo.InvariantCulture.NumberFormat);
+                double bvalue = Convert.ToDouble(stopItem.Substring(stopItem.IndexOf("=") + 1), CultureInfo.InvariantCulture.NumberFormat);
+                stopPairs[position] =  bvalue;
                 _stopTotals += bvalue;
             }
             if (stopPairs.Keys.Count > 0)
@@ -154,9 +157,9 @@ namespace WGiBeat.AudioSystem.Loaders
 
             foreach (string bpmItem in bpmText)
             {
-                double position = Convert.ToDouble(bpmItem.Substring(0, bpmItem.IndexOf("=")));
-                double bvalue = Convert.ToDouble(bpmItem.Substring(bpmItem.IndexOf("=") + 1));
-                bpmPairs.Add(position, bvalue);
+                double position = Convert.ToDouble(bpmItem.Substring(0, bpmItem.IndexOf("=")), CultureInfo.InvariantCulture.NumberFormat);
+                double bvalue = Convert.ToDouble(bpmItem.Substring(bpmItem.IndexOf("=") + 1), CultureInfo.InvariantCulture.NumberFormat);
+                bpmPairs[position]= bvalue;
             }
             if (bpmPairs.Keys.Count > 1)
             {

@@ -131,7 +131,7 @@ namespace WGiBeat.AudioSystem
         /// </summary>
         /// <param name="song">The game that needs to have its title split.</param>
         public static void SplitTitle(GameSong song)
-        {
+        {         
             var title = song.Title;
             title = title.Replace("[", "(");
             title = title.Replace("]", ")");

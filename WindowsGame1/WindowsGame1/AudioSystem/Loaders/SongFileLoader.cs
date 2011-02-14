@@ -22,6 +22,7 @@ namespace WGiBeat.AudioSystem.Loaders
 
         protected string FindUndefinedAudioFile(string path, string defFile)
         {
+            Log.AddMessage(String.Format("{0} has no defined audio file. Attempting to locate it automatically.",defFile),LogLevel.DEBUG);
             string[] validExtensions = { "*.mp3", "*.ogg", "*.wma" };
 
             foreach (string ext in validExtensions)
@@ -42,6 +43,7 @@ namespace WGiBeat.AudioSystem.Loaders
                 }
             }
 
+            Log.AddMessage(String.Format("FindUndefinedAudioFile: Nothing of value has been found."), LogLevel.DEBUG);
             return "";
         }
 

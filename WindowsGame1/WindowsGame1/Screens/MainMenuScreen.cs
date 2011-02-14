@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
@@ -18,7 +19,10 @@ namespace WGiBeat.Screens
         private Sprite _header;
         private SpriteMap _menuOptionSprite;
         private Sprite _foreground;
+        private UpdateManager _updateManager;
+        private string _updaterString = "";
 
+        private Thread _updateThread;
         public MainMenuScreen(GameCore core)
             : base(core)
         {
@@ -27,8 +31,34 @@ namespace WGiBeat.Screens
         public override void Initialize()
         {
             InitSprites();
+            InitUpdater();
             base.Initialize();
         }
+
+        private void InitUpdater()
+        {
+            if (!Core.Settings.Get<bool>("CheckForUpdates"))
+            {
+                return;
+            }
+            _updateManager = new UpdateManager();
+            _updateThread = new Thread(RunUpdater) {Name = "Updater"};
+            _updateThread.Start();
+        }
+
+        private void RunUpdater()
+        {
+            _updaterString = "Checking for updates...";
+            _updateManager.UpdateInfoAvailable += UpdateInfoAvailable;
+            _updateManager.GetLatestVersion();
+            
+        }
+
+        private void UpdateInfoAvailable(object sender, EventArgs e)
+        {
+            _updaterString = String.Format("You:{0}. Latest:{1}, News feed:{2} ",GameCore.VERSION_STRING, _updateManager.LatestVersion, _updateManager.NewsFeed);
+        }
+
         private void InitSprites()
         {
             _background = new Sprite
@@ -60,8 +90,10 @@ namespace WGiBeat.Screens
 
             if (_displayNoSongsError)
             {
-                spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"),"Error: No songs loaded", Core.Metrics["MainMenuNoSongsError",0],Color.Black);
+                TextureManager.DrawString(spriteBatch,"Error: No songs loaded","DefaultFont", Core.Metrics["MainMenuNoSongsError", 0], Color.Black,FontAlign.LEFT);
             }
+            TextureManager.DrawString(spriteBatch,_updaterString,"DefaultFont",new Vector2(750,550),Color.Black,FontAlign.RIGHT );
+
         }
 
         private void DrawBackground(SpriteBatch spriteBatch)

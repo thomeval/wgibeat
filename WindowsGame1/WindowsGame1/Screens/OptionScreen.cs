@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
@@ -19,7 +20,7 @@ namespace WGiBeat.Screens
         public OptionScreen(GameCore core)
             : base(core)
         {
-            _optionsMenu = new Menu { Width = 700 };
+            _optionsMenu = new Menu { Width = 700, MaxVisibleItems = 12 };
             BuildMenu();
             _optionsMenu.Position = (Core.Metrics["OptionsMenuStart", 0]);
         }
@@ -84,6 +85,19 @@ namespace WGiBeat.Screens
             item.AddOption("On", true);
             _optionsMenu.AddItem(item);
 
+            item = new MenuItem {ItemText = "Convert Files to .sng"};
+            item.AddOption("Off", false);
+            item.AddOption("On", true);
+            _optionsMenu.AddItem(item);
+
+            /*
+            item = new MenuItem {ItemText = "Screen Resolution"};
+            item.AddOption("800x600", "800x600");
+            item.AddOption("1024x768", "1024x768");
+            item.AddOption("1280x1024", "1280x1024");
+            _optionsMenu.AddItem(item);
+            */
+
             item = new MenuItem { ItemText = "Save" };
             _optionsMenu.AddItem(item);
             item = new MenuItem { ItemText = "Cancel" };
@@ -132,7 +146,6 @@ namespace WGiBeat.Screens
 
         private void DrawBackground(SpriteBatch spriteBatch)
         {
-
 
             _background.Draw(spriteBatch);
             _field.Draw(spriteBatch);
@@ -194,17 +207,18 @@ namespace WGiBeat.Screens
                 _optionsMenu.GetByItemText("Logging Level").SetSelectedByValue((LogLevel)(Core.Settings.Get<object>("LogLevel")));
                 _optionsMenu.GetByItemText("Theme").SetSelectedByValue(Core.Settings.Get<object>("Theme"));
                 _optionsMenu.GetByItemText("Allow Problematic Songs").SetSelectedByValue(Core.Settings.Get<object>("AllowProblematicSongs"));
+                _optionsMenu.GetByItemText("Convert Files to .sng").SetSelectedByValue(Core.Settings.Get<object>("ConvertToSNG"));
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("Failed to load options:" + ex.Message);
+                Core.Log.AddMessage("Failed to load options:" + ex.Message,LogLevel.WARN);
             }
 
         }
         private void SaveOptions()
         {
 
-            Core.Settings.Set("SongVolume", (Convert.ToDouble(_optionsMenu.GetByItemText("Song Volume").SelectedValue())));
+            Core.Settings.Set("SongVolume", (Convert.ToDouble(_optionsMenu.GetByItemText("Song Volume").SelectedValue(),CultureInfo.InvariantCulture.NumberFormat)));
             Core.Settings.Set("SongDebug", (_optionsMenu.GetByItemText("Song Debugging").SelectedValue()));
             Core.Settings.Set("SongPreview", (_optionsMenu.GetByItemText("Song Previews").SelectedValue()));
             Core.Settings.Set("FullScreen", _optionsMenu.GetByItemText("Full screen").SelectedValue());
@@ -213,13 +227,19 @@ namespace WGiBeat.Screens
             Core.Settings.Set("LogLevel", (int)_optionsMenu.GetByItemText("Logging Level").SelectedValue());
             Core.Settings.Set("Theme", _optionsMenu.GetByItemText("Theme").SelectedValue());
             Core.Settings.Set("AllowProblematicSongs",_optionsMenu.GetByItemText("Allow Problematic Songs").SelectedValue());
+            Core.Settings.Set("ConvertToSNG",_optionsMenu.GetByItemText("Convert Files to .sng").SelectedValue());
             Core.Audio.SetMasterVolume((float)Core.Settings.Get<double>("SongVolume"));
             Core.Log.LogLevel = (LogLevel)Core.Settings.Get<int>("LogLevel");
             Core.Log.SaveLog = Core.Settings.Get<bool>("SaveLog");
 
             Core.LoadCurrentTheme();
-
             Core.GraphicsManager.IsFullScreen = Core.Settings.Get<bool>("FullScreen");
+            /*
+             * Native resolution of 1200x900?
+            string[] _selectedResolution = _optionsMenu.GetByItemText("Screen Resolution").SelectedValue().ToString().Split('x');
+            Core.GraphicsManager.PreferredBackBufferWidth = Convert.ToInt32(_selectedResolution[0]);
+            Core.GraphicsManager.PreferredBackBufferHeight = Convert.ToInt32(_selectedResolution[1]);
+             */
             Core.GraphicsManager.ApplyChanges();
             Core.Settings.SaveToFile("settings.txt");
 
