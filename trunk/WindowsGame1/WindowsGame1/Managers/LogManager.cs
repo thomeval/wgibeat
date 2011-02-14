@@ -11,13 +11,15 @@ namespace WGiBeat.Managers
     public class LogManager : Manager
     {
         private readonly List<LogEntry> _logMessages;
-     
+        private readonly List<Exception> _exceptions;
+        public string RootFolder { get; set; }
         public bool SaveLog { get; set; }
 
         public LogLevel LogLevel { get; set; }
         public LogManager()
         {
             _logMessages = new List<LogEntry>();
+            _exceptions = new List<Exception>();
             AddMessage("Log Initialized", LogLevel.INFO);
             LogLevel = LogLevel.INFO;
         }
@@ -39,7 +41,7 @@ namespace WGiBeat.Managers
         {
             AddMessage(new LogEntry{Message = message, Level = level});
 #if DEBUG
-            if (level == Managers.LogLevel.ERROR)
+            if (level == LogLevel.ERROR)
             {
                 throw new Exception(message);
             }
@@ -61,6 +63,14 @@ namespace WGiBeat.Managers
             Monitor.Exit(_logMessages);
         }
 
+        public void AddException(Exception ex)
+        {
+            _exceptions.Add(ex);
+            if (_exceptions.Count > 25)
+            {
+                _exceptions.RemoveAt(0);
+            }
+        }
         public LogEntry[] GetMessages()
         {
             Monitor.Enter(_logMessages);
@@ -89,10 +99,28 @@ namespace WGiBeat.Managers
         {
             if (SaveLog)
             {
-                var filename = Path.GetDirectoryName(
-                    Assembly.GetAssembly(typeof(GameCore)).CodeBase) + "\\log.txt";
-                filename = filename.Replace("file:\\", "");
+                var filename = RootFolder + "\\Log.txt";
                 File.WriteAllLines(filename, ToStringArray());
+
+                var data = "";
+                foreach (Exception ex in _exceptions)
+                {
+                    data += ex.Message + "\n";
+                    data += ex.StackTrace + "\n";
+
+                    if (ex.InnerException != null)
+                    {
+                        data += "Inner: " + ex.InnerException.Message + "\n";
+                    }
+                    data += "\n\n";
+                }
+                
+                if (!String.IsNullOrEmpty(data))
+                {
+                    filename = RootFolder + "\\LastException.txt";
+                    File.WriteAllText(filename, data);
+                }
+                    
             }
         }
     }

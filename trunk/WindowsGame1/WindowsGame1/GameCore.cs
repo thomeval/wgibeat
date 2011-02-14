@@ -70,7 +70,7 @@ namespace WGiBeat
 Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             WgibeatRootFolder = WgibeatRootFolder.Replace("file:\\", "");
 
-            Log = new LogManager{Enabled = true, SaveLog = true, LogLevel = LogLevel.INFO};
+            Log = new LogManager{Enabled = true, SaveLog = true, RootFolder = WgibeatRootFolder, LogLevel = LogLevel.INFO};
             Log.AddMessage("Initializing Cookies...",LogLevel.INFO);
             Cookies = new Dictionary<string, object>();
 

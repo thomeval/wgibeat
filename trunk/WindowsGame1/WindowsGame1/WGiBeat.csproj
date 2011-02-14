@@ -142,6 +142,7 @@
     <Compile Include="Managers\NetManager.cs" />
     <Compile Include="Managers\ProfileManager.cs" />
     <Compile Include="Managers\TextManager.cs" />
+    <Compile Include="Managers\UpdateManager.cs" />
     <Compile Include="Profile.cs" />
     <Compile Include="Screens\InitialLoadScreen.cs" />
     <Compile Include="Screens\InstructionScreen.cs" />
