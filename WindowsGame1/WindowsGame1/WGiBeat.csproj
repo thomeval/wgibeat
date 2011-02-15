@@ -186,55 +186,55 @@
     <Content Include="Content\Audio\Fallback.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\EditorBackground.png">
+    <Content Include="Content\Textures\Default\WGiEdit\EditorBackground.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\LifeGraphCorners.png">
+    <Content Include="Content\Textures\Default\Evaluation\LifeGraphCorners.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\LifeGraphMiddle.png">
+    <Content Include="Content\Textures\Default\Evaluation\LifeGraphMiddle.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\LifeGraphXBorder.png">
+    <Content Include="Content\Textures\Default\Evaluation\LifeGraphXBorder.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\LifeGraphYBorder.png">
+    <Content Include="Content\Textures\Default\Evaluation\LifeGraphYBorder.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\MainMenuForeground.png">
+    <Content Include="Content\Textures\Default\MainMenu\MainMenuForeground.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\MenuSelectedItem.png">
+    <Content Include="Content\Textures\Default\Common\MenuSelectedItem.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\ModeDescriptionPreviews.png">
+    <Content Include="Content\Textures\Default\ModeSelect\ModeDescriptionPreviews.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\ModeSelectHeader.png">
+    <Content Include="Content\Textures\Default\ModeSelect\ModeSelectHeader.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\OptionDescriptionBase.png">
+    <Content Include="Content\Textures\Default\Options\OptionDescriptionBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\PlayerIdentifiers.png">
+    <Content Include="Content\Textures\Default\Common\PlayerIdentifiers.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\SongCountBase.png">
+    <Content Include="Content\Textures\Default\SongSelect\SongCountBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\StatsBackground.png">
+    <Content Include="Content\Textures\Default\Stats\StatsBackground.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\StatsHeader.png">
+    <Content Include="Content\Textures\Default\Stats\StatsHeader.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\StatsInstructionBase.png">
+    <Content Include="Content\Textures\Default\Stats\StatsInstructionBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\TextEntryBarMiddle.png">
+    <Content Include="Content\Textures\Default\Common\TextEntryBarMiddle.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\TextEntryBarSide.png">
+    <Content Include="Content\Textures\Default\Common\TextEntryBarSide.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Text\EditorText.txt">
@@ -246,313 +246,304 @@
     <Content Include="Content\Text\OptionText.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\ActionBindingBase.png">
+    <Content Include="Content\Textures\Default\KeyConfig\ActionBindingBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\AllBackground.png">
+    <Content Include="Content\Textures\Default\Common\AllBackground.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\Arrows.png">
+    <Content Include="Content\Textures\Default\MainGame\Arrows.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\BeatFlame.png">
+    <Content Include="Content\Textures\Default\MainGame\BeatFlame.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\BeatMarkers.png">
+    <Content Include="Content\Textures\Default\MainGame\BeatMarkers.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\BeatMeter.png">
+    <Content Include="Content\Textures\Default\MainGame\BeatMeter.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\BeatMeterLarge.png">
+    <Content Include="Content\Textures\Default\MainGame\BeatMeterLarge.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\BpmMeterBase.png">
+    <Content Include="Content\Textures\Default\SongSelect\BpmMeterBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\BpmMeterOverlay.png">
+    <Content Include="Content\Textures\Default\SongSelect\BpmMeterOverlay.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\Button_Active.png">
+    <Content Include="Content\Textures\Default\MainGame\coopLifebarBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\Button_Idle.png">
+    <Content Include="Content\Textures\Default\MainGame\coopLifebarMiddle.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\coopLifebarBase.png">
+    <Content Include="Content\Textures\Default\MainGame\countdown.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\coopLifebarMiddle.png">
+    <Content Include="Content\Textures\Default\WGiEdit\EditorSongValidity.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\countdown.png">
+    <Content Include="Content\Textures\Default\WGiEdit\EditorValidityTextBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\EditorSongValidity.png">
+    <Content Include="Content\Textures\Default\Evaluation\evaluationGradeBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\EditorValidityTextBase.png">
+    <Content Include="Content\Textures\Default\Evaluation\evaluationGrades.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\evaluationGradeBase.png">
+    <Content Include="Content\Textures\Default\Evaluation\evaluationHeader.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\evaluationGrades.png">
+    <Content Include="Content\Textures\Default\Evaluation\evaluationHighScore.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\evaluationHeader.png">
+    <Content Include="Content\Textures\Default\Evaluation\evaluationMaxBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\evaluationHighScore.png">
+    <Content Include="Content\Textures\Default\SongSelect\HighScoreFrame.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\evaluationMaxBase.png">
+    <Content Include="Content\Textures\Default\MainGame\hitsBar.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\HighScoreFrame.png">
+    <Content Include="Content\Textures\Default\MainGame\hitsBarCoop.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\hitsBar.png">
+    <Content Include="Content\Textures\Default\Common\IndicatorArrows.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\hitsBarCoop.png">
+    <Content Include="Content\Textures\Default\Instruction\InstructionPage1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\IndicatorArrows.png">
+    <Content Include="Content\Textures\Default\Instruction\InstructionPage2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\InstructionPage1.png">
+    <Content Include="Content\Textures\Default\Instruction\InstructionPage3.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\InstructionPage2.png">
+    <Content Include="Content\Textures\Default\Common\KeyboardIcons.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\InstructionPage3.png">
+    <Content Include="Content\Textures\Default\KeyConfig\KeyOptionControllerButtonIcons.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\KeyboardIcons.png">
+    <Content Include="Content\Textures\Default\KeyConfig\KeyOptionControllerPlayerIcons.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\KeyOptionControllerButtonIcons.png">
+    <Content Include="Content\Textures\Default\KeyConfig\KeyOptionGridBorder.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\KeyOptionControllerPlayerIcons.png">
+    <Content Include="Content\Textures\Default\KeyConfig\KeyOptionGridInside.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\KeyOptionGridBorder.png">
+    <Content Include="Content\Textures\Default\KeyConfig\KeyOptionGridSide.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\KeyOptionGridInside.png">
+    <Content Include="Content\Textures\Default\KeyConfig\KeyOptionGridTop.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\KeyOptionGridSide.png">
+    <Content Include="Content\Textures\Default\KeyConfig\KeyOptionHeader.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\KeyOptionGridTop.png">
+    <Content Include="Content\Textures\Default\KeyConfig\KeyOptionInstructionBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\KeyOptionHeader.png">
+    <Content Include="Content\Textures\Default\KeyConfig\KeyOptionKeyboardIcon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\KeyOptionInstructionBase.png">
+    <Content Include="Content\Textures\Default\MainGame\koIndicator.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\KeyOptionKeyboardIcon.png">
+    <Content Include="Content\Textures\Default\SongSelect\LengthDisplayBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\koIndicator.png">
+    <Content Include="Content\Textures\Default\MainGame\levelBarBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\LengthDisplayBase.png">
+    <Content Include="Content\Textures\Default\MainGame\levelBarFronts.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\levelBarBase.png">
+    <Content Include="Content\Textures\Default\MainGame\lifeBarBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\levelBarFronts.png">
+    <Content Include="Content\Textures\Default\MainGame\lifeBarBaseSide.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\lifeBarBase.png">
+    <Content Include="Content\Textures\Default\MainGame\lifeBarFront.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\lifeBarBaseSide.png">
+    <Content Include="Content\Textures\Default\MainGame\lifeBarGridBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\lifeBarFront.png">
+    <Content Include="Content\Textures\Default\MainGame\lifeBarOvercharge.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\lifeBarGridBase.png">
+    <Content Include="Content\Textures\Default\Init\LoadingMessageBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\lifeBarOvercharge.png">
+    <Content Include="Content\Textures\Default\MainGame\MainGameScreenBackground.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\LoadingMessageBase.png">
+    <Content Include="Content\Textures\Default\MainMenu\MainMenuBackground.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\MainGameScreenBackground.png">
+    <Content Include="Content\Textures\Default\MainMenu\mainMenuHeader.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\MainMenuBackground.jpg">
+    <Content Include="Content\Textures\Default\MainMenu\mainMenuOption.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\mainMenuHeader.png">
+    <Content Include="Content\Textures\Default\Common\MenuEdge.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\mainMenuOption.png">
+    <Content Include="Content\Textures\Default\Common\MenuSide.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\MenuEdge.png">
+    <Content Include="Content\Textures\Default\Common\MessageBorder.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\MenuSide.png">
+    <Content Include="Content\Textures\Default\ModeSelect\ModeDescriptionBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\MessageBorder.png">
+    <Content Include="Content\Textures\Default\ModeSelect\ModeOptionBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\ModeDescriptionBase.png">
+    <Content Include="Content\Textures\Default\ModeSelect\ModeOptions.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\ModeOptionBase.png">
+    <Content Include="Content\Textures\Default\ModeSelect\ModeSelectEdge.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\ModeOptions.png">
+    <Content Include="Content\Textures\Default\Instruction\MovingBackground1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\ModeSelectEdge.png">
+    <Content Include="Content\Textures\Default\NewGame\NewGameMessageBorder.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\MovingBackground1.png">
+    <Content Include="Content\Textures\Default\MainMenu\noteBarLeft.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\NewGameMessageBorder.png">
+    <Content Include="Content\Textures\Default\MainMenu\noteBarMiddle.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\noteBarLeft.png">
+    <Content Include="Content\Textures\Default\MainMenu\noteBarRight.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\noteBarMiddle.png">
+    <Content Include="Content\Textures\Default\MainMenu\noteJudgements.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\noteBarRight.png">
+    <Content Include="Content\Textures\Default\Options\OptionsHeader.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\noteJudgements.png">
+    <Content Include="Content\Textures\Default\Common\Particle_1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\OptionsHeader.png">
+    <Content Include="Content\Textures\Default\Common\Particle_2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\Particle_1.png">
+    <Content Include="Content\Textures\Default\Common\Particle_3.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\Particle_2.png">
+    <Content Include="Content\Textures\Default\Common\Particle_4.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\Particle_3.png">
+    <Content Include="Content\Textures\Default\Common\Particle_5.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\Particle_4.png">
+    <Content Include="Content\Textures\Default\MainGame\PerformanceBarHeader.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\Particle_5.png">
+    <Content Include="Content\Textures\Default\MainGame\PerformanceBarLeft.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\PerformanceBarHeader.png">
+    <Content Include="Content\Textures\Default\MainGame\PerformanceBarMiddle.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\PerformanceBarLeft.png">
+    <Content Include="Content\Textures\Default\MainGame\PerformanceBarParts.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\PerformanceBarMiddle.png">
+    <Content Include="Content\Textures\Default\MainGame\PerformanceBarRight.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\PerformanceBarParts.png">
+    <Content Include="Content\Textures\Default\Common\playerDifficulties.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\PerformanceBarRight.png">
+    <Content Include="Content\Textures\Default\Common\PlayerOptionsFrame.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\playerDifficulties.png">
+    <Content Include="Content\Textures\Default\Common\PlayerOptionsSpeedBlocks.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\PlayerOptionsFrame.png">
+    <Content Include="Content\Textures\Default\TeamSelect\PlayerReady.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\PlayerOptionsSpeedBlocks.png">
+    <Content Include="Content\Textures\Default\TeamSelect\PlayerTeamMarkers.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\PlayerReady.png">
+    <Content Include="Content\Textures\Default\Common\RestrictionIcon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\PlayerTeamMarkers.png">
+    <Content Include="Content\Textures\Default\MainGame\scoreBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\RestrictionIcon.png">
+    <Content Include="Content\Textures\Default\MainGame\scoreBaseCombined.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\scoreBase.png">
+    <Content Include="Content\Textures\Default\MainGame\ScoreBaseTeam.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\scoreBaseCombined.png">
+    <Content Include="Content\Textures\Default\MainGame\ScoreGridTeam.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\ScoreBaseTeam.png">
+    <Content Include="Content\Textures\Default\WGiEdit\SongEditProgress.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\ScoreGridTeam.png">
+    <Content Include="Content\Textures\Default\WGiEdit\SongEditProgressBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\SongEditProgress.png">
+    <Content Include="Content\Textures\Default\SongSelect\SongListBackend.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\SongEditProgressBase.png">
+    <Content Include="Content\Textures\Default\SongSelect\SongListItem.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\SongListBackend.png">
+    <Content Include="Content\Textures\Default\SongSelect\SongSelectHeader.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\SongListItem.png">
+    <Content Include="Content\Textures\Default\SongSelect\SongSortBackground.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\SongSelectHeader.png">
+    <Content Include="Content\Textures\Default\SongSelect\SongSortListBackground.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\SongSortArrows.png">
+    <Content Include="Content\Textures\Default\SongSelect\SongTitleBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\SongSortBackground.png">
+    <Content Include="Content\Textures\Default\SongSelect\SpectrumBackground.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\SongSortListBackground.png">
+    <Content Include="Content\Textures\Default\MainGame\StageClearIndicator.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\SongTitleBase.png">
+    <Content Include="Content\Textures\Default\TeamSelect\TeamScreenBackground.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\SpectrumBackground.png">
+    <Content Include="Content\Textures\Default\TeamSelect\TeamSelectHeader.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\StageClearIndicator.png">
+    <Content Include="Content\Textures\Default\Common\TextEntryCaps.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\TeamScreenBackground.png">
+    <Content Include="Content\Textures\Default\Common\TextEntryShift.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\TeamSelectHeader.png">
+    <Content Include="Content\Textures\Default\MainGame\TugOfWarBlue.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Textures\Default\TextEntryCaps.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Textures\Default\TextEntryShift.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Textures\Default\TugOfWarBlue.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Textures\Default\TugOfWarRed.png">
+    <Content Include="Content\Textures\Default\MainGame\TugOfWarRed.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="CPUSkill.txt">
