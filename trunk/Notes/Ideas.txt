@@ -15,6 +15,7 @@
 - Sync (0.7?), Battle (0.7?) Tag Team (0.7) game modes.
 - WGiEdit - add AudioStart support (0.7)
 - WGiEdit - song timeline (0.7)
+- WGiEdit - add .sm and .dwi support.
 - New difficulty icons? (0.7)
 - Graphics for blazing mode gameplay
 - Record average late/early beatline hits.
@@ -25,8 +26,14 @@
 - WGiEdit: Length measurement rewind
 - Overcharge for coop mode. (Blazing mode + overcharge)
 - Higher resolution screen and graphics (metrics, texture size mx)
-- Song count in Song Select screen.
 
+==0.7 - ??? ==
+
+ * Song total is now displayed in the Song Select screen.
+ * WGiEdit: Added ability to rewind the song when using a measurement tool. 
+ * Bugfix: Several crashes and songs failing to load due to cultural differences have been resolved (thanks to john_reactor for helping with this)
+ * Bugfix: Duplicate BPM or Stops definitions no longer cause a crash.
+  
 ==0.65 - "Executive Dancer" ==
  * Support for .sm and dwi files! Note that the results can vary between perfect and completely unplayable depending on how the particular stepfile was made. Also, there is no support for BPM changes or stops.
  * Option to allow/disallow problematic .sm and .dwi files

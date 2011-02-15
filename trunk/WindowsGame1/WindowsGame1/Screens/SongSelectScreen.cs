@@ -18,10 +18,12 @@ namespace WGiBeat.Screens
         private Sprite _background;
         private Sprite _spectrumBackground;
         private Sprite _listBackend;
+        private Sprite _songCountBase;
         private bool _previewStarted;
         
         private BpmMeter _bpmMeter;
         private SongSortDisplay _songSortDisplay;
+        
         private HighScoreFrame _highScoreFrame;
         private readonly List<PlayerOptionsFrame> _playerOptions = new List<PlayerOptionsFrame>();
 
@@ -111,6 +113,7 @@ namespace WGiBeat.Screens
                                    Width = 50,
                                    Position = (Core.Metrics["SongListBackend", 0])
                                };
+            _songCountBase = new Sprite {SpriteTexture = TextureManager.Textures("SongCountBase"), Position = Core.Metrics["SongCountDisplay",0]};
         }
 
         private void CreateSongList()
@@ -169,8 +172,16 @@ namespace WGiBeat.Screens
             DrawBpmMeter(gameTime, spriteBatch);
             DrawSongList(spriteBatch);
             _headerSprite.Draw(spriteBatch);
+            DrawSongCount(spriteBatch);
             _songSortDisplay.Draw(spriteBatch);
-     
+            
+        }
+
+        private void DrawSongCount(SpriteBatch spriteBatch)
+        {
+            _songCountBase.Draw(spriteBatch);
+            TextureManager.DrawString(spriteBatch, _songList.Count + "", "TwoTech36", Core.Metrics["SongCountDisplay", 1], Color.Black, FontAlign.CENTER);
+
         }
 
         private const int WAVEFORM_POINTS = 512;
