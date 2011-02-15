@@ -229,14 +229,17 @@ namespace WGiBeat.AudioSystem
             bool isPlaying = false;
             
             CheckFMODErrors(_tmpChannel.isPlaying(ref isPlaying));
-            
+            var tmpSound = new Sound();
+            CheckFMODErrors(_tmpChannel.getCurrentSound(ref tmpSound));
+
             if (isPlaying)
             {
-                var tmpSound = new Sound();
-                CheckFMODErrors(_tmpChannel.getCurrentSound(ref tmpSound));
+
                 CheckFMODErrors(_tmpChannel.stop());
-                CheckFMODErrors(tmpSound.release());
             }
+
+            CheckFMODErrors(tmpSound.release());
+
             Monitor.Exit(_tmpChannel);
         }
 

@@ -650,6 +650,20 @@ namespace WGiBeat.Screens
                             break;
                     }
                     break;
+                case "SELECT":
+
+                    var position = (int) Core.Audio.GetChannelPosition(_audioChannel);
+                    var newPosition = Math.Max(0, position - 10000);
+
+                    if (!Core.Audio.IsChannelPlaying(_audioChannel))
+                    {
+                        Core.Audio.StopChannel(_audioChannel);
+                        _audioChannel = Core.Audio.PlaySoundEffect(NewGameSong.Path + "\\" + NewGameSong.AudioFile, false, false);
+                    }
+
+                    Core.Audio.SetPosition(_audioChannel, newPosition);
+
+                    break;
 
                 case "BACK":
                     Core.Audio.StopChannel(_audioChannel);
@@ -762,7 +776,6 @@ namespace WGiBeat.Screens
         {
             _startTime = null;
             _songPlaying = false;
-            _confidence = 0;
             Core.Players[0].Streak = 0;
             Core.Songs.StopCurrentSong();
             _beatlineSet.Reset();
@@ -954,7 +967,6 @@ namespace WGiBeat.Screens
                         _cursorPosition = EditorCursorPosition.SONG_TUNING;
                         _startTime = null;
                         _songPlaying = false;
-                        _confidence = 0;
                         _beatlineSet.EndingPhrase = NewGameSong.GetEndingTimeInPhrase();
                         _beatlineSet.Bpm = NewGameSong.Bpm;
                         _beatlineSet.SetSpeeds();
@@ -1154,7 +1166,7 @@ namespace WGiBeat.Screens
             _startTime = null;
             _songPlaying = true;
             _audioChannel = Core.Audio.PlaySoundEffect(NewGameSong.Path + "\\" + NewGameSong.AudioFile, false, false);
-            _confidence = 0;
+
             //Only play the last 15 seconds of the song when measuring the length of the song.
             if (_cursorPosition == EditorCursorPosition.MEASURE_LENGTH)
             {
@@ -1223,7 +1235,6 @@ namespace WGiBeat.Screens
             base.Update(gameTime);
         }
 
-        private int _confidence;
         private bool _songPlaying;
 
         private void SyncSong()
@@ -1239,14 +1250,9 @@ namespace WGiBeat.Screens
             //to match current time with the song time by periodically sampling it. A hill climbing method
             // is used here.
             var delay = Core.Audio.GetChannelPosition(_audioChannel) - _timeElapsed;
-            if ((_confidence < 15) && (Math.Abs(delay) > 25))
+            if (Math.Abs(delay) > 20)
             {
-                _confidence = 0;
                 _songLoadDelay += delay / 2.0;
-            }
-            else if (_confidence < 15)
-            {
-                _confidence++;
             }
         }
 
