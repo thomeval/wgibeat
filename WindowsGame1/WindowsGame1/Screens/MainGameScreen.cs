@@ -7,6 +7,7 @@ using WGiBeat.Drawing;
 using WGiBeat.Drawing.Sets;
 using WGiBeat.Managers;
 using WGiBeat.Notes;
+using WGiBeat.Players;
 
 namespace WGiBeat.Screens
 {

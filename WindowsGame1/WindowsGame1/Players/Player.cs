@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WGiBeat.Notes;
 
-namespace WGiBeat
+namespace WGiBeat.Players
 {
     /// <summary>
     /// Represents a single player currently playing the game. Multiple players can play simultaneously.
@@ -99,14 +99,14 @@ namespace WGiBeat
                     return 9;
                 case Difficulty.INSANE:
                     return 11;
-                    default:
+                default:
                     return 10;
             }
         }
 
         public int MaxDifficulty()
         {
-                return MaxDifficulty(PlayDifficulty);
+            return MaxDifficulty(PlayDifficulty);
         }
 
         public Difficulty PlayDifficulty { get; set; }
@@ -157,7 +157,7 @@ namespace WGiBeat
             {
                 case Difficulty.BEGINNER:
                     break;
-                    case Difficulty.EASY:
+                case Difficulty.EASY:
                     result = -1;
                     break;
                 case Difficulty.MEDIUM:
@@ -166,7 +166,7 @@ namespace WGiBeat
                 case Difficulty.HARD:
                     result = -4;
                     break;
-                    case Difficulty.INSANE:
+                case Difficulty.INSANE:
                     result -= 6;
                     break;
             }
@@ -193,7 +193,7 @@ namespace WGiBeat
                 case Difficulty.HARD:
                     result = -12;
                     break;
-                    case Difficulty.INSANE:
+                case Difficulty.INSANE:
                     result -= 16;
                     break;
             }
@@ -266,48 +266,6 @@ namespace WGiBeat
 
         }
 
-        public int GetLevelSafe()
-        {
-            if (Profile == null)
-            {
-                return 1;
-            }
-            return Profile.GetLevel();
-        }
-
-        public long GetEXPSafe()
-        {
-            if (Profile == null)
-            {
-                return 0;
-            }
-            return Profile.EXP;
-
-        }
-
-        public void UpdatePreferences()
-        {
-            if (Profile == null)
-            {
-                return;
-            }
-            Profile.LastBeatlineSpeed = BeatlineSpeed;
-            Profile.LastDifficulty = PlayDifficulty;
-            Profile.DisableKO = DisableKO;
-
-        }
-
-        public void LoadPreferences()
-        {
-            if (Profile == null)
-            {
-                return;
-            }
-            BeatlineSpeed = Profile.LastBeatlineSpeed;
-            PlayDifficulty = Profile.LastDifficulty;
-            DisableKO = Profile.DisableKO;
-        }
-
         public double CalculatePercentage()
         {
 
@@ -332,43 +290,7 @@ namespace WGiBeat
             return 100.0 * playerScore / maxPossible;
         }
 
-
-        public long GetNextEXPSafe()
-        {
-            if (Profile == null)
-            {
-                return 1;
-            }
-            if (Profile.EXP > Profile.MaxLevelExp())
-            {
-                return Profile.MaxLevelExp();
-            }
-            return Profile.Levels[Profile.GetLevel()];
-        }
-
-        public double GetLevelProgressSafe()
-        {
-            if (Profile == null)
-            {
-                return 0.0;
-            }
-
-            var currentLevelExp = Profile.Levels[GetLevelSafe()-1];
-
-            return 1.0* (Profile.EXP - currentLevelExp) /
-            (GetNextEXPSafe() - currentLevelExp);
-        }
-
-        public int GetMaxDifficulty()
-        {
-            if ((Profile == null) || (Profile.GetLevel() < 10))
-            {
-                return 3;
-            }
-
-                return 4;
-
-        }
+  
     }
 
     public enum Difficulty

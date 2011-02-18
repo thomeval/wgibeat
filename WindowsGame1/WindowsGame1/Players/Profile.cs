@@ -3,22 +3,14 @@ using System.Linq;
 using System.Runtime.Serialization;
 using WGiBeat.Notes;
 
-namespace WGiBeat
+namespace WGiBeat.Players
 {
     [Serializable]
     public class Profile
     {
 
-
         public string Name { get; set; }
         public long EXP { get; set; }
-
-        public static readonly long[] Levels = {
-                                   0, 50, 110, 180, 260, 360, 480, 640, 820, 1000, 1200, 1450, 1700, 2000, 2300, 2600, 3000,
-                                   3400, 3900, 4400, 5000,5750,6500,7500,8500,9600,10700,11800,13000,14500,16000,17750,20000,
-                                   22500,25000,28000,31000,34000,36500,40000
-                               };
-
 
         public long[] JudgementCounts { get; private set; }
 
@@ -51,6 +43,7 @@ namespace WGiBeat
             LastBeatlineSpeed = (double) si.GetValue("LastBeatlineSpeed", typeof (double));
             SongsCleared = (long) si.GetValue("SongsCleared", typeof (long));
             SongsFailed = (long) si.GetValue("SongsFailed", typeof (long));
+
             try
             {
                 TotalPlayTime = (double)si.GetValue("TotalPlayTime", typeof(double));
@@ -60,23 +53,13 @@ namespace WGiBeat
             }
             catch (Exception)
             {
-
-                throw;  
+                
+                throw;
             }
- 
+
+
         }
 
-        public int GetLevel()
-        {
-            for (int x =0; x < Levels.Length; x++)
-            {
-                if (EXP < Levels[x])
-                {
-                    return x;
-                }
-            }
-            return Levels.Length;
-        }
         public void GetObjectData(SerializationInfo si, StreamingContext sc)
         {
             si.AddValue("Name", Name);
@@ -91,11 +74,6 @@ namespace WGiBeat
             si.AddValue("AverageHitOffset",AverageHitOffset);
             si.AddValue("HitOffsetCount",HitOffsetCount);
             si.AddValue("DisableKO",DisableKO);
-        }
-
-        public long MaxLevelExp()
-        {
-            return (Levels.Max());
         }
     }
 }

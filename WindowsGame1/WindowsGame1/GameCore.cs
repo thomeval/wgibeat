@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
+using WGiBeat.Players;
 using WGiBeat.Screens;
 
 namespace WGiBeat

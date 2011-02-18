@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
 using WGiBeat.Notes;
+using WGiBeat.Players;
 
 namespace WGiBeat.Screens
 {
