@@ -67,7 +67,7 @@ namespace WGiBeat.Screens
             var entries = GetOrReuseLogMessages();
 
             var startEntry = Math.Max(0, entries.Length - MAX_VISIBLE_ENTRIES);
-            _minY = Math.Min((entries.Length - startEntry) * -12 + 840, 40);
+            _minY = Math.Min((entries.Length - startEntry) * -12 + 555, 40);
 
             if (_autoScroll)
             {

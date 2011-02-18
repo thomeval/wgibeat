@@ -15,7 +15,7 @@ namespace WGiBeat
 {
     /// <summary>
     /// Represents the Core of the game. The main game loop happens here, and flows to the currently active
-    /// GameScreen. Also contains game settings, metrics, song database and players for universal access.
+    /// GameScreen. Also contains game settings, metrics, song database and players and managers for universal access.
     /// </summary>
     public class GameCore : Game
     {
@@ -32,7 +32,7 @@ namespace WGiBeat
         public CPUManager CPUManager;
         public LogManager Log;
         public TextManager Text;
-        public KeyMappings KeyMappings; //Changed to public, for GameScreen access.
+        public KeyMappings KeyMappings;
 
         public Player[] Players;
         public Dictionary<string, object> Cookies;
@@ -47,7 +47,7 @@ namespace WGiBeat
         public string WgibeatRootFolder;
         private bool _drawInProgress;
 
-        public const string VERSION_STRING = "v0.65";
+        public const string VERSION_STRING = "v0.7 pre";
         public GameCore()
         {
             GraphicsManager = new GraphicsDeviceManager(this);
