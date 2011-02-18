@@ -1,4 +1,5 @@
 ﻿using System;
+using WGiBeat.Players;
 
 namespace WGiBeat.AudioSystem
 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.Players;
 
 namespace WGiBeat.Drawing.Sets
 {
@@ -83,10 +84,10 @@ namespace WGiBeat.Drawing.Sets
             return (result.Any(e => e.DisableKO));
         }
 
-        const int LIFE_MAX_NORMAL = 200;
+
         private void AdjustLifeNormal(double amount, int player)
         {
-            if (Players[player].Life + amount > 100)
+            if ((amount > 0) && (Players[player].Life + amount > 100))
             {
                 if (Players[player].Life >= 100)
                 {
@@ -104,7 +105,7 @@ namespace WGiBeat.Drawing.Sets
                 Players[player].Life += amount;
             }
 
-            Players[player].Life = Math.Min(LIFE_MAX_NORMAL, Players[player].Life);
+            Players[player].Life = Math.Min(Players[player].GetMaxLife(), Players[player].Life);
             if ((!Players[player].CPU) && (Players[player].Life <= 0) && (!Players[player].DisableKO))
             {
                 Players[player].KO = true;

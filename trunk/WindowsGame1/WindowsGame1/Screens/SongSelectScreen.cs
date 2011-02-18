@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
+using WGiBeat.Players;
 
 namespace WGiBeat.Screens
 {

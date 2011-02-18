@@ -10,6 +10,7 @@ using WGiBeat.Drawing;
 using WGiBeat.Drawing.Sets;
 using WGiBeat.Managers;
 using WGiBeat.Notes;
+using WGiBeat.Players;
 using LogLevel = WGiBeat.Managers.LogLevel;
 
 namespace WGiBeat.Screens

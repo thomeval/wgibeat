@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.AudioSystem;
+using WGiBeat.Players;
 
 namespace WGiBeat.Drawing
 {

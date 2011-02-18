@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.Players;
 
 namespace WGiBeat.Drawing
 {
@@ -115,7 +116,7 @@ namespace WGiBeat.Drawing
             _levelFrontSprite.DrawTiled(spriteBatch,0,0, (int) (LEVELBAR_WIDTH * progress), 5 );
 
             //Draw level text.
-            var playerlevel = String.Format("{0:00}", Player.GetLevelSafe());
+            var playerlevel = String.Format("{0:00}", Player.GetLevel());
             var scale = TextureManager.ScaleTextToFit(playerlevel, "TwoTech36", 34, 40);
             TextureManager.DrawString(spriteBatch,playerlevel, "TwoTech36", _levelTextPosition, scale, _textColor,
    FontAlign.RIGHT);
@@ -193,7 +194,7 @@ namespace WGiBeat.Drawing
             if (Player.Profile != null)
             {
                 TextureManager.DrawString(spriteBatch,
-                                          String.Format("{0}/{1}", Player.GetEXPSafe(), Player.GetNextEXPSafe()),
+                                          String.Format("{0}/{1}", Player.GetEXP(), Player.GetNextEXPSafe()),
                                           "TwoTech", _expTextPosition, _textColor,
                                           FontAlign.CENTER);
             }

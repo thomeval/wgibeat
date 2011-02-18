@@ -143,7 +143,8 @@
     <Compile Include="Managers\ProfileManager.cs" />
     <Compile Include="Managers\TextManager.cs" />
     <Compile Include="Managers\UpdateManager.cs" />
-    <Compile Include="Profile.cs" />
+    <Compile Include="Players\Profile.cs" />
+    <Compile Include="Players\ProfileOperations.cs" />
     <Compile Include="Screens\InitialLoadScreen.cs" />
     <Compile Include="Screens\InstructionScreen.cs" />
     <Compile Include="Screens\ModeSelectScreen.cs" />
@@ -163,7 +164,7 @@
     <Compile Include="Drawing\LifeBar.cs" />
     <Compile Include="Notes\Note.cs" />
     <Compile Include="Notes\NoteBar.cs" />
-    <Compile Include="Player.cs" />
+    <Compile Include="Players\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="GameCore.cs" />
