@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-
 using System.IO;
 using Microsoft.Xna.Framework;
 using WGiBeat.Managers;
@@ -36,6 +34,7 @@ namespace WGiBeat.Drawing
         private void LoadFromText(string text)
         {
 
+ 
             if (text.Substring(0, 8) != "#METRICS")
             {
                 throw new FileLoadException("File requested is not a valid metrics file.");
@@ -48,11 +47,11 @@ namespace WGiBeat.Drawing
 
             foreach (string rule in rules)
             {
+                
                 if ((rule.Length < 1) || (rule[0] == '#'))
                     continue;
 
                 string id = rule.Substring(0, rule.IndexOf('='));
-
                 string[] svalues = rule.Substring(rule.IndexOf('=') + 1).Split(new[] { '[', ']', ',' }, StringSplitOptions.RemoveEmptyEntries);
 
                 var values = new Vector2[svalues.Count() / 2];
@@ -62,10 +61,15 @@ namespace WGiBeat.Drawing
                     int y = Convert.ToInt32(svalues[(2 * i) + 1]);
                     values[i] = new Vector2(x, y);
 
+                    x = (int) (1.5 * x);
+                    y = (int) (1.5*y);
+
                 }
                 this[id] = values;
 
+                
             }
+
         }
 
         public Vector2 this[string id, int player]

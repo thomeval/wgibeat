@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -60,7 +61,7 @@ namespace WGiBeat.Screens
         private int _numBeats = -1;
         private double? _lastHitTime;
 
-        private const string VERSION = "v1.1";
+        private const string VERSION = "v1.2";
 
         #endregion
 
@@ -97,7 +98,12 @@ namespace WGiBeat.Screens
 
         public void InitSprites()
         {
-            _backgroundSprite = new Sprite { SpriteTexture = TextureManager.Textures("EditorBackground"), Height = 800 };
+            _backgroundSprite = new Sprite
+            {
+                SpriteTexture = TextureManager.Textures("EditorBackground"),
+                Height = 600,
+                Width = 800,
+            };
             _editProgressBaseSprite = new Sprite
                                           {
                                               SpriteTexture = TextureManager.Textures("SongEditProgressBase"),
@@ -149,8 +155,10 @@ namespace WGiBeat.Screens
             detailsMenu.AddItem(new MenuItem { ItemText = "Measure Offset", ItemValue = 6 });
             detailsMenu.AddItem(new MenuItem { ItemText = "Enter Length Manually", ItemValue = 7 });
             detailsMenu.AddItem(new MenuItem { ItemText = "Measure Length", ItemValue = 8 });
-            detailsMenu.AddItem(new MenuItem { ItemText = "Next Step", ItemValue = 9, Enabled = false });
-            detailsMenu.AddItem(new MenuItem { ItemText = "Back", ItemValue = 10 });
+            detailsMenu.AddItem(new MenuItem { ItemText = "Enter Audio Start Manually", ItemValue = 9 });
+            detailsMenu.AddItem(new MenuItem { ItemText = "Measure Audio Start", ItemValue = 10 });
+            detailsMenu.AddItem(new MenuItem { ItemText = "Next Step", ItemValue = 11, Enabled = false });
+            detailsMenu.AddItem(new MenuItem { ItemText = "Back", ItemValue = 12 });
             _menus.Add("Details", detailsMenu);
 
             var deleteDetailsMenu = new Menu { Width = 400, Position = Core.Metrics["EditorMenuStart", 0] };
@@ -160,7 +168,7 @@ namespace WGiBeat.Screens
             deleteDetailsMenu.SelectedIndex = 2;
             _menus.Add("DeleteDetails",deleteDetailsMenu);
 
-            var doneMenu = new Menu {Width = 400, Position = Core.Metrics["EditorMenuStart", 1]};
+            var doneMenu = new Menu {Width = 300, Position = Core.Metrics["EditorMenuStart", 1]};
             doneMenu.AddItem(new MenuItem{ItemText = "OK", ItemValue = 0});
             _menus.Add("Done",doneMenu);
 
@@ -191,6 +199,7 @@ namespace WGiBeat.Screens
                 case "SongOffset":
                 case "SongBPM":
                 case "SongLength":
+                case "SongAudioStart":
                     _cursorPosition = EditorCursorPosition.SONG_DETAILS;
                     break;
             }
@@ -200,6 +209,8 @@ namespace WGiBeat.Screens
         private void TextEntryEntryComplete(object sender, EventArgs e)
         {
             double temp;
+            bool isDouble = Double.TryParse(_textEntry.EnteredText, NumberStyles.Number,
+                                            CultureInfo.InvariantCulture.NumberFormat, out temp);
             switch (_textEntryDestination)
             {
                 case "DefinitionFile":
@@ -228,14 +239,14 @@ namespace WGiBeat.Screens
                     break;
                 case "SongOffset":
                     _cursorPosition = EditorCursorPosition.SONG_DETAILS;
-                    if (Double.TryParse(_textEntry.EnteredText, out temp))
+                    if (isDouble)
                     {
                         NewGameSong.Offset = temp;
                     }
                     break;
                 case "SongBPM":
                     _cursorPosition = EditorCursorPosition.SONG_DETAILS;
-                    if (Double.TryParse(_textEntry.EnteredText, out temp))
+                    if (isDouble)
                     {
                         NewGameSong.Bpm = temp;
                     }
@@ -243,9 +254,16 @@ namespace WGiBeat.Screens
                 case "SongLength":
                     _cursorPosition = EditorCursorPosition.SONG_DETAILS;
 
-                    if (Double.TryParse(_textEntry.EnteredText, out temp))
+                    if (isDouble)
                     {
                         NewGameSong.Length = temp;
+                    }
+                    break;
+                case "SongAudioStart":
+                    _cursorPosition = EditorCursorPosition.SONG_DETAILS;
+                    if (isDouble)
+                    {
+                        NewGameSong.AudioStart = temp;
                     }
                     break;
             }
@@ -302,6 +320,7 @@ namespace WGiBeat.Screens
                     break;
                     case EditorCursorPosition.MEASURE_OFFSET:
                     case EditorCursorPosition.MEASURE_LENGTH:
+                    case EditorCursorPosition.MEASURE_AUDIO_START:
                     TextureManager.DrawString(spriteBatch, String.Format("{0:0.00}", _timeElapsed / 1000), "LargeFont", Core.Metrics["EditorMeasurementDisplay", 0], Color.Black, FontAlign.CENTER);
 
                     break;
@@ -372,8 +391,11 @@ namespace WGiBeat.Screens
 
                     var offsetPosition = _bpmMeter.Position.Clone();
                     offsetPosition.X += 320;
-                    offsetPosition.Y += 120;
+                    offsetPosition.Y += 90;
                     TextureManager.DrawString(spriteBatch, String.Format("Offset: {0:0.000}", NewGameSong.Offset), "TwoTech", offsetPosition, Color.Black, FontAlign.RIGHT);
+                    offsetPosition.Y += 30;
+                    TextureManager.DrawString(spriteBatch, String.Format("AudioStart: {0:0.000}", NewGameSong.AudioStart), "TwoTech", offsetPosition, Color.Black, FontAlign.RIGHT);
+
                     if ((NewGameSong.Bpm > 0) && (NewGameSong.Length > 0))
                     {
                         var totalBeatlines = Math.Floor(NewGameSong.GetEndingTimeInPhrase());
@@ -397,6 +419,9 @@ namespace WGiBeat.Screens
                     break;
                 case EditorCursorPosition.MEASURE_BPM:
                     instructions = Core.Text["EditorMeasureBPM"];
+                    break;
+                    case EditorCursorPosition.MEASURE_AUDIO_START:
+                    instructions = Core.Text["EditorMeasureAudioStart"];
                     break;
                     case EditorCursorPosition.DONE:
                     instructions = Core.Text["EditorDoneCreating"];
@@ -510,6 +535,9 @@ namespace WGiBeat.Screens
                 case EditorCursorPosition.MEASURE_OFFSET:
                     headingText = "Measure Offset";
                     break;
+                    case EditorCursorPosition.MEASURE_AUDIO_START:
+                    headingText = "Measure Audio Start";
+                    break;
                 case EditorCursorPosition.SONG_TUNING:
                     headingText = "Song Tuning";
                     break;
@@ -580,6 +608,7 @@ namespace WGiBeat.Screens
                     case EditorCursorPosition.MEASURE_BPM:
                     case EditorCursorPosition.MEASURE_LENGTH:
                     case EditorCursorPosition.MEASURE_OFFSET:
+                    case EditorCursorPosition.MEASURE_AUDIO_START:
                     PerformActionMeasurement(inputAction);
                     break;
             }
@@ -616,42 +645,45 @@ namespace WGiBeat.Screens
             {
                 case "BEATLINE":
                 case "START":
+                    //Normally these are both 'confirm' actions, but BPM measurement has different uses
+                    //for BEATLINE and START.
                     switch (_cursorPosition)
                     {
                         case EditorCursorPosition.MEASURE_BPM:
                             if (inputAction.Action == "BEATLINE")
                             {
                                 UpdateBPMMeasurement();
+                                return;
                             }
-                            else if (inputAction.Action == "START")
+                            
+                            if (inputAction.Action == "START")
                             {
-                                Core.Audio.StopChannel(_audioChannel);
-                                _cursorPosition = EditorCursorPosition.SONG_DETAILS;
-                                _songPlaying = false;
                                 if (_guessedBPM > 0)
                                 {
                                     NewGameSong.Bpm = _guessedBPM;
                                 }
-                            }                     
+                            }
                             break;
-
+                           
                             case EditorCursorPosition.MEASURE_LENGTH:
                             NewGameSong.Length = Math.Round(_timeElapsed / 1000, 2);
-                            Core.Audio.StopChannel(_audioChannel);
-                            _cursorPosition = EditorCursorPosition.SONG_DETAILS;
-                            _songPlaying = false;
                             break;
 
                             case EditorCursorPosition.MEASURE_OFFSET:
                             NewGameSong.Offset = Math.Round(_timeElapsed /1000,2);
-                            Core.Audio.StopChannel(_audioChannel);
-                            _cursorPosition = EditorCursorPosition.SONG_DETAILS;
-                            _songPlaying = false;
+                            break;
+                            case EditorCursorPosition.MEASURE_AUDIO_START:
+                            NewGameSong.AudioStart = Math.Round(_timeElapsed / 1000, 2);
                             break;
                     }
-                    break;
-                case "SELECT":
 
+                    Core.Audio.StopChannel(_audioChannel);
+                    _cursorPosition = EditorCursorPosition.SONG_DETAILS;
+                    _songPlaying = false;
+                    break;
+
+                case "SELECT":
+                    //Rewind the playing song.
                     var position = (int) Core.Audio.GetChannelPosition(_audioChannel);
                     var newPosition = Math.Max(0, position - 10000);
 
@@ -959,6 +991,15 @@ namespace WGiBeat.Screens
                     ActivateMeasureMode();
                     break;
                 case 9:
+                    ActivateTextEntryMode();
+                    _textEntryDestination = "SongAudioStart";
+                    _textEntry.DescriptionText = Core.Text["EditorEnterSongAudioStart"];
+                    break;
+                case 10:
+                    _cursorPosition = EditorCursorPosition.MEASURE_AUDIO_START;
+                    ActivateMeasureMode();
+                    break;
+                case 11:
                     
                     if (Core.Songs.ValidateSongFile(NewGameSong))
                     {
@@ -975,7 +1016,7 @@ namespace WGiBeat.Screens
                         _numHits = 0;
                     }
                     break;
-                case 10:
+                case 12:
                     if (_editMode)
                     {
                         _cursorPosition = EditorCursorPosition.MAIN_MENU;
@@ -1273,7 +1314,8 @@ namespace WGiBeat.Screens
             MEASURE_OFFSET,
             MEASURE_LENGTH,
             DONE,
-            DONE_DELETE
+            DONE_DELETE,
+            MEASURE_AUDIO_START
         }
     }
 }

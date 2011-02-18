@@ -137,7 +137,7 @@ namespace WGiBeat.Drawing.Sets
 
         private void DrawStreakCounters(SpriteBatch spriteBatch)
         {
-            Color streakColor = new Color(10, 123, 237, 255);
+            var streakColor = new Color(10, 123, 237, 255);
     
             for (int x = 0; x < 4; x++)
             {
@@ -154,7 +154,7 @@ namespace WGiBeat.Drawing.Sets
                     }
                   
                     streakColor.A = _displayedJudgements[x].Opacity;
-                    spriteBatch.DrawString(TextureManager.Fonts("TwoTechLarge"), "x" + Players[x].Streak,_metrics["StreakText",x],streakColor);
+                    TextureManager.DrawString(spriteBatch,"x" + Players[x].Streak, "TwoTechLarge",_metrics["StreakText",x],streakColor,FontAlign.LEFT);
               
                 }
             }

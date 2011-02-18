@@ -50,8 +50,8 @@ namespace WGiBeat.Drawing.Sets
 
                 DrawOvermask(spriteBatch,x);
 
-                spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), String.Format("{0:D3}", Players[x].Hits),
-                       _metrics["HitsText" + DetermineSuffix(), x], _textColor);
+                TextureManager.DrawString(spriteBatch, String.Format("{0:D3}", Players[x].Hits), "DefaultFont",
+                       _metrics["HitsText" + DetermineSuffix(), x], _textColor,FontAlign.CENTER);
             }
         }
 

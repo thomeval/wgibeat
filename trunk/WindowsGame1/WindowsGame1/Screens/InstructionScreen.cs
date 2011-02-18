@@ -35,9 +35,11 @@ namespace WGiBeat.Screens
             {
                 _instructionPages[x] = new Sprite {SpriteTexture = TextureManager.Textures("InstructionPage" + (x + 1))};
             }
-            _baseSprite = new Sprite { SpriteTexture = TextureManager.Textures("LoadingMessageBase") };
-            _baseSprite.Position = (Core.Metrics["LoadMessageBase", 0]);
-           
+            _baseSprite = new Sprite
+                              {
+                                  SpriteTexture = TextureManager.Textures("LoadingMessageBase"),
+                                  Position = (Core.Metrics["LoadMessageBase", 0])
+                              };
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)

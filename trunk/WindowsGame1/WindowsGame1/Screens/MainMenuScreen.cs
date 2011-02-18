@@ -63,15 +63,15 @@ namespace WGiBeat.Screens
         {
             _background = new Sprite
             {
-                Height = Core.Window.ClientBounds.Height,
+                Height = 600,
+                Width = 800,
                 SpriteTexture = TextureManager.Textures("MainMenuBackground"),
-                Width = Core.Window.ClientBounds.Width
             };
             _foreground = new Sprite
             {
-                Height = Core.Window.ClientBounds.Height,
                 SpriteTexture = TextureManager.Textures("MainMenuForeground"),
-                Width = Core.Window.ClientBounds.Width
+                Height = 600,
+                Width = 800,
             };
             _header = new Sprite
             {

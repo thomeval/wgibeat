@@ -44,6 +44,7 @@ namespace WGiBeat
         private KeyboardState _lastKeystate;
         private GamePadState[] _lastGamePadState;
         public string WgibeatRootFolder;
+        private bool _drawInProgress;
 
         public const string VERSION_STRING = "v0.65";
         public GameCore()
@@ -51,6 +52,8 @@ namespace WGiBeat
             GraphicsManager = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
+
+        #region Initialization
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -60,6 +63,8 @@ namespace WGiBeat
         /// </summary>
         protected override void Initialize()
         {
+            _lastGamePadState = new GamePadState[4];
+
             //For some reason XNA has a bug when using FixedTimeSteps, which is enabled by default.
             //Using this causes 100% CPU usage (one core) and a frame rate drop.
             this.IsFixedTimeStep = false;
@@ -70,33 +75,44 @@ namespace WGiBeat
 Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             WgibeatRootFolder = WgibeatRootFolder.Replace("file:\\", "");
 
-            Log = new LogManager{Enabled = true, SaveLog = true, RootFolder = WgibeatRootFolder, LogLevel = LogLevel.INFO};
-            Log.AddMessage("Initializing Cookies...",LogLevel.INFO);
+            InitManagers();
+            LoadCurrentTheme();
+        
+            SetGraphicsSettings();
+            InitPlayers();
+            
+            base.Initialize();
+        }
+
+        private void InitManagers()
+        {
+            Log = new LogManager { Enabled = true, SaveLog = true, RootFolder = WgibeatRootFolder, LogLevel = LogLevel.INFO };
+            Log.AddMessage("Initializing Cookies...", LogLevel.INFO);
             Cookies = new Dictionary<string, object>();
 
             TextureManager.Log = Log;
+            TextureManager.GraphicsDevice = this.GraphicsDevice;
+
             Metrics = new MetricsManager { Log = this.Log };
             Settings = SettingsManager.LoadFromFile(WgibeatRootFolder + "\\settings.txt", this.Log);
-            Log.LogLevel = (LogLevel) Settings.Get<int>("LogLevel");
+            Log.LogLevel = (LogLevel)Settings.Get<int>("LogLevel");
             HighScores = HighScoreManager.LoadFromFile(WgibeatRootFolder + "\\Scores.conf", this.Log);
             Profiles = ProfileManager.LoadFromFolder(WgibeatRootFolder + "\\Profiles", this.Log);
-            Text = TextManager.LoadFromFile(WgibeatRootFolder + "\\Content\\Text\\OptionText.txt",this.Log);
+            Text = TextManager.LoadFromFile(WgibeatRootFolder + "\\Content\\Text\\OptionText.txt", this.Log);
             Text.AddResource(WgibeatRootFolder + "\\Content\\Text\\EditorText.txt");
             Text.AddResource(WgibeatRootFolder + "\\Content\\Text\\ModeText.txt");
 
             Audio = new AudioManager(this.Log)
-                        {
-                            FallbackSound = (WgibeatRootFolder + "\\Content\\Audio\\Fallback.ogg")
-                        };
-            Songs = new SongManager(this.Log,this.Audio,this.Settings);
-            Crossfader = new CrossfaderManager(this.Log,this.Audio);
+            {
+                FallbackSound = (WgibeatRootFolder + "\\Content\\Audio\\Fallback.ogg")
+            };
+            Audio.SetMasterVolume((float)Settings.Get<double>("SongVolume"));
+
+            Songs = new SongManager(this.Log, this.Audio, this.Settings);
+            Crossfader = new CrossfaderManager(this.Log, this.Audio);
 
             CPUManager = new CPUManager(this.Log);
             CPUManager.LoadWeights("CPUSkill.txt");
-
-            TextureManager.GraphicsDevice = this.GraphicsDevice;
-
-            LoadCurrentTheme();
 
             _menuMusicManager = new MenuMusicManager(this.Log)
             {
@@ -106,30 +122,70 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             };
             _menuMusicManager.LoadMusicList(_menuMusicManager.MusicFilePath + "MusicList.txt");
 
-            Players = new Player[4];
-
-            for (int x = 0; x < 4; x++)
-            {
-                Players[x] = new Player();
-                Players[x].ResetStats();
-            }
-
             KeyMappings = new KeyMappings(this.Log);
             bool passed = KeyMappings.LoadFromFile("Keys.conf");
 
             if (!passed)
                 KeyMappings.LoadDefault();
-            
-            Audio.SetMasterVolume((float) Settings.Get<double>("SongVolume"));
-            GraphicsManager.IsFullScreen = Settings.Get<bool>("FullScreen");
-
-            GraphicsDevice.RenderState.ScissorTestEnable = true;
-            GraphicsManager.ApplyChanges();
-            _lastGamePadState = new GamePadState[4];
-
-            base.Initialize();
         }
 
+        private void InitPlayers()
+        {
+            Players = new Player[4];
+            for (int x = 0; x < 4; x++)
+            {
+                Players[x] = new Player();
+                Players[x].ResetStats();
+            }
+        }
+
+        private void InitializeScreens()
+        {
+            _screens = new Dictionary<string, GameScreen>();
+            _screens.Add("InitialLoad", new InitialLoadScreen(this));
+            _screens.Add("MainMenu", new MainMenuScreen(this));
+            _screens.Add("NewGame", new NewGameScreen(this));
+            _screens.Add("MainGame", new MainGameScreen(this));
+            _screens.Add("Evaluation", new EvaluationScreen(this));
+            _screens.Add("SongSelect", new SongSelectScreen(this));
+            _screens.Add("KeyOptions", new KeyOptionScreen(this));
+            _screens.Add("Options", new OptionScreen(this));
+            _screens.Add("ModeSelect", new ModeSelectScreen(this));
+            _screens.Add("TeamSelect", new TeamSelectScreen(this));
+            _screens.Add("Instruction", new InstructionScreen(this));
+            _screens.Add("SongEdit", new SongEditorScreen(this));
+            _screens.Add("Stats", new StatsScreen(this));
+
+            if (!Settings.Get<bool>("RunOnce"))
+            {
+                ScreenTransition("Instruction");
+                Cookies["FirstScreen"] = true;
+                Settings["RunOnce"] = true;
+                Settings.SaveToFile("settings.txt");
+            }
+            else
+            {
+                ScreenTransition("InitialLoad");
+            }
+
+        }
+
+        public void SetGraphicsSettings()
+        {
+            GraphicsManager.IsFullScreen = Settings.Get<bool>("FullScreen");
+            string[] resolution = Settings.Get<string>("ScreenResolution").Split('x');
+            GraphicsManager.PreferredBackBufferWidth = Convert.ToInt32(resolution[0]);
+            GraphicsManager.PreferredBackBufferHeight = Convert.ToInt32(resolution[1]);
+            GraphicsDevice.RenderState.ScissorTestEnable = true;
+            Sprite.SetMultiplier(Convert.ToInt32(resolution[0]), Convert.ToInt32(resolution[1]));
+            Sprite.Core = this;
+            PrimitiveLine.Multiplier = Sprite.Multiplier;
+            GraphicsManager.ApplyChanges();
+        }
+
+        #endregion
+
+        #region Graphics Loading
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
@@ -166,8 +222,11 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
         /// </summary>
         protected override void UnloadContent()
         {
-            
+
         }
+        #endregion
+
+        #region Overrides
 
         /// <summary>
         /// Allows the game to run logic such as updating the world,
@@ -189,6 +248,48 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             base.Update(gameTime);
         }
 
+        /// <summary>
+        /// This is called when the game should draw itself.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.Black);
+
+            ShiftSpriteBatch(false);
+
+            _activeScreen.Draw(gameTime, _spriteBatch);
+            _spriteBatch.End();
+            _drawInProgress = false;
+            base.Draw(gameTime);
+        }
+
+
+        public void ShiftSpriteBatch(bool enableWrap)
+        {
+            if (_drawInProgress)
+            {
+                _drawInProgress = false;
+                _spriteBatch.End();
+            }
+
+            _spriteBatch.Begin(SpriteBlendMode.AlphaBlend,SpriteSortMode.Immediate,SaveStateMode.None);
+            if (enableWrap)
+            {
+                GraphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
+                GraphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
+            }
+            else
+            {
+                GraphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Clamp;
+                GraphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Clamp;
+            }
+            _drawInProgress = true;
+
+        }
+        #endregion
+
+        #region Input Handling
         private void DetectButtonPresses()
         {
 
@@ -263,56 +364,8 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             }
             _lastKeystate = currentState;
         }
+        #endregion
 
-        private void InitializeScreens()
-        {
-            _screens = new Dictionary<string, GameScreen>();
-            _screens.Add("InitialLoad",new InitialLoadScreen(this));
-            _screens.Add("MainMenu", new MainMenuScreen(this));
-            _screens.Add("NewGame",new NewGameScreen(this));
-            _screens.Add("MainGame",new MainGameScreen(this));
-            _screens.Add("Evaluation", new EvaluationScreen(this));
-            _screens.Add("SongSelect", new SongSelectScreen(this));
-            _screens.Add("KeyOptions", new KeyOptionScreen(this));
-            _screens.Add("Options", new OptionScreen(this));
-            _screens.Add("ModeSelect", new ModeSelectScreen(this));
-            _screens.Add("TeamSelect", new TeamSelectScreen(this));
-            _screens.Add("Instruction", new InstructionScreen(this));
-            _screens.Add("SongEdit", new SongEditorScreen(this));
-            _screens.Add("Stats", new StatsScreen(this));
-
-            if (!Settings.Get<bool>("RunOnce"))
-            {
-                ScreenTransition("Instruction");
-                Cookies["FirstScreen"] = true;
-                Settings["RunOnce"] = true;
-                Settings.SaveToFile("settings.txt");
-            }
-            else
-            {
-                ScreenTransition("InitialLoad");
-            }
-            
-        }
-
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Draw(GameTime gameTime)
-        {
-            GraphicsDevice.Clear(Color.Black);
-
-            _spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
-            GraphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
-            GraphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
-
-            _activeScreen.Draw(gameTime, _spriteBatch);
-            _spriteBatch.End();
-
-            base.Draw(gameTime);
-
-        }
 
         /// <summary>
         /// Changes the currently displayed GameScreen to the one with the provided name.

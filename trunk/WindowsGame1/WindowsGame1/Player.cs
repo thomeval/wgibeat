@@ -233,6 +233,55 @@ namespace WGiBeat
             }
             Profile.TotalHits += TotalHits;
             Profile.TotalPlayTime += PlayTime;
+            Profile.EXP += AwardXP();
+        }
+
+        private readonly int[] _gradeBonusCutoffs = {90, 86, 82, 78,70};
+        private readonly double[] _gradeBonusAmounts = {1.4, 1.3, 1.2, 1.1, 1.05};
+        private readonly double[] _difficultyMultipliers = {0.5, 0.75, 1.0, 1.1, 1.2};
+
+        private long AwardXP()
+        {
+            double result = 0;
+
+            result += Judgements[0]*3;
+            result += Judgements[1]*2;
+            result += Judgements[2]*1;
+
+            var grade = CalculatePercentage();
+
+            for (int x = 0; x < _gradeBonusCutoffs.Length; x++)
+            {
+                if (grade >= _gradeBonusCutoffs[x])
+                {
+                    result *= _gradeBonusAmounts[x];
+                    break;
+                }
+            }
+
+            var difficulty = (int) PlayDifficulty;
+
+            result *= _difficultyMultipliers[difficulty];
+            return (long) Math.Floor(result);
+
+        }
+
+        public int GetLevelSafe()
+        {
+            if (Profile == null)
+            {
+                return 1;
+            }
+            return Profile.GetLevel();
+        }
+
+        public long GetEXPSafe()
+        {
+            if (Profile == null)
+            {
+                return 0;
+            }
+            return Profile.EXP;
 
         }
 
@@ -281,6 +330,33 @@ namespace WGiBeat
             playerScore += Judgements[6] * -1;
 
             return 100.0 * playerScore / maxPossible;
+        }
+
+
+        public long GetNextEXPSafe()
+        {
+            if (Profile == null)
+            {
+                return 1;
+            }
+            if (Profile.EXP > Profile.MaxLevelExp())
+            {
+                return Profile.MaxLevelExp();
+            }
+            return Profile.Levels[Profile.GetLevel()];
+        }
+
+        public double GetLevelProgressSafe()
+        {
+            if (Profile == null)
+            {
+                return 0.0;
+            }
+
+            var currentLevelExp = Profile.Levels[GetLevelSafe()-1];
+
+            return 1.0* (Profile.EXP - currentLevelExp) /
+            (GetNextEXPSafe() - currentLevelExp);
         }
     }
 

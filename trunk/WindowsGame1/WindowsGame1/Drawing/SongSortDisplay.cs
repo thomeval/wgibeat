@@ -8,7 +8,7 @@ namespace WGiBeat.Drawing
     {
 
         public bool Active { get; set; }
-        private byte _activeOpacity = 0;
+        private byte _activeOpacity;
 
         public SongSortMode SongSortMode { get; set;}
         

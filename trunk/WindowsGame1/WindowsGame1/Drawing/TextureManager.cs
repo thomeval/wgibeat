@@ -107,7 +107,7 @@ namespace WGiBeat.Drawing
                         measuredPosition.X -= measurements.X;
                         break;
                 }
-                spriteBatch.DrawString(_fonts[fontName], line, measuredPosition, color, 0.0f, _noRotation, scale, SpriteEffects.None, 0.0f);
+                spriteBatch.DrawString(_fonts[fontName], line, measuredPosition * Sprite.Multiplier, color, 0.0f, _noRotation, scale * Sprite.Multiplier, SpriteEffects.None, 0.0f);
                 measuredPosition.Y += measurements.Y;
                 measuredPosition.X = position.X;
             }
@@ -163,6 +163,21 @@ namespace WGiBeat.Drawing
             }
             result.SetData(pixels);
             return result;
+        }
+
+        public static void SetTextureWrapping(bool wrap)
+        {
+            if (wrap)
+            {
+                GraphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
+                GraphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
+            }
+            else
+            {
+                GraphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Clamp;
+                GraphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Clamp;   
+            }
+
         }
         /*
         public static void DrawStringClipped(string text, string fontName, Vector2 position, Color color, FontAlign align, Rectangle clip)

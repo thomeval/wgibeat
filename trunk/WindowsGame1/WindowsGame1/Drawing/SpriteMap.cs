@@ -11,8 +11,6 @@ namespace WGiBeat.Drawing
         public Color ColorShading = Color.White;
         public int Columns { get; set; }
         public int Rows { get; set; }
-        public int TrimX { get; set; }
-        public int TrimY { get; set; }
 
         public SpriteMap()
         {
@@ -24,7 +22,13 @@ namespace WGiBeat.Drawing
         {
 
             Rectangle sourceRect = CalculateSourceRectangle(cellnumber);
-            var destRect = new Rectangle {Height = height, Width = width, X = x, Y = y};
+            var destRect = new Rectangle
+                               {
+                                   Height =  (int) Math.Round(height * Sprite.Multiplier.Y),
+                                   Width = (int) Math.Round(width * Sprite.Multiplier.X), 
+                                   X = (int) Math.Round(x * Sprite.Multiplier.X), 
+                                   Y = (int) Math.Round(y * Sprite.Multiplier.Y)
+                               };
 
             spriteBatch.Draw(SpriteTexture, destRect, sourceRect, ColorShading);
         }
@@ -42,14 +46,6 @@ namespace WGiBeat.Drawing
             xSize = SpriteTexture.Width / Columns;
             ySize = SpriteTexture.Height / Rows;
 
-            if (ySize - TrimY < 0)
-            {
-                throw new Exception("Y Trim exceeds image cell size. Reduce the trim or enlarge the image.");
-            }
-            if (xSize - TrimX < 0)
-            {
-                throw new Exception("X Trim exceeds image cell size. Reduce the trim or enlarge the image.");
-            }
 
             while (cellnumber >= Columns)
             {
@@ -59,10 +55,6 @@ namespace WGiBeat.Drawing
             xOffset = cellnumber;
             yOffset *= ySize;
             xOffset *= xSize;
-            ySize -= 2 * TrimY;
-            xSize -= 2*TrimX;
-            xOffset += TrimX;
-            yOffset += TrimY;
 
             var sourceRect = new Rectangle{Height = ySize, Width = xSize, X = xOffset, Y = yOffset};
             return sourceRect;
