@@ -247,7 +247,7 @@ namespace WGiBeat.Drawing
         {
             var idx = (int)Player.PlayDifficulty;
             idx += amount;
-            idx = Math.Min((int)Difficulty.COUNT - 1, Math.Max(0, idx));
+            idx = Math.Min((int)Player.GetMaxDifficulty(), Math.Max(0, idx));
             Player.PlayDifficulty = (Difficulty)idx;
         }
     }

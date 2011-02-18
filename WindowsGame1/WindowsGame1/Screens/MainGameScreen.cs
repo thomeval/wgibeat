@@ -455,9 +455,9 @@ namespace WGiBeat.Screens
                 case Difficulty.MEDIUM:
                     return 70;
                 case Difficulty.HARD:
-                    return 150;
+                    return 175;
                 case Difficulty.INSANE:
-                    return 200;
+                    return 300;
                 default:
                     return 0;
             }

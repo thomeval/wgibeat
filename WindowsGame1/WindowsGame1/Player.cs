@@ -358,6 +358,17 @@ namespace WGiBeat
             return 1.0* (Profile.EXP - currentLevelExp) /
             (GetNextEXPSafe() - currentLevelExp);
         }
+
+        public int GetMaxDifficulty()
+        {
+            if ((Profile == null) || (Profile.GetLevel() < 10))
+            {
+                return 3;
+            }
+
+                return 4;
+
+        }
     }
 
     public enum Difficulty
