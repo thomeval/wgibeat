@@ -20,7 +20,7 @@ namespace WGiBeat.Screens
         public OptionScreen(GameCore core)
             : base(core)
         {
-            _optionsMenu = new Menu { Width = 1000, MaxVisibleItems = 12 };
+            _optionsMenu = new Menu { Width = 700, MaxVisibleItems = 12 };
             BuildMenu();
             _optionsMenu.Position = (Core.Metrics["OptionsMenuStart", 0]);
         }

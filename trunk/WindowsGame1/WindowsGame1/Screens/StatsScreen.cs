@@ -136,20 +136,29 @@ namespace WGiBeat.Screens
 
         private void DrawStats(SpriteBatch spriteBatch, int side, Profile profile)
         {
+            var tempPlayer = new Player { Profile = profile };
 
             Vector2[] positions = { Core.Metrics["StatsColumns", (3 * side)].Clone(), Core.Metrics["StatsColumns", (3 * side) + 1].Clone(), Core.Metrics["StatsColumns", (3 * side) + 2].Clone() };
             TextureManager.DrawString(spriteBatch, profile.Name, "TwoTech36", positions[0], Color.Black, FontAlign.LEFT);
             positions[0].Y += 30;
             positions[1].Y += 30;
-            DrawLevelBars(spriteBatch, positions[0], profile);
-            positions[0].Y += 50;
-            positions[1].Y += 50;
+
+            DrawLevelBars(spriteBatch, positions[0], tempPlayer);
+            positions[0].Y += 15;
+            positions[1].Y += 15;
+
+            TextureManager.DrawString(spriteBatch,"EXP: ", "DefaultFont",positions[0],Color.Black,FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch,
+                          String.Format("{0}/{1}", profile.EXP, tempPlayer.GetNextEXPSafe()),
+                          "DefaultFont", positions[1],Color.Black,
+                          FontAlign.LEFT);
+            positions[0].Y += 35;
+            positions[1].Y += 35;
             TextureManager.DrawString(spriteBatch, "Total play time:", "LargeFont", positions[0], Color.Black, FontAlign.LEFT);
             var playTime = new TimeSpan(0, 0, 0, 0, (int)profile.TotalPlayTime);
-            // positions[1].X += 50;
 
             TextureManager.DrawString(spriteBatch, String.Format("{0}h:{1:00}m:{2:00}s ", playTime.Hours, playTime.Minutes, playTime.Seconds), "LargeFont", positions[1], Color.Black, FontAlign.LEFT);
-            // positions[1].X -= 50;
+
             positions[0].Y += 25;
             positions[1].Y += 25;
 
@@ -210,10 +219,9 @@ namespace WGiBeat.Screens
 
         }
 
-        private void DrawLevelBars(SpriteBatch spriteBatch, Vector2 position, Profile profile)
+        private void DrawLevelBars(SpriteBatch spriteBatch, Vector2 position, Player player)
         {
-            var tempPlayer = new Player {Profile = profile};
-            levelDisplay.Player = tempPlayer;
+            levelDisplay.Player = player;
             levelDisplay.Position = position;
             levelDisplay.Draw(spriteBatch);
         }
