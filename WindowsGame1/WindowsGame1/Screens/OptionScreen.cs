@@ -20,7 +20,7 @@ namespace WGiBeat.Screens
         public OptionScreen(GameCore core)
             : base(core)
         {
-            _optionsMenu = new Menu { Width = 700, MaxVisibleItems = 12 };
+            _optionsMenu = new Menu { Width = 1000, MaxVisibleItems = 12 };
             BuildMenu();
             _optionsMenu.Position = (Core.Metrics["OptionsMenuStart", 0]);
         }
@@ -90,13 +90,12 @@ namespace WGiBeat.Screens
             item.AddOption("On", true);
             _optionsMenu.AddItem(item);
 
-            /*
             item = new MenuItem {ItemText = "Screen Resolution"};
             item.AddOption("800x600", "800x600");
             item.AddOption("1024x768", "1024x768");
+           // item.AddOption("1200x900","1200x900");
             item.AddOption("1280x1024", "1280x1024");
-            _optionsMenu.AddItem(item);
-            */
+            _optionsMenu.AddItem(item);         
 
             item = new MenuItem { ItemText = "Save" };
             _optionsMenu.AddItem(item);
@@ -115,9 +114,9 @@ namespace WGiBeat.Screens
         {
             _background = new Sprite
             {
-                Height = Core.Window.ClientBounds.Height,
+                Height = 600,
+                Width = 800,
                 SpriteTexture = TextureManager.Textures("AllBackground"),
-                Width = Core.Window.ClientBounds.Width,
             };
             _header = new Sprite
             {
@@ -208,6 +207,8 @@ namespace WGiBeat.Screens
                 _optionsMenu.GetByItemText("Theme").SetSelectedByValue(Core.Settings.Get<object>("Theme"));
                 _optionsMenu.GetByItemText("Allow Problematic Songs").SetSelectedByValue(Core.Settings.Get<object>("AllowProblematicSongs"));
                 _optionsMenu.GetByItemText("Convert Files to .sng").SetSelectedByValue(Core.Settings.Get<object>("ConvertToSNG"));
+                _optionsMenu.GetByItemText("Screen Resolution").SetSelectedByValue(Core.Settings.Get<object>("ScreenResolution"));
+
             }
             catch (Exception ex)
             {
@@ -228,19 +229,14 @@ namespace WGiBeat.Screens
             Core.Settings.Set("Theme", _optionsMenu.GetByItemText("Theme").SelectedValue());
             Core.Settings.Set("AllowProblematicSongs",_optionsMenu.GetByItemText("Allow Problematic Songs").SelectedValue());
             Core.Settings.Set("ConvertToSNG",_optionsMenu.GetByItemText("Convert Files to .sng").SelectedValue());
+            Core.Settings.Set("ScreenResolution", _optionsMenu.GetByItemText("Screen Resolution").SelectedValue());
             Core.Audio.SetMasterVolume((float)Core.Settings.Get<double>("SongVolume"));
             Core.Log.LogLevel = (LogLevel)Core.Settings.Get<int>("LogLevel");
             Core.Log.SaveLog = Core.Settings.Get<bool>("SaveLog");
 
             Core.LoadCurrentTheme();
-            Core.GraphicsManager.IsFullScreen = Core.Settings.Get<bool>("FullScreen");
-            /*
-             * Native resolution of 1200x900?
-            string[] _selectedResolution = _optionsMenu.GetByItemText("Screen Resolution").SelectedValue().ToString().Split('x');
-            Core.GraphicsManager.PreferredBackBufferWidth = Convert.ToInt32(_selectedResolution[0]);
-            Core.GraphicsManager.PreferredBackBufferHeight = Convert.ToInt32(_selectedResolution[1]);
-             */
-            Core.GraphicsManager.ApplyChanges();
+            Core.SetGraphicsSettings();
+
             Core.Settings.SaveToFile("settings.txt");
 
         }

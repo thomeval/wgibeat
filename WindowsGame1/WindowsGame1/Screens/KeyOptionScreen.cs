@@ -58,9 +58,9 @@ namespace WGiBeat.Screens
 
             _backgroundSprite = new Sprite
             {
-                Height = Core.Window.ClientBounds.Height,
+                Height = 600,
+                Width = 800,
                 SpriteTexture = TextureManager.Textures("AllBackground"),
-                Width = Core.Window.ClientBounds.Width,
             };
 
             _headerSprite = new Sprite
@@ -85,8 +85,6 @@ namespace WGiBeat.Screens
                                            Columns = 1,
                                            Rows = 4,
                                            SpriteTexture = TextureManager.Textures("KeyOptionGridInside"),
-                                           TrimX = 1,
-                                           TrimY = 1
                                        };
             _gridBorderSprite = new Sprite
                                     {

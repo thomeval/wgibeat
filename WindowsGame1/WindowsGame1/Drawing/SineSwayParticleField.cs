@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing
@@ -35,21 +33,12 @@ namespace WGiBeat.Drawing
         public int MinSize { get; set; }
         public int MaxSize { get; set; }
 
-        private Random _rand = new Random();
+        private readonly Random _rand = new Random();
 
         private String[] _textureList = { "Particle_1", "Particle_2", "Particle_3", "Particle_4", "Particle_5", };
         private Boolean RandomizeTextures { get; set; }
 
-        public SineSwayParticleField(int x, int y, int width, int height)
-        {
-            InitDefaultRanges();
-
-            MinHeight = 0;
-            MaxHeight = height;
-
-            InitializeSwayers();
-        }
-
+  
         public SineSwayParticleField()
         {
             InitDefaultRanges();
@@ -138,9 +127,9 @@ namespace WGiBeat.Drawing
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            foreach (SineSwayParticle token in _swayers)
+            foreach (SineSwayParticle particle in _swayers)
             {
-                token.Draw(spriteBatch);
+                particle.Draw(spriteBatch);
             }
         }
 

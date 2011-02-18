@@ -60,14 +60,12 @@ namespace WGiBeat.Screens
                            {
                                Columns = 2,
                                Rows = 1,
-                               TrimX = 1,
                                SpriteTexture = TextureManager.Textures("LifegraphYBorder")
                            };
             _xborder = new SpriteMap
             {
                 Columns = 1,
                 Rows = 2,
-                TrimY = 1,
                 SpriteTexture = TextureManager.Textures("LifegraphXBorder")
 
             };

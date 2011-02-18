@@ -35,6 +35,10 @@ namespace WGiBeat.Screens
         private double _lastBlazeCheck;
         private double _lastLifeRecord;
 
+        private Sprite _koSprite;
+        private Sprite _clearSprite;
+        private Sprite _background;
+
         public MainGameScreen(GameCore core)
             : base(core)
         {
@@ -61,7 +65,6 @@ namespace WGiBeat.Screens
 
             _displayState = 0;
             _songLoadDelay = 0.0;
-            _confidence = 0;
             _lastBlazeCheck = 0;
             _lastLifeRecord = -0.5;
             
@@ -99,6 +102,12 @@ namespace WGiBeat.Screens
                             {
                                 SpriteTexture = TextureManager.Textures("KOIndicator")
                             };
+            _background = new Sprite
+            {
+                Height = 600,
+                Width = 800,
+                SpriteTexture = TextureManager.Textures("MainGameScreenBackground"),
+            };
         }
 
         private bool LargeBeatlinesSuitable()
@@ -234,9 +243,6 @@ namespace WGiBeat.Screens
             return (from e in Core.Players select e).All(e => (!e.Playing || e.KO));
         }
 
-        private int _confidence;
-        private Sprite _koSprite;
-        private Sprite _clearSprite;
         private bool _panic;
 
         private void SyncSong()
@@ -540,13 +546,7 @@ namespace WGiBeat.Screens
 
         private void DrawBackground(SpriteBatch spriteBatch)
         {
-            var background = new Sprite
-            {
-                Height = Core.Window.ClientBounds.Height,
-                SpriteTexture = TextureManager.Textures("MainGameScreenBackground"),
-                Width = Core.Window.ClientBounds.Width,
-            };
-            background.Draw(spriteBatch);
+            _background.Draw(spriteBatch);
         }
 
         private void DrawCountdowns(SpriteBatch spriteBatch)

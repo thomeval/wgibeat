@@ -31,6 +31,7 @@ namespace WGiBeat.Drawing
 
         public int Width;
 
+        public static Vector2 Multiplier = new Vector2(1, 1);
         /// <summary>
         /// Gets the number of vectors which make up the primtive line object.
         /// </summary>
@@ -67,7 +68,7 @@ namespace WGiBeat.Drawing
         /// <param name="vector">The vector to add.</param>
         public void AddVector(Vector2 vector)
         {
-            vectors.Add(vector);
+            vectors.Add(vector * Multiplier);
         }
 
         /// <summary>

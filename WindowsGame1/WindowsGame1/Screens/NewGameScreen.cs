@@ -69,9 +69,9 @@ namespace WGiBeat.Screens
         {
             _background = new Sprite
             {
-                Height = Core.Window.ClientBounds.Height,
+                Height = 600,
+                Width = 800,
                 SpriteTexture = TextureManager.Textures("AllBackground"),
-                Width = Core.Window.ClientBounds.Width,
             };
             _messageBackground = new Sprite
                                      {

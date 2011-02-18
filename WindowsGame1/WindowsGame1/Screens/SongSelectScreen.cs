@@ -28,7 +28,7 @@ namespace WGiBeat.Screens
         private readonly List<PlayerOptionsFrame> _playerOptions = new List<PlayerOptionsFrame>();
 
         private int _songListDrawOffset;
-        private const int LISTITEMS_DRAWN = 7;
+        private const int LISTITEMS_DRAWN = 13;
         private const double SONG_CHANGE_SPEED = 0.9;
 
         private readonly SineSwayParticleField _field = new SineSwayParticleField();
@@ -89,9 +89,9 @@ namespace WGiBeat.Screens
         {
             _background = new Sprite
             {
-                Height = Core.Window.ClientBounds.Height,
+                Height = 600,
+                Width = 800,
                 SpriteTexture = TextureManager.Textures("AllBackground"),
-                Width = Core.Window.ClientBounds.Width,
             };
 
             _headerSprite = new Sprite

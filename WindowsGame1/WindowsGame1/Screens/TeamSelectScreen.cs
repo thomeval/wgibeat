@@ -60,9 +60,9 @@ namespace WGiBeat.Screens
 
             _backgroundSprite = new Sprite 
             { 
-                SpriteTexture = TextureManager.Textures("AllBackground"), 
-                Height = Core.Window.ClientBounds.Height, 
-                Width = Core.Window.ClientBounds.Width, 
+                SpriteTexture = TextureManager.Textures("AllBackground"),
+                Height = 600,
+                Width = 800
             };
 
             _playerReadyMarkers = new SpriteMap { SpriteTexture = TextureManager.Textures("PlayerReady"), Columns = 1, Rows = 2 };

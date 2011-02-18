@@ -82,8 +82,8 @@ namespace WGiBeat.Screens
             };
             _background = new Sprite
                               {
-                                  Height = Core.Window.ClientBounds.Height,
-                                  Width = Core.Window.ClientBounds.Width,
+                                  Height = 600,
+                                  Width = 800,
                                   SpriteTexture = TextureManager.Textures("AllBackground")
                               };
 
@@ -113,7 +113,7 @@ namespace WGiBeat.Screens
                                         SpriteTexture = TextureManager.Textures("ScoreBaseCombined"),
                                         Position = Core.Metrics["EvaluationTeamScoreMeter",0]
                                     };
-            _identifiersSpriteMap = new SpriteMap()
+            _identifiersSpriteMap = new SpriteMap
                                         {
                                             SpriteTexture = TextureManager.Textures("PlayerIdentifiers"),
                                             Rows = 5,
@@ -337,17 +337,17 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black, FontAlign.CENTER);
                 int y = 0;
                 foreach (string line in _lines)
                 {
-                    spriteBatch.DrawString(TextureManager.Fonts("LargeFont"), line + ":",
-                                           Core.Metrics["EvaluationLabel" + line, x], Color.Black);
-                    spriteBatch.DrawString(TextureManager.Fonts("LargeFont"), "" + Core.Players[x].Judgements[y],
-                                           Core.Metrics["Evaluation" + line, x], Color.Black);
+                    TextureManager.DrawString(spriteBatch, line + ":", "LargeFont",
+                                           Core.Metrics["EvaluationLabel" + line, x], Color.Black, FontAlign.LEFT);
+                    TextureManager.DrawString(spriteBatch, "" + Core.Players[x].Judgements[y], "LargeFont",
+                                           Core.Metrics["Evaluation" + line, x], Color.Black, FontAlign.LEFT);
                     y++;
                 }
 
-                spriteBatch.DrawString(TextureManager.Fonts("LargeFont"), "Score:",
-                                       Core.Metrics["EvaluationLabelScore", x], Color.Black);
-                spriteBatch.DrawString(TextureManager.Fonts("LargeFont"), "" + Core.Players[x].Score,
-                                       Core.Metrics["EvaluationScore", x], Color.Black);
+                TextureManager.DrawString(spriteBatch, "Score:", "LargeFont",
+                                       Core.Metrics["EvaluationLabelScore", x], Color.Black, FontAlign.LEFT);
+                TextureManager.DrawString(spriteBatch, "" + Core.Players[x].Score, "LargeFont",
+                                       Core.Metrics["EvaluationScore", x], Color.Black, FontAlign.LEFT);
             }
         }
 

@@ -58,7 +58,7 @@ namespace WGiBeat.Screens
             _doneLoading = true;
         }
 
-        private const int MAX_VISIBLE_ENTRIES = 75;
+        private const int MAX_VISIBLE_ENTRIES = 100;
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             _maxY = 40;
@@ -67,7 +67,7 @@ namespace WGiBeat.Screens
             var entries = GetOrReuseLogMessages();
 
             var startEntry = Math.Max(0, entries.Length - MAX_VISIBLE_ENTRIES);
-            _minY = Math.Min((entries.Length - startEntry) * -12 + 555, 40);
+            _minY = Math.Min((entries.Length - startEntry) * -12 + 840, 40);
 
             if (_autoScroll)
             {

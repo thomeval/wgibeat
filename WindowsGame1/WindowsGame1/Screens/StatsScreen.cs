@@ -66,8 +66,8 @@ namespace WGiBeat.Screens
             _backgroundSprite = new Sprite
                                     {
                                         SpriteTexture = TextureManager.Textures("StatsBackground"),
-                                        Height = Core.Window.ClientBounds.Height,
-                                        Width = Core.Window.ClientBounds.Width
+                                        Height = 800,
+                                        Width = 600,
                                     };
             _headerSprite = new Sprite {SpriteTexture = TextureManager.Textures("StatsHeader")};
             _instructionBaseSprite = new Sprite {SpriteTexture = TextureManager.Textures("StatsInstructionBase"),
