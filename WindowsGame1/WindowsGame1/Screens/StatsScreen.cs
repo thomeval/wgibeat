@@ -19,14 +19,18 @@ namespace WGiBeat.Screens
         private Sprite _headerSprite;
         private Sprite _instructionBaseSprite;
         private Sprite _backgroundSprite;
+ 
+
         private PrimitiveLine _line;
         private readonly SineSwayParticleField _field = new SineSwayParticleField();
+        private ProfileLevelDisplay levelDisplay;
 
         private const int MAX_SCROLL = 5;
-        public StatsScreen(GameCore core) : base(core)
+        public StatsScreen(GameCore core)
+            : base(core)
         {
-            _activePlayers =  new []{-1,-1};
-            _scrollPosition = new[]{0,0};
+            _activePlayers = new[] { -1, -1 };
+            _scrollPosition = new[] { 0, 0 };
             _activeProfiles = new Profile[2];
             _profileMenus = new Menu[2];
             
@@ -56,10 +60,11 @@ namespace WGiBeat.Screens
 
                 foreach (Profile profile in Core.Profiles.GetAll())
                 {
-                    _profileMenus[x].AddItem(new MenuItem{ItemText = profile.Name, ItemValue = profile});
+                    _profileMenus[x].AddItem(new MenuItem { ItemText = profile.Name, ItemValue = profile });
                 }
-                _profileMenus[x].AddItem(new MenuItem{ItemText = "Main Menu", ItemValue = null});
+                _profileMenus[x].AddItem(new MenuItem { ItemText = "Main Menu", ItemValue = null });
             }
+            levelDisplay = new ProfileLevelDisplay{Width = 365};
         }
 
         private void InitSprites()
@@ -67,13 +72,16 @@ namespace WGiBeat.Screens
             _backgroundSprite = new Sprite
                                     {
                                         SpriteTexture = TextureManager.Textures("StatsBackground"),
-                                        Height = 800,
-                                        Width = 600,
+                                        Height = 600,
+                                        Width = 800,
                                     };
-            _headerSprite = new Sprite {SpriteTexture = TextureManager.Textures("StatsHeader")};
-            _instructionBaseSprite = new Sprite {SpriteTexture = TextureManager.Textures("StatsInstructionBase"),
-            Position = Core.Metrics["StatsInstructionBase",0]
+            _headerSprite = new Sprite { SpriteTexture = TextureManager.Textures("StatsHeader") };
+            _instructionBaseSprite = new Sprite
+            {
+                SpriteTexture = TextureManager.Textures("StatsInstructionBase"),
+                Position = Core.Metrics["StatsInstructionBase", 0]
             };
+
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -96,8 +104,8 @@ namespace WGiBeat.Screens
             _line.Width = 1;
             _line.Colour = Color.Black;
             _line.ClearVectors();
-            _line.AddVector(new Vector2(400,0));
-            _line.AddVector(new Vector2(400,600));
+            _line.AddVector(new Vector2(400, 0));
+            _line.AddVector(new Vector2(400, 600));
             _line.Render(spriteBatch);
         }
 
@@ -107,21 +115,21 @@ namespace WGiBeat.Screens
             {
                 switch (GetState(x))
                 {
-                    
+
                     case StatsScreenState.NOT_JOINED:
                         TextureManager.DrawString(spriteBatch, "Press start to join...", "LargeFont", Core.Metrics["StatsJoinMessage", x], Color.Black, FontAlign.CENTER);
                         TextureManager.DrawString(spriteBatch, "START: Join", "DefaultFont", Core.Metrics["StatsInstructionText", x], Color.White, FontAlign.CENTER);
 
                         break;
-                        case StatsScreenState.SELECT_PROFILE:
+                    case StatsScreenState.SELECT_PROFILE:
                         TextureManager.DrawString(spriteBatch, "START: Select profile", "DefaultFont", Core.Metrics["StatsInstructionText", x], Color.White, FontAlign.CENTER);
                         _profileMenus[x].Draw(spriteBatch);
                         break;
                     case StatsScreenState.VIEWING_STATS:
-                        DrawStats(spriteBatch,x, (Profile) _profileMenus[x].SelectedItem().ItemValue);
+                        DrawStats(spriteBatch, x, (Profile)_profileMenus[x].SelectedItem().ItemValue);
                         TextureManager.DrawString(spriteBatch, "START: Change profile", "DefaultFont", Core.Metrics["StatsInstructionText", x], Color.White, FontAlign.CENTER);
                         break;
-  
+
                 }
             }
         }
@@ -129,16 +137,19 @@ namespace WGiBeat.Screens
         private void DrawStats(SpriteBatch spriteBatch, int side, Profile profile)
         {
 
-            Vector2[] positions = { Core.Metrics["StatsColumns", (3 * side)].Clone(), Core.Metrics["StatsColumns", (3 * side)+1].Clone(), Core.Metrics["StatsColumns", (3 * side)+2].Clone() };
+            Vector2[] positions = { Core.Metrics["StatsColumns", (3 * side)].Clone(), Core.Metrics["StatsColumns", (3 * side) + 1].Clone(), Core.Metrics["StatsColumns", (3 * side) + 2].Clone() };
             TextureManager.DrawString(spriteBatch, profile.Name, "TwoTech36", positions[0], Color.Black, FontAlign.LEFT);
-            positions[0].Y += 40;
-            positions[1].Y += 40;
-           TextureManager.DrawString(spriteBatch,"Total play time:","LargeFont",positions[0],Color.Black, FontAlign.LEFT);
-            var playTime = new TimeSpan(0, 0, 0, 0, (int) profile.TotalPlayTime);
-           // positions[1].X += 50;
+            positions[0].Y += 30;
+            positions[1].Y += 30;
+            DrawLevelBars(spriteBatch, positions[0], profile);
+            positions[0].Y += 50;
+            positions[1].Y += 50;
+            TextureManager.DrawString(spriteBatch, "Total play time:", "LargeFont", positions[0], Color.Black, FontAlign.LEFT);
+            var playTime = new TimeSpan(0, 0, 0, 0, (int)profile.TotalPlayTime);
+            // positions[1].X += 50;
 
-           TextureManager.DrawString(spriteBatch, String.Format("{0}h:{1:00}m:{2:00}s ", playTime.Hours, playTime.Minutes,playTime.Seconds), "LargeFont", positions[1], Color.Black, FontAlign.LEFT);
-           // positions[1].X -= 50;
+            TextureManager.DrawString(spriteBatch, String.Format("{0}h:{1:00}m:{2:00}s ", playTime.Hours, playTime.Minutes, playTime.Seconds), "LargeFont", positions[1], Color.Black, FontAlign.LEFT);
+            // positions[1].X -= 50;
             positions[0].Y += 25;
             positions[1].Y += 25;
 
@@ -151,28 +162,28 @@ namespace WGiBeat.Screens
 
             positions[0].Y += 50;
             positions[1].Y += 50;
-            var totalBeatlines = profile.JudgementCounts.Sum() - profile.JudgementCounts[(int) BeatlineNoteJudgement.COUNT];
-            TextureManager.DrawString(spriteBatch, "Total beatlines:","LargeFont", positions[0],Color.Black,FontAlign.LEFT);
+            var totalBeatlines = profile.JudgementCounts.Sum() - profile.JudgementCounts[(int)BeatlineNoteJudgement.COUNT];
+            TextureManager.DrawString(spriteBatch, "Total beatlines:", "LargeFont", positions[0], Color.Black, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, "" + totalBeatlines, "LargeFont", positions[1], Color.Black, FontAlign.LEFT);
             positions[0].Y += 25;
-            for (int x = 0; x < (int) BeatlineNoteJudgement.COUNT; x++)
+            for (int x = 0; x < (int)BeatlineNoteJudgement.COUNT; x++)
             {
 
                 positions[1].Y = positions[0].Y;
                 positions[2].Y = positions[0].Y;
-                TextureManager.DrawString(spriteBatch, ((BeatlineNoteJudgement) x).ToString(), "DefaultFont",
+                TextureManager.DrawString(spriteBatch, ((BeatlineNoteJudgement)x).ToString(), "DefaultFont",
                                           positions[0], Color.Black, FontAlign.LEFT);
                 TextureManager.DrawString(spriteBatch, profile.JudgementCounts[x] + "", "DefaultFont",
                                           positions[1], Color.Black, FontAlign.LEFT);
                 TextureManager.DrawString(spriteBatch, String.Format("{0:P0}", 1.0 * profile.JudgementCounts[x] / totalBeatlines), "DefaultFont",
                                           positions[2], Color.Black, FontAlign.LEFT);
                 positions[0].Y += 20;
-                
+
             }
             positions[0].Y += 25;
             positions[1].Y = positions[0].Y;
 
-            var totalArrows = profile.TotalHits + profile.JudgementCounts[(int) BeatlineNoteJudgement.COUNT];
+            var totalArrows = profile.TotalHits + profile.JudgementCounts[(int)BeatlineNoteJudgement.COUNT];
             string percentage;
             TextureManager.DrawString(spriteBatch, "Total arrows:", "LargeFont", positions[0], Color.Black, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, "" + totalArrows, "LargeFont", positions[1], Color.Black, FontAlign.LEFT);
@@ -182,23 +193,30 @@ namespace WGiBeat.Screens
 
             TextureManager.DrawString(spriteBatch, "Hits", "DefaultFont", positions[0], Color.Black, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, "" + profile.TotalHits, "DefaultFont", positions[1], Color.Black, FontAlign.LEFT);
-            percentage = String.Format("{0:P0}", 1.0*profile.TotalHits/totalArrows);
+            percentage = String.Format("{0:P0}", 1.0 * profile.TotalHits / totalArrows);
             TextureManager.DrawString(spriteBatch, percentage, "DefaultFont", positions[2], Color.Black, FontAlign.LEFT);
             positions[0].Y += 20;
             positions[1].Y = positions[0].Y;
             positions[2].Y = positions[0].Y;
 
             TextureManager.DrawString(spriteBatch, "Faults", "DefaultFont", positions[0], Color.Black, FontAlign.LEFT);
-            TextureManager.DrawString(spriteBatch, "" + profile.JudgementCounts[(int)BeatlineNoteJudgement.COUNT], "DefaultFont", 
+            TextureManager.DrawString(spriteBatch, "" + profile.JudgementCounts[(int)BeatlineNoteJudgement.COUNT], "DefaultFont",
                 positions[1], Color.Black, FontAlign.LEFT);
             percentage = String.Format("{0:P0}", 1.0 * profile.JudgementCounts[(int)BeatlineNoteJudgement.COUNT] / totalArrows);
             TextureManager.DrawString(spriteBatch, percentage, "DefaultFont", positions[2], Color.Black, FontAlign.LEFT);
             positions[0].Y += 20;
             positions[1].Y = positions[0].Y;
             positions[2].Y = positions[0].Y;
-            
+
         }
 
+        private void DrawLevelBars(SpriteBatch spriteBatch, Vector2 position, Profile profile)
+        {
+            var tempPlayer = new Player {Profile = profile};
+            levelDisplay.Player = tempPlayer;
+            levelDisplay.Position = position;
+            levelDisplay.Draw(spriteBatch);
+        }
 
 
         public override void PerformAction(InputAction inputAction)
@@ -233,11 +251,11 @@ namespace WGiBeat.Screens
             {
                 case StatsScreenState.SELECT_PROFILE:
                     _profileMenus[idx].MoveSelected(amount);
-                    break;        
+                    break;
                 case StatsScreenState.VIEWING_STATS:
-                        _scrollPosition[idx] += amount;
-                        _scrollPosition[idx] = Math.Min(MAX_SCROLL, _scrollPosition[idx]);
-                        _scrollPosition[idx] = Math.Max(0, _scrollPosition[idx]);
+                    _scrollPosition[idx] += amount;
+                    _scrollPosition[idx] = Math.Min(MAX_SCROLL, _scrollPosition[idx]);
+                    _scrollPosition[idx] = Math.Max(0, _scrollPosition[idx]);
                     break;
             }
         }
@@ -256,13 +274,13 @@ namespace WGiBeat.Screens
                 case StatsScreenState.SELECT_PROFILE:
                     if (_profileMenus[side].SelectedItem().ItemValue != null)
                     {
-                        _activeProfiles[side] = (Profile)_profileMenus[side].SelectedItem().ItemValue; 
+                        _activeProfiles[side] = (Profile)_profileMenus[side].SelectedItem().ItemValue;
                     }
                     else
                     {
                         Core.ScreenTransition("MainMenu");
                     }
-                    
+
                     break;
                 case StatsScreenState.VIEWING_STATS:
                     _activeProfiles[side] = null;
@@ -302,7 +320,7 @@ namespace WGiBeat.Screens
         }
     }
 
-    
+
     public enum StatsScreenState
     {
         NOT_JOINED,
