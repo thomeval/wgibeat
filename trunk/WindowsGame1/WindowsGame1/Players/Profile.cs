@@ -28,6 +28,12 @@ namespace WGiBeat.Players
         public double AverageHitOffset { get; set; }
         public long HitOffsetCount { get; set; }
 
+        public static readonly long[] Levels = {
+                                                   0, 50, 110, 180, 260, 360, 480, 640, 820, 1000, 1200, 1450, 1700, 2000, 2300, 2600, 3000,
+                                                   3400, 3900, 4400, 5000,5750,6500,7500,8500,9600,10700,11800,13000,14500,16000,17750,20000,
+                                                   22500,25000,28000,31000,34000,36500,40000
+                                               };
+
         public Profile()
         {
             JudgementCounts = new long[(int) BeatlineNoteJudgement.COUNT + 2];
@@ -74,6 +80,18 @@ namespace WGiBeat.Players
             si.AddValue("AverageHitOffset",AverageHitOffset);
             si.AddValue("HitOffsetCount",HitOffsetCount);
             si.AddValue("DisableKO",DisableKO);
+        }
+
+        public int GetLevel()
+        {
+            for (int x = 0; x < Levels.Length; x++)
+            {
+                if (EXP < Levels[x])
+                {
+                    return x;
+                }
+            }
+            return Levels.Length;
         }
     }
 }

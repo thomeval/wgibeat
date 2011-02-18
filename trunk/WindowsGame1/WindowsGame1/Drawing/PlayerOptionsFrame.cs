@@ -17,6 +17,7 @@ namespace WGiBeat.Drawing
             set
             {
                 _player = value;
+                _levelDisplay.Player = value;
             }
         }
 
@@ -25,8 +26,8 @@ namespace WGiBeat.Drawing
         private SpriteMap _difficultyIcons;
         private SpriteMap _indicatorArrows;
         private Sprite _nameBackground;
-        private Sprite _levelBaseSprite;
-        private Sprite _levelFrontSprite;
+
+        private Vector2 _levelDisplayPosition;
 
         public bool OptionChangeActive;
         private byte _optionControlOpacity;
@@ -37,12 +38,15 @@ namespace WGiBeat.Drawing
         private Vector2 _levelTextPosition;
         private Vector2 _expTextPosition;
 
+        private ProfileLevelDisplay _levelDisplay;
+
         public PlayerOptionsFrame()
         {
             InitSprites();
             this.Width = 450;
             this.Height = 38;
             _optionControlOpacity = 0;
+            _levelDisplay = new ProfileLevelDisplay();
         }
 
         private void InitSprites()
@@ -71,14 +75,7 @@ namespace WGiBeat.Drawing
                                    Rows = 1,
                                    SpriteTexture = TextureManager.Textures("IndicatorArrows")
                                };
-            _levelBaseSprite = new Sprite
-                                   {
-                                       SpriteTexture = TextureManager.Textures("PlayerLevelBarBase"),
-        
-                                   };
-            _levelFrontSprite = new Sprite {SpriteTexture = TextureManager.Textures("PlayerLevelBarFront"),
-                                            
-            };
+
             _nameBackground = new Sprite {SpriteTexture = TextureManager.BlankTexture()};
 
         }
@@ -96,32 +93,16 @@ namespace WGiBeat.Drawing
             DrawLevelBar(spriteBatch);
         }
 
-        private const int LEVELBAR_WIDTH = 318;
-   
         private void DrawLevelBar(SpriteBatch spriteBatch)
         {
-            if (Player.Profile == null)
-            {
-                return;
-            }
-            _levelBaseSprite.Position = new Vector2(this.X + 100, this.Y + 18);
-            _levelFrontSprite.Position = new Vector2(this.X + 100, this.Y + 30);
-            _levelBaseSprite.ColorShading.A = (byte)(255 - _optionControlOpacity);
-            _levelFrontSprite.ColorShading.A = (byte)(255 - _optionControlOpacity);
-            var progress = Player.GetLevelProgressSafe();
-            progress = Math.Min(1, progress);
-            _levelBaseSprite.Draw(spriteBatch);
-            _levelFrontSprite.Width = (int) (LEVELBAR_WIDTH * progress);
-            
-            _levelFrontSprite.DrawTiled(spriteBatch,0,0, (int) (LEVELBAR_WIDTH * progress), 5 );
-
-            //Draw level text.
-            var playerlevel = String.Format("{0:00}", Player.GetLevel());
-            var scale = TextureManager.ScaleTextToFit(playerlevel, "TwoTech36", 34, 40);
-            TextureManager.DrawString(spriteBatch,playerlevel, "TwoTech36", _levelTextPosition, scale, _textColor,
-   FontAlign.RIGHT);
-
+        
+            _levelDisplay.Position = _levelDisplayPosition;
+            _levelDisplay.Opacity = (byte) (255 - _optionControlOpacity);
+            _levelDisplay.Draw(spriteBatch);
         }
+
+   
+ 
 
         private readonly Color _blueBackground = new Color(128,128,255,128);
         private readonly Color _redBackground = new Color(255,128,128,128);
@@ -210,8 +191,9 @@ namespace WGiBeat.Drawing
             _difficultyTextPosition.X = this.X + this.X + 70 + 35;
             _difficultyTextPosition.Y = this.Y - 5;
 
-            _levelTextPosition.X = this.X + this.Width - 35;
-            _levelTextPosition.Y = this.Y;
+
+            _levelDisplayPosition.X = this.X + 100;
+            _levelDisplayPosition.Y = this.Y + 18;
             _expTextPosition.X = this.X + 260;
             _expTextPosition.Y = this.Y + 13;
         }

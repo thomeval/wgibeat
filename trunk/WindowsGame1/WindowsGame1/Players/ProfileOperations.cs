@@ -4,11 +4,7 @@ namespace WGiBeat.Players
 {
     public static class ProfileOperations
     {
-        public static readonly long[] Levels = {
-                                                   0, 50, 110, 180, 260, 360, 480, 640, 820, 1000, 1200, 1450, 1700, 2000, 2300, 2600, 3000,
-                                                   3400, 3900, 4400, 5000,5750,6500,7500,8500,9600,10700,11800,13000,14500,16000,17750,20000,
-                                                   22500,25000,28000,31000,34000,36500,40000
-                                               };
+
 
         public static int GetLevel(this Player player)
         {
@@ -16,14 +12,7 @@ namespace WGiBeat.Players
             {
                 return 1;
             }
-            for (int x = 0; x < Levels.Length; x++)
-            {
-                if (player.Profile.EXP < Levels[x])
-                {
-                    return x;
-                }
-            }
-            return Levels.Length;
+            return player.Profile.GetLevel();
         }
 
         public static long GetEXP(this Player player)
@@ -65,11 +54,11 @@ namespace WGiBeat.Players
             {
                 return 1;
             }
-            if (player.Profile.EXP > player.MaxLevelEXP())
+            if (player.Profile.EXP > MaxLevelEXP())
             {
-                return player.MaxLevelEXP();
+                return MaxLevelEXP();
             }
-            return Levels[player.GetLevel()];
+            return Profile.Levels[player.GetLevel()];
         }
 
         public static double GetLevelProgressSafe(this Player player)
@@ -79,7 +68,7 @@ namespace WGiBeat.Players
                 return 0.0;
             }
 
-            var currentLevelExp = Levels[player.GetLevel() - 1];
+            var currentLevelExp = Profile.Levels[player.GetLevel() - 1];
 
             return 1.0 * (player.Profile.EXP - currentLevelExp) /
                    (player.GetNextEXPSafe() - currentLevelExp);
@@ -116,9 +105,9 @@ namespace WGiBeat.Players
             return maxLife;
         }
 
-        public static long MaxLevelEXP(this Player player)
+        public static long MaxLevelEXP()
         {
-            return (Levels.Max());
+            return (Profile.Levels.Max());
         }
     }
 }
