@@ -73,7 +73,7 @@ namespace WGiBeat.Managers
             var playerOptions = (from e in _optionsFrames where e.PlayerIndex == playerIdx select e).SingleOrDefault();
 
             //Ignore inputs from players not playing EXCEPT for players joining in.
-            if (playerOptions == null)
+            if ((inputAction.Player == 0) || (!Players[inputAction.Player - 1].IsHumanPlayer))
             {
                 if (inputAction.Action == "START")
                 {
@@ -112,10 +112,19 @@ namespace WGiBeat.Managers
 
         private void JoinPlayer(int player)
         {
+            //Prevent a fourth player from joining in VS CPU mode.
+            var activePlayers = (from e in Players where e.Playing select e).Count();
+            if (activePlayers == 4)
+            {
+                return;
+            }
+
+            //Shift the CPU player to another slot
             if (Players[player-1].IsCPUPlayer)
             {
                 ShiftCPUPlayer(player);
             }
+
             Players[player - 1].ResetStats();
             Players[player - 1].Profile = null;
             Players[player - 1].Playing = true;
@@ -123,6 +132,10 @@ namespace WGiBeat.Managers
             if (CurrentGameType == GameType.TEAM)
             {
                 AssignTeam(player);
+            }
+            if (CurrentGameType == GameType.VS_CPU)
+            {
+                Players[player - 1].Team = 1;
             }
             CreatePlayerOptionsFrames();
         }
@@ -144,7 +157,17 @@ namespace WGiBeat.Managers
 
         private void ShiftCPUPlayer(int player)
         {
-            throw new NotImplementedException();
+            Players[player-1].CPU = false;
+            for (int x = 0; x < 4; x++)
+            {
+                if (!Players[x].Playing)
+                {
+                    Players[x].Playing = true;
+                    Players[x].CPU = true;
+                    Players[x].Team = 2;
+                    return;
+                }            
+            }
         }
 
         public void SetChangeMode(int player, bool enabled)
