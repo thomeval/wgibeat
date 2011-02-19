@@ -18,7 +18,8 @@ namespace WGiBeat.Screens
         private SpriteMap _playerReadyMarkers;
 
         private bool[] _ready = new bool[4];
-        private readonly List<PlayerOptionsFrame> _playerOptions = new List<PlayerOptionsFrame>();
+        private PlayerOptionsSet _playerOptionsSet;
+
         private string _restrictionMessage = "";
         private bool _showWarningIcon;
         private Sprite _messageBorder;
@@ -36,18 +37,13 @@ namespace WGiBeat.Screens
                 player.Team = 0;
             }
 
-            var frameCount = 0;
-            _playerOptions.Clear();
-            for (int x = 3; x >= 0; x--)
+            for (int x = 0; x < 4; x++ )
             {
                 _ready[x] = false;
-                if (Core.Players[x].Playing)
-                {
-                    _playerOptions.Add(new PlayerOptionsFrame { Player = Core.Players[x], PlayerIndex = x });
-                    _playerOptions[frameCount].Position = (Core.Metrics["PlayerOptionsFrame", frameCount]);
-                    frameCount++;
-                }
             }
+                _playerOptionsSet = new PlayerOptionsSet { Players = Core.Players, Positions = Core.Metrics["PlayerOptionsFrame"], CurrentGameType = (GameType)Core.Cookies["CurrentGameType"] };
+            _playerOptionsSet.CreatePlayerOptionsFrames();
+
             SetRestrictionMessage("Press left or right to \nchoose a team. Press start \nto confirm selection.", false);
 
         }
@@ -95,10 +91,7 @@ namespace WGiBeat.Screens
 
         private void DrawPlayerOptions(SpriteBatch spriteBatch)
         {
-            foreach (PlayerOptionsFrame pof in _playerOptions)
-            {
-                pof.Draw(spriteBatch);
-            }
+            _playerOptionsSet.Draw(spriteBatch);
         }
 
         private void DrawMarkers(SpriteBatch spriteBatch)
@@ -153,53 +146,32 @@ namespace WGiBeat.Screens
         public override void PerformAction(InputAction inputAction)
         {
 
-            var playerIdx = inputAction.Player - 1;
-            var optionsFrame = (from e in _playerOptions where e.PlayerIndex == playerIdx select e).SingleOrDefault();
-
-            //Ignore inputs from players not playing EXCEPT for system keys.
-            if ((inputAction.Player > 0) && (optionsFrame == null))
+            var pass = _playerOptionsSet.PerformAction(inputAction);
+            if (pass)
             {
                 return;
             }
+
+            //Ignore inputs from players not playing EXCEPT for system keys.
+            if ((inputAction.Player > 0) && (!Core.Players[inputAction.Player - 1].IsHumanPlayer))
+            {
+                return;
+            }
+
+            var playerIdx = inputAction.Player - 1;
             switch (inputAction.Action)
             {
                 case "LEFT":
-                    if (!optionsFrame.OptionChangeActive) 
-                    {
                         if (!_ready[playerIdx])
                         {
                             Core.Players[playerIdx].Team = Core.Players[playerIdx].Team == 2 ? 0 : 1;
                         }
-                    }
-                    else
-                    {
-                        optionsFrame.AdjustDifficulty(-1);   
-                    }
                     break;
                 case "RIGHT":
-                    if (!optionsFrame.OptionChangeActive)
-                    {
                         if (!_ready[playerIdx])
                         {
                             Core.Players[playerIdx].Team = Core.Players[playerIdx].Team == 1 ? 0 : 2;
                         }
-                    }
-                    else
-                    {
-                        optionsFrame.AdjustDifficulty(1);   
-                    }
-                    break;
-                case "UP":
-                    if (optionsFrame.OptionChangeActive)
-                    {
-                        optionsFrame.AdjustSpeed(1);
-                    }
-                    break;
-                case "DOWN":
-                    if (optionsFrame.OptionChangeActive)
-                    {
-                        optionsFrame.AdjustSpeed(-1);
-                    }
                     break;
                 case "START":
                     if (Core.Players[playerIdx].Team != 0)
@@ -209,7 +181,7 @@ namespace WGiBeat.Screens
                     }
                     break;
                 case "SELECT":
-                    optionsFrame.OptionChangeActive = true;
+                    _playerOptionsSet.SetChangeMode(inputAction.Player, true);
                     break;
                 case "BACK":
                     for (int x = 0; x < 4; x++ )
@@ -225,14 +197,10 @@ namespace WGiBeat.Screens
         public override void PerformActionReleased(InputAction inputAction)
         {
 
-            var playerOptions = (from e in _playerOptions where e.PlayerIndex == inputAction.Player -1 select e).SingleOrDefault();
             switch (inputAction.Action)
             {
                 case "SELECT":
-                    if (playerOptions != null)
-                    {
-                        playerOptions.OptionChangeActive = false;
-                    }
+                    _playerOptionsSet.SetChangeMode(inputAction.Player, false);
                     break;
             }
         }

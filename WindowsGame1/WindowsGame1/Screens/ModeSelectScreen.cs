@@ -23,7 +23,7 @@ namespace WGiBeat.Screens
 
         private readonly SineSwayParticleField _field = new SineSwayParticleField();
         private Sprite _restrictionSprite;
-        private readonly List<PlayerOptionsFrame> _playerOptions = new List<PlayerOptionsFrame>();
+        private PlayerOptionsSet _playerOptionsSet;
         private Sprite _messageBorderSprite;
         private int _listDrawOffset;
 
@@ -41,27 +41,13 @@ namespace WGiBeat.Screens
         {
             InitSprites();
             _selectingCPUSkill = false;
-
+                
             RemoveCPUPlayers();
-            CreatePlayerOptionsFrames();
+            _playerOptionsSet = new PlayerOptionsSet { Players = Core.Players, Positions = Core.Metrics["PlayerOptionsFrame"] };
+            _playerOptionsSet.CreatePlayerOptionsFrames();
             base.Initialize();
         }
 
-        private void CreatePlayerOptionsFrames()
-        {
-            var frameCount = 0;
-            _playerOptions.Clear();
-
-            for (int x = 3; x >= 0; x--)
-            {
-                if (Core.Players[x].Playing)
-                {
-                    _playerOptions.Add(new PlayerOptionsFrame { Player = Core.Players[x], PlayerIndex = x });
-                    _playerOptions[frameCount].Position = (Core.Metrics["PlayerOptionsFrame", frameCount]);
-                    frameCount++;
-                }
-            }
-        }
 
         private void InitSprites()
         {
@@ -230,10 +216,7 @@ namespace WGiBeat.Screens
 
         private void DrawPlayerOptions(SpriteBatch spriteBatch)
         {
-            foreach (PlayerOptionsFrame pof in _playerOptions)
-            {
-                pof.Draw(spriteBatch);
-            }
+            _playerOptionsSet.Draw(spriteBatch);
         }
 
         #endregion
@@ -243,26 +226,21 @@ namespace WGiBeat.Screens
         public override void PerformAction(InputAction inputAction)
         {
 
-            var playerIdx = inputAction.Player - 1;
-            var playerOptions = (from e in _playerOptions where e.PlayerIndex == playerIdx select e).SingleOrDefault();
+            var pass = _playerOptionsSet.PerformAction(inputAction);
+            if (pass)
+            {
+                return;
+            }
 
             //Ignore inputs from players not playing EXCEPT for system keys.
-            if ((inputAction.Player > 0) && (playerOptions == null))
+            if ((inputAction.Player > 0) && (!Core.Players[inputAction.Player -1].IsHumanPlayer))
             {
-                if (inputAction.Action == "START")
-                {
-                    JoinPlayer(inputAction.Player);
-                }
                 return;
             }
             switch (inputAction.Action)
             {
                 case "LEFT":
-                    if (playerOptions.OptionChangeActive)
-                    {
-                        playerOptions.AdjustDifficulty(-1);
-                    }
-                    else if (_selectingCPUSkill)
+                    if (_selectingCPUSkill)
                     {
                         ChangeSelectedCPUDifficulty(-1);
                     }
@@ -273,11 +251,7 @@ namespace WGiBeat.Screens
 
                     break;
                 case "RIGHT":
-                    if (playerOptions.OptionChangeActive)
-                    {
-                        playerOptions.AdjustDifficulty(1);
-                    }
-                    else if (_selectingCPUSkill)
+                    if (_selectingCPUSkill)
                     {
                         ChangeSelectedCPUDifficulty(1);
                     }
@@ -286,52 +260,25 @@ namespace WGiBeat.Screens
                         ChangeGameType(1);
                     }
                     break;
-                case "UP":
-                    if (playerOptions.OptionChangeActive)
-                    {
-                        playerOptions.AdjustSpeed(1);
-                    }
-                    break;
-                case "DOWN":
-                    if (playerOptions.OptionChangeActive)
-                    {
-                        playerOptions.AdjustSpeed(-1);
-                    }
-                    break;
                 case "BACK":
                     Core.ScreenTransition("NewGame");
                     break;
-
                 case "START":
                     DoAction();
                     break;
                 case "SELECT":
-                    playerOptions.OptionChangeActive = true;
+                    _playerOptionsSet.SetChangeMode(inputAction.Player,true);
                     break;
 
             }
         }
 
-        private void JoinPlayer(int player)
-        {
-            Core.Players[player - 1].ResetStats();
-            Core.Players[player - 1].Profile = null;
-            Core.Players[player - 1].Playing = true;
-            CreatePlayerOptionsFrames();
-        }
-
         public override void PerformActionReleased(InputAction inputAction)
         {
-
-
-            var playerOptions = (from e in _playerOptions where e.PlayerIndex == inputAction.Player - 1 select e).SingleOrDefault();
             switch (inputAction.Action)
             {
                 case "SELECT":
-                    if (playerOptions != null)
-                    {
-                        playerOptions.OptionChangeActive = false;
-                    }
+                    _playerOptionsSet.SetChangeMode(inputAction.Player, false);
                     break;
             }
         }
