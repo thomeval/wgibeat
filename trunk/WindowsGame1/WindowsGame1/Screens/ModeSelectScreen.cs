@@ -41,9 +41,17 @@ namespace WGiBeat.Screens
         {
             InitSprites();
             _selectingCPUSkill = false;
+
+            RemoveCPUPlayers();
+            CreatePlayerOptionsFrames();
+            base.Initialize();
+        }
+
+        private void CreatePlayerOptionsFrames()
+        {
             var frameCount = 0;
             _playerOptions.Clear();
-            RemoveCPUPlayers();
+
             for (int x = 3; x >= 0; x--)
             {
                 if (Core.Players[x].Playing)
@@ -53,8 +61,6 @@ namespace WGiBeat.Screens
                     frameCount++;
                 }
             }
-
-            base.Initialize();
         }
 
         private void InitSprites()
@@ -243,6 +249,10 @@ namespace WGiBeat.Screens
             //Ignore inputs from players not playing EXCEPT for system keys.
             if ((inputAction.Player > 0) && (playerOptions == null))
             {
+                if (inputAction.Action == "START")
+                {
+                    JoinPlayer(inputAction.Player);
+                }
                 return;
             }
             switch (inputAction.Action)
@@ -300,6 +310,14 @@ namespace WGiBeat.Screens
                     break;
 
             }
+        }
+
+        private void JoinPlayer(int player)
+        {
+            Core.Players[player - 1].ResetStats();
+            Core.Players[player - 1].Profile = null;
+            Core.Players[player - 1].Playing = true;
+            CreatePlayerOptionsFrames();
         }
 
         public override void PerformActionReleased(InputAction inputAction)
