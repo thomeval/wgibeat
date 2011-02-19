@@ -144,7 +144,7 @@ namespace WGiBeat.Screens
 
         private void MaintainCPUArrows()
         {
-            for (int x = 0; x < 3; x++)
+            for (int x = 0; x < 4; x++)
             {
                 if (!Core.Players[x].IsCPUPlayer)
                 {
