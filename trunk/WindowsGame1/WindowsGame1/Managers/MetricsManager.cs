@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using Microsoft.Xna.Framework;
-using WGiBeat.Managers;
 
-namespace WGiBeat.Drawing
+namespace WGiBeat.Managers
 {
     public class MetricsManager : Manager
     {
@@ -98,13 +97,14 @@ namespace WGiBeat.Drawing
             }
 
         }
-        private Vector2[] this[string id]
+
+        public Vector2[] this[string id]
         {
             get
             {
                 return _metrics[id];
             }
-            set
+            private set
             {
                 _metrics[id] = value;
             }

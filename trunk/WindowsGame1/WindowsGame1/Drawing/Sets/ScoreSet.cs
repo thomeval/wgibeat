@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.Managers;
 using WGiBeat.Players;
 
 namespace WGiBeat.Drawing.Sets

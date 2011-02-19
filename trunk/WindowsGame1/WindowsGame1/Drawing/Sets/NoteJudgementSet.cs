@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.Managers;
 using WGiBeat.Notes;
 using WGiBeat.Players;
 

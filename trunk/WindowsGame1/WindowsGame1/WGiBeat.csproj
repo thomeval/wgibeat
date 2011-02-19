@@ -125,7 +125,7 @@
     <Compile Include="Drawing\Menu.cs" />
     <Compile Include="Drawing\MenuItem.cs" />
     <Compile Include="Drawing\PathFollowerParticle.cs" />
-    <Compile Include="Drawing\MetricsManager.cs" />
+    <Compile Include="Managers\MetricsManager.cs" />
     <Compile Include="Drawing\OnScreenKeyboard.cs" />
     <Compile Include="Drawing\PlayerOptionsFrame.cs" />
     <Compile Include="Drawing\Sets\BeatlineSet.cs" />
@@ -141,6 +141,7 @@
     <Compile Include="Managers\LogManager.cs" />
     <Compile Include="Managers\Manager.cs" />
     <Compile Include="Managers\NetManager.cs" />
+    <Compile Include="Drawing\Sets\PlayerOptionsSet.cs" />
     <Compile Include="Managers\ProfileManager.cs" />
     <Compile Include="Managers\TextManager.cs" />
     <Compile Include="Managers\UpdateManager.cs" />
@@ -192,6 +193,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\Common\PlayerLevelBarFront.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Default\Common\PlayerOptionsFrameAttract.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\WGiEdit\EditorBackground.png">

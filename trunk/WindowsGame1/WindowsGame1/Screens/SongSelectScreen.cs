@@ -26,7 +26,7 @@ namespace WGiBeat.Screens
         private SongSortDisplay _songSortDisplay;
         
         private HighScoreFrame _highScoreFrame;
-        private readonly List<PlayerOptionsFrame> _playerOptions = new List<PlayerOptionsFrame>();
+        private PlayerOptionsSet _playerOptionsSet;
 
         private int _songListDrawOffset;
         private const int LISTITEMS_DRAWN = 13;
@@ -57,20 +57,12 @@ namespace WGiBeat.Screens
                                       EnableFadeout = false,
                                       Position = (Core.Metrics["SongHighScoreFrame", 0])
                                   };
+
             _highScoreFrame.InitSprites();
             _bpmMeter = new BpmMeter {Position = (Core.Metrics["BPMMeter", 0])};
-            _playerOptions.Clear();
 
-            var frameCount = 0;
-            for (int x = 3; x >= 0; x-- )
-            {
-                if (Core.Players[x].Playing)
-                {
-                    _playerOptions.Add(new PlayerOptionsFrame{Player = Core.Players[x], PlayerIndex = x});
-                    _playerOptions[frameCount].Position = (Core.Metrics["PlayerOptionsFrame", frameCount]);
-                    frameCount++;
-                }
-            }
+            _playerOptionsSet = new PlayerOptionsSet { Players = Core.Players, Positions = Core.Metrics["PlayerOptionsFrame"], CurrentGameType = (GameType)Core.Cookies["CurrentGameType"] };
+            _playerOptionsSet.CreatePlayerOptionsFrames();
 
                 CreateSongList();
 
@@ -280,10 +272,7 @@ namespace WGiBeat.Screens
 
         private void DrawPlayerOptions(SpriteBatch spriteBatch)
         {
-            foreach (PlayerOptionsFrame pof in _playerOptions)
-            {
-                pof.Draw(spriteBatch);
-            }
+            _playerOptionsSet.Draw(spriteBatch);
         }
 
         private void DrawBackground(SpriteBatch spriteBatch)
@@ -354,43 +343,32 @@ namespace WGiBeat.Screens
 
         public override void PerformAction(InputAction inputAction)
         {
-
-            if ((inputAction.Player != 0) && (!Core.Players[inputAction.Player - 1].IsHumanPlayer))
+            var pass = _playerOptionsSet.PerformAction(inputAction);
+            if (pass)
             {
                 return;
             }
-            var playerOptions = (from e in _playerOptions where e.PlayerIndex == inputAction.Player - 1 select e).SingleOrDefault();
+
+            //Ignore inputs from players not playing EXCEPT for system keys.
+            if ((inputAction.Player > 0) && (!Core.Players[inputAction.Player - 1].IsHumanPlayer))
+            {
+                return;
+            }
+
             switch (inputAction.Action)
             {
                 case "UP":
-                    if ((playerOptions != null) && (playerOptions.OptionChangeActive))
-                    {
-                        playerOptions.AdjustSpeed(1);
-                    }
-                    else
-                    {
+
                         MoveSelectionUp();
-                    }
                     break;
                 case "DOWN":
-
-                    if ((playerOptions != null) &&(playerOptions.OptionChangeActive))
-                    {
-                        playerOptions.AdjustSpeed(-1);
-                    }
-                    else
-                    {
                         MoveSelectionDown();
-                    }
+      
                     break;
 
                 case "LEFT":
-                    if (playerOptions.OptionChangeActive)
-                    {
-                        playerOptions.AdjustDifficulty(-1);
                         CheckCPUDifficulty();
-                    }
-                    else if (_songSortDisplay.Active)
+                    if (_songSortDisplay.Active)
                     {
                         _songSortDisplay.DecrementSort();
                         SortSongList();
@@ -398,12 +376,8 @@ namespace WGiBeat.Screens
                     break;
 
                 case "RIGHT":
-                    if (playerOptions.OptionChangeActive)
-                    {
-                        playerOptions.AdjustDifficulty(1);
                         CheckCPUDifficulty();
-                    }
-                    else if (_songSortDisplay.Active)
+                    if (_songSortDisplay.Active)
                     {
                         _songSortDisplay.IncrementSort();
                         SortSongList();
@@ -414,7 +388,7 @@ namespace WGiBeat.Screens
                     _songSortDisplay.Active = true;
                     break;
                 case "SELECT":
-                    playerOptions.OptionChangeActive = true;
+                    _playerOptionsSet.SetChangeMode(inputAction.Player, true);
                     break;
                 case "START":
                     StartSong();
@@ -438,14 +412,10 @@ namespace WGiBeat.Screens
         public override void PerformActionReleased(InputAction inputAction)
         {
 
-            var playerOptions = (from e in _playerOptions where e.PlayerIndex == inputAction.Player - 1 select e).SingleOrDefault();
             switch (inputAction.Action)
             {
                 case "SELECT":
-                    if (playerOptions != null)
-                    {
-                        playerOptions.OptionChangeActive = false;
-                    }
+                    _playerOptionsSet.SetChangeMode(inputAction.Player, false);
                     break;
                 case "BEATLINE":
                     _songSortDisplay.Active = false;
