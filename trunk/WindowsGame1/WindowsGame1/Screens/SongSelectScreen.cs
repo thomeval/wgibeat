@@ -346,9 +346,17 @@ namespace WGiBeat.Screens
             var pass = _playerOptionsSet.PerformAction(inputAction);
             if (pass)
             {
+                CheckCPUDifficulty();
                 return;
             }
-
+            pass = _songSortDisplay.PerformAction(inputAction);
+            if (pass)
+            {
+                SortSongList();
+                return;
+            }
+                
+            
             //Ignore inputs from players not playing EXCEPT for system keys.
             if ((inputAction.Player > 0) && (!Core.Players[inputAction.Player - 1].IsHumanPlayer))
             {
@@ -362,28 +370,8 @@ namespace WGiBeat.Screens
                         MoveSelectionUp();
                     break;
                 case "DOWN":
-                        MoveSelectionDown();
-      
+                        MoveSelectionDown(); 
                     break;
-
-                case "LEFT":
-                        CheckCPUDifficulty();
-                    if (_songSortDisplay.Active)
-                    {
-                        _songSortDisplay.DecrementSort();
-                        SortSongList();
-                    }
-                    break;
-
-                case "RIGHT":
-                        CheckCPUDifficulty();
-                    if (_songSortDisplay.Active)
-                    {
-                        _songSortDisplay.IncrementSort();
-                        SortSongList();
-                    }
-                    break;
-
                 case "BEATLINE":
                     _songSortDisplay.Active = true;
                     break;

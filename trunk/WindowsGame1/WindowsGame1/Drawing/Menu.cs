@@ -24,12 +24,20 @@ namespace WGiBeat.Drawing
         private SpriteMap _sideSpriteMap;
         private Sprite _selectedItemSprite;
 
+
         public string FontName
         {
             get { return _fontName; }
             set { _fontName = value; }
         }
 
+        public int ItemCount
+        {
+            get
+            {
+                return _menuItems.Count;
+            }
+        }
         public Menu()
         {
             SelectedIndex = 0;
