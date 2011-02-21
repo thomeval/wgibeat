@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.Managers;
 
 namespace WGiBeat.Drawing
 {
@@ -16,7 +19,12 @@ namespace WGiBeat.Drawing
         private Sprite _listBackgroundSprite;
         private SpriteMap _arrowSprites;
         private Vector2 _textPosition;
-        public int BaseHeight { get; set; }
+
+        private Menu _bookmarkMenu;
+        private int _selectedBookmarkIndex;
+        private int _bookmarkTextSize = 15;
+
+        public int VisibleBookmarks = 12;
 
         public SongSortDisplay()
         {
@@ -29,6 +37,7 @@ namespace WGiBeat.Drawing
             _arrowSprites = new SpriteMap {SpriteTexture = TextureManager.Textures("IndicatorArrows"), Columns=4, Rows = 1};
             _listBackgroundSprite = new Sprite {SpriteTexture = TextureManager.Textures("SongSortListBackground")};
             _textPosition = new Vector2();
+            _bookmarkMenu = new Menu();
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -41,10 +50,6 @@ namespace WGiBeat.Drawing
                 _activeOpacity = (byte) Math.Max(_activeOpacity - 10, 0);
             }
 
-            if (BaseHeight == 0)
-            {
-                BaseHeight = 50;
-            }
             SetSpritePositions();
             _backgroundSprite.Draw(spriteBatch);
             _textPosition.X = this.X + (this.Width/2);
@@ -68,25 +73,107 @@ namespace WGiBeat.Drawing
 
         private void DrawList(SpriteBatch spriteBatch)
         {
-            _listBackgroundSprite.Height = this.Height - BaseHeight;
-            _listBackgroundSprite.Width = this.Width;
-            _listBackgroundSprite.SetPosition(this.X, this.Y + this.BaseHeight);
-         //   _listBackgroundSprite.Draw(spriteBatch);
+            _listBackgroundSprite.Height = 40 + (_bookmarkTextSize * VisibleBookmarks);
+            _listBackgroundSprite.Width = 75;
+            _listBackgroundSprite.SetPosition(this.X + this.Width - 75, this.Y + this.Height);
+            _listBackgroundSprite.Draw(spriteBatch);
+
+            _bookmarkMenu.Draw(spriteBatch);
         }
 
-        public void IncrementSort()
-        {
-            SongSortMode = (SongSortMode)(((int)(SongSortMode) + 1) % (int)SongSortMode.COUNT);
-        }
 
-        public void DecrementSort()
+        public void MoveSort(int amount)
         {
-            var current = (int) SongSortMode - 1;
+            var current = (int) SongSortMode + amount;
+            const int COUNT = (int) SongSortMode.COUNT;
             if (current < 0)
             {
-                current += (int) SongSortMode.COUNT;
+                current += COUNT;
             }
+            if (current >= COUNT)
+            {
+                current -= COUNT;
+            }
+
             SongSortMode = (SongSortMode) current;
+            CreateBookmarkMenu();
+        }
+
+        public void MoveCurrentBookmark(int amount)
+        {
+            _selectedBookmarkIndex += amount;
+            _selectedBookmarkIndex = Math.Max(0, _selectedBookmarkIndex);
+            _selectedBookmarkIndex = Math.Min(_bookmarkMenu.ItemCount-1, _selectedBookmarkIndex);
+            _bookmarkMenu.SelectedIndex = _selectedBookmarkIndex;
+        }
+
+        public bool PerformAction(InputAction action)
+        {
+            if (!Active)
+            {
+                return false;
+            }
+
+            switch (action.Action)
+            {
+                case "LEFT":
+                    MoveSort(-1);
+                    break;
+                case "RIGHT":
+                    MoveSort(1);
+                    break;
+                case "UP":
+                    MoveCurrentBookmark(-1);
+                    break;
+                case "DOWN":
+                    MoveCurrentBookmark(1);
+                    break;
+            }
+
+         
+            return true;
+        }
+
+        private void CreateBookmarkMenu()
+        {
+            _bookmarkMenu = new Menu
+                                {
+                                    MaxVisibleItems = VisibleBookmarks,
+                                    FontName = "DefaultFont",
+                                    Position = _listBackgroundSprite.Position.Clone(),
+                                    ItemSpacing = 15,
+                                    Width = _listBackgroundSprite.Width
+                                };
+            foreach (MenuItem item in CreateBookmarks())
+            {
+                _bookmarkMenu.AddItem(item);
+            }
+            _selectedBookmarkIndex = 0;
+        
+        }
+
+        private IEnumerable CreateBookmarks()
+        {
+            var result = new List<MenuItem>();
+
+            switch (SongSortMode)
+            {
+                case SongSortMode.TITLE:
+                    for (char c = 'A'; c <= 'Z'; c++ )
+                    {
+                        result.Add(new MenuItem {ItemText = "" + c});
+                    }
+                        break;
+                case SongSortMode.ARTIST:
+                        for (char c = 'A'; c <= 'Z'; c++)
+                        {
+                            result.Add(new MenuItem { ItemText = "" + c });
+                        }
+                    break;
+                    case SongSortMode.BPM:
+                    break;
+            }
+            return result;
         }
     }
        public enum SongSortMode
