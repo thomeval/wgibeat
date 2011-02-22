@@ -19,10 +19,13 @@ namespace WGiBeat.Managers
         public Vector2[] Positions { get; set; }
         public GameType CurrentGameType { get; set; }
 
+        public event EventHandler GameTypeInvalidated;
+
         public PlayerOptionsSet()
         {
             _optionsFrames = new List<PlayerOptionsFrame>();
             InitSprites();
+  
         }
 
         private void InitSprites()
@@ -57,6 +60,8 @@ namespace WGiBeat.Managers
             {
                 _optionsFrameAttract.Position = new Vector2(-1000, -1000);
             }
+
+            CheckNumberOfPlayers();
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -104,10 +109,46 @@ namespace WGiBeat.Managers
                 case "DOWN":
                         playerOptions.AdjustSpeed(-1);
                     break;
-                
+                case "START":
+                    LeavePlayer(inputAction.Player);
+                    break;
             }
             return true;
 
+        }
+
+        private void LeavePlayer(int player)
+        {
+            Players[player - 1].Playing = false;
+            CheckNumberOfPlayers();
+            CreatePlayerOptionsFrames();
+        }
+
+        private void CheckNumberOfPlayers()
+        {
+            var playerCount = (from e in Players where e.IsHumanPlayer select e).Count();
+            switch (CurrentGameType)
+            {
+                case GameType.NORMAL:
+                case GameType.VS_CPU:
+                    //Anything is allowed here.
+                    break;
+                    case GameType.COOPERATIVE:
+                    case GameType.TEAM:
+                    if (playerCount < 2)
+                    {
+                        RequestReturnToMainMenu();
+                    }
+                    break;
+            }
+        }
+
+        private void RequestReturnToMainMenu()
+        {
+            if (GameTypeInvalidated != null)
+            {
+                GameTypeInvalidated(this, null);
+            }
         }
 
         private void JoinPlayer(int player)

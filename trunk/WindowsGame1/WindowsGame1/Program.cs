@@ -12,7 +12,7 @@ namespace WGiBeat
         static void Main(string[] args)
         {
 #if (DEBUG)
-            using (var game = new GameCore())
+            using (var game = GameCore.Instance)
             {
                 game.Run();
                 game.Log.SaveToFile();

@@ -149,6 +149,7 @@ namespace WGiBeat.Screens
             var pass = _playerOptionsSet.PerformAction(inputAction);
             if (pass)
             {
+                TryToStart();
                 return;
             }
 
@@ -211,15 +212,15 @@ namespace WGiBeat.Screens
             var canStart = true;
             for (int x = 0; x < 4; x++)
             {
-                canStart = canStart && !(Core.Players[x].Playing ^ _ready[x]);
+                canStart = canStart && (!Core.Players[x].Playing || _ready[x]);
             }
             if (!canStart)
             {
                 SetRestrictionMessage("Press left or right to \nchoose a team. Press start \nto confirm selection.", false);
                 return;
             }
-            var blueTeamCount = (from e in Core.Players where e.Team == 1 select e).Count();
-            var redTeamCount = (from e in Core.Players where e.Team == 2 select e).Count();
+            var blueTeamCount = (from e in Core.Players where e.Playing && e.Team == 1 select e).Count();
+            var redTeamCount = (from e in Core.Players where e.Playing && e.Team == 2 select e).Count();
 
             canStart = (blueTeamCount > 0);
             canStart = canStart && (redTeamCount > 0);

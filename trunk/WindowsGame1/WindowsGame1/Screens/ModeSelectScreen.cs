@@ -41,7 +41,7 @@ namespace WGiBeat.Screens
         {
             InitSprites();
             _selectingCPUSkill = false;
-                
+            Core.Cookies["CurrentGameType"] = GameType.NORMAL;
             RemoveCPUPlayers();
             _playerOptionsSet = new PlayerOptionsSet { Players = Core.Players, Positions = Core.Metrics["PlayerOptionsFrame"] };
             _playerOptionsSet.CreatePlayerOptionsFrames();

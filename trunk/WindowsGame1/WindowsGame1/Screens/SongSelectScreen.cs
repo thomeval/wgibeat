@@ -62,6 +62,8 @@ namespace WGiBeat.Screens
             _bpmMeter = new BpmMeter {Position = (Core.Metrics["BPMMeter", 0])};
 
             _playerOptionsSet = new PlayerOptionsSet { Players = Core.Players, Positions = Core.Metrics["PlayerOptionsFrame"], CurrentGameType = (GameType)Core.Cookies["CurrentGameType"] };
+            _playerOptionsSet.GameTypeInvalidated += delegate
+                                                         { Core.ScreenTransition("MainMenu"); };
             _playerOptionsSet.CreatePlayerOptionsFrames();
 
                 CreateSongList();
@@ -389,6 +391,10 @@ namespace WGiBeat.Screens
 
         private void CheckCPUDifficulty()
         {
+           if (((GameType) Core.Cookies["CurrentGameType"]) != GameType.VS_CPU)
+           {
+               return;
+           }
             var cpuDifficulty = (from e in Core.Players where e.IsHumanPlayer select e.PlayDifficulty).Max();
 
             foreach (Player player in (from e in Core.Players where e.IsCPUPlayer select e))
