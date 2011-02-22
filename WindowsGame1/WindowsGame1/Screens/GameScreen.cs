@@ -13,7 +13,7 @@ namespace WGiBeat.Screens
 
         public GameScreen(GameCore core) : base(core)
         {
-            Core = core;
+            Core = GameCore.Instance;
         }
 
         /// <summary>

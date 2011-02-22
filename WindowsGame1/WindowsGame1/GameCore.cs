@@ -48,12 +48,24 @@ namespace WGiBeat
         private bool _drawInProgress;
 
         public const string VERSION_STRING = "v0.7 pre";
-        public GameCore()
+        private GameCore()
         {
             GraphicsManager = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
+        private static GameCore _instance;
+        public static GameCore Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new GameCore();
+                }
+                return _instance;
+            }
+        }
         #region Initialization
 
         /// <summary>
