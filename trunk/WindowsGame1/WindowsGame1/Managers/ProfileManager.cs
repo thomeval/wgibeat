@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using WGiBeat.Players;
 
@@ -55,11 +56,24 @@ namespace WGiBeat.Managers
             }
             foreach (string file in Directory.GetFiles(path,"*.prf"))
             {
-                var fs = File.OpenRead(file);
 
-                var profile = (Profile) bf.Deserialize(fs);
-                pm.Add(profile);
-                fs.Close();
+                try
+                {
+
+                    var fs = File.OpenRead(file);
+                    var profile = (Profile)bf.Deserialize(fs);
+                    pm.Add(profile);
+                    fs.Close();
+                }
+
+                catch (SerializationException ex)
+                {                    
+                    pm.Log.AddMessage("Profile is outdated and cannot be loaded: " + file,LogLevel.WARN);
+                }
+                catch (Exception ex)
+                {
+                    pm.Log.AddMessage("Failed to load profile due to error: " + ex.Message + " File: " + file,LogLevel.WARN);
+                }
             }
             pm.Log.AddMessage(""+pm.Count +" Profiles loaded successfully.",LogLevel.INFO);
             return pm;

@@ -20,7 +20,7 @@ namespace WGiBeat
 #else
             try
             {
-                using (GameCore game = new GameCore())
+                using (GameCore game = GameCore.Instance)
                 {
                     game.Run();
                     game.Log.SaveToFile();

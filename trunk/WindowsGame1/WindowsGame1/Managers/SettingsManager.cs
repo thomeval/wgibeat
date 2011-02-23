@@ -64,6 +64,7 @@ namespace WGiBeat.Managers
             sm["AllowProblematicSongs"] = false;
             sm["ConvertToSNG"] = false;
             sm["CheckForUpdates"] = false;
+            sm["ScreenResolution"] = "800x600";
             return sm;
         }
 
