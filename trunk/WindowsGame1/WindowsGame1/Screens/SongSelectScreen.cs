@@ -118,44 +118,12 @@ namespace WGiBeat.Screens
             {
                 _songList.Add(new SongListItem {Height = 50, Song = song, Width = 380, TextMaxWidth = 330});
             }
-            SortSongList();
+            _songSortDisplay.SongList = _songList;
+            _songSortDisplay.SongSortMode = SongSortMode.TITLE;
             _highScoreFrame.HighScoreEntry = GetDisplayedHighScore((GameType)Core.Cookies["CurrentGameType"]);
         }
 
-        private void SortSongList()
-        {
-            int currentSelection = CurrentSong.GetHashCode();
-            switch (_songSortDisplay.SongSortMode)
-            {
-                case SongSortMode.TITLE:
-                    _songList.Sort(SortByName);
-                    break;
-                case SongSortMode.ARTIST:
-                    _songList.Sort(SortByArtist);
-                    break;
-                    case SongSortMode.BPM:
-                    _songList.Sort(SortByBpm);
-                    break;
-            }
-            var lastSong = (from e in _songList where e.Song.GetHashCode() == currentSelection select e).FirstOrDefault();
-            if (lastSong != null)
-            {
-                _selectedIndex = _songList.IndexOf(lastSong);
-            }
-        }
-
-        private int SortByName(SongListItem first, SongListItem second)
-        {
-            return first.Song.Title.CompareTo(second.Song.Title);
-        }
-        private int SortByArtist(SongListItem first, SongListItem second)
-        {
-            return first.Song.Artist.CompareTo(second.Song.Artist);
-        }
-        private int SortByBpm(SongListItem first, SongListItem second)
-        {
-            return first.Song.Bpm.CompareTo(second.Song.Bpm);
-        }
+  
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
@@ -354,7 +322,7 @@ namespace WGiBeat.Screens
             pass = _songSortDisplay.PerformAction(inputAction);
             if (pass)
             {
-                SortSongList();
+                
                 return;
             }
                 
