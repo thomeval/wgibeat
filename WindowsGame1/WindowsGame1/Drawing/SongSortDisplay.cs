@@ -13,8 +13,55 @@ namespace WGiBeat.Drawing
         public bool Active { get; set; }
         private byte _activeOpacity;
 
-        public SongSortMode SongSortMode { get; set;}
-        
+        private SongSortMode _songSortMode;
+        public SongSortMode SongSortMode
+        {
+            get { return _songSortMode; }
+            set 
+            {
+                _songSortMode = value;
+                SortSongList();
+            }
+        }
+
+        private void SortSongList()
+        {
+
+
+            switch (SongSortMode)
+            {
+                case SongSortMode.TITLE:
+                    SongList.Sort(SortByName);
+                    break;
+                case SongSortMode.ARTIST:
+                    SongList.Sort(SortByArtist);
+                    break;
+                case SongSortMode.BPM:
+                    SongList.Sort(SortByBpm);
+                    break;
+            }
+ 
+        }
+
+        private int SortByName(SongListItem first, SongListItem second)
+        {
+            return first.Song.Title.CompareTo(second.Song.Title);
+        }
+        private int SortByArtist(SongListItem first, SongListItem second)
+        {
+            return first.Song.Artist.CompareTo(second.Song.Artist);
+        }
+        private int SortByBpm(SongListItem first, SongListItem second)
+        {
+            return first.Song.Bpm.CompareTo(second.Song.Bpm);
+        }
+
+        public List<SongListItem> SongList
+        {
+            get; set;
+        }
+
+
         private Sprite _backgroundSprite;
         private Sprite _listBackgroundSprite;
         private SpriteMap _arrowSprites;

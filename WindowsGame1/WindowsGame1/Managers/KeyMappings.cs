@@ -207,7 +207,7 @@ namespace WGiBeat.Managers
         {
             if (!_mappings.ContainsKey(key))
             {
-                return null;
+                return new InputAction { Action = "", Player = 0 };
             }
             return _mappings[key];
         }
@@ -220,7 +220,7 @@ namespace WGiBeat.Managers
             }
             if (!_buttonMappings[controllerNumber-1].ContainsKey(button))
             {
-                return null;
+                return new InputAction {Action = "", Player = 0};
             }
             return _buttonMappings[controllerNumber - 1][button];
         }
