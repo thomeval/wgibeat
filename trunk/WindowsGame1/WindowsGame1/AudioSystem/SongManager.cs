@@ -232,7 +232,7 @@ namespace WGiBeat.AudioSystem
             {
                 Log.AddMessage(String.Format("No valid song files loaded. WGiBeat is not playable without one!"), LogLevel.ERROR);
             }
-            Log.AddMessage(String.Format("Song load completed. {0} songs loaded.", _songs.Count), LogLevel.NOTE);
+            Log.AddMessage(String.Format("Finished loading from song folders. {0} songs total.", _songs.Count), LogLevel.NOTE);
         }
 
         private void LoadFromFolder(string path, string pattern)

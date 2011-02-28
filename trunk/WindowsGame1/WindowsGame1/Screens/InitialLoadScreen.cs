@@ -43,18 +43,18 @@ namespace WGiBeat.Screens
         {
             string[] paths = _songFolderPath.Split('|');
 
-            foreach (string path in paths)
+
+            for (int x = 0; x < paths.Length; x++)
             {
+                string path = paths[x];
                 if (!Path.IsPathRooted(path))
                 {
-                   Core.Songs.LoadFromFolder(Core.WgibeatRootFolder + "\\" + path);
+                    paths[x] = Core.WgibeatRootFolder + "\\" + path;
+
                 }
-                else
-                {
-                    Core.Songs.LoadFromFolder(path);
-                }
-               
+
             }
+            Core.Songs.LoadFromFolder(paths);
             _doneLoading = true;
         }
 

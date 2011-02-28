@@ -27,9 +27,13 @@ namespace WGiBeat.Screens
         private TeamScoreMeter _teamScoreMeter;
         private Sprite _coopScoreDisplay;
         private SpriteMap _identifiersSpriteMap;
+        private ProfileLevelDisplay[] _profileLevelDisplays;
+        private long[] _xpAwarded;
 
         public EvaluationScreen(GameCore core) : base(core)
         {
+            _profileLevelDisplays = new ProfileLevelDisplay[4];
+            _xpAwarded = new long[4];
         }
 
         #region Overrides
@@ -52,12 +56,19 @@ namespace WGiBeat.Screens
                              };
             for (int x = 0; x < 4; x++)
             {
+                _profileLevelDisplays[x] = new ProfileLevelDisplay
+                                               {
+                                                   Player = Core.Players[x],
+                                                   Width = 400,
+                                                   Position = Core.Metrics["EvaluationLevelDisplay",x]
+                                               };
                 if (Core.Players[x].Playing)
                 {
-                    _lifeGraph[x] = Core.Players[x].LifeHistory.ToArray();
+                    _lifeGraph[x] = Core.Players[x].LifeHistory.ToArray();       
                 }
                 else
                 {
+                    _profileLevelDisplays[x].Player = null;
                     _lifeGraph.Location = x;
                 }
             }
@@ -132,6 +143,8 @@ namespace WGiBeat.Screens
         {
             for (int x = 0; x < 4; x++)
             {
+                _xpAwarded[x] = Core.Players[x].AwardXP();
+
                 if (Core.Players[x].Profile == null)
                 {
                     continue;
@@ -237,6 +250,25 @@ namespace WGiBeat.Screens
             DrawModeSpecific(spriteBatch);
             DrawMisc(spriteBatch,gameTime);
             DrawGraphs(spriteBatch,gameTime);
+            DrawEXPGains(spriteBatch);
+        }
+
+        private void DrawEXPGains(SpriteBatch spriteBatch)
+        {
+             for (int x = 0; x < 4; x++)
+             {
+                 if (!Core.Players[x].Playing)
+                 {
+                     continue;
+                 }
+                 if (Core.Players[x].Profile == null)
+                 {
+                     continue;
+                 }
+                 _profileLevelDisplays[x].Draw(spriteBatch);
+
+                 TextureManager.DrawString(spriteBatch,String.Format("+{0} EXP",_xpAwarded[x]),"LargeFont",Core.Metrics["EvaluationEXPAwarded",x],Color.Black,FontAlign.CENTER);
+             }
         }
 
         private void DrawGraphs(SpriteBatch spriteBatch, GameTime time)

@@ -35,7 +35,6 @@ namespace WGiBeat.Drawing
         private Vector2 _nameTextPosition;
         private Vector2 _speedTextPosition;
         private Vector2 _difficultyTextPosition;
-        private Vector2 _levelTextPosition;
         private Vector2 _expTextPosition;
 
         private ProfileLevelDisplay _levelDisplay;
@@ -230,7 +229,7 @@ namespace WGiBeat.Drawing
         {
             var idx = (int)Player.PlayDifficulty;
             idx += amount;
-            idx = Math.Min((int)Player.GetMaxDifficulty(), Math.Max(0, idx));
+            idx = Math.Min(Player.GetMaxDifficulty(), Math.Max(0, idx));
             Player.PlayDifficulty = (Difficulty)idx;
         }
     }
