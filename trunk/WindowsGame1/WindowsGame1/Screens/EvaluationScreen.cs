@@ -239,7 +239,6 @@ namespace WGiBeat.Screens
             DrawGraphs(spriteBatch,gameTime);
         }
 
-
         private void DrawGraphs(SpriteBatch spriteBatch, GameTime time)
         {
 
@@ -328,8 +327,11 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black, FontAlign.CENTER);
 
         private void DrawJudgementLines(SpriteBatch spriteBatch)
         {
+            
             for (int x = 0; x < 4; x++)
             {
+                var labelPosition = Core.Metrics["EvaluationLabelColumn", x].Clone();
+                var valuePosition = Core.Metrics["EvaluationValueColumn", x].Clone();
                 if (!Core.Players[x].Playing)
                 {
                     continue;
@@ -337,11 +339,14 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black, FontAlign.CENTER);
                 int y = 0;
                 foreach (string line in _lines)
                 {
-                    TextureManager.DrawString(spriteBatch, line + ":", "LargeFont",
-                                           Core.Metrics["EvaluationLabel" + line, x], Color.Black, FontAlign.LEFT);
-                    TextureManager.DrawString(spriteBatch, "" + Core.Players[x].Judgements[y], "LargeFont",
-                                           Core.Metrics["Evaluation" + line, x], Color.Black, FontAlign.LEFT);
+
+                    TextureManager.DrawString(spriteBatch, line + ":", "DefaultFont",
+                                           labelPosition, Color.Black, FontAlign.LEFT);
+                    TextureManager.DrawString(spriteBatch, "" + Core.Players[x].Judgements[y], "DefaultFont",
+                                           valuePosition, Color.Black, FontAlign.LEFT);
                     y++;
+                    labelPosition.Y += 18;
+                    valuePosition.Y += 18;
                 }
 
                 TextureManager.DrawString(spriteBatch, "Score:", "LargeFont",

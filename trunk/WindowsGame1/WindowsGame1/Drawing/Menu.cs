@@ -252,5 +252,15 @@ namespace WGiBeat.Drawing
                 mi.ClearOptions();
             }
         }
+
+        public void SetSelectedByValue(object value)
+        {
+            var selected = (from e in _menuItems where value.Equals(e.ItemValue) select e).FirstOrDefault();
+            if (selected != null)
+            {
+                SelectedIndex = _menuItems.IndexOf(selected);
+            }
+        }
+
     }
 }
