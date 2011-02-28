@@ -313,6 +313,7 @@ namespace WGiBeat.Screens
 
         public override void PerformAction(InputAction inputAction)
         {
+
             var pass = _playerOptionsSet.PerformAction(inputAction);
             if (pass)
             {
@@ -323,6 +324,7 @@ namespace WGiBeat.Screens
             if (pass)
             {
                 
+                JumpToBookmark();
                 return;
             }
                 
@@ -344,6 +346,8 @@ namespace WGiBeat.Screens
                     break;
                 case "BEATLINE":
                     _songSortDisplay.Active = true;
+                    _songSortDisplay.SelectedSongIndex = _selectedIndex;
+                    _songSortDisplay.SetBookmark(_selectedIndex);
                     break;
                 case "SELECT":
                     _playerOptionsSet.SetChangeMode(inputAction.Player, true);
@@ -355,6 +359,12 @@ namespace WGiBeat.Screens
                     Core.ScreenTransition("ModeSelect");
                     break;
             }
+        }
+
+        private void JumpToBookmark()
+        {
+            _selectedIndex = _songSortDisplay.SelectedSongIndex;
+            _previewStarted = false;
         }
 
         private void CheckCPUDifficulty()
@@ -418,6 +428,7 @@ namespace WGiBeat.Screens
             _selectedIndex = (_selectedIndex + 1)%_songList.Count();
             _previewStarted = false;
             _songListDrawOffset += 50;
+
         }
 
     } 

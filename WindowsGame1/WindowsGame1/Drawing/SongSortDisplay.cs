@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Managers;
@@ -13,6 +14,7 @@ namespace WGiBeat.Drawing
         public bool Active { get; set; }
         private byte _activeOpacity;
 
+        private bool _initiated;
         private SongSortMode _songSortMode;
         public SongSortMode SongSortMode
         {
@@ -26,7 +28,6 @@ namespace WGiBeat.Drawing
 
         private void SortSongList()
         {
-
 
             switch (SongSortMode)
             {
@@ -56,6 +57,7 @@ namespace WGiBeat.Drawing
             return first.Song.Bpm.CompareTo(second.Song.Bpm);
         }
 
+    
         public List<SongListItem> SongList
         {
             get; set;
@@ -73,6 +75,11 @@ namespace WGiBeat.Drawing
 
         public int VisibleBookmarks = 12;
 
+        public int SelectedSongIndex
+        {
+            get; set;
+        }
+
         public SongSortDisplay()
         {
             this.Width = 300;
@@ -85,6 +92,7 @@ namespace WGiBeat.Drawing
             _listBackgroundSprite = new Sprite {SpriteTexture = TextureManager.Textures("SongSortListBackground")};
             _textPosition = new Vector2();
             _bookmarkMenu = new Menu();
+ 
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -125,6 +133,11 @@ namespace WGiBeat.Drawing
             _listBackgroundSprite.SetPosition(this.X + this.Width - 75, this.Y + this.Height);
             _listBackgroundSprite.Draw(spriteBatch);
 
+            if (!_initiated)
+            {
+                _initiated = true;
+                CreateBookmarkMenu();
+            }
             _bookmarkMenu.Draw(spriteBatch);
         }
 
@@ -152,8 +165,112 @@ namespace WGiBeat.Drawing
             _selectedBookmarkIndex = Math.Max(0, _selectedBookmarkIndex);
             _selectedBookmarkIndex = Math.Min(_bookmarkMenu.ItemCount-1, _selectedBookmarkIndex);
             _bookmarkMenu.SelectedIndex = _selectedBookmarkIndex;
+            JumpToBookmark();
         }
 
+        private void JumpToBookmark()
+        {
+           
+            switch (SongSortMode)
+            {
+                case SongSortMode.TITLE:
+                    SelectedSongIndex = JumpBookmarkTitle(_bookmarkMenu.SelectedItem().ItemValue.ToString());
+                    break;
+                    case SongSortMode.ARTIST:
+                    SelectedSongIndex = JumpBookmarkArtist(_bookmarkMenu.SelectedItem().ItemValue.ToString());
+                    break;
+                    case SongSortMode.BPM:
+                    SelectedSongIndex = JumpBookmarkBPM(_bookmarkMenu.SelectedItem().ItemValue.ToString());
+                    break;
+            }
+        }
+
+
+        private int JumpBookmarkTitle(string start)
+        {
+            char startChar;
+            if (start == "#")
+            {
+                for (int x = 0; x < SongList.Count; x++)
+                {
+                    if (Char.IsDigit(SongList[x].Song.Title[0]))
+                    {
+                        return x;
+                    }
+                }
+            }
+            if (start == "@")
+            {
+                for (int x = 0; x < SongList.Count; x++)
+                {
+                    if (Char.IsSymbol(SongList[x].Song.Title[0]))
+                    {
+                        return x;
+                    }
+                }
+            }
+
+            startChar = start[0];
+
+            for (int x = 0; x < SongList.Count; x++)
+            {
+                if (SongList[x].Song.Title.ToUpperInvariant()[0] >= startChar)
+                {
+                    return x;
+                }
+            }
+            return SongList.Count - 1;
+        }
+        private int JumpBookmarkArtist(string start)
+        {
+            char startChar;
+            if (start == "#")
+            {
+                for (int x = 0; x < SongList.Count; x++)
+                {
+                    if (Char.IsDigit(SongList[x].Song.Artist[0]))
+                    {
+                        return x;
+                    }
+                }
+            }
+            if (start == "@")
+            {
+                for (int x = 0; x < SongList.Count; x++)
+                {
+                    if (Char.IsSymbol(SongList[x].Song.Artist[0]))
+                    {
+                        return x;
+                    }
+                }
+            }
+
+           startChar = start[0];
+
+
+            for (int x = 0; x < SongList.Count; x++)
+            {
+
+                if (SongList[x].Song.Artist.ToUpperInvariant()[0] == startChar)
+                {
+                    return x;
+                }
+            }
+            return SongList.Count - 1;
+        }
+        private int JumpBookmarkBPM(string start)
+        {
+            double startBpm = Convert.ToDouble(start, System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+
+            for (int x = 0; x < SongList.Count; x++)
+            {
+                if (SongList[x].Song.Bpm >= startBpm)
+                {
+                    return x;
+                }
+            }
+            return SongList.Count - 1;
+        }
         public bool PerformAction(InputAction action)
         {
             if (!Active)
@@ -202,25 +319,109 @@ namespace WGiBeat.Drawing
         private IEnumerable CreateBookmarks()
         {
             var result = new List<MenuItem>();
+            char[] validChars = {};
+
 
             switch (SongSortMode)
             {
                 case SongSortMode.TITLE:
-                    for (char c = 'A'; c <= 'Z'; c++ )
-                    {
-                        result.Add(new MenuItem {ItemText = "" + c});
-                    }
+                    validChars = (from e in SongList select e.Song.Title.ToUpper()[0]).Distinct().ToArray();
                         break;
                 case SongSortMode.ARTIST:
-                        for (char c = 'A'; c <= 'Z'; c++)
-                        {
-                            result.Add(new MenuItem { ItemText = "" + c });
-                        }
+                       validChars = (from e in SongList select e.Song.Title.ToUpper()[0]).Distinct().ToArray();
                     break;
                     case SongSortMode.BPM:
+                    result = CreateBPMBookmarks();
                     break;
             }
+
+            if (ContainsNumber(validChars))
+            {
+                result.Add(new MenuItem { ItemText = "0-9", ItemValue = "#" });
+            }
+            for (char c = 'A'; c <= 'Z'; c++)
+            {
+                if (validChars.Contains(c))
+                {
+                    result.Add(new MenuItem { ItemText = "" + c, ItemValue = "" + c });
+                }
+            }
+            if (ContainsSymbol(validChars))
+            {
+                result.Add(new MenuItem {ItemText = "Sym", ItemValue = "@"});
+            }
+
             return result;
+        }
+
+        private List<MenuItem> CreateBPMBookmarks()
+        {
+            var result = new List<MenuItem>();
+            result.Add(new MenuItem{ItemText = "Slow", ItemValue = 0});
+            result.Add(new MenuItem { ItemText = "80", ItemValue = 80 });
+            result.Add(new MenuItem { ItemText = "90", ItemValue = 90 });
+            result.Add(new MenuItem { ItemText = "100", ItemValue = 100 });
+            result.Add(new MenuItem { ItemText = "110", ItemValue = 110 });
+            result.Add(new MenuItem { ItemText = "120", ItemValue = 120 });
+            result.Add(new MenuItem { ItemText = "135", ItemValue = 135 });
+            result.Add(new MenuItem { ItemText = "150", ItemValue = 150 });
+            result.Add(new MenuItem { ItemText = "165", ItemValue = 165 });
+            result.Add(new MenuItem { ItemText = "180", ItemValue = 180 });
+            result.Add(new MenuItem { ItemText = "200", ItemValue = 200 });
+            result.Add(new MenuItem { ItemText = "Fast", ItemValue = 999 });
+            return result;
+        }
+
+        private bool ContainsSymbol(IEnumerable<char> chars)
+        {
+            foreach (char c in chars)
+            {
+                if (Char.IsSymbol(c))
+                {
+                    return true;
+                }
+                
+            }
+            return false;
+        }
+
+        private bool ContainsNumber(IEnumerable<char> chars)
+        {
+            foreach (char c in chars)
+            {
+                if (Char.IsNumber(c))
+                {
+                    return true;
+                }
+
+            }
+            return false;
+        }
+
+        public void SetBookmark(int index)
+        {
+            string value = "";
+            switch (SongSortMode)
+            {
+                case SongSortMode.TITLE:
+                    value = SongList[index].Song.Title.ToUpperInvariant()[0] + "";
+                    break;
+                case SongSortMode.ARTIST:
+                    value = SongList[index].Song.Artist.ToUpperInvariant()[0] + "";
+                    break;
+                case SongSortMode.BPM:
+                    return;
+            }
+            if (Char.IsDigit(value[0]))
+            {
+                value = "#";
+            }
+            else if (Char.IsSymbol(value[0]))
+            {
+                value = "@";
+            }
+            _bookmarkMenu.SetSelectedByValue(value);
+            _selectedBookmarkIndex = _bookmarkMenu.SelectedIndex;
         }
     }
        public enum SongSortMode
