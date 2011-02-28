@@ -14,6 +14,8 @@ namespace WGiBeat.Drawing
         private Sprite _basePart;
         private Sprite _gridPart;
         private Sprite _overchargePart;
+        private Sprite _2ndOverchargePart;
+
         private double _overchargeTextureOffset;
         private Vector2 _sidePos;
 
@@ -87,6 +89,13 @@ namespace WGiBeat.Drawing
                 SpriteTexture = TextureManager.Textures("LifeBarOvercharge")
             };
 
+            _2ndOverchargePart = new Sprite
+            {
+                Height = this.Height - 6,
+                X = this.X + 3,
+                Y = this.Y + 3,
+                SpriteTexture = TextureManager.Textures("LifeBarOvercharge")
+            };
             _gridPart = new Sprite
                             {
                                 Height = this.Height - 6,
@@ -144,21 +153,54 @@ namespace WGiBeat.Drawing
             _displayedLife = Parent.Players[PlayerID].Life;
 
             //Draw the overcharge above the normal bar.
-            if (_displayedLife > 100)
+            DrawFirstOvercharge(spriteBatch);
+            _gridPart.DrawTiled(spriteBatch,0,0,this.Width-3,this.Height-6);
+            DrawSecondOvercharge(spriteBatch);
+
+            DrawText(spriteBatch, _sidePos);
+            _overchargeTextureOffset = (_overchargeTextureOffset + 0.5) % OVERCHARGE_OFFSET_CLIP;
+        }
+
+        private void DrawFirstOvercharge(SpriteBatch spriteBatch)
+        {
+            if (_displayedLife <= 100)
             {
-                _overchargePart.Width = (int)((this.Width - 4) / LIFEBAR_CAPACITY * (_displayedLife - 100));
-                _overchargePart.ColorShading.A = Convert.ToByte((_displayedLife - 100) * 2.55);
-                _overchargePart.ColorShading.A = Math.Max(_overchargePart.ColorShading.A, (byte) 80);
+                return;
+            }
+                var amount = Math.Min(_displayedLife - 100, 100);
+                var opacity = (_displayedLife - 100) * 2.55;
+                opacity = Math.Max(opacity, 80);
+                opacity = Math.Min(255, opacity);
+
+                _overchargePart.Width = (int)((this.Width - 4) / LIFEBAR_CAPACITY * amount);
+                _overchargePart.ColorShading.A = Convert.ToByte(opacity);
+
                 if (_overchargePart.Width > 0)
                 {
                     _overchargePart.DrawTiled(spriteBatch, (int)_overchargeTextureOffset, 0, _overchargePart.Width,
                                               _overchargePart.Height);
                 }
-            }
 
-            _gridPart.DrawTiled(spriteBatch,0,0,this.Width-3,this.Height-6);
-            DrawText(spriteBatch, _sidePos);
-            _overchargeTextureOffset = (_overchargeTextureOffset + 0.5) % OVERCHARGE_OFFSET_CLIP;
+        }
+        private void DrawSecondOvercharge(SpriteBatch spriteBatch)
+        {
+            if (_displayedLife <= 200)
+            {
+                return;
+            }
+           
+            
+                var amount = Math.Min(_displayedLife - 200, 100);
+                var opacity = (_displayedLife - 200) * 2.55;
+                opacity = Math.Max(opacity, 80);
+                opacity = Math.Min(255, opacity);
+
+                _2ndOverchargePart.Width = (int)((this.Width - 4) / LIFEBAR_CAPACITY * amount);
+                _2ndOverchargePart.ColorShading.A = Convert.ToByte(opacity);
+
+                _2ndOverchargePart.DrawTiled(spriteBatch, (int)_overchargeTextureOffset, 0, _2ndOverchargePart.Width,
+                                              _2ndOverchargePart.Height);
+            
         }
 
         public int GetHighestBlockLevel()

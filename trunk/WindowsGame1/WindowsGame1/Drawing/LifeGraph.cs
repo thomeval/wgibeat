@@ -27,7 +27,7 @@ namespace WGiBeat.Screens
         private bool _minMaxSet;
 
         private const int ABSOLUTE_MIN = -100;
-        private const int ABSOLUTE_MAX = 200;
+        private const int ABSOLUTE_MAX = 300;
 
         public int Location { get; set; }
         
