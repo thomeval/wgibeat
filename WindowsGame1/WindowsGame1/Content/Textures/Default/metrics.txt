@@ -78,6 +78,8 @@ EvaluationHighScore=[220,225][620,225][220,550][620,550][265,300];
 EvaluationTotalScore=[635,285];
 EvaluationTotalGrade=[660,275];
 EvaluationTeamScoreMeter=[410,280];
+EvaluationLevelDisplay=[0,258][400,258][0,583][400,583];
+EvaluationEXPAwarded=[75,242][475,242][75,567][475,567];
 LifeGraph=[20,20][420,20][20,345][420,345];
 
 #New Game;

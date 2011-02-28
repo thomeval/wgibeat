@@ -240,7 +240,7 @@ namespace WGiBeat.Players
         private readonly double[] _gradeBonusAmounts = {1.4, 1.3, 1.2, 1.1, 1.05};
         private readonly double[] _difficultyMultipliers = {0.5, 0.75, 1.0, 1.1, 1.2};
 
-        private long AwardXP()
+        public long AwardXP()
         {
             double result = 0;
 

@@ -69,7 +69,7 @@ namespace WGiBeat.Screens
                 SpriteTexture = TextureManager.Textures("LifegraphXBorder")
 
             };
-            _backgroundSprite = new Sprite()
+            _backgroundSprite = new Sprite
                                     {
                                         SpriteTexture = TextureManager.Textures("LifeGraphMiddle"),
                                         
