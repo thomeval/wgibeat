@@ -116,7 +116,7 @@ namespace WGiBeat.Screens
             _songList.Clear();
             foreach (GameSong song in Core.Songs.Songs)
             {
-                _songList.Add(new SongListItem {Height = 50, Song = song, Width = 380, TextMaxWidth = 330});
+                _songList.Add(new SongListItem {Height = 50, Song = song, Width = 380, TextMaxWidth = 325});
             }
             _songSortDisplay.SongList = _songList;
             _songSortDisplay.SongSortMode = SongSortMode.TITLE;
@@ -320,6 +320,8 @@ namespace WGiBeat.Screens
                 CheckCPUDifficulty();
                 return;
             }
+
+            
             pass = _songSortDisplay.PerformAction(inputAction);
             if (pass)
             {
@@ -363,6 +365,7 @@ namespace WGiBeat.Screens
 
         private void JumpToBookmark()
         {
+           
             _selectedIndex = _songSortDisplay.SelectedSongIndex;
             _previewStarted = false;
         }

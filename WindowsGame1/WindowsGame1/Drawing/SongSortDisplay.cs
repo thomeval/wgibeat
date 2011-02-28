@@ -15,6 +15,8 @@ namespace WGiBeat.Drawing
         private byte _activeOpacity;
 
         private bool _initiated;
+        private int SelectedSongHash { get; set;}
+
         private SongSortMode _songSortMode;
         public SongSortMode SongSortMode
         {
@@ -71,9 +73,10 @@ namespace WGiBeat.Drawing
 
         private Menu _bookmarkMenu;
         private int _selectedBookmarkIndex;
-        private int _bookmarkTextSize = 15;
+        private int _bookmarkTextSize = 18;
 
-        public int VisibleBookmarks = 12;
+        public int VisibleBookmarks = 10;
+        private int _lastSongHash;
 
         public int SelectedSongIndex
         {
@@ -117,7 +120,7 @@ namespace WGiBeat.Drawing
 
             if (Active)
             {
-                DrawList(spriteBatch);
+                 DrawList(spriteBatch);
             }
         }
 
@@ -144,6 +147,7 @@ namespace WGiBeat.Drawing
 
         public void MoveSort(int amount)
         {
+            _lastSongHash = SongList[SelectedSongIndex].GetHashCode();
             var current = (int) SongSortMode + amount;
             const int COUNT = (int) SongSortMode.COUNT;
             if (current < 0)
@@ -157,6 +161,12 @@ namespace WGiBeat.Drawing
 
             SongSortMode = (SongSortMode) current;
             CreateBookmarkMenu();
+            SelectedSongIndex = SongList.IndexOf(GetByHashCode(_lastSongHash));
+        }
+
+        private SongListItem GetByHashCode(int hash)
+        {
+            return (from e in SongList where e.GetHashCode() == hash select e).FirstOrDefault();
         }
 
         public void MoveCurrentBookmark(int amount)
@@ -305,7 +315,7 @@ namespace WGiBeat.Drawing
                                     MaxVisibleItems = VisibleBookmarks,
                                     FontName = "DefaultFont",
                                     Position = _listBackgroundSprite.Position.Clone(),
-                                    ItemSpacing = 15,
+                                    ItemSpacing = _bookmarkTextSize,
                                     Width = _listBackgroundSprite.Width
                                 };
             foreach (MenuItem item in CreateBookmarks())
@@ -354,21 +364,18 @@ namespace WGiBeat.Drawing
             return result;
         }
 
+        private readonly string[] _bpmTexts = {
+                                         "Slow", "80", "90", "100", "110", "120", "135", "150", "165", "180", "200", "Fast"
+                                     };
+
+        private readonly int[] _bpmValues = {0,80,90,100,110,120,135,150,165,180,200,999};
         private List<MenuItem> CreateBPMBookmarks()
         {
             var result = new List<MenuItem>();
-            result.Add(new MenuItem{ItemText = "Slow", ItemValue = 0});
-            result.Add(new MenuItem { ItemText = "80", ItemValue = 80 });
-            result.Add(new MenuItem { ItemText = "90", ItemValue = 90 });
-            result.Add(new MenuItem { ItemText = "100", ItemValue = 100 });
-            result.Add(new MenuItem { ItemText = "110", ItemValue = 110 });
-            result.Add(new MenuItem { ItemText = "120", ItemValue = 120 });
-            result.Add(new MenuItem { ItemText = "135", ItemValue = 135 });
-            result.Add(new MenuItem { ItemText = "150", ItemValue = 150 });
-            result.Add(new MenuItem { ItemText = "165", ItemValue = 165 });
-            result.Add(new MenuItem { ItemText = "180", ItemValue = 180 });
-            result.Add(new MenuItem { ItemText = "200", ItemValue = 200 });
-            result.Add(new MenuItem { ItemText = "Fast", ItemValue = 999 });
+            for (int x = 0; x < _bpmTexts.Length; x++)
+            {
+                result.Add(new MenuItem{ItemText = _bpmTexts[x],ItemValue = _bpmValues[x]});
+            }
             return result;
         }
 
@@ -400,28 +407,37 @@ namespace WGiBeat.Drawing
 
         public void SetBookmark(int index)
         {
-            string value = "";
+            object value = "";
             switch (SongSortMode)
             {
                 case SongSortMode.TITLE:
                     value = SongList[index].Song.Title.ToUpperInvariant()[0] + "";
+                    value = CheckForSymbolOrDigit(value.ToString());
                     break;
                 case SongSortMode.ARTIST:
                     value = SongList[index].Song.Artist.ToUpperInvariant()[0] + "";
                     break;
                 case SongSortMode.BPM:
-                    return;
+                    var temp = SongList[index].Song.Bpm;
+                    value = (from e in _bpmValues where e >= temp select e).First();                   
+                    break;
             }
-            if (Char.IsDigit(value[0]))
-            {
-                value = "#";
-            }
-            else if (Char.IsSymbol(value[0]))
-            {
-                value = "@";
-            }
+
             _bookmarkMenu.SetSelectedByValue(value);
             _selectedBookmarkIndex = _bookmarkMenu.SelectedIndex;
+        }
+
+        private string CheckForSymbolOrDigit(string value)
+        {
+            if (Char.IsDigit(value[0]))
+            {
+                return "#";
+            }
+            if (Char.IsSymbol(value[0]))
+            {
+                return "@";
+            }
+            return value;
         }
     }
        public enum SongSortMode
