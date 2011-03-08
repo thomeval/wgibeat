@@ -270,9 +270,10 @@ namespace WGiBeat.AudioSystem
         public GameSong LoadFromFile(string filename, bool validate)
         {
             var pattern = "*" + Path.GetExtension(filename);
-            var newSong = Loaders[pattern].LoadFromFile(filename);
+            bool isValid;
+            var newSong = Loaders[pattern].LoadFromFile(filename, out isValid);
 
-            if (newSong == null)
+            if (!isValid)
             {
                 return null;
             }

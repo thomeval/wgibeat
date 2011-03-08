@@ -7,7 +7,7 @@ namespace WGiBeat.AudioSystem.Loaders
 {
     public class SNGFileLoader : SongFileLoader 
     {
-        public override GameSong LoadFromFile(string filename)
+        public override GameSong LoadFromFile(string filename, out bool valid)
         {
             var newSong = GameSong.LoadDefaults();
 
@@ -70,14 +70,17 @@ namespace WGiBeat.AudioSystem.Loaders
                 {
                     newSong.AudioFile = FindUndefinedAudioFile(newSong.Path, newSong.DefinitionFile);
                 }
-                return newSong;
+                valid = true;
             }
             catch (Exception ex)
             {
                 Log.AddException(ex);
-                Log.AddMessage("Failed to load song: " + filename + " ", LogLevel.WARN);
-                return null;
+                LastLoadError = ex.Message;
+                Log.AddMessage("Failed to load song: " + ex.Message + " File: " + filename, LogLevel.WARN);
+                valid = false;
             }
+
+            return newSong;
         }
     }
 }

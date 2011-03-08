@@ -29,12 +29,13 @@ namespace WGiBeat.Screens
         private bool _ignoreNextKey;
         private bool _songValid;
         private bool _editMode;
+        private bool _importMode;
         private string _errorMessage = "";
         private string _validityMessage = "";
         private int _audioChannel;
         private EditorCursorPosition _cursorPosition;
 
-        private string _audioFilePath = "";
+        private string _sourceFilePath = "";
         private string _destinationFileName = "";
         private string _destinationFolderName = "";
         private TimeSpan? _startTime;
@@ -62,7 +63,7 @@ namespace WGiBeat.Screens
         private int _numBeats = -1;
         private double? _lastHitTime;
 
-        private const string VERSION = "v1.2";
+        private const string VERSION = "v1.3";
 
         #endregion
 
@@ -134,12 +135,13 @@ namespace WGiBeat.Screens
             var mainMenu = new Menu { Width = 800, Position = Core.Metrics["EditorMenuStart", 0] };
             mainMenu.AddItem(new MenuItem { ItemText = "Create New Song", ItemValue = 0 });
             mainMenu.AddItem(new MenuItem { ItemText = "Edit Existing Song", ItemValue = 1 });
-            mainMenu.AddItem(new MenuItem { ItemText = "Delete Song", ItemValue = 2 });
-            mainMenu.AddItem(new MenuItem { ItemText = "Exit", ItemValue = 3 });
+            mainMenu.AddItem(new MenuItem{ItemText = "Import .sm or .dwi Song", ItemValue = 2});
+            mainMenu.AddItem(new MenuItem { ItemText = "Delete Song", ItemValue = 3 });
+            mainMenu.AddItem(new MenuItem { ItemText = "Exit", ItemValue = 4 });
             _menus.Add("Main", mainMenu);
 
             var basicsMenu = new Menu { Width = 800, Position = Core.Metrics["EditorMenuStart", 0] };
-            basicsMenu.AddItem(new MenuItem { ItemText = "Select Audio File", ItemValue = 0 });
+            basicsMenu.AddItem(new MenuItem { ItemText = "Select Source File", ItemValue = 0 });
             basicsMenu.AddItem(new MenuItem { ItemText = "Enter Folder Name", ItemValue = 1 });
             basicsMenu.AddItem(new MenuItem { ItemText = "Enter Destination File Name", ItemValue = 2 });
             basicsMenu.AddItem(new MenuItem { ItemText = "Next Step", ItemValue = 3, Enabled = false });
@@ -378,7 +380,8 @@ namespace WGiBeat.Screens
                 case EditorCursorPosition.SONG_BASICS:
                     var currentMenu = _menus["Basics"];
                     currentMenu.ClearMenuOptions();
-                    currentMenu.GetByItemText("Select Audio File").AddOption(Path.GetFileName(_audioFilePath), null);
+
+                    currentMenu.GetByItemText("Select Source File").AddOption(Path.GetFileName(_sourceFilePath), null);
                     currentMenu.GetByItemText("Enter Folder Name").AddOption(_destinationFolderName.Substring(_destinationFolderName.LastIndexOf("\\") + 1), null);
 
                     if (!String.IsNullOrEmpty(_destinationFileName))
@@ -876,18 +879,27 @@ namespace WGiBeat.Screens
                     _cursorPosition = EditorCursorPosition.SONG_BASICS;
                     _destinationFileName = "";
                     _destinationFolderName = "";
-                    _audioFilePath = "";
+                    _sourceFilePath = "";
                     _editMode = false;
+                    _importMode = false;
                     break;
                 case "1":
                     _cursorPosition = EditorCursorPosition.SELECT_SONGFILE;
                     ActivateEditMode(EditorCursorPosition.SONG_DETAILS);
                     break;
                 case "2":
+                    _cursorPosition = EditorCursorPosition.SONG_BASICS;
+                    _destinationFolderName = "";
+                    _destinationFileName = "";
+                    _sourceFilePath = "";
+                    _editMode = false;
+                    _importMode = true;
+                    break;
+                case "3":
                     _cursorPosition = EditorCursorPosition.SELECT_SONGFILE_DELETE;
                     ActivateEditMode(EditorCursorPosition.SONG_DETAILS_DELETE);
                     break;
-                case "3":
+                case "4":
                     Core.ScreenTransition("MainMenu");
                     break;
             }
@@ -898,17 +910,14 @@ namespace WGiBeat.Screens
             switch (menu.SelectedItem().ItemValue.ToString())
             {
                 case "0":
-                    _fileSelect.Patterns = new[] { "*.mp3", "*.ogg", "*.wav" };
-                    _cursorPosition = EditorCursorPosition.SELECT_AUDIO;
-                    _fileSelect.CurrentFolder = Path.GetFullPath(_wgibeatSongsFolder + "\\..");
-                    _fileSelect.ResetEvents();
-                    _fileSelect.FileSelected += delegate
-                                                    {
-                                                        _audioFilePath = _fileSelect.SelectedFile;
-                                                        _cursorPosition = EditorCursorPosition.SONG_BASICS;
-                                                    };
-                    _fileSelect.FileSelectCancelled += delegate { _cursorPosition = EditorCursorPosition.SONG_BASICS; };
-                  
+                    if (_importMode)
+                    {
+                        BasicsSelectImportFile();
+                    }
+                    else
+                    {
+                        BasicsSelectAudioFile();
+                    }
                     break;
                 case "1":
                     ActivateTextEntryMode();
@@ -922,20 +931,62 @@ namespace WGiBeat.Screens
                     _textEntryDestination = "DefinitionFile";
                     break;
                 case "3":
-                    if (_menus["Basics"].GetByItemText("Next Step").Enabled)
+                    if (!_menus["Basics"].GetByItemText("Next Step").Enabled)
                     {
-                        Core.Log.AddMessage(String.Format("Attempting to create a basic new GameSong at: {0}\\{1}", _destinationFolderName, _destinationFileName),LogLevel.DEBUG);
-                        _errorMessage = "";
+                        return;
+                    }
+                    if (!_importMode)
+                    {
+                        Core.Log.AddMessage(
+                            String.Format("Attempting to create a basic new GameSong at: {0}\\{1}",
+                                          _destinationFolderName, _destinationFileName), LogLevel.DEBUG);
                         CreateNewBasicGameSong();
+                    }
+                    else
+                    {
+                        Core.Log.AddMessage(String.Format("Attempting to import song file at: {0}",
+                                          _sourceFilePath), LogLevel.DEBUG);
+                        ImportGameSong();
+                    }
+                    _errorMessage = "";
                         _bpmMeter.DisplayedSong = NewGameSong;
                         _cursorPosition = EditorCursorPosition.SONG_DETAILS;
-
-                    }
+                    
                     break;
                 case "4":
                     _cursorPosition = EditorCursorPosition.MAIN_MENU;
                     break;
             }
+        }
+
+        private void ImportGameSong()
+        {
+            NewGameSong = Core.Songs.LoadFromFile(_sourceFilePath,false);
+        }
+
+        private void BasicsSelectAudioFile()
+        {
+            _fileSelect.Patterns = new[] { "*.mp3", "*.ogg", "*.wav" };
+            BasicsSelectSourceFile();
+
+        }
+        private void BasicsSelectImportFile()
+        {
+            _fileSelect.Patterns = new[] { "*.sm", "*.dwi"  };
+            BasicsSelectSourceFile();
+        }
+
+        private void BasicsSelectSourceFile()
+        {
+            _cursorPosition = EditorCursorPosition.SELECT_AUDIO;
+            _fileSelect.CurrentFolder = Path.GetFullPath(_wgibeatSongsFolder + "\\..");
+            _fileSelect.ResetEvents();
+            _fileSelect.FileSelected += delegate
+            {
+                _sourceFilePath = _fileSelect.SelectedFile;
+                _cursorPosition = EditorCursorPosition.SONG_BASICS;
+            };
+            _fileSelect.FileSelectCancelled += delegate { _cursorPosition = EditorCursorPosition.SONG_BASICS; };
         }
 
         private void DoMenuActionDetails(Menu menu)
@@ -1073,19 +1124,19 @@ namespace WGiBeat.Screens
 
         private void CreateNewBasicGameSong()
         {
-            var audioFileName = Path.GetFileName(_audioFilePath);
+            var audioFileName = Path.GetFileName(_sourceFilePath);
             
             Core.Log.AddMessage("Creating folder for new song: " + _wgibeatSongsFolder + "\\" + _destinationFolderName, LogLevel.DEBUG);
             if (!Directory.Exists(_wgibeatSongsFolder + "\\" + _destinationFolderName))
             {
                 Directory.CreateDirectory(_wgibeatSongsFolder + "\\" + _destinationFolderName);
             }
-            Core.Log.AddMessage("Copying selected audio file from: " + _audioFilePath, LogLevel.DEBUG);
+            Core.Log.AddMessage("Copying selected audio file from: " + _sourceFilePath, LogLevel.DEBUG);
             Core.Log.AddMessage(" ... to: " + _wgibeatSongsFolder + "\\" + _destinationFolderName + "\\" + audioFileName, LogLevel.DEBUG);
 
             if (!File.Exists(_wgibeatSongsFolder + "\\" + _destinationFolderName + "\\" + audioFileName))
             {
-                File.Copy(_audioFilePath, _wgibeatSongsFolder + "\\" + _destinationFolderName + "\\" + audioFileName);
+                File.Copy(_sourceFilePath, _wgibeatSongsFolder + "\\" + _destinationFolderName + "\\" + audioFileName);
             }
 
             //Create gamesong file.
@@ -1105,7 +1156,7 @@ namespace WGiBeat.Screens
         private void AddAudioMetaData()
         {
 
-            var tags = Core.Audio.GetAudioFileMetadata(_audioFilePath);
+            var tags = Core.Audio.GetAudioFileMetadata(_sourceFilePath);
             var titleTag = "";
             if (tags.ContainsKey("TITLE"))
             {
@@ -1144,7 +1195,7 @@ namespace WGiBeat.Screens
                     _menus["Basics"].GetByItemText("Next Step").Enabled =
                         (!String.IsNullOrEmpty(_destinationFileName)) &&
                         (!String.IsNullOrEmpty(_destinationFolderName)) &&
-                        (!String.IsNullOrEmpty(_audioFilePath)) &&
+                        (!String.IsNullOrEmpty(_sourceFilePath)) &&
                         (!invalidFilename) &&
                         (!invalidDirname);
 
