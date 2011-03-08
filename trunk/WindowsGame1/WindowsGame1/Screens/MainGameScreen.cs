@@ -135,7 +135,7 @@ namespace WGiBeat.Screens
             CheckForEndings(gameTime);
             SyncSong();
             _beatlineSet.MaintainBeatlineNotes(_phraseNumber);
-            MaintainBlazings();
+            _lifeBarSet.MaintainBlazings(_phraseNumber);
             MaintainCPUArrows();
             RecordPlayerLife();
             RecordPlayerPlayTime(gameTime.ElapsedRealTime.TotalMilliseconds);
@@ -186,40 +186,6 @@ namespace WGiBeat.Screens
             }
         }
 
-        private void MaintainBlazings()
-        {
-            double minBlazingAmount = 0;
-
-            switch ((GameType)Core.Cookies["CurrentGameType"])
-            {
-                case GameType.NORMAL:
-                case GameType.TEAM:
-                    minBlazingAmount = 100;
-                    break;
-                case GameType.COOPERATIVE:
-                    minBlazingAmount = 60;
-                    break;
-            }
-
-            if (_phraseNumber - _lastBlazeCheck > 0.25)
-            {
-                _lastBlazeCheck += 0.25;
-                for (int x = 0; x < 4; x++)
-                {
-                    if ((Core.Players[x].IsBlazing))
-                    {
-                        Core.Players[x].Life--;
-
-                        if (Core.Players[x].Life < minBlazingAmount)
-                        {
-                            Core.Players[x].Life -= 25;
-                            Core.Players[x].IsBlazing = false;
-                            _notebars[x].CancelReverse();
-                        }
-                    }
-                }
-            }
-        }
 
         private void CheckForEndings(GameTime gameTime)
         {
@@ -295,7 +261,7 @@ namespace WGiBeat.Screens
                     HitBeatline(inputAction.Player - 1);
                     break;
                 case "SELECT":
-                    ToggleBlazing(inputAction.Player - 1);
+                    _lifeBarSet.ToggleBlazing(inputAction.Player - 1);
                     break;
                 case  "BPM_DECREASE":
                     if (songDebug)
@@ -353,27 +319,6 @@ namespace WGiBeat.Screens
 
         }
 
-
-        private void ToggleBlazing(int player)
-        {
-            switch ((GameType)Core.Cookies["CurrentGameType"])
-            {
-                case GameType.NORMAL:
-                case GameType.TEAM:
-                    if (Core.Players[player].Life > 100)
-                    {
-                        Core.Players[player].IsBlazing = true;
-                    }
-                    break;
-                case GameType.COOPERATIVE:
-                    if (Core.Players[player].Life > 60)
-                    {
-                        Core.Players[player].IsBlazing = true;
-                    }
-                    break;
-            }
-
-        }
 
         private void HitArrow(InputAction inputAction)
         {

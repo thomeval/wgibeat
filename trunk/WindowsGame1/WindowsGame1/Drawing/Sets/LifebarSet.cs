@@ -10,6 +10,7 @@ namespace WGiBeat.Drawing.Sets
     {
 
         private readonly LifeBar[] _lifeBars;
+        private double _lastBlazeCheck;
 
         public LifeBarSet(MetricsManager metrics, Player[] players, GameType gameType)
             :base(metrics,players,gameType)
@@ -186,7 +187,101 @@ namespace WGiBeat.Drawing.Sets
             {
                 SetLife(Players[x].Life, x);
             }
+            _lastBlazeCheck = 0.0;
         }
 
+        public void MaintainBlazings(double phraseNumber)
+        {
+
+            if (phraseNumber - _lastBlazeCheck <= 0.25) return;
+            _lastBlazeCheck += 0.25;
+            switch (_gameType)
+            {
+                case GameType.NORMAL:
+                case GameType.TEAM:
+                    MaintainBlazingsNormal();
+                    break;
+                case GameType.COOPERATIVE:
+                    MaintainBlazingsCoop();
+                    break;
+            }
+
+        }
+
+        private void MaintainBlazingsCoop()
+        {
+            var numBlazers = (from e in Players where e.Playing && e.IsBlazing select e).Count();
+            var totalOvercharge = (from e in Players where e.Playing select  e.Life - 100).Sum();
+
+            //Cancel blazing mode and award post-blazing life penalty to all who participated when
+            //overcharge runs out.
+            if (totalOvercharge <= 0)
+            {
+                for (int x = 0; x < 4; x++ )
+                {
+                    if (Players[x].IsBlazing)
+                    {
+                        Players[x].Life -= 25;
+                        Players[x].IsBlazing = false;
+                        //TODO: Call Notebar.CancelReverse.
+                    }
+                }
+                return;
+            }
+
+            //In coop mode, blazing costs 1 life point per beat (1/4 beatline), times the number of blazing players.
+            //The cost is distributed in proportion to the overcharge contribution of the players.
+            for (int x = 0; x < 4; x++)
+            {
+                if (!Players[x].Playing)
+                {
+                    continue;
+                }
+                var playerOvercharge = Players[x].Life - 100;
+                Players[x].Life -= Math.Max(0,numBlazers*playerOvercharge/totalOvercharge);
+
+            }
+        }
+
+        private void MaintainBlazingsNormal()
+        {
+            const int MIN_BLAZING_AMOUNT = 100;
+            for (int x = 0; x < 4; x++)
+            {
+                if ((Players[x].IsBlazing))
+                {
+                    Players[x].Life--;
+
+                    if (Players[x].Life < MIN_BLAZING_AMOUNT)
+                    {
+                        Players[x].Life -= 25;
+                        Players[x].IsBlazing = false;
+                        //TODO: Call Notebar.CancelReverse.
+                    }
+                }
+            }
+        }
+
+        public void ToggleBlazing(int player)
+        {
+            switch (_gameType)
+            {
+                case GameType.NORMAL:
+                case GameType.TEAM:
+                    if (Players[player].Life > 100)
+                    {
+                        Players[player].IsBlazing = true;
+                    }
+                    break;
+                case GameType.COOPERATIVE:
+                    var totalOvercharge = (from e in Players where e.Playing select e.Life - 100).Sum();
+                    if (totalOvercharge > 0)
+                    {
+                        Players[player].IsBlazing = true;
+                    }
+                    break;
+            }
+
+        }
     }
 }
