@@ -45,7 +45,7 @@ namespace WGiBeat.Drawing
             //The calculated width of the level bar.
             var barWidth = (int)(levelFraction * maxWidth);
 
-            if (Parent.Players[PlayerID].Level == Parent.Players[PlayerID].MaxDifficulty())
+            if (Parent.Players[PlayerID].Level == Parent.Players[PlayerID].MaxArrowLevel())
             {
                 barWidth = maxWidth;
             }

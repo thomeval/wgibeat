@@ -17,8 +17,9 @@ namespace WGiBeat.AudioSystem.Loaders
         public double OffsetAdjust { get; set; }
         public bool AllowProblematic { get; set; }
         public bool ConvertToSNG { get; set; }
+        public string LastLoadError { get; protected set; }
 
-        public abstract GameSong LoadFromFile(string filename);
+        public abstract GameSong LoadFromFile(string filename, out bool valid);
 
         protected string FindUndefinedAudioFile(string path, string defFile)
         {

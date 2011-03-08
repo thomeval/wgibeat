@@ -24,16 +24,17 @@ namespace WGiBeat.AudioSystem.Loaders
             _notes = new string[_preferredNoteOrder.Length];
         }
 
-        public override GameSong LoadFromFile(string filename)
+        public override GameSong LoadFromFile(string filename, out bool valid)
         {
+            _newSong = new GameSong { ReadOnly = true };
             Log.AddMessage("Converting DWI File: " + filename, LogLevel.NOTE);
 
             try
             {
                 
-                _newSong = new GameSong{ReadOnly = true};
+                
                 string songText = File.ReadAllText(filename);
-                ParseText(songText,filename);
+                ParseText(songText);
 
                 var selectedNotes = (from e in _notes where e != null select e).First();
 
@@ -60,20 +61,24 @@ namespace WGiBeat.AudioSystem.Loaders
                     _newSong.ReadOnly = false;
                     SaveToFile(_newSong);
                 }
-                return _newSong;
+                valid = true;
+                
             }
             catch (Exception ex)
             {
                 Log.AddException(ex);
-                Log.AddMessage("Failed to load DWI File." + ex.Message, LogLevel.WARN);
-                return null;
+                Log.AddMessage("Failed to load DWI File: " + ex.Message, LogLevel.WARN);
+                valid = false;
             }
+
+                return _newSong;
+            
 
         }
 
         #region Helpers
 
-        private void ParseText(string songText, string filename)
+        private void ParseText(string songText)
         {
             songText = songText.Replace("\r", "\n");
             songText = Regex.Replace(songText, "/{2}(.)*(\\n)+", "");
@@ -109,7 +114,7 @@ namespace WGiBeat.AudioSystem.Loaders
                         break;
 
                     case "#CHANGEBPM":
-                        ParseBPMs(value,filename);
+                        ParseBPMs(value);
                         break;
 
                     case "#FILE":
@@ -119,7 +124,7 @@ namespace WGiBeat.AudioSystem.Loaders
                         AddNotes(value);
                         break;
                     case "#FREEZE":
-                        ParseStops(value, filename);
+                        ParseStops(value);
 
                         break;
                 }
@@ -127,7 +132,7 @@ namespace WGiBeat.AudioSystem.Loaders
             }
         }
 
-        private void ParseStops(string value, string filename)
+        private void ParseStops(string value)
         {
             if (String.IsNullOrEmpty(value))
             {
@@ -146,11 +151,11 @@ namespace WGiBeat.AudioSystem.Loaders
             if (stopPairs.Keys.Count > 0)
             {
                 if (!AllowProblematic)
-                    throw new Exception(filename + " has Stops and will not work correctly in WGiBeat! ");
+                    throw new Exception("this .dwi file has Stops and will not work correctly in WGiBeat! ");
             }
         }
 
-        private void ParseBPMs(string value, string filename)
+        private void ParseBPMs(string value)
         {
             var bpmPairs = new Dictionary<double, double>();
             var bpmText = value.Split(',');
@@ -164,7 +169,7 @@ namespace WGiBeat.AudioSystem.Loaders
             if (bpmPairs.Keys.Count > 1)
             {
                 if (!AllowProblematic)
-                    throw new Exception(filename + " has multiple BPMs and will not work correctly in WGiBeat! ");
+                    throw new Exception("this .dwi file has multiple BPMs and will not work correctly in WGiBeat! ");
             }
         }
 

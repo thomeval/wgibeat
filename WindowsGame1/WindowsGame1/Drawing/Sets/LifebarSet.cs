@@ -29,15 +29,32 @@ namespace WGiBeat.Drawing.Sets
                 case GameType.VS_CPU:
                     for (int x = 0; x < 4; x++)
                     {
-                        _lifeBars[x] = new NormalLifeBar {Height = 30, Width = 260, PlayerID = x, Parent = this};
-                        _lifeBars[x].Position = (_metrics["NormalLifeBar", x]);
- 
+                        _lifeBars[x] = new NormalLifeBar
+                                           {
+                                               Height = 30,
+                                               Width = 260,
+                                               PlayerID = x,
+                                               Parent = this,
+                                               Position = (_metrics["NormalLifeBar", x])
+                                           };
                     }
                     break;
                 case GameType.COOPERATIVE:
-                    _lifeBars[0] = new CoopLifeBar {Height = 30, Width = 785, Parent = this};   
+                    _lifeBars[0] = new CoopLifeBar {Height = 30, Width = 785, Parent = this};
+                    ((CoopLifeBar)_lifeBars[0]).TrueCapacity = GetTotalCapacity();
+                    ((CoopLifeBar)_lifeBars[0]).BaseCapacity = GetBaseCapacity();
                     break;
             }
+        }
+
+        private double GetBaseCapacity()
+        {
+            return (from e in Players where e.Playing select e).Count()*100;
+        }
+
+        private double GetTotalCapacity()
+        {
+            return (from e in Players where e.Playing select e.GetMaxLife()).Sum();
         }
 
         public double AdjustLife(double amount, int player)
@@ -48,35 +65,32 @@ namespace WGiBeat.Drawing.Sets
                 case GameType.NORMAL:
                 case GameType.TEAM:
                 case GameType.VS_CPU:
-                    AdjustLifeNormal(amount, player);
-                    break;
+                    return AdjustLifeNormal(amount, player);
+                    
                 case GameType.COOPERATIVE:
-                    AdjustLifeCoop(amount, player);          
-                    break;
+                    return AdjustLifeCoop(amount, player);          
+                    
             }
             return Players[player].Life;
         }
 
-        private void AdjustLifeCoop(double amount, int player)
+        private double AdjustLifeCoop(double amount, int player)
         {
             var theLifebar = (CoopLifeBar) _lifeBars[0];
-            var limit = (theLifebar.Participants() * 100) - theLifebar.TotalLife();
-            Players[player].Life += Math.Min(limit, amount);
+            Players[player].Life = Math.Min(Players[player].GetMaxLife(), Players[player].Life + amount);
 
-            if (AnyPlayerHasDisabledKO())
+            if (!AnyPlayerHasDisabledKO())
             {
-                return;
+                return amount;
             }
             if (theLifebar.TotalLife() <= 0)
             {
                 for (int x = 0; x < 4; x++)
                 {
-                    if (Players[x].Playing)
-                    {
                         Players[x].KO = true;
-                    }
                 }
             }
+            return amount;
         }
 
         private bool AnyPlayerHasDisabledKO()
@@ -86,8 +100,9 @@ namespace WGiBeat.Drawing.Sets
         }
 
 
-        private void AdjustLifeNormal(double amount, int player)
+        private double AdjustLifeNormal(double amount, int player)
         {
+            var old = Players[player].Life;
             if ((amount > 0) && (Players[player].Life + amount > 100))
             {
                 if (Players[player].Life >= 100)
@@ -96,8 +111,10 @@ namespace WGiBeat.Drawing.Sets
                 }
                 else
                 {
+                    
                     double over = Players[player].Life + amount - 100;
                     Players[player].Life = 100 + (over / 2);
+
                 }
 
             }
@@ -106,19 +123,19 @@ namespace WGiBeat.Drawing.Sets
                 Players[player].Life += amount;
             }
 
+
             Players[player].Life = Math.Min(Players[player].GetMaxLife(), Players[player].Life);
             if ((!Players[player].CPU) && (Players[player].Life <= 0) && (!Players[player].DisableKO))
             {
                 Players[player].KO = true;
                 Players[player].Life = 0;
             }
-            
+            return Players[player].Life - old;
         }
 
         public void SetLife(double amount, int player)
         {
             Players[player].Life = amount;
-
         }
 
         public override void Draw(SpriteBatch spriteBatch)

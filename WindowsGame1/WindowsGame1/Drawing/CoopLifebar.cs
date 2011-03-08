@@ -17,12 +17,18 @@ namespace WGiBeat.Drawing
         private SpriteMap _middlePart;
         private SpriteMap _frontPart;
         private Sprite _overchargePart;
+        private double _overchargeTextureOffset;
+        private const double OVERCHARGE_OFFSET_CLIP = 250;
+
+        public double BaseCapacity { get; set;}
+        public double TrueCapacity { get; set; }
 
         public CoopLifeBar()
         {
             _displayedLife = new double[4];
             InitSprites();
         }
+
 
         private void InitSprites()
         {
@@ -54,8 +60,7 @@ namespace WGiBeat.Drawing
             _overchargePart = new Sprite
                                   {
                                       SpriteTexture = TextureManager.Textures("LifeBarOvercharge"),
-                                      Width = this.Width = 4,
-                                      Height = this.Height - 12
+     
                                   };
         }
 
@@ -67,35 +72,58 @@ namespace WGiBeat.Drawing
         {
             DrawBase(spriteBatch);
             DrawSides(spriteBatch);
+            DrawBlocks(spriteBatch, gameTime);
+            DrawOvercharge(spriteBatch);
+            DrawGrid(spriteBatch);
+        }
 
+        private void DrawOvercharge(SpriteBatch spriteBatch)
+        {
+            var maxOvercharge = TrueCapacity - BaseCapacity;
+            var currentOvercharge = TotalLife() - BaseCapacity;
+            if ((maxOvercharge <= 0) || (currentOvercharge <= 0))
+            {
+                return;
+            }
 
+            _overchargePart.Width = (int) (this.Width*currentOvercharge/maxOvercharge) - 5;
+            _overchargePart.Width /= 2;
+            _overchargePart.Height = this.Height - 18;
+            _overchargePart.X = this.X + 2;
+            _overchargePart.Y = this.Y + 15;
+
+            _overchargePart.DrawTiled(spriteBatch,(int) (this.X + _overchargeTextureOffset),0,_overchargePart.Width,_overchargePart.Height);
+            _overchargePart.X += this.Width - 5 - _overchargePart.Width;
+            _overchargePart.DrawTiled(spriteBatch, (int) (this.X + _overchargeTextureOffset) + _overchargePart.Width, 0, _overchargePart.Width, _overchargePart.Height);
+            _overchargeTextureOffset = (_overchargeTextureOffset + 0.5) % OVERCHARGE_OFFSET_CLIP;
+        }
+
+        private void DrawBlocks(SpriteBatch spriteBatch, double gameTime)
+        {
             var beatFraction = GetBeatFraction(gameTime);
 
             int[] blockAssignments = AssignBlocks(beatFraction);
-            
+
             int posX = this.X + 3;
 
- 
-                for (int y = 0; y < blockAssignments.Length; y++)
-                {
-  
-                    if ((blockAssignments[y] < 10) && (blockAssignments[y] > -1))
-                    {
-                        _frontPart.ColorShading = Color.White;
-                    }
-                    else if (blockAssignments[y] >= 10)
-                    {
-                        _frontPart.ColorShading = Color.DarkGray;
-                        blockAssignments[y] -= 10;
-                    }
-                    else
-                    {
-                        _frontPart.ColorShading = Color.Black;
-                    }
-                    _frontPart.Draw(spriteBatch, blockAssignments[y], BLOCK_WIDTH, this.Height - 6, posX + (BLOCK_WIDTH*y), this.Y + 3);                 
-                }
+            for (int y = 0; y < blockAssignments.Length; y++)
+            {
 
-            DrawGrid(spriteBatch);
+                if ((blockAssignments[y] < 10) && (blockAssignments[y] > -1))
+                {
+                    _frontPart.ColorShading = Color.White;
+                }
+                else if (blockAssignments[y] >= 10)
+                {
+                    _frontPart.ColorShading = Color.DarkGray;
+                    blockAssignments[y] -= 10;
+                }
+                else
+                {
+                    _frontPart.ColorShading = Color.Black;
+                }
+                _frontPart.Draw(spriteBatch, blockAssignments[y], BLOCK_WIDTH, this.Height - 6, posX + (BLOCK_WIDTH * y), this.Y + 3);
+            }
         }
 
         private void DrawGrid(SpriteBatch spriteBatch)
@@ -111,7 +139,7 @@ namespace WGiBeat.Drawing
         {
             _blocksCount = (int)Math.Ceiling((this.Width - 6.00) / BLOCK_WIDTH);
             var result = new int[_blocksCount];
-            var capacity = 100.0 * Participants();
+            var capacity = Math.Max(TotalLife(), BaseCapacity);
             double penaltyMx = Math.Max(0, TotalLife() / TotalPositive());
 
             var position = 0;
@@ -130,7 +158,7 @@ namespace WGiBeat.Drawing
                     var displayedLife = Parent.Players[x].Life;
                     displayedLife *= (1 - beatFraction) * penaltyMx;
                     //Draw each block in sequence. Either in colour, or black depending on the Player's life.
-                    var highestBlock = GetHighestBlockLevel(x);
+                    var highestBlock = GetHighestBlockLevel(x,capacity);
 
                     for (int y = 0; y <= highestBlock; y++)
                     {
@@ -265,13 +293,13 @@ namespace WGiBeat.Drawing
             }
         }
 
-        public int GetHighestBlockLevel(int player)
+        public int GetHighestBlockLevel(int player, double capacity)
         {
             double penaltyMx = Math.Max(0, TotalLife() / TotalPositive());
             
             for (int x = _blocksCount - 1; x >= 0; x--)
             {
-                var minLife = 100.0 * Participants() / _blocksCount * x;
+                var minLife = capacity / _blocksCount * x;
 
                 if (Parent.Players[player].Life * penaltyMx > minLife)
                 {
@@ -287,6 +315,7 @@ namespace WGiBeat.Drawing
             gameTime *= 4;
             return (gameTime - Math.Floor(gameTime)) * BEAT_FRACTION_SEVERITY;
         }
+
         #endregion
     }
 }

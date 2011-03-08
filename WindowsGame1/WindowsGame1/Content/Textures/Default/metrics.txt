@@ -50,14 +50,6 @@ EvaluationInstruction=[10,275];
 EvaluationLabelColumn=[35,50][435,50][35,375][435,375];
 EvaluationValueColumn=[120,50][520,50][120,375][520,375];
 
-#EvaluationLabelIdeal=[20,50][420,50][20,375][420,375];
-#EvaluationLabelCool=[20,65][420,75][20,400][420,400];
-#EvaluationLabelOk=[20,80][420,100][20,425][420,425];
-#EvaluationLabelBad=[20,95][420,125][20,450][420,450];
-#EvaluationLabelFail=[20,110][420,150][20,475][420,475];
-#EvaluationLabelMiss=[20,125][420,175][20,500][420,500];
-#EvaluationLabelFault=[20,140][420,200][20,525][420,525];
-
 EvaluationLabelScore=[20,175][420,175][20,500][420,500];
 EvaluationGradeBase=[220,130][620,130][220,455][620,455];
 EvaluationMaxBase=[220,50][620,50][220,375][620,375];

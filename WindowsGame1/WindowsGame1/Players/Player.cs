@@ -78,14 +78,14 @@ namespace WGiBeat.Players
                 }
  
                 double x = Math.Log((Momentum + 150)/100.0, 1.5);
-                x = Math.Min(MaxDifficulty(PlayDifficulty), x);
+                x = Math.Min(MaxArrowLevel(PlayDifficulty), x);
                 
                 return Math.Max(1,x);
 
             }
         }
 
-        private static int MaxDifficulty(Difficulty difficulty)
+        private static int MaxArrowLevel(Difficulty difficulty)
         {
             switch (difficulty)
             {
@@ -104,9 +104,9 @@ namespace WGiBeat.Players
             }
         }
 
-        public int MaxDifficulty()
+        public int MaxArrowLevel()
         {
-            return MaxDifficulty(PlayDifficulty);
+            return MaxArrowLevel(PlayDifficulty);
         }
 
         public Difficulty PlayDifficulty { get; set; }
@@ -213,7 +213,7 @@ namespace WGiBeat.Players
             Streak = 0;
             MaxStreak = 0;
             Momentum = 0;
-            Life = 50;
+            Life = 150;
             KO = false;
             IsBlazing = false;
             PlayTime = 0;

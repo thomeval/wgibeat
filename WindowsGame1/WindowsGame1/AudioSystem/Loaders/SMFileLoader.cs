@@ -25,16 +25,16 @@ namespace WGiBeat.AudioSystem.Loaders
             _notes = new string[_preferredNoteOrder.Length];
         }
 
-        public override GameSong LoadFromFile(string filename)
+        public override GameSong LoadFromFile(string filename, out bool valid)
         {
             Log.AddMessage("Converting SM File: " + filename, LogLevel.NOTE);
-
+            _newSong = new GameSong { ReadOnly = true };
             try
             {
                 _stopTotals = 0.0;
-                _newSong = new GameSong{ReadOnly = true};
+                
                 string songText = File.ReadAllText(filename);
-                ParseText(songText,filename);
+                ParseText(songText);
 
                 var selectedNotes = (from e in _notes where e != null select e).First();
                 
@@ -64,20 +64,20 @@ namespace WGiBeat.AudioSystem.Loaders
                     _newSong.ReadOnly = false;
                     SaveToFile(_newSong);
                 }
-                return _newSong;
+                valid = true;
             }
             catch (Exception ex)
             {
                 Log.AddException(ex);
-                Log.AddMessage("Failed to load SM File." + ex.Message, LogLevel.WARN);
-                return null;
+                Log.AddMessage("Failed to load SM File: " + ex.Message, LogLevel.WARN);
+                valid = false;
             }
-
+            return _newSong;
         }
 
         #region Helpers
 
-        private void ParseText(string songText, string filename)
+        private void ParseText(string songText)
         {
             songText = songText.Replace("\r", "\n");
             //Remove comments from the file text.
@@ -114,7 +114,7 @@ namespace WGiBeat.AudioSystem.Loaders
                         _newSong.Length = Convert.ToDouble(value, CultureInfo.InvariantCulture.NumberFormat);
                         break;
                     case "#BPMS":
-                        ParseBPMs(value,filename);
+                        ParseBPMs(value);
                         break;
                     case "#MUSIC":
                         _newSong.AudioFile = value;
@@ -123,7 +123,7 @@ namespace WGiBeat.AudioSystem.Loaders
                         AddNotes(value);
                         break;
                     case "#STOPS":
-                      ParseStops(value,filename);
+                      ParseStops(value);
                         break;
                 }
 
@@ -131,7 +131,7 @@ namespace WGiBeat.AudioSystem.Loaders
 
         }
 
-        private void ParseStops(string value, string filename)
+        private void ParseStops(string value)
         {
             if (String.IsNullOrEmpty(value))
             {
@@ -150,12 +150,12 @@ namespace WGiBeat.AudioSystem.Loaders
             if (stopPairs.Keys.Count > 0)
             {
                 if (!AllowProblematic)
-                    throw new Exception(filename + " has Stops and will not work correctly in WGiBeat!");
+                    throw new Exception("This .sm file has Stops and will not work correctly in WGiBeat!");
             }
 
         }
 
-        private void ParseBPMs(string value, string filename)
+        private void ParseBPMs(string value)
         {
             var bpmPairs = new Dictionary<double, double>();
             var bpmText = value.Split(',');
@@ -169,7 +169,7 @@ namespace WGiBeat.AudioSystem.Loaders
             if (bpmPairs.Keys.Count > 1)
             {
                 if (!AllowProblematic)
-                    throw new Exception(filename + " has multiple BPMs and will not work correctly in WGiBeat!");
+                    throw new Exception("This .sm file has multiple BPMs and will not work correctly in WGiBeat!");
             }
             _newSong.Bpm = bpmPairs[0.0];
         }
