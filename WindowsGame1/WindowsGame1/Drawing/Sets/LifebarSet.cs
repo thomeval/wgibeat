@@ -12,6 +12,8 @@ namespace WGiBeat.Drawing.Sets
         private readonly LifeBar[] _lifeBars;
         private double _lastBlazeCheck;
 
+        public event EventHandler<ObjectEventArgs> BlazingEnded;
+
         public LifeBarSet(MetricsManager metrics, Player[] players, GameType gameType)
             :base(metrics,players,gameType)
         {
@@ -223,7 +225,10 @@ namespace WGiBeat.Drawing.Sets
                     {
                         Players[x].Life -= 25;
                         Players[x].IsBlazing = false;
-                        //TODO: Call Notebar.CancelReverse.
+                        if (BlazingEnded != null)
+                        {
+                            BlazingEnded(this, new ObjectEventArgs {Object = x});
+                        }
                     }
                 }
                 return;
@@ -256,7 +261,10 @@ namespace WGiBeat.Drawing.Sets
                     {
                         Players[x].Life -= 25;
                         Players[x].IsBlazing = false;
-                        //TODO: Call Notebar.CancelReverse.
+                        if (BlazingEnded != null)
+                        {
+                            BlazingEnded(this, new ObjectEventArgs { Object = x });
+                        }
                     }
                 }
             }

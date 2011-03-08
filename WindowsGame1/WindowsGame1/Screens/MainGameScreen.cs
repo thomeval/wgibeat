@@ -53,6 +53,8 @@ namespace WGiBeat.Screens
             var freeLocation = _performanceBar.GetFreeLocation((GameType) Core.Cookies["CurrentGameType"] == GameType.COOPERATIVE);
             _performanceBar.Position = Core.Metrics["PerformanceBar", freeLocation];
             _lifeBarSet = new LifeBarSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
+            _lifeBarSet.BlazingEnded += ((sender, e) => _notebars[(int) e.Object].CancelReverse());
+
             _levelbarSet = new LevelBarSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
             _hitsbarSet = new HitsBarSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
             _scoreSet = new ScoreSet(Core.Metrics, Core.Players, (GameType)Core.Cookies["CurrentGameType"]);
@@ -549,10 +551,12 @@ namespace WGiBeat.Screens
         {
             TextureManager.DrawString(spriteBatch, "" + CalculateTimeLeft(), "DefaultFont",
                 Core.Metrics["SongTimeLeft", 0], Color.Black, FontAlign.LEFT);
+            var scale = TextureManager.ScaleTextToFit(_gameSong.Title, "DefaultFont", 310, 100);
             TextureManager.DrawString(spriteBatch, _gameSong.Title, "DefaultFont",
-                Core.Metrics["SongTitle", 0], Color.Black, FontAlign.LEFT);
+                Core.Metrics["SongTitle", 0], scale, Color.Black, FontAlign.LEFT);
+            scale = TextureManager.ScaleTextToFit(_gameSong.Artist, "DefaultFont", 310, 100);
             TextureManager.DrawString(spriteBatch, _gameSong.Artist, "DefaultFont", 
-                Core.Metrics["SongArtist", 0], Color.Black, FontAlign.LEFT);
+                Core.Metrics["SongArtist", 0],scale, Color.Black, FontAlign.LEFT);
         }
 
         private void DrawText(SpriteBatch spriteBatch)

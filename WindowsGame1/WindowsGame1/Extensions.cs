@@ -38,4 +38,9 @@ namespace WGiBeat
         }
     
     }
+
+    public class ObjectEventArgs : EventArgs
+    {
+        public object Object { get; set; }
+    }
 }
