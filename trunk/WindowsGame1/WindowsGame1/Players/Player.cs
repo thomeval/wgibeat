@@ -213,7 +213,7 @@ namespace WGiBeat.Players
             Streak = 0;
             MaxStreak = 0;
             Momentum = 0;
-            Life = 150;
+            Life = 50;
             KO = false;
             IsBlazing = false;
             PlayTime = 0;
