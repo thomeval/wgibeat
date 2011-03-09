@@ -17,6 +17,9 @@ namespace WGiBeat.Drawing
         private SpriteMap _middlePart;
         private SpriteMap _frontPart;
         private Sprite _overchargePart;
+        private Sprite _blazingPart;
+        private SpriteMap _blazingSidePart;
+
         private double _overchargeTextureOffset;
         private const double OVERCHARGE_OFFSET_CLIP = 250;
 
@@ -62,6 +65,14 @@ namespace WGiBeat.Drawing
                                       SpriteTexture = TextureManager.Textures("LifeBarOvercharge"),
      
                                   };
+
+            _blazingPart = new Sprite { SpriteTexture = TextureManager.Textures("LifeBarBlazingCoop") };
+            _blazingSidePart = new SpriteMap
+            {
+                Columns = 1,
+                Rows = 2,
+                SpriteTexture = TextureManager.CreateWhiteMask("LifeBarBaseSide")
+            };
         }
 
         const double BEAT_FRACTION_SEVERITY = 0.3;
@@ -73,8 +84,23 @@ namespace WGiBeat.Drawing
             DrawBase(spriteBatch);
             DrawSides(spriteBatch);
             DrawBlocks(spriteBatch, gameTime);
-            DrawOvercharge(spriteBatch);
+            DrawOvercharge(spriteBatch);        
             DrawGrid(spriteBatch);
+            DrawBlazingEffect(spriteBatch, gameTime);
+            DrawText(spriteBatch);
+        }
+
+        private void DrawText(SpriteBatch spriteBatch)
+        {
+            for (int x = 0; x < 4; x++)
+            {
+                if (!Parent.Players[x].Playing)
+                {
+                    continue;
+                }
+
+                DrawText(spriteBatch,x,_sidePositions[x]);
+            }
         }
 
         private void DrawOvercharge(SpriteBatch spriteBatch)
@@ -126,15 +152,6 @@ namespace WGiBeat.Drawing
             }
         }
 
-        private void DrawGrid(SpriteBatch spriteBatch)
-        {
-
-            _gridPart.SetPosition(this.X + 2, this.Y + 3);
-            _gridPart.Width = this.Width - 4;
-            _gridPart.Height = this.Height - 4;
-            _gridPart.DrawTiled(spriteBatch, 0, 0, this.Width - 4, this.Height - 4);
-        }
-
         private int[] AssignBlocks(double beatFraction)
         {
             _blocksCount = (int)Math.Ceiling((this.Width - 6.00) / BLOCK_WIDTH);
@@ -144,48 +161,86 @@ namespace WGiBeat.Drawing
 
             var position = 0;
 
-            for (int x = 0; x < result.Length; x++ )
+            for (int x = 0; x < result.Length; x++)
             {
                 result[x] = -1;
             }
-                for (int x = 0; x < 4; x++)
+            for (int x = 0; x < 4; x++)
+            {
+                if (!Parent.Players[x].Playing)
                 {
-                    if (!Parent.Players[x].Playing)
+                    continue;
+                }
+
+                var displayedLife = Parent.Players[x].Life;
+                displayedLife *= (1 - beatFraction) * penaltyMx;
+                //Draw each block in sequence. Either in colour, or black depending on the Player's life.
+                var highestBlock = GetHighestBlockLevel(x, capacity);
+
+                for (int y = 0; y <= highestBlock; y++)
+                {
+                    if (position + y >= result.Length)
                     {
-                        continue;
+                        result[position + y - 1] = 10 + x;
+                        break;
                     }
 
-                    var displayedLife = Parent.Players[x].Life;
-                    displayedLife *= (1 - beatFraction) * penaltyMx;
-                    //Draw each block in sequence. Either in colour, or black depending on the Player's life.
-                    var highestBlock = GetHighestBlockLevel(x,capacity);
-
-                    for (int y = 0; y <= highestBlock; y++)
+                    var minLife = capacity / _blocksCount * y;
+                    if (displayedLife > minLife)
                     {
-                        if (position + y >= result.Length)
-                        {
-                            result[position + y - 1] = 10 + x;
-                            break;
-                        }
-
-                        var minLife = capacity / _blocksCount * y;
-                        if (displayedLife > minLife)
-                        {
-                            result[position + y] = x;
-                        }
-                        else if (y == highestBlock)
-                        {
-                            result[position + y] = 10 + x;
-                        }
-
+                        result[position + y] = x;
                     }
-                    position += highestBlock + 1;
+                    else if (y == highestBlock)
+                    {
+                        result[position + y] = 10 + x;
+                    }
 
                 }
+                position += highestBlock + 1;
+
+            }
 
             return result;
 
         }
+
+        private void DrawGrid(SpriteBatch spriteBatch)
+        {
+            _gridPart.SetPosition(this.X + 2, this.Y + 3);
+            _gridPart.Width = this.Width - 4;
+            _gridPart.Height = this.Height - 4;
+            _gridPart.DrawTiled(spriteBatch, 0, 0, this.Width - 4, this.Height - 4);
+        }
+
+        private void DrawBlazingEffect(SpriteBatch spriteBatch, double gameTime)
+        {
+            var anyBlazer = (from e in Parent.Players where e.IsBlazing select e).Any();
+            if (!anyBlazer)
+            {
+                return;
+            }
+
+            gameTime *= 4;
+            var beatFraction = gameTime - Math.Floor(gameTime);
+            beatFraction = 1 - beatFraction;
+            var opacity = (byte)(beatFraction * 255);
+            _blazingPart.ColorShading.A = opacity;
+            _blazingPart.X = this.X;
+            _blazingPart.Y = this.Y;
+            _blazingPart.Draw(spriteBatch);
+            _blazingSidePart.ColorShading.A = opacity;
+
+            for (int x = 0; x < 4; x++)
+            {
+                if (!Parent.Players[x].IsBlazing)
+                {
+                    continue;
+                }
+                _blazingSidePart.Draw(spriteBatch, x/2, 50, 25, _sidePositions[x]);
+            }
+
+        }
+
 
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -198,12 +253,13 @@ namespace WGiBeat.Drawing
             _basePart.Draw(spriteBatch);
         }
 
-        private void DrawText(SpriteBatch spriteBatch, int player, int x, int y)
+        private void DrawText(SpriteBatch spriteBatch, int player, Vector2 position)
         {
-            var position = new Vector2(x + 25, y);
+            var textPosition = position.Clone();
+            textPosition.X += 25;
 
             TextureManager.DrawString(spriteBatch, String.Format("{0:D3}", (int)Parent.Players[player].Life),
-                    "DefaultFont",position, Color.Black,FontAlign.CENTER);
+                    "DefaultFont",textPosition, Color.Black,FontAlign.CENTER);
            
         }
 
@@ -234,47 +290,47 @@ namespace WGiBeat.Drawing
                     position, Color.Black);
 
         }
+
+        private Vector2[] _sidePositions = new Vector2[4];
         private void DrawSides(SpriteBatch spriteBatch)
         {
             int playerIdx = 0;
-            int posX, posY;
+
+ 
+            _sidePositions[0].X = this.X;
+            _sidePositions[0].Y = this.Y + this.Height;
+            _sidePositions[1].X = this.X + this.Width - 50;
+            _sidePositions[1].Y = this.Y + this.Height;
+            _sidePositions[2].X = this.X;
+            _sidePositions[2].Y = this.Y -25;
+            _sidePositions[3].X = this.X + this.Width - 50;
+            _sidePositions[3].Y = this.Y -25;
 
             //Lifebar amounts appear on top for Player 3 and 4.
             if (SideLocationTop)
             {
                 playerIdx += 2;
-                posY = this.Y - 25;
-            }
-            else
-            {
-                posY = this.Y + this.Height;
+
             }
 
             //Draw on the right side.
             if (Parent.Players[playerIdx + 1].Playing)
             {
-                posX = this.X + this.Width - 50;
-                _sidePart.Draw(spriteBatch, playerIdx / 2, 50, 25, posX, posY);
-                DrawText(spriteBatch, playerIdx + 1, posX, posY);
+                _sidePart.Draw(spriteBatch, playerIdx / 2, 50, 25,_sidePositions[playerIdx+1]);
             }
             //Draw on the left.
             if (Parent.Players[playerIdx].Playing)
             {
-                posX = this.X;
-                _sidePart.Draw(spriteBatch, playerIdx / 2, 50, 25, posX, posY);
-                DrawText(spriteBatch, playerIdx, posX, posY);
+                _sidePart.Draw(spriteBatch, playerIdx / 2, 50, 25, _sidePositions[playerIdx]);
             }
 
-            _middlePart.Draw(spriteBatch, playerIdx / 2, 139, 25, (this.X + this.Width - 134) / 2, posY);
-            DrawTotal(spriteBatch, (this.X + this.Width - 90) / 2, posY);
+            _middlePart.Draw(spriteBatch, playerIdx / 2, 139, 25, (this.X + this.Width - 134) / 2, (int) _sidePositions[playerIdx].Y);
+            DrawTotal(spriteBatch, (this.X + this.Width - 90) / 2, (int)_sidePositions[playerIdx].Y);
 
         }
+
 
         #region Helper Methods
-        public int Participants()
-        {
-            return (from e in Parent.Players where e.Playing select e).Count();
-        }
 
         public double TotalLife()
         {

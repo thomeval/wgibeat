@@ -243,8 +243,10 @@ namespace WGiBeat.Drawing.Sets
                     continue;
                 }
                 var playerOvercharge = Players[x].Life - 100;
-                Players[x].Life -= Math.Max(0,numBlazers*playerOvercharge/totalOvercharge);
-
+                var reductionAmount = numBlazers*playerOvercharge/totalOvercharge;
+                reductionAmount = Math.Max(0, reductionAmount);
+                reductionAmount = Math.Min(numBlazers, reductionAmount);
+                Players[x].Life -= Math.Max(0,reductionAmount);
             }
         }
 
