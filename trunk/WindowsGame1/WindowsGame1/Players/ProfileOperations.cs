@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace WGiBeat.Players
 {
@@ -85,7 +86,7 @@ namespace WGiBeat.Players
 
         }
 
-        private static readonly int[] _lifeMilestones = { 5, 10, 15, 20, 25, 30, 35, 40 };
+       
         public static double GetMaxLife(this Player player)
         {
             if (player.Profile == null)
@@ -95,13 +96,8 @@ namespace WGiBeat.Players
 
             var maxLife = 100;
 
-            foreach (int milestone in _lifeMilestones)
-            {
-                if (player.GetLevel() >= milestone)
-                {
-                    maxLife += 25;
-                }
-            }
+            maxLife += (player.GetLevel() - 1)*5;
+            maxLife = Math.Min(300, maxLife);
             return maxLife;
         }
 
