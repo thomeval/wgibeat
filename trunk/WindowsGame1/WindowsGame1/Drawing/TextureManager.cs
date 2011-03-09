@@ -156,10 +156,9 @@ namespace WGiBeat.Drawing
             Textures(assetName).GetData(pixels);
             for (int x = 0; x < pixels.Length; x++)
             {
-                var pixel = pixels[x];
-                pixel.R = 255;
-                pixel.B = 255;
-                pixel.G = 255;
+                pixels[x].R = 255;
+                pixels[x].B = 255;
+                pixels[x].G = 255;
             }
             result.SetData(pixels);
             return result;

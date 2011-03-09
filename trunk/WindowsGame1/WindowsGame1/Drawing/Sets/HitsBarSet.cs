@@ -44,7 +44,7 @@ namespace WGiBeat.Drawing.Sets
                 {
                     _opacity[x] = (byte)Math.Min(_opacity[x] + 8, 255);
                 }
-                _overmaskOpacity[x] = (byte) Math.Max(0,  _overmaskOpacity[x] - 8);
+                _overmaskOpacity[x] = (byte) Math.Max(0,  _overmaskOpacity[x] - 4);
                 _baseSprite.SpriteTexture = TextureManager.Textures("HitsBar" + DetermineSuffix());
                 _baseSprite.ColorShading.A = _opacity[x];
                 _textColor.A = _opacity[x];
@@ -61,7 +61,7 @@ namespace WGiBeat.Drawing.Sets
         {
             if (PlayerAtNewMilestone(x))
             {
-                _overmaskOpacity[x] = 255;
+                _overmaskOpacity[x] = 160;
                 _lastMilestone[x] = Players[x].Hits;
             }
 
