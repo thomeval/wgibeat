@@ -33,7 +33,6 @@ namespace WGiBeat.Screens
         private TimeSpan? _startTime;
         private int _displayState;
         private double _transitionTime;
-        private double _lastBlazeCheck;
         private double _lastLifeRecord;
 
         private Sprite _koSprite;
@@ -68,7 +67,6 @@ namespace WGiBeat.Screens
 
             _displayState = 0;
             _songLoadDelay = 0.0;
-            _lastBlazeCheck = 0;
             _lastLifeRecord = -0.5;
             
             for (int x = 0; x < PLAYER_COUNT; x++)

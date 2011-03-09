@@ -15,6 +15,8 @@ namespace WGiBeat.Drawing
         private Sprite _gridPart;
         private Sprite _overchargePart;
         private Sprite _2ndOverchargePart;
+        private Sprite _blazingPart;
+        private SpriteMap _blazingSidePart;
 
         private double _overchargeTextureOffset;
         private Vector2 _sidePos;
@@ -104,6 +106,13 @@ namespace WGiBeat.Drawing
                                 Y = this.Y + 3,
                                 SpriteTexture = TextureManager.Textures("LifeBarGridBase")
                             };
+            _blazingPart = new Sprite {SpriteTexture = TextureManager.Textures("LifeBarBlazing")};
+            _blazingSidePart = new SpriteMap
+                                   {
+                                       Columns = 1,
+                                       Rows = 2,
+                                       SpriteTexture = TextureManager.CreateWhiteMask("LifeBarBaseSide")
+                                   };
 
         }
 
@@ -155,10 +164,27 @@ namespace WGiBeat.Drawing
             //Draw the overcharge above the normal bar.
             DrawFirstOvercharge(spriteBatch);
             _gridPart.DrawTiled(spriteBatch,0,0,this.Width-3,this.Height-6);
+            DrawBlazingEffect(spriteBatch, beatFraction);
             DrawSecondOvercharge(spriteBatch);
 
             DrawText(spriteBatch, _sidePos);
             _overchargeTextureOffset = (_overchargeTextureOffset + 0.5) % OVERCHARGE_OFFSET_CLIP;
+        }
+
+        private void DrawBlazingEffect(SpriteBatch spriteBatch, double beatFraction)
+        {
+            if (!Parent.Players[PlayerID].IsBlazing)
+            {
+                return;
+            }
+            beatFraction /= BEAT_FRACTION_SEVERITY;
+            var opacity = (byte)((1 - beatFraction) * 255);
+            _blazingPart.ColorShading.A = opacity;
+            _blazingPart.X = this.X;
+            _blazingPart.Y = this.Y;
+            _blazingPart.Draw(spriteBatch);
+            _blazingSidePart.ColorShading.A = opacity;
+            _blazingSidePart.Draw(spriteBatch, PlayerID / 2, 50, 25, _sidePos);
         }
 
         private void DrawFirstOvercharge(SpriteBatch spriteBatch)

@@ -83,10 +83,8 @@ namespace WGiBeat.Players
             }
 
             return 4;
-
         }
-
-       
+   
         public static double GetMaxLife(this Player player)
         {
             if (player.Profile == null)

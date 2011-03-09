@@ -1,7 +1,6 @@
 ﻿#METRICS-1.0;
 #Main Game;
 NormalLifeBar=[5,45][530,45][5,525][530,525];
-NormalLifeBarSide=[5,45][740,45][5,505][740,505];
 CoopLifeBar=[5,45][5,525];
 LevelBar=[50,78][533,78][50,503][533,503];
 LevelBarBase=[49,75][530,75][49,500][530,500];
