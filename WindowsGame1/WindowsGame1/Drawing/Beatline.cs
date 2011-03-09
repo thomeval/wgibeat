@@ -263,6 +263,7 @@ namespace WGiBeat.Drawing
             var passedNotes =
                 (from e in _beatlineNotes where (!e.Hit) && (CalculateHitOffset(e, phraseNumber) < 0) select e);
             var result = passedNotes.Count();
+
             foreach (BeatlineNote bln in passedNotes)
             {
                 bln.Hit = true;
