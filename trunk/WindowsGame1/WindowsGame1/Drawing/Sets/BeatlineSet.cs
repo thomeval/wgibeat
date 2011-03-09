@@ -106,13 +106,18 @@ namespace WGiBeat.Drawing.Sets
                 if (Players[x].CPU)
                 {
                     _beatlines[x].Id = 4;
-                    var notesHit = _beatlines[x].AutoHit(phraseNumber);
-
-                    for (int y = 0; y < notesHit; y++)
+                    var miss = Players[x].NextCPUJudgement == BeatlineNoteJudgement.MISS;
+                    if ((!miss))
                     {
-                        if (CPUNoteHit != null)
+
+                        var notesHit = _beatlines[x].AutoHit(phraseNumber);
+
+                        for (int y = 0; y < notesHit; y++)
                         {
-                            CPUNoteHit(x, null);
+                            if (CPUNoteHit != null)
+                            {
+                                CPUNoteHit(x, null);
+                            }
                         }
                     }
                 }
@@ -121,12 +126,12 @@ namespace WGiBeat.Drawing.Sets
                     _beatlines[x].RemoveAll();
                 }
                 var missedNotes = _beatlines[x].TrimExpired(phraseNumber);
-
+               // _beatlines[x].Id = x;
                 for (int y = 0; y < missedNotes; y++)
                 {
                     if (NoteMissed != null)
                     {
-                        NoteMissed(_beatlines[x], null);
+                        NoteMissed(x, null);
                     }
                 }
             }

@@ -24,6 +24,7 @@ namespace WGiBeat.Players
         public int Team { get; set; }
         public long PlayTime { get; set; }
         public double LastCPUArrowHit { get; set; }
+        public BeatlineNoteJudgement NextCPUJudgement { get; set; }
 
         private long _hits;
         public long Hits
@@ -126,7 +127,6 @@ namespace WGiBeat.Players
         public bool IsCPUPlayer
         {
             get { return Playing && CPU;}
-
         }
 
         public string SafeName
@@ -219,6 +219,7 @@ namespace WGiBeat.Players
             PlayTime = 0;
             LastCPUArrowHit = 0.0;
             _lifeHistory.Clear();
+            NextCPUJudgement = BeatlineNoteJudgement.COUNT;
         }
         
         public void UpdateToProfile()

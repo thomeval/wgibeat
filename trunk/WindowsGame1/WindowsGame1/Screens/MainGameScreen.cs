@@ -448,15 +448,27 @@ namespace WGiBeat.Screens
 
         private void BeatlineNoteMissed(object sender, EventArgs e)
         {
-            var player = ((Beatline)sender).Id;
+            var player = (int) sender;
+
             _lifeBarSet.AdjustLife(
                 _noteJudgementSet.AwardJudgement(BeatlineNoteJudgement.MISS, player, 0, 0), player);
+            if (Core.Players[player].CPU)
+            {
+                Core.Players[player].NextCPUJudgement =
+                    Core.CPUManager.GetNextJudgement(Core.Cookies["CPUSkillLevel"].ToString(),
+                                                     Core.Players[player].Streak);
+            }
         }
 
         private void BeatlineNoteCPUHit(object sender, EventArgs e)
         {
             var player = (int) sender;
-            var judgement = Core.CPUManager.GetNextJudgement(Core.Cookies["CPUSkillLevel"].ToString(), Core.Players[player].Streak);
+            var judgement = Core.Players[player].NextCPUJudgement;
+
+            if (judgement == BeatlineNoteJudgement.COUNT)
+            {
+                judgement = Core.CPUManager.GetNextJudgement(Core.Cookies["CPUSkillLevel"].ToString(), Core.Players[player].Streak);
+            }
 
             _notebars[player].MarkAllCompleted();
 
@@ -464,9 +476,12 @@ namespace WGiBeat.Screens
             {
                 Core.Players[player].Momentum += (long) (MomentumJudgementMultiplier(judgement) * MomentumIncreaseByDifficulty(Core.Players[player].PlayDifficulty));
             }
+
             //Award Score
             ApplyJudgement(judgement, player);
             CreateNextNoteBar(player);
+            Core.Players[player].NextCPUJudgement = Core.CPUManager.GetNextJudgement(Core.Cookies["CPUSkillLevel"].ToString(), Core.Players[player].Streak);
+            
         }
 
         #endregion
