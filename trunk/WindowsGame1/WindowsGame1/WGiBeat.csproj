@@ -108,6 +108,7 @@
     <Compile Include="Drawing\FileSelectDialog.cs" />
     <Compile Include="Drawing\MovingBackground.cs" />
     <Compile Include="Drawing\Sets\DrawableObjectSet.cs" />
+    <Compile Include="Drawing\SongTimeLine.cs" />
     <Compile Include="Drawing\TextEntry.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="AudioSystem\Loaders\SMFileLoader.cs" />
@@ -256,6 +257,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\Common\TextEntryBarSide.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Default\WGiEdit\SongTimeLineEdges.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Default\WGiEdit\SongTimeLineParts.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Text\EditorText.txt">

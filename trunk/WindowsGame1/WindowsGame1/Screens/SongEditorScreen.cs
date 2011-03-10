@@ -24,6 +24,7 @@ namespace WGiBeat.Screens
         private BeatlineSet _beatlineSet;
         private NoteJudgementSet _noteJudgementSet;
         private CountdownSet _countdownSet;
+        private SongTimeLine _songTimeLine;
 
         private bool _keyInput;
         private bool _ignoreNextKey;
@@ -95,7 +96,8 @@ namespace WGiBeat.Screens
             _beatlineSet = new BeatlineSet(Core.Metrics, Core.Players, GameType.NORMAL) {Large = true};
             _noteJudgementSet = new NoteJudgementSet(Core.Metrics,Core.Players,GameType.NORMAL);
             _countdownSet = new CountdownSet(Core.Metrics, Core.Players, GameType.NORMAL);
-
+            _songTimeLine = new SongTimeLine
+                                {Height = 60, Width = 780, Position = Core.Metrics["EditorSongTimeLine", 0]};
         }
 
         public void InitSprites()
@@ -279,7 +281,7 @@ namespace WGiBeat.Screens
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-
+            Core.ShiftSpriteBatch(false);
             _backgroundSprite.Draw(spriteBatch);
             DrawHeading(spriteBatch);
 
@@ -304,6 +306,9 @@ namespace WGiBeat.Screens
                     _validitySpriteMap.Draw(spriteBatch, validIdx, 195, 42, Core.Metrics["EditorSongValidity",0]);
                     _bpmMeter.Draw(spriteBatch);
                     DrawBPMMeterExtras(spriteBatch);
+                    _songTimeLine.Song = NewGameSong;
+                    _songTimeLine.AudioEnd = Core.Audio.GetFileLength(NewGameSong.Path + "\\" + NewGameSong.AudioFile) / 1000.0;
+                    _songTimeLine.Draw(spriteBatch);
                     if (!String.IsNullOrEmpty(_errorMessage))
                     {
                         var scale = TextureManager.ScaleTextToFit(_errorMessage, "DefaultFont", 790, 100);
@@ -344,6 +349,7 @@ namespace WGiBeat.Screens
             {
                 _menus[_activeMenu].Draw(spriteBatch);
             }
+            Core.ShiftSpriteBatch(true);
         }
 
         private void DrawBPMMeterExtras(SpriteBatch spriteBatch)
@@ -950,6 +956,7 @@ namespace WGiBeat.Screens
                     }
                     _errorMessage = "";
                         _bpmMeter.DisplayedSong = NewGameSong;
+                        _songTimeLine.AudioEnd = Core.Audio.GetFileLength(NewGameSong.Path + "\\" + NewGameSong.AudioFile) / 1000.0;
                         _cursorPosition = EditorCursorPosition.SONG_DETAILS;
                     
                     break;
@@ -1281,6 +1288,7 @@ namespace WGiBeat.Screens
             {
                 NewGameSong = Core.Songs.LoadFromFile(_fileSelect.SelectedFile, false);
                 _bpmMeter.DisplayedSong = NewGameSong;
+                _songTimeLine.AudioEnd = Core.Audio.GetFileLength(NewGameSong.Path + "\\" + NewGameSong.AudioFile) / 1000.0;
                 _cursorPosition = position;
                 _editMode = true;
                 NewGameSong.SetMD5();
