@@ -11,6 +11,7 @@ namespace WGiBeat.Drawing.Sets
 
         private readonly LifeBar[] _lifeBars;
         private double _lastBlazeCheck;
+        public Color[] FullHighlightColors = {new Color(255,128,128), new Color(128,128,255), new Color(128,255,128), new Color(255,255,128)  };
 
         public event EventHandler<ObjectEventArgs> BlazingEnded;
 

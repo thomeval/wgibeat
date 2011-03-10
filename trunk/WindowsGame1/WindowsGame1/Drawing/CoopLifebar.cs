@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.Players;
 
 namespace WGiBeat.Drawing
 {
@@ -19,6 +20,7 @@ namespace WGiBeat.Drawing
         private Sprite _overchargePart;
         private Sprite _blazingPart;
         private SpriteMap _blazingSidePart;
+        private SpriteMap _blazingMiddlePart;
 
         private double _overchargeTextureOffset;
         private const double OVERCHARGE_OFFSET_CLIP = 250;
@@ -73,6 +75,13 @@ namespace WGiBeat.Drawing
                 Rows = 2,
                 SpriteTexture = TextureManager.CreateWhiteMask("LifeBarBaseSide")
             };
+
+            _blazingMiddlePart = new SpriteMap
+                                     {
+                                         Columns = 1,
+                                         Rows = 2,
+                                         SpriteTexture = TextureManager.Textures("CoopLifebarMiddleBlazing")
+                                     };
         }
 
         const double BEAT_FRACTION_SEVERITY = 0.3;
@@ -86,6 +95,7 @@ namespace WGiBeat.Drawing
             DrawBlocks(spriteBatch, gameTime);
             DrawOvercharge(spriteBatch);        
             DrawGrid(spriteBatch);
+            DrawFullEffect(spriteBatch);
             DrawBlazingEffect(spriteBatch, gameTime);
             DrawText(spriteBatch);
         }
@@ -228,8 +238,9 @@ namespace WGiBeat.Drawing
             _blazingPart.X = this.X;
             _blazingPart.Y = this.Y;
             _blazingPart.Draw(spriteBatch);
+            _blazingSidePart.ColorShading = Color.White;
             _blazingSidePart.ColorShading.A = opacity;
-
+            
             for (int x = 0; x < 4; x++)
             {
                 if (!Parent.Players[x].IsBlazing)
@@ -239,6 +250,29 @@ namespace WGiBeat.Drawing
                 _blazingSidePart.Draw(spriteBatch, x/2, 50, 25, _sidePositions[x]);
             }
 
+            var middlePosition = SideLocationTop ? 1 : 0;
+            _blazingMiddlePart.ColorShading.A = opacity;
+            _blazingMiddlePart.Draw(spriteBatch,middlePosition, _middlePositions[middlePosition]);
+        }
+
+
+        private void DrawFullEffect(SpriteBatch spriteBatch)
+        {
+            for (int x = 0; x < 4; x++)
+            {
+                if (!((x >= 2 && SideLocationTop) || (x < 2 && !SideLocationTop)))
+                {
+                    continue;
+                }
+
+                if ((Parent.Players[x].Life == Parent.Players[x].GetMaxLife()) &&
+                    (!Parent.Players[x].IsBlazing))
+                {
+                    _blazingSidePart.ColorShading.A = 255;
+                    _blazingSidePart.ColorShading = Parent.FullHighlightColors[x];
+                    _blazingSidePart.Draw(spriteBatch, x/2, 50, 25, _sidePositions[x]);
+                }
+            }
         }
 
 
@@ -292,25 +326,17 @@ namespace WGiBeat.Drawing
         }
 
         private Vector2[] _sidePositions = new Vector2[4];
+        private Vector2[] _middlePositions = new Vector2[2];
         private void DrawSides(SpriteBatch spriteBatch)
         {
             int playerIdx = 0;
+            SetPositions();
 
- 
-            _sidePositions[0].X = this.X;
-            _sidePositions[0].Y = this.Y + this.Height;
-            _sidePositions[1].X = this.X + this.Width - 50;
-            _sidePositions[1].Y = this.Y + this.Height;
-            _sidePositions[2].X = this.X;
-            _sidePositions[2].Y = this.Y -25;
-            _sidePositions[3].X = this.X + this.Width - 50;
-            _sidePositions[3].Y = this.Y -25;
 
             //Lifebar amounts appear on top for Player 3 and 4.
             if (SideLocationTop)
             {
                 playerIdx += 2;
-
             }
 
             //Draw on the right side.
@@ -324,11 +350,10 @@ namespace WGiBeat.Drawing
                 _sidePart.Draw(spriteBatch, playerIdx / 2, 50, 25, _sidePositions[playerIdx]);
             }
 
-            _middlePart.Draw(spriteBatch, playerIdx / 2, 139, 25, (this.X + this.Width - 134) / 2, (int) _sidePositions[playerIdx].Y);
+            _middlePart.Draw(spriteBatch, playerIdx / 2, 139, 25, _middlePositions[playerIdx/2]);
             DrawTotal(spriteBatch, (this.X + this.Width - 90) / 2, (int)_sidePositions[playerIdx].Y);
 
         }
-
 
         #region Helper Methods
 
@@ -372,6 +397,21 @@ namespace WGiBeat.Drawing
             return (gameTime - Math.Floor(gameTime)) * BEAT_FRACTION_SEVERITY;
         }
 
+        private void SetPositions()
+        {
+            _sidePositions[0].X = this.X;
+            _sidePositions[0].Y = this.Y + this.Height;
+            _sidePositions[1].X = this.X + this.Width - 50;
+            _sidePositions[1].Y = this.Y + this.Height;
+            _sidePositions[2].X = this.X;
+            _sidePositions[2].Y = this.Y - 25;
+            _sidePositions[3].X = this.X + this.Width - 50;
+            _sidePositions[3].Y = this.Y - 25;
+            _middlePositions[0].X = (this.X + this.Width - 134) / 2;
+            _middlePositions[0].Y = this.Y + this.Height;
+            _middlePositions[1].X = (this.X + this.Width - 134) / 2;
+            _middlePositions[1].Y = this.Y - 25;
+        }
         #endregion
     }
 }
