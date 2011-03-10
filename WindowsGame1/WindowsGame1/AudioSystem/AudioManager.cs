@@ -343,5 +343,15 @@ namespace WGiBeat.AudioSystem
             return returnData;
         }
 
+        public double GetFileLength(string filePath)
+        {
+            Sound tmpSound = new Sound();
+            CheckFMODErrors(_fmodSystem.createSound(filePath, MODE.SOFTWARE + (uint) MODE.CREATESTREAM, ref tmpSound));
+            uint result = 0;
+            CheckFMODErrors(tmpSound.getLength(ref result,TIMEUNIT.MS));
+            CheckFMODErrors(tmpSound.release());
+            return result;
+
+        }
     }
 }
