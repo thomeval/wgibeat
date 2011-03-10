@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
+using WGiBeat.Notes;
 
 namespace WGiBeat.Screens
 {
@@ -364,11 +365,15 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black, FontAlign.CENTER);
             {
                 var labelPosition = Core.Metrics["EvaluationLabelColumn", x].Clone();
                 var valuePosition = Core.Metrics["EvaluationValueColumn", x].Clone();
+                var percentagePosition = Core.Metrics["EvaluationPercentageColumn", x].Clone();
+
                 if (!Core.Players[x].Playing)
                 {
                     continue;
                 }
                 int y = 0;
+                var totalBeatlines = Core.Players[x].Judgements.Sum() - Core.Players[x].Judgements[(int)BeatlineNoteJudgement.COUNT];
+
                 foreach (string line in _lines)
                 {
 
@@ -376,9 +381,19 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black, FontAlign.CENTER);
                                            labelPosition, Color.Black, FontAlign.LEFT);
                     TextureManager.DrawString(spriteBatch, "" + Core.Players[x].Judgements[y], "DefaultFont",
                                            valuePosition, Color.Black, FontAlign.LEFT);
+                    if (line != "Fault")
+                    {
+                        TextureManager.DrawString(spriteBatch,
+                                                  String.Format("{0:P0}",
+                                                                1.0*Core.Players[x].Judgements[y]/totalBeatlines),
+                                                  "DefaultFont",
+                                                  percentagePosition, Color.Black, FontAlign.LEFT);
+                    }
                     y++;
                     labelPosition.Y += 18;
                     valuePosition.Y += 18;
+                    percentagePosition.Y += 18;
+
                 }
 
                 TextureManager.DrawString(spriteBatch, "Score:", "LargeFont",
