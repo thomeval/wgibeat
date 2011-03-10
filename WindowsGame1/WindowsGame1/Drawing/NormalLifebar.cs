@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.Players;
 
 namespace WGiBeat.Drawing
 {
@@ -165,10 +166,21 @@ namespace WGiBeat.Drawing
             DrawFirstOvercharge(spriteBatch);
             _gridPart.DrawTiled(spriteBatch,0,0,this.Width-3,this.Height-6);
             DrawBlazingEffect(spriteBatch, beatFraction);
+            DrawFullEffect(spriteBatch);
             DrawSecondOvercharge(spriteBatch);
 
             DrawText(spriteBatch, _sidePos);
             _overchargeTextureOffset = (_overchargeTextureOffset + 0.5) % OVERCHARGE_OFFSET_CLIP;
+        }
+
+        private void DrawFullEffect(SpriteBatch spriteBatch)
+        {
+            if ((Parent.Players[PlayerID].Life == Parent.Players[PlayerID].GetMaxLife()) && (!Parent.Players[PlayerID].IsBlazing))
+            {
+                _blazingSidePart.ColorShading.A = 255;
+                _blazingSidePart.ColorShading = Parent.FullHighlightColors[PlayerID];
+                _blazingSidePart.Draw(spriteBatch, PlayerID/2, 50, 25, _sidePos);
+            }
         }
 
         private void DrawBlazingEffect(SpriteBatch spriteBatch, double beatFraction)
@@ -183,7 +195,8 @@ namespace WGiBeat.Drawing
             _blazingPart.X = this.X;
             _blazingPart.Y = this.Y;
             _blazingPart.Draw(spriteBatch);
-            _blazingSidePart.ColorShading.A = opacity;
+            _blazingSidePart.ColorShading = Color.White;
+            _blazingSidePart.ColorShading.A = opacity;  
             _blazingSidePart.Draw(spriteBatch, PlayerID / 2, 50, 25, _sidePos);
         }
 
