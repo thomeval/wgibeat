@@ -49,6 +49,7 @@ namespace WGiBeat.Screens
 
         private Sprite _editProgressBaseSprite;
         private Sprite _backgroundSprite;
+        private Sprite _songDetailsDisplaySprite;
         private SpriteMap _editProgressSpriteMap;
         private SpriteMap _validitySpriteMap;
         private Sprite _validityTextBaseSprite;
@@ -130,6 +131,11 @@ namespace WGiBeat.Screens
                                               SpriteTexture = TextureManager.Textures("EditorValidityTextBase"),
                                               Position = (Core.Metrics["EditorSongValidityMessageBase", 0])
                                           };
+            _songDetailsDisplaySprite = new Sprite
+                                            {
+                                                Position = Core.Metrics["EditorSongDetailsDisplay", 0],
+                                                SpriteTexture = TextureManager.Textures("EditorDetailsDisplay")
+                                            };
         }
 
         private void CreateMenus()
@@ -355,6 +361,7 @@ namespace WGiBeat.Screens
         private void DrawBPMMeterExtras(SpriteBatch spriteBatch)
         {
             _validityTextBaseSprite.Draw(spriteBatch);
+            _songDetailsDisplaySprite.Draw(spriteBatch);
         }
 
         private void DrawBPMMeasurement(SpriteBatch spriteBatch)
@@ -399,22 +406,27 @@ namespace WGiBeat.Screens
                 case EditorCursorPosition.SONG_DETAILS:
                 case EditorCursorPosition.SONG_DETAILS_DELETE:
 
-                    var offsetPosition = _bpmMeter.Position.Clone();
-                    offsetPosition.X += 320;
-                    offsetPosition.Y += 90;
-                    TextureManager.DrawString(spriteBatch, String.Format("Offset: {0:0.000}", NewGameSong.Offset), "TwoTech", offsetPosition, Color.Black, FontAlign.RIGHT);
-                    offsetPosition.Y += 30;
-                    TextureManager.DrawString(spriteBatch, String.Format("AudioStart: {0:0.000}", NewGameSong.AudioStart), "TwoTech", offsetPosition, Color.Black, FontAlign.RIGHT);
+                    var offsetPosition = Core.Metrics["EditorSongDetailsDisplay",0].Clone();
+                    offsetPosition.X += 2;
+                    offsetPosition.Y += 12;
+                    var scale = TextureManager.ScaleTextToFit(String.Format("{0:0.00}", NewGameSong.AudioStart),
+                                                              "TwoTech", 70, 35);
+                    TextureManager.DrawString(spriteBatch, String.Format("{0:0.00}", NewGameSong.AudioStart), "TwoTech", offsetPosition,scale, Color.Black, FontAlign.LEFT);
+                    offsetPosition.X += 160;
+                    scale = TextureManager.ScaleTextToFit(String.Format("{0:0.00}", NewGameSong.Offset),
+                                                              "TwoTech", 70, 35);
+                    TextureManager.DrawString(spriteBatch, String.Format("{0:0.00}", NewGameSong.Offset), "TwoTech", offsetPosition,scale, Color.Black, FontAlign.RIGHT);
 
                     if ((NewGameSong.Bpm > 0) && (NewGameSong.Length > 0))
                     {
                         var totalBeatlines = Math.Floor(NewGameSong.GetEndingTimeInPhrase());
-                        offsetPosition.Y -= 25;
+                        offsetPosition.Y += 20;
                         totalBeatlines = Math.Max(totalBeatlines + 1, 0);
-                        TextureManager.DrawString(spriteBatch, "Total beatlines: " + totalBeatlines, "TwoTech",
+                        TextureManager.DrawString(spriteBatch, "" +totalBeatlines, "TwoTechLarge",
                                                   offsetPosition, Color.Black, FontAlign.RIGHT);
                     }
-                    TextureManager.DrawString(spriteBatch, _validityMessage, "DefaultFont", Core.Metrics["EditorSongValidityMessage",0],Color.Black, FontAlign.CENTER);
+                    
+                    TextureManager.DrawString(spriteBatch, _validityMessage.Replace(".",".\n"), "DefaultFont", Core.Metrics["EditorSongValidityMessage",0],Color.Black, FontAlign.CENTER);
                     break;
                 case EditorCursorPosition.SONG_TUNING:
                     DrawDebugText(spriteBatch);

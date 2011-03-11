@@ -379,17 +379,17 @@ namespace WGiBeat.AudioSystem
             }
             if (song.Offset < 0)
             {
-                message = "Offset position is invalid.";
+                message = "Offset position is invalid. Must be more than zero.";
                 return false;
             }
             if ((song.Length <= 0) || (song.Length <= song.Offset))
             {
-                message = "Length is not specified or invalid.";
+                message = "Length is not specified or invalid. Must be higher than Offset.";
                 return false;
             }
             if (song.Bpm <= 0)
             {
-                message = "BPM is not specified or invalid.";
+                message = "BPM is not specified or invalid. Must be more than zero.";
                 return false;
             }
 
