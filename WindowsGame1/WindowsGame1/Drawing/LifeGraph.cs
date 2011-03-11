@@ -58,14 +58,14 @@ namespace WGiBeat.Screens
         {
             _yborder = new SpriteMap
                            {
-                               Columns = 2,
-                               Rows = 1,
+                               Columns = 1,
+                               Rows = 2,
                                SpriteTexture = TextureManager.Textures("LifegraphYBorder")
                            };
             _xborder = new SpriteMap
             {
-                Columns = 1,
-                Rows = 2,
+                Columns = 2,
+                Rows = 1,
                 SpriteTexture = TextureManager.Textures("LifegraphXBorder")
 
             };
@@ -191,8 +191,8 @@ namespace WGiBeat.Screens
 
             _xborder.Draw(spriteBatch,1,20,this.Height,this.X - 20, this.Y);
             _xborder.Draw(spriteBatch,0,20, this.Height,this.X + this.Width, this.Y);
-            _yborder.Draw(spriteBatch,0,this.Width,20,this.X, this.Y - 20);
-            _yborder.Draw(spriteBatch,1, this.Width, 20, this.X, this.Y + this.Height);
+            _yborder.Draw(spriteBatch,1,this.Width,20,this.X, this.Y - 20);
+            _yborder.Draw(spriteBatch,0, this.Width, 20, this.X, this.Y + this.Height);
             _cornerSpriteMap.Draw(spriteBatch,0,this.X - 20, this.Y - 20);
             _cornerSpriteMap.Draw(spriteBatch, 1, this.X + this.Width, this.Y - 20);
             _cornerSpriteMap.Draw(spriteBatch, 2, this.X - 20, this.Y +this.Height);
