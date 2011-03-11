@@ -87,6 +87,7 @@ namespace WGiBeat.AudioSystem
             if (!dontStream)
             {
                 mode += (uint) MODE.CREATESTREAM;
+
             }
 
             CheckFMODErrors(mySound.setMode((MODE) mode));
@@ -197,6 +198,7 @@ namespace WGiBeat.AudioSystem
                     mode += (uint) MODE.CREATESTREAM;
                 }
 
+                mode += (uint)MODE.ACCURATETIME;
                 CheckFMODErrors(_fmodSystem.createSound(soundPath, (MODE) mode, ref mySound));
                 _sounds.Add(soundPath, mySound);
                 return mySound;

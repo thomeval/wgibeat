@@ -208,19 +208,19 @@ namespace WGiBeat.Screens
         private void DrawBpmMeter(GameTime gameTime, SpriteBatch spriteBatch)
         {
 
-        //    var timeElapsed = gameTime.TotalRealTime.TotalMilliseconds - _songStartTime + CurrentSong.Offset * 1000;
             if (Core.Settings.Get<bool>("SongPreview") && Crossfader.ChannelIndexCurrent > -1)
             {
 
                 var actualTime = Core.Audio.GetChannelPosition(Crossfader.ChannelIndexCurrent);
                 _bpmMeter.SongTime = CurrentSong.ConvertMSToPhrase(actualTime)*4;
+             //   TextureManager.DrawString(spriteBatch,String.Format("{0:F3}",actualTime),"DefaultFont",new Vector2(20,140),Color.Black,FontAlign.LEFT);
+            //    TextureManager.DrawString(spriteBatch, String.Format("{0:F3}", CurrentSong.ConvertMSToPhrase(actualTime) * 1), "DefaultFont", new Vector2(50, 120), Color.Black, FontAlign.LEFT);
+
             }
             else
             {
                 _bpmMeter.SongTime = 0;
             }
-//            TextureManager.DrawString(spriteBatch,String.Format("{0:F3}",CurrentSong.ConvertMSToPhrase(timeElapsed) * 2),"DefaultFont", new Vector2(50,100),Color.Black,FontAlign.LEFT );
-//            TextureManager.DrawString(spriteBatch, String.Format("{0:F3}", CurrentSong.ConvertMSToPhrase(actualTime) * 2), "DefaultFont", new Vector2(50, 120), Color.Black, FontAlign.LEFT);
 
             _bpmMeter.Draw(spriteBatch);
         }
