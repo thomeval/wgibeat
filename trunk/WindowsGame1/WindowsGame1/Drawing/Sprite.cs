@@ -32,14 +32,31 @@ namespace WGiBeat.Drawing
                                       Height = (int) Math.Ceiling(this.Height * Multiplier.Y),
                                       Width = (int)Math.Ceiling(this.Width * Multiplier.X),
                                   };
-            /*
-            var drift = Math.Ceiling(this.X*Multiplier.X) - (this.X * Multiplier.X);
+
+         //   boundingBox = AdjustForDrift(boundingBox);
+            spriteBatch.Draw(SpriteTexture, boundingBox, ColorShading);
+        }
+
+        //Doesn't work - No solution found for sprite tearing yet.
+        private static Rectangle AdjustForDrift(Rectangle boundingBox)
+        {
+           var drift = Math.Ceiling(boundingBox.X * Multiplier.X) - (boundingBox.X * Multiplier.X);
+           drift  += Math.Ceiling(boundingBox.Width * Multiplier.X) - (boundingBox.Width * Multiplier.X);
+
             if (drift >= 0.5)
             {
                 boundingBox.Width--;
             }
-             */
-                spriteBatch.Draw(SpriteTexture, boundingBox, ColorShading);
+
+            drift = Math.Ceiling(boundingBox.Y * Multiplier.Y) - (boundingBox.Y * Multiplier.Y);
+            drift += Math.Ceiling(boundingBox.Height * Multiplier.Y) - (boundingBox.Height * Multiplier.Y);
+
+            if (drift >= 0.5)
+            {
+                boundingBox.Height--;
+            }
+
+            return boundingBox;
         }
 
 

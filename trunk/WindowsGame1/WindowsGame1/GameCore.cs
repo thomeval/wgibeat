@@ -186,11 +186,21 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
         public void SetGraphicsSettings()
         {
             GraphicsManager.IsFullScreen = Settings.Get<bool>("FullScreen");
-            string[] resolution = Settings.Get<string>("ScreenResolution").Split('x');
-            GraphicsManager.PreferredBackBufferWidth = Convert.ToInt32(resolution[0]);
-            GraphicsManager.PreferredBackBufferHeight = Convert.ToInt32(resolution[1]);
-            GraphicsDevice.RenderState.ScissorTestEnable = true;
-            Sprite.SetMultiplier(Convert.ToInt32(resolution[0]), Convert.ToInt32(resolution[1]));
+            if (GraphicsManager.IsFullScreen)
+            {
+                GraphicsManager.PreferredBackBufferHeight = 600;
+                GraphicsManager.PreferredBackBufferWidth = 800;
+                Sprite.SetMultiplier(800,600);
+            }
+            else
+            {
+                string[] resolution = Settings.Get<string>("ScreenResolution").Split('x');
+                GraphicsManager.PreferredBackBufferWidth = Convert.ToInt32(resolution[0]);
+                GraphicsManager.PreferredBackBufferHeight = Convert.ToInt32(resolution[1]);
+                GraphicsDevice.RenderState.ScissorTestEnable = true;
+                Sprite.SetMultiplier(Convert.ToInt32(resolution[0]), Convert.ToInt32(resolution[1]));
+            }
+
             Sprite.Core = this;
             PrimitiveLine.Multiplier = Sprite.Multiplier;
             GraphicsManager.ApplyChanges();
