@@ -332,7 +332,6 @@ namespace WGiBeat.Drawing
             int playerIdx = 0;
             SetPositions();
 
-
             //Lifebar amounts appear on top for Player 3 and 4.
             if (SideLocationTop)
             {
