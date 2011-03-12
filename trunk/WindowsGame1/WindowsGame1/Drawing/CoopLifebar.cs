@@ -319,9 +319,9 @@ namespace WGiBeat.Drawing
             var position = new Vector2(x, y);
             TextureManager.DrawString(spriteBatch, GetBonusMultiplier() + "x",
 "DefaultFont", position, Color.Black, FontAlign.CENTER);
-            position.X += 40;
-            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), String.Format("{0:D3}", (int)TotalLife()),
-                    position, Color.Black);
+            position.X += 65;
+            TextureManager.DrawString(spriteBatch, String.Format("{0:D3}", (int)TotalLife()),"DefaultFont",
+                    position, Color.Black,FontAlign.CENTER);
 
         }
 
