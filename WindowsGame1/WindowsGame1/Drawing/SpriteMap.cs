@@ -24,10 +24,10 @@ namespace WGiBeat.Drawing
             Rectangle sourceRect = CalculateSourceRectangle(cellnumber);
             var destRect = new Rectangle
                                {
-                                   Height =  (int) Math.Round(height * Sprite.Multiplier.Y),
-                                   Width = (int) Math.Round(width * Sprite.Multiplier.X), 
-                                   X = (int) Math.Round(x * Sprite.Multiplier.X), 
-                                   Y = (int) Math.Round(y * Sprite.Multiplier.Y)
+                                   Height =  (int) Math.Ceiling(height * Sprite.Multiplier.Y),
+                                   Width = (int)Math.Ceiling(width * Sprite.Multiplier.X),
+                                   X = (int)Math.Ceiling(x * Sprite.Multiplier.X),
+                                   Y = (int)Math.Ceiling(y * Sprite.Multiplier.Y)
                                };
 
             spriteBatch.Draw(SpriteTexture, destRect, sourceRect, ColorShading);

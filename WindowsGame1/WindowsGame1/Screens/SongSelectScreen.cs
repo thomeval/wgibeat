@@ -155,6 +155,7 @@ namespace WGiBeat.Screens
         private void DrawWaveForm(SpriteBatch spriteBatch)
         {
             _spectrumBackground.Draw(spriteBatch);
+            
             if (Crossfader.ChannelIndexCurrent != -1)
             {
                 float[] levels = Core.Audio.GetChannelSpectrum(Crossfader.ChannelIndexCurrent, WAVEFORM_POINTS);
@@ -190,6 +191,7 @@ namespace WGiBeat.Screens
                         line.AddVector(new Vector2(posX + 6, -70 * averageLevels[x]));
                         posX += 6;
                     }
+  
                 line.Render(spriteBatch);
 
                 posX = 0;

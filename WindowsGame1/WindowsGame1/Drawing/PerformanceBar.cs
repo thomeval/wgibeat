@@ -97,9 +97,9 @@ namespace WGiBeat.Drawing
                 _middleSprite.Draw(spriteBatch);
 
                 _rightSprite.Draw(spriteBatch);
-                _rightSprite.X += 10;
+                _rightSprite.X += 35;
                 _rightSprite.Y += 5;
-                TextureManager.DrawString(spriteBatch, percentageText, "DefaultFont", _rightSprite.Position, Color.Black, FontAlign.LEFT);
+                TextureManager.DrawString(spriteBatch, percentageText, "DefaultFont", _rightSprite.Position, Color.Black, FontAlign.CENTER);
 
                 position.X = this.Position.X;
                 position.Y += 30;

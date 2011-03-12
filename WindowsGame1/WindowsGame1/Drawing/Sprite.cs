@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing
@@ -26,11 +27,18 @@ namespace WGiBeat.Drawing
             CheckIfDimensionsSet();
             var boundingBox = new Rectangle
                                   {
-                                      X = (int) (this.X * Multiplier.X),
-                                      Y = (int) (this.Y * Multiplier.Y),
-                                      Height = (int) (this.Height * Multiplier.Y),
-                                      Width = (int) (this.Width * Multiplier.X),
+                                      X = (int)Math.Ceiling(this.X * Multiplier.X),
+                                      Y = (int)Math.Ceiling(this.Y * Multiplier.Y),
+                                      Height = (int) Math.Ceiling(this.Height * Multiplier.Y),
+                                      Width = (int)Math.Ceiling(this.Width * Multiplier.X),
                                   };
+            /*
+            var drift = Math.Ceiling(this.X*Multiplier.X) - (this.X * Multiplier.X);
+            if (drift >= 0.5)
+            {
+                boundingBox.Width--;
+            }
+             */
                 spriteBatch.Draw(SpriteTexture, boundingBox, ColorShading);
         }
 
@@ -43,10 +51,10 @@ namespace WGiBeat.Drawing
             var textureRect = new Rectangle(texU1, texV1, texU2, texV2);
             var dest = new Rectangle
             {
-                X = (int)(this.X * Multiplier.X),
-                Y = (int)(this.Y * Multiplier.Y),
-                Height = (int)(this.Height * Multiplier.Y),
-                Width = (int)(this.Width * Multiplier.X),
+                X = (int)Math.Ceiling(this.X * Multiplier.X),
+                Y = (int)Math.Ceiling(this.Y * Multiplier.Y),
+                Height = (int)Math.Ceiling(this.Height * Multiplier.Y),
+                Width = (int)Math.Ceiling(this.Width * Multiplier.X),
             };
 
             spriteBatch.Draw(SpriteTexture, dest, textureRect, ColorShading);

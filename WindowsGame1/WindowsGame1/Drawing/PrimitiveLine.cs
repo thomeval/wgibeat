@@ -116,6 +116,8 @@ namespace WGiBeat.Drawing
             if (vectors.Count < 2)
                 return;
 
+            var actualPosition = Position*Multiplier;
+
             for (int i = 1; i < vectors.Count; i++)
             {
                 var vector1 = vectors[i - 1];
@@ -130,7 +132,7 @@ namespace WGiBeat.Drawing
 
                 // stretch the pixel between the two vectors
                 spriteBatch.Draw(pixel,
-                                 Position + vector1,
+                                 actualPosition + vector1,
                                  null,
                                  Colour,
                                  angle,
