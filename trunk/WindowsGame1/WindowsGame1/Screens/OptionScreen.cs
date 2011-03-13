@@ -46,11 +46,6 @@ namespace WGiBeat.Screens
             item.AddOption("On", true);
             _optionsMenu.AddItem(item);
 
-            item = new MenuItem { ItemText = "Full screen" };
-            item.AddOption("Off", false);
-            item.AddOption("On", true);
-            _optionsMenu.AddItem(item);
-
             item = new MenuItem { ItemText = "Song Audio Validation" };
             item.AddOption("Ignore", 0);
             item.AddOption("Warn only", 1);
@@ -93,9 +88,14 @@ namespace WGiBeat.Screens
             item = new MenuItem {ItemText = "Screen Resolution"};
             item.AddOption("800x600", "800x600");
             item.AddOption("1024x768", "1024x768");
-           // item.AddOption("1200x900","1200x900");
+            item.AddOption("1200x900","1200x900");
             item.AddOption("1280x1024", "1280x1024");
-            _optionsMenu.AddItem(item);         
+            _optionsMenu.AddItem(item);
+
+            item = new MenuItem { ItemText = "Full screen" };
+            item.AddOption("Off", false);
+            item.AddOption("On", true);
+            _optionsMenu.AddItem(item);
 
             item = new MenuItem { ItemText = "Save" };
             _optionsMenu.AddItem(item);
