@@ -108,7 +108,11 @@ namespace WGiBeat.Drawing
                 {
                     continue;
                 }
-
+                //Only draw P3 and P4's life totals on the bottom, and only P1 and P2 on top.
+                if ((!SideLocationTop && x >= 2) || (SideLocationTop && x < 2))
+                {
+                    continue;
+                }
                 DrawText(spriteBatch,x,_sidePositions[x]);
             }
         }

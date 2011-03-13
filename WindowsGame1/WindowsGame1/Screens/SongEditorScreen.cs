@@ -480,33 +480,33 @@ namespace WGiBeat.Screens
         {
             var textPosition = Core.Metrics["EditorTweakControls", 0].Clone();
 
-            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "F5 - Decrease BPM", textPosition, Color.Black);
+            TextureManager.DrawString(spriteBatch, "F5 - Decrease BPM", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "F6 - Increase BPM", textPosition, Color.Black);
+            TextureManager.DrawString(spriteBatch, "F6 - Increase BPM", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "F7 - Decrease Offset (0.1)", textPosition, Color.Black);
+            TextureManager.DrawString(spriteBatch, "F7 - Decrease Offset (0.1)", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "F8 - Increase Offset (0.1)", textPosition, Color.Black);
+            TextureManager.DrawString(spriteBatch, "F8 - Increase Offset (0.1)", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "F9 - Decrease Offset (0.01)", textPosition, Color.Black);
+            TextureManager.DrawString(spriteBatch, "F9 - Decrease Offset (0.01)", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "F10 - Increase Offset (0.01)", textPosition, Color.Black);
+            TextureManager.DrawString(spriteBatch, "F10 - Increase Offset (0.01)", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "F11 - Decrease Length", textPosition, Color.Black);
+            TextureManager.DrawString(spriteBatch, "F11 - Decrease Length", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "F12 - Increase Length", textPosition, Color.Black);
+            TextureManager.DrawString(spriteBatch, "F12 - Increase Length", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
 
             textPosition = Core.Metrics["EditorTweakControls", 1].Clone();
 
-            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "LEFT - Decrease Beatline Speed", textPosition, Color.Black);
+            TextureManager.DrawString(spriteBatch, "LEFT - Decrease Beatline Speed", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "RIGHT - Increase Beatline Speed", textPosition, Color.Black);
+            TextureManager.DrawString(spriteBatch, "RIGHT - Increase Beatline Speed", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "BEATLINE - Hit beatline", textPosition, Color.Black);
+            TextureManager.DrawString(spriteBatch, "BEATLINE - Hit beatline", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "SELECT - Restart Song", textPosition, Color.Black);
+            TextureManager.DrawString(spriteBatch, "SELECT - Restart Song", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
             textPosition.Y += 20;
-            spriteBatch.DrawString(TextureManager.Fonts("DefaultFont"), "START - Complete Tuning", textPosition, Color.Black);
+            TextureManager.DrawString(spriteBatch, "START - Complete Tuning", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
         }
 
 
