@@ -79,8 +79,17 @@ namespace WGiBeat.Managers
             _buttonMappings[0].Add(Buttons.LeftShoulder, new InputAction { Player = 4, Action = "BEATLINE" });
             _buttonMappings[0].Add(Buttons.RightShoulder, new InputAction { Player = 4, Action = "BEATLINE" });
             _buttonMappings[0].Add(Buttons.Start, new InputAction { Player = 4, Action = "START" });
-            _buttonMappings[0].Add(Buttons.Back, new InputAction { Player = 4, Action = "SELECT" });
+            _buttonMappings[0].Add(Buttons.LeftTrigger, new InputAction { Player = 4, Action = "SELECT" });
+            _buttonMappings[0].Add(Buttons.RightTrigger, new InputAction { Player = 4, Action = "SELECT" });
+            _buttonMappings[0].Add(Buttons.DPadLeft, new InputAction { Player = 4, Action = "LEFT" });
+            _buttonMappings[0].Add(Buttons.DPadRight, new InputAction { Player = 4, Action = "RIGHT" });
+            _buttonMappings[0].Add(Buttons.DPadUp, new InputAction { Player = 4, Action = "UP" });
+            _buttonMappings[0].Add(Buttons.DPadDown, new InputAction { Player = 4, Action = "DOWN" });
 
+            _buttonMappings[0].Add(Buttons.Back, new InputAction{ Player = 0, Action = "BACK"});
+            _buttonMappings[1].Add(Buttons.Back, new InputAction { Player = 1, Action = "BACK" });
+            _buttonMappings[2].Add(Buttons.Back, new InputAction { Player = 2, Action = "BACK" });
+            _buttonMappings[3].Add(Buttons.Back, new InputAction { Player = 3, Action = "BACK" });
         }
 
         public bool LoadFromFile(string filename)

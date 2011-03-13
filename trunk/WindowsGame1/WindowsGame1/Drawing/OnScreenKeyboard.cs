@@ -94,11 +94,11 @@ namespace WGiBeat.Drawing
                 drawPosition.Y = (initialPosition.Y) + (SpacingY*(counter/Columns));
                 if (counter == _selectedIndex)
                 {
-                    spriteBatch.DrawString(TextureManager.Fonts("TwoTech"), c.ToString(), drawPosition, HighlightColor);
+                    TextureManager.DrawString(spriteBatch, c.ToString(), "TwoTech", drawPosition, HighlightColor, FontAlign.LEFT);
                 }
                 else
                 {
-                    spriteBatch.DrawString(TextureManager.Fonts("TwoTech"), c.ToString(), drawPosition, BaseColor);                  
+                    TextureManager.DrawString(spriteBatch, c.ToString(), "TwoTech", drawPosition, BaseColor,FontAlign.LEFT);                  
                 }
 
                 counter++;

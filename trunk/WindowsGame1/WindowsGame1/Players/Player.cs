@@ -23,7 +23,6 @@ namespace WGiBeat.Players
         public bool IsBlazing { get; set; }
         public int Team { get; set; }
         public long PlayTime { get; set; }
-        public double LastCPUArrowHit { get; set; }
         public BeatlineNoteJudgement NextCPUJudgement { get; set; }
 
         private long _hits;
@@ -213,11 +212,10 @@ namespace WGiBeat.Players
             Streak = 0;
             MaxStreak = 0;
             Momentum = 0;
-            Life = 50;
+            Life = this.GetMaxLife() / 2;
             KO = false;
             IsBlazing = false;
             PlayTime = 0;
-            LastCPUArrowHit = 0.0;
             _lifeHistory.Clear();
             NextCPUJudgement = BeatlineNoteJudgement.COUNT;
         }
@@ -290,8 +288,7 @@ namespace WGiBeat.Players
 
             return 100.0 * playerScore / maxPossible;
         }
-
-  
+ 
     }
 
     public enum Difficulty

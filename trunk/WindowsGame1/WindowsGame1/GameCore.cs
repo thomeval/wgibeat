@@ -197,7 +197,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
                 string[] resolution = Settings.Get<string>("ScreenResolution").Split('x');
                 GraphicsManager.PreferredBackBufferWidth = Convert.ToInt32(resolution[0]);
                 GraphicsManager.PreferredBackBufferHeight = Convert.ToInt32(resolution[1]);
-                GraphicsDevice.RenderState.ScissorTestEnable = true;
+
                 Sprite.SetMultiplier(Convert.ToInt32(resolution[0]), Convert.ToInt32(resolution[1]));
             }
 
@@ -217,7 +217,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
         {         
             // Create a new SpriteBatch, which can be used to draw textures.
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
+    
             LoadCurrentTheme();
 
             var files = Directory.GetFiles(Content.RootDirectory + "/Fonts", "*.xnb");
@@ -296,7 +296,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
                 _spriteBatch.End();
             }
 
-            _spriteBatch.Begin(SpriteBlendMode.AlphaBlend,SpriteSortMode.Immediate,SaveStateMode.None);
+            _spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
             if (enableWrap)
             {
                 GraphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
