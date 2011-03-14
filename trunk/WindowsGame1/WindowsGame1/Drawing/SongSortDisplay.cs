@@ -15,7 +15,6 @@ namespace WGiBeat.Drawing
         private byte _activeOpacity;
 
         private bool _initiated;
-        private int SelectedSongHash { get; set;}
 
         private SongSortMode _songSortMode;
         public SongSortMode SongSortMode
@@ -25,6 +24,7 @@ namespace WGiBeat.Drawing
             {
                 _songSortMode = value;
                 SortSongList();
+                CreateBookmarkMenu();
             }
         }
 
@@ -59,10 +59,17 @@ namespace WGiBeat.Drawing
             return first.Song.Bpm.CompareTo(second.Song.Bpm);
         }
 
-    
+
+        private List<SongListItem> _songList;
+
         public List<SongListItem> SongList
         {
-            get; set;
+            get { return _songList; }
+            set
+            {
+                _songList = value;
+                CreateBookmarkMenu();
+            }
         }
 
 
@@ -78,9 +85,16 @@ namespace WGiBeat.Drawing
         public int VisibleBookmarks = 10;
         private int _lastSongHash;
 
+        private int _selectedSongIndex;
+
         public int SelectedSongIndex
         {
-            get; set;
+            get { return _selectedSongIndex; }
+            set
+            {
+                _selectedSongIndex = value;
+                SetBookmark(value);
+            }
         }
 
         public SongSortDisplay()
@@ -94,7 +108,6 @@ namespace WGiBeat.Drawing
             _arrowSprites = new SpriteMap {SpriteTexture = TextureManager.Textures("IndicatorArrows"), Columns=4, Rows = 1};
             _listBackgroundSprite = new Sprite {SpriteTexture = TextureManager.Textures("SongSortListBackground")};
             _textPosition = new Vector2();
-            _bookmarkMenu = new Menu();
  
         }
         public override void Draw(SpriteBatch spriteBatch)
@@ -140,6 +153,7 @@ namespace WGiBeat.Drawing
             {
                 _initiated = true;
                 CreateBookmarkMenu();
+                SetBookmark(_selectedSongIndex);
             }
             _bookmarkMenu.Draw(spriteBatch);
         }
@@ -162,6 +176,7 @@ namespace WGiBeat.Drawing
             SongSortMode = (SongSortMode) current;
             CreateBookmarkMenu();
             SelectedSongIndex = SongList.IndexOf(GetByHashCode(_lastSongHash));
+            SetBookmark(SelectedSongIndex);
         }
 
         private SongListItem GetByHashCode(int hash)
@@ -310,14 +325,15 @@ namespace WGiBeat.Drawing
 
         private void CreateBookmarkMenu()
         {
-            _bookmarkMenu = new Menu
-                                {
-                                    MaxVisibleItems = VisibleBookmarks,
-                                    FontName = "DefaultFont",
-                                    Position = _listBackgroundSprite.Position.Clone(),
-                                    ItemSpacing = _bookmarkTextSize,
-                                    Width = _listBackgroundSprite.Width
-                                };
+
+                _bookmarkMenu = new Menu
+                                    {
+                                        MaxVisibleItems = VisibleBookmarks,
+                                        FontName = "DefaultFont",
+                                        Position = _listBackgroundSprite.Position.Clone(),
+                                        ItemSpacing = _bookmarkTextSize,
+                                        Width = _listBackgroundSprite.Width
+                                    };
             foreach (MenuItem item in CreateBookmarks())
             {
                 _bookmarkMenu.AddItem(item);
@@ -407,6 +423,7 @@ namespace WGiBeat.Drawing
 
         public void SetBookmark(int index)
         {
+
             object value = "";
             switch (SongSortMode)
             {

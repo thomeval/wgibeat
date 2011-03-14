@@ -1070,8 +1070,7 @@ namespace WGiBeat.Screens
                     _cursorPosition = EditorCursorPosition.MEASURE_AUDIO_START;
                     ActivateMeasureMode();
                     break;
-                case 11:
-                    
+                case 11:    
                     if (Core.Songs.ValidateSongFile(NewGameSong))
                     {
                         Core.Log.AddMessage(String.Format("DEBUG: Attempting to save song details to: {0}\\{1}", NewGameSong.Path, NewGameSong.DefinitionFile), LogLevel.DEBUG);
