@@ -378,6 +378,10 @@ namespace WGiBeat.Screens
            {
                return;
            }
+            if ((from e in Core.Players where e.IsHumanPlayer select e).Count() == 0)
+            {
+                return;
+            }
             var cpuDifficulty = (from e in Core.Players where e.IsHumanPlayer select e.PlayDifficulty).Max();
 
             foreach (Player player in (from e in Core.Players where e.IsCPUPlayer select e))
