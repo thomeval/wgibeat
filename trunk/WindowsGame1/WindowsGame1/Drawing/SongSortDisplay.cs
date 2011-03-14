@@ -199,13 +199,13 @@ namespace WGiBeat.Drawing
             switch (SongSortMode)
             {
                 case SongSortMode.TITLE:
-                    SelectedSongIndex = JumpBookmarkTitle(_bookmarkMenu.SelectedItem().ItemValue.ToString());
+                    _selectedSongIndex = JumpBookmarkTitle(_bookmarkMenu.SelectedItem().ItemValue.ToString());
                     break;
                     case SongSortMode.ARTIST:
-                    SelectedSongIndex = JumpBookmarkArtist(_bookmarkMenu.SelectedItem().ItemValue.ToString());
+                    _selectedSongIndex = JumpBookmarkArtist(_bookmarkMenu.SelectedItem().ItemValue.ToString());
                     break;
                     case SongSortMode.BPM:
-                    SelectedSongIndex = JumpBookmarkBPM(_bookmarkMenu.SelectedItem().ItemValue.ToString());
+                    _selectedSongIndex = JumpBookmarkBPM(_bookmarkMenu.SelectedItem().ItemValue.ToString());
                     break;
             }
         }
@@ -244,7 +244,7 @@ namespace WGiBeat.Drawing
                     return x;
                 }
             }
-            return SongList.Count - 1;
+            return SelectedSongIndex;
         }
         private int JumpBookmarkArtist(string start)
         {
@@ -281,7 +281,7 @@ namespace WGiBeat.Drawing
                     return x;
                 }
             }
-            return SongList.Count - 1;
+            return SelectedSongIndex;
         }
         private int JumpBookmarkBPM(string start)
         {
@@ -294,7 +294,7 @@ namespace WGiBeat.Drawing
                     return x;
                 }
             }
-            return SongList.Count - 1;
+            return SelectedSongIndex;
         }
         public bool PerformAction(InputAction action)
         {
@@ -354,7 +354,7 @@ namespace WGiBeat.Drawing
                     validChars = (from e in SongList select e.Song.Title.ToUpper()[0]).Distinct().ToArray();
                         break;
                 case SongSortMode.ARTIST:
-                       validChars = (from e in SongList select e.Song.Title.ToUpper()[0]).Distinct().ToArray();
+                       validChars = (from e in SongList select e.Song.Artist.ToUpper()[0]).Distinct().ToArray();
                     break;
                     case SongSortMode.BPM:
                     result = CreateBPMBookmarks();
