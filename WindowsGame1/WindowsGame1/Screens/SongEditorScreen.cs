@@ -980,7 +980,35 @@ namespace WGiBeat.Screens
 
         private void ImportGameSong()
         {
+            Core.Songs.SetProblematicOveride(true);
             NewGameSong = Core.Songs.LoadFromFile(_sourceFilePath,false);
+            Core.Songs.SetProblematicOveride(false);
+
+            var audioFileName = Path.GetFileName(NewGameSong.AudioFile);
+
+            Core.Log.AddMessage("Creating folder for imported song: " + _wgibeatSongsFolder + "\\" + _destinationFolderName, LogLevel.DEBUG);
+            if (!Directory.Exists(_wgibeatSongsFolder + "\\" + _destinationFolderName))
+            {
+                Directory.CreateDirectory(_wgibeatSongsFolder + "\\" + _destinationFolderName);
+            }
+            Core.Log.AddMessage("Copying selected audio file from: " + audioFileName, LogLevel.DEBUG);
+            Core.Log.AddMessage(" ... to: " + _wgibeatSongsFolder + "\\" + _destinationFolderName + "\\" + audioFileName, LogLevel.DEBUG);
+
+            if (!File.Exists(_wgibeatSongsFolder + "\\" + _destinationFolderName + "\\" + audioFileName))
+            {
+                File.Copy(NewGameSong.Path + "\\" + audioFileName, _wgibeatSongsFolder + "\\" + _destinationFolderName + "\\" + audioFileName);
+            }
+
+            //Create gamesong file.
+            //Calculate MD5 and save .sng file.
+            NewGameSong.DefinitionFile = _destinationFileName;
+            NewGameSong.Path = _wgibeatSongsFolder + "\\" + _destinationFolderName;
+            NewGameSong.SetMD5();
+            NewGameSong.ReadOnly = false;
+            Core.Songs.SaveToFile(NewGameSong);
+
+            Core.Log.AddMessage("New basic game song created successfully.", LogLevel.INFO);
+
         }
 
         private void BasicsSelectAudioFile()

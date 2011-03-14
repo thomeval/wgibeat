@@ -438,5 +438,13 @@ namespace WGiBeat.AudioSystem
         }
         #endregion
 
+        public void SetProblematicOveride(bool enable)
+        {
+            foreach (SongFileLoader loader in Loaders.Values)
+            {
+                loader.AllowProblematic = enable ? true : SettingsManager.Get<bool>("AllowProblematicSongs");
+                loader.ConvertToSNG = enable ? false : SettingsManager.Get<bool>("ConvertToSNG");
+            }
+        }
     }
 }

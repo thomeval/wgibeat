@@ -50,10 +50,7 @@ namespace WGiBeat.AudioSystem.Loaders
 
         public void SaveToFile(GameSong song)
         {
-            if (!ConvertToSNG)
-            {
-                return;
-            }
+
             if (song.ReadOnly)
             {
                 return;
