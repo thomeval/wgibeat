@@ -47,7 +47,7 @@ namespace WGiBeat
         public string WgibeatRootFolder;
         private bool _drawInProgress;
 
-        public const string VERSION_STRING = "v0.7 pre";
+        public const string VERSION_STRING = "v0.7";
         private GameCore()
         {
             GraphicsManager = new GraphicsDeviceManager(this);

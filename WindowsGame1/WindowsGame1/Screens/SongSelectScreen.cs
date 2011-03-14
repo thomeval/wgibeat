@@ -73,7 +73,9 @@ namespace WGiBeat.Screens
                 if (lastSong != null)
                 {
                     _selectedIndex = _songList.IndexOf(lastSong);
+                    _songSortDisplay.SelectedSongIndex = _selectedIndex;
                 }
+
 
             InitSprites();
 
@@ -351,7 +353,6 @@ namespace WGiBeat.Screens
                 case "BEATLINE":
                     _songSortDisplay.Active = true;
                     _songSortDisplay.SelectedSongIndex = _selectedIndex;
-                    _songSortDisplay.SetBookmark(_selectedIndex);
                     break;
                 case "SELECT":
                     _playerOptionsSet.SetChangeMode(inputAction.Player, true);
@@ -366,8 +367,7 @@ namespace WGiBeat.Screens
         }
 
         private void JumpToBookmark()
-        {
-           
+        {    
             _selectedIndex = _songSortDisplay.SelectedSongIndex;
             _previewStarted = false;
         }
