@@ -144,7 +144,7 @@ namespace WGiBeat.Drawing
 
         private void DrawList(SpriteBatch spriteBatch)
         {
-            _listBackgroundSprite.Height = 40 + (_bookmarkTextSize * VisibleBookmarks);
+            _listBackgroundSprite.Height = 40 + (_bookmarkTextSize * (Math.Min(VisibleBookmarks,_bookmarkMenu.ItemCount)));
             _listBackgroundSprite.Width = 75;
             _listBackgroundSprite.SetPosition(this.X + this.Width - 75, this.Y + this.Height);
             _listBackgroundSprite.Draw(spriteBatch);
