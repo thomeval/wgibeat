@@ -5,8 +5,7 @@
 ==0.7 (r443) - "Colour-blind Unionist" ==
 
  * Song total is now displayed in the Song Select screen.
- * Players can now join and leave independently from any screen that has Player Options Frames (mode, team and song select screens)
- (To join if possible, press START. To leave, hold SELECT and press START.) 
+ * Players can now join and leave independently from any screen that has Player Options Frames (mode, team and song select screens). To join if possible, press START. To leave, hold SELECT and press START. 
  * EXP and player level system for profiles. Player level and EXP bar is shown on Player Options Frames.
  * Depending on player profile level, a player can have up to 300 maximum life. The normal lifebar has been updated to reflect this.
  * Player starting life is depandant on player profile level. 
