@@ -2,6 +2,35 @@
 
 =Version History=
 
+==0.7 (r443) - "Colour-blind Unionist" ==
+
+ * Song total is now displayed in the Song Select screen.
+ * Players can now join and leave independently from any screen that has Player Options Frames (mode, team and song select screens)
+ (To join if possible, press START. To leave, hold SELECT and press START.) 
+ * EXP and player level system for profiles. Player level and EXP bar is shown on Player Options Frames.
+ * Depending on player profile level, a player can have up to 300 maximum life. The normal lifebar has been updated to reflect this.
+ * Player starting life is depandant on player profile level. 
+ * Lifebars now indicate when they are full by having a coloured text background.  
+ * Coop mode now has overcharge, and a completely new blazing mode system.
+ * CPU players now miss beatlines more beliveably.
+ * Momentum increases are now dependant on beatline accuracy (better judgements award more momentum).
+ * Player difficulty icons have been updated.
+ * Blazing mode now has graphical effects when active (in both Normal and Coop modes).  
+ * Improved song navigation by using headings similar to those found in RB2 and RB3. Hold the BEATLINE key and press UP or DOWN to use this during Song Select.
+ * Percentages are now displayed in the Evaluation Screen. 
+ * The game window can now be changed to higher resolutions (this does NOT mean better graphics, it only stretches the window's contents). Intended for players that play without full screen mode, but have a large desktop.      
+ * WGiEdit: Added ability to rewind the song when using a measurement tool.
+ * WGiEdit: Added support for AudioStart field.
+ * WGiEdit: A song timeline is now displayed in Step 2.
+ * WGiEdit: Song validity message now handles multiple lines correctly.
+ * WGiEdit: Updated song details display in Step 2.   
+ * WGiEdit: Added feature to import individual .sm and .dwi files for editing and conversion.   
+ * Bugfix: Several crashes and songs failing to load due to cultural differences have been resolved (thanks to john_reactor for helping with this)
+ * Bugfix: Duplicate BPM or Stops definitions no longer cause a crash.
+ * Bugfix: WGiBeat no longer crashes when pressing an unmapped key or button on certain screens (thanks to eXeCutor18 for the bug report)
+ * Bugfix: On Screen Keyboard now in the correct location for P3 and P4.
+ * Bugfix: BPM meter now animates correctly, even with VBR audio files.
+
 ==0.65 (r391) - "Executive Dancer" ==
  * Support for .sm and dwi files! Note that the results can vary between perfect and completely unplayable depending on how the particular stepfile was made. Also, there is no support for BPM changes or stops.
  * Option to allow/disallow problematic .sm and .dwi files
