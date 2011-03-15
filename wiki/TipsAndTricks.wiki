@@ -50,7 +50,7 @@ When the song sort order is set to BPM, a list of common BPM's will be displayed
 ==Profile System==
 WGiBeat supports a profile system for returning players. Profiles can be used to store a player's preferred gameplay options (such as Beatline speed and difficulty), and are also used to keep gameplay stats.
 
-To create a profile, select the "[Create New]" option after selecting the "Start Game" option from the main menu. A keyboard is then displayed to facilitate name entry. Once created, a profile can be selected from the profile list shown on this screen. Profiles are completely optional for gameplay - and each player can use a profile if desired.
+To create a profile, select the "Create New" option after selecting the "Start Game" option from the main menu. A keyboard is then displayed to facilitate name entry. Once created, a profile can be selected from the profile list shown on this screen. Profiles are completely optional for gameplay - and each player can use a profile if desired.
 
 In addition to the above, players are also awarded with EXP when playing with a profile. When enough EXP is earned, the player's profile level increases, which provides certain benefits, such as increased maximum life. A player's profile level is displayed in the player options frame, located at the bottom of the screen.
 
