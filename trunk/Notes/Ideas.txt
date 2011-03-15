@@ -88,7 +88,7 @@
  * Bugfix - Song previews now play correctly when entering song select for the 2nd time.
 
 ==0.5 - "Handicapped Doubt" ==
- *   Song audio validation by using MD5. This makes it easier to ensure that the correct audio (.mp3) file is used when playing a song, especially when song files (.sng) are distributed.
+ *  Song audio validation by using MD5. This makes it easier to ensure that the correct audio (.mp3) file is used when playing a song, especially when song files (.sng) are distributed.
  *  Song Editor: named WGiEdit. Using WGiEdit, it is possible to create a song file (.sng) from scratch, edit existing song files, or delete them. WGiEdit also features measurement tools for determining a song's offset, length and BPM.
  *  A Performance indicator is now displayed during gameplay, which provides a graphical display of a player's beatline accuracy (based on judgement ratings).
  *  Bugfix: Playing VS CPU mode with 3 players is now possible. 
