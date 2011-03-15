@@ -84,12 +84,12 @@ WGiBeat has three different types of player mistakes.
 Normally, when having to choose between the three, it is better to hit arrows slower but more accurately, and accepting a miss. This gives the player extra time to complete the arrow set, before the next beatline. Note that amount of damage dealt by the three types of mistakes is higher for higher difficulty levels.
 
 ==Multiple song folders==
-WGiBeat supports loading songs from multiple folders. By default, songs are loaded from the "Songs" subfolder. This can be changed by editing the settings.txt file. To load from multiple folders, separate them with a "|". For example, to load songs from the "Songs" subfolder as well as from "D:\Stepmania\Songs", change the SongFolder line to this:
+WGiBeat supports loading songs from multiple folders. By default, songs are loaded from the "Songs" subfolder. This can be changed by editing the settings.txt file. To load from multiple folders, separate them with a "|". For example, to load songs from the "Songs" subfolder as well as from "D:\Stepmania\Songs", change the !SongFolder line to this:
 
-SongFolder=Songs|D:\Stepmania\Songs;
+`SongFolder=Songs|D:\Stepmania\Songs;`
 
 ==Handling .sm and .dwi files==
-Since WGiBeat can load .sm and .dwi files from multiple folders, it is possible to load them directly from an existing Stepmania installation. To do this, add the Stepmania songs folder to the SongFolder setting as shown above. Since WGiBeat needs to modify these files for them to work correctly, two options are provided, which affect how these files are treated.
+Since WGiBeat can load .sm and .dwi files from multiple folders, it is possible to load them directly from an existing Stepmania installation. To do this, add the Stepmania songs folder to the !SongFolder setting as shown above. Since WGiBeat needs to modify these files for them to work correctly, two options are provided, which affect how these files are treated.
 
 The first option, "Allow Problematic Songs", forces WGiBeat to load any .sm or .dwi file, even if they are known to be problematic - such as if they contain Stops or BPM changes. This feature is useful to bypass the restrictions normally placed on these songs by WGiBeat, although it is likely that such songs will not work correctly.
 
