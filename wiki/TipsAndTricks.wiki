@@ -5,6 +5,13 @@
 
 This page contains some of the less obvious features of WGiBeat. Most players will benefit from knowing this information. More will be added as features are implemented or updated.
 
+==Drop in/Drop out==
+Since v0.7, it is possible for players to join or leave without having to return to the Main Menu to do so. It can be done from any screen that displays the "Press START To Join" message.
+
+[http://wgibeat.googlecode.com/svn/wiki/JoinInIndicator.png]
+
+Simply press START to join in. To leave, hold the SELECT key and press START.
+
 ==Blazing Mode==
 Blazing mode is a gameplay feature available in most game modes that can earn players huge amounts of points while it is active. It is, however, a risky mode to activate, as it makes arrows more difficult to hit successfully.
 
