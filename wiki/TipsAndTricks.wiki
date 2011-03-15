@@ -21,7 +21,7 @@ While in Blazing Mode, some of the arrows will be red. In order to hit these arr
 
 [http://wgibeat.googlecode.com/svn/wiki/BlazingMode.png]
 
-In Co-op mode, players share life, and as such they also share the ability to use Blazing Mode. When multiple players use Blazing Mode simultaneously in this mode, an additional 'unison multiplier' is awarded to all points earned. Players must have an average above 100 life to use Blazing Mode in Coop mode and it will remain active until this is no longer the case.
+In Co-op mode, players share life, and as such they also share the ability to use Blazing Mode. Each player has the ability to activate Blazing Mode individually, which costs shared life. When multiple players use Blazing Mode simultaneously in this mode, an additional 'unison multiplier' is awarded to all points earned. Players must have an average above 100 life to use Blazing Mode in Coop mode and it will remain active until this is no longer the case.
 
 NOTE: Blazing Mode cannot be used in VS CPU mode, as the CPU does not use this mode.
 NOTE: Since Blazing Mode requires more than 100 life to use, it is only available to players with a profile with level 2 or higher.
@@ -46,6 +46,13 @@ The song sort order is displayed near the top right corner of the song select sc
 WGiBeat v0.7 has introduced a new feature to allow for quicker song list navigation. It is used in combination with the song sort order. When the sort is set to title or artist, pressing and holding down the BEATLINE key will display a list of letters. Press UP or DOWN to select a letter from this list, the song list will jump to the first song that begins with the selected letter. Songs that begin with numbers are represented by the '0-9' item, and songs that begin with symbols are represented by the 'Sym' item.
 
 When the song sort order is set to BPM, a list of common BPM's will be displayed in a similar fashion. Selecting one will cause the song list to jump to the first song that has a BPM equal to or faster than the selected BPM.
+
+==Adding Menu Music==
+WGiBeat can play any provided audio as menu music during the game's various screens. By default, no menu music is provided. To add menu music, edit the MenuList.txt file inside the MenuMusic folder. This file defines which audio file should be played for each screen. To have "MyBackgroundMusic.mp3" play during the Main Menu Screen, use this line:
+
+`MainMenu=MyBackgroundMusic.mp3;`
+
+Similar to game songs, .mp3, .ogg, .wma or .wav files can be used for menu music. The same audio can be used for any number of screens.
 
 ==Profile System==
 WGiBeat supports a profile system for returning players. Profiles can be used to store a player's preferred gameplay options (such as Beatline speed and difficulty), and are also used to keep gameplay stats.
