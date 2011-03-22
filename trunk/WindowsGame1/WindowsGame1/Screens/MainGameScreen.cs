@@ -268,13 +268,13 @@ namespace WGiBeat.Screens
                 case  "BPM_DECREASE":
                     if (songDebug)
                     {
-                        _gameSong.StartBPM -= 0.1;
+                        _gameSong.SetCurrentBPM(_phraseNumber, _gameSong.CurrentBPM(_phraseNumber) - 0.1);
                     }
                     break;
                 case "BPM_INCREASE":
                     if (songDebug)
                     {
-                        _gameSong.StartBPM += 0.1;
+                        _gameSong.SetCurrentBPM(_phraseNumber, _gameSong.CurrentBPM(_phraseNumber) + 0.1);
                     }
                     break;
                 case "OFFSET_DECREASE_BIG":
