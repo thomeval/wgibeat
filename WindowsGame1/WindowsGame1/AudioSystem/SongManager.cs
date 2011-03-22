@@ -387,7 +387,7 @@ namespace WGiBeat.AudioSystem
                 message = "Length is not specified or invalid. Must be higher than Offset.";
                 return false;
             }
-            if (song.Bpm <= 0)
+            if (song.StartBPM <= 0)
             {
                 message = "BPM is not specified or invalid. Must be more than zero.";
                 return false;

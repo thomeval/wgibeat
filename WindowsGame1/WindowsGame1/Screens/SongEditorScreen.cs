@@ -259,7 +259,7 @@ namespace WGiBeat.Screens
                     _cursorPosition = EditorCursorPosition.SONG_DETAILS;
                     if (isDouble)
                     {
-                        NewGameSong.Bpm = temp;
+                        NewGameSong.StartBPM = temp;
                     }
                     break;
                 case "SongLength":
@@ -417,7 +417,7 @@ namespace WGiBeat.Screens
                                                               "TwoTech", 70, 35);
                     TextureManager.DrawString(spriteBatch, String.Format("{0:0.00}", NewGameSong.Offset), "TwoTech", offsetPosition,scale, Color.Black, FontAlign.RIGHT);
 
-                    if ((NewGameSong.Bpm > 0) && (NewGameSong.Length > 0))
+                    if ((NewGameSong.StartBPM > 0) && (NewGameSong.Length > 0))
                     {
                         var totalBeatlines = Math.Floor(NewGameSong.GetEndingTimeInPhrase());
                         offsetPosition.Y += 20;
@@ -512,7 +512,7 @@ namespace WGiBeat.Screens
 
         private void DrawDebugText(SpriteBatch spriteBatch)
         {
-            TextureManager.DrawString(spriteBatch, String.Format("BPM: {0:F2}", NewGameSong.Bpm),
+            TextureManager.DrawString(spriteBatch, String.Format("BPM: {0:F2}", NewGameSong.StartBPM),
                    "DefaultFont", Core.Metrics["SongDebugBPM", 0], Color.Black, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, String.Format("Offset: {0:F3}s", NewGameSong.Offset),
                     "DefaultFont", Core.Metrics["SongDebugOffset", 0], Color.Black, FontAlign.LEFT);
@@ -682,7 +682,7 @@ namespace WGiBeat.Screens
                             {
                                 if (_guessedBPM > 0)
                                 {
-                                    NewGameSong.Bpm = _guessedBPM;
+                                    NewGameSong.StartBPM = _guessedBPM;
                                 }
                             }
                             break;
@@ -739,10 +739,10 @@ namespace WGiBeat.Screens
                     RestartSong();
                     break;
                 case "BPM_DECREASE":
-                        NewGameSong.Bpm -= 0.1;
+                    NewGameSong.StartBPM -= 0.1;
                     break;
                 case "BPM_INCREASE":
-                        NewGameSong.Bpm += 0.1;
+                    NewGameSong.StartBPM += 0.1;
                     break;
                 case "OFFSET_DECREASE_BIG":
                         NewGameSong.Offset -= 0.1;
@@ -1107,7 +1107,7 @@ namespace WGiBeat.Screens
                         _startTime = null;
                         _songPlaying = false;
                         _beatlineSet.EndingPhrase = NewGameSong.GetEndingTimeInPhrase();
-                        _beatlineSet.Bpm = NewGameSong.Bpm;
+                        _beatlineSet.Bpm = NewGameSong.StartBPM;
                         _beatlineSet.SetSpeeds();
                         _beatlineSet.Reset();
                         _noteJudgementSet.Reset();

@@ -157,18 +157,18 @@ namespace WGiBeat.Drawing
 
             if (_displayedBpm == 0.0)
             {
-                _displayedBpm = DisplayedSong.Bpm;
+                _displayedBpm = DisplayedSong.StartBPM;
             }
             else
             {
-                var diff = _displayedBpm - DisplayedSong.Bpm;
+                var diff = _displayedBpm - DisplayedSong.StartBPM;
                 _displayedBpm -= diff / 6;
             }
 
             var beatFraction = (SongTime) - Math.Floor(SongTime);
             beatFraction *= BEAT_FRACTION_SEVERITY;
 
-            var meterBPM = Math.Max(BpmLevels[BpmLevels.Count() - 1], DisplayedSong.Bpm * (1 - beatFraction));
+            var meterBPM = Math.Max(BpmLevels[BpmLevels.Count() - 1], DisplayedSong.StartBPM * (1 - beatFraction));
 
             _baseSprite.Draw(spriteBatch);
             int height = (this.Height - 2) / _meterSprite.Rows;

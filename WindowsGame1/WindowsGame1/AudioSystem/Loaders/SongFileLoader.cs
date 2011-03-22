@@ -61,11 +61,12 @@ namespace WGiBeat.AudioSystem.Loaders
             var file = new FileStream(song.Path + "\\" + song.DefinitionFile, FileMode.Create, FileAccess.Write);
             var sw = new StreamWriter(file);
 
-            sw.WriteLine("#SONG-1.0;");
+            sw.WriteLine("#SONG-1.1;");
             sw.WriteLine("Title={0};", song.Title);
             sw.WriteLine("Subtitle={0};", song.Subtitle);
             sw.WriteLine("Artist={0};", song.Artist);
-            sw.WriteLine("Bpm={0};", Math.Round(song.Bpm, 2));
+
+            sw.WriteLine(SaveSongBPMs(song));
             sw.WriteLine("Offset={0};", Math.Round(song.Offset, 3));
             sw.WriteLine("AudioStart={0};", Math.Round(song.AudioStart, 3));
             sw.WriteLine("Length={0};", Math.Round(song.Length, 3));
@@ -74,6 +75,21 @@ namespace WGiBeat.AudioSystem.Loaders
             sw.Close();
             
             Log.AddMessage(String.Format("Song file saved successfully: {0}\\{1}",song.Path,song.DefinitionFile),LogLevel.INFO);
+        }
+
+        private string SaveSongBPMs(GameSong song)
+        {
+            var result = "Bpm=";
+
+            foreach (double key in song.BPMs.Keys)
+            {
+                result += Math.Round(key, 3);
+                result += ":" + Math.Round(song.BPMs[key], 3);
+                result += ",";
+            }
+            result = result.TrimEnd(',');
+            result += ";";
+            return result;
         }
     }
 }

@@ -56,7 +56,7 @@ namespace WGiBeat.Drawing
         }
         private int SortByBpm(SongListItem first, SongListItem second)
         {
-            return first.Song.Bpm.CompareTo(second.Song.Bpm);
+            return first.Song.StartBPM.CompareTo(second.Song.StartBPM);
         }
 
 
@@ -289,7 +289,7 @@ namespace WGiBeat.Drawing
 
             for (int x = 0; x < SongList.Count; x++)
             {
-                if (SongList[x].Song.Bpm >= startBpm)
+                if (SongList[x].Song.StartBPM >= startBpm)
                 {
                     return x;
                 }
@@ -435,7 +435,7 @@ namespace WGiBeat.Drawing
                     value = SongList[index].Song.Artist.ToUpperInvariant()[0] + "";
                     break;
                 case SongSortMode.BPM:
-                    var temp = SongList[index].Song.Bpm;
+                    var temp = SongList[index].Song.StartBPM;
                     value = (from e in _bpmValues where e >= temp select e).First();                   
                     break;
             }
