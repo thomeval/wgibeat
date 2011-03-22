@@ -39,7 +39,7 @@ First, select 'Create New Song' from the WGiEdit main menu. It will then ask for
 
 == Step 2 ==
 
+[http://wgibeat.googlecode.com/svn/wiki/WGiEditStep2.png]
 During this step, the details of the song are requested. The title, subtitle and artist of the song are read from the audio file's metadata if possible. Either way, it can be entered by selecting the appropriate options. For BPM, !AudioStart, Offset and Length, these values can either be entered manually (if you know them), or measured, Use the instructions on screen when using a measurement tool. Whether a song is valid or not is displayed on the right side of the screen, along with a reason why the song is not valid, if appropriate. When the song is considered valid, the 'Next Step' option will become available.
 
 == Step 3 ==
-
