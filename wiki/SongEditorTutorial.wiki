@@ -19,8 +19,8 @@ These three pieces of information need to be provided by the player. They are re
 [http://wgibeat.googlecode.com/svn/wiki/SongPartitionDiagram.png]
 
 In the above diagram, the song's audio is divided into four sections:
- * The audio in Section A occurs before the AudioStart point and is skipped by WGiBeat. Note that the AudioStart point can be zero (at the start of the song), meaning that no part of the song is skipped.
- * The audio in Section B occurs between the AudioStart and Offset points (hence the offset *must* be greater than the AudioStart point). This represents the audio that is played before the first beatline of the song (this is when the "Ready" message and countdown are displayed). It is suggested that this section be between 3 and 12 seconds long.
+ * The audio in Section A occurs before the !AudioStart point and is skipped by WGiBeat. Note that the !AudioStart point can be zero (at the start of the song), meaning that no part of the song is skipped.
+ * The audio in Section B occurs between the !AudioStart and Offset points (hence the offset *must* be greater than the !AudioStart point). This represents the audio that is played before the first beatline of the song (this is when the "Ready" message and countdown are displayed). It is suggested that this section be between 3 and 12 seconds long.
  * The audio in Section C represents the playable portion of the song, between the Offset and Length points. Beatlines are generated in this portion. Their frequency is determined by the song's BPM.
  * The audio in Section D represents the audio that is played after the song is considered completed. Since the gameplay has ended, no beatlines appear beyond this point, but the audio will continue playing (typically into the evaluation screen).
  
