@@ -23,5 +23,23 @@ In the above diagram, the song's audio is divided into four sections:
  * The audio in Section B occurs between the !AudioStart and Offset points (hence the offset *must* be greater than the !AudioStart point). This represents the audio that is played before the first beatline of the song (this is when the "Ready" message and countdown are displayed). It is suggested that this section be between 3 and 12 seconds long.
  * The audio in Section C represents the playable portion of the song, between the Offset and Length points. Beatlines are generated in this portion. Their frequency is determined by the song's BPM.
  * The audio in Section D represents the audio that is played after the song is considered completed. Since the gameplay has ended, no beatlines appear beyond this point, but the audio will continue playing (typically into the evaluation screen).
+
+= What is needed =
+
+In order to create a new song is WGiBeat, only one thing is needed, the audio file. This file can be an .mp3, .ogg, .wma or .wav file, and does not need to be in WGiBeat's Songs folder to be usable. WGiEdit allows users to create song files from scratch - and handles the moving process automatically.
  
-    
+= Starting the Editor =
+
+WGiEdit can be started by selecting the 'Song Editor' option from the Main Menu. WGiEdit is only available in newer versions of WGiBeat. WGiEdit can be used to create a new song from scratch, edit an existing one, convert a .sm or .dwi song to .sng, or delete a song. A guide for creating a new song is provided below.
+
+= Guide =
+== Step 1 ==
+
+First, select 'Create New Song' from the WGiEdit main menu. It will then ask for three pieces of information. The source file, the destination file, and destination folder. The source file is the audio that should be used for the new game song. When selecting this option, a file browser is displayed. Navigate to the audio file you want to use by using the controls displayed on screen, and press START. The destination file is the name of the .sng file that will be used to hold the gameplay information of this song (such as the Offset, BPM and Length, as discussed earlier). Simply type in the name of this file. The file name has no effect on gameplay. Finally, the destination folder is the name of the folder that will be created inside WGiBeat's Songs folder to hold both the source file and destination file. Once these three pieces of information are provided, select 'Next Step'. The destination folder will be created, the destination file will be created inside it, and the source file will be copied to this folder if necessary.
+
+== Step 2 ==
+
+During this step, the details of the song are requested. The title, subtitle and artist of the song are read from the audio file's metadata if possible. Either way, it can be entered by selecting the appropriate options. For BPM, !AudioStart, Offset and Length, these values can either be entered manually (if you know them), or measured, Use the instructions on screen when using a measurement tool. Whether a song is valid or not is displayed on the right side of the screen, along with a reason why the song is not valid, if appropriate. When the song is considered valid, the 'Next Step' option will become available.
+
+== Step 3 ==
+
