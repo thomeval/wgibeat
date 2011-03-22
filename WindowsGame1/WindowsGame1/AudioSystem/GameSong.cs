@@ -56,6 +56,12 @@ namespace WGiBeat.AudioSystem
             var key = BPMs.Keys.LastOrDefault(e => e <= phraseNumber);
             return BPMs[key];
         }
+
+        public void SetCurrentBPM(double phraseNumber, double newBPM)
+        {
+            var key = BPMs.Keys.LastOrDefault(e => e <= phraseNumber);
+            BPMs[key] = newBPM;
+        }
         /// <summary>
         /// The MD5 hash of the correct MD5 file. This is checked with the actual MD5 calculated at runtime, and
         /// mismatches are reported.
