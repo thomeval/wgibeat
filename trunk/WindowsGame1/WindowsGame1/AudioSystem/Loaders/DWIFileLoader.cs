@@ -110,7 +110,7 @@ namespace WGiBeat.AudioSystem.Loaders
                         _newSong.Offset = Convert.ToDouble(value, CultureInfo.InvariantCulture.NumberFormat) / 1000.0;
                         break;
                     case "#BPM":
-                        _newSong.Bpm = Convert.ToDouble(value, CultureInfo.InvariantCulture.NumberFormat);
+                        _newSong.StartBPM = Convert.ToDouble(value, CultureInfo.InvariantCulture.NumberFormat);
                         break;
 
                     case "#CHANGEBPM":
@@ -145,7 +145,7 @@ namespace WGiBeat.AudioSystem.Loaders
             {
                 double position = Convert.ToDouble(stopItem.Substring(0, stopItem.IndexOf("=")), CultureInfo.InvariantCulture.NumberFormat);
                 double bvalue = Convert.ToDouble(stopItem.Substring(stopItem.IndexOf("=") + 1), CultureInfo.InvariantCulture.NumberFormat);
-                stopPairs[position] =  bvalue;
+                stopPairs[position/32.0] =  bvalue;
                 _stopTotals += bvalue;
             }
             if (stopPairs.Keys.Count > 0)
@@ -157,20 +157,16 @@ namespace WGiBeat.AudioSystem.Loaders
 
         private void ParseBPMs(string value)
         {
-            var bpmPairs = new Dictionary<double, double>();
+
             var bpmText = value.Split(',');
 
             foreach (string bpmItem in bpmText)
             {
                 double position = Convert.ToDouble(bpmItem.Substring(0, bpmItem.IndexOf("=")), CultureInfo.InvariantCulture.NumberFormat);
                 double bvalue = Convert.ToDouble(bpmItem.Substring(bpmItem.IndexOf("=") + 1), CultureInfo.InvariantCulture.NumberFormat);
-                bpmPairs[position]= bvalue;
+                _newSong.BPMs.Add(position,bvalue);
             }
-            if (bpmPairs.Keys.Count > 1)
-            {
-                if (!AllowProblematic)
-                    throw new Exception("this .dwi file has multiple BPMs and will not work correctly in WGiBeat! ");
-            }
+
         }
 
 

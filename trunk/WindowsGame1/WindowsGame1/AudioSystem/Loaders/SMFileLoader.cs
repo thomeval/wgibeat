@@ -157,21 +157,17 @@ namespace WGiBeat.AudioSystem.Loaders
 
         private void ParseBPMs(string value)
         {
-            var bpmPairs = new Dictionary<double, double>();
+            var bpmPairs = new SortedDictionary<double, double>();
             var bpmText = value.Split(',');
 
             foreach (string bpmItem in bpmText)
             {
                 double position = Convert.ToDouble(bpmItem.Substring(0, bpmItem.IndexOf("=")), CultureInfo.InvariantCulture.NumberFormat);
                 double bvalue = Convert.ToDouble(bpmItem.Substring(bpmItem.IndexOf("=") + 1), CultureInfo.InvariantCulture.NumberFormat);
-                bpmPairs[position] =  bvalue;
+                bpmPairs[position/4.0] =  bvalue;
             }
-            if (bpmPairs.Keys.Count > 1)
-            {
-                if (!AllowProblematic)
-                    throw new Exception("This .sm file has multiple BPMs and will not work correctly in WGiBeat!");
-            }
-            _newSong.Bpm = bpmPairs[0.0];
+
+            _newSong.BPMs = bpmPairs;
         }
 
         private void AddNotes(string value)
@@ -202,7 +198,29 @@ namespace WGiBeat.AudioSystem.Loaders
                 }
             }
             song.Offset = song.ConvertPhraseToMS(idx) / 1000.0;
+
+            //Adjust all BPM changes forward to compensate for the offset moving.
+            AdjustBpmChanges(song, idx);
             Log.AddMessage(String.Format("Song notes start at phrase {0}. Offset set to {1}. ",idx,song.Offset),LogLevel.DEBUG);
+        }
+
+        private void AdjustBpmChanges(GameSong song, int idx)
+        {
+            var newBPMs = new SortedDictionary<double, double>();
+            
+            foreach (double key in song.BPMs.Keys)
+            {
+                if (key == 0.0)
+                {
+                    newBPMs[key] = song.BPMs[key];
+                }
+                else
+                {
+                newBPMs[key - idx] = song.BPMs[key];
+                }
+            }
+            song.BPMs = newBPMs;                                      
+                              
         }
 
         private void CalculateLength(GameSong song, string notes)

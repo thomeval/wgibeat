@@ -1,18 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using LogLevel = WGiBeat.Managers.LogLevel;
 
 namespace WGiBeat.AudioSystem.Loaders
 {
-    public class SNGFileLoader : SongFileLoader 
+    public class SNGFileLoader : SongFileLoader
     {
+        private GameSong _newSong;
         public override GameSong LoadFromFile(string filename, out bool valid)
         {
-            var newSong = GameSong.LoadDefaults();
-
-            newSong.Path = filename.Substring(0, filename.LastIndexOf("\\"));
-            newSong.DefinitionFile = Path.GetFileName(filename);
+            
+            _newSong = GameSong.LoadDefaults();
+            var songVersion = "";
+            _newSong.Path = filename.Substring(0, filename.LastIndexOf("\\"));
+            _newSong.DefinitionFile = Path.GetFileName(filename);
             try
             {
                 string songText = File.ReadAllText(filename);
@@ -21,6 +24,12 @@ namespace WGiBeat.AudioSystem.Loaders
                 songText = songText.Replace("\n", "");
 
                 string[] rules = songText.Split(';');
+
+                if (!rules[0].StartsWith("#SONG"))
+                {
+                    throw new Exception("Song is not a valid song file. It must start with #SONG- followed by the version number.");
+                }
+                songVersion = rules[0].Substring(rules[0].IndexOf("-") + 1);
 
                 foreach (string rule in rules)
                 {
@@ -35,40 +44,49 @@ namespace WGiBeat.AudioSystem.Loaders
                     switch (field.ToUpper())
                     {
                         case "TITLE":
-                            newSong.Title = value;
+                            _newSong.Title = value;
                             break;
                         case "SUBTITLE":
-                            newSong.Subtitle = value;
+                            _newSong.Subtitle = value;
                             break;
                         case "ARTIST":
-                            newSong.Artist = value;
+                            _newSong.Artist = value;
                             break;
                         case "OFFSET":
-                            newSong.Offset = Convert.ToDouble(value, CultureInfo.InvariantCulture.NumberFormat);
+                            _newSong.Offset = Convert.ToDouble(value, CultureInfo.InvariantCulture.NumberFormat);
                             break;
                         case "AUDIOSTART":
-                            newSong.AudioStart = Convert.ToDouble(value, CultureInfo.InvariantCulture.NumberFormat);
+                            _newSong.AudioStart = Convert.ToDouble(value, CultureInfo.InvariantCulture.NumberFormat);
                             break;
                         case "LENGTH":
-                            newSong.Length = Convert.ToDouble(value, CultureInfo.InvariantCulture.NumberFormat);
+                            _newSong.Length = Convert.ToDouble(value, CultureInfo.InvariantCulture.NumberFormat);
                             break;
                         case "BPM":
-                            newSong.Bpm = Convert.ToDouble(value, CultureInfo.InvariantCulture.NumberFormat);
+                            switch (songVersion)
+                            {
+                                case "1.0":
+                                    _newSong.StartBPM = Convert.ToDouble(value, CultureInfo.InvariantCulture.NumberFormat);
+                                    break;
+                                case "1.1":
+                                    ParseBPMs(value);
+                                    break;
+                            }
+
                             break;
                         case "SONGFILE":
                         case "AUDIOFILE":
-                            newSong.AudioFile = value;
+                            _newSong.AudioFile = value;
                             break;
                         case "SONGFILEMD5":
                         case "AUDIOFILEMD5":
-                            newSong.AudioFileMD5 = value;
+                            _newSong.AudioFileMD5 = value;
                             break;
                     }
                 }
 
-                if (String.IsNullOrEmpty(newSong.AudioFile))
+                if (String.IsNullOrEmpty(_newSong.AudioFile))
                 {
-                    newSong.AudioFile = FindUndefinedAudioFile(newSong.Path, newSong.DefinitionFile);
+                    _newSong.AudioFile = FindUndefinedAudioFile(_newSong.Path, _newSong.DefinitionFile);
                 }
                 valid = true;
             }
@@ -80,7 +98,32 @@ namespace WGiBeat.AudioSystem.Loaders
                 valid = false;
             }
 
-            return newSong;
+            return _newSong;
+        }
+
+        private void ParseBPMs(string value)
+        {
+            //Example: BPM=0.0:120.0,5.0:150.0,8.5:185.0
+            var result = new SortedDictionary<double, double>();
+            try
+            {
+
+                string[] pairs = value.Split(',');
+
+                foreach (string bpmPair in pairs)
+                {
+                    var pieces = bpmPair.Split(':');
+                    var bpmKey = Convert.ToDouble(pieces[0], CultureInfo.InvariantCulture.NumberFormat);
+                    var bpmValue = Convert.ToDouble(pieces[1], CultureInfo.InvariantCulture.NumberFormat);
+                    result.Add(bpmKey,bpmValue);
+                }
+
+                _newSong.BPMs = result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to load song's BPM. ", ex);
+            }
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 namespace WGiBeat.AudioSystem
 {
@@ -22,7 +24,8 @@ namespace WGiBeat.AudioSystem
         /// The name of the definition file (.sng) that defines this song.
         /// </summary>
         public string DefinitionFile { get; set; }
-        public double Bpm { get; set; }
+
+
         public double Offset { get; set; }
         public double Length { get; set; }
         public double AudioStart { get; set; }
@@ -30,6 +33,29 @@ namespace WGiBeat.AudioSystem
 
         public bool ReadOnly { get; set; }
 
+        public SortedDictionary<double, double> BPMs
+        {
+            get; set;
+        }
+        public double StartBPM
+        {
+            get
+            {
+                return BPMs.Values.First();
+            }
+            set
+            {
+                BPMs[0.0] = value;
+            }
+        }
+
+        public double CurrentBPM(double phraseNumber)
+        {
+            //Return the last BPM in the BPM collection that has a phrase number
+            //before or equal to the phrase number given (i.e. the most recent BPM change).
+            var key = BPMs.Keys.LastOrDefault(e => e <= phraseNumber);
+            return BPMs[key];
+        }
         /// <summary>
         /// The MD5 hash of the correct MD5 file. This is checked with the actual MD5 calculated at runtime, and
         /// mismatches are reported.
@@ -64,7 +90,7 @@ namespace WGiBeat.AudioSystem
                 int result = (Title != null ? Title.GetHashCode() : 0);
                 result = (result * 397) ^ (Subtitle != null ? Subtitle.GetHashCode() : 0);
                 result = (result*397) ^ (Artist != null ? Artist.GetHashCode() : 0);
-                result = (result*397) ^ Bpm.GetHashCode();
+                result = (result * 397) ^ BPMs.GetHashCode();
                 result = (result*397) ^ Offset.GetHashCode();
                 result = (result*397) ^ Length.GetHashCode();
                 return result;
@@ -80,7 +106,7 @@ namespace WGiBeat.AudioSystem
         {
             var gs = new GameSong
                          {
-                             Bpm = 0.0,
+                             BPMs = new SortedDictionary<double, double>(),
                              DefinitionFile = null,
                              Length = 0.0,
                              Offset = 0.0,
@@ -91,6 +117,7 @@ namespace WGiBeat.AudioSystem
                              Subtitle = "",
                              Title = ""
                          };
+            gs.BPMs.Add(0.0, 0.0);
             return gs;
         }
 
@@ -102,7 +129,7 @@ namespace WGiBeat.AudioSystem
         /// <returns>The ending time of this song, as a decimal phrase number.</returns>
         public double GetEndingTimeInPhrase()
         {
-            return ((Length - Offset) * 1000) / 1000 * (Bpm / 240);
+            return ConvertMSToPhrase(Length  *1000);
         }
 
         /// <summary>
@@ -167,12 +194,62 @@ namespace WGiBeat.AudioSystem
         /// <returns>The phrase number converted from the given milliseconds.</returns>
         public double ConvertMSToPhrase(double milliseconds)
         {
-            return (milliseconds - (Offset * 1000.0)) / 1000.0 * (Bpm / 240.0);
+            var msLeft = milliseconds;
+            msLeft -= Offset*1000;
+            var keys = BPMs.Keys.ToArray();
+            var msList = CreateMSCache(keys);
+            var lastPassedPhrase = 0.0;
+            var currentKeyIndex = 0;
+            //Subtract previous BPM change points.
+            var activeMSKey = (from e in msList where e <= msLeft select e).LastOrDefault();
+
+                msLeft -= activeMSKey;
+                 currentKeyIndex = msList.IndexOf(activeMSKey);
+                lastPassedPhrase  = keys[currentKeyIndex];        
+
+
+            //Apply the phrase calculations for the current BPM active.
+            
+  
+            var result = lastPassedPhrase;
+            result += (msLeft) / 1000.0 * (BPMs[keys[currentKeyIndex]] / 240.0);
+
+            return result;
+
+            //TODO: Convert to using multiple BPMs.
+            return (milliseconds) / 1000.0 * (StartBPM / 240.0);
+        }
+
+        private double[] CreateMSCache(double[] bpmKeys)
+        {
+            //TODO: Fix.
+            var result = new double[bpmKeys.Length];
+            for (int x = 0; x < bpmKeys.Length; x++)
+            {
+                double key = bpmKeys[x];
+                result[x] = ConvertPhraseToMS(key) - (Offset*1000);
+            }
+            return result;
         }
 
         public double ConvertPhraseToMS(double phrase)
         {
-            return ((phrase * 1000 * 240.0) / Bpm) + (Offset * 1000);
+            var keys = BPMs.Keys.ToArray();
+            var activeKey = (from e in keys where e <= phrase select e).LastOrDefault();
+
+            var totalMS = (Offset * 1000);
+
+            var relevantPhrase = 0.0;
+            for (int x = 0; keys[x] != activeKey; x++ )
+            {
+                relevantPhrase = keys[x + 1] - keys[x];
+                totalMS += relevantPhrase* 1000 * 240.0 / BPMs[keys[x]];
+            }
+
+            relevantPhrase = phrase - activeKey;
+            totalMS += relevantPhrase*1000*240.0/BPMs[activeKey];
+
+            return totalMS;
         }
     }
 }
