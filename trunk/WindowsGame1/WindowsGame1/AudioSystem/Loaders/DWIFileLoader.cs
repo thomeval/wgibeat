@@ -27,12 +27,12 @@ namespace WGiBeat.AudioSystem.Loaders
         public override GameSong LoadFromFile(string filename, out bool valid)
         {
             _newSong = new GameSong { ReadOnly = true };
+            _newSong.BPMs = new SortedDictionary<double, double>();
             Log.AddMessage("Converting DWI File: " + filename, LogLevel.NOTE);
 
             try
             {
-                
-                
+                  
                 string songText = File.ReadAllText(filename);
                 ParseText(songText);
 
@@ -72,8 +72,6 @@ namespace WGiBeat.AudioSystem.Loaders
             }
 
                 return _newSong;
-            
-
         }
 
         #region Helpers
@@ -145,7 +143,7 @@ namespace WGiBeat.AudioSystem.Loaders
             {
                 double position = Convert.ToDouble(stopItem.Substring(0, stopItem.IndexOf("=")), CultureInfo.InvariantCulture.NumberFormat);
                 double bvalue = Convert.ToDouble(stopItem.Substring(stopItem.IndexOf("=") + 1), CultureInfo.InvariantCulture.NumberFormat);
-                stopPairs[position/32.0] =  bvalue;
+                stopPairs[position/16.0] =  bvalue;
                 _stopTotals += bvalue;
             }
             if (stopPairs.Keys.Count > 0)
@@ -164,7 +162,7 @@ namespace WGiBeat.AudioSystem.Loaders
             {
                 double position = Convert.ToDouble(bpmItem.Substring(0, bpmItem.IndexOf("=")), CultureInfo.InvariantCulture.NumberFormat);
                 double bvalue = Convert.ToDouble(bpmItem.Substring(bpmItem.IndexOf("=") + 1), CultureInfo.InvariantCulture.NumberFormat);
-                _newSong.BPMs.Add(position,bvalue);
+                _newSong.BPMs[position / 16.0] = bvalue;
             }
 
         }
@@ -187,7 +185,27 @@ namespace WGiBeat.AudioSystem.Loaders
         {
             var startPhrase = ParseNoteString(notes, true);
             song.Offset = song.ConvertPhraseToMS(startPhrase) / 1000.0;
+            AdjustBpmChanges(song,startPhrase);
             Log.AddMessage(String.Format("Song notes start at phrase {0}. Offset set to {1}. ", startPhrase, song.Offset), LogLevel.DEBUG);
+        }
+
+        private void AdjustBpmChanges(GameSong song, int idx)
+        {
+            var newBPMs = new SortedDictionary<double, double>();
+
+            foreach (double key in song.BPMs.Keys)
+            {
+                if (key == 0.0)
+                {
+                    newBPMs[key] = song.BPMs[key];
+                }
+                else
+                {
+                    newBPMs[key - idx] = song.BPMs[key];
+                }
+            }
+            song.BPMs = newBPMs;
+
         }
 
         private void CalculateLength(GameSong song, string notes)
