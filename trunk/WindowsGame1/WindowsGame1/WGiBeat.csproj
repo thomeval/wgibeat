@@ -108,6 +108,7 @@
     <Compile Include="Drawing\FileSelectDialog.cs" />
     <Compile Include="Drawing\MovingBackground.cs" />
     <Compile Include="Drawing\Sets\DrawableObjectSet.cs" />
+    <Compile Include="Drawing\Sets\NoteBarSet.cs" />
     <Compile Include="Drawing\SongTimeLine.cs" />
     <Compile Include="Drawing\SongTypeDisplay.cs" />
     <Compile Include="Drawing\TextEntry.cs" />
