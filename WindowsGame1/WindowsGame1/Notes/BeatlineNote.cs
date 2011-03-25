@@ -11,6 +11,7 @@
         public int DisplayPosition { get; set; }
         //Whether this BeatlineNote has been hit already.
         public bool Hit { get; set; }
+        public BeatlineNoteType NoteType {get; set;}
     }
 
     /// <summary>
@@ -25,5 +26,13 @@
         FAIL = 4,
         MISS = 5,
         COUNT = 6
+    }
+
+    public enum BeatlineNoteType
+    {
+        NORMAL = 0,
+        END_OF_SONG = 1,
+        BPM_INCREASE = 2,
+        BPM_DECREASE = 3
     }
 }

@@ -24,7 +24,6 @@ namespace WGiBeat.Drawing
         public bool Large { get; set; }
 
         //Used by endpoint markers.
-        private const int BEHIND_VISIBILITY = 23;
 
         public const int HIT_IGNORE_CUTOFF = 1000;
         //How distant the beatline notes are from each other.
@@ -85,7 +84,7 @@ namespace WGiBeat.Drawing
             DrawPulse(spriteBatch, phraseNumber);
             DrawBase(spriteBatch);
             DrawNotes(spriteBatch, phraseNumber);
-            DrawEndPoints(spriteBatch, phraseNumber);
+         //   DrawEndPoints(spriteBatch, phraseNumber);
         }
 
         private void DrawEndPoints(SpriteBatch spriteBatch, double phraseNumber)
@@ -93,10 +92,7 @@ namespace WGiBeat.Drawing
             var endpointBeatOffset = (int)(Speed * BEAT_ZOOM_DISTANCE * (phraseNumber - EndPhrase));
 
             //Dont render endpoint if outside the visibility range.
-            if (((-1 * endpointBeatOffset) > BEAT_ZOOM_DISTANCE * BEAT_VISIBILITY) || (endpointBeatOffset > BEHIND_VISIBILITY))
-            {
-                return;
-            }
+
 
             var markerPosition = new Vector2 { X = this.X + 28 - (endpointBeatOffset) };
             var markerHeight = Large ? LARGE_HEIGHT : NORMAL_HEIGHT;
@@ -152,7 +148,22 @@ namespace WGiBeat.Drawing
                     }
                 }
                 var markerHeight = Large ? LARGE_HEIGHT : NORMAL_HEIGHT;
-                _markerSprite.Draw(spriteBatch, bn.Player, 5, markerHeight, markerPosition);
+                int noteIdx = 0;
+                int width = 5;
+
+                switch (bn.NoteType)
+                {
+                    case BeatlineNoteType.NORMAL:
+                        noteIdx = bn.Player;
+                        break;
+                    case BeatlineNoteType.END_OF_SONG:
+                    case BeatlineNoteType.BPM_INCREASE:
+                    case BeatlineNoteType.BPM_DECREASE:
+                        width = 1;
+                        noteIdx = 4;
+                        break;
+                }
+                _markerSprite.Draw(spriteBatch,noteIdx, width, markerHeight, markerPosition);
 
             }
         }
@@ -196,7 +207,7 @@ namespace WGiBeat.Drawing
             {
                 _beatlineNotes.Remove(bnr);
             }
-            return (from e in _notesToRemove where (!e.Hit) select e).Count();
+            return (from e in _notesToRemove where (!e.Hit) && (e.NoteType == BeatlineNoteType.NORMAL) select e).Count();
         }
 
         public double CalculateHitOffset(double phraseNumber)
@@ -215,7 +226,7 @@ namespace WGiBeat.Drawing
 
         public BeatlineNote NearestBeatlineNote(double phraseNumber)
         {
-            return (from e in _beatlineNotes where (!e.Hit) orderby CalculateHitOffset(e, phraseNumber) select e).FirstOrDefault();
+            return (from e in _beatlineNotes where (!e.Hit && e.NoteType == BeatlineNoteType.NORMAL) orderby CalculateHitOffset(e, phraseNumber) select e).FirstOrDefault();
         }
 
         private int CalculateAbsoluteBeatlinePosition(double position, double phraseNumber)
