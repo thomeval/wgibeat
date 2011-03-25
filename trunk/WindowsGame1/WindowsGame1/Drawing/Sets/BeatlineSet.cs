@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.AudioSystem;
 using WGiBeat.Managers;
 using WGiBeat.Notes;
 using WGiBeat.Players;
@@ -60,7 +61,7 @@ namespace WGiBeat.Drawing.Sets
                 _endingPhrase = value;
                 foreach (Beatline bl in _beatlines)
                 {
-                    bl.EndPhrase = EndingPhrase;
+                    bl.AddBeatlineNote(new BeatlineNote{Player = -1 , NoteType = BeatlineNoteType.END_OF_SONG, Position = EndingPhrase});
                 }
             }
         }
@@ -151,13 +152,33 @@ namespace WGiBeat.Drawing.Sets
                 {
                     if ((!Players[x].KO) && (Players[x].Playing))
                     {
-                        _beatlines[x].AddBeatlineNote(new BeatlineNote { Player = x, Position = _lastBeatlineNote });
+                        _beatlines[x].AddBeatlineNote(new BeatlineNote { Player = x, Position = _lastBeatlineNote, NoteType = BeatlineNoteType.NORMAL });
                     }
                 }
             }
         }
 
 
+        public void AddBPMChangeMarkers(GameSong song)
+        {
+            var prev = song.BPMs[0.0];
+            foreach (double bpmKey in song.BPMs.Keys)
+            {
+                if (bpmKey == 0.0)
+                {
+                    continue;
+                }
+
+                foreach (Beatline bl in _beatlines)
+                {
+                    var noteType = song.BPMs[bpmKey] > prev
+                                       ? BeatlineNoteType.BPM_INCREASE
+                                       : BeatlineNoteType.BPM_DECREASE;
+                    bl.AddBeatlineNote(new BeatlineNote{Player = -1, NoteType = noteType,Position = bpmKey});
+                }
+                
+            }
+        }
         public BeatlineNoteJudgement AwardJudgement(double phraseNumber, int player, bool completed)
         {
             var result = _beatlines[player].DetermineJudgement(phraseNumber, completed);

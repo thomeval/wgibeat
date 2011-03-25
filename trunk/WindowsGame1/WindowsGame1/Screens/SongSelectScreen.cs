@@ -24,7 +24,8 @@ namespace WGiBeat.Screens
         
         private BpmMeter _bpmMeter;
         private SongSortDisplay _songSortDisplay;
-        
+        private SongTypeDisplay _songTypeDisplay;
+
         private HighScoreFrame _highScoreFrame;
         private PlayerOptionsSet _playerOptionsSet;
 
@@ -77,6 +78,8 @@ namespace WGiBeat.Screens
                 }
 
 
+            _songTypeDisplay = new SongTypeDisplay
+                                   {Position = Core.Metrics["SongTypeDisplay", 0], Width = 112, Height = 42};
             InitSprites();
 
             base.Initialize();
@@ -134,12 +137,14 @@ namespace WGiBeat.Screens
             DrawHighScoreFrame(spriteBatch);
             
             DrawWaveForm(spriteBatch);
+            _songTypeDisplay.Draw(spriteBatch);
             DrawBpmMeter(gameTime, spriteBatch);
+            
             DrawSongList(spriteBatch);
             _headerSprite.Draw(spriteBatch);
             DrawSongCount(spriteBatch);
             _songSortDisplay.Draw(spriteBatch);
-            
+
         }
 
         private void DrawSongCount(SpriteBatch spriteBatch)
@@ -303,6 +308,7 @@ namespace WGiBeat.Screens
             {
                 _previewStarted = true;
                 _bpmMeter.DisplayedSong = CurrentSong;
+                _songTypeDisplay.Song = CurrentSong;
                 Crossfader.PreviewDuration = 10;
                 var previewsOn = Core.Settings.Get<bool>("SongPreview");
 

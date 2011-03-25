@@ -13,8 +13,8 @@ namespace WGiBeat.Drawing
 
         private void InitSprites()
         {
-            _audioTypeSpriteMap = new SpriteMap {SpriteTexture = TextureManager.Textures("AudioTypes"), Columns = 1, Rows = _audioTypes.Length + 1 };
-            _songTypeSpriteMap = new SpriteMap { SpriteTexture = TextureManager.Textures("SongTypes"), Columns = 1, Rows = _songTypes.Length + 1 };
+            _songTypeBackgroundSpriteMap = new SpriteMap { SpriteTexture = TextureManager.Textures("SongTypeBackgrounds"), Columns = 1, Rows = _songTypes.Length + 1 };
+            _songTypeIconSpriteMap = new SpriteMap { SpriteTexture = TextureManager.Textures("SongTypeIcons"), Columns = _songTypes.Length + 1, Rows = 1 };
         }
 
         private GameSong _song;
@@ -28,27 +28,34 @@ namespace WGiBeat.Drawing
             }
         }
 
-        private SpriteMap _audioTypeSpriteMap;
-        private SpriteMap _songTypeSpriteMap;
+        private SpriteMap _songTypeBackgroundSpriteMap;
+        private SpriteMap _songTypeIconSpriteMap;
 
-        private readonly string[] _audioTypes = {".mp3", ".ogg", ".wma", ".wav"};
         private readonly string[] _songTypes = {".sng", ".sm", ".dwi"};
 
         int _songIndex;
-        int _audioIndex;
 
         private void SetIndexes()
         {
             _songIndex = _songTypes.IndexOf(Path.GetExtension(Song.DefinitionFile)) + 1;
-            _audioIndex = _audioTypes.IndexOf(Path.GetExtension(Song.AudioFile)) + 1;
+            //_audioIndex = _audioTypes.IndexOf(Path.GetExtension(Song.AudioFile)) + 1;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             var position = this.Position.Clone();
-            _audioTypeSpriteMap.Draw(spriteBatch,_audioIndex,position);
+            _songTypeBackgroundSpriteMap.Draw(spriteBatch, _songIndex, this.Width, this.Height, position);
             position.Y += 1;
-            _songTypeSpriteMap.Draw(spriteBatch,_songIndex,position);
+            position.X += 5;
+            _songTypeIconSpriteMap.Draw(spriteBatch, _songIndex, this.Height -1, this.Height - 1, position);
+
+            position.X = this.X + this.Width - 10;
+            position.Y = this.Y + 1;
+            var audioExt = Path.GetExtension(Song.AudioFile).ToUpper().TrimStart('.');
+            var songExt = Path.GetExtension(Song.DefinitionFile).ToUpper().TrimStart('.');
+            TextureManager.DrawString(spriteBatch,audioExt,"DefaultFont",position,Color.Black,FontAlign.RIGHT);
+            position.Y += 16;
+            TextureManager.DrawString(spriteBatch, songExt, "DefaultFont", position, Color.Black, FontAlign.RIGHT);
         }
     }
 }

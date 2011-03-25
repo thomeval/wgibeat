@@ -209,6 +209,12 @@
     <Content Include="Content\Textures\Default\MainGame\LifeBarBlazingCoop.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Textures\Default\SongSelect\SongTypeBackgrounds.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Default\SongSelect\SongTypeIcons.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Textures\Default\WGiEdit\EditorBackground.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

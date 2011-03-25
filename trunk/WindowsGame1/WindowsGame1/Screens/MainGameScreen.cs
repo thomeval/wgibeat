@@ -64,7 +64,7 @@ namespace WGiBeat.Screens
             _beatlineSet.NoteMissed += BeatlineNoteMissed;
             _beatlineSet.CPUNoteHit += BeatlineNoteCPUHit;
             _beatlineSet.Large = LargeBeatlinesSuitable();
-
+            
             _displayState = 0;
             _songLoadDelay = 0.0;
             _lastLifeRecord = -0.5;
@@ -81,6 +81,7 @@ namespace WGiBeat.Screens
             }
 
             _gameSong = (GameSong)Core.Cookies["CurrentSong"];
+            _beatlineSet.AddBPMChangeMarkers(_gameSong);
 
             _startTime = null;
             _panic = Core.Cookies.ContainsKey("Panic");
