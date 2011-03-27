@@ -14,7 +14,7 @@ namespace WGiBeat.Screens
         private readonly SineSwayParticleField _field = new SineSwayParticleField();
 
         private bool _displayNoSongsError;
-        private readonly string[] _menuText = { "Start Game", "Stats","How to play", "Keys", "Options", "Song Editor", "Exit" };
+        private readonly string[] _menuText = { "Start Game", "Stats","How to play", "Keys", "Options", "Song Editor", "Exit", "Netplay" };
         private Sprite _background;
         private Sprite _header;
         private SpriteMap _menuOptionSprite;
@@ -32,6 +32,7 @@ namespace WGiBeat.Screens
         {
             InitSprites();
             InitUpdater();
+
             base.Initialize();
         }
 
@@ -109,7 +110,7 @@ namespace WGiBeat.Screens
 
             _header.Draw(spriteBatch);
             
-            for (int menuOption = 0; menuOption < (int)MainMenuOption.COUNT; menuOption++)
+            for (int menuOption = 0; menuOption < (int)MainMenuOption.COUNT - 1; menuOption++)
             {
 
                 var idx = (menuOption == (int) _selectedMenuOption) ? 1 : 0;
@@ -167,6 +168,9 @@ namespace WGiBeat.Screens
                         _displayNoSongsError = true;
                     }
                     break;
+                case MainMenuOption.NETPLAY:
+                    Core.ScreenTransition("Net");
+                    break;
                 case MainMenuOption.STATS:
                     Core.ScreenTransition("Stats");
                     break;
@@ -198,7 +202,8 @@ namespace WGiBeat.Screens
         OPTIONS = 4,
         SONG_EDIT = 5,
         EXIT = 6,
-        COUNT = 7
+        NETPLAY = 7,
+        COUNT = 8
     }
 
 }

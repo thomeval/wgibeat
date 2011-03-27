@@ -61,6 +61,10 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Lidgren.Network, Version=2011.3.12.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\Lidgren.Network.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
       <Private>False</Private>
       <SpecificVersion>True</SpecificVersion>
@@ -143,11 +147,13 @@
     <Compile Include="Drawing\LifeGraph.cs" />
     <Compile Include="Managers\LogManager.cs" />
     <Compile Include="Managers\Manager.cs" />
-    <Compile Include="Managers\NetManager.cs" />
+    <Compile Include="NetSystem\NetClientManager.cs" />
+    <Compile Include="NetSystem\NetManager.cs" />
     <Compile Include="Drawing\Sets\PlayerOptionsSet.cs" />
     <Compile Include="Managers\ProfileManager.cs" />
     <Compile Include="Managers\TextManager.cs" />
     <Compile Include="Managers\UpdateManager.cs" />
+    <Compile Include="NetSystem\NetServerManager.cs" />
     <Compile Include="Players\Profile.cs" />
     <Compile Include="Players\ProfileOperations.cs" />
     <Compile Include="Screens\InitialLoadScreen.cs" />
@@ -660,6 +666,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="WindowsGame1_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="NetSystem\Lidgren\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />

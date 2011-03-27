@@ -24,6 +24,7 @@ namespace WGiBeat
         public SettingsManager Settings;
         public MetricsManager Metrics;
         public ProfileManager Profiles;
+        public NetManager Net;
 
         public AudioManager Audio;
         public SongManager Songs;
@@ -41,13 +42,12 @@ namespace WGiBeat
         private GameScreen _activeScreen;
         private MenuMusicManager _menuMusicManager; 
         
-
         private KeyboardState _lastKeystate;
         private GamePadState[] _lastGamePadState;
         public string WgibeatRootFolder;
         private bool _drawInProgress;
 
-        public const string VERSION_STRING = "v0.7";
+        public const string VERSION_STRING = "v0.8 pre";
         private GameCore()
         {
             GraphicsManager = new GraphicsDeviceManager(this);
@@ -140,6 +140,14 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
 
             if (!passed)
                 KeyMappings.LoadDefault();
+
+            Net = new NetManager {Log = this.Log};
+            Net.NetMessageReceived += NetMessageReceived;
+        }
+
+        private void NetMessageReceived(object sender, ObjectEventArgs e)
+        {
+           _activeScreen.NetMessageReceived((NetMessage) e.Object);
         }
 
         private void InitPlayers()
@@ -168,6 +176,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             _screens.Add("Instruction", new InstructionScreen(this));
             _screens.Add("SongEdit", new SongEditorScreen(this));
             _screens.Add("Stats", new StatsScreen(this));
+            _screens.Add("Net",new NetLobbyScreen(this));
 
             if (!Settings.Get<bool>("RunOnce"))
             {
@@ -265,7 +274,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
 
             DetectKeyPresses();
             DetectButtonPresses();
-
+            Net.ListenForMessages();
             _activeScreen.Update(gameTime);
             Crossfader.Update(gameTime.TotalRealTime.TotalSeconds);
             base.Update(gameTime);

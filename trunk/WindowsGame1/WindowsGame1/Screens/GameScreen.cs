@@ -54,5 +54,10 @@ namespace WGiBeat.Screens
         {
             //Virtual since it is optional for GameScreens.
         }
+
+        public virtual void NetMessageReceived(NetMessage message)
+        {
+            
+        }
     }
 }

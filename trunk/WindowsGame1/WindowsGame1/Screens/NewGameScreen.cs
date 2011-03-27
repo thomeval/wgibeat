@@ -460,6 +460,17 @@ namespace WGiBeat.Screens
         {       
             Core.ScreenTransition("ModeSelect");
         }
+
+        public override void NetMessageReceived(NetMessage message)
+        {
+            switch (message.MessageType)
+            {
+                case MessageType.PLAYER_ACTION:
+                    PerformAction(new InputAction{Action = message.MessageData, Player = message.PlayerID});
+                    break;
+            }
+            base.NetMessageReceived(message);
+        }
         #endregion
 
     }
