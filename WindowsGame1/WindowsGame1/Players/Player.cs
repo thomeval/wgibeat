@@ -62,6 +62,7 @@ namespace WGiBeat.Players
         public bool KO { get; set; }
         public bool Playing { get; set; }
         public bool CPU { get; set; }
+        public bool Remote { get; set; }
         public bool DisableKO { get; set; }
 
         //0 = Ideal, 1 = Cool, 2 = Ok, 3 = Bad, 4 = Fail, 5 = Miss, 6 = Fault;
