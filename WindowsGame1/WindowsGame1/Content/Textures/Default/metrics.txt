@@ -128,6 +128,7 @@ EditorMeasurementDisplay=[400,250];
 EditorVersion=[795,575];
 EditorSongTimeLine=[10,455];
 EditorSongDetailsDisplay=[410,200];
+EditorSongTypeDisplay=[575,200];
 
 #Key Options;
 KeyOptionGridTop=[225,100][300,100][375,100][450,100];
@@ -147,5 +148,5 @@ StatsJoinMessage=[200,300][600,300];
 StatsColumns=[25,85][250,85][325,85][425,85][650,85][725,85];
 StatsProfileMenu=[25,100][425,100];
 
-#Net;
+#PDA;
 NetMainMenu=[25,150][400,150];

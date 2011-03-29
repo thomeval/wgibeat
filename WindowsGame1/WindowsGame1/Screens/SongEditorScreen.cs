@@ -54,6 +54,7 @@ namespace WGiBeat.Screens
         private SpriteMap _validitySpriteMap;
         private Sprite _validityTextBaseSprite;
         private BpmMeter _bpmMeter;
+        private SongTypeDisplay _songTypeDisplay;
 
         private double _phraseNumber = -1;
         private double _debugLastHitOffset;
@@ -99,6 +100,7 @@ namespace WGiBeat.Screens
             _countdownSet = new CountdownSet(Core.Metrics, Core.Players, GameType.NORMAL);
             _songTimeLine = new SongTimeLine
                                 {Height = 60, Width = 780, Position = Core.Metrics["EditorSongTimeLine", 0]};
+            _songTypeDisplay = new SongTypeDisplay { Position = Core.Metrics["EditorSongTypeDisplay", 0], Width = 155, Height = 40 };
         }
 
         public void InitSprites()
@@ -362,6 +364,8 @@ namespace WGiBeat.Screens
         {
             _validityTextBaseSprite.Draw(spriteBatch);
             _songDetailsDisplaySprite.Draw(spriteBatch);
+            _songTypeDisplay.Song = NewGameSong;
+            _songTypeDisplay.Draw(spriteBatch);
         }
 
         private void DrawBPMMeasurement(SpriteBatch spriteBatch)

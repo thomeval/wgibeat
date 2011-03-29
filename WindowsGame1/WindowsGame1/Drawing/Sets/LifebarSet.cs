@@ -111,7 +111,7 @@ namespace WGiBeat.Drawing.Sets
             {
                 if (Players[player].Life >= 100)
                 {
-                    Players[player].Life += amount / 2;
+                    Players[player].Life += amount / 1.25;
                 }
                 else
                 {
