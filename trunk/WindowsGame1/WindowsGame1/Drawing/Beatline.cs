@@ -16,11 +16,12 @@ namespace WGiBeat.Drawing
         public double Bpm { get; set; }
         public int Id { get; set; }
         public bool DisablePulse { get; set; }
-        public double EndPhrase { get; set; }
         private SpriteMap _markerSprite;
         private Sprite _pulseSprite;
         private SpriteMap _baseSprite;
         private SpriteMap _largeBaseSprite;
+        private SpriteMap _beatlineEffects;
+
         public bool Large { get; set; }
 
         //Used by endpoint markers.
@@ -71,6 +72,12 @@ namespace WGiBeat.Drawing
                 Columns = 1,
                 Rows = 5
             };
+            _beatlineEffects = new SpriteMap
+                                   {
+                                       SpriteTexture = TextureManager.Textures("BeatlineEffectIcons"),
+                                       Columns = 1,
+                                       Rows = 3
+                                   };
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -87,6 +94,7 @@ namespace WGiBeat.Drawing
          //   DrawEndPoints(spriteBatch, phraseNumber);
         }
 
+/*
         private void DrawEndPoints(SpriteBatch spriteBatch, double phraseNumber)
         {
             var endpointBeatOffset = (int)(Speed * BEAT_ZOOM_DISTANCE * (phraseNumber - EndPhrase));
@@ -100,6 +108,7 @@ namespace WGiBeat.Drawing
             _markerSprite.ColorShading.A = 255;
             _markerSprite.Draw(spriteBatch, 4, 1, markerHeight, markerPosition);
         }
+*/
 
         private void DrawPulse(SpriteBatch spriteBatch, double phraseNumber)
         {
@@ -148,6 +157,8 @@ namespace WGiBeat.Drawing
                     }
                 }
                 var markerHeight = Large ? LARGE_HEIGHT : NORMAL_HEIGHT;
+                var effectHeight = Large ? 30 : 15;
+
                 int noteIdx = 0;
                 int width = 5;
 
@@ -163,8 +174,14 @@ namespace WGiBeat.Drawing
                         noteIdx = 4;
                         break;
                 }
-                _markerSprite.Draw(spriteBatch,noteIdx, width, markerHeight, markerPosition);
 
+                _markerSprite.Draw(spriteBatch,noteIdx, width, markerHeight, markerPosition);
+                var effectType = (int)bn.NoteType;
+                if (effectType != 0)
+                {
+                    _beatlineEffects.ColorShading.A = (byte) (_markerSprite.ColorShading.A  /2);
+                    _beatlineEffects.Draw(spriteBatch, effectType - 1,effectHeight * 2, effectHeight, (int)(markerPosition.X - effectHeight), (int)markerPosition.Y + markerHeight - effectHeight);
+                }
             }
         }
 
@@ -187,6 +204,10 @@ namespace WGiBeat.Drawing
             _beatlineNotes.Add(bln);
         }
 
+        public void InsertBeatlineNote(BeatlineNote bln, int index)
+        {
+            _beatlineNotes.Insert(index,bln);
+        }
         public void RemoveAll()
         {
             _beatlineNotes.Clear();
@@ -272,7 +293,8 @@ namespace WGiBeat.Drawing
         public int AutoHit(double phraseNumber)
         {
             var passedNotes =
-                (from e in _beatlineNotes where (!e.Hit) && (CalculateHitOffset(e, phraseNumber) < 0) select e);
+                (from e in _beatlineNotes where (!e.Hit) && (CalculateHitOffset(e, phraseNumber) < 0) 
+                 && (e.NoteType == BeatlineNoteType.NORMAL ) select e);
             var result = passedNotes.Count();
 
             foreach (BeatlineNote bln in passedNotes)
@@ -288,5 +310,7 @@ namespace WGiBeat.Drawing
         {
             _beatlineNotes.Clear();
         }
+
+
     }
 }

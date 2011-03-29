@@ -174,8 +174,10 @@ namespace WGiBeat.Drawing.Sets
                     var noteType = song.BPMs[bpmKey] > prev
                                        ? BeatlineNoteType.BPM_INCREASE
                                        : BeatlineNoteType.BPM_DECREASE;
-                    bl.AddBeatlineNote(new BeatlineNote{Player = -1, NoteType = noteType,Position = bpmKey});
+                    bl.InsertBeatlineNote(new BeatlineNote{Player = -1, NoteType = noteType,Position = bpmKey},0);
+                    
                 }
+                prev = song.BPMs[bpmKey];
                 
             }
         }
