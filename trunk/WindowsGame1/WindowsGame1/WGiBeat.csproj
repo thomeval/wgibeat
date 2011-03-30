@@ -148,6 +148,7 @@
     <Compile Include="Managers\LogManager.cs" />
     <Compile Include="Managers\Manager.cs" />
     <Compile Include="NetSystem\NetClientManager.cs" />
+    <Compile Include="NetSystem\NetHelper.cs" />
     <Compile Include="NetSystem\NetManager.cs" />
     <Compile Include="Drawing\Sets\PlayerOptionsSet.cs" />
     <Compile Include="Managers\ProfileManager.cs" />

@@ -169,7 +169,10 @@ namespace WGiBeat.Screens
                     }
                     break;
                 case MainMenuOption.NETPLAY:
-                    Core.ScreenTransition("Net");
+                    if (Core.Settings.Get<bool>("AllowPDA"))
+                    {
+                        Core.ScreenTransition("Net"); 
+                    }
                     break;
                 case MainMenuOption.STATS:
                     Core.ScreenTransition("Stats");

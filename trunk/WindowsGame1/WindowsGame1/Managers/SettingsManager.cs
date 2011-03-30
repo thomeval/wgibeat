@@ -65,6 +65,7 @@ namespace WGiBeat.Managers
             sm["ConvertToSNG"] = false;
             sm["CheckForUpdates"] = false;
             sm["ScreenResolution"] = "800x600";
+            sm["AllowPDA"] = false;
             return sm;
         }
 

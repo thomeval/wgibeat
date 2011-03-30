@@ -522,7 +522,7 @@ namespace WGiBeat.Screens
                     "DefaultFont", Core.Metrics["SongDebugOffset", 0], Color.Black, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, "" + String.Format("{0:F3}", _phraseNumber),
                 "DefaultFont", Core.Metrics["EditorSongPhraseNumber", 0], Color.Black, FontAlign.LEFT);
-            TextureManager.DrawString(spriteBatch, String.Format("Speed: {0}x", Core.Players[0].BeatlineSpeed),
+            TextureManager.DrawString(spriteBatch, String.Format("Speed: {0}x", Core.Players[0].PlayerOptions.BeatlineSpeed),
                 "DefaultFont", Core.Metrics["SongDebugHitOffset", 0], Color.Black, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, String.Format("Length: {0:F3}s", NewGameSong.Length),
                 "DefaultFont", Core.Metrics["SongDebugLength", 0], Color.Black, FontAlign.LEFT);       
@@ -823,10 +823,10 @@ namespace WGiBeat.Screens
         private readonly double[] _speedOptions = { 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0 };
         public void AdjustSpeed(int amount)
         {
-            var idx = Array.IndexOf(_speedOptions, Core.Players[0].BeatlineSpeed);
+            var idx = Array.IndexOf(_speedOptions, Core.Players[0].PlayerOptions.BeatlineSpeed);
             idx += amount;
             idx = Math.Min(_speedOptions.Length - 1, Math.Max(0, idx));
-            Core.Players[0].BeatlineSpeed = _speedOptions[idx];
+            Core.Players[0].PlayerOptions.BeatlineSpeed = _speedOptions[idx];
             _beatlineSet.SetSpeeds();
         }
 

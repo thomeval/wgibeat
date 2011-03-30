@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Lidgren.Network;
+using WGiBeat.Managers;
 using WGiBeat.NetSystem;
 
-namespace WGiBeat.Managers
+namespace WGiBeat.NetSystem
 {
     public class NetManager : Manager
     {
@@ -23,6 +24,19 @@ namespace WGiBeat.Managers
             Formatter = new BinaryFormatter();
             Server = new NetServerManager {Parent = this};
             Client = new NetClientManager {Parent = this};
+        }
+
+        public bool NetplayActive
+        {
+            get
+            {
+                if (Server.IsActive)
+                {
+                    return true;
+                }
+                return Client.IsActive;
+            }
+  
         }
 
 
@@ -97,6 +111,18 @@ namespace WGiBeat.Managers
             Server.CheckForMessages();
             Client.CheckForMessages();
         }
+
+        public void SendToPeers(NetMessage message)
+        {
+            if (Server.IsActive)
+            {
+                Server.BroadcastMessage(message, null);
+            }
+            if (Client.IsActive)
+            {
+                Client.SendMessage(message);
+            }
+        }
     }
 
     [Serializable]
@@ -105,7 +131,7 @@ namespace WGiBeat.Managers
         public MessageType MessageType
         { get; set; }
 
-        public string MessageData
+        public object MessageData
         {
             get; set;
         }
@@ -119,8 +145,12 @@ namespace WGiBeat.Managers
         PLAYER_NOTEBAR_UPDATE,
         PLAYER_ACTION,
         PLAYER_NAME,
+        PLAYER_PROFILE,
+        PLAYER_NO_PROFILE,
         DISCONNECT,
         CHAT_MESSAGE,
-        LOBBY_START
+        LOBBY_START,
+        CURSOR_POSITION,
+        PLAYER_OPTIONS
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
-using WGiBeat.Notes;
+using WGiBeat.NetSystem;
 using WGiBeat.Players;
 
 namespace WGiBeat.Screens
@@ -38,6 +38,7 @@ namespace WGiBeat.Screens
             {
                 _cursorPositions[x] = CursorPosition.NOT_JOINED;
                 Core.Players[x].Playing = false;
+                Core.Players[x].Remote = false;
                 Core.Players[x].Profile = null;
                 CreatePlayerMenu(x);
                 CreateProfileMenu(x);
@@ -219,16 +220,31 @@ namespace WGiBeat.Screens
                         _infoMessages[x] = "";
                         break;
                     case CursorPosition.MAIN_MENU:
+
                         _playerMenus[x].Draw(spriteBatch);
                         _infoMessages[x] = (Core.Players[x].Profile == null) ? "No profile" : "Current profile: " + Core.Players[x].SafeName;
                         break;
                     case CursorPosition.PROFILE_LIST:
-                        _profileMenus[x].Draw(spriteBatch);
-                        _infoMessages[x] = "Select a profile.";
+                        if (Core.Players[x].Remote)
+                        {
+                            _infoMessages[x] = "Selecting a profile";
+                        }
+                        else
+                        {
+                            _profileMenus[x].Draw(spriteBatch);
+                            _infoMessages[x] = "Select a profile.";
+                        }
                         break;
                     case CursorPosition.KEYBOARD:
+                        if (Core.Players[x].Remote)
+                        {
+                            _infoMessages[x] = "Creating a new profile";
+                        }
+                        else
+                        {                         
                         _keyboards[x].Draw(spriteBatch);
-                        _infoMessages[x] = "Enter a profile name.";
+                            _infoMessages[x] = "Enter a profile name.";
+                        }
                         break;
                     case CursorPosition.READY:
                         TextureManager.DrawString(spriteBatch, "Ready", "LargeFont",
@@ -238,6 +254,7 @@ namespace WGiBeat.Screens
                 }
             }
         }
+
 
 
         private void DrawBorders(SpriteBatch spriteBatch)
@@ -264,53 +281,34 @@ namespace WGiBeat.Screens
         public override void PerformAction(InputAction inputAction)
         {
             var playerIdx = inputAction.Player - 1;
+            if ((playerIdx > -1) && Core.Players[playerIdx].Remote)
+            {
+                return;
+            }
+            if ((playerIdx > -1) && (_cursorPositions[playerIdx] == CursorPosition.KEYBOARD))
+            {
+                _keyboards[playerIdx].MoveSelection(inputAction.Action);
+                return;
+            }
+
             switch (inputAction.Action)
             {
                 case "START":
                     StartPressed(playerIdx);
                     break;
                 case "UP":
-                    if (_cursorPositions[playerIdx] == CursorPosition.KEYBOARD)
-                    {
-                        _keyboards[playerIdx].MoveSelection(NoteDirection.UP);
-                    }
-                    else
-                    {
                         _playerMenus[playerIdx].DecrementSelected();
                         _profileMenus[playerIdx].DecrementSelected();
-                    }
-
                     break;
                 case "DOWN":
-                    if (_cursorPositions[playerIdx] == CursorPosition.KEYBOARD)
-                    {
-                        _keyboards[playerIdx].MoveSelection(NoteDirection.DOWN);
-                    }
-                    else
-                    {
                         _playerMenus[playerIdx].IncrementSelected();
                         _profileMenus[playerIdx].IncrementSelected();
-                    }
                     break;
                 case "RIGHT":
-                    if (_cursorPositions[playerIdx] == CursorPosition.KEYBOARD)
-                    {
-                        _keyboards[playerIdx].MoveSelection(NoteDirection.RIGHT);
-                    }
-                    else
-                    {
                         _playerMenus[playerIdx].IncrementOption();
-                    }
                     break;
                 case "LEFT":
-                    if (_cursorPositions[playerIdx] == CursorPosition.KEYBOARD)
-                    {
-                        _keyboards[playerIdx].MoveSelection(NoteDirection.LEFT);
-                    }
-                    else
-                    {
                         _playerMenus[playerIdx].DecrementOption();
-                    }
                     break;
                 case "BACK":
                     Core.ScreenTransition("MainMenu");
@@ -323,7 +321,7 @@ namespace WGiBeat.Screens
             switch (_cursorPositions[number])
             {
                 case CursorPosition.NOT_JOINED:
-                    _cursorPositions[number] = CursorPosition.PROFILE_LIST;
+                    ChangeCursorPosition(number, CursorPosition.PROFILE_LIST);
                     Core.Players[number].Playing = true;
                     Core.Players[number].CPU = false;
                     break;
@@ -339,7 +337,9 @@ namespace WGiBeat.Screens
                 case CursorPosition.READY:
                     //Player is already ready.
                     return;
+                    
             }
+
         }
 
         private void SelectProfileListItem(int number)
@@ -350,14 +350,15 @@ namespace WGiBeat.Screens
                switch (_profileMenus[number].SelectedItem().ItemText)
                {
                    case "[Create New]":
-                       _cursorPositions[number] = CursorPosition.KEYBOARD;
+                       ChangeCursorPosition(number, CursorPosition.KEYBOARD);
                        break;
                    case "[Guest]":
                        Core.Players[number].Profile = null;
-                       _cursorPositions[number] = CursorPosition.MAIN_MENU;
+                       ChangeCursorPosition(number, CursorPosition.MAIN_MENU);
+                       NetHelper.Instance.BroadcastProfileChange(number);
                        break;
                    case "[Cancel]":
-                       _cursorPositions[number] = CursorPosition.MAIN_MENU;
+                       ChangeCursorPosition(number, CursorPosition.MAIN_MENU);
                        break;
                }
                _errorMessages[number] = "";
@@ -383,17 +384,25 @@ namespace WGiBeat.Screens
                    Core.Players[number].Profile = newSelection;
                    Core.Players[number].LoadPreferences();
                    RefereshSelectedOptions(number);
-                   _cursorPositions[number] = CursorPosition.MAIN_MENU;
+                   ChangeCursorPosition(number,CursorPosition.MAIN_MENU);
                    _errorMessages[number] = "";
+                   NetHelper.Instance.BroadcastProfileChange(number);
                }
            }
+
         }
 
+        private void ChangeCursorPosition(int player, CursorPosition position)
+        {
+            _cursorPositions[player] = position;
+            NetHelper.Instance.BroadcastCursorPosition(player, _cursorPositions[player]);
+
+        }
         private void RefereshSelectedOptions(int number)
         {
-            _playerMenus[number].GetByItemText("Beatline Speed").SetSelectedByValue(Core.Players[number].BeatlineSpeed);
-            _playerMenus[number].GetByItemText("Difficulty").SetSelectedByValue((int) Core.Players[number].PlayDifficulty);
-            _playerMenus[number].GetByItemText("Disable KO").SetSelectedByValue(Core.Players[number].DisableKO);
+            _playerMenus[number].GetByItemText("Beatline Speed").SetSelectedByValue(Core.Players[number].PlayerOptions.BeatlineSpeed);
+            _playerMenus[number].GetByItemText("Difficulty").SetSelectedByValue((int)Core.Players[number].PlayerOptions.PlayDifficulty);
+            _playerMenus[number].GetByItemText("Disable KO").SetSelectedByValue(Core.Players[number].PlayerOptions.DisableKO);
         }
 
         private void SelectMainMenuItem(int number)
@@ -401,17 +410,17 @@ namespace WGiBeat.Screens
             switch (_playerMenus[number].SelectedItem().ItemText)
             {
                 case "Leave":
-                    _cursorPositions[number] = CursorPosition.NOT_JOINED;
+                    ChangeCursorPosition(number, CursorPosition.NOT_JOINED);
                     Core.Players[number].Playing = false;
                     Core.Players[number].Profile = null;
                     TryToStart();
                     break;
                 case "Decision":
-                    _cursorPositions[number] = CursorPosition.READY;
+                    ChangeCursorPosition(number,CursorPosition.READY);
                     TryToStart();
                     break;
                 case "Profile":
-                    _cursorPositions[number] = CursorPosition.PROFILE_LIST;
+                    ChangeCursorPosition(number, CursorPosition.PROFILE_LIST);
                     _profileMenus[number].SelectedIndex = 0;
                     break;
             }
@@ -446,10 +455,10 @@ namespace WGiBeat.Screens
         {
             for (int x = 0; x < 4; x++)
             {
-                Core.Players[x].PlayDifficulty =
+                Core.Players[x].PlayerOptions.PlayDifficulty =
     (Difficulty)(int)_playerMenus[x].GetByItemText("Difficulty").SelectedValue();
-                Core.Players[x].BeatlineSpeed = (double)_playerMenus[x].GetByItemText("Beatline Speed").SelectedValue();
-                Core.Players[x].DisableKO = (bool) _playerMenus[x].GetByItemText("Disable KO").SelectedValue();
+                Core.Players[x].PlayerOptions.BeatlineSpeed = (double)_playerMenus[x].GetByItemText("Beatline Speed").SelectedValue();
+                Core.Players[x].PlayerOptions.DisableKO = (bool)_playerMenus[x].GetByItemText("Disable KO").SelectedValue();
                 Core.Players[x].UpdatePreferences();
             }
             Core.Profiles.SaveToFolder(Core.Settings["ProfileFolder"] + "");
@@ -461,18 +470,53 @@ namespace WGiBeat.Screens
             Core.ScreenTransition("ModeSelect");
         }
 
+        #endregion
+
+        #region Netplay Code
+
         public override void NetMessageReceived(NetMessage message)
         {
             switch (message.MessageType)
             {
-                case MessageType.PLAYER_ACTION:
-                    PerformAction(new InputAction{Action = message.MessageData, Player = message.PlayerID});
+                case MessageType.CURSOR_POSITION:
+                    var position = (CursorPosition)message.MessageData;
+
+                    _cursorPositions[message.PlayerID] = position;
+                    if (_cursorPositions[message.PlayerID] == CursorPosition.PROFILE_LIST)
+                    {
+                        Core.Players[message.PlayerID].Remote = true;
+                        Core.Players[message.PlayerID].Playing = true;
+                    }
+                    if (_cursorPositions[message.PlayerID] == CursorPosition.NOT_JOINED)
+                    {
+                        Core.Players[message.PlayerID].Remote = false;
+                        Core.Players[message.PlayerID].Playing = false;
+                    }
+                    break;
+                case MessageType.PLAYER_PROFILE:
+                    if (!Core.Players[message.PlayerID].Remote)
+                    {
+                        return;
+                    }
+                    var profile = (Profile)message.MessageData;
+                    Core.Players[message.PlayerID].Profile = profile;
+                    break;
+                case MessageType.PLAYER_NO_PROFILE:
+                    if (!Core.Players[message.PlayerID].Remote)
+                    {
+                        return;
+                    }
+                    Core.Players[message.PlayerID].Profile = null;
+                    break;
+                case MessageType.PLAYER_OPTIONS:
+                    Core.Players[message.PlayerID].PlayerOptions = ((PlayerOptions)message.MessageData);
                     break;
             }
             base.NetMessageReceived(message);
         }
-        #endregion
 
+
+        #endregion
     }
 
     enum CursorPosition

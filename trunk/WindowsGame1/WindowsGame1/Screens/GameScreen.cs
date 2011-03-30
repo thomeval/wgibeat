@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using WGiBeat.Helpers;
 using WGiBeat.Managers;
+using WGiBeat.NetSystem;
 
 namespace WGiBeat.Screens
 {

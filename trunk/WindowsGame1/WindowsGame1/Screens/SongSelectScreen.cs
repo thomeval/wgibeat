@@ -388,11 +388,11 @@ namespace WGiBeat.Screens
             {
                 return;
             }
-            var cpuDifficulty = (from e in Core.Players where e.IsHumanPlayer select e.PlayDifficulty).Max();
+            var cpuDifficulty = (from e in Core.Players where e.IsHumanPlayer select e.PlayerOptions.PlayDifficulty).Max();
 
             foreach (Player player in (from e in Core.Players where e.IsCPUPlayer select e))
             {
-                player.PlayDifficulty = cpuDifficulty;
+                player.PlayerOptions.PlayDifficulty = cpuDifficulty;
             }
         }
 

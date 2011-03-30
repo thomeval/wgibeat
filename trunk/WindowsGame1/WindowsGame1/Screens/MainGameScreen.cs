@@ -330,7 +330,7 @@ namespace WGiBeat.Screens
             if (complete)
             {
                 //Increment Player Level
-                Core.Players[player].Momentum += (long) (MomentumJudgementMultiplier(judgement) * MomentumIncreaseByDifficulty(Core.Players[player].PlayDifficulty));
+                Core.Players[player].Momentum += (long)(MomentumJudgementMultiplier(judgement) * MomentumIncreaseByDifficulty(Core.Players[player].PlayerOptions.PlayDifficulty));
             }
             //Award Score
             ApplyJudgement(judgement, player);
@@ -433,7 +433,7 @@ namespace WGiBeat.Screens
 
             if ((judgement != BeatlineNoteJudgement.MISS) && (judgement != BeatlineNoteJudgement.FAIL))
             {
-                Core.Players[player].Momentum += (long) (MomentumJudgementMultiplier(judgement) * MomentumIncreaseByDifficulty(Core.Players[player].PlayDifficulty));
+                Core.Players[player].Momentum += (long)(MomentumJudgementMultiplier(judgement) * MomentumIncreaseByDifficulty(Core.Players[player].PlayerOptions.PlayDifficulty));
             }
 
             //Award Score

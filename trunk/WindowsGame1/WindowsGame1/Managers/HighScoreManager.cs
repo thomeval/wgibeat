@@ -110,7 +110,7 @@ namespace WGiBeat.Managers
                 default:
                     //Individual high score.
                     var highest = players[result].Score;
-                    SetHighScoreEntry(CurrentSong.GetHashCode(), gameType, highest, grades[result], players[result].PlayDifficulty, players[result].SafeName);
+                    SetHighScoreEntry(CurrentSong.GetHashCode(), gameType, highest, grades[result], players[result].PlayerOptions.PlayDifficulty, players[result].SafeName);
                     break;
             }
             return result;
@@ -130,7 +130,7 @@ namespace WGiBeat.Managers
 
         private static Difficulty LowestDifficulty(Player[] players)
         {
-            return (from e in players where e.Playing select e.PlayDifficulty).Min();
+            return (from e in players where e.Playing select e.PlayerOptions.PlayDifficulty).Min();
         }
 
         #region IO

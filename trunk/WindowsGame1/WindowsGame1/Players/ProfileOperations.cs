@@ -32,9 +32,7 @@ namespace WGiBeat.Players
             {
                 return;
             }
-            player.Profile.LastBeatlineSpeed = player.BeatlineSpeed;
-            player.Profile.LastDifficulty = player.PlayDifficulty;
-            player.Profile.DisableKO = player.DisableKO;
+            player.Profile.LastPlayerOptions = player.PlayerOptions;
 
         }
 
@@ -44,9 +42,8 @@ namespace WGiBeat.Players
             {
                 return;
             }
-            player.BeatlineSpeed = player.Profile.LastBeatlineSpeed;
-            player.PlayDifficulty = player.Profile.LastDifficulty;
-            player.DisableKO = player.Profile.DisableKO;
+            player.PlayerOptions = player.Profile.LastPlayerOptions;
+
         }
 
         public static long GetNextEXPSafe(this Player player)

@@ -70,7 +70,7 @@ namespace WGiBeat.Drawing.Sets
                 {
                     continue;
                 }
-                int idx = 1 + (int)(Players[x].PlayDifficulty);
+                int idx = 1 + (int)(Players[x].PlayerOptions.PlayDifficulty);
  
                 _iconSpriteMap.Draw(spriteBatch, idx, 30, 30, _metrics["GameScreenPlayerDifficulties", x]);
             }

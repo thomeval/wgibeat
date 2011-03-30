@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
+using WGiBeat.NetSystem;
 using WGiBeat.Players;
 using WGiBeat.Screens;
 
@@ -143,10 +144,13 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
 
             Net = new NetManager {Log = this.Log};
             Net.NetMessageReceived += NetMessageReceived;
+            NetHelper.NetManager = Net;
+            NetHelper.Core = this;
         }
 
         private void NetMessageReceived(object sender, ObjectEventArgs e)
         {
+
            _activeScreen.NetMessageReceived((NetMessage) e.Object);
         }
 
