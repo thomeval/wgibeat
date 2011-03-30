@@ -100,7 +100,7 @@ namespace WGiBeat.Drawing.Sets
         private bool AnyPlayerHasDisabledKO()
         {
             var result = (from e in Players where e.Playing && !e.CPU select e);
-            return (result.Any(e => e.DisableKO));
+            return (result.Any(e => e.PlayerOptions.DisableKO));
         }
 
 
@@ -129,7 +129,7 @@ namespace WGiBeat.Drawing.Sets
 
 
             Players[player].Life = Math.Min(Players[player].GetMaxLife(), Players[player].Life);
-            if ((!Players[player].CPU) && (Players[player].Life <= 0) && (!Players[player].DisableKO))
+            if ((!Players[player].CPU) && (Players[player].Life <= 0) && (!Players[player].PlayerOptions.DisableKO))
             {
                 Players[player].KO = true;
                 Players[player].Life = 0;

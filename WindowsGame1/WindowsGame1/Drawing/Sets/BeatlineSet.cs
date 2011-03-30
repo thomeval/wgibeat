@@ -198,7 +198,7 @@ namespace WGiBeat.Drawing.Sets
         {
             for (int x = 0; x < 4; x++)
             {
-                _beatlines[x].Speed = Players[x].BeatlineSpeed;
+                _beatlines[x].Speed = Players[x].PlayerOptions.BeatlineSpeed;
             }
         }
 

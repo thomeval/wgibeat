@@ -14,7 +14,8 @@ namespace WGiBeat.Players
         public Player()
         {
             Judgements = new int[8];
-            BeatlineSpeed = 1.0;
+            PlayerOptions = new PlayerOptions {BeatlineSpeed = 1.0};
+
         }
 
         public Profile Profile { get; set; }
@@ -24,7 +25,7 @@ namespace WGiBeat.Players
         public int Team { get; set; }
         public long PlayTime { get; set; }
         public BeatlineNoteJudgement NextCPUJudgement { get; set; }
-
+        public PlayerOptions PlayerOptions { get; set; }
         private long _hits;
         public long Hits
         {
@@ -63,12 +64,10 @@ namespace WGiBeat.Players
         public bool Playing { get; set; }
         public bool CPU { get; set; }
         public bool Remote { get; set; }
-        public bool DisableKO { get; set; }
 
         //0 = Ideal, 1 = Cool, 2 = Ok, 3 = Bad, 4 = Fail, 5 = Miss, 6 = Fault;
         public int[] Judgements { get; set; }
 
-        public double BeatlineSpeed { get; set; }
         public double Level
         {
             get
@@ -79,7 +78,7 @@ namespace WGiBeat.Players
                 }
  
                 double x = Math.Log((Momentum + 150)/100.0, 1.5);
-                x = Math.Min(MaxArrowLevel(PlayDifficulty), x);
+                x = Math.Min(MaxArrowLevel(PlayerOptions.PlayDifficulty), x);
                 
                 return Math.Max(1,x);
 
@@ -107,10 +106,8 @@ namespace WGiBeat.Players
 
         public int MaxArrowLevel()
         {
-            return MaxArrowLevel(PlayDifficulty);
+            return MaxArrowLevel(PlayerOptions.PlayDifficulty);
         }
-
-        public Difficulty PlayDifficulty { get; set; }
 
         private readonly List<float> _lifeHistory = new List<float>();
 
@@ -153,7 +150,7 @@ namespace WGiBeat.Players
             Momentum = (long)(Momentum * 0.95);
             Judgements[6]++;
             int result = 0;
-            switch (PlayDifficulty)
+            switch (PlayerOptions.PlayDifficulty)
             {
                 case Difficulty.BEGINNER:
                     break;
@@ -179,7 +176,7 @@ namespace WGiBeat.Players
             Momentum = (long)(Momentum * 0.8);
            
             var result = 0;
-            switch (PlayDifficulty)
+            switch (PlayerOptions.PlayDifficulty)
             {
                 case Difficulty.BEGINNER:
                     result = -2;
@@ -259,7 +256,7 @@ namespace WGiBeat.Players
                 }
             }
 
-            var difficulty = (int) PlayDifficulty;
+            var difficulty = (int)PlayerOptions.PlayDifficulty;
 
             result *= _difficultyMultipliers[difficulty];
             return (long) Math.Floor(result);
@@ -290,6 +287,14 @@ namespace WGiBeat.Players
             return 100.0 * playerScore / maxPossible;
         }
  
+    }
+
+    [Serializable]
+    public class PlayerOptions
+    {
+        public bool DisableKO { get; set; }
+        public double BeatlineSpeed { get; set;}
+        public Difficulty PlayDifficulty { get; set;}
     }
 
     public enum Difficulty

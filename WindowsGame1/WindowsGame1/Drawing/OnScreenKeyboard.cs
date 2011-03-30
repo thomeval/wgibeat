@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.Managers;
 using WGiBeat.Notes;
 
 namespace WGiBeat.Drawing
@@ -114,37 +115,40 @@ namespace WGiBeat.Drawing
             }
         }
 
-        public void MoveSelection(NoteDirection dir)
+        public void MoveSelection(string dir)
         {
             switch (dir)
             {
-                case NoteDirection.LEFT:
+                case "LEFT":
                     _selectedIndex--;
                     if (_selectedIndex < 0)
                     {
                         _selectedIndex = _totalItems - 1;
                     }
                     break;
-                case NoteDirection.RIGHT:
+                case "RIGHT":
                     _selectedIndex++;
                     if (_selectedIndex >= _totalItems)
                     {
                         _selectedIndex = 0;
                     }
                     break;
-                case NoteDirection.UP:
+                case "UP":
                     _selectedIndex -= this.Columns;
                     if (_selectedIndex < 0)
                     {
                         _selectedIndex += _totalItems;
                     }
                     break;
-                case NoteDirection.DOWN:
+                case "DOWN":
                     _selectedIndex += this.Columns;
                     if (_selectedIndex >= _totalItems)
                     {
                         _selectedIndex -= _totalItems;
                     }
+                    break;
+                case "START":
+                    PickSelection();
                     break;
             }
         }
