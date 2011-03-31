@@ -6,47 +6,28 @@ namespace WGiBeat.Drawing
 {
     public class SineSwayParticle : DrawableObject
     {
-        public Double ParticlePosition { get; set; } //Between 0 and 1.
-        public Double Frequency { get; set; }
-        public Boolean Vertical { get; set; }
-        public Double StepSize { get; set; }
-        public Double Shift { get; set; }
+        public double ParticlePosition { get; set; } //Between 0 and 1.
+        public double Frequency { get; set; }
+        public bool Vertical { get; set; }
+        public double StepSize { get; set; }
+        public double Shift { get; set; }
 
-        public int ParticleCount { get; set; }
-        //public Sprite[] Particles { get; set; }
 
         public int ParticleSize { get; set; }
 
-        public Sprite Particle { get; set; }
+        public SpriteMap ParticleSpriteMap { get; set; }
+        public int ParticleType { get; set; }
 
         //Convert sine wave amplitude to fit width. default Vertical = true.
-
         public SineSwayParticle()
-            : this(0, 1, true, 0.01, 0, new Color((float) 233 / 255, (float) 255 / 255, (float) 251 / 255), "Particle_1", 25)
-        {}
-
-        public SineSwayParticle(Double startPosition, Double frequency, Boolean vertical, Double stepSize, Double shift, Color shade, String particleShape, int particleSize)
         {
-            ParticlePosition = startPosition;
-            Frequency = frequency;
-            Shift = shift;
-            StepSize = stepSize;
-            Vertical = vertical;
-
-            Particle = new Sprite //temp
-                            {
-                                SpriteTexture = TextureManager.Textures(particleShape),
-                                ColorShading = shade
-                            };
-
-            Vector2 tempVector = GetVector();
-
-            ParticleSize = particleSize;
-
-            Particle.X = (int) tempVector.X;
-            Particle.Y = (int) tempVector.Y;
+            ParticleSpriteMap = new SpriteMap
+            {
+                SpriteTexture = TextureManager.Textures("BackgroundParticles"),
+                Columns = 5,
+                Rows = 1
+            };
         }
-
 
         private void Step()
         {
@@ -55,6 +36,7 @@ namespace WGiBeat.Drawing
             if (ParticlePosition >= 1)
                 ParticlePosition -= 1;
 
+            this.Rotation += 0.0075f;
         }
 
         private Vector2 GetVector()
@@ -65,22 +47,14 @@ namespace WGiBeat.Drawing
             if (Vertical)
                 return new Vector2(X + widthAlt, Y + heightAlt);
 
-            return new Vector2(X + heightAlt, Y + widthAlt);
+            return new Vector2(X + widthAlt, Y + heightAlt);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Particle.Width = ParticleSize;
-            Particle.Height = ParticleSize;
-
-            Particle.Draw(spriteBatch);
-
-
-            Vector2 tempVector = GetVector();
-
-            Particle.X = (int) tempVector.X;
-            Particle.Y = (int) tempVector.Y;
-
+           // this.Width = ParticleSize;
+          //  this.Height = ParticleSize;
+            ParticleSpriteMap.Draw(spriteBatch, ParticleType, ParticleSize, ParticleSize, (int) GetVector().X, (int) GetVector().Y, Rotation);
             Step();
         }
 

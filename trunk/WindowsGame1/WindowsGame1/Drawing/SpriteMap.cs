@@ -29,9 +29,24 @@ namespace WGiBeat.Drawing
                                    X = (int)Math.Ceiling(x * Sprite.Multiplier.X),
                                    Y = (int)Math.Ceiling(y * Sprite.Multiplier.Y)
                                };
-
             spriteBatch.Draw(SpriteTexture, destRect, sourceRect, ColorShading);
+            
         }
+
+        public void Draw(SpriteBatch spriteBatch, int cellnumber, int width, int height, int x, int y, float rotation)
+        {
+            Rectangle sourceRect = CalculateSourceRectangle(cellnumber);
+            var destRect = new Rectangle
+            {
+                Height = (int)Math.Ceiling(height * Sprite.Multiplier.Y),
+                Width = (int)Math.Ceiling(width * Sprite.Multiplier.X),
+                X = (int)Math.Ceiling(x * Sprite.Multiplier.X),
+                Y = (int)Math.Ceiling(y * Sprite.Multiplier.Y)
+            };
+            var rotationOrigin = new Vector2(destRect.Width / 2, destRect.Height / 2);
+            spriteBatch.Draw(SpriteTexture, destRect, sourceRect, ColorShading,rotation,rotationOrigin, SpriteEffects.None,0);
+        }
+
 
         public void Draw(SpriteBatch spriteBatch, int cellnumber, int width, int height, Vector2 position)
         {
