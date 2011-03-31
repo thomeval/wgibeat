@@ -9,17 +9,17 @@ namespace WGiBeat.Drawing
         private SineSwayParticle[] _swayers;
         public int Count { get; set; }
 
-        public Double MinPosition { get; set; }
-        public Double MaxPosition { get; set; }
+        public double MinPosition { get; set; }
+        public double MaxPosition { get; set; }
 
-        public Double MinFrequency { get; set; }
-        public Double MaxFrequency { get; set; }
+        public double MinFrequency { get; set; }
+        public double MaxFrequency { get; set; }
 
-        public Double MinStepSize { get; set; }
-        public Double MaxStepSize { get; set; }
+        public double MinStepSize { get; set; }
+        public double MaxStepSize { get; set; }
 
-        public Double MinShift { get; set; }
-        public Double MaxShift { get; set; }
+        public double MinShift { get; set; }
+        public double MaxShift { get; set; }
 
         public int MinWidth { get; set; }
         public int MaxWidth { get; set; }
@@ -35,8 +35,7 @@ namespace WGiBeat.Drawing
 
         private readonly Random _rand = new Random();
 
-        private String[] _textureList = { "Particle_1", "Particle_2", "Particle_3", "Particle_4", "Particle_5", };
-        private Boolean RandomizeTextures { get; set; }
+        private bool RandomizeTextures { get; set; }
 
   
         public SineSwayParticleField()
@@ -106,8 +105,6 @@ namespace WGiBeat.Drawing
         {
             particle.ParticleSize = _rand.Next(MinSize, MaxSize);
 
-
-
             particle.Frequency = MinFrequency + (_rand.NextDouble() * (MaxFrequency - MinFrequency));
             particle.Shift = MinShift + (_rand.NextDouble() * (MaxShift - MinShift));
             particle.ParticlePosition = MinPosition + (_rand.NextDouble() * (MaxPosition - MinPosition));
@@ -117,12 +114,12 @@ namespace WGiBeat.Drawing
 
             particle.Width = _rand.Next(MinWidth, MaxWidth);
             particle.Height = _rand.Next(MinHeight, MaxHeight);
-
+ 
             particle.StepSize = MinStepSize + (_rand.NextDouble() * (MaxStepSize - MinStepSize));
 
             if (RandomizeTextures) //Hacky. Must fix.
             {
-                particle.Particle.SpriteTexture = TextureManager.Textures(_textureList[_rand.Next(0, 5)]);
+                particle.ParticleType = _rand.Next(0, 5);
             }
         }
         public override void Draw(SpriteBatch spriteBatch)

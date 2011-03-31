@@ -156,7 +156,9 @@ namespace WGiBeat.Screens
                 CreateProfileMenu(x);
             }
             Core.Profiles.SaveToFolder(Core.Settings["ProfileFolder"] + "");
-            _cursorPositions[player] = CursorPosition.MAIN_MENU;
+            ChangeCursorPosition(player,CursorPosition.MAIN_MENU);
+            NetHelper.Instance.BroadcastPlayerOptions(player);
+            NetHelper.Instance.BroadcastProfileChange(player);
             _errorMessages[player] = "";
         }
 
@@ -312,6 +314,8 @@ namespace WGiBeat.Screens
                     break;
                 case "BACK":
                     Core.ScreenTransition("MainMenu");
+                    NetHelper.Instance.BroadcastScreenTransition("MainMenu");
+                    Core.Net.Disconnect();
                     break;
             }
         }
@@ -356,6 +360,7 @@ namespace WGiBeat.Screens
                        Core.Players[number].Profile = null;
                        ChangeCursorPosition(number, CursorPosition.MAIN_MENU);
                        NetHelper.Instance.BroadcastProfileChange(number);
+                       NetHelper.Instance.BroadcastPlayerOptions(number);
                        break;
                    case "[Cancel]":
                        ChangeCursorPosition(number, CursorPosition.MAIN_MENU);
@@ -387,6 +392,7 @@ namespace WGiBeat.Screens
                    ChangeCursorPosition(number,CursorPosition.MAIN_MENU);
                    _errorMessages[number] = "";
                    NetHelper.Instance.BroadcastProfileChange(number);
+                   NetHelper.Instance.BroadcastPlayerOptions(number);
                }
            }
 
@@ -455,6 +461,10 @@ namespace WGiBeat.Screens
         {
             for (int x = 0; x < 4; x++)
             {
+                if (Core.Players[x].Remote)
+                {
+                    continue;
+                }
                 Core.Players[x].PlayerOptions.PlayDifficulty =
     (Difficulty)(int)_playerMenus[x].GetByItemText("Difficulty").SelectedValue();
                 Core.Players[x].PlayerOptions.BeatlineSpeed = (double)_playerMenus[x].GetByItemText("Beatline Speed").SelectedValue();
@@ -466,7 +476,8 @@ namespace WGiBeat.Screens
 
 
         private void StartGame()
-        {       
+        {
+            NetHelper.Instance.BroadcastScreenTransition("ModeSelect");
             Core.ScreenTransition("ModeSelect");
         }
 
@@ -510,9 +521,21 @@ namespace WGiBeat.Screens
                     break;
                 case MessageType.PLAYER_OPTIONS:
                     Core.Players[message.PlayerID].PlayerOptions = ((PlayerOptions)message.MessageData);
+                    RefereshSelectedOptions(message.PlayerID);
+                    break;
+                case MessageType.SCREEN_TRANSITION:
+                    var screen = message.MessageData.ToString();
+                    if (screen == "MainMenu")
+                    {
+                        for (int x = 0; x < 4; x++)
+                        {
+                            Core.Players[x].Remote = false;
+                        }
+                    }
+                    Core.ScreenTransition(screen);
                     break;
             }
-            base.NetMessageReceived(message);
+
         }
 
 

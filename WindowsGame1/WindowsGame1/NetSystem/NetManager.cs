@@ -11,10 +11,10 @@ namespace WGiBeat.NetSystem
     public class NetManager : Manager
     {
 
-        public NetServerManager Server;
-        public NetClientManager Client;
+        public readonly NetServerManager Server;
+        public readonly NetClientManager Client;
 
-        public BinaryFormatter Formatter;
+        public readonly BinaryFormatter Formatter;
 
         public event EventHandler<ObjectEventArgs> NetMessageReceived;
 
@@ -151,6 +151,10 @@ namespace WGiBeat.NetSystem
         CHAT_MESSAGE,
         LOBBY_START,
         CURSOR_POSITION,
-        PLAYER_OPTIONS
+        PLAYER_OPTIONS,
+        SCREEN_TRANSITION,
+        PLAYER_JOIN,
+        PLAYER_LEAVE,
+        PLAYER_ACTION_RELEASED
     }
 }

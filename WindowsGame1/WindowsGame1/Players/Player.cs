@@ -139,6 +139,11 @@ namespace WGiBeat.Players
 
         }
 
+        public bool IsLocalHumanPlayer
+        {
+            get { return IsHumanPlayer && (!Remote); }
+        }
+
         public void RecordCurrentLife()
         {
             _lifeHistory.Add((float) Life);

@@ -36,34 +36,27 @@ namespace WGiBeat.Players
 
         public Profile()
         {
-            JudgementCounts = new long[(int) BeatlineNoteJudgement.COUNT + 2];
+            JudgementCounts = new long[(int)BeatlineNoteJudgement.COUNT + 2];
             LastPlayerOptions = new PlayerOptions { BeatlineSpeed = 1.0 };
         }
 
         public Profile(SerializationInfo si, StreamingContext sc)
         {
-            LastPlayerOptions = new PlayerOptions {BeatlineSpeed = 1.0};
-            Name = (string) si.GetValue("Name", typeof (string));
-            EXP = (long) si.GetValue("EXP", typeof (long));
-            JudgementCounts = (long[]) si.GetValue("JudgementCounts", typeof (long[]));
-            TotalHits = (long) si.GetValue("TotalHits", typeof (long));
-            LastPlayerOptions.PlayDifficulty = (Difficulty) si.GetValue("LastDifficulty", typeof (Difficulty));
-            LastPlayerOptions.BeatlineSpeed = (double) si.GetValue("LastBeatlineSpeed", typeof (double));
-            SongsCleared = (long) si.GetValue("SongsCleared", typeof (long));
-            SongsFailed = (long) si.GetValue("SongsFailed", typeof (long));
+            LastPlayerOptions = new PlayerOptions { BeatlineSpeed = 1.0 };
+            Name = (string)si.GetValue("Name", typeof(string));
+            EXP = (long)si.GetValue("EXP", typeof(long));
+            JudgementCounts = (long[])si.GetValue("JudgementCounts", typeof(long[]));
+            TotalHits = (long)si.GetValue("TotalHits", typeof(long));
+            LastPlayerOptions.PlayDifficulty = (Difficulty)si.GetValue("LastDifficulty", typeof(Difficulty));
+            LastPlayerOptions.BeatlineSpeed = (double)si.GetValue("LastBeatlineSpeed", typeof(double));
+            SongsCleared = (long)si.GetValue("SongsCleared", typeof(long));
+            SongsFailed = (long)si.GetValue("SongsFailed", typeof(long));
 
-            try
-            {
-                TotalPlayTime = (double)si.GetValue("TotalPlayTime", typeof(double));
-                AverageHitOffset = si.GetDouble("AverageHitOffset");
-                HitOffsetCount = si.GetInt64("HitOffsetCount");
-                LastPlayerOptions.DisableKO = si.GetBoolean("DisableKO");
-            }
-            catch (Exception)
-            {
-                
-                throw;
-            }
+            TotalPlayTime = (double)si.GetValue("TotalPlayTime", typeof(double));
+            AverageHitOffset = si.GetDouble("AverageHitOffset");
+            HitOffsetCount = si.GetInt64("HitOffsetCount");
+            LastPlayerOptions.DisableKO = si.GetBoolean("DisableKO");
+
 
 
         }
@@ -74,13 +67,13 @@ namespace WGiBeat.Players
             si.AddValue("EXP", EXP);
             si.AddValue("JudgementCounts", JudgementCounts);
             si.AddValue("TotalHits", TotalHits);
-            si.AddValue("LastDifficulty",LastPlayerOptions.PlayDifficulty);
+            si.AddValue("LastDifficulty", LastPlayerOptions.PlayDifficulty);
             si.AddValue("LastBeatlineSpeed", LastPlayerOptions.BeatlineSpeed);
-            si.AddValue("SongsCleared",SongsCleared);
-            si.AddValue("SongsFailed",SongsFailed);
-            si.AddValue("TotalPlayTime",TotalPlayTime);
-            si.AddValue("AverageHitOffset",AverageHitOffset);
-            si.AddValue("HitOffsetCount",HitOffsetCount);
+            si.AddValue("SongsCleared", SongsCleared);
+            si.AddValue("SongsFailed", SongsFailed);
+            si.AddValue("TotalPlayTime", TotalPlayTime);
+            si.AddValue("AverageHitOffset", AverageHitOffset);
+            si.AddValue("HitOffsetCount", HitOffsetCount);
             si.AddValue("DisableKO", LastPlayerOptions.DisableKO);
         }
 

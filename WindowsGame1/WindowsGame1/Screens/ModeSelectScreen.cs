@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
+using WGiBeat.NetSystem;
 using WGiBeat.Players;
 
 namespace WGiBeat.Screens
@@ -45,7 +46,19 @@ namespace WGiBeat.Screens
             RemoveCPUPlayers();
             _playerOptionsSet = new PlayerOptionsSet { Players = Core.Players, Positions = Core.Metrics["PlayerOptionsFrame"] };
             _playerOptionsSet.CreatePlayerOptionsFrames();
+            //_playerOptionsSet.PlayerJoined += new EventHandler<ObjectEventArgs>(_playerOptionsSet_PlayerJoined);
+           // _playerOptionsSet.PlayerLeft += new EventHandler<ObjectEventArgs>(_playerOptionsSet_PlayerLeft);
             base.Initialize();
+        }
+
+        private void _playerOptionsSet_PlayerLeft(object sender, ObjectEventArgs e)
+        {
+            
+        }
+
+        private void _playerOptionsSet_PlayerJoined(object sender, ObjectEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
 
@@ -225,18 +238,20 @@ namespace WGiBeat.Screens
 
         public override void PerformAction(InputAction inputAction)
         {
-
+            
             var pass = _playerOptionsSet.PerformAction(inputAction);
             if (pass)
             {
+                NetHelper.Instance.BroadcastPlayerOptions(inputAction.Player);
                 return;
             }
-
+            
             //Ignore inputs from players not playing EXCEPT for system keys.
             if ((inputAction.Player > 0) && (!Core.Players[inputAction.Player -1].IsHumanPlayer))
             {
                 return;
             }
+            NetHelper.Instance.BroadcastAction(inputAction);
             switch (inputAction.Action)
             {
                 case "LEFT":
@@ -281,6 +296,8 @@ namespace WGiBeat.Screens
                     _playerOptionsSet.SetChangeMode(inputAction.Player, false);
                     break;
             }
+            NetHelper.Instance.BroadcastActionReleased(inputAction);
+
         }
 
         private void ChangeGameType(int amount)
@@ -428,6 +445,35 @@ namespace WGiBeat.Screens
             Core.Log.AddMessage("Failed to add CPU Player.",LogLevel.ERROR);
         }
 
+        #endregion
+
+        #region Netplay Code
+
+        public override void NetMessageReceived(NetMessage message)
+        {
+            switch (message.MessageType)
+            {
+
+                case MessageType.PLAYER_ACTION:
+                    PerformAction((InputAction) message.MessageData);
+                    break;
+                case MessageType.PLAYER_ACTION_RELEASED:
+                    PerformAction((InputAction) message.MessageData);
+                    break;
+                case MessageType.PLAYER_JOIN:
+                    break;
+                case MessageType.PLAYER_LEAVE:
+                    break;
+                case MessageType.PLAYER_OPTIONS:
+                    Core.Players[message.PlayerID].PlayerOptions = ((PlayerOptions)message.MessageData);
+                    break;
+                case MessageType.SCREEN_TRANSITION:
+                    var screen = message.MessageData.ToString();
+                    Core.ScreenTransition(screen);
+                    break;
+            }
+
+        }
         #endregion
     }
 }

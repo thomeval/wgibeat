@@ -20,6 +20,8 @@ namespace WGiBeat.Managers
         public GameType CurrentGameType { get; set; }
 
         public event EventHandler GameTypeInvalidated;
+        public event EventHandler<ObjectEventArgs> PlayerJoined;
+        public event EventHandler<ObjectEventArgs> PlayerLeft;
 
         public PlayerOptionsSet()
         {
@@ -122,6 +124,10 @@ namespace WGiBeat.Managers
             Players[player - 1].Playing = false;
             CheckNumberOfPlayers();
             CreatePlayerOptionsFrames();
+            if (PlayerLeft != null)
+            {
+                PlayerLeft(this, new ObjectEventArgs {Object = player});
+            }
         }
 
         private void CheckNumberOfPlayers()
@@ -179,6 +185,10 @@ namespace WGiBeat.Managers
                 Players[player - 1].Team = 1;
             }
             CreatePlayerOptionsFrames();
+            if (PlayerJoined != null)
+            {
+                PlayerJoined(this, new ObjectEventArgs { Object = player });
+            }
         }
 
         private void AssignTeam(int player)

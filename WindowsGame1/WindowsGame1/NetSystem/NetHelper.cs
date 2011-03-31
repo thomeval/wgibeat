@@ -1,4 +1,5 @@
-﻿using WGiBeat.Managers;
+﻿using System;
+using WGiBeat.Managers;
 using WGiBeat.Players;
 
 namespace WGiBeat.NetSystem
@@ -55,9 +56,59 @@ namespace WGiBeat.NetSystem
             }
         }
 
-        public void BroadcastPlayerOptions(int number, PlayerOptions playerOptions)
+        public void BroadcastPlayerOptions(int number)
         {
-            //TODO: Complete
+            if (Core.Net.NetplayActive)
+            {
+                var message = new NetMessage
+                                  {
+                                      PlayerID = number,
+                                      MessageData = Core.Players[number].PlayerOptions,
+                                      MessageType = MessageType.PLAYER_OPTIONS
+                                  };
+                Core.Net.SendToPeers(message);
+            }
+        }
+
+        public void BroadcastScreenTransition(string screen)
+        {
+            if (Core.Net.NetplayActive)
+            {
+                var message = new NetMessage
+                {
+                    PlayerID = 0,
+                    MessageData = screen,
+                    MessageType = MessageType.SCREEN_TRANSITION
+                };
+                Core.Net.SendToPeers(message);
+            }
+        }
+
+        public void BroadcastAction(InputAction action)
+        {
+            if (Core.Net.NetplayActive)
+            {
+                var message = new NetMessage
+                                  {
+                                      PlayerID = action.Player,
+                                      MessageData = action,
+                                      MessageType = MessageType.PLAYER_ACTION
+                                  };
+                Core.Net.SendToPeers(message);
+            }
+        }
+        public void BroadcastActionReleased(InputAction action)
+        {
+            if (Core.Net.NetplayActive)
+            {
+                var message = new NetMessage
+                {
+                    PlayerID = action.Player,
+                    MessageData = action,
+                    MessageType = MessageType.PLAYER_ACTION_RELEASED
+                };
+                Core.Net.SendToPeers(message);
+            }
         }
     }
 }
