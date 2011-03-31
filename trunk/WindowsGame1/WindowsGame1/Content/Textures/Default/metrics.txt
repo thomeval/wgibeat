@@ -86,7 +86,7 @@ SongCountDisplay=[400,80][460,75];
 PlayerOptionsFrame=[0,562][0,524][0,486][0,448];
 SelectedMode=[300,550];
 BPMMeter=[70,180];
-SelectedSongSpectrum=[235,330];
+SelectedSongSpectrum=[235,325];
 SongTypeDisplay=[150,370];
 
 #Options;

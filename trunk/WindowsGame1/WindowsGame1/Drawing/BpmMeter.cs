@@ -12,8 +12,22 @@ namespace WGiBeat.Drawing
         private Sprite _baseSprite;
         private Sprite _songLengthBase;
         private Sprite _songTitleBase;
+        private double _displayedMinBpm;
+        private double _displayedMaxBpm;
+        private double _actualMinBpm;
+        private double _actualMaxBpm;
 
-        public GameSong DisplayedSong { get; set; }
+        private GameSong _displayedSong;
+        public GameSong DisplayedSong
+        {
+            get { return _displayedSong; }
+            set
+            {
+                _displayedSong = value;
+                _actualMinBpm = (from e in _displayedSong.BPMs.Values select e).Min();
+                _actualMaxBpm = (from e in _displayedSong.BPMs.Values select e).Max();
+            }
+        }
 
         public double SongTime { get; set; }
 
@@ -91,16 +105,15 @@ namespace WGiBeat.Drawing
 
             _bpmTextPosition = _baseSprite.Position.Clone();
             _bpmTextPosition.X += 125;
-            _bpmTextPosition.Y += 90;
+            _bpmTextPosition.Y += 85;
         }
 
         private readonly Color _notLitColor = new Color(64, 64, 64, 255);
         private double _displayedLength;
         private Vector2 _bpmTextPosition;
-        private double _displayedBpm;
 
         public override void Draw(SpriteBatch spriteBatch)
-        {   
+        {
             DrawBPMMeter(spriteBatch);
             DrawLengthDisplay(spriteBatch);
             DrawTitleDisplay(spriteBatch);
@@ -155,15 +168,11 @@ namespace WGiBeat.Drawing
         private void DrawBPMMeter(SpriteBatch spriteBatch)
         {
 
-            if (_displayedBpm == 0.0)
-            {
-                _displayedBpm = DisplayedSong.StartBPM;
-            }
-            else
-            {
-                var diff = _displayedBpm - DisplayedSong.StartBPM;
-                _displayedBpm -= diff / 6;
-            }
+            var diff = _displayedMinBpm - _actualMinBpm;
+            _displayedMinBpm -= diff / 6;
+
+            diff = _displayedMaxBpm - _actualMaxBpm;
+            _displayedMaxBpm -= diff / 6;
 
             var beatFraction = (SongTime) - Math.Floor(SongTime);
             beatFraction *= BEAT_FRACTION_SEVERITY;
@@ -185,9 +194,41 @@ namespace WGiBeat.Drawing
                 _meterSprite.Draw(spriteBatch, x, this.Width, height, _baseSprite.X, _baseSprite.Y + (x * height));
             }
 
-            TextureManager.DrawString(spriteBatch, String.Format("{0:000.0}", Math.Min(999.9,_displayedBpm)), "TwoTechLarge",
-                        _bpmTextPosition, Color.Black, FontAlign.RIGHT);
+            DrawBPMText(spriteBatch);
+
         }
 
+        private void DrawBPMText(SpriteBatch spriteBatch)
+        {
+            var bpmLabelText = _bpmTextPosition.Clone();
+            bpmLabelText.X -= 120;
+            bpmLabelText.Y += 4;
+            if (_actualMinBpm == _actualMaxBpm)
+            {
+                TextureManager.DrawString(spriteBatch, String.Format("{0:000.0}", Math.Min(999.9, _displayedMinBpm)),
+                                          "TwoTechLarge",
+                                          _bpmTextPosition, Color.Black, FontAlign.RIGHT);
+            }
+            else
+            {
+                _bpmTextPosition.Y += 2;
+                TextureManager.DrawString(spriteBatch, String.Format("{0:000.0}", Math.Min(999.9, _displayedMinBpm)),
+                          "TwoTech",
+                          _bpmTextPosition, Color.Black, FontAlign.RIGHT);
+                _bpmTextPosition.Y += 19;
+                TextureManager.DrawString(spriteBatch, String.Format("{0:000.0}", Math.Min(999.9, _displayedMaxBpm)),
+                          "TwoTech",
+                          _bpmTextPosition, Color.Black, FontAlign.RIGHT);
+                _bpmTextPosition.Y -= 21;
+
+                TextureManager.DrawString(spriteBatch, "Min:",
+                          "DefaultFont",
+                          bpmLabelText, Color.Black, FontAlign.LEFT);
+                bpmLabelText.Y += 20;
+                TextureManager.DrawString(spriteBatch, "Max:",
+           "DefaultFont",
+           bpmLabelText, Color.Black, FontAlign.LEFT);
+            }
+        }
     }
 }

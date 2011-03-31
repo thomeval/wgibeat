@@ -105,7 +105,7 @@ namespace WGiBeat.Screens
                                           SpriteTexture = TextureManager.Textures("SpectrumBackground"),
                                           Position = Core.Metrics["SelectedSongSpectrum", 0]
                                       };
-            _spectrumBackground.Y -= 70;
+            _spectrumBackground.Y -= 65;
             _listBackend = new Sprite
                                {
                                    SpriteTexture = TextureManager.Textures("SongListBackend"),
@@ -194,8 +194,8 @@ namespace WGiBeat.Screens
                         _maxLevels[x] = Math.Max(averageLevels[x], _maxLevels[x] - _dropSpeed[x]);
 
                         line.AddVector(new Vector2(posX, 0));
-                        line.AddVector(new Vector2(posX, -70 * averageLevels[x]));
-                        line.AddVector(new Vector2(posX + 6, -70 * averageLevels[x]));
+                        line.AddVector(new Vector2(posX, -65 * averageLevels[x]));
+                        line.AddVector(new Vector2(posX + 6, -65 * averageLevels[x]));
                         posX += 6;
                     }
   
@@ -206,8 +206,8 @@ namespace WGiBeat.Screens
                 {
                     line.ClearVectors();
  
-                    line.AddVector(new Vector2(posX, -70 * _maxLevels[x]));
-                    line.AddVector(new Vector2(posX + 6, -70 * _maxLevels[x]));
+                    line.AddVector(new Vector2(posX, -65 * _maxLevels[x]));
+                    line.AddVector(new Vector2(posX + 6, -65 * _maxLevels[x]));
                     line.Render(spriteBatch);
                     posX += 6; 
                     
