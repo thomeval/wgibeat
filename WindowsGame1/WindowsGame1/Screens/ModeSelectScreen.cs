@@ -341,6 +341,10 @@ namespace WGiBeat.Screens
                     }
                     Core.Cookies["CPUSkillLevel"] = Core.CPUManager.SkillNames[_selectedCPUSkill];
                 }
+                if (((GameType) _selectedGameType ) == GameType.SYNC)
+                {
+                        _playerOptionsSet.CheckSyncDifficulty();
+                }
                 if (((GameType)_selectedGameType) == GameType.TEAM)
                 {
                     Core.ScreenTransition("TeamSelect");
@@ -363,20 +367,7 @@ namespace WGiBeat.Screens
 
         private string GetModeDescription(GameType gameType)
         {
-            switch (gameType)
-            {
-                case GameType.NORMAL:
-                    return Core.Text["ModeSelectNormal"];
-                case GameType.COOPERATIVE:
-                    return Core.Text["ModeSelectCoop"];
-
-                case GameType.TEAM:
-                    return Core.Text["ModeSelectTeam"];
-                case GameType.VS_CPU:
-                    return Core.Text["ModeSelectVSCPU"];
-                default:
-                    return "Game type not recognized.";
-            }
+            return Core.Text["ModeSelect" + (int) gameType];
         }
 
         public string GameTypeAllowed(GameType gameType)
@@ -402,7 +393,12 @@ namespace WGiBeat.Screens
                         return "Requires at most three players.";
                     }
                     break;
-
+                    case GameType.SYNC:
+                    if (PlayerCount() < 2)
+                    {
+                        return "Requires at least two players.";
+                    }
+                    break;
                 default:
                     break;
             }

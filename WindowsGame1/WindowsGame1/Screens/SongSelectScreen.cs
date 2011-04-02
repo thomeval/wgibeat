@@ -396,6 +396,7 @@ namespace WGiBeat.Screens
             }
         }
 
+
         public override void PerformActionReleased(InputAction inputAction)
         {
 
@@ -414,7 +415,11 @@ namespace WGiBeat.Screens
         {
             Crossfader.StopBoth();
             Core.Cookies["CurrentSong"] = CurrentSong;
-            
+            if (((GameType)Core.Cookies["CurrentGameType"]) == GameType.SYNC)
+            {
+                _playerOptionsSet.CheckSyncDifficulty();
+            }
+
             if (Core.Cookies.ContainsKey("Panic"))
             {
                 Core.Cookies.Remove("Panic");

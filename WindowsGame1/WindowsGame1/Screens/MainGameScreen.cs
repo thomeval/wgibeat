@@ -100,6 +100,7 @@ namespace WGiBeat.Screens
         {
             var player = (int) sender;
             _lifeBarSet.AdjustLife(Core.Players[player].MissedArrow(), player);
+            _levelbarSet.AdjustForFault(player);
             _hitsBarSet.ResetHits(player);
         }
 
@@ -329,39 +330,20 @@ namespace WGiBeat.Screens
 
             var complete = _noteBarSet.AllCompleted(player);
             var judgement = _beatlineSet.AwardJudgement(_phraseNumber, player, complete);
+            _levelbarSet.AdjustMomentum(judgement, player);
+
             if (judgement == BeatlineNoteJudgement.COUNT)
             {
                 return;
             }
 
             //Check if all notes in the notebar have been hit and act accordingly.
-            if (complete)
-            {
-                //Increment Player Level
-                Core.Players[player].Momentum += (long)(MomentumJudgementMultiplier(judgement) * MomentumIncreaseByDifficulty(Core.Players[player].PlayerOptions.PlayDifficulty));
-            }
+
             //Award Score
             ApplyJudgement(judgement, player);
             _noteBarSet.CreateNextNoteBar(player);
 
         }
-
-        private double MomentumJudgementMultiplier(BeatlineNoteJudgement judgement)
-        {
-            switch (judgement)
-            {
-                case BeatlineNoteJudgement.IDEAL:
-                    return 1.0;
-                    case BeatlineNoteJudgement.COOL:
-                    return 2.0/3;
-                    case BeatlineNoteJudgement.OK:
-                    return 1.0/3;
-                case BeatlineNoteJudgement.BAD:
-                    return 0.0;
-            }
-            return 0.0;
-        }
-
 
 
         #endregion
@@ -374,24 +356,6 @@ namespace WGiBeat.Screens
                                                               _noteBarSet.NumberIncomplete(player));
         }
 
-        private static long MomentumIncreaseByDifficulty(Difficulty difficulty)
-        {
-            switch (difficulty)
-            {
-                case Difficulty.BEGINNER:
-                    return 15;
-                case Difficulty.EASY:
-                    return 40;
-                case Difficulty.MEDIUM:
-                    return 70;
-                case Difficulty.HARD:
-                    return 175;
-                case Difficulty.INSANE:
-                    return 300;
-                default:
-                    return 0;
-            }
-        }
 
         private string CalculateTimeLeft()
         {
@@ -435,7 +399,7 @@ namespace WGiBeat.Screens
 
             if ((judgement != BeatlineNoteJudgement.MISS) && (judgement != BeatlineNoteJudgement.FAIL))
             {
-                Core.Players[player].Momentum += (long)(MomentumJudgementMultiplier(judgement) * MomentumIncreaseByDifficulty(Core.Players[player].PlayerOptions.PlayDifficulty));
+                _levelbarSet.AdjustMomentum(judgement, player);
             }
 
             //Award Score

@@ -1,5 +1,7 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using System;
+using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Managers;
+using WGiBeat.Notes;
 using WGiBeat.Players;
 
 namespace WGiBeat.Drawing.Sets
@@ -64,5 +66,100 @@ namespace WGiBeat.Drawing.Sets
             }
 
         }
+
+        public void AdjustMomentum(BeatlineNoteJudgement judgement, int player)
+        {
+            if (judgement == BeatlineNoteJudgement.MISS)
+            {
+                MultiplyMomentum(0.8, player);
+            }
+            else if (judgement == BeatlineNoteJudgement.FAIL)
+            {
+              MultiplyMomentum(0.7,player);   
+            }
+            else
+            {
+                //Using Players[player] for Sync mode too doesn't matter, since all players will have
+                //the same difficulty.
+                var amount = (long)
+                    (MomentumJudgementMultiplier(judgement)*
+                     MomentumIncreaseByDifficulty(Players[player].PlayerOptions.PlayDifficulty));
+                if (_gameType == GameType.SYNC)
+                {
+                    SetMomentumSync(Players[0].Momentum + amount);
+                }
+                else
+                {
+                    Players[player].Momentum += amount;
+                }
+ 
+            }
+
+
+        }
+
+        public void MultiplyMomentum(double amount, int player)
+        {
+            if (_gameType == GameType.SYNC)
+            {
+                SetMomentumSync((long) (Players[0].Momentum*amount));
+            }
+            else
+            {
+                Players[player].Momentum = (long)(Players[player].Momentum * amount);
+            }
+
+        }
+
+        private void SetMomentumSync(long amount)
+        {
+            for (int x = 0; x < 4; x++)
+            {
+                Players[x].Momentum = amount;
+            }
+        }
+
+        public void AdjustForFault(int player)
+        {
+            MultiplyMomentum(0.95, player);
+        }
+
+        private static long MomentumIncreaseByDifficulty(Difficulty difficulty)
+        {
+            switch (difficulty)
+            {
+                case Difficulty.BEGINNER:
+                    return 15;
+                case Difficulty.EASY:
+                    return 40;
+                case Difficulty.MEDIUM:
+                    return 70;
+                case Difficulty.HARD:
+                    return 175;
+                case Difficulty.INSANE:
+                    return 300;
+                default:
+                    return 0;
+            }
+        }
+
+        private double MomentumJudgementMultiplier(BeatlineNoteJudgement judgement)
+        {
+            switch (judgement)
+            {
+                case BeatlineNoteJudgement.IDEAL:
+                    return 1.0;
+                case BeatlineNoteJudgement.COOL:
+                    return 2.0 / 3;
+                case BeatlineNoteJudgement.OK:
+                    return 1.0 / 3;
+                case BeatlineNoteJudgement.BAD:
+                    return 0.0;
+                    
+            }
+            return 0.0;
+        }
+
+
     }
 }

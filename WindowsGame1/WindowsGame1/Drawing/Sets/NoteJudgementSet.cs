@@ -90,7 +90,6 @@ namespace WGiBeat.Drawing.Sets
                 case BeatlineNoteJudgement.FAIL:
                     Players[player].Streak = 0;
                     lifeAdjust = 0 - (int)(1 + Players[player].PlayerOptions.PlayDifficulty) * (numNotCompleted + 1);
-                    Players[player].Momentum = (long)(Players[player].Momentum * 0.7);
                     break;
                     case BeatlineNoteJudgement.COUNT:
                     //Ignore judgement

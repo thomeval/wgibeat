@@ -177,8 +177,6 @@ namespace WGiBeat.Players
 
         public double MissedBeat()
         {
-
-            Momentum = (long)(Momentum * 0.8);
            
             var result = 0;
             switch (PlayerOptions.PlayDifficulty)
