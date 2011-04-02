@@ -70,13 +70,13 @@ namespace WGiBeat.Drawing.Sets
                 case GameType.NORMAL:
                 case GameType.TEAM:
                 case GameType.VS_CPU:
-                    AdjustLifeNormal(amount, player);
+                    AdjustLifeNormal(amount, player,false);
                     break;
                 case GameType.COOPERATIVE:
                     AdjustLifeCoop(amount, player);
                     break;
                     case GameType.SYNC:
-                    AdjustLifeSync(amount, player);
+                    AdjustLifeSync(amount);
                     break;
                     
             }
@@ -113,9 +113,8 @@ namespace WGiBeat.Drawing.Sets
         }
 
 
-        private double AdjustLifeNormal(double amount, int player)
+        private void AdjustLifeNormal(double amount, int player, bool ignoreKO)
         {
-            var old = Players[player].Life;
             if ((amount > 0) && (Players[player].Life + amount > 100))
             {
                 if (Players[player].Life >= 100)
@@ -136,22 +135,35 @@ namespace WGiBeat.Drawing.Sets
             }
 
             Players[player].Life = Math.Min(Players[player].GetMaxLife(), Players[player].Life);
+
+            if (ignoreKO)
+            {
+                return;
+            }
             if ((!Players[player].CPU) && (Players[player].Life <= 0) && (!Players[player].PlayerOptions.DisableKO))
             {
                 Players[player].KO = true;
                 Players[player].Life = 0;
             }
-            return Players[player].Life - old;
         }
 
-        private double AdjustLifeSync(double amount, int player)
+        private void AdjustLifeSync(double amount)
         {
-            var result = AdjustLifeNormal(amount, 0);
+
+            AdjustLifeNormal(amount, 0, true);
             for (int x = 1; x < 4; x++)
             {
-                Players[player].Life = Players[0].Life;
+                Players[x].Life = Players[0].Life;
             }
-            return result;
+
+            if ((Players[0].Life <= 0) && (!AnyPlayerHasDisabledKO()))
+            {
+                for (int x = 0; x < 4; x++)
+                {
+                    Players[x].KO = true;
+                    Players[x].Life = 0;
+                }
+            }
         }
 
         public void SetLife(double amount, int player)

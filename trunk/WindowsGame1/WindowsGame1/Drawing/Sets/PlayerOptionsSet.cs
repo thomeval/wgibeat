@@ -230,5 +230,21 @@ namespace WGiBeat.Managers
                 pof.OptionChangeActive = enabled;
             }
         }
+
+        public void CheckSyncDifficulty()
+        {
+
+            if ((from e in Players where e.IsHumanPlayer select e).Count() == 0)
+            {
+                return;
+            }
+
+            var lowestDifficulty = (from e in Players where e.IsHumanPlayer select e.PlayerOptions.PlayDifficulty).Min();
+
+            foreach (Player player in (from e in Players where e.IsHumanPlayer select e))
+            {
+                player.PlayerOptions.PlayDifficulty = lowestDifficulty;
+            }
+        }
     }
 }
