@@ -149,7 +149,7 @@ namespace WGiBeat.AudioSystem.Loaders
             if (stopPairs.Keys.Count > 0)
             {
                 if (!AllowProblematic)
-                    throw new Exception("this .dwi file has Stops and will not work correctly in WGiBeat! ");
+                    throw new NotSupportedException("this .dwi file has Stops and will not work correctly in WGiBeat! ");
             }
         }
 
@@ -163,6 +163,10 @@ namespace WGiBeat.AudioSystem.Loaders
                 double position = Convert.ToDouble(bpmItem.Substring(0, bpmItem.IndexOf("=")), CultureInfo.InvariantCulture.NumberFormat);
                 double bvalue = Convert.ToDouble(bpmItem.Substring(bpmItem.IndexOf("=") + 1), CultureInfo.InvariantCulture.NumberFormat);
                 _newSong.BPMs[position / 16.0] = bvalue;
+                if ((bvalue <= 0.0) && (!AllowProblematic))
+                {
+                    throw new NotSupportedException("This .dwi file uses negative BPMs and will not work correctly in WGiBeat!");
+                }
             }
 
         }
