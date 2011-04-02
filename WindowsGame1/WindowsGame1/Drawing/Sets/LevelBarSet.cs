@@ -52,12 +52,12 @@ namespace WGiBeat.Drawing.Sets
                     case GameType.SYNC:
                     if (Players[0].Playing || Players[1].Playing)
                     {
-                        _levelBars[0].Position = _metrics["SyncLevelBar", 0];
+                        _levelBars[0].Position = _metrics["SyncLevelBarBase", 0];
                         _levelBars[0].Draw(spriteBatch); 
                     }
                     if (Players[2].Playing || Players[3].Playing)
                     {
-                        _levelBars[0].Position = _metrics["SyncLevelBar", 1];
+                        _levelBars[0].Position = _metrics["SyncLevelBarBase", 1];
                         _levelBars[0].Draw(spriteBatch);
                     }
                     break;

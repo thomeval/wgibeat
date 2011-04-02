@@ -27,7 +27,12 @@ namespace WGiBeat.Drawing.Sets
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-
+            if (_gameType == GameType.SYNC)
+            {
+                DrawHitsBar(spriteBatch, 0, DeterminePrefix() + "HitsBar");
+                DrawHitsBar(spriteBatch,1, DeterminePrefix() + "HitsBar" );
+                return;
+            }
             for (int x = 0; x < 4; x++)
             {
 
@@ -35,39 +40,44 @@ namespace WGiBeat.Drawing.Sets
                 {
                     continue;
                 }
-                if (Players[x].Hits < 25)
-                {
-                    _opacity[x] = (byte)Math.Max(_opacity[x] - 8, 0);
-                    _lastMilestone[x] = 0;
-                }
-                else
-                {
-                    _opacity[x] = (byte)Math.Min(_opacity[x] + 8, 255);
-                }
-                _overmaskOpacity[x] = (byte) Math.Max(0,  _overmaskOpacity[x] - 4);
-                _baseSprite.SpriteTexture = TextureManager.Textures("HitsBar" + DetermineSuffix());
-                _baseSprite.ColorShading.A = _opacity[x];
-                _textColor.A = _opacity[x];
-                _baseSprite.Draw(spriteBatch, x, _metrics["HitsBar" + DetermineSuffix(), x]);
-
-                DrawOvermask(spriteBatch,x);
-
-                TextureManager.DrawString(spriteBatch, String.Format("{0:D3}", Players[x].Hits), "DefaultFont",
-                       _metrics["HitsText" + DetermineSuffix(), x], _textColor,FontAlign.CENTER);
+                DrawHitsBar(spriteBatch, x, DeterminePrefix() + "HitsBar");
             }
         }
 
-        private void DrawOvermask(SpriteBatch spriteBatch, int x)
+        private void DrawHitsBar(SpriteBatch spriteBatch, int player, string assetName)
         {
-            if (PlayerAtNewMilestone(x))
+            if (Players[player].Hits < 25)
             {
-                _overmaskOpacity[x] = 160;
-                _lastMilestone[x] = Players[x].Hits;
+                _opacity[player] = (byte)Math.Max(_opacity[player] - 8, 0);
+                _lastMilestone[player] = 0;
+            }
+            else
+            {
+                _opacity[player] = (byte)Math.Min(_opacity[player] + 8, 255);
+            }
+            _overmaskOpacity[player] = (byte)Math.Max(0, _overmaskOpacity[player] - 4);
+            _baseSprite.SpriteTexture = TextureManager.Textures(assetName);
+            _baseSprite.ColorShading.A = _opacity[player];
+            _textColor.A = _opacity[player];
+            _baseSprite.Draw(spriteBatch, player, _metrics[assetName, player]);
+
+            DrawOvermask(spriteBatch, player,assetName);
+
+            TextureManager.DrawString(spriteBatch, String.Format("{0:D3}", Players[player].Hits), "DefaultFont",
+                   _metrics[DeterminePrefix() + "HitsText", player], _textColor, FontAlign.CENTER);
+        }
+
+        private void DrawOvermask(SpriteBatch spriteBatch, int player, string assetName)
+        {
+            if (PlayerAtNewMilestone(player))
+            {
+                _overmaskOpacity[player] = 160;
+                _lastMilestone[player] = Players[player].Hits;
             }
 
-            _baseOvermaskSprite.ColorShading = _overmaskColors[x];
-            _baseOvermaskSprite.ColorShading.A = _overmaskOpacity[x];
-            _baseOvermaskSprite.Draw(spriteBatch, x, _metrics["HitsBar" + DetermineSuffix(), x]);
+            _baseOvermaskSprite.ColorShading = _overmaskColors[player];
+            _baseOvermaskSprite.ColorShading.A = _overmaskOpacity[player];
+            _baseOvermaskSprite.Draw(spriteBatch, player, _metrics[assetName, player]);
         }
 
         private bool PlayerAtNewMilestone(int x)
@@ -81,24 +91,32 @@ namespace WGiBeat.Drawing.Sets
             {
                 Columns = 1,
                 Rows = 4,
-                SpriteTexture = TextureManager.Textures("HitsBar" + DetermineSuffix())
+                SpriteTexture = TextureManager.Textures( DeterminePrefix() + "HitsBar")
             };
+
             _baseOvermaskSprite = new SpriteMap
                                       {
                                           Columns = 1,
                                           Rows = 4,
-                                          SpriteTexture = TextureManager.CreateWhiteMask("HitsBar" + DetermineSuffix()),
+                                          SpriteTexture = TextureManager.CreateWhiteMask( DeterminePrefix() + "HitsBar"),
                                           ColorShading = {A = 128}
                                       };
+            if (_gameType == GameType.SYNC)
+            {
+                _baseSprite.Rows = 2;
+                _baseOvermaskSprite.Rows = 2;
+            }
         }
 
 
-        private string DetermineSuffix()
+        private string DeterminePrefix()
         {
             switch (_gameType)
             {
                 case GameType.COOPERATIVE:
                     return "Coop";
+                    case GameType.SYNC:
+                    return "Sync";
                 default:
                     return "";
             }
