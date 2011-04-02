@@ -103,5 +103,47 @@ namespace WGiBeat.Drawing.Sets
                     return "";
             }
         }
+
+        public void IncrementHits(int amount, int player)
+        {
+            switch (_gameType)
+            {
+                case GameType.NORMAL:
+                case GameType.COOPERATIVE:
+                case GameType.TEAM:
+                case GameType.VS_CPU:
+                    Players[player].Hits += amount;
+                    Players[player].TotalHits+= amount;
+                    break;
+                case GameType.SYNC:
+                    Players[0].Hits += amount;
+                    //Total Hits aren't shared, but normal hits are.
+                    Players[player].TotalHits+= amount;
+                    for (int x = 1; x < 4; x++ )
+                    {
+                        Players[x].Hits = Players[0].Hits;
+                    }
+                        break;
+            }
+        }
+
+        public void ResetHits(int player)
+        {
+            switch (_gameType)
+            {
+                case GameType.NORMAL:
+                case GameType.COOPERATIVE:
+                case GameType.TEAM:
+                case GameType.VS_CPU:
+                    Players[player].Hits = 0;
+                    break;
+                case GameType.SYNC:
+                    for (int x = 0; x < 4; x++)
+                    {
+                        Players[x].Hits = 0;
+                    }
+                    break;
+            }
+        }
     }
 }

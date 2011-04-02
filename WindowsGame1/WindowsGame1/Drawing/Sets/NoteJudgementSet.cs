@@ -10,16 +10,22 @@ namespace WGiBeat.Drawing.Sets
     public class NoteJudgementSet :DrawableObjectSet
     {
         private readonly DisplayedJudgement[] _displayedJudgements;
+        private readonly LifeBarSet _lifeBarSet;
+        private readonly ScoreSet _scoreSet;
+
         private double _phraseNumber;
 
+        
         public static readonly int[] JudgementCutoffs = {20, 50, 125, 250,1500};
 
-        public NoteJudgementSet(MetricsManager metrics, Player[] players, GameType type)
+        public NoteJudgementSet(MetricsManager metrics, Player[] players, GameType type, LifeBarSet lifeBarSet, ScoreSet scoreSet)
             :base(metrics,players,type)
         {
             _displayedJudgements = new DisplayedJudgement[4];
-
+            _lifeBarSet = lifeBarSet;
+            _scoreSet = scoreSet;
         }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
 
@@ -46,11 +52,10 @@ namespace WGiBeat.Drawing.Sets
         public void Draw(SpriteBatch spriteBatch, double phraseNumber)
         {
             _phraseNumber = phraseNumber;
-
             Draw(spriteBatch);
         }
 
-        public double AwardJudgement(BeatlineNoteJudgement judgement, int player, int numCompleted, int numNotCompleted)
+        public void AwardJudgement(BeatlineNoteJudgement judgement, int player, int numCompleted, int numNotCompleted)
         {
             double lifeAdjust = 0;
             long scoreAdjust = 0;
@@ -89,7 +94,7 @@ namespace WGiBeat.Drawing.Sets
                     break;
                     case BeatlineNoteJudgement.COUNT:
                     //Ignore judgement
-                    return 0.0;
+                    break;
             }
 
             Players[player].Judgements[(int)judgement]++;
@@ -102,15 +107,21 @@ namespace WGiBeat.Drawing.Sets
             {
                 scoreAdjust *= GetBonusMultiplier();
             }
-            Players[player].Score += scoreAdjust;
+
+            if (_scoreSet != null)
+            {
+                _scoreSet.AdjustScore(scoreAdjust, player);
+            }
+            if (_lifeBarSet != null)
+            {
+                _lifeBarSet.AdjustLife(lifeAdjust, player);
+            }
 
             var newDj = new DisplayedJudgement { DisplayUntil = _phraseNumber + 0.5, Height = 40, Width = 150, Player = player, Tier = (int)judgement };
             newDj.Position = (_metrics["Judgement", player]);
             _displayedJudgements[player] = newDj;
 
-            return lifeAdjust;
         }
-
 
         private int GetBonusMultiplier()
         {

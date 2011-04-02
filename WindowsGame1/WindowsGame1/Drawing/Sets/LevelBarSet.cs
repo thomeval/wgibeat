@@ -23,8 +23,6 @@ namespace WGiBeat.Drawing.Sets
                 _levelBars[x] = new LevelBar
                                     {
                                         Parent = this,
-                                        BarPosition = _metrics["LevelBar", x],
-                                        TextPosition = _metrics["LevelText", x],
                                         Height = 25,
                                         Width = 216,
                                         PlayerID = x,
@@ -48,6 +46,19 @@ namespace WGiBeat.Drawing.Sets
                         {
                             _levelBars[x].Draw(spriteBatch);
                         }
+                    }
+                    break;
+
+                    case GameType.SYNC:
+                    if (Players[0].Playing || Players[1].Playing)
+                    {
+                        _levelBars[0].Position = _metrics["SyncLevelBar", 0];
+                        _levelBars[0].Draw(spriteBatch); 
+                    }
+                    if (Players[2].Playing || Players[3].Playing)
+                    {
+                        _levelBars[0].Position = _metrics["SyncLevelBar", 1];
+                        _levelBars[0].Draw(spriteBatch);
                     }
                     break;
             }

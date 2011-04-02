@@ -11,7 +11,7 @@ namespace WGiBeat.Drawing.Sets
 
         private readonly LifeBar[] _lifeBars;
         private double _lastBlazeCheck;
-        public Color[] FullHighlightColors = {new Color(255,128,128), new Color(128,128,255), new Color(128,255,128), new Color(255,255,128)  };
+        public readonly Color[] FullHighlightColors = {new Color(255,128,128), new Color(128,128,255), new Color(128,255,128), new Color(255,255,128)  };
 
         public event EventHandler<ObjectEventArgs> BlazingEnded;
 
@@ -31,6 +31,7 @@ namespace WGiBeat.Drawing.Sets
                 case GameType.NORMAL:
                 case GameType.TEAM:
                 case GameType.VS_CPU:
+                case GameType.SYNC:
                     for (int x = 0; x < 4; x++)
                     {
                         _lifeBars[x] = new NormalLifeBar
@@ -61,7 +62,7 @@ namespace WGiBeat.Drawing.Sets
             return (from e in Players where e.Playing select e.GetMaxLife()).Sum();
         }
 
-        public double AdjustLife(double amount, int player)
+        public void AdjustLife(double amount, int player)
         {
             //Adjust the life according to the 'rules' of the lifebar used, and return the new amount.
             switch (_gameType)
@@ -69,32 +70,40 @@ namespace WGiBeat.Drawing.Sets
                 case GameType.NORMAL:
                 case GameType.TEAM:
                 case GameType.VS_CPU:
-                    return AdjustLifeNormal(amount, player);
-                    
+                    AdjustLifeNormal(amount, player);
+                    break;
                 case GameType.COOPERATIVE:
-                    return AdjustLifeCoop(amount, player);          
+                    AdjustLifeCoop(amount, player);
+                    break;
+                    case GameType.SYNC:
+                    AdjustLifeSync(amount, player);
+                    break;
                     
             }
-            return Players[player].Life;
+
         }
 
-        private double AdjustLifeCoop(double amount, int player)
+        private void AdjustLifeCoop(double amount, int player)
         {
-            var theLifebar = (CoopLifeBar) _lifeBars[0];
+            
             Players[player].Life = Math.Min(Players[player].GetMaxLife(), Players[player].Life + amount);
+            CheckForCoopKO();
+        }
 
-            if (!AnyPlayerHasDisabledKO())
+        private void CheckForCoopKO()
+        {
+            if (AnyPlayerHasDisabledKO())
             {
-                return amount;
+                return;
             }
+            var theLifebar = (CoopLifeBar)_lifeBars[0];
             if (theLifebar.TotalLife() <= 0)
             {
                 for (int x = 0; x < 4; x++)
                 {
-                        Players[x].KO = true;
+                    Players[x].KO = true;
                 }
             }
-            return amount;
         }
 
         private bool AnyPlayerHasDisabledKO()
@@ -120,13 +129,11 @@ namespace WGiBeat.Drawing.Sets
                     Players[player].Life = 100 + (over / 2);
 
                 }
-
             }
             else
             {
                 Players[player].Life += amount;
             }
-
 
             Players[player].Life = Math.Min(Players[player].GetMaxLife(), Players[player].Life);
             if ((!Players[player].CPU) && (Players[player].Life <= 0) && (!Players[player].PlayerOptions.DisableKO))
@@ -135,6 +142,16 @@ namespace WGiBeat.Drawing.Sets
                 Players[player].Life = 0;
             }
             return Players[player].Life - old;
+        }
+
+        private double AdjustLifeSync(double amount, int player)
+        {
+            var result = AdjustLifeNormal(amount, 0);
+            for (int x = 1; x < 4; x++)
+            {
+                Players[player].Life = Players[0].Life;
+            }
+            return result;
         }
 
         public void SetLife(double amount, int player)
@@ -171,6 +188,18 @@ namespace WGiBeat.Drawing.Sets
                         ((CoopLifeBar)_lifeBars[0]).SideLocationTop = true;
                         _lifeBars[0].Position = (_metrics["CoopLifeBar", 1]);
                         _lifeBars[0].Draw(spriteBatch, gameTime);
+                    }
+                    break;
+                    case GameType.SYNC:
+                    if (Players[0].Playing || Players[1].Playing)
+                    {
+                        _lifeBars[0].Position = (_metrics["SyncLifeBar", 0]);
+                        _lifeBars[0].Draw(spriteBatch, gameTime);
+                    }
+                    if (Players[2].Playing || Players[3].Playing)
+                    {
+                        _lifeBars[3].Position = (_metrics["SyncLifeBar", 1]);
+                        _lifeBars[3].Draw(spriteBatch, gameTime);
                     }
                     break;
             }

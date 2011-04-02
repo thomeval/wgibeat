@@ -96,7 +96,7 @@ namespace WGiBeat.Screens
         {
             _bpmMeter = new BpmMeter {Position = (Core.Metrics["EditorBPMMeter", 0])};
             _beatlineSet = new BeatlineSet(Core.Metrics, Core.Players, GameType.NORMAL) {Large = true};
-            _noteJudgementSet = new NoteJudgementSet(Core.Metrics,Core.Players,GameType.NORMAL);
+            _noteJudgementSet = new NoteJudgementSet(Core.Metrics,Core.Players,GameType.NORMAL,null,null);
             _countdownSet = new CountdownSet(Core.Metrics, Core.Players, GameType.NORMAL);
             _songTimeLine = new SongTimeLine
                                 {Height = 60, Width = 780, Position = Core.Metrics["EditorSongTimeLine", 0]};

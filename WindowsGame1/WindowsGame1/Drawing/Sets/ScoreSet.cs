@@ -89,6 +89,26 @@ namespace WGiBeat.Drawing.Sets
                 case GameType.VS_CPU:
                     DrawTeamCombinedScores(spriteBatch);
                     break;
+                    case GameType.SYNC:
+                    DrawSyncCombinedScore(spriteBatch);
+                    break;
+            }
+        }
+
+        private void DrawSyncCombinedScore(SpriteBatch spriteBatch)
+        {
+
+            long scoreText = Players[0].Score;
+
+            for (int x = 0; x < 2; x++)
+            {
+                if ((Players[2 * x].Playing) || (Players[(2 * x) + 1].Playing))
+                {
+
+                    _coopBaseSprite.Draw(spriteBatch, 0, 240, 40, _metrics["ScoreCombinedBase", x]);
+                    TextureManager.DrawString(spriteBatch, "" + scoreText, "LargeFont",
+                                           _metrics["ScoreCombinedText", x], Color.White, FontAlign.RIGHT);
+                }
             }
         }
 
@@ -151,7 +171,10 @@ namespace WGiBeat.Drawing.Sets
 
         private void DrawIndividualScores(SpriteBatch spriteBatch)
         {
-
+            if (_gameType == GameType.SYNC)
+            {
+                return;
+            }
             for (int x = 0; x < 4; x++)
             {
 
@@ -184,6 +207,26 @@ namespace WGiBeat.Drawing.Sets
 
                 var amount = Math.Max(25, (Players[x].Score - _displayedScores[x]) / 10);
                 _displayedScores[x] = Math.Min(Players[x].Score, _displayedScores[x] + amount);
+            }
+        }
+
+        public void AdjustScore(long amount, int player)
+        {
+            switch (_gameType)
+            {
+                case GameType.NORMAL:
+                case GameType.COOPERATIVE:
+                case GameType.TEAM:
+                case GameType.VS_CPU:
+                    Players[player].Score += amount;
+                    break;
+                case GameType.SYNC:
+                    Players[0].Score += amount;
+                    for (int x = 1; x < 4; x++ )
+                    {
+                        Players[x].Score = Players[0].Score;
+                    }
+                        break;
             }
         }
     }

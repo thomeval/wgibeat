@@ -6,8 +6,8 @@
         COOPERATIVE = 1,
         TEAM = 2,
         VS_CPU = 3,
-       // SYNC = 4,
+        SYNC = 4,
        // BATTLE = 5,
-        COUNT = 4
+        COUNT = 5
     }
 }

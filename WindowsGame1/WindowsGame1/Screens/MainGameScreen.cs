@@ -20,7 +20,7 @@ namespace WGiBeat.Screens
 
         private LifeBarSet _lifeBarSet;
         private LevelBarSet _levelbarSet;
-        private HitsBarSet _hitsbarSet;
+        private HitsBarSet _hitsBarSet;
         private ScoreSet _scoreSet;
         private NoteJudgementSet _noteJudgementSet;
         private NoteBarSet _noteBarSet;
@@ -56,13 +56,14 @@ namespace WGiBeat.Screens
             _lifeBarSet.BlazingEnded += ((sender, e) => _noteBarSet.CancelReverse((int) e.Object));
 
             _levelbarSet = new LevelBarSet(Core.Metrics, Core.Players, currentGameType);
-            _hitsbarSet = new HitsBarSet(Core.Metrics, Core.Players, currentGameType);
+            _hitsBarSet = new HitsBarSet(Core.Metrics, Core.Players, currentGameType);
             _scoreSet = new ScoreSet(Core.Metrics, Core.Players, currentGameType);
-            _noteJudgementSet = new NoteJudgementSet(Core.Metrics, Core.Players, currentGameType);
+            _noteJudgementSet = new NoteJudgementSet(Core.Metrics, Core.Players, currentGameType,_lifeBarSet,_scoreSet);
             _countdownSet = new CountdownSet(Core.Metrics, Core.Players, currentGameType);
             _beatlineSet = new BeatlineSet(Core.Metrics, Core.Players, currentGameType);
             _noteBarSet = new NoteBarSet(Core.Metrics, Core.Players, currentGameType);
             _noteBarSet.PlayerFaulted += (PlayerFaulted);
+            _noteBarSet.PlayerArrowHit += (PlayerArrowHit);
 
             _beatlineSet.NoteMissed += BeatlineNoteMissed;
             _beatlineSet.CPUNoteHit += BeatlineNoteCPUHit;
@@ -99,6 +100,13 @@ namespace WGiBeat.Screens
         {
             var player = (int) sender;
             _lifeBarSet.AdjustLife(Core.Players[player].MissedArrow(), player);
+            _hitsBarSet.ResetHits(player);
+        }
+
+        private void PlayerArrowHit(object sender, EventArgs e)
+        {
+            var player = (int) sender;
+            _hitsBarSet.IncrementHits(1,player);
         }
 
         private void InitSprites()
@@ -362,9 +370,8 @@ namespace WGiBeat.Screens
 
         private void ApplyJudgement(BeatlineNoteJudgement judgement, int player)
         {
-            var lifeAdjust = _noteJudgementSet.AwardJudgement(judgement, player, _noteBarSet.NumberCompleted(player),
+            _noteJudgementSet.AwardJudgement(judgement, player, _noteBarSet.NumberCompleted(player),
                                                               _noteBarSet.NumberIncomplete(player));
-            _lifeBarSet.AdjustLife(lifeAdjust, player);
         }
 
         private static long MomentumIncreaseByDifficulty(Difficulty difficulty)
@@ -388,9 +395,6 @@ namespace WGiBeat.Screens
 
         private string CalculateTimeLeft()
         {
-
-           // var timeElapsed = gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds;
-           // var timeLeft = _gameSong.Length * 1000 - timeElapsed;
             var timeLeft = _gameSong.Length*1000 - _timeElapsed;
             var ts = new TimeSpan(0, 0, 0, 0, (int)timeLeft);
 
@@ -399,8 +403,7 @@ namespace WGiBeat.Screens
 
         private bool SongPassed()
         {
-            //var timeElapsed = gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds;
-           // var timeLeft = _gameSong.Length * 1000 - timeElapsed;
+
             var timeLeft = _gameSong.Length * 1000 - _timeElapsed;
             return timeLeft <= 0.0;
         }
@@ -409,8 +412,7 @@ namespace WGiBeat.Screens
         {
             var player = (int) sender;
 
-            _lifeBarSet.AdjustLife(
-                _noteJudgementSet.AwardJudgement(BeatlineNoteJudgement.MISS, player, 0, 0), player);
+       _noteJudgementSet.AwardJudgement(BeatlineNoteJudgement.MISS, player, 0, 0);
             if (Core.Players[player].CPU)
             {
                 Core.Players[player].NextCPUJudgement =
@@ -458,7 +460,7 @@ namespace WGiBeat.Screens
             //Draw the component sets.
             _lifeBarSet.Draw(spriteBatch, _phraseNumber);
             _levelbarSet.Draw(spriteBatch);
-            _hitsbarSet.Draw(spriteBatch);
+            _hitsBarSet.Draw(spriteBatch);
             _scoreSet.Draw(spriteBatch);
             _noteJudgementSet.Draw(spriteBatch, _phraseNumber);
             _beatlineSet.Draw(spriteBatch, _phraseNumber);
