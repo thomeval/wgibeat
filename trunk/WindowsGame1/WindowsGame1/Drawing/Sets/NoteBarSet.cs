@@ -12,6 +12,7 @@ namespace WGiBeat.Drawing.Sets
         private readonly NoteBar[] _noteBars;
 
         public event EventHandler PlayerFaulted;
+        public event EventHandler PlayerArrowHit;
 
         public NoteBarSet(MetricsManager metrics, Player[] players, GameType gameType) : base(metrics, players, gameType)
         {
@@ -77,8 +78,10 @@ namespace WGiBeat.Drawing.Sets
             if ((_noteBars[player].CurrentNote() != null) && (Note.ActionToDirection(inputAction) == _noteBars[player].CurrentNote().Direction))
             {
                 _noteBars[player].MarkCurrentCompleted();
-                Players[player].Hits++;
-                Players[player].TotalHits++;
+                if (PlayerArrowHit != null)
+                {
+                    PlayerArrowHit(player, null);
+                }
             }
             else if (_noteBars[player].CurrentNote() != null)
             {

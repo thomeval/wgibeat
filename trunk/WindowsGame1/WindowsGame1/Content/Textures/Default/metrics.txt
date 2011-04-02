@@ -32,6 +32,9 @@ SongDebugHitOffset=[550,275];
 SongDebugPhrase=[340,300];
 SongDebugLength=[550,300];
 PerformanceBar=[25,50][425,50][25,410][425,410][-1000,-1000];
+SyncLifeBar=[235,45][235,525];
+SyncLevelBar=[285,78][285,503];
+SyncLevelBarBase=[284,75][284,500];
 
 #Main Menu;
 MainMenuOptions=[250,150][250,225][250,275][250,325][250,375][250,425][250,475][250,525];

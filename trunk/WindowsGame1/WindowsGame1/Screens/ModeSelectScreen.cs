@@ -58,7 +58,7 @@ namespace WGiBeat.Screens
 
         private void _playerOptionsSet_PlayerJoined(object sender, ObjectEventArgs e)
         {
-            throw new NotImplementedException();
+           
         }
 
 
@@ -200,7 +200,7 @@ namespace WGiBeat.Screens
 
             midpoint.X -= 255 * LIST_ITEMS_DRAWN;
 
-
+            index = _selectedGameType;
             //Draw Mode options to the left of (before) the selected one.
             for (int x = 1; x <= LIST_ITEMS_DRAWN; x++)
             {

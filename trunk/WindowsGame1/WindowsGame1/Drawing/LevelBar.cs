@@ -8,8 +8,8 @@ namespace WGiBeat.Drawing
     public class LevelBar : DrawableObject
     {
        
-        public Vector2 TextPosition; 
-        public Vector2 BarPosition { get; set; }
+        private Vector2 _textPosition;
+        private Vector2 _barPosition;
         private SpriteMap _barSprite;
         private Sprite _baseSprite;
         private bool _spritesInit;
@@ -19,19 +19,35 @@ namespace WGiBeat.Drawing
         public LevelBarSet Parent { get; set; }
         public int PlayerID { get; set; }
 
+        public override Vector2 Position
+        {
+            get
+            {
+                return base.Position;
+            }
+            set
+            {
+                base.Position = value;
+
+                _textPosition = this.Position.Clone();
+                _textPosition.X += 201;
+                _barPosition = this.Position.Clone();
+                _barPosition.X += 3;
+                _barPosition.Y += 3;
+            }
+        }
         public override void Draw(SpriteBatch spriteBatch)
         {
             if (!_spritesInit)
             {
                 InitSprites();
             }
-   
-                _baseSprite.SetPosition(this.X, this.Y);
+
+            _baseSprite.Position = this.Position;
                 _baseSprite.Draw(spriteBatch);
-
-
+             
                 TextureManager.DrawString(spriteBatch, "" + (int)Parent.Players[PlayerID].Level, "DefaultFont",
-                       TextPosition, Color.Black,FontAlign.CENTER);
+                       _textPosition, Color.Black,FontAlign.CENTER);
             DrawBars(spriteBatch);
                      
         }
@@ -62,13 +78,13 @@ namespace WGiBeat.Drawing
             if (_lastLevelDrawn > 0)
             {
                 _barSprite.ColorShading.A = _lastLevelOpacity;
-                _barSprite.Draw(spriteBatch, _lastLevelDrawn - 1, maxWidth, this.Height - 6, BarPosition);
+                _barSprite.Draw(spriteBatch, _lastLevelDrawn - 1, maxWidth, this.Height - 6, _barPosition );
                 _lastLevelOpacity = (byte)Math.Max(_lastLevelOpacity - 5, 0);
             }
 
             //Draw the current level bar.
             _barSprite.ColorShading.A = 255;
-            _barSprite.Draw(spriteBatch, (int)Parent.Players[PlayerID].Level - 1, barWidth, this.Height - 6, BarPosition);
+            _barSprite.Draw(spriteBatch, (int)Parent.Players[PlayerID].Level - 1, barWidth, this.Height - 6, _barPosition);
         }
 
         private void InitSprites()

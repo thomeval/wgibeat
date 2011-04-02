@@ -29,11 +29,25 @@ namespace WGiBeat.Drawing
         {
             _displayedLife = 0;
             InitSprites();
+
         }
 
-        private void InitSprites()
+        public override Vector2 Position
         {
+            get
+            {
+                return base.Position;
+            }
+            set
+            {
 
+                base.Position = value;
+                UpdatePositions();
+            }
+        }
+
+        private void UpdatePositions()
+        {
             _sidePos = new Vector2();
 
             switch (PlayerID)
@@ -61,20 +75,32 @@ namespace WGiBeat.Drawing
 
             }
 
+            _basePart.Height = this.Height;
+            _basePart.Width = this.Width;
+            _basePart.Position = this.Position;
+            _overchargePart.Height = this.Height - 18;
+            _overchargePart.Position = new Vector2(this.X + 3, this.Y + 15);
+            _2ndOverchargePart.Height = this.Height - 6;
+            _2ndOverchargePart.Position = new Vector2(this.X + 3, this.Y + 3);
+            _gridPart.Height = this.Height - 6;
+            _gridPart.Width = this.Width - 3;
+            _gridPart.Position = new Vector2(this.X + 2, this.Y + 3);
+
+        }
+
+        private void InitSprites()
+        {
+
             _basePart = new Sprite
             {
-                Height = this.Height,
-                Width = this.Width,
-                X = this.X,
-                Y = this.Y,
                 SpriteTexture = TextureManager.Textures("LifeBarBase")
             };
 
             _sidePart = new SpriteMap
                             {
                                 SpriteTexture = TextureManager.Textures("LifeBarBaseSide"),
-                                Columns=1,
-                                Rows=2
+                                Columns = 1,
+                                Rows = 2
                             };
 
             _frontPart = new SpriteMap
@@ -86,28 +112,20 @@ namespace WGiBeat.Drawing
 
             _overchargePart = new Sprite
             {
-                Height = this.Height - 18,
-                X = this.X + 3,
-                Y = this.Y + 15,
+
                 SpriteTexture = TextureManager.Textures("LifeBarOvercharge")
             };
 
             _2ndOverchargePart = new Sprite
             {
-                Height = this.Height - 6,
-                X = this.X + 3,
-                Y = this.Y + 3,
                 SpriteTexture = TextureManager.Textures("LifeBarOvercharge")
             };
             _gridPart = new Sprite
                             {
-                                Height = this.Height - 6,
-                                Width = this.Width - 3,
-                                X = this.X + 2,
-                                Y = this.Y + 3,
+
                                 SpriteTexture = TextureManager.Textures("LifeBarGridBase")
                             };
-            _blazingPart = new Sprite {SpriteTexture = TextureManager.Textures("LifeBarBlazing")};
+            _blazingPart = new Sprite { SpriteTexture = TextureManager.Textures("LifeBarBlazing") };
             _blazingSidePart = new SpriteMap
                                    {
                                        Columns = 1,
@@ -123,12 +141,12 @@ namespace WGiBeat.Drawing
 
         public override void Draw(SpriteBatch spriteBatch, double gameTime)
         {
-            _blocksCount = (int) Math.Ceiling((this.Width - 6)/4.00);
+            _blocksCount = (int)Math.Ceiling((this.Width - 6) / 4.00);
             var solidLife = Math.Min(Parent.Players[PlayerID].Life, 100);
 
             //Causes the bar to pulse on every beat.
             gameTime *= 4;
-            var beatFraction = (gameTime) -  Math.Floor(gameTime);
+            var beatFraction = (gameTime) - Math.Floor(gameTime);
             beatFraction *= BEAT_FRACTION_SEVERITY;
 
             //Causes the bar to not pulse before the first beat.
@@ -138,13 +156,13 @@ namespace WGiBeat.Drawing
             }
 
             _basePart.Draw(spriteBatch);
-            _sidePart.Draw(spriteBatch,PlayerID/2,50,25,_sidePos);
+            _sidePart.Draw(spriteBatch, PlayerID / 2, 50, 25, _sidePos);
 
             //Draw each block in sequence. Either in colour, or black depending on the Player's life.
             var highestBlock = GetHighestBlockLevel();
-            for (int x = 0; x < _blocksCount;x++)
+            for (int x = 0; x < _blocksCount; x++)
             {
-                var minLife = LIFEBAR_CAPACITY/_blocksCount*x;
+                var minLife = LIFEBAR_CAPACITY / _blocksCount * x;
                 if (solidLife > minLife)
                 {
                     _frontPart.ColorShading = Color.White;
@@ -164,7 +182,7 @@ namespace WGiBeat.Drawing
 
             //Draw the overcharge above the normal bar.
             DrawFirstOvercharge(spriteBatch);
-            _gridPart.DrawTiled(spriteBatch,0,0,this.Width-3,this.Height-6);
+            _gridPart.DrawTiled(spriteBatch, 0, 0, this.Width - 3, this.Height - 6);
             DrawBlazingEffect(spriteBatch, beatFraction);
             DrawFullEffect(spriteBatch);
             DrawSecondOvercharge(spriteBatch);
@@ -179,7 +197,7 @@ namespace WGiBeat.Drawing
             {
                 _blazingSidePart.ColorShading.A = 255;
                 _blazingSidePart.ColorShading = Parent.FullHighlightColors[PlayerID];
-                _blazingSidePart.Draw(spriteBatch, PlayerID/2, 50, 25, _sidePos);
+                _blazingSidePart.Draw(spriteBatch, PlayerID / 2, 50, 25, _sidePos);
             }
         }
 
@@ -196,7 +214,7 @@ namespace WGiBeat.Drawing
             _blazingPart.Y = this.Y;
             _blazingPart.Draw(spriteBatch);
             _blazingSidePart.ColorShading = Color.White;
-            _blazingSidePart.ColorShading.A = opacity;  
+            _blazingSidePart.ColorShading.A = opacity;
             _blazingSidePart.Draw(spriteBatch, PlayerID / 2, 50, 25, _sidePos);
         }
 
@@ -206,19 +224,19 @@ namespace WGiBeat.Drawing
             {
                 return;
             }
-                var amount = Math.Min(_displayedLife - 100, 100);
-                var opacity = (_displayedLife - 100) * 2.55;
-                opacity = Math.Max(opacity, 80);
-                opacity = Math.Min(255, opacity);
+            var amount = Math.Min(_displayedLife - 100, 100);
+            var opacity = (_displayedLife - 100) * 2.55;
+            opacity = Math.Max(opacity, 80);
+            opacity = Math.Min(255, opacity);
 
-                _overchargePart.Width = (int)((this.Width - 4) / LIFEBAR_CAPACITY * amount);
-                _overchargePart.ColorShading.A = Convert.ToByte(opacity);
+            _overchargePart.Width = (int)((this.Width - 4) / LIFEBAR_CAPACITY * amount);
+            _overchargePart.ColorShading.A = Convert.ToByte(opacity);
 
-                if (_overchargePart.Width > 0)
-                {
-                    _overchargePart.DrawTiled(spriteBatch, (int)_overchargeTextureOffset, 0, _overchargePart.Width,
-                                              _overchargePart.Height);
-                }
+            if (_overchargePart.Width > 0)
+            {
+                _overchargePart.DrawTiled(spriteBatch, (int)_overchargeTextureOffset, 0, _overchargePart.Width,
+                                          _overchargePart.Height);
+            }
 
         }
         private void DrawSecondOvercharge(SpriteBatch spriteBatch)
@@ -227,24 +245,24 @@ namespace WGiBeat.Drawing
             {
                 return;
             }
-           
-            
-                var amount = Math.Min(_displayedLife - 200, 100);
-                var opacity = (_displayedLife - 200) * 2.55;
-                opacity = Math.Max(opacity, 80);
-                opacity = Math.Min(255, opacity);
 
-                _2ndOverchargePart.Width = (int)((this.Width - 4) / LIFEBAR_CAPACITY * amount);
-                _2ndOverchargePart.ColorShading.A = Convert.ToByte(opacity);
 
-                _2ndOverchargePart.DrawTiled(spriteBatch, (int)_overchargeTextureOffset, 0, _2ndOverchargePart.Width,
-                                              _2ndOverchargePart.Height);
-            
+            var amount = Math.Min(_displayedLife - 200, 100);
+            var opacity = (_displayedLife - 200) * 2.55;
+            opacity = Math.Max(opacity, 80);
+            opacity = Math.Min(255, opacity);
+
+            _2ndOverchargePart.Width = (int)((this.Width - 4) / LIFEBAR_CAPACITY * amount);
+            _2ndOverchargePart.ColorShading.A = Convert.ToByte(opacity);
+
+            _2ndOverchargePart.DrawTiled(spriteBatch, (int)_overchargeTextureOffset, 0, _2ndOverchargePart.Width,
+                                          _2ndOverchargePart.Height);
+
         }
 
         public int GetHighestBlockLevel()
         {
-            for (int x = _blocksCount-1; x >= 0; x--)
+            for (int x = _blocksCount - 1; x >= 0; x--)
             {
                 var minLife = LIFEBAR_CAPACITY / _blocksCount * x;
 
@@ -260,11 +278,11 @@ namespace WGiBeat.Drawing
             Draw(spriteBatch, 0.0);
         }
 
-        private void DrawText(SpriteBatch spriteBatch,Vector2 position)
+        private void DrawText(SpriteBatch spriteBatch, Vector2 position)
         {
             position.X += 25;
             TextureManager.DrawString(spriteBatch, String.Format("{0:D3}", (int)Parent.Players[PlayerID].Life),
-                    "DefaultFont",position, Color.Black,FontAlign.CENTER);
+                    "DefaultFont", position, Color.Black, FontAlign.CENTER);
             position.X -= 25;
         }
 
@@ -272,7 +290,6 @@ namespace WGiBeat.Drawing
         public override void Reset()
         {
             _displayedLife = 0;
-            InitSprites();
         }
 
 
