@@ -29,8 +29,14 @@ namespace WGiBeat.Drawing.Sets
         {
             if (_gameType == GameType.SYNC)
             {
-                DrawHitsBar(spriteBatch, 0, DeterminePrefix() + "HitsBar");
-                DrawHitsBar(spriteBatch,1, DeterminePrefix() + "HitsBar" );
+                if (Players[0].Playing || Players[1].Playing)
+                {
+                    DrawHitsBar(spriteBatch, 0, DeterminePrefix() + "HitsBar");
+                }
+                if (Players[2].Playing || Players[3].Playing)
+                {
+                    DrawHitsBar(spriteBatch, 1, DeterminePrefix() + "HitsBar");
+                }
                 return;
             }
             for (int x = 0; x < 4; x++)

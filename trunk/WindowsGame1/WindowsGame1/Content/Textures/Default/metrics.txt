@@ -34,6 +34,7 @@ SyncLifeBar=[250,45][250,525];
 SyncLevelBarBase=[294,75][250,500];
 SyncHitsBar=[510,45][193,500];
 SyncHitsText=[535,50][225,505];
+SyncPlayerDifficulties=[215,50][520,505];
 
 #Main Menu;
 MainMenuOptions=[250,150][250,225][250,275][250,325][250,375][250,425][250,475][250,525];

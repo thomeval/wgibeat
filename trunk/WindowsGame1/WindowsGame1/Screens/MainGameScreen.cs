@@ -49,7 +49,7 @@ namespace WGiBeat.Screens
 
             var currentGameType = (GameType) Core.Cookies["CurrentGameType"];
             _performanceBar = new PerformanceBar
-                                  {Width = 350, Players = Core.Players};
+                                  {Width = 350, Players = Core.Players, GameType = currentGameType};
             var freeLocation = _performanceBar.GetFreeLocation(currentGameType == GameType.COOPERATIVE);
             _performanceBar.Position = Core.Metrics["PerformanceBar", freeLocation];
             _lifeBarSet = new LifeBarSet(Core.Metrics, Core.Players, currentGameType);
@@ -377,6 +377,7 @@ namespace WGiBeat.Screens
             var player = (int) sender;
 
        _noteJudgementSet.AwardJudgement(BeatlineNoteJudgement.MISS, player, 0, 0);
+            _levelbarSet.AdjustMomentum(BeatlineNoteJudgement.MISS, player);
             if (Core.Players[player].CPU)
             {
                 Core.Players[player].NextCPUJudgement =
@@ -397,10 +398,8 @@ namespace WGiBeat.Screens
 
             _noteBarSet.MarkAllCompleted(player);
 
-            if ((judgement != BeatlineNoteJudgement.MISS) && (judgement != BeatlineNoteJudgement.FAIL))
-            {
-                _levelbarSet.AdjustMomentum(judgement, player);
-            }
+            _levelbarSet.AdjustMomentum(judgement, player);
+
 
             //Award Score
             ApplyJudgement(judgement, player);

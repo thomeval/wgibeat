@@ -11,12 +11,14 @@ namespace WGiBeat.Drawing
 
         public byte Opacity { get; set; }
         public Player[] Players { get; set; }
+        public GameType GameType { get; set; }
 
         private SpriteMap _partsSpriteMap;
         private SpriteMap _leftSpriteMap;
         private Sprite _middleSprite;
         private Sprite _rightSprite;
         private Sprite _headerSprite;
+
 
         public PerformanceBar()
         {
@@ -60,6 +62,10 @@ namespace WGiBeat.Drawing
                 if (!Players[x].Playing)
                     continue;
 
+                if (x > 0 && (GameType == GameType.SYNC))
+                {
+                    return;
+                }
                 _rightSprite.Position = position.Clone();
                 _rightSprite.X += this.Width - 70;
 

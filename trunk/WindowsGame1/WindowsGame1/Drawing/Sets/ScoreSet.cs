@@ -63,7 +63,11 @@ namespace WGiBeat.Drawing.Sets
         }
         private void DrawPlayerDifficulties(SpriteBatch spriteBatch)
         {
-
+            if (_gameType == GameType.SYNC)
+            {
+                DrawPlayerDifficultiesSync(spriteBatch);
+                return;
+            }
             for (int x = 0; x < 4; x++)
             {
                 if (! Players[x].Playing)
@@ -73,6 +77,19 @@ namespace WGiBeat.Drawing.Sets
                 int idx = 1 + (int)(Players[x].PlayerOptions.PlayDifficulty);
  
                 _iconSpriteMap.Draw(spriteBatch, idx, 30, 30, _metrics["GameScreenPlayerDifficulties", x]);
+            }
+        }
+
+        private void DrawPlayerDifficultiesSync(SpriteBatch spriteBatch)
+        {
+            int idx = 1 + (int)(Players[0].PlayerOptions.PlayDifficulty);
+
+            for (int x = 0; x < 2; x++)
+            {
+                if (Players[x * 2].Playing || Players[(x * 2) + 1].Playing)
+                {
+                    _iconSpriteMap.Draw(spriteBatch, idx, 30, 30, _metrics["SyncPlayerDifficulties", x]);
+                }
             }
         }
 
