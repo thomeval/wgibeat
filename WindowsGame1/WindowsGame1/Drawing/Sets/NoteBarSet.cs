@@ -39,10 +39,10 @@ namespace WGiBeat.Drawing.Sets
 
         public void InitNoteBars()
         {
+            
             for (int x = 0; x < _noteBars.Length; x++)
             {
-                _noteBars[x] = NoteBar.CreateNoteBar((int) Players[x].Level, 0);
-                _noteBars[x].Position = (_metrics["NoteBar", x]);
+                CreateNextNoteBar(x);
             }
         }
 
@@ -105,8 +105,24 @@ namespace WGiBeat.Drawing.Sets
             var numArrow = (int)Players[player].Level;
             var numReverse = (Players[player].IsBlazing) ? (int)Players[player].Level / 2 : 0;
             _noteBars[player] = NoteBar.CreateNoteBar(numArrow, numReverse, _metrics["NoteBar", player]);
+            SyncNoteBars(_noteBars[player]);
         }
 
+        public void SyncNoteBars(NoteBar notebar)
+        {
+            if (_gameType == GameType.SYNC)
+            {
+                for (int x = 0; x < 3; x++)
+                {
+                    if (!Players[x].Playing)
+                    {
+                        continue;
+                    }
+                    _noteBars[x] = notebar.Clone();
+                    _noteBars[x].Position = _metrics["NoteBar", x];
+                }
+            }
+        }
         public int NumberCompleted(int player)
         {
             return _noteBars[player].NumberCompleted() + _noteBars[player].NumberReverse(); 
