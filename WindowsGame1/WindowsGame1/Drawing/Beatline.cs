@@ -76,7 +76,7 @@ namespace WGiBeat.Drawing
                                    {
                                        SpriteTexture = TextureManager.Textures("BeatlineEffectIcons"),
                                        Columns = 1,
-                                       Rows = 3
+                                       Rows = 4
                                    };
         }
 
@@ -157,7 +157,7 @@ namespace WGiBeat.Drawing
                     }
                 }
                 var markerHeight = Large ? LARGE_HEIGHT : NORMAL_HEIGHT;
-                var effectHeight = Large ? 30 : 15;
+                var effectHeight = Large ? LARGE_HEIGHT : NORMAL_HEIGHT;
 
                 int noteIdx = 0;
                 int width = 5;
@@ -170,6 +170,7 @@ namespace WGiBeat.Drawing
                     case BeatlineNoteType.END_OF_SONG:
                     case BeatlineNoteType.BPM_INCREASE:
                     case BeatlineNoteType.BPM_DECREASE:
+                        case BeatlineNoteType.STOP:
                         width = 1;
                         noteIdx = 4;
                         break;
@@ -180,7 +181,7 @@ namespace WGiBeat.Drawing
                 if (effectType != 0)
                 {
                     _beatlineEffects.ColorShading.A = (byte) (_markerSprite.ColorShading.A  /2);
-                    _beatlineEffects.Draw(spriteBatch, effectType - 1,effectHeight * 2, effectHeight, (int)(markerPosition.X - effectHeight), (int)markerPosition.Y + markerHeight - effectHeight);
+                    _beatlineEffects.Draw(spriteBatch, effectType - 1,effectHeight, effectHeight, (int)(markerPosition.X - effectHeight/2), (int)markerPosition.Y);
                 }
             }
         }

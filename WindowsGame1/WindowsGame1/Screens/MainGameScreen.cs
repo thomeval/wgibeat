@@ -83,7 +83,7 @@ namespace WGiBeat.Screens
             _noteBarSet.InitNoteBars();
 
             _gameSong = (GameSong)Core.Cookies["CurrentSong"];
-            _beatlineSet.AddBPMChangeMarkers(_gameSong);
+            _beatlineSet.AddTimingPointMarkers(_gameSong);
 
             _startTime = null;
             _panic = Core.Cookies.ContainsKey("Panic");
@@ -512,6 +512,7 @@ namespace WGiBeat.Screens
                 "DefaultFont", Core.Metrics["SongDebugHitOffset", 0], Color.Black, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, String.Format("Length: {0:F3}", _gameSong.Length),
                 "DefaultFont", Core.Metrics["SongDebugLength", 0], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, _gameSong.ConvertPhraseToMS(_phraseNumber) + " ms","DefaultFont",new Vector2(375,350),Color.Black,FontAlign.LEFT );
         }
 
         private void DrawBorders(SpriteBatch spriteBatch)

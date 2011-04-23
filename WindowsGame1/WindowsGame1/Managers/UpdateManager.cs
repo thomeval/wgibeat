@@ -11,6 +11,7 @@ namespace WGiBeat.Managers
         public string NewsFeed { get; set; }
 
         public event EventHandler UpdateInfoAvailable;
+        public event EventHandler UpdateInfoFailed;
 
         public void GetLatestVersion()
         {

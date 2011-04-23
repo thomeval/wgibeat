@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -33,10 +34,30 @@ namespace WGiBeat.AudioSystem
 
         public bool ReadOnly { get; set; }
 
-        public SortedDictionary<double, double> BPMs
+        private Dictionary<double, double> _bpMS = new Dictionary<double, double>();
+
+        public Dictionary<double, double> BPMs
         {
-            get; set;
+            get { return _bpMS; }
+            set
+            {
+                _bpMS = value;
+                _timingMap = SongTimingMap.CreateSongTimingMap(Stops, BPMs);
+            }
         }
+
+        private Dictionary<double, double> _stops = new Dictionary<double, double>();
+
+        public Dictionary<double, double> Stops
+        {
+            get { return _stops; }
+            set
+            {
+                _stops = value;
+                _timingMap = SongTimingMap.CreateSongTimingMap(Stops, BPMs);
+            }
+        }
+
         public double StartBPM
         {
             get
@@ -46,6 +67,7 @@ namespace WGiBeat.AudioSystem
             set
             {
                 BPMs[0.0] = value;
+                _timingMap = SongTimingMap.CreateSongTimingMap(Stops, BPMs);
             }
         }
 
@@ -61,7 +83,12 @@ namespace WGiBeat.AudioSystem
         {
             var key = BPMs.Keys.LastOrDefault(e => e <= phraseNumber);
             BPMs[key] = newBPM;
+            _timingMap = SongTimingMap.CreateSongTimingMap(Stops, BPMs);
         }
+
+
+        private SongTimingMap _timingMap;
+
         /// <summary>
         /// The MD5 hash of the correct MD5 file. This is checked with the actual MD5 calculated at runtime, and
         /// mismatches are reported.
@@ -112,7 +139,8 @@ namespace WGiBeat.AudioSystem
         {
             var gs = new GameSong
                          {
-                             BPMs = new SortedDictionary<double, double>(),
+                             BPMs = new Dictionary<double, double>(),
+                             Stops = new Dictionary<double, double>(),
                              DefinitionFile = null,
                              Length = 0.0,
                              Offset = 0.0,
@@ -200,62 +228,13 @@ namespace WGiBeat.AudioSystem
         /// <returns>The phrase number converted from the given milliseconds.</returns>
         public double ConvertMSToPhrase(double milliseconds)
         {
-            var msLeft = milliseconds;
-            msLeft -= Offset*1000;
-            var keys = BPMs.Keys.ToArray();
-            var msList = CreateMSCache(keys);
-            var lastPassedPhrase = 0.0;
-            var currentKeyIndex = 0;
-            //Subtract previous BPM change points.
-            var activeMSKey = (from e in msList where e <= msLeft select e).LastOrDefault();
-
-                msLeft -= activeMSKey;
-                 currentKeyIndex = msList.IndexOf(activeMSKey);
-                lastPassedPhrase  = keys[currentKeyIndex];        
-
-
-            //Apply the phrase calculations for the current BPM active.
-            
-  
-            var result = lastPassedPhrase;
-            result += (msLeft) / 1000.0 * (BPMs[keys[currentKeyIndex]] / 240.0);
-
-            return result;
-
-            //TODO: Convert to using multiple BPMs.
-            return (milliseconds) / 1000.0 * (StartBPM / 240.0);
-        }
-
-        private double[] CreateMSCache(double[] bpmKeys)
-        {
-            //TODO: Fix.
-            var result = new double[bpmKeys.Length];
-            for (int x = 0; x < bpmKeys.Length; x++)
-            {
-                double key = bpmKeys[x];
-                result[x] = ConvertPhraseToMS(key) - (Offset*1000);
-            }
-            return result;
+            return _timingMap.ConvertMSToPhrase(milliseconds - (Offset * 1000));
         }
 
         public double ConvertPhraseToMS(double phrase)
         {
-            var keys = BPMs.Keys.ToArray();
-            var activeKey = (from e in keys where e <= phrase select e).LastOrDefault();
-
-            var totalMS = (Offset * 1000);
-
-            var relevantPhrase = 0.0;
-            for (int x = 0; keys[x] != activeKey; x++ )
-            {
-                relevantPhrase = keys[x + 1] - keys[x];
-                totalMS += relevantPhrase* 1000 * 240.0 / BPMs[keys[x]];
-            }
-
-            relevantPhrase = phrase - activeKey;
-            totalMS += relevantPhrase*1000*240.0/BPMs[activeKey];
-
-            return totalMS;
+            return _timingMap.ConvertPhraseToMS(phrase)  + (Offset*1000);
         }
+
     }
 }

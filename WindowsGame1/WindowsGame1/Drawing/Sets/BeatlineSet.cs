@@ -159,27 +159,36 @@ namespace WGiBeat.Drawing.Sets
         }
 
 
-        public void AddBPMChangeMarkers(GameSong song)
+        public void AddTimingPointMarkers(GameSong song)
         {
             var prev = song.BPMs[0.0];
-            foreach (double bpmKey in song.BPMs.Keys)
+
+            foreach (Beatline bl in _beatlines)
             {
-                if (bpmKey == 0.0)
+                foreach (double bpmKey in song.BPMs.Keys)
                 {
-                    continue;
+                    if (bpmKey == 0.0)
+                    {
+                        continue;
+                    }
+
+                        var noteType = song.BPMs[bpmKey] > prev
+                                           ? BeatlineNoteType.BPM_INCREASE
+                                           : BeatlineNoteType.BPM_DECREASE;
+                        bl.InsertBeatlineNote(new BeatlineNote {Player = -1, NoteType = noteType, Position = bpmKey}, 0);
+
+                    
+                    prev = song.BPMs[bpmKey];
+
                 }
 
-                foreach (Beatline bl in _beatlines)
+                foreach (double stopKey in song.Stops.Keys)
                 {
-                    var noteType = song.BPMs[bpmKey] > prev
-                                       ? BeatlineNoteType.BPM_INCREASE
-                                       : BeatlineNoteType.BPM_DECREASE;
-                    bl.InsertBeatlineNote(new BeatlineNote{Player = -1, NoteType = noteType,Position = bpmKey},0);
-                    
+                    bl.InsertBeatlineNote(
+                        new BeatlineNote {Player = -1, NoteType = BeatlineNoteType.STOP, Position = stopKey}, 0);
                 }
-                prev = song.BPMs[bpmKey];
-                
             }
+  
         }
         public BeatlineNoteJudgement AwardJudgement(double phraseNumber, int player, bool completed)
         {

@@ -33,6 +33,7 @@
         NORMAL = 0,
         END_OF_SONG = 1,
         BPM_INCREASE = 2,
-        BPM_DECREASE = 3
+        BPM_DECREASE = 3,
+        STOP = 4
     }
 }

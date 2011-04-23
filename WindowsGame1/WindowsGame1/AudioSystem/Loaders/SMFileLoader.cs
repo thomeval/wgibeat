@@ -43,7 +43,6 @@ namespace WGiBeat.AudioSystem.Loaders
                 if (_newSong.Length == 0)
                 {
                     CalculateLength(_newSong, selectedNotes);
-                    _newSong.Length += _stopTotals;
                     _newSong.Length += OffsetAdjust;
                 } 
                 
@@ -137,27 +136,23 @@ namespace WGiBeat.AudioSystem.Loaders
             {
                 return;
             }
-            var stopPairs = new Dictionary<double, double>();
+            var stopPairs = new Dictionary <double, double>();
             var stopText = value.Split(',');
 
             foreach (string stopItem in stopText)
             {
                 double position = Convert.ToDouble(stopItem.Substring(0, stopItem.IndexOf("=")), CultureInfo.InvariantCulture.NumberFormat);
                 double bvalue = Convert.ToDouble(stopItem.Substring(stopItem.IndexOf("=") + 1), CultureInfo.InvariantCulture.NumberFormat);
-                stopPairs[position] =  bvalue;
+                stopPairs[position/4.0] =  bvalue;
                 _stopTotals += bvalue;
             }
-            if (stopPairs.Keys.Count > 0)
-            {
-                if (!AllowProblematic)
-                    throw new NotSupportedException("This .sm file has Stops and will not work correctly in WGiBeat!");
-            }
-
+            _newSong.Stops = stopPairs;
+ 
         }
 
         private void ParseBPMs(string value)
         {
-            var bpmPairs = new SortedDictionary<double, double>();
+            var bpmPairs = new Dictionary<double, double>();
             var bpmText = value.Split(',');
 
             foreach (string bpmItem in bpmText)
@@ -210,7 +205,7 @@ namespace WGiBeat.AudioSystem.Loaders
 
         private void AdjustBpmChanges(GameSong song, int idx)
         {
-            var newBPMs = new SortedDictionary<double, double>();
+            var newBPMs = new Dictionary<double, double>();
             
             foreach (double key in song.BPMs.Keys)
             {
@@ -223,8 +218,14 @@ namespace WGiBeat.AudioSystem.Loaders
                 newBPMs[key - idx] = song.BPMs[key];
                 }
             }
-            song.BPMs = newBPMs;                                      
-                              
+            song.BPMs = newBPMs;
+
+            var newStops = new Dictionary<double, double>();
+            foreach (double key in song.Stops.Keys)
+            {
+                newStops[key - idx] = song.Stops[key];
+            }
+            song.Stops = newStops;
         }
 
         private void CalculateLength(GameSong song, string notes)
