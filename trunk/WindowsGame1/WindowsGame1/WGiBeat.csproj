@@ -105,6 +105,8 @@
     <Compile Include="AudioSystem\MenuMusicManager.cs" />
     <Compile Include="AudioSystem\CrossfaderManager.cs" />
     <Compile Include="AudioSystem\SongManager.cs" />
+    <Compile Include="AudioSystem\SongTimeline.cs" />
+    <Compile Include="AudioSystem\SongTimingPoint.cs" />
     <Compile Include="Drawing\ActionBinding.cs" />
     <Compile Include="Drawing\PerformanceBar.cs" />
     <Compile Include="Drawing\ProfileLevelDisplay.cs" />
@@ -119,6 +121,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="AudioSystem\Loaders\SMFileLoader.cs" />
     <Compile Include="AudioSystem\Loaders\SongFileLoader.cs" />
+    <Compile Include="Helpers\BeatlineHitAggregator.cs" />
     <Compile Include="Managers\InputAction.cs" />
     <Compile Include="Managers\CPUManager.cs" />
     <Compile Include="Drawing\Beatline.cs" />

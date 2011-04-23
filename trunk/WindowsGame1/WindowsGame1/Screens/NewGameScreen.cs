@@ -358,6 +358,7 @@ namespace WGiBeat.Screens
                        break;
                    case "[Guest]":
                        Core.Players[number].Profile = null;
+                       Core.Players[number].PlayerOptions = new PlayerOptions {BeatlineSpeed = 1.0};
                        ChangeCursorPosition(number, CursorPosition.MAIN_MENU);
                        NetHelper.Instance.BroadcastProfileChange(number);
                        NetHelper.Instance.BroadcastPlayerOptions(number);

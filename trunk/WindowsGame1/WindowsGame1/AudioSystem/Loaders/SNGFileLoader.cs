@@ -71,7 +71,6 @@ namespace WGiBeat.AudioSystem.Loaders
                                     ParseBPMs(value);
                                     break;
                             }
-
                             break;
                         case "SONGFILE":
                         case "AUDIOFILE":
@@ -80,6 +79,9 @@ namespace WGiBeat.AudioSystem.Loaders
                         case "SONGFILEMD5":
                         case "AUDIOFILEMD5":
                             _newSong.AudioFileMD5 = value;
+                            break;
+                        case "STOPS":
+                            //TODO: Complete
                             break;
                     }
                 }
@@ -104,7 +106,7 @@ namespace WGiBeat.AudioSystem.Loaders
         private void ParseBPMs(string value)
         {
             //Example: BPM=0.0:120.0,5.0:150.0,8.5:185.0
-            var result = new SortedDictionary<double, double>();
+            var result = new Dictionary<double, double>();
             try
             {
 

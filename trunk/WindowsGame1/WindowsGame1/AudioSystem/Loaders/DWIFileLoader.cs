@@ -17,7 +17,6 @@ namespace WGiBeat.AudioSystem.Loaders
     {
         private readonly string[] _notes;
         private readonly string[] _preferredNoteOrder = {"MANIAC", "SMANIAC", "ANOTHER", "BASIC", "BEGINNER", "EDIT"};
-        private double _stopTotals;
         private GameSong _newSong;
         public DWIFileLoader()
         {
@@ -27,7 +26,7 @@ namespace WGiBeat.AudioSystem.Loaders
         public override GameSong LoadFromFile(string filename, out bool valid)
         {
             _newSong = new GameSong { ReadOnly = true };
-            _newSong.BPMs = new SortedDictionary<double, double>();
+            _newSong.BPMs = new Dictionary<double, double>();
             Log.AddMessage("Converting DWI File: " + filename, LogLevel.NOTE);
 
             try
@@ -41,7 +40,6 @@ namespace WGiBeat.AudioSystem.Loaders
                 _newSong.Offset += OffsetAdjust;
 
                 CalculateLength(_newSong, selectedNotes);
-                _newSong.Length += _stopTotals;
                 _newSong.Length += OffsetAdjust;
                 
                 //Length calculation needs the ORIGINAL offset, so this must be done after it.
@@ -144,12 +142,6 @@ namespace WGiBeat.AudioSystem.Loaders
                 double position = Convert.ToDouble(stopItem.Substring(0, stopItem.IndexOf("=")), CultureInfo.InvariantCulture.NumberFormat);
                 double bvalue = Convert.ToDouble(stopItem.Substring(stopItem.IndexOf("=") + 1), CultureInfo.InvariantCulture.NumberFormat);
                 stopPairs[position/16.0] =  bvalue;
-                _stopTotals += bvalue;
-            }
-            if (stopPairs.Keys.Count > 0)
-            {
-                if (!AllowProblematic)
-                    throw new NotSupportedException("this .dwi file has Stops and will not work correctly in WGiBeat! ");
             }
         }
 
@@ -195,7 +187,7 @@ namespace WGiBeat.AudioSystem.Loaders
 
         private void AdjustBpmChanges(GameSong song, int idx)
         {
-            var newBPMs = new SortedDictionary<double, double>();
+            var newBPMs = new Dictionary<double, double>();
 
             foreach (double key in song.BPMs.Keys)
             {
@@ -210,6 +202,12 @@ namespace WGiBeat.AudioSystem.Loaders
             }
             song.BPMs = newBPMs;
 
+            var newStops = new Dictionary<double, double>();
+            foreach (double key in song.Stops.Keys)
+            {
+                newStops[key - idx] = song.Stops[key];
+            }
+            song.Stops = newStops;
         }
 
         private void CalculateLength(GameSong song, string notes)
