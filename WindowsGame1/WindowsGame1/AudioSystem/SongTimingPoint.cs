@@ -16,8 +16,8 @@
 
     public enum PointType
     {
-        STOP = 0,
-        BPM_CHANGE = 1
+        STOP = 1,
+        BPM_CHANGE = 0
     }
 
     

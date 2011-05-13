@@ -217,6 +217,11 @@ namespace WGiBeat.AudioSystem
             {
                 return 0;
             }
+            if (first.Phrase == second.Phrase)
+            {
+                return (first.PointType.CompareTo(second.PointType));
+            }
+
             return first.Phrase.CompareTo(second.Phrase);
         }
     }
