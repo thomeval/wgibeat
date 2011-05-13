@@ -147,19 +147,21 @@ namespace WGiBeat.AudioSystem.Loaders
 
         private void ParseBPMs(string value)
         {
-
+            var bpmPairs = new Dictionary<double, double>();
             var bpmText = value.Split(',');
 
             foreach (string bpmItem in bpmText)
             {
                 double position = Convert.ToDouble(bpmItem.Substring(0, bpmItem.IndexOf("=")), CultureInfo.InvariantCulture.NumberFormat);
                 double bvalue = Convert.ToDouble(bpmItem.Substring(bpmItem.IndexOf("=") + 1), CultureInfo.InvariantCulture.NumberFormat);
-                _newSong.BPMs[position / 16.0] = bvalue;
+                bpmPairs[position / 16.0] = bvalue;
                 if ((bvalue <= 0.0) && (!AllowProblematic))
                 {
                     throw new NotSupportedException("This .dwi file uses negative BPMs and will not work correctly in WGiBeat!");
                 }
             }
+            bpmPairs[0.0] = _newSong.StartBPM;
+            _newSong.BPMs = bpmPairs;
 
         }
 
@@ -214,6 +216,8 @@ namespace WGiBeat.AudioSystem.Loaders
         {
 
             var endPhrase = ParseNoteString(notes, false);
+
+            //TODO: Likely incorrect.
             song.Length = song.ConvertPhraseToMS(endPhrase + 0.5) / 1000.0;
             Log.AddMessage(String.Format("Song notes end at phrase {0}. Length set to {1}. ", endPhrase, song.Length), LogLevel.DEBUG);
         }

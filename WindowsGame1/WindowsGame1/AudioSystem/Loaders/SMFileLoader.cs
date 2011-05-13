@@ -19,7 +19,6 @@ namespace WGiBeat.AudioSystem.Loaders
         private readonly string[] _notes;
         private readonly string[] _preferredNoteOrder = {"Hard", "Challenge", "Medium", "Easy", "Beginner", "Edit"};
         private GameSong _newSong;
-        private double _stopTotals;
         public SMFileLoader()
         {
             _notes = new string[_preferredNoteOrder.Length];
@@ -31,7 +30,6 @@ namespace WGiBeat.AudioSystem.Loaders
             _newSong = new GameSong { ReadOnly = true };
             try
             {
-                _stopTotals = 0.0;
                 
                 string songText = File.ReadAllText(filename);
                 ParseText(songText);
@@ -144,7 +142,6 @@ namespace WGiBeat.AudioSystem.Loaders
                 double position = Convert.ToDouble(stopItem.Substring(0, stopItem.IndexOf("=")), CultureInfo.InvariantCulture.NumberFormat);
                 double bvalue = Convert.ToDouble(stopItem.Substring(stopItem.IndexOf("=") + 1), CultureInfo.InvariantCulture.NumberFormat);
                 stopPairs[position/4.0] =  bvalue;
-                _stopTotals += bvalue;
             }
             _newSong.Stops = stopPairs;
  
