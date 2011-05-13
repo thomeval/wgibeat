@@ -161,10 +161,11 @@ namespace WGiBeat.Drawing.Sets
 
         public void AddTimingPointMarkers(GameSong song)
         {
-            var prev = song.BPMs[0.0];
+            double prev;
 
             foreach (Beatline bl in _beatlines)
             {
+                prev = song.BPMs[0.0];
                 foreach (double bpmKey in song.BPMs.Keys)
                 {
                     if (bpmKey == 0.0)

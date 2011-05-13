@@ -55,25 +55,26 @@ namespace WGiBeat.AudioSystem
         {
             var phraseLeft = phrase;
 
-            //Subtract previous BPM change points.
+           
 
-            var activeKey = GetLastPassedTimingPointByPhrase(phrase);
+            var lastPassedPoint = GetLastPassedTimingPointByPhrase(phrase);
             var currentBPM = GetCurrentBpmByPhrase(phrase);
             var result = 0.0;
             
-
-            if (activeKey != null)
+            //Find the most recently passed TimingPoint, and calculate forward from there.
+            //If the last past point is a stop, remember to add the Stop amount as well.
+            if (lastPassedPoint != null)
             {
-                phraseLeft -= activeKey.Phrase;
-                result +=  activeKey.MS;
+                phraseLeft -= lastPassedPoint.Phrase;
+                result +=  lastPassedPoint.MS;
+                if (lastPassedPoint.PointType == PointType.STOP)
+                {
+                    result += lastPassedPoint.Amount * 1000;
+                }
             }
 
             result += phraseLeft * 1000 * 240.0 / currentBPM;
-            var lastStop = (from e in TimingPoints where e.PointType == PointType.STOP && e.Phrase < phrase select e).LastOrDefault();
-            if (lastStop != null)
-            {
-                result += lastStop.Amount * 1000;
-            }
+
             return result;
         }
 
