@@ -172,9 +172,17 @@ namespace WGiBeat.Drawing.Sets
                         continue;
                     }
 
+                    //Don't mark a BPM change if there isn't actually a change in the BPM.
+                    if (song.BPMs[bpmKey] == prev)
+                    {
+                        continue;
+                    }
+
                         var noteType = song.BPMs[bpmKey] > prev
                                            ? BeatlineNoteType.BPM_INCREASE
                                            : BeatlineNoteType.BPM_DECREASE;
+                    
+
                         bl.InsertBeatlineNote(new BeatlineNote {Player = -1, NoteType = noteType, Position = bpmKey}, 0);
 
                     

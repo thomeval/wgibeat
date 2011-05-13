@@ -53,7 +53,6 @@ namespace WGiBeat.AudioSystem
 
         public double ConvertPhraseToMS(double phrase)
         {
-            //TODO: Convert to using MS caches.
             var phraseLeft = phrase;
 
             //Subtract previous BPM change points.
@@ -83,6 +82,10 @@ namespace WGiBeat.AudioSystem
             var lastBPMPoint =
                 (from e in TimingPoints where (e.PointType == PointType.BPM_CHANGE) && (e.MS <= milliseconds) select e).
                     LastOrDefault();
+            if (TimingPoints.Count == 0)
+            {
+                return 0.0;
+            }
             if (lastBPMPoint == null)
             {
                 lastBPMPoint = (from e in TimingPoints where (e.PointType == PointType.BPM_CHANGE) select e).First();
@@ -94,7 +97,10 @@ namespace WGiBeat.AudioSystem
             var lastBPMPoint =
                 (from e in TimingPoints where (e.PointType == PointType.BPM_CHANGE) && (e.Phrase < phrase) select e).
                     LastOrDefault();
-
+            if (TimingPoints.Count == 0)
+            {
+                return 0.0;
+            }
             if (lastBPMPoint == null)
             {
                 lastBPMPoint = (from e in TimingPoints where (e.PointType == PointType.BPM_CHANGE) select e).First();
@@ -117,8 +123,28 @@ namespace WGiBeat.AudioSystem
         {
             var result = 0.0;
 
+            var lastPassedPoint = (from e in TimingPoints where e.MS < milliseconds select e).LastOrDefault();
 
-            //TODO: Possibly wrong. Investigate later.
+            if (lastPassedPoint == null || lastPassedPoint.PointType == PointType.BPM_CHANGE)
+            {
+                return result;
+            }
+
+            var amount = lastPassedPoint.Amount * 1000;
+            if (lastPassedPoint.MS + amount <= milliseconds)
+            {
+                //The current time is past the current stop.
+                result += amount;
+                //    System.Diagnostics.Debug.WriteLine("OUTSIDE Stop: Result = " + result);
+            }
+            else
+            {
+                //The current time is 'inside' the current stop.
+                result = (milliseconds - lastPassedPoint.MS);
+                //   System.Diagnostics.Debug.WriteLine("INSIDE Stop: Result = " + result);
+            } 
+
+            /*
             var lastStopPoint = (from e in TimingPoints where e.PointType == PointType.STOP && e.MS < milliseconds select e).LastOrDefault();
             if (lastStopPoint != null)
             {
@@ -127,19 +153,20 @@ namespace WGiBeat.AudioSystem
                 {
                     //The current time is past the current stop.
                     result += amount;
-                    System.Diagnostics.Debug.WriteLine("OUTSIDE Stop: Result = " + result);
+                //    System.Diagnostics.Debug.WriteLine("OUTSIDE Stop: Result = " + result);
                 }
                 else
                 {
                     //The current time is 'inside' the current stop.
                     result = (milliseconds - lastStopPoint.MS);
-                    System.Diagnostics.Debug.WriteLine("INSIDE Stop: Result = " + result);
+                 //   System.Diagnostics.Debug.WriteLine("INSIDE Stop: Result = " + result);
                 } 
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("NO Stop: Result = " + result);
+              //  System.Diagnostics.Debug.WriteLine("NO Stop: Result = " + result);
             }
+             */
             return result;
  
         }
