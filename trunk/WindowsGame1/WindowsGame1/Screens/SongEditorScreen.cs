@@ -262,6 +262,7 @@ namespace WGiBeat.Screens
                     if (isDouble)
                     {
                         NewGameSong.StartBPM = temp;
+                        _bpmMeter.DisplayedSong = NewGameSong;
                     }
                     break;
                 case "SongLength":
@@ -687,6 +688,7 @@ namespace WGiBeat.Screens
                                 if (_guessedBPM > 0)
                                 {
                                     NewGameSong.StartBPM = _guessedBPM;
+                                    _bpmMeter.DisplayedSong = NewGameSong;
                                 }
                             }
                             break;
