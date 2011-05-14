@@ -39,6 +39,7 @@ SyncPlayerDifficulties=[215,50][520,505];
 #Main Menu;
 MainMenuOptions=[250,150][250,225][250,275][250,325][250,375][250,425][250,475][250,525];
 MainMenuNoSongsError=[270,200];
+UpdaterFrame=[0,544];
 
 #Initial Load;
 LoadMessage=[435,565];

@@ -12,38 +12,51 @@ namespace WGiBeat.Managers
 
         public event EventHandler UpdateInfoAvailable;
         public event EventHandler UpdateInfoFailed;
+        public Exception LastException { get; private set; }
 
         public void GetLatestVersion()
         {
-            var result = WebRequest.Create("http://wgibeat.googlecode.com/svn/trunk/Notes/LatestVersion.txt");
-            var response = (HttpWebResponse) result.GetResponse();
-            var stream = response.GetResponseStream();
-
-            var buffer = new byte[8192];
-            var stringBuilder = new StringBuilder();
-            string tempString = null;
-            int count = 0;
-
-            do
+            try
             {
-                // fill the buffer with data
-                count = stream.Read(buffer, 0, buffer.Length);
+                var result = WebRequest.Create("http://wgibeat.googlecode.com/svn/trunk/Notes/LatestVersion.txt");
+                var response = (HttpWebResponse)result.GetResponse();
+                var stream = response.GetResponseStream();
 
-                // make sure we read some data
-                if (count != 0)
+                var buffer = new byte[8192];
+                var stringBuilder = new StringBuilder();
+                string tempString = null;
+                int count = 0;
+
+                do
                 {
-                    // translate from bytes to ASCII text
-                    tempString = Encoding.ASCII.GetString(buffer);
-                    tempString = tempString.Replace("\0", "");
-                    // continue building the string
-                    stringBuilder.Append(tempString);
+                    // fill the buffer with data
+                    count = stream.Read(buffer, 0, buffer.Length);
+
+                    // make sure we read some data
+                    if (count != 0)
+                    {
+                        // translate from bytes to ASCII text
+                        tempString = Encoding.ASCII.GetString(buffer);
+                        tempString = tempString.Replace("\0", "");
+                        // continue building the string
+                        stringBuilder.Append(tempString);
+                    }
+                }
+                while (count > 0);
+                ApplyVersionData(stringBuilder.ToString());
+                if (UpdateInfoAvailable != null)
+                {
+                    UpdateInfoAvailable(this, null);
                 }
             }
-            while (count > 0);
-            ApplyVersionData(stringBuilder.ToString());
-            if (UpdateInfoAvailable != null)
+            catch (Exception ex)
             {
-                UpdateInfoAvailable(this, null);
+                LastException = ex;
+                if (UpdateInfoFailed != null)
+                {
+                    UpdateInfoFailed(this, null);
+                }
+                throw;
             }
         }
 
@@ -51,8 +64,8 @@ namespace WGiBeat.Managers
         {
             str = str.Replace('\r', ' ');
             var lines = str.Split('\n');
-            LatestVersion = lines[0];
-            NewsFeed = lines[1];
+            LatestVersion = lines[0].Trim();
+            NewsFeed = lines[1].Trim();
         }
 
 

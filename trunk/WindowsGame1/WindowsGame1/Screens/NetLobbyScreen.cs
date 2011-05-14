@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
-using WGiBeat.NetSystem;
+//using WGiBeat.NetSystem;
 
 namespace WGiBeat.Screens
 {

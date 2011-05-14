@@ -14,15 +14,17 @@ namespace WGiBeat.Screens
         private readonly SineSwayParticleField _field = new SineSwayParticleField();
 
         private bool _displayNoSongsError;
-        private readonly string[] _menuText = { "Start Game", "Stats","How to play", "Keys", "Options", "Song Editor", "Exit", "Netplay" };
+        private readonly string[] _menuText = { "Start Game", "Stats","How to play", "Keys", "Options", "Song Editor", "Exit"};
         private Sprite _background;
         private Sprite _header;
         private SpriteMap _menuOptionSprite;
         private Sprite _foreground;
         private UpdateManager _updateManager;
-        private string _updaterString = "";
+        private UpdaterFrame _updaterFrame;
 
         private Thread _updateThread;
+
+
         public MainMenuScreen(GameCore core)
             : base(core)
         {
@@ -30,6 +32,11 @@ namespace WGiBeat.Screens
 
         public override void Initialize()
         {
+            _updaterFrame = new UpdaterFrame
+                                {
+                                    Position = Core.Metrics["UpdaterFrame", 0],
+                                    Status = UpdaterStatus.DISABLED
+                                };
             InitSprites();
             InitUpdater();
 
@@ -45,46 +52,58 @@ namespace WGiBeat.Screens
             _updateManager = new UpdateManager();
             _updateThread = new Thread(RunUpdater) {Name = "Updater"};
             _updateThread.Start();
+            
         }
 
         private void RunUpdater()
         {
-            _updaterString = "Checking for updates...";
+            _updaterFrame.Status = UpdaterStatus.CHECKING;
             _updateManager.UpdateInfoAvailable += UpdateInfoAvailable;
+            _updateManager.UpdateInfoFailed += UpdateInfoFailed;
             _updateManager.GetLatestVersion();
             
         }
 
+        private void UpdateInfoFailed(object sender, EventArgs e)
+        {
+            _updaterFrame.Status = UpdaterStatus.FAILED;
+        }
+
         private void UpdateInfoAvailable(object sender, EventArgs e)
         {
-            _updaterString = String.Format("You:{0}. Latest:{1}, News feed:{2} ",GameCore.VERSION_STRING, _updateManager.LatestVersion, _updateManager.NewsFeed);
+            _updaterFrame.NewsMessage = _updateManager.NewsFeed;
+            _updaterFrame.AvailableVersion = _updateManager.LatestVersion;
+            _updaterFrame.CurrentVersion = GameCore.VERSION_STRING.Substring(1);
+            _updaterFrame.Status = UpdaterStatus.SUCCESSFUL;
         }
 
         private void InitSprites()
         {
             _background = new Sprite
-            {
-                Height = 600,
-                Width = 800,
-                SpriteTexture = TextureManager.Textures("MainMenuBackground"),
-            };
+                              {
+                                  Height = 600,
+                                  Width = 800,
+                                  SpriteTexture = TextureManager.Textures("MainMenuBackground"),
+                              };
             _foreground = new Sprite
-            {
-                SpriteTexture = TextureManager.Textures("MainMenuForeground"),
-                Height = 600,
-                Width = 800,
-            };
+                              {
+                                  SpriteTexture = TextureManager.Textures("MainMenuForeground"),
+                                  Height = 600,
+                                  Width = 800,
+                              };
             _header = new Sprite
-            {
-                SpriteTexture = TextureManager.Textures("MainMenuHeader")
-            };
+                          {
+                              SpriteTexture = TextureManager.Textures("MainMenuHeader")
+                          };
             _menuOptionSprite = new SpriteMap
-            {
-                SpriteTexture = TextureManager.Textures("MainMenuOption"),
-                Columns = 1,
-                Rows = 2
-            };
+                                    {
+                                        SpriteTexture = TextureManager.Textures("MainMenuOption"),
+                                        Columns = 1,
+                                        Rows = 2
+                                    };
+
         }
+
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             DrawMenu(spriteBatch);
@@ -93,8 +112,15 @@ namespace WGiBeat.Screens
             {
                 TextureManager.DrawString(spriteBatch,"Error: No songs loaded","DefaultFont", Core.Metrics["MainMenuNoSongsError", 0], Color.Black,FontAlign.LEFT);
             }
-            TextureManager.DrawString(spriteBatch,_updaterString,"DefaultFont",new Vector2(750,550),Color.Black,FontAlign.RIGHT );
+            DrawUpdater(spriteBatch);
+            
 
+        }
+
+        private void DrawUpdater(SpriteBatch spriteBatch)
+        {
+            _updaterFrame.Visible = Core.Settings.Get<bool>("CheckForUpdates");
+            _updaterFrame.Draw(spriteBatch);
         }
 
         private void DrawBackground(SpriteBatch spriteBatch)
@@ -110,7 +136,7 @@ namespace WGiBeat.Screens
 
             _header.Draw(spriteBatch);
             
-            for (int menuOption = 0; menuOption < (int)MainMenuOption.COUNT - 1; menuOption++)
+            for (int menuOption = 0; menuOption < (int)MainMenuOption.COUNT; menuOption++)
             {
 
                 var idx = (menuOption == (int) _selectedMenuOption) ? 1 : 0;
@@ -168,12 +194,14 @@ namespace WGiBeat.Screens
                         _displayNoSongsError = true;
                     }
                     break;
+                    /*
                 case MainMenuOption.NETPLAY:
                     if (Core.Settings.Get<bool>("AllowPDA"))
                     {
                         Core.ScreenTransition("Net"); 
                     }
                     break;
+                     */
                 case MainMenuOption.STATS:
                     Core.ScreenTransition("Stats");
                     break;
@@ -206,7 +234,7 @@ namespace WGiBeat.Screens
         SONG_EDIT = 5,
         EXIT = 6,
         NETPLAY = 7,
-        COUNT = 8
+        COUNT = 7
     }
 
 }
