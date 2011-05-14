@@ -1,2 +1,2 @@
-0.7
-Test
+0.75
+New features in this version include: Stop and BPM change support for .dwi and .sm files, a song format indicator in the song select screen, and an ingame online version checker!
