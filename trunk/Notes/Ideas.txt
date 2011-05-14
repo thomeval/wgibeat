@@ -1,7 +1,6 @@
 
 ==Low Priority==
 - Netplay (major)
-- Update notification.
 - Transition effects for DrawableObjects.
 - Background images.
 
@@ -30,10 +29,10 @@
 - Sound effects for menus.
 
 
-==0.8 - ??? ==
+==0.75 - "Functional Mixture" ==
 - Display song type in Song Select Screen.
 
-==0.7 - Colour-blind Unionist ==
+==0.7 - "Colour-blind Unionist" ==
 
  * Song total is now displayed in the Song Select screen.
  * Players can now join and leave independently from any screen that has Player Options Frames (mode, team and song select screens)

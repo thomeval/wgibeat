@@ -58,14 +58,7 @@ namespace WGiBeat
         private static GameCore _instance;
         public static GameCore Instance
         {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new GameCore();
-                }
-                return _instance;
-            }
+            get { return _instance ?? (_instance = new GameCore()); }
         }
         #region Initialization
 
@@ -85,7 +78,7 @@ namespace WGiBeat
             //NOTE: Uncomment to disable vsync.
             //GraphicsManager.SynchronizeWithVerticalRetrace = false;
 
-            WgibeatRootFolder = Path.GetDirectoryName(
+            WgibeatRootFolder = "" + Path.GetDirectoryName(
 Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             WgibeatRootFolder = WgibeatRootFolder.Replace("file:\\", "");
 
