@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
-using WGiBeat.NetSystem;
+//using WGiBeat.NetSystem;
 using WGiBeat.Players;
 
 namespace WGiBeat.Screens
@@ -242,7 +242,7 @@ namespace WGiBeat.Screens
             var pass = _playerOptionsSet.PerformAction(inputAction);
             if (pass)
             {
-                NetHelper.Instance.BroadcastPlayerOptions(inputAction.Player);
+                //NetHelper.Instance.BroadcastPlayerOptions(inputAction.Player);
                 return;
             }
             
@@ -251,7 +251,7 @@ namespace WGiBeat.Screens
             {
                 return;
             }
-            NetHelper.Instance.BroadcastAction(inputAction);
+            //NetHelper.Instance.BroadcastAction(inputAction);
             switch (inputAction.Action)
             {
                 case "LEFT":
@@ -296,7 +296,7 @@ namespace WGiBeat.Screens
                     _playerOptionsSet.SetChangeMode(inputAction.Player, false);
                     break;
             }
-            NetHelper.Instance.BroadcastActionReleased(inputAction);
+            //NetHelper.Instance.BroadcastActionReleased(inputAction);
 
         }
 
@@ -444,7 +444,7 @@ namespace WGiBeat.Screens
         #endregion
 
         #region Netplay Code
-
+        /*
         public override void NetMessageReceived(NetMessage message)
         {
             switch (message.MessageType)
@@ -470,6 +470,7 @@ namespace WGiBeat.Screens
             }
 
         }
+         */ 
         #endregion
     }
 }

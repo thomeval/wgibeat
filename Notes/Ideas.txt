@@ -1,21 +1,37 @@
 
 ==Low Priority==
-- Netplay (major, low)
+- Netplay (major)
 - Update notification.
+- Transition effects for DrawableObjects.
+- Background images.
 
 ==Delayed==
-- BPM Change support for song files.
-- Sync (0.8?), Battle (0.8?) Tag Team (0.8) game modes.
-- More Cooperative bonuses (Streaks? Sync perfects?) (0.7)
-- Ingame update notification.
-- There HAS to be a better way to upscale the window! Consider switching to 3D.
+
  
 ==Post Release==
 - Wiki page for WGiEdit and how songs work.
-- More sample songs
 
 ==TODO==
+- BPM Change support for song files.
+-- .sm format
+-- .dwi format
+-- .sng format (and saving)
+-- Update song debugging for this
+-- Song select screen - display bpm changes
+-- Beatlines - bpm change alerter.
 
+- Sync (0.8?), Battle (0.8?) Tag Team (0.8) game modes.
+- More Cooperative bonuses (Streaks? Sync perfects?) (0.8)
+- Ingame update notification.
+- There HAS to be a better way to upscale the window! Consider switching to 3D.
+- Dropping a level affects notebar (AKA Mercy Rule).
+- Stop support for song files.
+- Beatline pulse effect on hit instead of periodic.
+- Sound effects for menus.
+
+
+==0.8 - ??? ==
+- Display song type in Song Select Screen.
 
 ==0.7 - Colour-blind Unionist ==
 

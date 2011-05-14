@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
-using WGiBeat.NetSystem;
+//using WGiBeat.NetSystem;
 using WGiBeat.Players;
 
 namespace WGiBeat.Screens
@@ -157,8 +157,8 @@ namespace WGiBeat.Screens
             }
             Core.Profiles.SaveToFolder(Core.Settings["ProfileFolder"] + "");
             ChangeCursorPosition(player,CursorPosition.MAIN_MENU);
-            NetHelper.Instance.BroadcastPlayerOptions(player);
-            NetHelper.Instance.BroadcastProfileChange(player);
+            //NetHelper.Instance.BroadcastPlayerOptions(player);
+            //NetHelper.Instance.BroadcastProfileChange(player);
             _errorMessages[player] = "";
         }
 
@@ -314,8 +314,8 @@ namespace WGiBeat.Screens
                     break;
                 case "BACK":
                     Core.ScreenTransition("MainMenu");
-                    NetHelper.Instance.BroadcastScreenTransition("MainMenu");
-                    Core.Net.Disconnect();
+                    //NetHelper.Instance.BroadcastScreenTransition("MainMenu");
+                    //Core.Net.Disconnect();
                     break;
             }
         }
@@ -360,8 +360,8 @@ namespace WGiBeat.Screens
                        Core.Players[number].Profile = null;
                        Core.Players[number].PlayerOptions = new PlayerOptions {BeatlineSpeed = 1.0};
                        ChangeCursorPosition(number, CursorPosition.MAIN_MENU);
-                       NetHelper.Instance.BroadcastProfileChange(number);
-                       NetHelper.Instance.BroadcastPlayerOptions(number);
+                       //NetHelper.Instance.BroadcastProfileChange(number);
+                       //NetHelper.Instance.BroadcastPlayerOptions(number);
                        break;
                    case "[Cancel]":
                        ChangeCursorPosition(number, CursorPosition.MAIN_MENU);
@@ -392,8 +392,8 @@ namespace WGiBeat.Screens
                    RefereshSelectedOptions(number);
                    ChangeCursorPosition(number,CursorPosition.MAIN_MENU);
                    _errorMessages[number] = "";
-                   NetHelper.Instance.BroadcastProfileChange(number);
-                   NetHelper.Instance.BroadcastPlayerOptions(number);
+                   //NetHelper.Instance.BroadcastProfileChange(number);
+                  // NetHelper.Instance.BroadcastPlayerOptions(number);
                }
            }
 
@@ -402,7 +402,7 @@ namespace WGiBeat.Screens
         private void ChangeCursorPosition(int player, CursorPosition position)
         {
             _cursorPositions[player] = position;
-            NetHelper.Instance.BroadcastCursorPosition(player, _cursorPositions[player]);
+           // NetHelper.Instance.BroadcastCursorPosition(player, _cursorPositions[player]);
 
         }
         private void RefereshSelectedOptions(int number)
@@ -478,14 +478,14 @@ namespace WGiBeat.Screens
 
         private void StartGame()
         {
-            NetHelper.Instance.BroadcastScreenTransition("ModeSelect");
+           // NetHelper.Instance.BroadcastScreenTransition("ModeSelect");
             Core.ScreenTransition("ModeSelect");
         }
 
         #endregion
 
         #region Netplay Code
-
+        /*
         public override void NetMessageReceived(NetMessage message)
         {
             switch (message.MessageType)
@@ -538,7 +538,7 @@ namespace WGiBeat.Screens
             }
 
         }
-
+        */
 
         #endregion
     }
