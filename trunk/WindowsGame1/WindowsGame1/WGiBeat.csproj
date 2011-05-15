@@ -201,6 +201,9 @@
     <Content Include="Content\Textures\Default\Common\BackgroundParticles.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Textures\Default\Common\MissingGraphic.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Textures\Default\Common\PlayerLevelBarBase.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -253,6 +256,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\MainMenu\MainMenuForeground.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\Common\MenuSelectedItem.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

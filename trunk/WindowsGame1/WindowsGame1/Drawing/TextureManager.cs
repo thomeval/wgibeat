@@ -18,10 +18,18 @@ namespace WGiBeat.Drawing
         {
             if (!_textures.ContainsKey(id.ToUpper()))
             {
+                Log.AddMessage(String.Format("Texture {0} is missing.", id.ToUpper()), LogLevel.ERROR);  
+                
+                if (_textures.ContainsKey("MISSINGGRAPHIC"))
+                {
+                    _textures.Add(id.ToUpper(),_textures["MISSINGGRAPHIC"]);
+                }
+                else
+                {
+                    _textures.Add(id.ToUpper(), new Texture2D(GraphicsDevice, 1, 1)); 
+                }
 
-                //TODO: Add fallback missing graphic.
-                Log.AddMessage(String.Format("Texture {0} is missing.",id.ToUpper()),LogLevel.ERROR);  
-                _textures.Add(id.ToUpper(),new Texture2D(GraphicsDevice,1,1));
+                
 
             }
             return _textures[id.ToUpper()];
