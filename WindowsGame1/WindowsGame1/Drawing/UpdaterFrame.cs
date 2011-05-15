@@ -37,8 +37,11 @@ namespace WGiBeat.Drawing
         public override void Draw(SpriteBatch spriteBatch)
         {
             var message = "";
-            if (Visible)
+            if (!Visible)
             {
+                return;
+            }
+           
                 switch (Status)
                 {
                     case UpdaterStatus.DISABLED:
@@ -54,8 +57,6 @@ namespace WGiBeat.Drawing
                         message = DetermineVersionMessage();
                         break;
                 }
-
-            }
 
             message = ScrollText(message);
             
