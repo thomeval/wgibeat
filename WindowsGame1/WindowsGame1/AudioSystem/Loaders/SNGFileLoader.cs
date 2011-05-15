@@ -81,7 +81,7 @@ namespace WGiBeat.AudioSystem.Loaders
                             _newSong.AudioFileMD5 = value;
                             break;
                         case "STOPS":
-                            //TODO: Complete
+                            ParseStops(value);
                             break;
                     }
                 }
@@ -121,6 +121,31 @@ namespace WGiBeat.AudioSystem.Loaders
                 }
 
                 _newSong.BPMs = result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to load song's BPM. ", ex);
+            }
+        }
+
+        private void ParseStops(string value)
+        {
+            //Example: STOPS=0.5:2.0,5.0:0.025,8.5:0.375
+            var result = new Dictionary<double, double>();
+            try
+            {
+
+                string[] pairs = value.Split(',');
+
+                foreach (string stopPair in pairs)
+                {
+                    var pieces = stopPair.Split(':');
+                    var stopKey = Convert.ToDouble(pieces[0], CultureInfo.InvariantCulture.NumberFormat);
+                    var stopValue = Convert.ToDouble(pieces[1], CultureInfo.InvariantCulture.NumberFormat);
+                    result.Add(stopKey, stopValue);
+                }
+
+                _newSong.Stops = result;
             }
             catch (Exception ex)
             {

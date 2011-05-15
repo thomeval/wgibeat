@@ -74,6 +74,7 @@ namespace WGiBeat.AudioSystem.Loaders
             sw.WriteLine("AudioFileMD5={0};", song.AudioFileMD5);
             sw.Close();
             
+            //TODO: Save Stops.
             Log.AddMessage(String.Format("Song file saved successfully: {0}\\{1}",song.Path,song.DefinitionFile),LogLevel.INFO);
         }
 
