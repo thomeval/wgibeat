@@ -1,4 +1,4 @@
-﻿WGiBeat - v0.6 Readme
+﻿WGiBeat - v0.75 Readme
 http://code.google.com/p/wgibeat/
 wgibeat{at}gmail{period}com
 By thomeval
@@ -30,7 +30,7 @@ Another important consideration for users running Windows Vista or 7: It is *str
 
 Usage and default keys
 ---------------------------------------------
-Start the game by running WGiBeat.exe
+Start the game by running WGiBeat.exe. A shortcut should be created automatically on the start menu if the installer is used.
 The game is controlled entirely with either a keyboard or an Xbox 360 controller. The following keys are used by default:
 
 Player 1:
@@ -63,7 +63,8 @@ X = Left
 A = Down
 S = Right
 RB or LB = Beatline
-Back = Select
+LT or RT = Select
+Back = Back
 Start = Start
 
 All keys can be changed from by Keys option in the main menu. To reset the assigned keys to default, delete the keys.conf file created by the game in the same folder.
@@ -77,8 +78,9 @@ Gameplay Explanation
 ----------------------------------------------
 For a tutorial on the basic gameplay of WGiBeat, please see the the How To Play screen, accessible from the main menu.
 
-For more help, please see the official website, or contact the official developers at the address given at the top of the readme.
+For more help, please see the official website, or contact the developers at the address given at the top of the readme.
 
 Compiling the source code
 ----------------------------------------------
 To compile your own version of WGiBeat from source, the same prerequisites are necessary as mentioned above, in addition to Visual Studio 2008, and XNA Game Studio 3.1. With these installed, the project can be loaded and compiled normally by opening the .sln file.
+For more information, or to join the development team, please contact the developers using the address given at the top of the readme.
