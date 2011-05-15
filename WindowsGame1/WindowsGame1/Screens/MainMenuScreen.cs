@@ -113,7 +113,7 @@ namespace WGiBeat.Screens
                 TextureManager.DrawString(spriteBatch,"Error: No songs loaded","DefaultFont", Core.Metrics["MainMenuNoSongsError", 0], Color.Black,FontAlign.LEFT);
             }
             DrawUpdater(spriteBatch);
-            
+            var temp = Core.Metrics["SomeRandomMetric", 0];
 
         }
 

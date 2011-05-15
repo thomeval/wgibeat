@@ -253,7 +253,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\MainMenu\MainMenuForeground.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\Common\MenuSelectedItem.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

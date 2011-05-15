@@ -81,8 +81,9 @@ namespace WGiBeat.Managers
                 }
                 catch (Exception)
                 {
-                    //TODO: Let this only happen once.
                     Log.AddMessage(String.Format("Metrics entry {0}[{1}] doesn't exist in the metrics file.",id,player),LogLevel.ERROR);
+                    this[id] = new Vector2[player+1];
+                    
                 }
                 return new Vector2();
                 

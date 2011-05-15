@@ -217,7 +217,6 @@ namespace WGiBeat.AudioSystem.Loaders
 
             var endPhrase = ParseNoteString(notes, false);
 
-            //TODO: Likely incorrect.
             song.Length = song.ConvertPhraseToMS(endPhrase + 0.5) / 1000.0;
             Log.AddMessage(String.Format("Song notes end at phrase {0}. Length set to {1}. ", endPhrase, song.Length), LogLevel.DEBUG);
         }
