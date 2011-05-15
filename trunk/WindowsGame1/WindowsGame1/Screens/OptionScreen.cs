@@ -97,6 +97,11 @@ namespace WGiBeat.Screens
             item.AddOption("On", true);
             _optionsMenu.AddItem(item);
 
+            item = new MenuItem {ItemText = "Check For Updates"};
+            item.AddOption("Off", false);
+            item.AddOption("On", true);
+            _optionsMenu.AddItem(item);
+
             item = new MenuItem { ItemText = "Save" };
             _optionsMenu.AddItem(item);
             item = new MenuItem { ItemText = "Cancel" };
@@ -208,7 +213,7 @@ namespace WGiBeat.Screens
                 _optionsMenu.GetByItemText("Allow Problematic Songs").SetSelectedByValue(Core.Settings.Get<object>("AllowProblematicSongs"));
                 _optionsMenu.GetByItemText("Convert Files to .sng").SetSelectedByValue(Core.Settings.Get<object>("ConvertToSNG"));
                 _optionsMenu.GetByItemText("Screen Resolution").SetSelectedByValue(Core.Settings.Get<object>("ScreenResolution"));
-
+                _optionsMenu.GetByItemText("Check For Updates").SetSelectedByValue(Core.Settings.Get<object>("CheckForUpdates"));
             }
             catch (Exception ex)
             {
@@ -230,6 +235,7 @@ namespace WGiBeat.Screens
             Core.Settings.Set("AllowProblematicSongs",_optionsMenu.GetByItemText("Allow Problematic Songs").SelectedValue());
             Core.Settings.Set("ConvertToSNG",_optionsMenu.GetByItemText("Convert Files to .sng").SelectedValue());
             Core.Settings.Set("ScreenResolution", _optionsMenu.GetByItemText("Screen Resolution").SelectedValue());
+            Core.Settings.Set("CheckForUpdates", _optionsMenu.GetByItemText("Check For Updates").SelectedValue());
             Core.Audio.SetMasterVolume((float)Core.Settings.Get<double>("SongVolume"));
             Core.Log.LogLevel = (LogLevel)Core.Settings.Get<int>("LogLevel");
             Core.Log.SaveLog = Core.Settings.Get<bool>("SaveLog");

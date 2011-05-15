@@ -384,7 +384,7 @@ namespace WGiBeat.Drawing
                                          "Slow", "80", "90", "100", "110", "120", "135", "150", "165", "180", "200", "Fast"
                                      };
 
-        private readonly int[] _bpmValues = {0,80,90,100,110,120,135,150,165,180,200,999};
+        private readonly int[] _bpmValues = {0,80,90,100,110,120,135,150,165,180,200,99999};
         private List<MenuItem> CreateBPMBookmarks()
         {
             var result = new List<MenuItem>();
@@ -436,7 +436,7 @@ namespace WGiBeat.Drawing
                     break;
                 case SongSortMode.BPM:
                     var temp = SongList[index].Song.StartBPM;
-                    value = (from e in _bpmValues where e >= temp select e).First();                   
+                    value = (from e in _bpmValues where e >= temp select e).FirstOrDefault();
                     break;
             }
 

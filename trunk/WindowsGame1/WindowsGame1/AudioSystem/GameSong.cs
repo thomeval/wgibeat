@@ -62,7 +62,8 @@ namespace WGiBeat.AudioSystem
         {
             get
             {
-                return BPMs.Values.First();
+                var firstKey = (from e in BPMs.Keys orderby e select e).First();
+                return BPMs[firstKey];
             }
             set
             {
