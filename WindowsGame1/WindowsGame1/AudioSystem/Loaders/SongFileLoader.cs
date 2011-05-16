@@ -72,9 +72,9 @@ namespace WGiBeat.AudioSystem.Loaders
             sw.WriteLine("Length={0};", Math.Round(song.Length, 3));
             sw.WriteLine("AudioFile={0};", song.AudioFile);
             sw.WriteLine("AudioFileMD5={0};", song.AudioFileMD5);
+            sw.WriteLine(SaveSongStops(song));
             sw.Close();
             
-            //TODO: Save Stops.
             Log.AddMessage(String.Format("Song file saved successfully: {0}\\{1}",song.Path,song.DefinitionFile),LogLevel.INFO);
         }
 
@@ -86,6 +86,25 @@ namespace WGiBeat.AudioSystem.Loaders
             {
                 result += Math.Round(key, 3);
                 result += ":" + Math.Round(song.BPMs[key], 3);
+                result += ",";
+            }
+            result = result.TrimEnd(',');
+            result += ";";
+            return result;
+        }
+
+        private string SaveSongStops(GameSong song)
+        {
+            if (song.Stops.Keys.Count <= 0)
+            {
+                return "";
+            }
+            var result = "Stops=";
+
+            foreach (double key in song.Stops.Keys)
+            {
+                result += Math.Round(key, 3);
+                result += ":" + Math.Round(song.Stops[key], 3);
                 result += ",";
             }
             result = result.TrimEnd(',');

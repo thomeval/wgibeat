@@ -838,7 +838,7 @@ namespace WGiBeat.Screens
             _songPlaying = false;
             Core.Players[0].Streak = 0;
             Core.Songs.StopCurrentSong();
-            _beatlineSet.Reset();
+            SetupBeatline();
             _noteJudgementSet.Reset();
         }
 
@@ -1112,10 +1112,9 @@ namespace WGiBeat.Screens
                         _cursorPosition = EditorCursorPosition.SONG_TUNING;
                         _startTime = null;
                         _songPlaying = false;
-                        _beatlineSet.EndingPhrase = NewGameSong.GetEndingTimeInPhrase();
-                        _beatlineSet.Bpm = NewGameSong.StartBPM;
-                        _beatlineSet.SetSpeeds();
-                        _beatlineSet.Reset();
+                        SetupBeatline();
+
+
                         _noteJudgementSet.Reset();
                         _numHits = 0;
                     }
@@ -1131,6 +1130,15 @@ namespace WGiBeat.Screens
                     }
                     break;
             }
+        }
+
+        private void SetupBeatline()
+        {
+            _beatlineSet.Reset();
+            _beatlineSet.EndingPhrase = NewGameSong.GetEndingTimeInPhrase();
+            _beatlineSet.Bpm = NewGameSong.StartBPM;
+            _beatlineSet.AddTimingPointMarkers(NewGameSong);
+            _beatlineSet.SetSpeeds();
         }
 
         private void DoMenuActionDeleteDetails(Menu menu)
