@@ -43,7 +43,7 @@ During this step, the details of the song are requested. The title, subtitle and
 
 == Step 3 ==
 
-During this step, all of the information needed for a song to be playable has already been provided. This step is used to fine-tune the information given in the previous step - particularly the AudioStart, Offset, BPM and Length fields. To do this, the song gameplay is simulated using a beatline. The song is then played and beatlines are shown as they would appear during actual gameplay. At any time, the BPM, Offset and Length can be adjusted by using the controls detailed at the bottom of this screen. It is also possible to increase the beatline speed for additional accuracy, or to restart the song.
+During this step, all of the information needed for a song to be playable has already been provided. This step is used to fine-tune the information given in the previous step - particularly the !AudioStart, Offset, BPM and Length fields. To do this, the song gameplay is simulated using a beatline. The song is then played and beatline notes are shown as they would appear during actual gameplay. At any time, the BPM, Offset and Length can be adjusted by using the controls detailed at the bottom of this screen. It is also possible to increase the beatline speed for additional accuracy, or to restart the song.
 
 To test whether the information given is accurate, try to hit the beatline notes using the BEATLINE key, and observe whether these appear to be hit late or early. The timing of each hit relative to the song will also be displayed, as well as the average timing. Use these timings to adjust the given information appropriately.
 
