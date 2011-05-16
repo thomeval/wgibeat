@@ -48,7 +48,7 @@ WGiBeat v0.7 has introduced a new feature to allow for quicker song list navigat
 When the song sort order is set to BPM, a list of common BPM's will be displayed in a similar fashion. Selecting one will cause the song list to jump to the first song that has a BPM equal to or faster than the selected BPM.
 
 ==Adding Menu Music==
-WGiBeat can play any provided audio as menu music during the game's various screens. By default, no menu music is provided. To add menu music, edit the MenuList.txt file inside the MenuMusic folder. This file defines which audio file should be played for each screen. To have "MyBackgroundMusic.mp3" play during the Main Menu Screen, use this line:
+WGiBeat can play any provided audio as menu music during the game's various screens. By default, no menu music is provided. To add menu music, edit the !MenuList.txt file inside the !MenuMusic folder. This file defines which audio file should be played for each screen. To have "!MyBackgroundMusic.mp3" play during the Main Menu Screen, use this line:
 
 `MainMenu=MyBackgroundMusic.mp3;`
 
