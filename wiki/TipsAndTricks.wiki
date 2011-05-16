@@ -98,7 +98,7 @@ WGiBeat supports loading songs from multiple folders. By default, songs are load
 ==Handling .sm and .dwi files==
 Since WGiBeat can load .sm and .dwi files from multiple folders, it is possible to load them directly from an existing Stepmania installation. To do this, add the Stepmania songs folder to the !SongFolder setting as shown above. Since WGiBeat needs to modify these files for them to work correctly, two options are provided, which affect how these files are treated.
 
-The first option, "Allow Problematic Songs", forces WGiBeat to load any .sm or .dwi file, even if they are known to be problematic - such as if they contain Stops or BPM changes. This feature is useful to bypass the restrictions normally placed on these songs by WGiBeat, although it is likely that such songs will not work correctly.
+The first option, "Allow Problematic Songs", forces WGiBeat to load any .sm or .dwi file, even if they are known to be problematic - such as if they contain negative BPMs. This feature is useful to bypass the restrictions normally placed on these songs by WGiBeat, although it is likely that such songs will not work correctly.
 
 The second option, "Convert Files to .sng", will convert any song found in .sm or .dwi format to the native .sng format. The original .sm and .dwi files are not modified, and are ignored if a corresponding .sng file exists. If this option is disabled, then all .sm and .dwi songs are loaded in Read Only mode, and no lasting changes can be made to them using song debugging (since doing so would cause these songs to play incorrectly in Stepmania). This option must be enabled to allow such changes to be persisted, while preserving them for other programs such as Stepmania.
 
