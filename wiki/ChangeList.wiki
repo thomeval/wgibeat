@@ -2,6 +2,19 @@
 
 =Version History=
 
+==0.75 - "Functional Mixture" ==
+
+* BPM Change and Stop support for song files! This includes:
+** Support for BPM changes and stops in .sng, .dwi or .sm format. The .sng format has changed slightly to incorporate these.
+** As a result, many previously broken .sm and .dwi files are now playable. Results will vary depending on how exactly the simfile was authored.
+** Support for saving files in .sng format with Stops and BPM changes.
+** Min and Max BPM is now displayed in the Song select screen.
+** BPM changes and Stops are indicated on Beatlines to warn players. 
+* Song and Audio type is now displayed in the Song Select Screen.
+* Better handling of missing textures or metrics definitions.
+* WGiBeat can now automatically check for updates from the internet. This option must be turned on in the Options Menu.
+* Bugfix: BPMs higher than 999 no longer crash the Song Sorter.
+
 ==0.7 (r443) - "Colour-blind Unionist" ==
 
  * Song total is now displayed in the Song Select screen.
