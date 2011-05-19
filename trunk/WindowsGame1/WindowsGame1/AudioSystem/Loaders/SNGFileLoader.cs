@@ -83,6 +83,9 @@ namespace WGiBeat.AudioSystem.Loaders
                         case "STOPS":
                             ParseStops(value);
                             break;
+                        case "BACKGROUND":
+                            _newSong.BackgroundFile = value;
+                            break;
                     }
                 }
 

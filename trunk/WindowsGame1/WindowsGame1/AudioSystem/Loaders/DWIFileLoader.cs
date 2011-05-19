@@ -121,7 +121,9 @@ namespace WGiBeat.AudioSystem.Loaders
                         break;
                     case "#FREEZE":
                         ParseStops(value);
-
+                        break;
+                    case "#BACKGROUND":
+                        _newSong.BackgroundFile = value;
                         break;
                 }
 
