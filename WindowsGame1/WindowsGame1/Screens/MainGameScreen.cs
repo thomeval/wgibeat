@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -120,12 +121,22 @@ namespace WGiBeat.Screens
                             {
                                 SpriteTexture = TextureManager.Textures("KOIndicator")
                             };
-            _background = new Sprite
+
+            if (File.Exists(_gameSong.Path + "\\" + _gameSong.BackgroundFile))
             {
-                Height = 600,
-                Width = 800,
-                SpriteTexture = TextureManager.Textures("MainGameScreenBackground"),
-            };
+                TextureManager.CreateAndAddTexture(_gameSong.Path + "\\" + _gameSong.BackgroundFile, "SongBackground");
+                _background = new Sprite { Height = 600, Width = 800, SpriteTexture = TextureManager.Textures("SongBackground") };
+            }
+            else
+            {
+                _background = new Sprite
+                {
+                    Height = 600,
+                    Width = 800,
+                    SpriteTexture = TextureManager.Textures("MainGameScreenBackground"),
+                };            
+            }
+   
         }
 
         private bool LargeBeatlinesSuitable()
@@ -443,6 +454,8 @@ namespace WGiBeat.Screens
 
         private void DrawBackground(SpriteBatch spriteBatch)
         {
+
+
             _background.Draw(spriteBatch);
         }
 

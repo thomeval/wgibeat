@@ -26,6 +26,7 @@ namespace WGiBeat.AudioSystem
         /// </summary>
         public string DefinitionFile { get; set; }
 
+        public string BackgroundFile { get; set; }
 
         public double Offset { get; set; }
         public double Length { get; set; }

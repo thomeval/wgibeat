@@ -73,9 +73,22 @@ namespace WGiBeat.AudioSystem.Loaders
             sw.WriteLine("AudioFile={0};", song.AudioFile);
             sw.WriteLine("AudioFileMD5={0};", song.AudioFileMD5);
             sw.WriteLine(SaveSongStops(song));
+            sw.WriteLine(SaveSongBackground(song));
             sw.Close();
             
             Log.AddMessage(String.Format("Song file saved successfully: {0}\\{1}",song.Path,song.DefinitionFile),LogLevel.INFO);
+        }
+
+        private string SaveSongBackground(GameSong song)
+        {
+            var result = "Background=";
+            if (String.IsNullOrEmpty(song.BackgroundFile))
+            {
+                return "";
+            }
+            
+            result += song.BackgroundFile + ";";
+            return result;
         }
 
         private string SaveSongBPMs(GameSong song)
