@@ -37,6 +37,8 @@ namespace WGiBeat.Drawing
 
         private const int NORMAL_HEIGHT = 34;
         private const int LARGE_HEIGHT = 68;
+        private const int LEFT_SIDE = 40;
+        private const int IMPACT_WIDTH = 5;
         public Beatline()
         {
             _beatlineNotes = new List<BeatlineNote>();
@@ -47,7 +49,7 @@ namespace WGiBeat.Drawing
         private void InitSprites()
         {
             this.Height = 40;
-            this.Width = 250;
+            this.Width = 350;
             _markerSprite = new SpriteMap
             {
                 Columns = 1,
@@ -70,7 +72,7 @@ namespace WGiBeat.Drawing
             {
                 SpriteTexture = TextureManager.Textures("BeatMeterLarge"),
                 Columns = 1,
-                Rows = 5
+                Rows = 5,
             };
             _beatlineEffects = new SpriteMap
                                    {
@@ -94,21 +96,6 @@ namespace WGiBeat.Drawing
          //   DrawEndPoints(spriteBatch, phraseNumber);
         }
 
-/*
-        private void DrawEndPoints(SpriteBatch spriteBatch, double phraseNumber)
-        {
-            var endpointBeatOffset = (int)(Speed * BEAT_ZOOM_DISTANCE * (phraseNumber - EndPhrase));
-
-            //Dont render endpoint if outside the visibility range.
-
-
-            var markerPosition = new Vector2 { X = this.X + 28 - (endpointBeatOffset) };
-            var markerHeight = Large ? LARGE_HEIGHT : NORMAL_HEIGHT;
-            markerPosition.Y = Large ? this.Y + 6 : this.Y + 3;
-            _markerSprite.ColorShading.A = 255;
-            _markerSprite.Draw(spriteBatch, 4, 1, markerHeight, markerPosition);
-        }
-*/
 
         private void DrawPulse(SpriteBatch spriteBatch, double phraseNumber)
         {
@@ -119,7 +106,7 @@ namespace WGiBeat.Drawing
             _pulseSprite.Width = (int)(80 * (Math.Ceiling(phraseNumber) - (phraseNumber)));
             _pulseSprite.ColorShading.A = (byte)(_pulseSprite.Width * 255 / 80);
             _pulseSprite.Height = this.Height;
-            _pulseSprite.SetPosition(this.X + 30, this.Y - 3);
+            _pulseSprite.SetPosition(this.X + LEFT_SIDE + IMPACT_WIDTH, this.Y - 3);
             _pulseSprite.DrawTiled(spriteBatch, 83 - _pulseSprite.Width, 0, _pulseSprite.Width, 36);
         }
 
@@ -131,7 +118,7 @@ namespace WGiBeat.Drawing
                 var markerBeatOffset = (int)(Speed * BEAT_ZOOM_DISTANCE * (phraseNumber - bn.Position));
 
                 //Dont render notes outside the visibility range.
-                if (((-1 * markerBeatOffset) > BEAT_ZOOM_DISTANCE * BEAT_VISIBILITY) && (!bn.Hit))
+                if (((-1 * markerBeatOffset) > this.Width - LEFT_SIDE) && (!bn.Hit))
                 {
                     continue;
                 }
@@ -140,16 +127,23 @@ namespace WGiBeat.Drawing
                 markerPosition.Y = Large ? this.Y + 6 : this.Y + 3;
                 if (bn.Hit)
                 {
-                    markerPosition.X = this.X + 28 + (bn.DisplayPosition);
+                    var absPosition = LEFT_SIDE + (bn.DisplayPosition);
+                    absPosition = Math.Min(this.Width, absPosition);
+                    absPosition = Math.Max(0, absPosition);
+                    markerPosition.X = this.X + absPosition;
                     _markerSprite.ColorShading.A = 128;
                 }
                 else
                 {
-                    markerPosition.X = this.X + 28 - (markerBeatOffset);
-
+                    markerPosition.X = this.X + LEFT_SIDE - (markerBeatOffset);
+                    var distTravelled = this.Width - LEFT_SIDE + markerBeatOffset;
                     if (markerBeatOffset > 0)
                     {
                         _markerSprite.ColorShading.A = (byte)(Math.Max(0, 255 - 10 * markerBeatOffset));
+                    }
+                    else if (distTravelled < 35)
+                    {
+                        _markerSprite.ColorShading.A = (byte)(7 * distTravelled);
                     }
                     else
                     {
@@ -160,7 +154,7 @@ namespace WGiBeat.Drawing
                 var effectHeight = Large ? LARGE_HEIGHT : NORMAL_HEIGHT;
 
                 int noteIdx = 0;
-                int width = 5;
+                int width = IMPACT_WIDTH;
 
                 switch (bn.NoteType)
                 {

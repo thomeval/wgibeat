@@ -35,6 +35,7 @@ SyncLevelBarBase=[294,75][250,500];
 SyncHitsBar=[510,45][193,500];
 SyncHitsText=[535,50][225,505];
 SyncPlayerDifficulties=[215,50][520,505];
+MainGameTextBackground=[0,270];
 
 #Main Menu;
 MainMenuOptions=[250,150][250,225][250,275][250,325][250,375][250,425][250,475][250,525];

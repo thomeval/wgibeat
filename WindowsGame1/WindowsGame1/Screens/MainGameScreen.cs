@@ -39,6 +39,7 @@ namespace WGiBeat.Screens
         private Sprite _koSprite;
         private Sprite _clearSprite;
         private Sprite _background;
+        private Sprite _textBackground;
 
         public MainGameScreen(GameCore core)
             : base(core)
@@ -136,7 +137,12 @@ namespace WGiBeat.Screens
                     SpriteTexture = TextureManager.Textures("MainGameScreenBackground"),
                 };            
             }
-   
+
+            _textBackground = new Sprite
+                                  {
+                                      SpriteTexture = TextureManager.Textures("MainGameTextBackground"),
+                                      Position = Core.Metrics["MainGameTextBackground", 0]
+                                  };
         }
 
         private bool LargeBeatlinesSuitable()
@@ -426,7 +432,7 @@ namespace WGiBeat.Screens
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             DrawBackground(spriteBatch);
-            DrawBorders(spriteBatch);
+            //DrawBorders(spriteBatch);
 
             //Draw the notebars.
           _noteBarSet.Draw(spriteBatch);
@@ -455,8 +461,8 @@ namespace WGiBeat.Screens
         private void DrawBackground(SpriteBatch spriteBatch)
         {
 
-
             _background.Draw(spriteBatch);
+            _textBackground.Draw(spriteBatch);
         }
 
         private void DrawCountdowns(SpriteBatch spriteBatch)
