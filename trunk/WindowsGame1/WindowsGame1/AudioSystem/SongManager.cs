@@ -22,6 +22,7 @@ namespace WGiBeat.AudioSystem
         public AudioManager AudioManager { get; set; }
         public SettingsManager SettingsManager { get; set; }
         public readonly Dictionary<string, SongFileLoader> Loaders = new Dictionary<string, SongFileLoader>();
+        private double _cachedAudioStart;
 
         /// <summary>
         /// Returns all songs stored in the Manager.
@@ -87,6 +88,21 @@ namespace WGiBeat.AudioSystem
             //TODO: Fade in if appropriate.
             AudioManager.SetPosition(_songChannelIndex, Math.Max(0.0, 1000 * (song.AudioStart - 0.5)));
             return _songChannelIndex;
+        }
+
+        public int PreloadSong(GameSong song)
+        {
+            var preloadChannelIndex = AudioManager.PlaySoundEffect(song.Path + "\\" + song.AudioFile, false, true,true);
+            _cachedAudioStart = Math.Max(0.0, 1000*(song.AudioStart - 0.5));
+            
+            return preloadChannelIndex;
+        }
+
+        public void PlayCachedSong(int channelIndex)
+        {
+            AudioManager.SetPosition(channelIndex, _cachedAudioStart);
+            AudioManager.SetChannelPause(channelIndex, false);
+            _songChannelIndex = channelIndex;
         }
 
         /// <summary>
