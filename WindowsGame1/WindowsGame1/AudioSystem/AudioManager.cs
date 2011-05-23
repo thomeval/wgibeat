@@ -57,6 +57,51 @@ namespace WGiBeat.AudioSystem
         #endregion
 
         #region Sound Effect System
+
+        /// <summary>
+        /// Loads and immediately plays any audio file given, as a stream. Each sound effect is
+        /// given its own channel - the channel allocated to the provided audio file is the return
+        /// value. Because it is loaded as a stream, this occurs quickly.
+        /// </summary>
+        /// <param name="soundPath">The path and filename to the audio file to play.</param>
+        /// <param name="loop">Whether the audio file should loop. Set to false for the audio file to play only once.</param>
+        /// <param name="dontStream">Whether the audio file should be loaded fully into memory before being played
+        /// (recommended for song audio), but will cause delays.</param>
+        /// <param name="loadPaused">Whether the audio file should be loaded but not played immediately. Useful for
+        /// 'caching' audio large audio files.</param>
+        /// <returns>The channel ID allocated by Fmod to the channel. Use this to control the playback.</returns>
+        public int PlaySoundEffect(string soundPath, bool loop, bool dontStream, bool loadPaused)
+        {
+            if (!File.Exists(soundPath))
+            {
+                return PlayFallbackSoundEffect();
+            }
+
+            var mySound = GetOrCreateSound(soundPath, !dontStream);
+            var myChannel = new Channel();
+
+            var mode = (uint)MODE.SOFTWARE;
+
+            if (loop)
+            {
+                mode += (uint)MODE.LOOP_NORMAL;
+
+            }
+            if (!dontStream)
+            {
+                mode += (uint)MODE.CREATESTREAM;
+
+            }
+
+            CheckFMODErrors(mySound.setMode((MODE)mode));
+            CheckFMODErrors(_fmodSystem.playSound(CHANNELINDEX.FREE, mySound, loadPaused, ref myChannel));
+            CheckFMODErrors(myChannel.setVolume(_masterVolume));
+            int index = -1;
+            CheckFMODErrors(myChannel.getIndex(ref index));
+
+            return index;
+        }
+
         /// <summary>
         /// Loads and immediately plays any audio file given, as a stream. Each sound effect is
         /// given its own channel - the channel allocated to the provided audio file is the return
@@ -69,34 +114,7 @@ namespace WGiBeat.AudioSystem
         /// <returns>The channel ID allocated by Fmod to the channel. Use this to control the playback.</returns>
         public int PlaySoundEffect(string soundPath, bool loop, bool dontStream)
         {
-            if (!File.Exists(soundPath))
-            {
-                return PlayFallbackSoundEffect();
-            }
-
-            var mySound = GetOrCreateSound(soundPath,!dontStream);
-            var myChannel = new Channel();
-
-            var mode = (uint) MODE.SOFTWARE;
-
-            if (loop)
-            {
-                mode += (uint)MODE.LOOP_NORMAL;
-
-            }
-            if (!dontStream)
-            {
-                mode += (uint) MODE.CREATESTREAM;
-
-            }
-
-            CheckFMODErrors(mySound.setMode((MODE) mode));
-            CheckFMODErrors(_fmodSystem.playSound(CHANNELINDEX.FREE, mySound, false, ref myChannel));
-            CheckFMODErrors(myChannel.setVolume(_masterVolume));
-            int index = -1;
-            CheckFMODErrors(myChannel.getIndex(ref index));
-
-            return index;
+            return PlaySoundEffect(soundPath, loop, dontStream, false);
         }
 
 
@@ -308,6 +326,12 @@ namespace WGiBeat.AudioSystem
             return playing;
         }
 
+        public void SetChannelPause(int index, bool paused)
+        {
+            CheckFMODErrors(_fmodSystem.getChannel(index, ref _tmpChannel));
+            CheckFMODErrors(_tmpChannel.setPaused(paused));
+        }
+
         /// <summary>
         /// Gets the length of the sound playing in a given Channel ID.
         /// </summary>
@@ -355,5 +379,8 @@ namespace WGiBeat.AudioSystem
             return result;
 
         }
+
+
+
     }
 }

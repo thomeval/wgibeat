@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
+using WGiBeat.Helpers;
 using WGiBeat.Managers;
 using WGiBeat.Players;
 
@@ -21,7 +23,8 @@ namespace WGiBeat.Screens
         private Sprite _listBackend;
         private Sprite _songCountBase;
         private bool _previewStarted;
-        
+        private PreloadState _preloadState;
+
         private BpmMeter _bpmMeter;
         private SongSortDisplay _songSortDisplay;
         private SongTypeDisplay _songTypeDisplay;
@@ -32,6 +35,7 @@ namespace WGiBeat.Screens
         private int _songListDrawOffset;
         private const int LISTITEMS_DRAWN = 13;
         private const double SONG_CHANGE_SPEED = 0.9;
+        private byte _songListDrawOpacity;
 
         private readonly SineSwayParticleField _field = new SineSwayParticleField();
 
@@ -42,17 +46,20 @@ namespace WGiBeat.Screens
             get { return _songList[_selectedIndex].Song; }
         }
 
-        public SongSelectScreen(GameCore core) : base(core)
-        {           
+        public SongSelectScreen(GameCore core)
+            : base(core)
+        {
         }
 
         public override void Initialize()
         {
-            _songSortDisplay = new SongSortDisplay {Position = (Core.Metrics["SongSortDisplay", 0])};
+            _songSortDisplay = new SongSortDisplay { Position = (Core.Metrics["SongSortDisplay", 0]) };
             _songSortDisplay.InitSprites();
+            _songListDrawOpacity = 255;
             Crossfader = Core.Crossfader;
+            _preloadState = PreloadState.NOT_LOADING;
             _previewStarted = false;
-            
+
             _highScoreFrame = new HighScoreFrame
                                   {
                                       EnableFadeout = false,
@@ -60,26 +67,25 @@ namespace WGiBeat.Screens
                                   };
 
             _highScoreFrame.InitSprites();
-            _bpmMeter = new BpmMeter {Position = (Core.Metrics["BPMMeter", 0])};
+            _bpmMeter = new BpmMeter { Position = (Core.Metrics["BPMMeter", 0]) };
 
             _playerOptionsSet = new PlayerOptionsSet { Players = Core.Players, Positions = Core.Metrics["PlayerOptionsFrame"], CurrentGameType = (GameType)Core.Cookies["CurrentGameType"] };
             _playerOptionsSet.GameTypeInvalidated += delegate
                                                          { Core.ScreenTransition("MainMenu"); };
             _playerOptionsSet.CreatePlayerOptionsFrames();
 
-                CreateSongList();
+            CreateSongList();
 
-                var lastSongHash = Core.Settings.Get<int>("LastSongPlayed");
-                var lastSong = (from e in _songList where e.Song.GetHashCode() == lastSongHash select e).FirstOrDefault();
-                if (lastSong != null)
-                {
-                    _selectedIndex = _songList.IndexOf(lastSong);
-                    _songSortDisplay.SelectedSongIndex = _selectedIndex;
-                }
+            var lastSongHash = Core.Settings.Get<int>("LastSongPlayed");
+            var lastSong = (from e in _songList where e.Song.GetHashCode() == lastSongHash select e).FirstOrDefault();
+            if (lastSong != null)
+            {
+                _selectedIndex = _songList.IndexOf(lastSong);
+                _songSortDisplay.SelectedSongIndex = _selectedIndex;
+            }
 
 
-            _songTypeDisplay = new SongTypeDisplay
-                                   {Position = Core.Metrics["SongTypeDisplay", 0], Width = 112, Height = 42};
+            _songTypeDisplay = new SongTypeDisplay { Position = Core.Metrics["SongTypeDisplay", 0], Width = 112, Height = 42 };
             InitSprites();
 
             base.Initialize();
@@ -113,7 +119,7 @@ namespace WGiBeat.Screens
                                    Width = 50,
                                    Position = (Core.Metrics["SongListBackend", 0])
                                };
-            _songCountBase = new Sprite {SpriteTexture = TextureManager.Textures("SongCountBase"), Position = Core.Metrics["SongCountDisplay",0]};
+            _songCountBase = new Sprite { SpriteTexture = TextureManager.Textures("SongCountBase"), Position = Core.Metrics["SongCountDisplay", 0] };
         }
 
         private void CreateSongList()
@@ -121,29 +127,34 @@ namespace WGiBeat.Screens
             _songList.Clear();
             foreach (GameSong song in Core.Songs.Songs)
             {
-                _songList.Add(new SongListItem {Height = 50, Song = song, Width = 380, TextMaxWidth = 325});
+                _songList.Add(new SongListItem { Height = 50, Song = song, Width = 380, TextMaxWidth = 325 });
             }
             _songSortDisplay.SongList = _songList;
             _songSortDisplay.SongSortMode = SongSortMode.TITLE;
             _highScoreFrame.HighScoreEntry = GetDisplayedHighScore((GameType)Core.Cookies["CurrentGameType"]);
         }
 
-  
+
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             DrawBackground(spriteBatch);
             DrawPlayerOptions(spriteBatch);
             DrawHighScoreFrame(spriteBatch);
-            
+
             DrawWaveForm(spriteBatch);
             _songTypeDisplay.Draw(spriteBatch);
-            DrawBpmMeter(gameTime, spriteBatch);
-            
+            DrawBpmMeter(spriteBatch);
+
             DrawSongList(spriteBatch);
             _headerSprite.Draw(spriteBatch);
             DrawSongCount(spriteBatch);
             _songSortDisplay.Draw(spriteBatch);
+
+            if (_preloadState == PreloadState.LOADING_STARTED)
+            {
+                TextureManager.DrawString(spriteBatch, "Loading...", "LargeFont", new Vector2(40, 100), Color.Black, FontAlign.LEFT);
+            }
 
         }
 
@@ -162,7 +173,7 @@ namespace WGiBeat.Screens
         private void DrawWaveForm(SpriteBatch spriteBatch)
         {
             _spectrumBackground.Draw(spriteBatch);
-            
+
             if (Crossfader.ChannelIndexCurrent != -1)
             {
                 float[] levels = Core.Audio.GetChannelSpectrum(Crossfader.ChannelIndexCurrent, WAVEFORM_POINTS);
@@ -176,12 +187,12 @@ namespace WGiBeat.Screens
                 int posX = 0;
 
                 var averageLevels = new float[levels.Count() / WAVEFORM_CLUSTER_SIZE];
-      
-                for (int x = 0; x < averageLevels.Count() - 4; x++ )
+
+                for (int x = 0; x < averageLevels.Count() - 4; x++)
                 {
                     averageLevels[x] = levels.Skip(WAVEFORM_CLUSTER_SIZE * x).Take(WAVEFORM_CLUSTER_SIZE).Average();
-                   // averageLevels[x] = averageLevels[x]* 2 * (float) Math.Pow(x, 1.5);  
-                      averageLevels[x] = Math.Min(1, averageLevels[x] * 8 * (x + 1));
+                    // averageLevels[x] = averageLevels[x]* 2 * (float) Math.Pow(x, 1.5);  
+                    averageLevels[x] = Math.Min(1, averageLevels[x] * 8 * (x + 1));
 
                     if (averageLevels[x] >= _maxLevels[x])
                     {
@@ -191,39 +202,39 @@ namespace WGiBeat.Screens
                     {
                         _dropSpeed[x] += 0.0005f;
                     }
-                        _maxLevels[x] = Math.Max(averageLevels[x], _maxLevels[x] - _dropSpeed[x]);
+                    _maxLevels[x] = Math.Max(averageLevels[x], _maxLevels[x] - _dropSpeed[x]);
 
-                        line.AddVector(new Vector2(posX, 0));
-                        line.AddVector(new Vector2(posX, -65 * averageLevels[x]));
-                        line.AddVector(new Vector2(posX + 6, -65 * averageLevels[x]));
-                        posX += 6;
-                    }
-  
+                    line.AddVector(new Vector2(posX, 0));
+                    line.AddVector(new Vector2(posX, -65 * averageLevels[x]));
+                    line.AddVector(new Vector2(posX + 6, -65 * averageLevels[x]));
+                    posX += 6;
+                }
+
                 line.Render(spriteBatch);
 
                 posX = 0;
                 for (int x = 0; x < _maxLevels.Count(); x++)
                 {
                     line.ClearVectors();
- 
+
                     line.AddVector(new Vector2(posX, -65 * _maxLevels[x]));
                     line.AddVector(new Vector2(posX + 6, -65 * _maxLevels[x]));
                     line.Render(spriteBatch);
-                    posX += 6; 
-                    
+                    posX += 6;
+
                 }
             }
         }
-        private void DrawBpmMeter(GameTime gameTime, SpriteBatch spriteBatch)
+        private void DrawBpmMeter(SpriteBatch spriteBatch)
         {
 
             if (Core.Settings.Get<bool>("SongPreview") && Crossfader.ChannelIndexCurrent > -1)
             {
 
                 var actualTime = Core.Audio.GetChannelPosition(Crossfader.ChannelIndexCurrent);
-                _bpmMeter.SongTime = CurrentSong.ConvertMSToPhrase(actualTime)*4;
-             //   TextureManager.DrawString(spriteBatch,String.Format("{0:F3}",actualTime),"DefaultFont",new Vector2(20,140),Color.Black,FontAlign.LEFT);
-            //    TextureManager.DrawString(spriteBatch, String.Format("{0:F3}", CurrentSong.ConvertMSToPhrase(actualTime) * 1), "DefaultFont", new Vector2(50, 120), Color.Black, FontAlign.LEFT);
+                _bpmMeter.SongTime = CurrentSong.ConvertMSToPhrase(actualTime) * 4;
+                //   TextureManager.DrawString(spriteBatch,String.Format("{0:F3}",actualTime),"DefaultFont",new Vector2(20,140),Color.Black,FontAlign.LEFT);
+                //    TextureManager.DrawString(spriteBatch, String.Format("{0:F3}", CurrentSong.ConvertMSToPhrase(actualTime) * 1), "DefaultFont", new Vector2(50, 120), Color.Black, FontAlign.LEFT);
 
             }
             else
@@ -236,7 +247,7 @@ namespace WGiBeat.Screens
 
         private void DrawHighScoreFrame(SpriteBatch spriteBatch)
         {
-            var cgt = HighScoreManager.TranslateGameType((GameType) Core.Cookies["CurrentGameType"]);
+            var cgt = HighScoreManager.TranslateGameType((GameType)Core.Cookies["CurrentGameType"]);
             _highScoreFrame.HighScoreEntry = GetDisplayedHighScore(cgt);
             _highScoreFrame.Draw(spriteBatch);
         }
@@ -245,7 +256,7 @@ namespace WGiBeat.Screens
         {
             Core.HighScores.CurrentSong = _songList[_selectedIndex].Song;
             var highScoreEntry =
-                Core.HighScores.GetHighScoreEntry(_songList[_selectedIndex].Song.GetHashCode(),gameType);
+                Core.HighScores.GetHighScoreEntry(_songList[_selectedIndex].Song.GetHashCode(), gameType);
             return highScoreEntry;
         }
 
@@ -263,14 +274,25 @@ namespace WGiBeat.Screens
 
         private void DrawSongList(SpriteBatch spriteBatch)
         {
+            if (_preloadState == PreloadState.LOADING_STARTED)
+            {
+                _songListDrawOpacity = (byte) Math.Max(0, _songListDrawOpacity - 5);
+            }
             _listBackend.Draw(spriteBatch);
 
             var midpoint = Core.Metrics["SongListMidpoint", 0];
             midpoint.Y += _songListDrawOffset;
+
+ 
             _songList[_selectedIndex].Position = (midpoint);
             _songList[_selectedIndex].IsSelected = true;
+            _songList[_selectedIndex].Opacity = 255;
             _songList[_selectedIndex].Draw(spriteBatch);
 
+            foreach (SongListItem sli in _songList)
+            {
+                sli.Opacity = _songListDrawOpacity;
+            }
             //Draw SongListItems below (after) the selected one.
             for (int x = 1; x <= LISTITEMS_DRAWN; x++)
             {
@@ -279,7 +301,7 @@ namespace WGiBeat.Screens
                 _songList[(_selectedIndex + x) % _songList.Count].Position = (midpoint);
                 _songList[(_selectedIndex + x) % _songList.Count].Draw(spriteBatch);
             }
-         
+
             midpoint.Y -= 50 * LISTITEMS_DRAWN;
             int index = _selectedIndex;
 
@@ -298,7 +320,7 @@ namespace WGiBeat.Screens
             }
 
             midpoint.Y -= _songListDrawOffset;
-            _songListDrawOffset = (int) (_songListDrawOffset * SONG_CHANGE_SPEED);
+            _songListDrawOffset = (int)(_songListDrawOffset * SONG_CHANGE_SPEED);
 
         }
 
@@ -314,15 +336,25 @@ namespace WGiBeat.Screens
 
                 if (previewsOn)
                 {
-                    Crossfader.SetPreviewedSong(CurrentSong,true);
+                    Crossfader.SetPreviewedSong(CurrentSong, true);
                 }
             }
 
+            if (_preloadState == PreloadState.LOADING_FINISHED)
+            {
+                Crossfader.StopBoth();
+                Core.Settings.Set("LastSongPlayed", CurrentSong.GetHashCode());
+                Core.ScreenTransition("MainGame");
+            }
             base.Update(gameTime);
         }
 
         public override void PerformAction(InputAction inputAction)
         {
+            if (_preloadState == PreloadState.LOADING_STARTED)
+            {
+                return;
+            }
 
             var pass = _playerOptionsSet.PerformAction(inputAction);
             if (pass)
@@ -331,16 +363,15 @@ namespace WGiBeat.Screens
                 return;
             }
 
-            
             pass = _songSortDisplay.PerformAction(inputAction);
             if (pass)
             {
-                
+
                 JumpToBookmark();
                 return;
             }
-                
-            
+
+
             //Ignore inputs from players not playing EXCEPT for system keys.
             if ((inputAction.Player > 0) && (!Core.Players[inputAction.Player - 1].IsHumanPlayer))
             {
@@ -350,11 +381,10 @@ namespace WGiBeat.Screens
             switch (inputAction.Action)
             {
                 case "UP":
-
-                        MoveSelectionUp();
+                    MoveSelectionUp();
                     break;
                 case "DOWN":
-                        MoveSelectionDown(); 
+                    MoveSelectionDown();
                     break;
                 case "BEATLINE":
                     _songSortDisplay.Active = true;
@@ -373,17 +403,17 @@ namespace WGiBeat.Screens
         }
 
         private void JumpToBookmark()
-        {    
+        {
             _selectedIndex = _songSortDisplay.SelectedSongIndex;
             _previewStarted = false;
         }
 
         private void CheckCPUDifficulty()
         {
-           if (((GameType) Core.Cookies["CurrentGameType"]) != GameType.VS_CPU)
-           {
-               return;
-           }
+            if (((GameType)Core.Cookies["CurrentGameType"]) != GameType.VS_CPU)
+            {
+                return;
+            }
             if ((from e in Core.Players where e.IsHumanPlayer select e).Count() == 0)
             {
                 return;
@@ -413,7 +443,7 @@ namespace WGiBeat.Screens
 
         private void StartSong()
         {
-            Crossfader.StopBoth();
+
             Core.Cookies["CurrentSong"] = CurrentSong;
             if (((GameType)Core.Cookies["CurrentGameType"]) == GameType.SYNC)
             {
@@ -426,10 +456,25 @@ namespace WGiBeat.Screens
             }
             if (!File.Exists(CurrentSong.Path + "\\" + CurrentSong.AudioFile))
             {
-                Core.Cookies.Add("Panic",true);
+                Core.Cookies.Add("Panic", true);
+                _preloadState = PreloadState.LOADING_FINISHED;
             }
-            Core.Settings.Set("LastSongPlayed", CurrentSong.GetHashCode());
-            Core.ScreenTransition("MainGame");
+            else
+            {
+                _songLoadingThread = new Thread(StartSongLoading) { Name = "Song Loading Thread" };
+                _songLoadingThread.Start();
+            }
+
+        }
+
+        private Thread _songLoadingThread;
+        private void StartSongLoading(object state)
+        {
+            _preloadState = PreloadState.LOADING_STARTED;
+            System.Diagnostics.Debug.WriteLine("Preload started...");
+            Core.Cookies["GameSongChannel"] = Core.Songs.PreloadSong(CurrentSong);
+            System.Diagnostics.Debug.WriteLine("Preload done.");
+            _preloadState = PreloadState.LOADING_FINISHED;
         }
 
         private void MoveSelectionUp()
@@ -445,11 +490,18 @@ namespace WGiBeat.Screens
 
         private void MoveSelectionDown()
         {
-            _selectedIndex = (_selectedIndex + 1)%_songList.Count();
+            _selectedIndex = (_selectedIndex + 1) % _songList.Count();
             _previewStarted = false;
             _songListDrawOffset += 50;
 
         }
 
-    } 
+    }
+
+    public enum PreloadState
+    {
+        NOT_LOADING,
+        LOADING_STARTED,
+        LOADING_FINISHED
+    }
 }

@@ -161,7 +161,7 @@ namespace WGiBeat.Screens
 
             if (_startTime == null)
             {
-                Core.Songs.PlaySong(_gameSong);
+                Core.Songs.PlayCachedSong((int) Core.Cookies["GameSongChannel"]);
                 _startTime = new TimeSpan(gameTime.TotalRealTime.Ticks);
             }
             _timeElapsed = (int)(gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay);
