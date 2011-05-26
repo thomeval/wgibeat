@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
-using WGiBeat.Helpers;
 using WGiBeat.Managers;
 using WGiBeat.Players;
 
@@ -138,9 +137,16 @@ namespace WGiBeat.Screens
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+
+
             DrawBackground(spriteBatch);
             DrawPlayerOptions(spriteBatch);
             DrawHighScoreFrame(spriteBatch);
+
+            if (_preloadState == PreloadState.LOADING_STARTED)
+            {
+                TextureManager.DrawString(spriteBatch, "Loading...", "LargeFont", Core.Metrics["SongSelectLoadingMessage", 0], Color.Black, FontAlign.LEFT);
+            }
 
             DrawWaveForm(spriteBatch);
             _songTypeDisplay.Draw(spriteBatch);
@@ -150,11 +156,6 @@ namespace WGiBeat.Screens
             _headerSprite.Draw(spriteBatch);
             DrawSongCount(spriteBatch);
             _songSortDisplay.Draw(spriteBatch);
-
-            if (_preloadState == PreloadState.LOADING_STARTED)
-            {
-                TextureManager.DrawString(spriteBatch, "Loading...", "LargeFont", new Vector2(40, 100), Color.Black, FontAlign.LEFT);
-            }
 
         }
 

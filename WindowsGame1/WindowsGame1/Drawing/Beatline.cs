@@ -31,10 +31,6 @@ namespace WGiBeat.Drawing
         //Increase this to make them move faster and more apart.
         const int BEAT_ZOOM_DISTANCE = 200;
 
-        //Prevent notes from being drawn outside the beatline base.
-        //Higher means longer visibility range.
-        public const double BEAT_VISIBILITY = 1.1;
-
         private const int NORMAL_HEIGHT = 34;
         private const int LARGE_HEIGHT = 68;
         private const int LEFT_SIDE = 40;

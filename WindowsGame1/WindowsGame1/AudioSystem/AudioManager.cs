@@ -146,6 +146,7 @@ namespace WGiBeat.AudioSystem
             var mySound = new Sound();
             CheckFMODErrors(_fmodSystem.createStream(filename, MODE.SOFTWARE, ref mySound));
 
+            
             int tagsCount = 0, tagsUpdated = 0;
             CheckFMODErrors(mySound.getNumTags(ref tagsCount, ref tagsUpdated));
             var tagResult = new TAG();
@@ -169,7 +170,12 @@ namespace WGiBeat.AudioSystem
 
                 result[tagResult.name.ToUpper()] =  data;
             }
+
+            uint length = 0;
+            CheckFMODErrors(mySound.getLength(ref length, TIMEUNIT.MS));
+            result["LENGTH"] = length.ToString();
             CheckFMODErrors(mySound.release());
+
             return result;
 
         }
