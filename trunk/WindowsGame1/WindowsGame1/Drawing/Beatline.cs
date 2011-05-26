@@ -17,10 +17,12 @@ namespace WGiBeat.Drawing
         public int Id { get; set; }
         public bool DisablePulse { get; set; }
         private SpriteMap _markerSprite;
-        private Sprite _pulseSprite;
         private SpriteMap _baseSprite;
         private SpriteMap _largeBaseSprite;
         private SpriteMap _beatlineEffects;
+        private SpriteMap _pulseFront;
+        private SpriteMap _pulseBack;
+        private byte _pulseFrontOpacity;
 
         public bool Large { get; set; }
 
@@ -54,10 +56,19 @@ namespace WGiBeat.Drawing
 
             };
 
-            _pulseSprite = new Sprite
+            _pulseFront = new SpriteMap
             {
-                SpriteTexture = TextureManager.Textures("BeatFlame")
+                SpriteTexture = TextureManager.Textures("BeatMeterPulseFront"),
+                Rows = 5,
+                Columns = 1,
             };
+
+            _pulseBack = new SpriteMap
+                             {
+                                 SpriteTexture = TextureManager.Textures("BeatMeterPulseBack"),
+                                 Rows = 5,
+                                 Columns = 1,
+                             };
             _baseSprite = new SpriteMap
             {
                 SpriteTexture = TextureManager.Textures("BeatMeter"),
@@ -86,26 +97,39 @@ namespace WGiBeat.Drawing
         public void Draw(SpriteBatch spriteBatch, double phraseNumber)
         {
             this.Height = Large ? 80 : 40;
-            DrawPulse(spriteBatch, phraseNumber);
+            DrawPulseBack(spriteBatch, phraseNumber);
+            DrawPulseFront(spriteBatch);
             DrawBase(spriteBatch);
             DrawNotes(spriteBatch, phraseNumber);
-         //   DrawEndPoints(spriteBatch, phraseNumber);
         }
 
 
-        private void DrawPulse(SpriteBatch spriteBatch, double phraseNumber)
+        private void DrawPulseBack(SpriteBatch spriteBatch, double phraseNumber)
+        {
+            if (DisablePulse || phraseNumber < 0.0)
+            {
+                return;
+            }
+            var phraseDecimal =  (phraseNumber - (int) phraseNumber);
+            phraseDecimal = Math.Max(1 - (phraseDecimal*6),0);
+            _pulseBack.ColorShading.A = (byte)(phraseDecimal * 255);
+            var markerPosition = new Vector2 { X = this.X, Y = Large ? this.Y + 6 : this.Y + 3 };
+            var markerHeight = Large ? LARGE_HEIGHT : NORMAL_HEIGHT;
+            _pulseBack.Draw(spriteBatch,Id,LEFT_SIDE,markerHeight,markerPosition);
+        }
+
+        private void DrawPulseFront(SpriteBatch spriteBatch)
         {
             if (DisablePulse)
             {
                 return;
             }
-            _pulseSprite.Width = (int)(80 * (Math.Ceiling(phraseNumber) - (phraseNumber)));
-            _pulseSprite.ColorShading.A = (byte)(_pulseSprite.Width * 255 / 80);
-            _pulseSprite.Height = this.Height;
-            _pulseSprite.SetPosition(this.X + LEFT_SIDE + IMPACT_WIDTH, this.Y - 3);
-            _pulseSprite.DrawTiled(spriteBatch, 83 - _pulseSprite.Width, 0, _pulseSprite.Width, 36);
+            var markerPosition = new Vector2 { X = this.X + LEFT_SIDE + IMPACT_WIDTH, Y = Large ? this.Y + 6 : this.Y + 3 };
+            var markerHeight = Large ? LARGE_HEIGHT : NORMAL_HEIGHT;
+            _pulseFront.ColorShading.A = _pulseFrontOpacity;
+            _pulseFront.Draw(spriteBatch, Id, this.Width - LEFT_SIDE, markerHeight, markerPosition);
+            _pulseFrontOpacity = (byte)Math.Max(0, _pulseFrontOpacity - 20);
         }
-
 
         private void DrawNotes(SpriteBatch spriteBatch, double phraseNumber)
         {
@@ -119,8 +143,7 @@ namespace WGiBeat.Drawing
                     continue;
                 }
 
-                var markerPosition = new Vector2 ();
-                markerPosition.Y = Large ? this.Y + 6 : this.Y + 3;
+                var markerPosition = new Vector2 {Y = Large ? this.Y + 6 : this.Y + 3};
                 if (bn.Hit)
                 {
                     var absPosition = LEFT_SIDE + (bn.DisplayPosition);
@@ -248,6 +271,7 @@ namespace WGiBeat.Drawing
 
         public BeatlineNoteJudgement DetermineJudgement(double phraseNumber, bool completed)
         {
+            _pulseFrontOpacity = 255;
             var nearest = NearestBeatlineNote(phraseNumber);
             double offset = (nearest == null) ? 9999 : CalculateHitOffset(nearest, phraseNumber);
             offset = Math.Abs(offset);
@@ -277,6 +301,7 @@ namespace WGiBeat.Drawing
                 nearest.Position = phraseNumber + 0.3;
             }
 
+            
             return result;
         }
 
