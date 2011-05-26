@@ -216,6 +216,12 @@
     <Content Include="Content\Textures\Default\MainGame\BeatlineEffectIcons.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Textures\Default\MainGame\BeatMeterPulseBack.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Default\MainGame\BeatMeterPulseFront.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Textures\Default\MainGame\CoopHitsBar.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
