@@ -1239,6 +1239,8 @@ namespace WGiBeat.Screens
             {
                 NewGameSong.Artist = tags["TPE1"];
             }
+            NewGameSong.Length = Convert.ToInt32(tags["LENGTH"]) / 1000.0;
+
         }
 
         private void ValidateInputs()
