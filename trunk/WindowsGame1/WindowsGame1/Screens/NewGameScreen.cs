@@ -83,16 +83,24 @@ namespace WGiBeat.Screens
 
         private void CreateProfileMenu(int x)
         {
-            _profileMenus[x] = new Menu {Width = 300, Position = (Core.Metrics["NewGameMenuStart", x]), MaxVisibleItems = 6};
-            _profileMenus[x].AddItem(new MenuItem {ItemText = "[Create New]"});
-            _profileMenus[x].AddItem(new MenuItem { ItemText = "[Guest]" });
-            _profileMenus[x].AddItem(new MenuItem {ItemText = "[Cancel]"});
+            _profileMenus[x] = new Menu
+                                   {
+                                       Width = 300,
+                                       Position = (Core.Metrics["NewGameMenuStart", x]),
+                                       MaxVisibleItems = 6,
+                                       SelectedItemBackgroundColor = _backgroundColors[x]
+                                   };
 
-            _profileMenus[x].SelectedItemBackgroundColor = _backgroundColors[x];
             foreach (Profile profile in Core.Profiles.GetAll())
             {
-                _profileMenus[x].AddItem(new MenuItem {ItemText = profile.Name, ItemValue = profile});
+                _profileMenus[x].AddItem(new MenuItem { ItemText = profile.Name, ItemValue = profile });
             }
+
+            _profileMenus[x].AddItem(new MenuItem { ItemText = "[Guest]" });
+            _profileMenus[x].AddItem(new MenuItem { ItemText = "[Create New]" });
+            _profileMenus[x].AddItem(new MenuItem {ItemText = "[Cancel]"});
+
+
 
         }
 
@@ -108,10 +116,6 @@ namespace WGiBeat.Screens
             difficulty.AddOption("Medium", 2);
             difficulty.AddOption("Hard", 3);
 
-            if (Core.Players[x].GetMaxDifficulty() >= 4)
-            {
-                difficulty.AddOption("Insane", 4);
-            }
             _playerMenus[x].AddItem(difficulty);
 
             var noteSpeed = new MenuItem { ItemText = "Beatline Speed" };
@@ -410,6 +414,13 @@ namespace WGiBeat.Screens
             _playerMenus[number].GetByItemText("Beatline Speed").SetSelectedByValue(Core.Players[number].PlayerOptions.BeatlineSpeed);
             _playerMenus[number].GetByItemText("Difficulty").SetSelectedByValue((int)Core.Players[number].PlayerOptions.PlayDifficulty);
             _playerMenus[number].GetByItemText("Disable KO").SetSelectedByValue(Core.Players[number].PlayerOptions.DisableKO);
+
+
+            _playerMenus[number].GetByItemText("Difficulty").RemoveOption("Insane");
+            if (Core.Players[number].GetMaxDifficulty() >= 4)
+            {
+                _playerMenus[number].GetByItemText("Difficulty").AddOption("Insane",4);
+            }
         }
 
         private void SelectMainMenuItem(int number)

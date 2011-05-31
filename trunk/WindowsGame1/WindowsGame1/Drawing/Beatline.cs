@@ -97,9 +97,9 @@ namespace WGiBeat.Drawing
         public void Draw(SpriteBatch spriteBatch, double phraseNumber)
         {
             this.Height = Large ? 80 : 40;
+            DrawBase(spriteBatch);
             DrawPulseBack(spriteBatch, phraseNumber);
             DrawPulseFront(spriteBatch);
-            DrawBase(spriteBatch);
             DrawNotes(spriteBatch, phraseNumber);
         }
 
@@ -150,7 +150,8 @@ namespace WGiBeat.Drawing
                     absPosition = Math.Min(this.Width, absPosition);
                     absPosition = Math.Max(0, absPosition);
                     markerPosition.X = this.X + absPosition;
-                    _markerSprite.ColorShading.A = 128;
+                    _markerSprite.ColorShading.A = bn.Opacity;
+                    bn.Opacity = (byte) Math.Max(0, bn.Opacity - 8);
                 }
                 else
                 {
@@ -193,7 +194,7 @@ namespace WGiBeat.Drawing
                 var effectType = (int)bn.NoteType;
                 if (effectType != 0)
                 {
-                    _beatlineEffects.ColorShading.A = (byte) (_markerSprite.ColorShading.A  /2);
+                    _beatlineEffects.ColorShading.A = (byte) (_markerSprite.ColorShading.A  * 0.8);
                     _beatlineEffects.Draw(spriteBatch, effectType - 1,effectHeight, effectHeight, (int)(markerPosition.X - effectHeight/2), (int)markerPosition.Y);
                 }
             }
@@ -205,7 +206,6 @@ namespace WGiBeat.Drawing
             {
                            
                 _largeBaseSprite.Draw(spriteBatch,Id, this.Width, this.Height, this.X, this.Y);
-
             }
             else
             {
@@ -297,6 +297,7 @@ namespace WGiBeat.Drawing
             if (nearest != null)
             {
                 nearest.Hit = true;
+                nearest.Opacity = 255;
                 nearest.DisplayPosition = CalculateAbsoluteBeatlinePosition(nearest.Position, phraseNumber);
                 nearest.Position = phraseNumber + 0.3;
             }

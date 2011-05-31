@@ -1,4 +1,6 @@
-﻿namespace WGiBeat.Notes
+﻿using System;
+
+namespace WGiBeat.Notes
 {
     /// <summary>
     /// A BeatlineNote represents a single note on a Beatline that must be hit in time with the beat of a song,
@@ -6,6 +8,13 @@
     /// </summary>
     public class BeatlineNote
     {
+        private byte _opacity;
+        public byte Opacity
+        {
+            get { return _opacity; }
+            set { _opacity = value; }
+        }
+
         public int Player { get; set; }
         public double Position { get; set; }
         public int DisplayPosition { get; set; }
