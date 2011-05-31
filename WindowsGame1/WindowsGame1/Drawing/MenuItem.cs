@@ -36,6 +36,11 @@ namespace WGiBeat.Drawing
         public void RemoveOption(string display)
         {
             int idx = _optionDisplays.IndexOf(display);
+            if (idx == -1)
+            {
+                return;
+            }
+
             _optionDisplays.RemoveAt(idx);
             _optionValues.RemoveAt(idx);
         }

@@ -123,6 +123,11 @@ namespace WGiBeat.Drawing.Sets
                 }
             }
         }
+
+        public void TruncateNotes(int player, int level)
+        {
+            _noteBars[player].TruncateNotes(level);
+        }
         public int NumberCompleted(int player)
         {
             return _noteBars[player].NumberCompleted() + _noteBars[player].NumberReverse(); 

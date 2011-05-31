@@ -43,7 +43,7 @@ namespace WGiBeat.Drawing
                 X = (int)Math.Ceiling(x * Sprite.Multiplier.X),
                 Y = (int)Math.Ceiling(y * Sprite.Multiplier.Y)
             };
-            var rotationOrigin = new Vector2(destRect.Width / 2, destRect.Height / 2);
+            var rotationOrigin = new Vector2((destRect.Width /2), (destRect.Height /2));
             spriteBatch.Draw(SpriteTexture, destRect, sourceRect, ColorShading,rotation,rotationOrigin, SpriteEffects.None,0);
         }
 

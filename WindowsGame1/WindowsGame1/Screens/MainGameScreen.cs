@@ -103,6 +103,7 @@ namespace WGiBeat.Screens
             var player = (int) sender;
             _lifeBarSet.AdjustLife(Core.Players[player].MissedArrow(), player);
             _levelbarSet.AdjustForFault(player);
+            _noteBarSet.TruncateNotes(player, (int)Core.Players[player].Level);
             _hitsBarSet.ResetHits(player);
         }
 
@@ -395,6 +396,7 @@ namespace WGiBeat.Screens
 
        _noteJudgementSet.AwardJudgement(BeatlineNoteJudgement.MISS, player, 0, 0);
             _levelbarSet.AdjustMomentum(BeatlineNoteJudgement.MISS, player);
+            _noteBarSet.TruncateNotes(player, (int) Core.Players[player].Level);
             if (Core.Players[player].CPU)
             {
                 Core.Players[player].NextCPUJudgement =

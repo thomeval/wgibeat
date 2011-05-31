@@ -178,5 +178,12 @@ namespace WGiBeat.Notes
             }
         }
 
+        public void TruncateNotes(int level)
+        {
+            while (Notes.Count > level)
+            {
+                Notes.RemoveAt(Notes.Count-1);
+            }
+        }
     }
 }
