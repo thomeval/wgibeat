@@ -100,8 +100,6 @@ namespace WGiBeat.Screens
             _profileMenus[x].AddItem(new MenuItem { ItemText = "[Create New]" });
             _profileMenus[x].AddItem(new MenuItem {ItemText = "[Cancel]"});
 
-
-
         }
 
         private void CreatePlayerMenu(int x)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.Helpers;
 using WGiBeat.Managers;
 using WGiBeat.Notes;
 using WGiBeat.Players;
@@ -101,6 +102,10 @@ namespace WGiBeat.Drawing.Sets
 
         public void CreateNextNoteBar(int player)
         {
+            if (player == (int) AggregatorPlayerID.ALL)
+            {
+                player = 0;
+            }
             //Create next note bar.
             var numArrow = (int)Players[player].Level;
             var numReverse = (Players[player].IsBlazing) ? (int)Players[player].Level / 2 : 0;

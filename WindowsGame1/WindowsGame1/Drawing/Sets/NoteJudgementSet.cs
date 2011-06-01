@@ -55,7 +55,7 @@ namespace WGiBeat.Drawing.Sets
             Draw(spriteBatch);
         }
 
-        public void AwardJudgement(BeatlineNoteJudgement judgement, int player, int numCompleted, int numNotCompleted)
+        public void AwardJudgement(BeatlineNoteJudgement judgement, int player, int givenMultiplier, int numCompleted, int numNotCompleted)
         {
             double lifeAdjust = 0;
             long scoreAdjust = 0;
@@ -96,7 +96,8 @@ namespace WGiBeat.Drawing.Sets
                     break;
             }
 
-            Players[player].Judgements[(int)judgement]++;
+            RecordJudgement(player, judgement);
+
 
             if (Players[player].CPU)
             {
@@ -107,6 +108,7 @@ namespace WGiBeat.Drawing.Sets
                 scoreAdjust *= GetBonusMultiplier();
             }
 
+            scoreAdjust *= givenMultiplier;
             if (_scoreSet != null)
             {
                 _scoreSet.AdjustScore(scoreAdjust, player);
@@ -120,6 +122,24 @@ namespace WGiBeat.Drawing.Sets
             newDj.Position = (_metrics["Judgement", player]);
             _displayedJudgements[player] = newDj;
 
+        }
+
+        private void RecordJudgement(int player, BeatlineNoteJudgement judgement)
+        {
+            if (_gameType == GameType.SYNC)
+            {
+                for (int x = 0; x < 4; x++)
+                {
+                    if (Players[x].Playing)
+                    {
+                        Players[x].Judgements[(int) judgement]++;
+                    }
+                }
+            }
+            else
+            {
+                Players[player].Judgements[(int)judgement]++;
+            }
         }
 
         private int GetBonusMultiplier()
