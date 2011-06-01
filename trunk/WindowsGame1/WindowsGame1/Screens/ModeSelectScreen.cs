@@ -394,7 +394,6 @@ namespace WGiBeat.Screens
                     }
                     break;
                     case GameType.SYNC:
-                    return "Coming soon! \nWill be available in v0.8.";
                     if (PlayerCount() < 2)
                     {
                         return "Requires at least two players.";

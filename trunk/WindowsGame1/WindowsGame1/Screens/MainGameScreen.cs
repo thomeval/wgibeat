@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Drawing.Sets;
+using WGiBeat.Helpers;
 using WGiBeat.Managers;
 using WGiBeat.Notes;
 using WGiBeat.Players;
@@ -27,6 +28,7 @@ namespace WGiBeat.Screens
         private NoteBarSet _noteBarSet;
         private BeatlineSet _beatlineSet;
         private CountdownSet _countdownSet;
+        private BeatlineHitAggregator _hitAggregator;
 
         private PerformanceBar _performanceBar;
         private const int PLAYER_COUNT = 4;
@@ -63,6 +65,8 @@ namespace WGiBeat.Screens
             _noteJudgementSet = new NoteJudgementSet(Core.Metrics, Core.Players, currentGameType,_lifeBarSet,_scoreSet);
             _countdownSet = new CountdownSet(Core.Metrics, Core.Players, currentGameType);
             _beatlineSet = new BeatlineSet(Core.Metrics, Core.Players, currentGameType);
+            _hitAggregator = new BeatlineHitAggregator(Core.Players, currentGameType);
+            _hitAggregator.HitsAggregated += HitsAggregated;
             _noteBarSet = new NoteBarSet(Core.Metrics, Core.Players, currentGameType);
             _noteBarSet.PlayerFaulted += (PlayerFaulted);
             _noteBarSet.PlayerArrowHit += (PlayerArrowHit);
@@ -96,6 +100,44 @@ namespace WGiBeat.Screens
             InitSprites();
 
             base.Initialize();
+        }
+
+        private void HitsAggregated(object sender, ObjectEventArgs e)
+        {
+            AggregatorResponse ar = (AggregatorResponse) e.Object;
+
+            switch (ar.Player)
+            {
+                case AggregatorPlayerID.ALL:
+                    for (int x = 0; x < 4; x++ )
+                    {
+                        if (Core.Players[x].Playing)
+                        {
+                            ApplyJudgement(ar.Judgement,x,ar.Multiplier);
+                        }
+                    }
+                        break;
+                    default:
+                        ApplyJudgement(ar.Judgement, (int)ar.Player, ar.Multiplier);
+                    break;
+            }
+            if (ar.Judgement == BeatlineNoteJudgement.MISS)
+            {
+                if (ar.Player ==  AggregatorPlayerID.ALL)
+                {
+                     _noteBarSet.TruncateNotes(0, (int)Core.Players[0].Level);
+                }
+                else
+                {
+                    _noteBarSet.TruncateNotes((int)ar.Player, (int)Core.Players[(int)ar.Player].Level);
+                }
+            }
+            else
+            {
+                _noteBarSet.CreateNextNoteBar((int)ar.Player);
+            }
+
+            
         }
 
         private void PlayerFaulted(object sender, EventArgs e)
@@ -348,7 +390,6 @@ namespace WGiBeat.Screens
 
             var complete = _noteBarSet.AllCompleted(player);
             var judgement = _beatlineSet.AwardJudgement(_phraseNumber, player, complete);
-            _levelbarSet.AdjustMomentum(judgement, player);
 
             if (judgement == BeatlineNoteJudgement.COUNT)
             {
@@ -358,8 +399,9 @@ namespace WGiBeat.Screens
             //Check if all notes in the notebar have been hit and act accordingly.
 
             //Award Score
-            ApplyJudgement(judgement, player);
-            _noteBarSet.CreateNextNoteBar(player);
+            _hitAggregator.RegisterHit(player,judgement);
+            //ApplyJudgement(judgement, player, 1);
+
 
         }
 
@@ -368,10 +410,11 @@ namespace WGiBeat.Screens
 
         #region Helper Methods
 
-        private void ApplyJudgement(BeatlineNoteJudgement judgement, int player)
+        private void ApplyJudgement(BeatlineNoteJudgement judgement, int player, int multiplier)
         {
-            _noteJudgementSet.AwardJudgement(judgement, player, _noteBarSet.NumberCompleted(player),
+            _noteJudgementSet.AwardJudgement(judgement, player, multiplier, _noteBarSet.NumberCompleted(player),
                                                               _noteBarSet.NumberIncomplete(player));
+            _levelbarSet.AdjustMomentum(judgement, player);
         }
 
 
@@ -393,10 +436,13 @@ namespace WGiBeat.Screens
         private void BeatlineNoteMissed(object sender, EventArgs e)
         {
             var player = (int) sender;
+            _hitAggregator.RegisterHit(player, BeatlineNoteJudgement.MISS);
+            /*
+       _noteJudgementSet.AwardJudgement(BeatlineNoteJudgement.MISS, player,1, 0, 0);
 
-       _noteJudgementSet.AwardJudgement(BeatlineNoteJudgement.MISS, player, 0, 0);
             _levelbarSet.AdjustMomentum(BeatlineNoteJudgement.MISS, player);
-            _noteBarSet.TruncateNotes(player, (int) Core.Players[player].Level);
+             */
+            
             if (Core.Players[player].CPU)
             {
                 Core.Players[player].NextCPUJudgement =
@@ -421,7 +467,7 @@ namespace WGiBeat.Screens
 
 
             //Award Score
-            ApplyJudgement(judgement, player);
+            ApplyJudgement(judgement, player, 1);
             _noteBarSet.CreateNextNoteBar(player);
             Core.Players[player].NextCPUJudgement = Core.CPUManager.GetNextJudgement(Core.Cookies["CPUSkillLevel"].ToString(), Core.Players[player].Streak);
             
