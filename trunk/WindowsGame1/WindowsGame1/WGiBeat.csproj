@@ -237,6 +237,9 @@
     <Content Include="Content\Textures\Default\MainGame\MainGameTextBackground.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Textures\Default\MainGame\SyncDifficultyBar.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Textures\Default\MainGame\SyncHitsBar.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

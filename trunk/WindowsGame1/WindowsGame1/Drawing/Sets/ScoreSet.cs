@@ -15,6 +15,7 @@ namespace WGiBeat.Drawing.Sets
         private SpriteMap _playerIdentifierSpriteMap;
 
         private TeamScoreMeter _teamScoreMeter;
+        private SpriteMap _iconSyncBaseSpriteMap;
 
         public ScoreSet(MetricsManager metrics, Player[] players, GameType type)
             : base(metrics,players,type)
@@ -42,6 +43,12 @@ namespace WGiBeat.Drawing.Sets
                 SpriteTexture = TextureManager.Textures("PlayerDifficulties")
             };
 
+            _iconSyncBaseSpriteMap = new SpriteMap
+                                         {
+                                             Columns = 1,
+                                             Rows = 2,
+                                             SpriteTexture = TextureManager.Textures("SyncDifficultyBar")
+                                         };
             _coopBaseSprite = new SpriteMap
             {
                 SpriteTexture = TextureManager.Textures("ScoreBaseCombined"),
@@ -88,6 +95,7 @@ namespace WGiBeat.Drawing.Sets
             {
                 if (Players[x * 2].Playing || Players[(x * 2) + 1].Playing)
                 {
+                    _iconSyncBaseSpriteMap.Draw(spriteBatch, x, _metrics["SyncPlayerDifficultiesBase", x]);
                     _iconSpriteMap.Draw(spriteBatch, idx, 30, 30, _metrics["SyncPlayerDifficulties", x]);
                 }
             }

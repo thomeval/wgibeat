@@ -486,10 +486,11 @@ namespace WGiBeat.Screens
           _noteBarSet.Draw(spriteBatch);
 
             //Draw the component sets.
+             _scoreSet.Draw(spriteBatch);
             _lifeBarSet.Draw(spriteBatch, _phraseNumber);
             _levelbarSet.Draw(spriteBatch);
             _hitsBarSet.Draw(spriteBatch);
-            _scoreSet.Draw(spriteBatch);
+
             _noteJudgementSet.Draw(spriteBatch, _phraseNumber);
             _beatlineSet.Draw(spriteBatch, _phraseNumber);
             _performanceBar.Draw(spriteBatch);
