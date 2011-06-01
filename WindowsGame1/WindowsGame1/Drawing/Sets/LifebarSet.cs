@@ -245,6 +245,10 @@ namespace WGiBeat.Drawing.Sets
                 case GameType.TEAM:
                     MaintainBlazingsNormal();
                     break;
+                    case GameType.SYNC:
+                    MaintainBlazingsNormal();
+                    AdjustLifeSync(0);
+                    break;
                 case GameType.COOPERATIVE:
                     MaintainBlazingsCoop();
                     break;
@@ -323,6 +327,14 @@ namespace WGiBeat.Drawing.Sets
                     if (Players[player].Life > 100)
                     {
                         Players[player].IsBlazing = true;
+                    }
+                    break;
+                    case GameType.SYNC:
+                    {
+                        if (Players[0].Life > 100)
+                        {
+                            Players[0].IsBlazing = true;
+                        }
                     }
                     break;
                 case GameType.COOPERATIVE:
