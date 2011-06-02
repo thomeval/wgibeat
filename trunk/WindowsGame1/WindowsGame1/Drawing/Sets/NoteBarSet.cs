@@ -131,7 +131,21 @@ namespace WGiBeat.Drawing.Sets
 
         public void TruncateNotes(int player, int level)
         {
-            _noteBars[player].TruncateNotes(level);
+            if (_gameType == GameType.SYNC)
+            {
+                for (int x = 0; x < 4; x++)
+                {
+                    if (Players[x].Playing)
+                    {
+                        _noteBars[x].TruncateNotes(level);
+                    }
+                }
+            }
+            else
+            {
+                _noteBars[player].TruncateNotes(level);
+            }
+            
         }
         public int NumberCompleted(int player)
         {
