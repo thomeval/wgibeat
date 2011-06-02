@@ -123,7 +123,7 @@ namespace WGiBeat.Drawing.Sets
         private void DrawSyncCombinedScore(SpriteBatch spriteBatch)
         {
 
-            long scoreText = Players[0].Score;
+            long scoreText = _displayedScores[0];
 
             for (int x = 0; x < 2; x++)
             {
