@@ -246,11 +246,7 @@ namespace WGiBeat.Drawing.Sets
                     Players[player].Score += amount;
                     break;
                 case GameType.SYNC:
-                    Players[0].Score += amount;
-                    for (int x = 1; x < 4; x++ )
-                    {
-                        Players[x].Score = Players[0].Score;
-                    }
+                    Players[player].Score += amount;
                         break;
             }
         }
