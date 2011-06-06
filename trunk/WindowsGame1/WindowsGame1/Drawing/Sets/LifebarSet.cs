@@ -76,7 +76,7 @@ namespace WGiBeat.Drawing.Sets
                     AdjustLifeCoop(amount, player);
                     break;
                     case GameType.SYNC:
-                    AdjustLifeSync(amount);
+                    AdjustLifeSync(amount,player);
                     break;
                     
             }
@@ -147,10 +147,10 @@ namespace WGiBeat.Drawing.Sets
             }
         }
 
-        private void AdjustLifeSync(double amount)
+        private void AdjustLifeSync(double amount, int player)
         {
 
-            AdjustLifeNormal(amount, 0, true);
+            AdjustLifeNormal(amount, player, true);
             for (int x = 1; x < 4; x++)
             {
                 Players[x].Life = Players[0].Life;
@@ -247,7 +247,7 @@ namespace WGiBeat.Drawing.Sets
                     break;
                     case GameType.SYNC:
                     MaintainBlazingsNormal();
-                    AdjustLifeSync(0);
+                    AdjustLifeSync(0,0);
                     break;
                 case GameType.COOPERATIVE:
                     MaintainBlazingsCoop();

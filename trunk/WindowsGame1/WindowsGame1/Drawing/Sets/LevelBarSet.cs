@@ -86,6 +86,7 @@ namespace WGiBeat.Drawing.Sets
                      MomentumIncreaseByDifficulty(Players[player].PlayerOptions.PlayDifficulty));
                 if (_gameType == GameType.SYNC)
                 {
+                    //TODO: Fix
                     SetMomentumSync(Players[0].Momentum + amount);
                 }
                 else

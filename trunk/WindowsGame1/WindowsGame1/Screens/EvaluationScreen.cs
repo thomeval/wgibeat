@@ -193,7 +193,32 @@ namespace WGiBeat.Screens
                 case GameType.COOPERATIVE:
                     _grades[0] = PercentageToGradeIndex(CalculateTeamPercentage());
                     break;
+                    case GameType.SYNC:
+                    _grades[0] = GetSyncGradeIndex();
+                    break;
             }
+        }
+
+        private int GetSyncGradeIndex()
+        {
+            var result = 0;
+            for (int x = 0; x < 4; x++ )
+            {
+                if (!Core.Players[x].IsHumanPlayer)
+                {
+                    continue;
+                }
+                if (Core.Players[x].KO)
+                {
+                    return NUM_EVALUATIONS - 1;
+                }
+
+                int idx = PercentageToGradeIndex(Core.Players[x].CalculatePercentage());
+
+                result = Math.Max(result, idx);
+            }
+
+            return result;
         }
 
         private int CalculateGradeIndex(int player)

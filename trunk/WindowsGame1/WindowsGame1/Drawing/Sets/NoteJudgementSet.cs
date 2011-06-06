@@ -126,19 +126,17 @@ namespace WGiBeat.Drawing.Sets
 
         private void RecordJudgement(int player, BeatlineNoteJudgement judgement)
         {
-            if (_gameType == GameType.SYNC)
+
+            Players[player].Judgements[(int)judgement]++;
+
+            if (_gameType != GameType.SYNC) return;
+
+            for (int x = 1; x < 4; x++)
             {
-                for (int x = 0; x < 4; x++)
+                if (Players[x].Playing)
                 {
-                    if (Players[x].Playing)
-                    {
-                        Players[x].Judgements[(int) judgement]++;
-                    }
+                    Players[x].Judgements[(int) judgement] = Players[0].Judgements[(int) judgement];
                 }
-            }
-            else
-            {
-                Players[player].Judgements[(int)judgement]++;
             }
         }
 

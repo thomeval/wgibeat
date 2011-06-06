@@ -57,6 +57,7 @@ namespace WGiBeat.Managers
             }
 
             int awardedPlayer = -1;
+            long currentTotal;
             switch (gameType)
             {
                 case GameType.NORMAL:
@@ -70,10 +71,17 @@ namespace WGiBeat.Managers
                     }
                     break;
                 case GameType.COOPERATIVE:
-                    var currentTotal = (from e in players where e.Playing select e.Score).Sum();
+                    currentTotal = (from e in players where e.Playing select e.Score).Sum();
                     if (currentTotal > highest)
                     {
                         awardedPlayer = 4;
+                    }
+                    break;
+                    case GameType.SYNC:
+                    currentTotal = (from e in players where e.Playing select e.Score).First();
+                    if (currentTotal > highest)
+                    {
+                        awardedPlayer = 5;
                     }
                     break;
             }
@@ -90,22 +98,30 @@ namespace WGiBeat.Managers
         /// <param name="gameType">The GameType used in the current game.</param>
         /// <param name="grades">The GameType used in the current game.</param>
         /// <returns>-1 if no player beat the stored high score, 4 if all players as a team
-        /// beat the high score, or the player index (0 to 3) if a single player beat the high score.
+        /// beat the high score, or the player index (0 to 3) if a single player beat the high score.</returns>
         public int UpdateHighScore(int songHashCode, Player[] players, GameType gameType, int[] grades)
         {
             gameType = TranslateGameType(gameType);
             var result = DetermineHighScore(songHashCode, players, gameType);
 
+            long totalScore;
+            int playerCount;
             switch (result)
             {
                 case -1:
                     //No one beat the score.
                     break;
                 case 4:
-                    //Team score.
-                    var total = (from e in players where e.Playing select e.Score).Sum();
-                    var playerCount = (from e in players where e.Playing select e).Count();
-                    SetHighScoreEntry(CurrentSong.GetHashCode(), gameType, total, grades[0], LowestDifficulty(players), playerCount + " Players" );
+                    //Team score. Add invididual player scores up.
+                    totalScore = (from e in players where e.IsHumanPlayer select e.Score).Sum();
+                    playerCount = (from e in players where e.IsHumanPlayer select e).Count();
+                    SetHighScoreEntry(CurrentSong.GetHashCode(), gameType, totalScore, grades[0], LowestDifficulty(players), playerCount + " Players");
+                    break;
+                case 5:
+                    //Sync score. Player scores are equal so use any one of them.
+                    totalScore = (from e in players where e.IsHumanPlayer select e.Score).First();
+                    playerCount = (from e in players where e.IsHumanPlayer select e).Count();
+                    SetHighScoreEntry(CurrentSong.GetHashCode(), gameType, totalScore, grades[0], LowestDifficulty(players), playerCount + " Players");
                     break;
                 default:
                     //Individual high score.
