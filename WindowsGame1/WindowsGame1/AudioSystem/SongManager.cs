@@ -92,8 +92,18 @@ namespace WGiBeat.AudioSystem
 
         public int PreloadSong(GameSong song)
         {
-            var preloadChannelIndex = AudioManager.PlaySoundEffect(song.Path + "\\" + song.AudioFile, false, true,true);
+            var filePath = song.Path + "\\" + song.AudioFile;
+            int preloadChannelIndex;
+            if (File.Exists(filePath))
+            {
+              preloadChannelIndex = AudioManager.PlaySoundEffect(song.Path + "\\" + song.AudioFile, false, true,true);
             _cachedAudioStart = Math.Max(0.0, 1000*(song.AudioStart - 0.5));
+            }
+            else
+            {
+                preloadChannelIndex = AudioManager.PlayFallbackSoundEffect(true);
+            }
+
             
             return preloadChannelIndex;
         }
