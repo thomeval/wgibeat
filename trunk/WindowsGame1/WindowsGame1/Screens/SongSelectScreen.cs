@@ -451,20 +451,10 @@ namespace WGiBeat.Screens
                 _playerOptionsSet.CheckSyncDifficulty();
             }
 
-            if (Core.Cookies.ContainsKey("Panic"))
-            {
-                Core.Cookies.Remove("Panic");
-            }
-            if (!File.Exists(CurrentSong.Path + "\\" + CurrentSong.AudioFile))
-            {
-                Core.Cookies.Add("Panic", true);
-                _preloadState = PreloadState.LOADING_FINISHED;
-            }
-            else
-            {
+
                 _songLoadingThread = new Thread(StartSongLoading) { Name = "Song Loading Thread" };
                 _songLoadingThread.Start();
-            }
+            
 
         }
 
@@ -474,8 +464,22 @@ namespace WGiBeat.Screens
             _preloadState = PreloadState.LOADING_STARTED;
             System.Diagnostics.Debug.WriteLine("Preload started...");
             Core.Cookies["GameSongChannel"] = Core.Songs.PreloadSong(CurrentSong);
+            SetPanicState();
             System.Diagnostics.Debug.WriteLine("Preload done.");
             _preloadState = PreloadState.LOADING_FINISHED;
+        }
+
+        private void SetPanicState()
+        {
+            if (Core.Cookies.ContainsKey("Panic"))
+            {
+                Core.Cookies.Remove("Panic");
+            }
+            if (!File.Exists(CurrentSong.Path + "\\" + CurrentSong.AudioFile))
+            {
+                Core.Cookies.Add("Panic", true);
+            }
+
         }
 
         private void MoveSelectionUp()

@@ -74,7 +74,7 @@ namespace WGiBeat.AudioSystem
         {
             if (!File.Exists(soundPath))
             {
-                return PlayFallbackSoundEffect();
+                return PlayFallbackSoundEffect(false);
             }
 
             var mySound = GetOrCreateSound(soundPath, !dontStream);
@@ -118,7 +118,7 @@ namespace WGiBeat.AudioSystem
         }
 
 
-        public int PlayFallbackSoundEffect()
+        public int PlayFallbackSoundEffect(bool loadPaused)
         {
             if (!File.Exists(FallbackSound))
             {
@@ -132,7 +132,7 @@ namespace WGiBeat.AudioSystem
 
             var myChannel = new Channel();
 
-            CheckFMODErrors(_fmodSystem.playSound(CHANNELINDEX.FREE, mySound, false, ref myChannel));
+            CheckFMODErrors(_fmodSystem.playSound(CHANNELINDEX.FREE, mySound, loadPaused, ref myChannel));
             CheckFMODErrors(myChannel.setVolume(_masterVolume));
             
             int index = -1;
