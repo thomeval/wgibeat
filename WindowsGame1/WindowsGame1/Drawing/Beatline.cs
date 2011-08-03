@@ -31,7 +31,6 @@ namespace WGiBeat.Drawing
         private SpriteMap _playerIdentifiers;
 
         private Sprite _baseSprite;
-        private Sprite _largeBaseSprite;
         private SpriteMap _beatlineEffects;
         private SpriteMap _pulseFront;
         private SpriteMap _pulseBack;
@@ -90,10 +89,6 @@ namespace WGiBeat.Drawing
             {
                 SpriteTexture = TextureManager.Textures("BeatMeter")
             };
-            _largeBaseSprite = new Sprite
-            {
-                SpriteTexture = TextureManager.Textures("BeatMeter"),
-            };
 
             _beatlineEffects = new SpriteMap
                                    {
@@ -127,6 +122,10 @@ namespace WGiBeat.Drawing
         private void DrawPlayerIdentifier(SpriteBatch spriteBatch)
         {
             _indicatorPosition.Y = this.Y + this.Height - 27;
+            if (Large)
+            {
+                _indicatorPosition.Y -= 2;
+            }
             _indicatorPosition.X = _reverseDirection ? this.X + 25 : this.X + this.Width - 60;
             _playerIdentifiers.Draw(spriteBatch,Id,_indicatorPosition);
         }
@@ -195,11 +194,11 @@ namespace WGiBeat.Drawing
                 _markerSprite.Draw(spriteBatch, noteIdx, width, markerHeight, (int)markerPosition.X, (int)markerPosition.Y);
 
                 //Draw the effect icon on top of the marker if appropriate (such as a BPM change arrow)
-                //TODO: Flip effect icons for reverse direction.
+                var flip = _reverseDirection ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
                 if (bn.NoteType != 0)
                 {
                     _beatlineEffects.ColorShading.A = (byte) (_markerSprite.ColorShading.A  * 0.8);
-                    _beatlineEffects.Draw(spriteBatch, (int)bn.NoteType - 1, markerHeight, markerHeight, (int)(markerPosition.X - markerHeight / 2), (int)markerPosition.Y);
+                    _beatlineEffects.Draw(spriteBatch, (int)bn.NoteType - 1, markerHeight, markerHeight, (int)(markerPosition.X - markerHeight / 2), (int)markerPosition.Y,flip);
                 }
             }
         }
@@ -264,22 +263,11 @@ namespace WGiBeat.Drawing
         private void DrawBase(SpriteBatch spriteBatch)
         {
             var flip = _reverseDirection ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-            //TODO: Optimize to use one variable (change Sprite used instead of having two)
-            //TODO: Fix broken big sprite.
-            if (Large)
-            {
-                _largeBaseSprite.SetPosition(this.X, this.Y);
-                _largeBaseSprite.Height = this.Height;
-                _largeBaseSprite.Width = this.Width;
-                _largeBaseSprite.Draw(spriteBatch, flip);
-            }
-            else
-            {
+  
                 _baseSprite.SetPosition(this.X, this.Y);
                 _baseSprite.Height = this.Height;
                 _baseSprite.Width = this.Width;
                 _baseSprite.Draw(spriteBatch,flip);
-            }
         }
 
         public void AddBeatlineNote(BeatlineNote bln)
