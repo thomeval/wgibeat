@@ -298,6 +298,8 @@ namespace WGiBeat.Players
         public bool DisableKO { get; set; }
         public double BeatlineSpeed { get; set;}
         public Difficulty PlayDifficulty { get; set;}
+        public bool ScrollDirectionWest { get; set; }
+        public bool ScrollDirectionEast { get; set; }
     }
 
     public enum Difficulty

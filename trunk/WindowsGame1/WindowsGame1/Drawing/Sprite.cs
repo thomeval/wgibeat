@@ -20,21 +20,36 @@ namespace WGiBeat.Drawing
 
         public Color ColorShading;
         public Texture2D SpriteTexture;
+        private Vector2 _origin;
 
-       
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             CheckIfDimensionsSet();
             var boundingBox = new Rectangle
-                                  {
-                                      X = (int)Math.Ceiling(this.X * Multiplier.X),
-                                      Y = (int)Math.Ceiling(this.Y * Multiplier.Y),
-                                      Height = (int) Math.Ceiling(this.Height * Multiplier.Y),
-                                      Width = (int)Math.Ceiling(this.Width * Multiplier.X),
-                                  };
+            {
+                Height = (int)Math.Ceiling(this.Height * Multiplier.Y),
+                Width = (int)Math.Ceiling(this.Width * Multiplier.X),
+                X = (int)Math.Ceiling(this.X * Multiplier.X),
+                Y = (int)Math.Ceiling(this.Y * Multiplier.Y),
 
-         //   boundingBox = AdjustForDrift(boundingBox);
-            spriteBatch.Draw(SpriteTexture, boundingBox, ColorShading);
+            };
+            spriteBatch.Draw(SpriteTexture,boundingBox,ColorShading);
+        }
+
+        public void Draw(SpriteBatch spriteBatch, SpriteEffects flip)
+        {
+            CheckIfDimensionsSet();
+            var boundingBox = new Rectangle
+            {
+                Height = (int)Math.Ceiling(this.Height * Multiplier.Y),
+                Width = (int)Math.Ceiling(this.Width * Multiplier.X),
+                X = (int)Math.Ceiling(this.X * Multiplier.X),
+                Y = (int)Math.Ceiling(this.Y * Multiplier.Y),
+
+            };
+
+            spriteBatch.Draw(SpriteTexture, boundingBox, null, ColorShading, 0,new Vector2(0,0), flip, 0); 
         }
 
         //Doesn't work - No solution found for sprite tearing yet.
@@ -94,6 +109,7 @@ namespace WGiBeat.Drawing
             {
                 Height = SpriteTexture.Height;
             }
+            _origin = new Vector2(Width*Multiplier.X/2.0f , Height*Multiplier.Y/2.0f);
         }
 
         public static void SetMultiplier(int width, int height)
@@ -101,5 +117,7 @@ namespace WGiBeat.Drawing
             Multiplier.X = (float) (1.0*width/BASE_WIDTH);
             Multiplier.Y = (float) (1.0*height/BASE_HEIGHT);
         }
+
+
     }
 }

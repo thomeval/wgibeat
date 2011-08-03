@@ -16,8 +16,22 @@ namespace WGiBeat.Drawing
         public double Bpm { get; set; }
         public int Id { get; set; }
         public bool DisablePulse { get; set; }
+
+        private float _rotationValue;
+
+        private bool _reverseDirection;
+        public bool ReverseDirection
+        {
+            get { return _reverseDirection; }
+            set
+            {
+                _reverseDirection = value;
+                _rotationValue = ReverseDirection ? (float) Math.PI : 0;
+            }
+        }
+
         private SpriteMap _markerSprite;
-        private SpriteMap _baseSprite;
+        private Sprite _baseSprite;
         private SpriteMap _largeBaseSprite;
         private SpriteMap _beatlineEffects;
         private SpriteMap _pulseFront;
@@ -69,11 +83,9 @@ namespace WGiBeat.Drawing
                                  Rows = 5,
                                  Columns = 1,
                              };
-            _baseSprite = new SpriteMap
+            _baseSprite = new Sprite
             {
-                SpriteTexture = TextureManager.Textures("BeatMeter"),
-                Columns = 1,
-                Rows = 5
+                SpriteTexture = TextureManager.Textures("BeatMeter")
             };
             _largeBaseSprite = new SpriteMap
             {
@@ -97,6 +109,7 @@ namespace WGiBeat.Drawing
         public void Draw(SpriteBatch spriteBatch, double phraseNumber)
         {
             this.Height = Large ? 80 : 40;
+            
             DrawBase(spriteBatch);
             DrawPulseBack(spriteBatch, phraseNumber);
             DrawPulseFront(spriteBatch);
@@ -115,7 +128,7 @@ namespace WGiBeat.Drawing
             _pulseBack.ColorShading.A = (byte)(phraseDecimal * 255);
             var markerPosition = new Vector2 { X = this.X, Y = Large ? this.Y + 6 : this.Y + 3 };
             var markerHeight = Large ? LARGE_HEIGHT : NORMAL_HEIGHT;
-            _pulseBack.Draw(spriteBatch,Id,LEFT_SIDE,markerHeight,markerPosition);
+            _pulseBack.Draw(spriteBatch,Id,this.Width,markerHeight,(int) markerPosition.X,(int) markerPosition.Y,_rotationValue);
         }
 
         private void DrawPulseFront(SpriteBatch spriteBatch)
@@ -124,10 +137,10 @@ namespace WGiBeat.Drawing
             {
                 return;
             }
-            var markerPosition = new Vector2 { X = this.X + LEFT_SIDE + IMPACT_WIDTH, Y = Large ? this.Y + 6 : this.Y + 3 };
+            var markerPosition = new Vector2 { X = this.X, Y = Large ? this.Y + 6 : this.Y + 3 };
             var markerHeight = Large ? LARGE_HEIGHT : NORMAL_HEIGHT;
             _pulseFront.ColorShading.A = _pulseFrontOpacity;
-            _pulseFront.Draw(spriteBatch, Id, this.Width - LEFT_SIDE, markerHeight, markerPosition);
+            _pulseFront.Draw(spriteBatch, Id, this.Width, markerHeight, (int)markerPosition.X, (int)markerPosition.Y, _rotationValue);
             _pulseFrontOpacity = (byte)Math.Max(0, _pulseFrontOpacity - 20);
         }
 
@@ -143,35 +156,10 @@ namespace WGiBeat.Drawing
                     continue;
                 }
 
-                var markerPosition = new Vector2 {Y = Large ? this.Y + 6 : this.Y + 3};
-                if (bn.Hit)
-                {
-                    var absPosition = LEFT_SIDE + (bn.DisplayPosition);
-                    absPosition = Math.Min(this.Width, absPosition);
-                    absPosition = Math.Max(0, absPosition);
-                    markerPosition.X = this.X + absPosition;
-                    _markerSprite.ColorShading.A = bn.Opacity;
-                    bn.Opacity = (byte) Math.Max(0, bn.Opacity - 8);
-                }
-                else
-                {
-                    markerPosition.X = this.X + LEFT_SIDE - (markerBeatOffset);
-                    var distTravelled = this.Width - LEFT_SIDE + markerBeatOffset;
-                    if (markerBeatOffset > 0)
-                    {
-                        _markerSprite.ColorShading.A = (byte)(Math.Max(0, 255 - 10 * markerBeatOffset));
-                    }
-                    else if (distTravelled < 35)
-                    {
-                        _markerSprite.ColorShading.A = (byte)(7 * distTravelled);
-                    }
-                    else
-                    {
-                        _markerSprite.ColorShading.A = 255;
-                    }
-                }
+                var markerPosition = new Vector2 {Y = Large ? this.Y + 6 : this.Y + 3, X = CalculateNotePosition(bn, markerBeatOffset)};
+                 _markerSprite.ColorShading.A = CalculateNoteOpacity(bn,markerBeatOffset);
+
                 var markerHeight = Large ? LARGE_HEIGHT : NORMAL_HEIGHT;
-                var effectHeight = Large ? LARGE_HEIGHT : NORMAL_HEIGHT;
 
                 int noteIdx = 0;
                 int width = IMPACT_WIDTH;
@@ -190,26 +178,89 @@ namespace WGiBeat.Drawing
                         break;
                 }
 
-                _markerSprite.Draw(spriteBatch,noteIdx, width, markerHeight, markerPosition);
-                var effectType = (int)bn.NoteType;
-                if (effectType != 0)
+                _markerSprite.Draw(spriteBatch, noteIdx, width, markerHeight, (int)markerPosition.X, (int)markerPosition.Y);
+
+                //Draw the effect icon on top of the marker if appropriate (such as a BPM change arrow)
+                if (bn.NoteType != 0)
                 {
                     _beatlineEffects.ColorShading.A = (byte) (_markerSprite.ColorShading.A  * 0.8);
-                    _beatlineEffects.Draw(spriteBatch, effectType - 1,effectHeight, effectHeight, (int)(markerPosition.X - effectHeight/2), (int)markerPosition.Y);
+                    _beatlineEffects.Draw(spriteBatch, (int)bn.NoteType - 1, markerHeight, markerHeight, (int)(markerPosition.X - markerHeight / 2), (int)markerPosition.Y);
                 }
             }
         }
 
-        private void DrawBase(SpriteBatch spriteBatch)
+        /// <summary>
+        /// Calculates the opacity of a beatline note depending on where it is. If it isn't hit, it will fade
+        /// in and out when at the edges of the beatline. If it is hit, it will fade out gradually and remain in position.
+        /// </summary>
+        /// <param name="bn"></param>
+        /// <param name="markerBeatOffset"></param>
+        /// <returns></returns>
+        private byte CalculateNoteOpacity(BeatlineNote bn, int markerBeatOffset)
         {
-            if (Large)
+            byte result;
+            if (bn.Hit)
             {
-                           
-                _largeBaseSprite.Draw(spriteBatch,Id, this.Width, this.Height, this.X, this.Y);
+                bn.Opacity = (byte)Math.Max(0, bn.Opacity - 8);
+                result = bn.Opacity;
+                return result;
+            }
+
+            var distTravelled = this.Width - LEFT_SIDE + markerBeatOffset;
+
+            if (markerBeatOffset > 0)
+            {
+                result = (byte)(Math.Max(0, 255 - 10 * markerBeatOffset));
+            }
+            else if (distTravelled < 35)
+            {
+                result  = (byte)(7 * distTravelled);
             }
             else
             {
-                _baseSprite.Draw(spriteBatch, Id, this.Width, this.Height, this.X, this.Y);
+                result = 255;
+            }
+            return result;
+        }
+
+        private float CalculateNotePosition(BeatlineNote bn, int markerBeatOffset)
+        {
+            float result = 0.0f;
+            if (bn.Hit)
+            {
+                result = LEFT_SIDE + (bn.DisplayPosition);
+                result = Math.Min(this.Width, result);
+                result = Math.Max(0, result);
+            }
+            else
+            {
+                result = LEFT_SIDE - (markerBeatOffset);
+            }
+
+            if (_reverseDirection)
+            {
+                result = this.Width - result;
+                result -= 4;
+            }
+            result += this.X;
+            return result;
+        }
+
+        private void DrawBase(SpriteBatch spriteBatch)
+        {
+            var flip = _reverseDirection ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            //TODO: Optimize to use one variable (change Sprite used instead of having two)
+            if (Large)
+            {
+                           
+                _largeBaseSprite.Draw(spriteBatch,Id, this.Width, this.Height, this.X, this.Y,flip);
+            }
+            else
+            {
+                _baseSprite.SetPosition(this.X, this.Y);
+                _baseSprite.Height = this.Height;
+                _baseSprite.Width = this.Width;
+                _baseSprite.Draw(spriteBatch,flip);
             }
         }
 

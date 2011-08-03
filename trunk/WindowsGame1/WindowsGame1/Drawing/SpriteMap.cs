@@ -41,13 +41,29 @@ namespace WGiBeat.Drawing
                 Height = (int)Math.Ceiling(height * Sprite.Multiplier.Y),
                 Width = (int)Math.Ceiling(width * Sprite.Multiplier.X),
                 X = (int)Math.Ceiling(x * Sprite.Multiplier.X),
-                Y = (int)Math.Ceiling(y * Sprite.Multiplier.Y)
+                Y = (int)Math.Ceiling(y * Sprite.Multiplier.Y) 
             };
-            var rotationOrigin = new Vector2((destRect.Width /2), (destRect.Height /2));
-            spriteBatch.Draw(SpriteTexture, destRect, sourceRect, ColorShading,rotation,rotationOrigin, SpriteEffects.None,0);
+            var origin = new Vector2 {X = destRect.Width/2, Y = destRect.Height/2};
+            destRect.X += (int) origin.X;
+            destRect.Y += (int) origin.Y;
+
+            spriteBatch.Draw(SpriteTexture, destRect, sourceRect, ColorShading,rotation,origin, SpriteEffects.None,0);
         }
 
 
+        public void Draw(SpriteBatch spriteBatch, int cellnumber, int width, int height, int x, int y, SpriteEffects flip)
+        {
+            Rectangle sourceRect = CalculateSourceRectangle(cellnumber);
+            var destRect = new Rectangle
+            {
+                Height = (int)Math.Ceiling(height * Sprite.Multiplier.Y),
+                Width = (int)Math.Ceiling(width * Sprite.Multiplier.X),
+                X = (int)Math.Ceiling(x * Sprite.Multiplier.X),
+                Y = (int)Math.Ceiling(y * Sprite.Multiplier.Y)
+            };
+
+            spriteBatch.Draw(SpriteTexture, destRect, sourceRect, ColorShading, 0.0f, new Vector2(0,0), flip, 0);
+        }
         public void Draw(SpriteBatch spriteBatch, int cellnumber, int width, int height, Vector2 position)
         {
             Draw(spriteBatch, cellnumber, width, height,(int) position.X, (int) position.Y);
