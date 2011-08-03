@@ -132,6 +132,11 @@ namespace WGiBeat.Screens
             disableKO.AddOption("On",true);
             _playerMenus[x].AddItem(disableKO);
 
+            var beatlineDirection = new MenuItem {ItemText = "Scroll Direction"};
+            beatlineDirection.AddOption("Left",false);
+            beatlineDirection.AddOption("Right",true);
+            _playerMenus[x].AddItem(beatlineDirection);
+
             _playerMenus[x].Position = (Core.Metrics["NewGameMenuStart", x]);
             _playerMenus[x].MaxVisibleItems = 6;
 
@@ -360,7 +365,7 @@ namespace WGiBeat.Screens
                        break;
                    case "[Guest]":
                        Core.Players[number].Profile = null;
-                       Core.Players[number].PlayerOptions = new PlayerOptions {BeatlineSpeed = 1.0};
+                       Core.Players[number].PlayerOptions = new PlayerOptions {BeatlineSpeed = 1.0, PlayDifficulty = Difficulty.BEGINNER,ScrollDirectionEast = true, DisableKO = false};
                        ChangeCursorPosition(number, CursorPosition.MAIN_MENU);
                        //NetHelper.Instance.BroadcastProfileChange(number);
                        //NetHelper.Instance.BroadcastPlayerOptions(number);
@@ -412,7 +417,11 @@ namespace WGiBeat.Screens
             _playerMenus[number].GetByItemText("Beatline Speed").SetSelectedByValue(Core.Players[number].PlayerOptions.BeatlineSpeed);
             _playerMenus[number].GetByItemText("Difficulty").SetSelectedByValue((int)Core.Players[number].PlayerOptions.PlayDifficulty);
             _playerMenus[number].GetByItemText("Disable KO").SetSelectedByValue(Core.Players[number].PlayerOptions.DisableKO);
-
+            
+            var direction = number % 2 == 0 ? Core.Players[number].PlayerOptions.ScrollDirectionWest :
+            Core.Players[number].PlayerOptions.ScrollDirectionEast;
+            _playerMenus[number].GetByItemText("Scroll Direction").SetSelectedByValue(
+                direction);
 
             _playerMenus[number].GetByItemText("Difficulty").RemoveOption("Insane");
             if (Core.Players[number].GetMaxDifficulty() >= 4)
@@ -480,6 +489,17 @@ namespace WGiBeat.Screens
                 Core.Players[x].PlayerOptions.BeatlineSpeed = (double)_playerMenus[x].GetByItemText("Beatline Speed").SelectedValue();
                 Core.Players[x].PlayerOptions.DisableKO = (bool)_playerMenus[x].GetByItemText("Disable KO").SelectedValue();
                 Core.Players[x].UpdatePreferences();
+
+                var direction = (bool) _playerMenus[x].GetByItemText("Scroll Direction").SelectedValue();
+
+                if (x % 2 == 0)
+                {
+                    Core.Players[x].PlayerOptions.ScrollDirectionWest = direction;
+                }
+                else
+                {
+                    Core.Players[x].PlayerOptions.ScrollDirectionEast = direction;
+                }
             }
             Core.Profiles.SaveToFolder(Core.Settings["ProfileFolder"] + "");
         }

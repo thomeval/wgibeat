@@ -78,6 +78,9 @@ namespace WGiBeat.Drawing.Sets
             for (int x = 0; x < 4; x++)
             {
                 _beatlines[x] = new Beatline {Position = (_metrics["BeatlineBarBase", x]), Id = x};
+
+                var direction = x%2 == 0 ? players[x].PlayerOptions.ScrollDirectionWest : players[x].PlayerOptions.ScrollDirectionEast;
+                _beatlines[x].ReverseDirection = direction;
             }
         }
 

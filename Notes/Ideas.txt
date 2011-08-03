@@ -2,36 +2,46 @@
 ==Low Priority==
 - Netplay (major)
 - Transition effects for DrawableObjects.
-- Background images.
-
+ -  Battle (0.9?) Tag Team (0.9) game modes.
+ - More Cooperative bonuses (Streaks? Sync perfects?) (0.8)
+ - There HAS to be a better way to upscale the window! Consider switching to 3D.
+ 
 ==Delayed==
 
  
 ==Post Release==
-- Wiki page for WGiEdit and how songs work.
+
 
 ==TODO==
 
-- Sync (0.8?), Battle (0.8?) Tag Team (0.8) game modes.
-- More Cooperative bonuses (Streaks? Sync perfects?) (0.8)
-- There HAS to be a better way to upscale the window! Consider switching to 3D.
-- Dropping a level affects notebar (AKA Mercy Rule).
-- Beatline pulse effect on hit instead of periodic. (Or both)
+
+- Sync mode bugs:
+--Different grades due to different fault counts.
+--Lifebar counts judgements twice.
+--Judgements are counted twice for evaluation.
+--Profile level of P1 is used (instead of max/average)
+--Save high scores with number of players.
+
 - Sound effects for menus.
-- Better transition between Song Select and Main Game screens (while loading songs)
 - Convert song timeline to singleton.  Check memory usage.
 
+==0.8 - ??? ==
+- Beatlines have recevied several minor updates, such as a background, fading in of notes, and new pulse graphics. They have also been made longer.
+- Support for song background graphics (.sng and .sm support only - the background must be declared in the definition file to be recognized).
+- WGiBeat no longer freezes while loading the song selected from the Song Select Screen.
+- Dropping a level affects notebar (AKA Mercy Rule).
+
 ==0.75 - "Functional Mixture" ==
-* BPM Change and Stop support for song files! This includes:
-** Support for BPM changes and stops in .sng, .dwi or .sm format. The .sng format has changed slightly to incorporate these.
-** As a result, many previously broken .sm and .dwi files are now playable. Results will vary depending on how exactly the simfile was authored.
-** Support for saving files in .sng format with Stops and BPM changes.
-** Min and Max BPM is now displayed in the Song select screen.
-** BPM changes and Stops are indicated on Beatlines to warn players. 
-* Song and Audio type is now displayed in the Song Select Screen.
-* Better handling of missing textures or metrics definitions.
-* WGiBeat can now automatically check for updates from the internet. This option must be turned on in the Options Menu.
-* Bugfix: BPMs higher than 999 no longer crash the Song Sorter.
+ * BPM Change and Stop support for song files! This includes:
+ ** Support for BPM changes and stops in .sng, .dwi or .sm format. The .sng format has changed slightly to incorporate these.
+ ** As a result, many previously broken .sm and .dwi files are now playable. Results will vary depending on how exactly the simfile was authored.
+ ** Support for saving files in .sng format with Stops and BPM changes.
+ ** Min and Max BPM is now displayed in the Song select screen.
+ ** BPM changes and Stops are indicated on Beatlines to warn players. 
+ * Song and Audio type is now displayed in the Song Select Screen.
+ * Better handling of missing textures or metrics definitions.
+ * WGiBeat can now automatically check for updates from the internet. This option must be turned on in the Options Menu.
+ * Bugfix: BPMs higher than 999 no longer crash the Song Sorter.
 
 ==0.7 - "Colour-blind Unionist" ==
 
