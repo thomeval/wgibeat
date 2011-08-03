@@ -216,6 +216,9 @@
     <Content Include="Content\Textures\Default\MainGame\BeatlineEffectIcons.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Textures\Default\MainGame\BeatlinePlayerIdentifiers.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Textures\Default\MainGame\BeatMeterPulseBack.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
