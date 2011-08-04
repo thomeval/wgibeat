@@ -14,7 +14,6 @@
 
 ==TODO==
 
-
 - Sync mode bugs:
 --Different grades due to different fault counts.
 --Lifebar counts judgements twice.
@@ -24,12 +23,17 @@
 
 - Sound effects for menus.
 - Convert song timeline to singleton.  Check memory usage.
+- Profiles don't save beatline direction option.
+- Judgements need halo.
 
 ==0.8 - ??? ==
+- Support for Beat Up Mania simfiles! (It's only logical)
 - Beatlines have recevied several minor updates, such as a background, fading in of notes, and new pulse graphics. They have also been made longer.
+- Added option to have beatlines scroll from left to right, to make them easier to follow for P2 and P4. Any player can enable this individually.
 - Support for song background graphics (.sng and .sm support only - the background must be declared in the definition file to be recognized).
-- WGiBeat no longer freezes while loading the song selected from the Song Select Screen.
-- Dropping a level affects notebar (AKA Mercy Rule).
+- Several graphics updates to the main game screen to increase visibility when using song background graphics.
+- WGiBeat no longer freezes temporarily while loading the song selected from the Song Select Screen.
+- When a miss or fault causes a player to drop a level, the number of arrows in the player's current note bar is reduced accordingly. (AKA Mercy Rule).
 
 ==0.75 - "Functional Mixture" ==
  * BPM Change and Stop support for song files! This includes:

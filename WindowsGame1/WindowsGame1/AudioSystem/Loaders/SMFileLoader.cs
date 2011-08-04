@@ -17,6 +17,7 @@ namespace WGiBeat.AudioSystem.Loaders
     public class SMFileLoader : SongFileLoader
     {
         private readonly string[] _notes;
+        private readonly string[] _preferredStyleOrder = { "DANCE-SINGLE", "TECHNO-SINGLE8" };
         private readonly string[] _preferredNoteOrder = {"Hard", "Challenge", "Medium", "Easy", "Beginner", "Edit"};
         private GameSong _newSong;
         public SMFileLoader()
@@ -173,8 +174,8 @@ namespace WGiBeat.AudioSystem.Loaders
         {
             value = value.Replace(" ", "");
             var parts = value.Split(':');
-            //Only consider Single steps
-            if ((parts.Length < 6) || (!parts[0].Equals("dance-single",StringComparison.InvariantCultureIgnoreCase)))
+            //Only consider known step types.
+            if ((parts.Length < 6) || (!_preferredStyleOrder.Contains(parts[0].ToUpper())))
             {
                 return;
             }

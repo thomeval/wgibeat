@@ -38,11 +38,12 @@ namespace WGiBeat.Drawing
         private void SetIndexes()
         {
             _songIndex = _songTypes.IndexOf(Path.GetExtension(Song.DefinitionFile)) + 1;
-            //_audioIndex = _audioTypes.IndexOf(Path.GetExtension(Song.AudioFile)) + 1;
+
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+
             var position = this.Position.Clone();
             _songTypeBackgroundSpriteMap.Draw(spriteBatch, _songIndex, this.Width, this.Height, position);
             position.Y += 1;
