@@ -38,7 +38,6 @@ namespace WGiBeat.Drawing
         private void SetIndexes()
         {
             _songIndex = _songTypes.IndexOf(Path.GetExtension(Song.DefinitionFile)) + 1;
-
         }
 
         public override void Draw(SpriteBatch spriteBatch)

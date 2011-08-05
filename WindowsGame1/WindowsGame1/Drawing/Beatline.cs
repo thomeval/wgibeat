@@ -39,7 +39,6 @@ namespace WGiBeat.Drawing
 
         public bool Large { get; set; }
 
-
         //When a player presses the beatline key, only notes closer than this cutoff are considered.
         //Otherwise, the event is ignored completely.
         public const int HIT_IGNORE_CUTOFF = 1000;
@@ -272,7 +271,7 @@ namespace WGiBeat.Drawing
 
         public void AddBeatlineNote(BeatlineNote bln)
         {
-            _beatlineNotes.Add(bln);
+            _beatlineNotes.Insert(0,bln);
         }
 
         public void InsertBeatlineNote(BeatlineNote bln, int index)

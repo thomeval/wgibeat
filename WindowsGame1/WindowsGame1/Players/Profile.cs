@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using WGiBeat.Notes;
@@ -37,12 +38,13 @@ namespace WGiBeat.Players
         public Profile()
         {
             JudgementCounts = new long[(int)BeatlineNoteJudgement.COUNT + 2];
-            LastPlayerOptions = new PlayerOptions { BeatlineSpeed = 1.0 };
+            LastPlayerOptions = new PlayerOptions { BeatlineSpeed = 1.0, ScrollDirectionWest = true };
         }
 
+        public static bool ProfileOutOfDate = false;
         public Profile(SerializationInfo si, StreamingContext sc)
         {
-            LastPlayerOptions = new PlayerOptions { BeatlineSpeed = 1.0 };
+            LastPlayerOptions = new PlayerOptions();
             Name = (string)si.GetValue("Name", typeof(string));
             EXP = (long)si.GetValue("EXP", typeof(long));
             JudgementCounts = (long[])si.GetValue("JudgementCounts", typeof(long[]));
@@ -57,7 +59,16 @@ namespace WGiBeat.Players
             HitOffsetCount = si.GetInt64("HitOffsetCount");
             LastPlayerOptions.DisableKO = si.GetBoolean("DisableKO");
 
-
+            try
+            {
+                LastPlayerOptions.ScrollDirectionEast = si.GetBoolean("ScrollDirectionEast");
+                LastPlayerOptions.ScrollDirectionWest = si.GetBoolean("ScrollDirectionWest");
+                ProfileOutOfDate = false;
+            }
+            catch (SerializationException)
+            {
+                ProfileOutOfDate = true;
+            }
 
         }
 
@@ -75,6 +86,8 @@ namespace WGiBeat.Players
             si.AddValue("AverageHitOffset", AverageHitOffset);
             si.AddValue("HitOffsetCount", HitOffsetCount);
             si.AddValue("DisableKO", LastPlayerOptions.DisableKO);
+            si.AddValue("ScrollDirectionEast", LastPlayerOptions.ScrollDirectionEast);
+            si.AddValue("ScrollDirectionWest", LastPlayerOptions.ScrollDirectionWest);
         }
 
         public int GetLevel()
