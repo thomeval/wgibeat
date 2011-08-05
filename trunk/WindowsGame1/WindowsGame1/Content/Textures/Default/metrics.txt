@@ -76,7 +76,7 @@ LifeGraph=[20,20][420,20][20,345][420,345];
 
 #New Game;
 NewGameJoinNotification=[50,125][450,125][50,450][450,450];
-NewGameMenuStart=[50,0][450,0][50,300][450,300];
+NewGameMenuStart=[25,0][425,0][25,300][425,300];
 NewGameMessageBorder=[0,220][400,220][0,545][400,545];
 OnScreenKeyboard=[10,40][410,40][10,365][410,365];
 OnScreenKeyboardDisplay=[200,10][600,10][200,335][600,335];

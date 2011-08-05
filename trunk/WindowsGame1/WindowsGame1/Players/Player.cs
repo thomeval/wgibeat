@@ -300,6 +300,13 @@ namespace WGiBeat.Players
         public Difficulty PlayDifficulty { get; set;}
         public bool ScrollDirectionWest { get; set; }
         public bool ScrollDirectionEast { get; set; }
+
+        public PlayerOptions()
+        {
+            ScrollDirectionEast = true;
+            BeatlineSpeed = 1.0;
+            PlayDifficulty = Difficulty.BEGINNER;
+        }
     }
 
     public enum Difficulty

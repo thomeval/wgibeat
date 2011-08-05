@@ -29,7 +29,6 @@ namespace WGiBeat.Screens
         public NewGameScreen(GameCore core)
             : base(core)
         {
-
         }
 
         public override void Initialize()
@@ -39,6 +38,7 @@ namespace WGiBeat.Screens
                 _cursorPositions[x] = CursorPosition.NOT_JOINED;
                 Core.Players[x].Playing = false;
                 Core.Players[x].Remote = false;
+                Core.Players[x].PlayerOptions = new PlayerOptions();
                 Core.Players[x].Profile = null;
                 CreatePlayerMenu(x);
                 CreateProfileMenu(x);
@@ -85,7 +85,7 @@ namespace WGiBeat.Screens
         {
             _profileMenus[x] = new Menu
                                    {
-                                       Width = 300,
+                                       Width = 350,
                                        Position = (Core.Metrics["NewGameMenuStart", x]),
                                        MaxVisibleItems = 6,
                                        SelectedItemBackgroundColor = _backgroundColors[x]
@@ -104,7 +104,7 @@ namespace WGiBeat.Screens
 
         private void CreatePlayerMenu(int x)
         {
-            _playerMenus[x] = new Menu { Width = 300 };
+            _playerMenus[x] = new Menu { Width = 350 };
             _playerMenus[x].AddItem(new MenuItem { ItemText = "Decision" });
             _playerMenus[x].AddItem(new MenuItem { ItemText = "Profile" });
             _playerMenus[x].SelectedItemBackgroundColor = _backgroundColors[x];
@@ -365,7 +365,8 @@ namespace WGiBeat.Screens
                        break;
                    case "[Guest]":
                        Core.Players[number].Profile = null;
-                       Core.Players[number].PlayerOptions = new PlayerOptions {BeatlineSpeed = 1.0, PlayDifficulty = Difficulty.BEGINNER,ScrollDirectionEast = true, DisableKO = false};
+                       Core.Players[number].PlayerOptions = new PlayerOptions();
+                       RefereshSelectedOptions(number);
                        ChangeCursorPosition(number, CursorPosition.MAIN_MENU);
                        //NetHelper.Instance.BroadcastProfileChange(number);
                        //NetHelper.Instance.BroadcastPlayerOptions(number);
@@ -488,10 +489,8 @@ namespace WGiBeat.Screens
     (Difficulty)(int)_playerMenus[x].GetByItemText("Difficulty").SelectedValue();
                 Core.Players[x].PlayerOptions.BeatlineSpeed = (double)_playerMenus[x].GetByItemText("Beatline Speed").SelectedValue();
                 Core.Players[x].PlayerOptions.DisableKO = (bool)_playerMenus[x].GetByItemText("Disable KO").SelectedValue();
-                Core.Players[x].UpdatePreferences();
-
+                
                 var direction = (bool) _playerMenus[x].GetByItemText("Scroll Direction").SelectedValue();
-
                 if (x % 2 == 0)
                 {
                     Core.Players[x].PlayerOptions.ScrollDirectionWest = direction;
@@ -500,6 +499,8 @@ namespace WGiBeat.Screens
                 {
                     Core.Players[x].PlayerOptions.ScrollDirectionEast = direction;
                 }
+
+                Core.Players[x].UpdatePreferences();
             }
             Core.Profiles.SaveToFolder(Core.Settings["ProfileFolder"] + "");
         }

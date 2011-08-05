@@ -25,6 +25,7 @@
 - Convert song timeline to singleton.  Check memory usage.
 - Profiles don't save beatline direction option.
 - Judgements need halo.
+- CPU player beatline notes bug.
 
 ==0.8 - ??? ==
 - Support for Beat Up Mania simfiles! (It's only logical)

@@ -62,13 +62,12 @@ namespace WGiBeat.Managers
 
                     var fs = File.OpenRead(file);
                     var profile = (Profile)bf.Deserialize(fs);
+                    if (Profile.ProfileOutOfDate)
+                    {
+                        pm.Log.AddMessage("Profile is outdated but loaded successfully: " + file, LogLevel.NOTE);
+                    }
                     pm.Add(profile);
                     fs.Close();
-                }
-
-                catch (SerializationException ex)
-                {                    
-                    pm.Log.AddMessage("Profile is outdated and cannot be loaded: " + file,LogLevel.WARN);
                 }
                 catch (Exception ex)
                 {
