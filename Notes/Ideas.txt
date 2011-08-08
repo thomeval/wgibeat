@@ -7,7 +7,7 @@
  - There HAS to be a better way to upscale the window! Consider switching to 3D.
  
 ==Delayed==
-
+- Sound effects for menus.
  
 ==Post Release==
 
@@ -16,15 +16,9 @@
 
 - Sync mode bugs:
 --Different grades due to different fault counts.
---Lifebar counts judgements twice.
---Judgements are counted twice for evaluation.
 --Profile level of P1 is used (instead of max/average)
---Save high scores with number of players.
 
-- Sound effects for menus.
-- Convert song timeline to singleton.  Check memory usage.
-- Profiles don't save beatline direction option.
-- Judgements need halo.
+
 - CPU player beatline notes bug.
 
 ==0.8 - ??? ==
@@ -35,6 +29,7 @@
 - Several graphics updates to the main game screen to increase visibility when using song background graphics.
 - WGiBeat no longer freezes temporarily while loading the song selected from the Song Select Screen.
 - When a miss or fault causes a player to drop a level, the number of arrows in the player's current note bar is reduced accordingly. (AKA Mercy Rule).
+- Improvements to the update checker to handle errors more gracefully.
 
 ==0.75 - "Functional Mixture" ==
  * BPM Change and Stop support for song files! This includes:
