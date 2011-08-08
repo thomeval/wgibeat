@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Managers;
 using WGiBeat.Notes;
@@ -69,6 +70,7 @@ namespace WGiBeat.Drawing.Sets
 
         public void AdjustMomentum(BeatlineNoteJudgement judgement, int player)
         {
+           
             if (judgement == BeatlineNoteJudgement.MISS)
             {
                 MultiplyMomentum(0.8, player);
@@ -86,7 +88,8 @@ namespace WGiBeat.Drawing.Sets
                      MomentumIncreaseByDifficulty(Players[player].PlayerOptions.PlayDifficulty));
                 if (_gameType == GameType.SYNC)
                 {
-                    //TODO: Fix
+                    var activePlayers = (from e in Players where e.Playing select e).Count();
+                    amount /= activePlayers;
                     SetMomentumSync(Players[0].Momentum + amount);
                 }
                 else
@@ -96,13 +99,16 @@ namespace WGiBeat.Drawing.Sets
  
             }
 
-
         }
 
         public void MultiplyMomentum(double amount, int player)
         {
+            //In SYNC mode, this function will be called for every player, so we need to dampen it
+            //to ensure the correct result.
             if (_gameType == GameType.SYNC)
             {
+                var activePlayers = (from e in Players where e.Playing select e).Count();
+                amount = Math.Pow(amount, 1.0 / activePlayers);
                 SetMomentumSync((long) (Players[0].Momentum*amount));
             }
             else
@@ -114,6 +120,7 @@ namespace WGiBeat.Drawing.Sets
 
         private void SetMomentumSync(long amount)
         {
+            
             for (int x = 0; x < 4; x++)
             {
                 Players[x].Momentum = amount;
