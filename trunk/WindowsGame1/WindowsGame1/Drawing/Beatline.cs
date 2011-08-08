@@ -352,13 +352,9 @@ namespace WGiBeat.Drawing
             //Mark the beatlinenote as hit (it will be displayed differently and hold position)
             if (nearest != null)
             {
-                nearest.Hit = true;
-                nearest.Opacity = 255;
-                nearest.DisplayPosition = CalculateAbsoluteBeatlinePosition(nearest.Position, phraseNumber);
-                nearest.Position = phraseNumber + 0.3;
+                MarkNoteAsHit(nearest, phraseNumber);
             }
-
-            
+          
             return result;
         }
 
@@ -372,11 +368,17 @@ namespace WGiBeat.Drawing
 
             foreach (BeatlineNote bln in passedNotes)
             {
-                bln.Hit = true;
-                bln.DisplayPosition = CalculateAbsoluteBeatlinePosition(bln.Position, phraseNumber);
-                bln.Position = phraseNumber + 0.3;
+                MarkNoteAsHit(bln, phraseNumber);
             }
             return result;
+        }
+
+        private void MarkNoteAsHit(BeatlineNote bln, double phraseNumber)
+        {
+            bln.Hit = true;
+            bln.Opacity = 255;
+            bln.DisplayPosition = CalculateAbsoluteBeatlinePosition(bln.Position, phraseNumber);
+            bln.Position = phraseNumber + 0.3;
         }
 
         public void ClearNotes()
