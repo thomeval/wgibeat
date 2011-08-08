@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 
 namespace WGiBeat.Managers
@@ -39,8 +38,10 @@ namespace WGiBeat.Managers
 
         public void AddMessage(string message, LogLevel level)
         {
+            
             AddMessage(new LogEntry{Message = message, Level = level});
 #if DEBUG
+            //System.Diagnostics.Debug.WriteLine(level + ":" + message);
             if (level == LogLevel.ERROR)
             {
                 throw new Exception(message);

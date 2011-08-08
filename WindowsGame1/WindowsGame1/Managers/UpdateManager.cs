@@ -7,8 +7,9 @@ namespace WGiBeat.Managers
     public class UpdateManager : Manager
     {
 
-        public string LatestVersion { get; set; }
-        public string NewsFeed { get; set; }
+        public string LatestVersion { get; private set; }
+        public string NewsFeed { get; private set; }
+        public string ErrorMessage { get; private set; }
 
         public event EventHandler UpdateInfoAvailable;
         public event EventHandler UpdateInfoFailed;
@@ -16,8 +17,19 @@ namespace WGiBeat.Managers
 
         public void GetLatestVersion()
         {
+            if (!String.IsNullOrEmpty(LatestVersion))
+            {
+                Log.AddMessage("Skipping version information web request.", LogLevel.DEBUG);
+                if (UpdateInfoAvailable != null)
+                {
+                    UpdateInfoAvailable(this, null);
+                }
+                return;
+            }
+
             try
             {
+                Log.AddMessage("Fetching latest version information...",LogLevel.INFO);
                 var result = WebRequest.Create("http://wgibeat.googlecode.com/svn/trunk/Notes/LatestVersion.txt");
                 var response = (HttpWebResponse)result.GetResponse();
                 var stream = response.GetResponseStream();
@@ -44,6 +56,7 @@ namespace WGiBeat.Managers
                 }
                 while (count > 0);
                 ApplyVersionData(stringBuilder.ToString());
+                Log.AddMessage("Update check successful. Latest version is " + this.LatestVersion,LogLevel.INFO);
                 if (UpdateInfoAvailable != null)
                 {
                     UpdateInfoAvailable(this, null);
@@ -52,11 +65,12 @@ namespace WGiBeat.Managers
             catch (Exception ex)
             {
                 LastException = ex;
+                ErrorMessage = ex.Message;
+                Log.AddMessage("Update check failed: " + this.ErrorMessage, LogLevel.NOTE);
                 if (UpdateInfoFailed != null)
                 {
                     UpdateInfoFailed(this, null);
-                }
-                throw;
+                }              
             }
         }
 
@@ -68,6 +82,12 @@ namespace WGiBeat.Managers
             NewsFeed = lines[1].Trim();
         }
 
+        public void Reset()
+        {
+            LatestVersion = "";
+            ErrorMessage = "";
+            NewsFeed = "";
+        }
 
     }
 }

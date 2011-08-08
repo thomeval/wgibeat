@@ -51,7 +51,7 @@ namespace WGiBeat.Drawing
                         message = "Checking for updates...";
                         break;
                     case UpdaterStatus.FAILED:
-                        message = "Failed to retrieve WGiBeat latest version information.";
+                        message = "Update check failed: " + NewsMessage;
                         break;
                     case UpdaterStatus.SUCCESSFUL:
                         message = DetermineVersionMessage();

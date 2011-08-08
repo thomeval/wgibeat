@@ -35,6 +35,7 @@ namespace WGiBeat
         public LogManager Log;
         public TextManager Text;
         public KeyMappings KeyMappings;
+        public UpdateManager UpdateManager;
 
         public Player[] Players;
         public Dictionary<string, object> Cookies;
@@ -48,7 +49,7 @@ namespace WGiBeat
         public string WgibeatRootFolder;
         private bool _drawInProgress;
 
-        public const string VERSION_STRING = "v0.8 pre";
+        public const string VERSION_STRING = "v0.8";
         private GameCore()
         {
             GraphicsManager = new GraphicsDeviceManager(this);
@@ -56,6 +57,8 @@ namespace WGiBeat
         }
 
         private static GameCore _instance;
+
+
         public static GameCore Instance
         {
             get { return _instance ?? (_instance = new GameCore()); }
@@ -134,6 +137,8 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
 
             if (!passed)
                 KeyMappings.LoadDefault();
+
+            UpdateManager = new UpdateManager { Log = this.Log };
 
             /*
             Net = new NetManager {Log = this.Log};
