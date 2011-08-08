@@ -19,7 +19,6 @@ namespace WGiBeat.Screens
         private Sprite _header;
         private SpriteMap _menuOptionSprite;
         private Sprite _foreground;
-        private UpdateManager _updateManager;
         private UpdaterFrame _updaterFrame;
 
         private Thread _updateThread;
@@ -33,10 +32,11 @@ namespace WGiBeat.Screens
         public override void Initialize()
         {
             _updaterFrame = new UpdaterFrame
-                                {
-                                    Position = Core.Metrics["UpdaterFrame", 0],
-                                    Status = UpdaterStatus.DISABLED
-                                };
+            {
+                Position = Core.Metrics["UpdaterFrame", 0],
+                Status = UpdaterStatus.DISABLED
+            };
+
             InitSprites();
             InitUpdater();
 
@@ -49,7 +49,7 @@ namespace WGiBeat.Screens
             {
                 return;
             }
-            _updateManager = new UpdateManager();
+
             _updateThread = new Thread(RunUpdater) {Name = "Updater"};
             _updateThread.Start();
             
@@ -58,21 +58,21 @@ namespace WGiBeat.Screens
         private void RunUpdater()
         {
             _updaterFrame.Status = UpdaterStatus.CHECKING;
-            _updateManager.UpdateInfoAvailable += UpdateInfoAvailable;
-            _updateManager.UpdateInfoFailed += UpdateInfoFailed;
-            _updateManager.GetLatestVersion();
-            
+            Core.UpdateManager.UpdateInfoAvailable += UpdateInfoAvailable;
+            Core.UpdateManager.UpdateInfoFailed += UpdateInfoFailed;
+            Core.UpdateManager.GetLatestVersion();
         }
 
         private void UpdateInfoFailed(object sender, EventArgs e)
         {
             _updaterFrame.Status = UpdaterStatus.FAILED;
+            _updaterFrame.NewsMessage = Core.UpdateManager.ErrorMessage;
         }
 
         private void UpdateInfoAvailable(object sender, EventArgs e)
         {
-            _updaterFrame.NewsMessage = _updateManager.NewsFeed;
-            _updaterFrame.AvailableVersion = _updateManager.LatestVersion;
+            _updaterFrame.NewsMessage = Core.UpdateManager.NewsFeed;
+            _updaterFrame.AvailableVersion = Core.UpdateManager.LatestVersion;
             _updaterFrame.CurrentVersion = GameCore.VERSION_STRING.Substring(1);
             _updaterFrame.Status = UpdaterStatus.SUCCESSFUL;
         }

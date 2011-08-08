@@ -462,10 +462,10 @@ namespace WGiBeat.Screens
         private void StartSongLoading(object state)
         {
             _preloadState = PreloadState.LOADING_STARTED;
-            System.Diagnostics.Debug.WriteLine("Preload started...");
+            Core.Log.AddMessage("Song preload started...",LogLevel.DEBUG);
             Core.Cookies["GameSongChannel"] = Core.Songs.PreloadSong(CurrentSong);
             SetPanicState();
-            System.Diagnostics.Debug.WriteLine("Preload done.");
+            Core.Log.AddMessage("Song preload done.", LogLevel.DEBUG);
             _preloadState = PreloadState.LOADING_FINISHED;
         }
 
