@@ -131,10 +131,8 @@ namespace WGiBeat.Drawing
             _arrowSprites.Draw(spriteBatch, 1, 35, 35, this.X + 15, this.Y + 8);
             _arrowSprites.Draw(spriteBatch, 0, 35, 35, this.X + this.Width - 40, this.Y + 8);
 
-            if (Active)
-            {
-                 DrawList(spriteBatch);
-            }
+            DrawList(spriteBatch);
+
         }
 
         private void SetSpritePositions()
@@ -146,6 +144,7 @@ namespace WGiBeat.Drawing
         {
             _listBackgroundSprite.Height = 40 + (_bookmarkTextSize * (Math.Min(VisibleBookmarks,_bookmarkMenu.ItemCount)));
             _listBackgroundSprite.Width = 75;
+            _listBackgroundSprite.ColorShading.A = _activeOpacity;
             _listBackgroundSprite.SetPosition(this.X + this.Width - 75, this.Y + this.Height);
             _listBackgroundSprite.Draw(spriteBatch);
 
@@ -155,7 +154,9 @@ namespace WGiBeat.Drawing
                 CreateBookmarkMenu();
                 SetBookmark(_selectedSongIndex);
             }
+            _bookmarkMenu.Opacity = _activeOpacity;
             _bookmarkMenu.Draw(spriteBatch);
+
         }
 
 

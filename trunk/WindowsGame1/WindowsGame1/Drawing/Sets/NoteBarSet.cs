@@ -149,11 +149,19 @@ namespace WGiBeat.Drawing.Sets
         }
         public int NumberCompleted(int player)
         {
+            if (_gameType == GameType.SYNC)
+            {
+                return (from e in _noteBars select e.NumberCompleted() + e.NumberReverse()).Max();
+            }
             return _noteBars[player].NumberCompleted() + _noteBars[player].NumberReverse(); 
         }
 
         public int NumberIncomplete(int player)
         {
+            if (_gameType == GameType.SYNC)
+            {
+                return (from e in _noteBars select e.Notes.Count + e.NumberCompleted()).Max();
+            }
             return _noteBars[player].Notes.Count - _noteBars[player].NumberCompleted();
         }
 

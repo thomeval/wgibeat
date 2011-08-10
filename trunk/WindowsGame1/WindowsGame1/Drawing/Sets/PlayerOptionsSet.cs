@@ -241,7 +241,7 @@ namespace WGiBeat.Managers
 
             var lowestDifficulty = (from e in Players where e.IsHumanPlayer select e.PlayerOptions.PlayDifficulty).Min();
 
-            foreach (Player player in (from e in Players where e.IsHumanPlayer select e))
+            foreach (Player player in (from e in Players select e))
             {
                 player.PlayerOptions.PlayDifficulty = lowestDifficulty;
             }

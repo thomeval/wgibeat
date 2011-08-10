@@ -104,17 +104,17 @@ namespace WGiBeat.Screens
 
         private void HitsAggregated(object sender, ObjectEventArgs e)
         {
-            AggregatorResponse ar = (AggregatorResponse) e.Object;
+            var ar = (AggregatorResponse) e.Object;
 
             switch (ar.Player)
             {
                 case AggregatorPlayerID.ALL:
                     for (int x = 0; x < 4; x++ )
                     {
-                        if (Core.Players[x].Playing)
-                        {
+                  //      if (Core.Players[x].Playing)
+                  //      {
                             ApplyJudgement(ar.Judgement,x,ar.Multiplier);
-                        }
+                  //      }
                     }
                         break;
                     default:

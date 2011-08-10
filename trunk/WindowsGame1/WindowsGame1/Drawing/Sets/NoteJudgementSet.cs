@@ -118,10 +118,19 @@ namespace WGiBeat.Drawing.Sets
                 _lifeBarSet.AdjustLife(lifeAdjust, player);
             }
 
-            var newDj = new DisplayedJudgement { DisplayUntil = _phraseNumber + 0.5, Height = 40, Width = 150, Player = player, Tier = (int)judgement };
-            newDj.Position = (_metrics["Judgement", player]);
-            _displayedJudgements[player] = newDj;
-
+            if (Players[player].Playing)
+            {
+                var newDj = new DisplayedJudgement
+                                {
+                                    DisplayUntil = _phraseNumber + 0.5,
+                                    Height = 40,
+                                    Width = 150,
+                                    Player = player,
+                                    Tier = (int) judgement
+                                };
+                newDj.Position = (_metrics["Judgement", player]);
+                _displayedJudgements[player] = newDj;
+            }
         }
 
         private void RecordJudgement(int player, BeatlineNoteJudgement judgement)
