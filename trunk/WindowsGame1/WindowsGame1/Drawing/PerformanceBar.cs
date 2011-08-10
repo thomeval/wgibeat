@@ -59,9 +59,12 @@ namespace WGiBeat.Drawing
 
             for (int x = 0; x < Players.Length; x++)
             {
-                if (!Players[x].Playing)
-                    continue;
 
+                //TODO: Refactor
+                if ((!Players[x].Playing) && (GameType != GameType.SYNC))
+                {
+                    continue;
+                }
                 if (x > 0 && (GameType == GameType.SYNC))
                 {
                     return;

@@ -143,7 +143,18 @@ namespace WGiBeat.Screens
         private void PlayerFaulted(object sender, EventArgs e)
         {
             var player = (int) sender;
-            _lifeBarSet.AdjustLife(Core.Players[player].MissedArrow(), player);
+            //TODO: Life adjustments and momentum adjustments are handled inconsistently. Refactor
+            if ((GameType) Core.Cookies["CurrentGameType"] == GameType.SYNC)
+            {
+
+                    _lifeBarSet.AdjustLife(Core.Players[player].MissedArrow(), 0); 
+            }
+            else
+            {
+                _lifeBarSet.AdjustLife(Core.Players[player].MissedArrow(), player);  
+            }
+
+            
             _levelbarSet.AdjustForFault(player);
             _noteBarSet.TruncateNotes(player, (int)Core.Players[player].Level);
             _hitsBarSet.ResetHits(player);
