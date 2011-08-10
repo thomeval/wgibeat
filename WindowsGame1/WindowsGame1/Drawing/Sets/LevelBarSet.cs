@@ -88,7 +88,7 @@ namespace WGiBeat.Drawing.Sets
                      MomentumIncreaseByDifficulty(Players[player].PlayerOptions.PlayDifficulty));
                 if (_gameType == GameType.SYNC)
                 {
-                    var activePlayers = (from e in Players where e.Playing select e).Count();
+                    const int activePlayers = 4;
                     amount /= activePlayers;
                     SetMomentumSync(Players[0].Momentum + amount);
                 }
@@ -107,7 +107,7 @@ namespace WGiBeat.Drawing.Sets
             //to ensure the correct result.
             if (_gameType == GameType.SYNC)
             {
-                var activePlayers = (from e in Players where e.Playing select e).Count();
+                const int activePlayers = 4;
                 amount = Math.Pow(amount, 1.0 / activePlayers);
                 SetMomentumSync((long) (Players[0].Momentum*amount));
             }

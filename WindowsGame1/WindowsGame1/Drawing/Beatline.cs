@@ -47,8 +47,11 @@ namespace WGiBeat.Drawing
         //Increase this to make them move faster and more apart.
         const int BEAT_ZOOM_DISTANCE = 200;
 
+        //The height of the beatline markers.
         private const int NORMAL_HEIGHT = 34;
         private const int LARGE_HEIGHT = 68;
+
+        //The distance from the left edge of the beatline to the impact area of the beatline.
         private const int LEFT_SIDE = 40;
         private const int IMPACT_WIDTH = 5;
 

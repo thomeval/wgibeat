@@ -38,9 +38,13 @@ namespace WGiBeat.Drawing
                 return _menuItems.Count;
             }
         }
+
+        public byte Opacity { get; set; }
+
         public Menu()
         {
             SelectedIndex = 0;
+            Opacity = 255;
             _menuItems = new List<MenuItem>();
             InitSprites();
         }
@@ -100,6 +104,7 @@ namespace WGiBeat.Drawing
 
                 if (IsSelected(menuItem))
                 {
+                    SelectedItemBackgroundColor.A = Opacity;
                     drawColor = HighlightColor;
                     _selectedItemSprite.ColorShading = SelectedItemBackgroundColor;
                     _selectedItemSprite.Position = position.Clone();
@@ -118,6 +123,7 @@ namespace WGiBeat.Drawing
                 {
                     drawColor = new Color(drawColor, (byte)(drawColor.A / 2));
                 }
+                drawColor.A = Opacity;
                 TextureManager.DrawString(spriteBatch, menuItem.ItemText, FontName, position, drawColor, FontAlign.LEFT);
                 position.X += xOptionOffset;
 
@@ -137,15 +143,18 @@ namespace WGiBeat.Drawing
 
         private void DrawBorder(SpriteBatch spriteBatch, int startItem, int lastItem)
         {
+            _edgeSpriteMap.ColorShading.A = Opacity;
             _edgeSpriteMap.Draw(spriteBatch, 0, this.Width, 30, this.X, this.Y);
             var menuBottom = Math.Min(MaxVisibleItems, _menuItems.Count);
             var bottomPosition = this.Y + (ItemSpacing * menuBottom) + 40;
             _edgeSpriteMap.Draw(spriteBatch, 1, this.Width, 30, this.X, bottomPosition);
             _animationOffset = (int)(_animationOffset * 0.4);
 
+            _sideSpriteMap.ColorShading.A = Opacity;
             _sideSpriteMap.Draw(spriteBatch, 0, 5, bottomPosition - this.Y - 30, this.X, this.Y + 30);
             _sideSpriteMap.Draw(spriteBatch, 0, 5, bottomPosition - this.Y - 30, this.X + this.Width - 5, this.Y + 30);
 
+            _arrowSpriteMap.ColorShading.A = Opacity;
             if (startItem > 0)
             {
                 _arrowSpriteMap.Draw(spriteBatch, 2, 25, 25, this.X + (this.Width / 2) - 12, this.Y);

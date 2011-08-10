@@ -225,10 +225,6 @@ namespace WGiBeat.Drawing.Sets
         {
             for (int x = 0; x < 4; x++)
             {
-                if (!Players[x].Playing)
-                {
-                    continue;
-                }
 
                 var amount = Math.Max(25, (Players[x].Score - _displayedScores[x]) / 10);
                 _displayedScores[x] = Math.Min(Players[x].Score, _displayedScores[x] + amount);

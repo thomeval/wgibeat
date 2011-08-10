@@ -70,7 +70,9 @@ namespace WGiBeat.Drawing.Sets
                 case GameType.NORMAL:
                 case GameType.TEAM:
                 case GameType.VS_CPU:
-                    AdjustLifeNormal(amount, player,false);
+                    AdjustLifeNormal(amount, player);
+                    CheckForNormalKO(player);
+                    ClipNormalMaxLife(player);
                     break;
                 case GameType.COOPERATIVE:
                     AdjustLifeCoop(amount, player);
@@ -113,7 +115,7 @@ namespace WGiBeat.Drawing.Sets
         }
 
 
-        private void AdjustLifeNormal(double amount, int player, bool ignoreKO)
+        private void AdjustLifeNormal(double amount, int player)
         {
             if ((amount > 0) && (Players[player].Life + amount > 100))
             {
@@ -133,13 +135,10 @@ namespace WGiBeat.Drawing.Sets
             {
                 Players[player].Life += amount;
             }
+        }
 
-            Players[player].Life = Math.Min(Players[player].GetMaxLife(), Players[player].Life);
-
-            if (ignoreKO)
-            {
-                return;
-            }
+        private void CheckForNormalKO(int player)
+        {
             if ((!Players[player].CPU) && (Players[player].Life <= 0) && (!Players[player].PlayerOptions.DisableKO))
             {
                 Players[player].KO = true;
@@ -147,19 +146,44 @@ namespace WGiBeat.Drawing.Sets
             }
         }
 
+        private void ClipNormalMaxLife(int player)
+        {
+            Players[player].Life = Math.Min(Players[player].GetMaxLife(), Players[player].Life);   
+        }
+
         private void AdjustLifeSync(double amount, int player)
         {
-
-            AdjustLifeNormal(amount, player, true);
+            if (amount != 0.0)
+            {
+                System.Diagnostics.Debug.WriteLine("AdjustLifeSync: P" + player + ", amount: " + amount);
+            }
+            AdjustLifeNormal(amount, player);
+            ClipSyncMaxLife(0);
             for (int x = 1; x < 4; x++)
             {
                 Players[x].Life = Players[0].Life;
             }
 
+            CheckForSyncKO();
+        }
+
+        private void ClipSyncMaxLife(int player)
+        {
+            var maxLife = (from e in Players where e.Playing select e.GetMaxLife()).Min();
+            Players[player].Life = Math.Min(maxLife, Players[player].Life);   
+
+        }
+
+        private void CheckForSyncKO()
+        {
             if ((Players[0].Life <= 0) && (!AnyPlayerHasDisabledKO()))
             {
                 for (int x = 0; x < 4; x++)
                 {
+                    if (!Players[x].Playing)
+                    {
+                        continue;
+                    }
                     Players[x].KO = true;
                     Players[x].Life = 0;
                 }
@@ -224,12 +248,17 @@ namespace WGiBeat.Drawing.Sets
                 if (_lifeBars[x] != null)
                 {
                     _lifeBars[x].Reset();
-
                 }
             }
             for (int x = 0; x < 4; x++)
             {
                 SetLife(Players[x].Life, x);
+            }
+            if (_gameType == GameType.SYNC)
+            {
+                var maxLife = (from e in Players where e.Playing select e.GetMaxLife()).Min();
+                Players[0].Life = maxLife/2;
+                AdjustLifeSync(0.0,0);
             }
             _lastBlazeCheck = 0.0;
         }
