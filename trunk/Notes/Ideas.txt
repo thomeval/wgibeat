@@ -15,16 +15,16 @@
 ==TODO==
 
 ==0.8 - "Patient Fury" ==
-* A new cooperative game mode is now playable: Sync Mode! Please report any bugs found when playing this mode to the development team.
-* Support for Beat Up Mania simfiles! (It's only logical)
-* Beatlines have recevied several minor updates, such as a background, fading in of notes, and new pulse graphics. They have also been made longer.
-* Added option to have beatlines scroll from left to right, to make them easier to follow for P2 and P4. Any player can enable this individually.
-* Support for song background graphics (.sng and .sm support only - the background must be declared in the definition file to be recognized).
-* Several graphics updates to the main game screen to increase visibility when using song background graphics.
-* WGiBeat no longer freezes temporarily while loading the song selected from the Song Select Screen.
-* When a miss or fault causes a player to drop a level, the number of arrows in the player's current note bar is reduced accordingly. (AKA Mercy Rule).
-* Improvements to the update checker to handle errors more gracefully.
-* Song sort menu now fades in and out correctly.
+ * A new cooperative game mode is now playable: Sync Mode! Please report any bugs found when playing this mode to the development team.
+ * Support for Beat Up Mania simfiles! (It's only logical)
+ * Beatlines have recevied several minor updates, such as a background, fading in of notes, and new pulse graphics. They have also been made longer.
+ * Added option to have beatlines scroll from left to right, to make them easier to follow for P2 and P4. Any player can enable this individually.
+ * Support for song background graphics (.sng and .sm support only - the background must be declared in the definition file to be recognized).
+ * Several graphics updates to the main game screen to increase visibility when using song background graphics.
+ * WGiBeat no longer freezes temporarily while loading the song selected from the Song Select Screen.
+ * When a miss or fault causes a player to drop a level, the number of arrows in the player's current note bar is reduced accordingly. (AKA Mercy Rule).
+ * Improvements to the update checker to handle errors more gracefully.
+ * Song sort menu now fades in and out correctly.
 
 ==0.75 - "Functional Mixture" ==
  * BPM Change and Stop support for song files! This includes:
