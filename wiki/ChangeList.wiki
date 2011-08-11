@@ -2,6 +2,18 @@
 
 =Version History=
 
+==0.8 - "Patient Fury" ==
+ * A new cooperative game mode is now playable: Sync Mode! Please report any bugs found when playing this mode to the development team.
+ * Support for Beat Up Mania simfiles! (It's only logical)
+ * Beatlines have recevied several minor updates, such as a background, fading in of notes, and new pulse graphics. They have also been made longer.
+ * Added option to have beatlines scroll from left to right, to make them easier to follow for P2 and P4. Any player can enable this individually.
+ * Support for song background graphics (.sng and .sm support only - the background must be declared in the definition file to be recognized).
+ * Several graphics updates to the main game screen to increase visibility when using song background graphics.
+ * WGiBeat no longer freezes temporarily while loading the song selected from the Song Select Screen.
+ * When a miss or fault causes a player to drop a level, the number of arrows in the player's current note bar is reduced accordingly. (AKA Mercy Rule).
+ * Improvements to the update checker to handle errors more gracefully.
+ * Song sort menu now fades in and out correctly.
+
 ==0.75 (r481) - "Functional Mixture" ==
 
   * BPM Change and Stop support for song files! This includes:
@@ -21,11 +33,11 @@
   * Players can now join and leave independently from any screen that has Player Options Frames (mode, team and song select screens). To join if possible, press START. To leave, hold SELECT and press START. 
   * EXP and player level system for profiles. Player level and EXP bar is shown on Player Options Frames.
   * Depending on player profile level, a player can have up to 300 maximum life. The normal lifebar has been updated to reflect this.
-  * Player starting life is depandant on player profile level. 
+  * Player starting life is dependent on player profile level. 
   * Lifebars now indicate when they are full by having a coloured text background.  
   * Coop mode now has overcharge, and a completely new blazing mode system.
-  * CPU players now miss beatlines more beliveably.
-  * Momentum increases are now dependant on beatline accuracy (better judgements award more momentum).
+  * CPU players now miss beatlines more believably.
+  * Momentum increases are now dependent on beatline accuracy (better judgements award more momentum).
   * Player difficulty icons have been updated.
   * Blazing mode now has graphical effects when active (in both Normal and Coop modes).  
   * Improved song navigation by using headings similar to those found in RB2 and RB3. Hold the BEATLINE key and press UP or DOWN to use this during Song Select.
