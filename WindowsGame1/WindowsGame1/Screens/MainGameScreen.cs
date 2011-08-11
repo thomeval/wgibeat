@@ -136,8 +136,7 @@ namespace WGiBeat.Screens
             {
                 _noteBarSet.CreateNextNoteBar((int)ar.Player);
             }
-
-            
+         
         }
 
         private void PlayerFaulted(object sender, EventArgs e)

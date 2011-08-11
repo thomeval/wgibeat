@@ -58,7 +58,6 @@ namespace WGiBeat
 
         private static GameCore _instance;
 
-
         public static GameCore Instance
         {
             get { return _instance ?? (_instance = new GameCore()); }

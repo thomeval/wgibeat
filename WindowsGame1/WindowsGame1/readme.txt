@@ -1,4 +1,4 @@
-﻿WGiBeat - v0.75 Readme
+﻿WGiBeat - v0.8 Readme
 http://code.google.com/p/wgibeat/
 wgibeat{at}gmail{period}com
 By thomeval

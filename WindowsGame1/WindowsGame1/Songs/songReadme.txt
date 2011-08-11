@@ -11,6 +11,7 @@ OFFSET=The starting point offset, in seconds, goes here;
 LENGTH=The length of the song, in seconds goes here;
 AUDIOFILE=The name of the song file (such as mysong.mp3) goes here.;
 AUDIOSTART=(Optional) The starting position of audio playback goes here.;
+BACKGROUND=(Optional) The name of the background image (such as mybackground.png) goes here.;
 
 Note that each line MUST end in a semicolon, and the file must start with #SONG-1.0;
 
