@@ -4,7 +4,7 @@
 
 ==0.8 - "Patient Fury" ==
  * A new cooperative game mode is now playable: Sync Mode! Please report any bugs found when playing this mode to the development team.
- * Support for Beat Up Mania simfiles! (It's only logical)
+ * Support for [http://www.stepmania.com/forums/showthread.php?22227-Beat-Up-Mania Beat Up Mania] simfiles! (It's only logical)
  * Beatlines have recevied several minor updates, such as a background, fading in of notes, and new pulse graphics. They have also been made longer.
  * Added option to have beatlines scroll from left to right, to make them easier to follow for P2 and P4. Any player can enable this individually.
  * Support for song background graphics (.sng and .sm support only - the background must be declared in the definition file to be recognized).
