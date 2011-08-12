@@ -203,19 +203,17 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             {
                 GraphicsManager.PreferredBackBufferHeight = 600;
                 GraphicsManager.PreferredBackBufferWidth = 800;
-                Sprite.SetMultiplier(800,600);
             }
             else
             {
                 string[] resolution = Settings.Get<string>("ScreenResolution").Split('x');
                 GraphicsManager.PreferredBackBufferWidth = Convert.ToInt32(resolution[0]);
                 GraphicsManager.PreferredBackBufferHeight = Convert.ToInt32(resolution[1]);
-
-                Sprite.SetMultiplier(Convert.ToInt32(resolution[0]), Convert.ToInt32(resolution[1]));
+              
             }
 
             Sprite.Core = this;
-            PrimitiveLine.Multiplier = Sprite.Multiplier;
+            Sprite.Device = this.GraphicsDevice;
             GraphicsManager.ApplyChanges();
         }
 
@@ -243,7 +241,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
         public void LoadCurrentTheme()
         {
             var themeFolder = WgibeatRootFolder + "\\Content\\Textures\\";
-            if (!(Settings.Get<string>("Theme") == "Default"))
+            if (Settings.Get<string>("Theme") != "Default")
             {
                 TextureManager.LoadTheme(themeFolder + "Default");
                 Metrics.LoadFromFile(themeFolder + "Default\\metrics.txt");
@@ -309,9 +307,11 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
                 _spriteBatch.End();
             }
 
-            _spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+            //TODO: Use Matrix.CreateScale for resolution effects.
+            _spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None,Matrix.CreateScale(GraphicsManager.PreferredBackBufferWidth / 800.0f));
             if (enableWrap)
             {
+   
                 GraphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
                 GraphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
             }
@@ -320,6 +320,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
                 GraphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Clamp;
                 GraphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Clamp;
             }
+       
             _drawInProgress = true;
 
         }

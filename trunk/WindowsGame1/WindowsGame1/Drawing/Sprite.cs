@@ -6,12 +6,7 @@ namespace WGiBeat.Drawing
 {
     public class Sprite : DrawableObject
     {
-        public static Vector2 Multiplier = new Vector2(1,1);
         public static GameCore Core;
-
-        public const int BASE_WIDTH = 800;
-        public const int BASE_HEIGHT = 600;
-
 
         public Sprite()
         {
@@ -20,21 +15,35 @@ namespace WGiBeat.Drawing
 
         public Color ColorShading;
         public Texture2D SpriteTexture;
-        private Vector2 _origin;
 
+        public static GraphicsDevice Device;
+        private VertexPositionTexture[] _vertices;
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            SetupPrimitives();
+            
             CheckIfDimensionsSet();
             var boundingBox = new Rectangle
             {
-                Height = (int)Math.Ceiling(this.Height * Multiplier.Y),
-                Width = (int)Math.Ceiling(this.Width * Multiplier.X),
-                X = (int)Math.Ceiling(this.X * Multiplier.X),
-                Y = (int)Math.Ceiling(this.Y * Multiplier.Y),
-
+                Height = this.Height,
+                Width = this.Width,
+                X = this.X,
+                Y = this.Y,
             };
+
+           // SetupPrimitives();
+        //    Device.DrawUserPrimitives(PrimitiveType.TriangleStrip, vertices, 0, 1);
             spriteBatch.Draw(SpriteTexture,boundingBox,ColorShading);
+        }
+
+        private void SetupPrimitives()
+        {
+            _vertices = new[] {
+                new VertexPositionTexture{Position = new Vector3{X = this.X, Y = this.Y},TextureCoordinate = new Vector2{X = 0, Y = 0}}, 
+                new VertexPositionTexture{Position = new Vector3{X = this.X + this.Width, Y = this.Y},TextureCoordinate = new Vector2{X = 1, Y = 0}},
+                new VertexPositionTexture{Position = new Vector3{X = this.X + this.Width, Y = this.Y + this.Height},TextureCoordinate = new Vector2{X = 1, Y = 1}}, 
+                new VertexPositionTexture{Position = new Vector3{X = this.X, Y = this.Y + this.Height},TextureCoordinate = new Vector2{X = 0, Y = 1}}, };       
         }
 
         public void Draw(SpriteBatch spriteBatch, SpriteEffects flip)
@@ -42,38 +51,16 @@ namespace WGiBeat.Drawing
             CheckIfDimensionsSet();
             var boundingBox = new Rectangle
             {
-                Height = (int)Math.Ceiling(this.Height * Multiplier.Y),
-                Width = (int)Math.Ceiling(this.Width * Multiplier.X),
-                X = (int)Math.Ceiling(this.X * Multiplier.X),
-                Y = (int)Math.Ceiling(this.Y * Multiplier.Y),
-
+                Height = this.Height,
+                Width = this.Width,
+                X = this.X,
+                Y = this.Y,
             };
 
+           // SetupPrimitives();
+           // Device.DrawUserPrimitives(PrimitiveType.TriangleStrip, vertices, 0, 1);
             spriteBatch.Draw(SpriteTexture, boundingBox, null, ColorShading, 0,new Vector2(0,0), flip, 0); 
         }
-
-        //Doesn't work - No solution found for sprite tearing yet.
-        private static Rectangle AdjustForDrift(Rectangle boundingBox)
-        {
-           var drift = Math.Ceiling(boundingBox.X * Multiplier.X) - (boundingBox.X * Multiplier.X);
-           drift  += Math.Ceiling(boundingBox.Width * Multiplier.X) - (boundingBox.Width * Multiplier.X);
-
-            if (drift >= 0.5)
-            {
-                boundingBox.Width--;
-            }
-
-            drift = Math.Ceiling(boundingBox.Y * Multiplier.Y) - (boundingBox.Y * Multiplier.Y);
-            drift += Math.Ceiling(boundingBox.Height * Multiplier.Y) - (boundingBox.Height * Multiplier.Y);
-
-            if (drift >= 0.5)
-            {
-                boundingBox.Height--;
-            }
-
-            return boundingBox;
-        }
-
 
         public void DrawTiled(SpriteBatch spriteBatch, int texU1, int texV1, int texU2, int texV2)
         {
@@ -83,14 +70,13 @@ namespace WGiBeat.Drawing
             var textureRect = new Rectangle(texU1, texV1, texU2, texV2);
             var dest = new Rectangle
             {
-                X = (int)Math.Ceiling(this.X * Multiplier.X),
-                Y = (int)Math.Ceiling(this.Y * Multiplier.Y),
-                Height = (int)Math.Ceiling(this.Height * Multiplier.Y),
-                Width = (int)Math.Ceiling(this.Width * Multiplier.X),
+                Height = this.Height,
+                Width = this.Width,
+                X = this.X,
+                Y = this.Y,
             };
 
             spriteBatch.Draw(SpriteTexture, dest, textureRect, ColorShading);
-
             Core.ShiftSpriteBatch(false);
             
         }
@@ -109,15 +95,7 @@ namespace WGiBeat.Drawing
             {
                 Height = SpriteTexture.Height;
             }
-            _origin = new Vector2(Width*Multiplier.X/2.0f , Height*Multiplier.Y/2.0f);
         }
-
-        public static void SetMultiplier(int width, int height)
-        {
-            Multiplier.X = (float) (1.0*width/BASE_WIDTH);
-            Multiplier.Y = (float) (1.0*height/BASE_HEIGHT);
-        }
-
 
     }
 }

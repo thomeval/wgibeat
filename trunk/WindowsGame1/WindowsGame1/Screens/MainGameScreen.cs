@@ -500,11 +500,12 @@ namespace WGiBeat.Screens
             _lifeBarSet.Draw(spriteBatch, _phraseNumber);
             _levelbarSet.Draw(spriteBatch);
             _hitsBarSet.Draw(spriteBatch);
-
+            
             _noteJudgementSet.Draw(spriteBatch, _phraseNumber);
             _beatlineSet.Draw(spriteBatch, _phraseNumber);
             _performanceBar.Draw(spriteBatch);
-
+             
+            
             if (_phraseNumber < 0)
             {
                 DrawCountdowns(spriteBatch);
@@ -514,7 +515,7 @@ namespace WGiBeat.Screens
             DrawSongInfo(spriteBatch);
             DrawClearIndicators(spriteBatch);
             DrawText(spriteBatch);
-
+            
         }
 
         private void DrawBackground(SpriteBatch spriteBatch)
