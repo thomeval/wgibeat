@@ -2,7 +2,7 @@
 
 =Version History=
 
-==0.8 - "Patient Fury" ==
+==0.8 (r518) - "Patient Fury" ==
  * A new cooperative game mode is now playable: Sync Mode! Please report any bugs found when playing this mode to the development team.
  * Support for [http://www.stepmania.com/forums/showthread.php?22227-Beat-Up-Mania Beat Up Mania] simfiles! (It's only logical)
  * Beatlines have recevied several minor updates, such as a background, fading in of notes, and new pulse graphics. They have also been made longer.
