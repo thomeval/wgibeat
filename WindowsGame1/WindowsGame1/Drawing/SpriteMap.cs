@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing
@@ -24,13 +23,12 @@ namespace WGiBeat.Drawing
             Rectangle sourceRect = CalculateSourceRectangle(cellnumber);
             var destRect = new Rectangle
                                {
-                                   Height =  (int) Math.Ceiling(height * Sprite.Multiplier.Y),
-                                   Width = (int)Math.Ceiling(width * Sprite.Multiplier.X),
-                                   X = (int)Math.Ceiling(x * Sprite.Multiplier.X),
-                                   Y = (int)Math.Ceiling(y * Sprite.Multiplier.Y)
+                                   Height = height,
+                                   Width = width,
+                                   X = x,
+                                   Y = y
                                };
-            spriteBatch.Draw(SpriteTexture, destRect, sourceRect, ColorShading);
-            
+            spriteBatch.Draw(SpriteTexture, destRect, sourceRect, ColorShading);         
         }
 
         public void Draw(SpriteBatch spriteBatch, int cellnumber, int width, int height, int x, int y, float rotation)
@@ -38,10 +36,10 @@ namespace WGiBeat.Drawing
             Rectangle sourceRect = CalculateSourceRectangle(cellnumber);
             var destRect = new Rectangle
             {
-                Height = (int)Math.Ceiling(height * Sprite.Multiplier.Y),
-                Width = (int)Math.Ceiling(width * Sprite.Multiplier.X),
-                X = (int)Math.Ceiling(x * Sprite.Multiplier.X),
-                Y = (int)Math.Ceiling(y * Sprite.Multiplier.Y) 
+                Height = height,
+                Width = width,
+                X = x,
+                Y = y
             };
             var origin = new Vector2 {X = destRect.Width/2, Y = destRect.Height/2};
             destRect.X += (int) origin.X;
@@ -56,10 +54,10 @@ namespace WGiBeat.Drawing
             Rectangle sourceRect = CalculateSourceRectangle(cellnumber);
             var destRect = new Rectangle
             {
-                Height = (int)Math.Ceiling(height * Sprite.Multiplier.Y),
-                Width = (int)Math.Ceiling(width * Sprite.Multiplier.X),
-                X = (int)Math.Ceiling(x * Sprite.Multiplier.X),
-                Y = (int)Math.Ceiling(y * Sprite.Multiplier.Y)
+                Height = height,
+                Width = width,
+                X = x,
+                Y = y
             };
 
             spriteBatch.Draw(SpriteTexture, destRect, sourceRect, ColorShading, 0.0f, new Vector2(0,0), flip, 0);

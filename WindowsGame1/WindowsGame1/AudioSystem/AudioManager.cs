@@ -98,7 +98,6 @@ namespace WGiBeat.AudioSystem
             CheckFMODErrors(myChannel.setVolume(_masterVolume));
             int index = -1;
             CheckFMODErrors(myChannel.getIndex(ref index));
-
             return index;
         }
 
