@@ -9,7 +9,8 @@ namespace WGiBeat.AudioSystem
 {
     /// <summary>
     /// A manager that specifically handles parsing, saving, storage and validation of Song Files (.sng files). 
-    /// These files are loaded and a collection of loaded songs is managed here. Game songs can then be played 
+    /// These files are loaded and a collection of loaded songs is managed here. In order to load each song, a Loader object is used,
+    /// with each loader designed to handle a specific file type. Game songs can then be played 
     /// by using the PlaySong() method. The actual audio component is handled by the AudioManager.
     /// </summary>
     public class SongManager : Manager
