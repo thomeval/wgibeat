@@ -107,6 +107,7 @@
     <Compile Include="AudioSystem\SongManager.cs" />
     <Compile Include="AudioSystem\SongTimeline.cs" />
     <Compile Include="AudioSystem\SongTimingPoint.cs" />
+    <Compile Include="AudioSystem\SoundEffectManager.cs" />
     <Compile Include="Drawing\ActionBinding.cs" />
     <Compile Include="Drawing\PerformanceBar.cs" />
     <Compile Include="Drawing\ProfileLevelDisplay.cs" />
@@ -195,7 +196,7 @@
     <Compile Include="Screens\TeamSelectScreen.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Audio\Fallback.ogg">
+    <Content Include="Content\SoundEffects\Fallback.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\Common\BackgroundParticles.png">
