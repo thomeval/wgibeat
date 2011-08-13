@@ -1,0 +1,6 @@
+﻿#MENUSOUNDS-1.0;
+MainMenuDecide=test.ogg;
+MainMenuSelectUp=test2.ogg;
+MainMenuSelectDown=test2.ogg;
+MenuDecide=test.ogg;
+SongDecide=test.ogg;

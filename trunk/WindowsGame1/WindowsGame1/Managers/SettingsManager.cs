@@ -66,6 +66,7 @@ namespace WGiBeat.Managers
             sm["CheckForUpdates"] = false;
             sm["ScreenResolution"] = "800x600";
             sm["AllowPDA"] = false;
+            sm["EnableMenuSounds"] = true;
             return sm;
         }
 

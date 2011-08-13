@@ -2,6 +2,7 @@
 using System.Globalization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
 using LogLevel = WGiBeat.Managers.LogLevel;
@@ -163,18 +164,23 @@ namespace WGiBeat.Screens
             {
                 case "LEFT":
                     _optionsMenu.DecrementOption();
+                    RaiseSoundTriggered(SoundEvent.MENU_OPTION_SELECT_LEFT);
                     break;
                 case "RIGHT":
                     _optionsMenu.IncrementOption();
+                    RaiseSoundTriggered(SoundEvent.MENU_OPTION_SELECT_RIGHT);
                     break;
                 case "UP":
                     _optionsMenu.DecrementSelected();
+                    RaiseSoundTriggered(SoundEvent.MENU_SELECT_UP);
                     break;
                 case "DOWN":
                     _optionsMenu.IncrementSelected();
+                    RaiseSoundTriggered(SoundEvent.MENU_SELECT_DOWN);
                     break;
                 case "BACK":
                     Core.ScreenTransition("MainMenu");
+                    RaiseSoundTriggered(SoundEvent.MENU_BACK);
                     break;
 
                 case "START":
@@ -191,9 +197,11 @@ namespace WGiBeat.Screens
                 case "Save":
                     SaveOptions();
                     Core.ScreenTransition("MainMenu");
+                    RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     break;
                 case "Cancel":
                     Core.ScreenTransition("MainMenu");
+                    RaiseSoundTriggered(SoundEvent.MENU_BACK);
                     break;
             }
         }

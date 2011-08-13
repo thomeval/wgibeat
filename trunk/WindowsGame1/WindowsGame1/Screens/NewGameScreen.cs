@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
 //using WGiBeat.NetSystem;
@@ -308,19 +309,24 @@ namespace WGiBeat.Screens
                 case "UP":
                         _playerMenus[playerIdx].DecrementSelected();
                         _profileMenus[playerIdx].DecrementSelected();
+                    RaiseSoundTriggered(SoundEvent.MENU_SELECT_UP);                    
                     break;
                 case "DOWN":
                         _playerMenus[playerIdx].IncrementSelected();
                         _profileMenus[playerIdx].IncrementSelected();
+                        RaiseSoundTriggered(SoundEvent.MENU_SELECT_DOWN);   
                     break;
                 case "RIGHT":
                         _playerMenus[playerIdx].IncrementOption();
+                        RaiseSoundTriggered(SoundEvent.MENU_OPTION_SELECT_RIGHT);   
                     break;
                 case "LEFT":
                         _playerMenus[playerIdx].DecrementOption();
+                        RaiseSoundTriggered(SoundEvent.MENU_OPTION_SELECT_LEFT);   
                     break;
                 case "BACK":
                     Core.ScreenTransition("MainMenu");
+                    RaiseSoundTriggered(SoundEvent.MENU_BACK);   
                     //NetHelper.Instance.BroadcastScreenTransition("MainMenu");
                     //Core.Net.Disconnect();
                     break;
@@ -509,6 +515,7 @@ namespace WGiBeat.Screens
         private void StartGame()
         {
            // NetHelper.Instance.BroadcastScreenTransition("ModeSelect");
+            RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
             Core.ScreenTransition("ModeSelect");
         }
 

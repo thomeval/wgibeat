@@ -2,6 +2,7 @@
 using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
 
@@ -160,11 +161,13 @@ namespace WGiBeat.Screens
                         newOptionValue += (int)MainMenuOption.COUNT;
                     }
                     _selectedMenuOption = (MainMenuOption)newOptionValue;
+                    RaiseSoundTriggered(SoundEvent.MAIN_MENU_SELECT_UP);
                     break;
                 case "DOWN":
                     newOptionValue = (int)_selectedMenuOption + 1;
                     newOptionValue %= (int)MainMenuOption.COUNT;
                     _selectedMenuOption = (MainMenuOption)newOptionValue;
+                    RaiseSoundTriggered(SoundEvent.MAIN_MENU_SELECT_DOWN);
                     break;
                 case "START":
                      MenuOptionSelected(inputAction.Player - 1);
@@ -180,6 +183,7 @@ namespace WGiBeat.Screens
 
         private void MenuOptionSelected(int player)
         {
+            RaiseSoundTriggered(SoundEvent.MAIN_MENU_DECIDE);
             switch (_selectedMenuOption)
             {
                 case MainMenuOption.START_GAME:
