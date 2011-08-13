@@ -29,6 +29,7 @@ namespace WGiBeat
 
         public AudioManager Audio;
         public SongManager Songs;
+        public SoundEffectManager Sounds;
         public HighScoreManager HighScores;
         public CrossfaderManager Crossfader;
         public CPUManager CPUManager;
@@ -118,6 +119,8 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             Audio.SetMasterVolume((float)Settings.Get<double>("SongVolume"));
 
             Songs = new SongManager(this.Log, this.Audio, this.Settings);
+            Sounds = new SoundEffectManager(this.Log, this.Audio, this.Settings);
+
             Crossfader = new CrossfaderManager(this.Log, this.Audio);
 
             CPUManager = new CPUManager(this.Log);
@@ -182,6 +185,10 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             _screens.Add("Stats", new StatsScreen(this));
            // _screens.Add("Net",new NetLobbyScreen(this));
 
+            foreach (GameScreen screen in _screens.Values)
+            {
+                screen.SoundTriggered += (s,e) => Sounds.PlaySoundEffect((SoundEvent) (e.Object));
+            }
             if (!Settings.Get<bool>("RunOnce"))
             {
                 ScreenTransition("Instruction");
@@ -241,13 +248,16 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
         public void LoadCurrentTheme()
         {
             var themeFolder = WgibeatRootFolder + "\\Content\\Textures\\";
-            if (Settings.Get<string>("Theme") != "Default")
+            var currentTheme = Settings.Get<string>("Theme");
+            if (currentTheme != "Default")
             {
                 TextureManager.LoadTheme(themeFolder + "Default");
                 Metrics.LoadFromFile(themeFolder + "Default\\metrics.txt");
+                Sounds.LoadFromFolder(WgibeatRootFolder + "\\Content\\SoundEffects\\Default");
             }
-            TextureManager.LoadTheme(themeFolder + Settings.Get<string>("Theme"));
-            Metrics.LoadFromFile(themeFolder + Settings.Get<string>("Theme") + "\\metrics.txt");
+            TextureManager.LoadTheme(themeFolder + currentTheme);
+            Metrics.LoadFromFile(themeFolder + currentTheme + "\\metrics.txt");
+            Sounds.LoadFromFolder(WgibeatRootFolder + "\\Content\\SoundEffects\\" + currentTheme);
         }
 
         /// <summary>

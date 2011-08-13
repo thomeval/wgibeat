@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
 using WGiBeat.Players;
@@ -231,6 +232,7 @@ namespace WGiBeat.Screens
             }  
             else
             {
+                RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                 Core.ScreenTransition("SongSelect");
             }
         }

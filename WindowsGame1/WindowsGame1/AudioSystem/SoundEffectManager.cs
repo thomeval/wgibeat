@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using WGiBeat.Managers;
@@ -10,20 +11,79 @@ namespace WGiBeat.AudioSystem
     {
         public AudioManager AudioManager { get; set; }
         public SettingsManager SettingsManager { get; set; }
-        public Dictionary<string, string> Sounds;
-
+        public readonly Dictionary<string, string> Sounds;
+       
         public SoundEffectManager(LogManager log, AudioManager audioManager, SettingsManager settings)
         {
             Log = log;
             AudioManager = audioManager;
             SettingsManager = settings;
             Sounds = new Dictionary<string, string>();
-            Log.AddMessage("Initializing Song Manager...", LogLevel.INFO);
+            Log.AddMessage("Initializing Sound Effect Manager...", LogLevel.INFO);
         }
 
-        public void LoadFromFile(string filename)
+        public void LoadFromFolder(string foldername)
         {
-            //TODO: Define file format.
+            if (!Directory.Exists(foldername))
+            {
+                Log.AddMessage("SoundEffectManager: Folder doesn't exist: " + foldername, LogLevel.WARN);
+                return;
+            }
+
+            if (!File.Exists(foldername + "\\MenuSounds.txt"))
+            {
+                Log.AddMessage("SoundEffectManager: Cannot find definition file: " + foldername + "\\MenuSounds.txt", LogLevel.WARN);
+                return;
+            }
+
+            var filedata = File.ReadAllText(foldername + "\\MenuSounds.txt").Replace("\r", "").Replace("\n", "");
+            var lines = filedata.Split(';');
+            if (!lines[0].StartsWith("#MENUSOUNDS-1.0"))
+            {
+                Log.AddMessage("SoundEffectManager: Invalid definition file: " + foldername + "\\MenuSounds.txt", LogLevel.WARN);
+            }
+
+            foreach (var line in lines)
+            {
+                var parts = line.Split('=');
+                if (parts.Count() != 2)
+                {
+                    continue;
+                }
+
+                var key = parts[0].ToUpper();
+                var value = foldername + "\\" + parts[1];
+
+                Sounds[key] = value;
+            }
+        }
+
+        public void PlaySoundEffect(SoundEvent sevent)
+        {
+            if (!SettingsManager.Get<bool>("EnableMenuSounds"))
+            {
+                return;
+            }
+
+            var eventName = sevent.ToString().Replace("_", "");
+            if (!Sounds.ContainsKey(eventName))
+            {
+                //This should happen if no corresponding definition is found for the event (such as a missing definition file).
+                Log.AddMessage("SoundEffectManager doesn't contain an entry for: " + eventName,LogLevel.WARN);
+                Sounds[eventName] = "";
+                return;
+            }
+            if (string.IsNullOrEmpty(Sounds[eventName]))
+            {
+                return;
+            }
+            if (!File.Exists(Sounds[eventName]))
+            {
+                Log.AddMessage("SoundEffectManager: File specified doesn't exist: " + Sounds[eventName], LogLevel.WARN);
+                return;
+            }
+
+            AudioManager.PlaySoundEffect(Sounds[eventName]);
         }
     }
 

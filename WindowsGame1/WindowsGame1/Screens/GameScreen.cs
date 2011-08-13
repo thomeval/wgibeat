@@ -1,6 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using WGiBeat.AudioSystem;
 using WGiBeat.Helpers;
 using WGiBeat.Managers;
 //using WGiBeat.NetSystem;
@@ -55,11 +57,25 @@ namespace WGiBeat.Screens
         {
             //Virtual since it is optional for GameScreens.
         }
+
+        public  event EventHandler<ObjectEventArgs> SoundTriggered;
+
+        /// <summary>
+        /// Necessary since inherited classes cannot invoke events in the base class.
+        /// </summary>
+        /// <param name="soundEvent">The SoundEvent to report to GameCore.</param>
+        protected void RaiseSoundTriggered(SoundEvent soundEvent)
+        {
+            if (SoundTriggered != null)
+            {
+                SoundTriggered(this, new ObjectEventArgs {Object = soundEvent});
+            }
+        }
         /*
         public virtual void NetMessageReceived(NetMessage message)
         {
             
         }
-         */ 
+         */
     }
 }

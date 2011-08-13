@@ -383,6 +383,7 @@ namespace WGiBeat.Screens
             {
                 case "UP":
                     MoveSelectionUp();
+                    
                     break;
                 case "DOWN":
                     MoveSelectionDown();
@@ -454,7 +455,7 @@ namespace WGiBeat.Screens
 
                 _songLoadingThread = new Thread(StartSongLoading) { Name = "Song Loading Thread" };
                 _songLoadingThread.Start();
-            
+            RaiseSoundTriggered(SoundEvent.SONG_DECIDE);
 
         }
 
@@ -491,6 +492,7 @@ namespace WGiBeat.Screens
             }
             _previewStarted = false;
             _songListDrawOffset -= 50;
+            RaiseSoundTriggered(SoundEvent.SONG_SELECT_UP);
         }
 
         private void MoveSelectionDown()
@@ -498,6 +500,7 @@ namespace WGiBeat.Screens
             _selectedIndex = (_selectedIndex + 1) % _songList.Count();
             _previewStarted = false;
             _songListDrawOffset += 50;
+            RaiseSoundTriggered(SoundEvent.SONG_SELECT_DOWN);
 
         }
 

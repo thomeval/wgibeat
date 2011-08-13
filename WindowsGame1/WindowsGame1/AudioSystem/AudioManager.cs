@@ -77,6 +77,7 @@ namespace WGiBeat.AudioSystem
                 return PlayFallbackSoundEffect(false);
             }
 
+            CheckChannels();
             var mySound = GetOrCreateSound(soundPath, !dontStream);
             var myChannel = new Channel();
 
@@ -85,7 +86,7 @@ namespace WGiBeat.AudioSystem
             if (loop)
             {
                 mode += (uint)MODE.LOOP_NORMAL;
-
+                
             }
             if (!dontStream)
             {
@@ -95,10 +96,32 @@ namespace WGiBeat.AudioSystem
 
             CheckFMODErrors(mySound.setMode((MODE)mode));
             CheckFMODErrors(_fmodSystem.playSound(CHANNELINDEX.FREE, mySound, loadPaused, ref myChannel));
-            CheckFMODErrors(myChannel.setVolume(_masterVolume));
+            if (loop)
+            {
+                CheckFMODErrors(myChannel.setPriority(0));
+            }
+
+
+                CheckFMODErrors(myChannel.setVolume(_masterVolume));
             int index = -1;
             CheckFMODErrors(myChannel.getIndex(ref index));
+            System.Diagnostics.Debug.WriteLine("Channel: " + index);
             return index;
+        }
+
+        /// <summary>
+        /// Although this method doesn't actually return anything, it is necessary for FMOD to realise
+        /// which channels are free for reuse.
+        /// </summary>
+        private void CheckChannels()
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                Channel channel = new Channel();
+                CheckFMODErrors(_fmodSystem.getChannel(x, ref channel));
+                bool isplaying = false;
+                channel.isPlaying(ref isplaying);
+            }
         }
 
         /// <summary>

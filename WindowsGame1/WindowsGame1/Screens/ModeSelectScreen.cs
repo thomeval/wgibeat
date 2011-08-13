@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
 //using WGiBeat.NetSystem;
@@ -258,31 +259,38 @@ namespace WGiBeat.Screens
                     if (_selectingCPUSkill)
                     {
                         ChangeSelectedCPUDifficulty(-1);
+                        RaiseSoundTriggered(SoundEvent.MENU_OPTION_SELECT_LEFT);
                     }
                     else
                     {
                         ChangeGameType(-1);
+                        RaiseSoundTriggered(SoundEvent.MENU_SELECT_UP);
                     }
-
+                    
                     break;
                 case "RIGHT":
                     if (_selectingCPUSkill)
                     {
                         ChangeSelectedCPUDifficulty(1);
+                        RaiseSoundTriggered(SoundEvent.MENU_OPTION_SELECT_RIGHT);
                     }
                     else
                     {
                         ChangeGameType(1);
+                        RaiseSoundTriggered(SoundEvent.MENU_SELECT_DOWN);
                     }
+                    
                     break;
                 case "BACK":
                     Core.ScreenTransition("NewGame");
+                    RaiseSoundTriggered(SoundEvent.MENU_BACK);
                     break;
                 case "START":
                     DoAction();
                     break;
                 case "SELECT":
                     _playerOptionsSet.SetChangeMode(inputAction.Player,true);
+                    RaiseSoundTriggered(SoundEvent.PLAYER_OPTIONS_DISPLAY);
                     break;
 
             }
@@ -294,6 +302,7 @@ namespace WGiBeat.Screens
             {
                 case "SELECT":
                     _playerOptionsSet.SetChangeMode(inputAction.Player, false);
+                    RaiseSoundTriggered(SoundEvent.PLAYER_OPTIONS_HIDE);
                     break;
             }
             //NetHelper.Instance.BroadcastActionReleased(inputAction);
@@ -332,11 +341,13 @@ namespace WGiBeat.Screens
             {
 
                 Core.Cookies["CurrentGameType"] = (GameType)_selectedGameType;
+                RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                 if (((GameType)_selectedGameType) == GameType.VS_CPU)
                 {
                     if (!_selectingCPUSkill)
                     {
                         SetupVSCPUMode();
+                        
                         return;
                     }
                     Core.Cookies["CPUSkillLevel"] = Core.CPUManager.SkillNames[_selectedCPUSkill];
