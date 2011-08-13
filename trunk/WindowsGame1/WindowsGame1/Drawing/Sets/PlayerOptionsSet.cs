@@ -103,7 +103,6 @@ namespace WGiBeat.Managers
                     break;
                 case "RIGHT":
                         playerOptions.AdjustDifficulty(1);
- 
                     break;
                 case "UP":
                         playerOptions.AdjustSpeed(1);

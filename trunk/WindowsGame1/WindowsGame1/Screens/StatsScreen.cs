@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
 using WGiBeat.Notes;
@@ -243,6 +244,7 @@ namespace WGiBeat.Screens
                     break;
                 case "BACK":
                     Core.ScreenTransition("MainMenu");
+                    RaiseSoundTriggered(SoundEvent.MENU_BACK);
                     break;
             }
         }
@@ -259,6 +261,14 @@ namespace WGiBeat.Screens
             {
                 case StatsScreenState.SELECT_PROFILE:
                     _profileMenus[idx].MoveSelected(amount);
+                    if (amount > 0)
+                    {
+                        RaiseSoundTriggered(SoundEvent.MENU_SELECT_DOWN);
+                    }
+                    else
+                    {
+                        RaiseSoundTriggered(SoundEvent.MENU_SELECT_UP);
+                    }
                     break;
                 case StatsScreenState.VIEWING_STATS:
                     _scrollPosition[idx] += amount;
@@ -274,6 +284,7 @@ namespace WGiBeat.Screens
             if (side == -1)
             {
                 AddPlayer(player);
+                RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                 return;
             }
 
@@ -283,15 +294,18 @@ namespace WGiBeat.Screens
                     if (_profileMenus[side].SelectedItem().ItemValue != null)
                     {
                         _activeProfiles[side] = (Profile)_profileMenus[side].SelectedItem().ItemValue;
+                        RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     }
                     else
                     {
                         Core.ScreenTransition("MainMenu");
+                        RaiseSoundTriggered(SoundEvent.MENU_BACK);
                     }
 
                     break;
                 case StatsScreenState.VIEWING_STATS:
                     _activeProfiles[side] = null;
+                    RaiseSoundTriggered(SoundEvent.MENU_BACK);
                     break;
             }
 
@@ -327,7 +341,6 @@ namespace WGiBeat.Screens
             return StatsScreenState.VIEWING_STATS;
         }
     }
-
 
     public enum StatsScreenState
     {

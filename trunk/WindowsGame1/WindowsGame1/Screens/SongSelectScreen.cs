@@ -360,6 +360,7 @@ namespace WGiBeat.Screens
             var pass = _playerOptionsSet.PerformAction(inputAction);
             if (pass)
             {
+                RaiseSoundTriggered(SoundEvent.PLAYER_OPTIONS_CHANGE);
                 CheckCPUDifficulty();
                 return;
             }
@@ -367,7 +368,7 @@ namespace WGiBeat.Screens
             pass = _songSortDisplay.PerformAction(inputAction);
             if (pass)
             {
-
+                RaiseSoundTriggered(SoundEvent.SONG_SORT_CHANGE);
                 JumpToBookmark();
                 return;
             }
@@ -383,7 +384,6 @@ namespace WGiBeat.Screens
             {
                 case "UP":
                     MoveSelectionUp();
-                    
                     break;
                 case "DOWN":
                     MoveSelectionDown();
@@ -391,15 +391,18 @@ namespace WGiBeat.Screens
                 case "BEATLINE":
                     _songSortDisplay.Active = true;
                     _songSortDisplay.SelectedSongIndex = _selectedIndex;
+                    RaiseSoundTriggered(SoundEvent.SONG_SORT_DISPLAY);
                     break;
                 case "SELECT":
                     _playerOptionsSet.SetChangeMode(inputAction.Player, true);
+                    RaiseSoundTriggered(SoundEvent.PLAYER_OPTIONS_DISPLAY);
                     break;
                 case "START":
                     StartSong();
                     break;
                 case "BACK":
                     Core.ScreenTransition("ModeSelect");
+                    RaiseSoundTriggered(SoundEvent.MENU_BACK);
                     break;
             }
         }
@@ -436,9 +439,11 @@ namespace WGiBeat.Screens
             {
                 case "SELECT":
                     _playerOptionsSet.SetChangeMode(inputAction.Player, false);
+                    RaiseSoundTriggered(SoundEvent.PLAYER_OPTIONS_HIDE);
                     break;
                 case "BEATLINE":
                     _songSortDisplay.Active = false;
+                    RaiseSoundTriggered(SoundEvent.SONG_SORT_HIDE);
                     break;
             }
         }
@@ -455,7 +460,7 @@ namespace WGiBeat.Screens
 
                 _songLoadingThread = new Thread(StartSongLoading) { Name = "Song Loading Thread" };
                 _songLoadingThread.Start();
-            RaiseSoundTriggered(SoundEvent.SONG_DECIDE);
+                RaiseSoundTriggered(SoundEvent.SONG_DECIDE);
 
         }
 

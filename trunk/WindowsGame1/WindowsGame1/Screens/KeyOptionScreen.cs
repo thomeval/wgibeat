@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using Microsoft.Xna.Framework.Input;
 using WGiBeat.Managers;
@@ -37,7 +38,7 @@ namespace WGiBeat.Screens
         private readonly string[] _actions = { "LEFT", "RIGHT", "UP", "DOWN", "BEATLINE", "START", "SELECT", "Reset Defaults" };
         private const int _normalActionCount = 7;
 
-        private SineSwayParticleField _field = new SineSwayParticleField();
+        private readonly SineSwayParticleField _field = new SineSwayParticleField();
         private Vector2 _bindingPosition;
 
         public KeyOptionScreen(GameCore core)
@@ -199,9 +200,7 @@ namespace WGiBeat.Screens
                     }
 
                     Core.KeyMappings.SetKey(key, _currentPlayer, _actions[_selectedAction]);
-                    Core.KeyMappings.SaveToFile("Keys.conf");
-                    State.CurrentState = 1;
-                    CreateBindingList();
+                    SaveMappingChanges();
                     break;
             }
         }
@@ -214,15 +213,20 @@ namespace WGiBeat.Screens
                     State.CurrentState = 3;
                     break;
                 case 3:
-
                     Core.KeyMappings.SetButton(buttons, controllerNumber, _currentPlayer, _actions[_selectedAction]);
-                    Core.KeyMappings.SaveToFile("Keys.conf");
-                    State.CurrentState = 1;
-                    CreateBindingList();
+                    SaveMappingChanges();
                     break;
             }
         }
 
+        private void SaveMappingChanges()
+        {
+            Core.KeyMappings.SaveToFile("Keys.conf");
+            State.CurrentState = 1;
+            CreateBindingList();
+            RaiseSoundTriggered(SoundEvent.KEY_CHANGE_COMPLETE);
+        }
+ 
         public override void PerformAction(InputAction inputAction)
         {
             if (State.CurrentState != 1)
@@ -234,10 +238,10 @@ namespace WGiBeat.Screens
             {
                 case "UP":
                     _selectedAction--;
-
                     if (_selectedAction < 0)
                         _selectedAction = _actions.Length - 1;
 
+                    RaiseSoundTriggered(SoundEvent.MENU_SELECT_UP);
                     break;
 
                 case "DOWN":
@@ -246,6 +250,7 @@ namespace WGiBeat.Screens
                     if (_selectedAction >= _actions.Length)
                         _selectedAction = 0;
 
+                    RaiseSoundTriggered(SoundEvent.MENU_SELECT_DOWN);
                     break;
 
                 case "LEFT":
@@ -253,6 +258,8 @@ namespace WGiBeat.Screens
 
                     if (_currentPlayer < 1)
                         _currentPlayer = 4;
+
+                    RaiseSoundTriggered(SoundEvent.MENU_OPTION_SELECT_LEFT);
                     break;
 
                 case "RIGHT":
@@ -260,6 +267,8 @@ namespace WGiBeat.Screens
 
                     if (_currentPlayer > 4)
                         _currentPlayer = 1;
+
+                    RaiseSoundTriggered(SoundEvent.MENU_OPTION_SELECT_RIGHT);
                     break;
 
                 case "START":
@@ -270,6 +279,7 @@ namespace WGiBeat.Screens
                     break;
                 case "BACK":
                     Core.ScreenTransition("MainMenu");
+                    RaiseSoundTriggered(SoundEvent.MENU_BACK);
                     break;
             }
             CreateBindingList();
@@ -299,10 +309,12 @@ namespace WGiBeat.Screens
             {
                 Core.KeyMappings.LoadDefault();
                 Core.KeyMappings.SaveToFile("Keys.conf");
+                RaiseSoundTriggered(SoundEvent.KEY_CHANGE_COMPLETE);
             }
             else
             {
                 State.CurrentState = 2;
+                RaiseSoundTriggered(SoundEvent.KEY_CHANGE_START);
             }
         }
 
