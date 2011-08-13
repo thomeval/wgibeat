@@ -1,7 +1,0 @@
-﻿#METRICS-1.0;
-
-#Main Menu;
-MainMenuOptions=[250,150][250,225][250,285][250,345][250,405][250,465];
-MainMenuNoSongsError=[270,200];
-
-
