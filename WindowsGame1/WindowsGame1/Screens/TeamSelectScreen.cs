@@ -168,22 +168,26 @@ namespace WGiBeat.Screens
                         {
                             Core.Players[playerIdx].Team = Core.Players[playerIdx].Team == 2 ? 0 : 1;
                         }
+                        RaiseSoundTriggered(SoundEvent.TEAM_CHANGE);
                     break;
                 case "RIGHT":
                         if (!_ready[playerIdx])
                         {
                             Core.Players[playerIdx].Team = Core.Players[playerIdx].Team == 1 ? 0 : 2;
                         }
+                    RaiseSoundTriggered(SoundEvent.TEAM_CHANGE);
                     break;
                 case "START":
                     if (Core.Players[playerIdx].Team != 0)
                     {
                         _ready[playerIdx] = !_ready[playerIdx];
+                        RaiseSoundTriggered(SoundEvent.TEAM_DECIDE);
                         TryToStart();
                     }
                     break;
                 case "SELECT":
                     _playerOptionsSet.SetChangeMode(inputAction.Player, true);
+                    RaiseSoundTriggered(SoundEvent.PLAYER_OPTIONS_DISPLAY);
                     break;
                 case "BACK":
                     for (int x = 0; x < 4; x++ )
