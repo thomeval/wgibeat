@@ -11,6 +11,7 @@ namespace WGiBeat.Drawing.Sets
     {
 
         private readonly LevelBar[] _levelBars;
+        public readonly Color[] MaxHighlightColors = { new Color(255, 128, 128), new Color(128, 128, 255), new Color(128, 255, 128), new Color(255, 255, 128) };
 
         public LevelBarSet(MetricsManager metrics, Player[] players, GameType gameType)
             : base(metrics,players,gameType)
@@ -37,6 +38,10 @@ namespace WGiBeat.Drawing.Sets
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+           Draw(spriteBatch,0.0);
+        }
+        public void Draw(SpriteBatch spriteBatch, double gameTime)
+        {
             switch (_gameType)
             {
                 case GameType.NORMAL:
@@ -47,7 +52,7 @@ namespace WGiBeat.Drawing.Sets
                     {
                         if (Players[x].Playing)
                         {
-                            _levelBars[x].Draw(spriteBatch);
+                            _levelBars[x].Draw(spriteBatch,gameTime);
                         }
                     }
                     break;

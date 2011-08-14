@@ -244,6 +244,7 @@ namespace WGiBeat.Screens
             if (pass)
             {
                 //NetHelper.Instance.BroadcastPlayerOptions(inputAction.Player);
+                RaiseSoundTriggered(SoundEvent.PLAYER_OPTIONS_CHANGE);
                 return;
             }
             

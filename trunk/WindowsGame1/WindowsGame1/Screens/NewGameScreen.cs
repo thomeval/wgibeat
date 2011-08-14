@@ -362,6 +362,7 @@ namespace WGiBeat.Screens
         private void SelectProfileListItem(int number)
         {
             _playerMenus[number].SelectedIndex = 0;
+            RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
            if (_profileMenus[number].SelectedItem().ItemValue == null)
            {
                switch (_profileMenus[number].SelectedItem().ItemText)
@@ -381,6 +382,7 @@ namespace WGiBeat.Screens
                        ChangeCursorPosition(number, CursorPosition.MAIN_MENU);
                        break;
                }
+              
                _errorMessages[number] = "";
            }
            else
@@ -445,6 +447,7 @@ namespace WGiBeat.Screens
                     ChangeCursorPosition(number, CursorPosition.NOT_JOINED);
                     Core.Players[number].Playing = false;
                     Core.Players[number].Profile = null;
+                    RaiseSoundTriggered(SoundEvent.MENU_BACK);
                     TryToStart();
                     break;
                 case "Decision":
@@ -454,6 +457,7 @@ namespace WGiBeat.Screens
                 case "Profile":
                     ChangeCursorPosition(number, CursorPosition.PROFILE_LIST);
                     _profileMenus[number].SelectedIndex = 0;
+                    RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     break;
             }
         }
