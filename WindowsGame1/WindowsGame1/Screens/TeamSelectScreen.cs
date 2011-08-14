@@ -150,6 +150,7 @@ namespace WGiBeat.Screens
             var pass = _playerOptionsSet.PerformAction(inputAction);
             if (pass)
             {
+                RaiseSoundTriggered(SoundEvent.PLAYER_OPTIONS_CHANGE);
                 TryToStart();
                 return;
             }
@@ -207,6 +208,7 @@ namespace WGiBeat.Screens
             {
                 case "SELECT":
                     _playerOptionsSet.SetChangeMode(inputAction.Player, false);
+                    RaiseSoundTriggered(SoundEvent.PLAYER_OPTIONS_HIDE);
                     break;
             }
         }

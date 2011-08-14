@@ -235,6 +235,9 @@
     <Content Include="Content\Textures\Default\MainGame\CoopLifebarMiddleBlazing.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Textures\Default\MainGame\LevelBarMaxBase.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Textures\Default\MainGame\LifeBarBlazing.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
