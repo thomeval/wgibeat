@@ -1336,7 +1336,7 @@ namespace WGiBeat.Screens
 
         private void ActivateEditMode(EditorCursorPosition position)
         {
-            _fileSelect.Patterns = new[] { "*.sng" };
+            _fileSelect.Patterns = new[] { "*.sng","*.sm","*.dwi" };
             _fileSelect.CurrentFolder = _wgibeatSongsFolder;
             _fileSelect.ResetEvents();
             _fileSelect.FileSelected += delegate
