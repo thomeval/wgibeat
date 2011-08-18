@@ -127,7 +127,7 @@ namespace WGiBeat.Drawing.Sets
                 {
                     
                     double over = Players[player].Life + amount - 100;
-                    Players[player].Life = 100 + (over / 2);
+                    Players[player].Life = 100 + (over / 1.25);
 
                 }
             }

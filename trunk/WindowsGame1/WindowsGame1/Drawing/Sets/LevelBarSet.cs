@@ -61,12 +61,12 @@ namespace WGiBeat.Drawing.Sets
                     if (Players[0].Playing || Players[1].Playing)
                     {
                         _levelBars[0].Position = _metrics["SyncLevelBarBase", 0];
-                        _levelBars[0].Draw(spriteBatch); 
+                        _levelBars[0].Draw(spriteBatch,gameTime); 
                     }
                     if (Players[2].Playing || Players[3].Playing)
                     {
                         _levelBars[0].Position = _metrics["SyncLevelBarBase", 1];
-                        _levelBars[0].Draw(spriteBatch);
+                        _levelBars[0].Draw(spriteBatch,gameTime);
                     }
                     break;
             }
