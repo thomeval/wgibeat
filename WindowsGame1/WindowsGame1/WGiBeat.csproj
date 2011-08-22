@@ -123,6 +123,10 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="AudioSystem\Loaders\SMFileLoader.cs" />
     <Compile Include="AudioSystem\Loaders\SongFileLoader.cs" />
+    <Compile Include="GameManagers\CoopGameManager.cs" />
+    <Compile Include="GameManagers\GameManager.cs" />
+    <Compile Include="GameManagers\SyncGameManager.cs" />
+    <Compile Include="GameManagers\TeamGameManager.cs" />
     <Compile Include="Helpers\BeatlineHitAggregator.cs" />
     <Compile Include="Managers\InputAction.cs" />
     <Compile Include="Managers\CPUManager.cs" />
@@ -236,6 +240,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\MainGame\LevelBarMaxBase.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Default\MainGame\LevelBarMaxFront.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\MainGame\LifeBarBlazing.png">
