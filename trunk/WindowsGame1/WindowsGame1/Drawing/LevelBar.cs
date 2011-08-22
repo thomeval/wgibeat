@@ -13,9 +13,11 @@ namespace WGiBeat.Drawing
         private SpriteMap _barSprite;
         private Sprite _baseSprite;
         private Sprite _maxBaseSprite;
+        private Sprite _maxFrontSprite;
         private bool _spritesInit;
         private int _lastLevelDrawn;
         private byte _lastLevelOpacity;
+        private int _maxFrontOpacity;
 
         public LevelBarSet Parent { get; set; }
         public int PlayerID { get; set; }
@@ -40,9 +42,8 @@ namespace WGiBeat.Drawing
                 _textPosition.X += 201;
                 _barPosition = this.Position.Clone();
                 _barPosition.X += 3;
-                _barPosition.Y += 3;
-
-
+                _barPosition.Y += 3;             
+                
             }
         }
 
@@ -61,19 +62,33 @@ namespace WGiBeat.Drawing
             _baseSprite.Draw(spriteBatch);
             _maxBaseSprite.ColorShading = Parent.MaxHighlightColors[PlayerID];
             _maxBaseSprite.ColorShading.A = _lastLevelOpacity;
+            phraseNumber *= 4;
+            var beatFraction = (phraseNumber) - Math.Floor(phraseNumber);  
 
             if (LevelBarFull)
-            {
-                phraseNumber *= 4;
-                var beatFraction = (phraseNumber) - Math.Floor(phraseNumber);    
+            {              
                 _maxBaseSprite.ColorShading.A = (byte) ((1-beatFraction)*255);
+                _maxFrontOpacity = Math.Min(255, _maxFrontOpacity + 3);
                 
             }
+            else
+            {
+                _maxFrontOpacity = Math.Max(0, _maxFrontOpacity - 10);
+            }
+
+            _maxFrontSprite.ColorShading.A = (byte)((_maxFrontOpacity));
+            _maxFrontSprite.Position = _barPosition;
+            _maxFrontSprite.Width = this.Width - 32;
+            _maxFrontSprite.Height = this.Height - 6;
             _maxBaseSprite.Position = this.Position;
             _maxBaseSprite.Draw(spriteBatch);
                 TextureManager.DrawString(spriteBatch, "" + (int)Parent.Players[PlayerID].Level, "DefaultFont",
                        _textPosition, Color.Black,FontAlign.CENTER);
+            
             DrawBars(spriteBatch);
+            phraseNumber /= 16;
+            beatFraction = (phraseNumber) - Math.Floor(phraseNumber); 
+            _maxFrontSprite.DrawTiled(spriteBatch, (int)(beatFraction * _maxFrontSprite.Width), 0, _maxFrontSprite.Width, _maxFrontSprite.Height);
                      
         }
 
@@ -130,6 +145,9 @@ namespace WGiBeat.Drawing
                 Rows = 12,
                 SpriteTexture = TextureManager.Textures("LevelBarFronts")
             };
+
+            _maxFrontSprite = new Sprite {SpriteTexture = TextureManager.Textures("LevelBarMaxFront")};
+
             _spritesInit = true;
         }
     }

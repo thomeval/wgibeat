@@ -111,11 +111,9 @@ namespace WGiBeat.Screens
                 case AggregatorPlayerID.ALL:
                     for (int x = 0; x < 4; x++ )
                     {
-                  //      if (Core.Players[x].Playing)
-                  //      {
                             ApplyJudgement(ar.Judgement,x,ar.Multiplier);
-                  //      }
                     }
+                    //GameManager.ApplyJudgement(ar.Judgement,x,ar.Multiplier);
                         break;
                     default:
                         ApplyJudgement(ar.Judgement, (int)ar.Player, ar.Multiplier);
@@ -472,9 +470,6 @@ namespace WGiBeat.Screens
             }
 
             _noteBarSet.MarkAllCompleted(player);
-
-            _levelbarSet.AdjustMomentum(judgement, player);
-
 
             //Award Score
             ApplyJudgement(judgement, player, 1);
