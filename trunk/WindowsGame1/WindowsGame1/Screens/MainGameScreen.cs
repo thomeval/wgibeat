@@ -444,25 +444,23 @@ namespace WGiBeat.Screens
             _levelbarSet.AdjustMomentum(judgement, player);
             
             //Keep scoring sane by adding a delay to the awarding of Groove Momentum.
-            //Otherwise, the last player to hit each phrase has an advantage.
-            var timer = new Timer(AdjustGrooveMomentum, new GMAdjustment { Judgement = judgement, Player = player },
-                                  150, 0);
+            //Otherwise, the last player to hit each phrase has an advantage.      
+            var thread = new Thread(AdjustGrooveMomentum);
+            thread.Start(new GMAdjustment{Judgement = judgement, Multiplier = _noteBarSet.NumberCompleted(player)});
+
         }
 
-        private readonly double[] _gmAdjustments = {0.08, 0.04, 0.014, 0.0, -0.15, -0.06};
+        private readonly double[] _gmAdjustments = {0.08, 0.05, 0.03, 0.0, -0.15, -0.06};
         private void AdjustGrooveMomentum(object input)
         {
+            Thread.Sleep(150);
             var adjustment = (GMAdjustment) input;
+             
             var isPositive = _gmAdjustments[(int) adjustment.Judgement] > 0.0;
-            var mx = Core.Players[adjustment.Player].Level;
-            if ((Core.Players[adjustment.Player].IsBlazing) && (isPositive))
-            {
-                mx *= 1.5;
-            }
-            Player.GrooveMomentum += _gmAdjustments[(int)adjustment.Judgement] * mx;
-            
+            var mx = (isPositive) ? adjustment.Multiplier : 1;
+            System.Diagnostics.Debug.WriteLine("GMAdjust: " + mx + "x, " + adjustment.Judgement);
+            Player.GrooveMomentum += _gmAdjustments[(int)adjustment.Judgement] * mx;          
         }
-
 
         private string CalculateTimeLeft()
         {

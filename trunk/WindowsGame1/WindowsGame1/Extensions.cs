@@ -48,5 +48,7 @@ namespace WGiBeat
     {
         public int Player { get; set; }
         public Notes.BeatlineNoteJudgement Judgement { get; set; }
+
+        public double Multiplier { get; set; }
     }
 }
