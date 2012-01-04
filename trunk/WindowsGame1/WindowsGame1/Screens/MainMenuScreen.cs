@@ -15,13 +15,13 @@ namespace WGiBeat.Screens
         private readonly SineSwayParticleField _field = new SineSwayParticleField();
 
         private bool _displayNoSongsError;
-        private readonly string[] _menuText = { "Start Game", "Stats","How to play", "Keys", "Options", "Song Editor", "Exit"};
+        private readonly string[] _menuText = { "Start Game", "Stats","How to play", "Keys", "Options", "Song Editor", "Website", "Exit"};
         private Sprite _background;
         private Sprite _header;
         private SpriteMap _menuOptionSprite;
         private Sprite _foreground;
         private UpdaterFrame _updaterFrame;
-
+        private string _website = "http://wgibeat.googlecode.com/";
         private Thread _updateThread;
 
 
@@ -107,6 +107,7 @@ namespace WGiBeat.Screens
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            DrawBackground(spriteBatch,gameTime);
             DrawMenu(spriteBatch);
 
             if (_displayNoSongsError)
@@ -123,16 +124,16 @@ namespace WGiBeat.Screens
             _updaterFrame.Draw(spriteBatch);
         }
 
-        private void DrawBackground(SpriteBatch spriteBatch)
+        private void DrawBackground(SpriteBatch spriteBatch,GameTime gameTime)
         {
             _background.Draw(spriteBatch);
-            _field.Draw(spriteBatch);                                
+            _field.Draw(spriteBatch, gameTime);                                
             _foreground.Draw(spriteBatch);        
         }
 
         private void DrawMenu(SpriteBatch spriteBatch)
         {
-            DrawBackground(spriteBatch);
+      
 
             _header.Draw(spriteBatch);
             
@@ -220,6 +221,10 @@ namespace WGiBeat.Screens
                     case MainMenuOption.SONG_EDIT:
                     Core.ScreenTransition("SongEdit");
                     break;
+                case MainMenuOption.WEBSITE:
+                    System.Diagnostics.Process.Start(_website);
+                    break;
+
                 case MainMenuOption.EXIT:
                     Core.Exit();
                     break;
@@ -235,9 +240,10 @@ namespace WGiBeat.Screens
         KEYS = 3,
         OPTIONS = 4,
         SONG_EDIT = 5,
-        EXIT = 6,
-        NETPLAY = 7,
-        COUNT = 7
+        WEBSITE = 6,
+        EXIT = 7,
+        NETPLAY = 8,
+        COUNT = 8,
     }
 
 }

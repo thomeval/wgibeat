@@ -1171,7 +1171,15 @@ namespace WGiBeat.Screens
            switch (menu.SelectedItem().ItemValue.ToString())
            {
                case "0":
-                   Core.ScreenTransition("MainMenu");
+                   if (_cursorPosition == EditorCursorPosition.DONE_DELETE )
+                   {
+                       _cursorPosition = EditorCursorPosition.SELECT_SONGFILE_DELETE;
+                   }
+                   else
+                   {
+                       Core.ScreenTransition("MainMenu");
+                   }
+                   
                    break;
                    
            }

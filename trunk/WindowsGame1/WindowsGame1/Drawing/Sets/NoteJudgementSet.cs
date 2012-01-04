@@ -109,6 +109,7 @@ namespace WGiBeat.Drawing.Sets
             }
 
             scoreAdjust *= givenMultiplier;
+            scoreAdjust = (long) (scoreAdjust*Math.Sqrt(Player.GrooveMomentum));
             if (_scoreSet != null)
             {
                 _scoreSet.AdjustScore(scoreAdjust, player);

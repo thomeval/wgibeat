@@ -84,7 +84,7 @@ namespace WGiBeat.Screens
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            DrawBackground(spriteBatch);
+            DrawBackground(spriteBatch, gameTime);
             DrawMarkers(spriteBatch);
             DrawPlayerOptions(spriteBatch);
             DrawRestrictionMessage(spriteBatch);
@@ -125,7 +125,7 @@ namespace WGiBeat.Screens
             }
         }
 
-        private void DrawBackground(SpriteBatch spriteBatch)
+        private void DrawBackground(SpriteBatch spriteBatch, GameTime gameTime)
         {
             _backgroundSprite.Draw(spriteBatch);
             _headingSprite.Draw(spriteBatch);

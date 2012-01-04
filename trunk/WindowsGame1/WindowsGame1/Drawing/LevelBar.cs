@@ -62,14 +62,14 @@ namespace WGiBeat.Drawing
             _baseSprite.Draw(spriteBatch);
             _maxBaseSprite.ColorShading = Parent.MaxHighlightColors[PlayerID];
             _maxBaseSprite.ColorShading.A = _lastLevelOpacity;
-            phraseNumber *= 4;
-            var beatFraction = (phraseNumber) - Math.Floor(phraseNumber);  
+
+            var maxFrontBeatFraction = (phraseNumber / 4) - Math.Floor(phraseNumber / 4);
+            var beatFraction = (phraseNumber * 4) - Math.Floor(phraseNumber * 4);
 
             if (LevelBarFull)
             {              
                 _maxBaseSprite.ColorShading.A = (byte) ((1-beatFraction)*255);
                 _maxFrontOpacity = Math.Min(255, _maxFrontOpacity + 3);
-                
             }
             else
             {
@@ -86,10 +86,8 @@ namespace WGiBeat.Drawing
                        _textPosition, Color.Black,FontAlign.CENTER);
             
             DrawBars(spriteBatch);
-            phraseNumber /= 16;
-            beatFraction = (phraseNumber) - Math.Floor(phraseNumber); 
-            _maxFrontSprite.DrawTiled(spriteBatch, (int)(beatFraction * _maxFrontSprite.Width), 0, _maxFrontSprite.Width, _maxFrontSprite.Height);
-                     
+            _maxFrontSprite.DrawTiled(spriteBatch, (int)(maxFrontBeatFraction * _maxFrontSprite.Width), 0, _maxFrontSprite.Width, _maxFrontSprite.Height);
+         
         }
 
         private void DrawBars(SpriteBatch spriteBatch)

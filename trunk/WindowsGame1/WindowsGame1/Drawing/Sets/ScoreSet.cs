@@ -12,10 +12,12 @@ namespace WGiBeat.Drawing.Sets
         private SpriteMap _iconSpriteMap;
         private SpriteMap _coopBaseSprite;
         private Sprite _individualBaseSprite;
+        private Sprite _individualPulseSprite;
         private SpriteMap _playerIdentifierSpriteMap;
 
         private TeamScoreMeter _teamScoreMeter;
         private SpriteMap _iconSyncBaseSpriteMap;
+        private readonly Color[] _pulseColors = {new Color(255,128,128),new Color(128,128,255), new Color(128,255,255),new Color(255,255,128)    };
 
         public ScoreSet(MetricsManager metrics, Player[] players, GameType type)
             : base(metrics,players,type)
@@ -65,8 +67,12 @@ namespace WGiBeat.Drawing.Sets
             };
             _individualBaseSprite = new Sprite
             {
-                SpriteTexture = TextureManager.Textures("ScoreBase"),
+                SpriteTexture = TextureManager.Textures("ScoreBase")
             };
+            _individualPulseSprite = new Sprite
+                                         {
+                                             SpriteTexture = TextureManager.Textures("ScorePulse")
+                                         };
         }
         private void DrawPlayerDifficulties(SpriteBatch spriteBatch)
         {
@@ -210,7 +216,10 @@ namespace WGiBeat.Drawing.Sets
                 var idx = (Players[x].IsCPUPlayer) ? 4 : x;
                 _individualBaseSprite.Position = _metrics["ScoreBase", x];
                 _individualBaseSprite.Draw(spriteBatch);
-
+                _individualPulseSprite.Position = _metrics["ScoreBase", x];
+                _individualPulseSprite.ColorShading = _pulseColors[x];
+                _individualPulseSprite.ColorShading.A = (byte) Math.Min(255, 4* Math.Sqrt(Players[x].Score - _displayedScores[x]));
+                _individualPulseSprite.Draw(spriteBatch);
                 var identifierPosition = _metrics["ScoreBase", x].Clone();
                 identifierPosition.X += 12;
                 identifierPosition.Y += 5;

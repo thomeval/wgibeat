@@ -129,7 +129,7 @@ namespace WGiBeat.Screens
                 _songList.Add(new SongListItem { Height = 50, Song = song, Width = 380, TextMaxWidth = 325 });
             }
             _songSortDisplay.SongList = _songList;
-            _songSortDisplay.SongSortMode = SongSortMode.TITLE;
+            _songSortDisplay.SongSortMode = Core.Settings.Get<SongSortMode>("LastSortMode");
             _highScoreFrame.HighScoreEntry = GetDisplayedHighScore((GameType)Core.Cookies["CurrentGameType"]);
         }
 
@@ -139,7 +139,7 @@ namespace WGiBeat.Screens
         {
 
 
-            DrawBackground(spriteBatch);
+            DrawBackground(spriteBatch, gameTime);
             DrawPlayerOptions(spriteBatch);
             DrawHighScoreFrame(spriteBatch);
 
@@ -234,8 +234,6 @@ namespace WGiBeat.Screens
 
                 var actualTime = Core.Audio.GetChannelPosition(Crossfader.ChannelIndexCurrent);
                 _bpmMeter.SongTime = CurrentSong.ConvertMSToPhrase(actualTime) * 4;
-                //   TextureManager.DrawString(spriteBatch,String.Format("{0:F3}",actualTime),"DefaultFont",new Vector2(20,140),Color.Black,FontAlign.LEFT);
-                //    TextureManager.DrawString(spriteBatch, String.Format("{0:F3}", CurrentSong.ConvertMSToPhrase(actualTime) * 1), "DefaultFont", new Vector2(50, 120), Color.Black, FontAlign.LEFT);
 
             }
             else
@@ -266,11 +264,10 @@ namespace WGiBeat.Screens
             _playerOptionsSet.Draw(spriteBatch);
         }
 
-        private void DrawBackground(SpriteBatch spriteBatch)
+        private void DrawBackground(SpriteBatch spriteBatch, GameTime gameTime)
         {
-
             _background.Draw(spriteBatch);
-            _field.Draw(spriteBatch);
+            _field.Draw(spriteBatch, gameTime);
         }
 
         private void DrawSongList(SpriteBatch spriteBatch)
@@ -344,7 +341,7 @@ namespace WGiBeat.Screens
             if (_preloadState == PreloadState.LOADING_FINISHED)
             {
                 Crossfader.StopBoth();
-                Core.Settings.Set("LastSongPlayed", CurrentSong.GetHashCode());
+
                 Core.ScreenTransition("MainGame");
             }
             base.Update(gameTime);
@@ -460,8 +457,11 @@ namespace WGiBeat.Screens
 
                 _songLoadingThread = new Thread(StartSongLoading) { Name = "Song Loading Thread" };
                 _songLoadingThread.Start();
-                RaiseSoundTriggered(SoundEvent.SONG_DECIDE);
 
+                RaiseSoundTriggered(SoundEvent.SONG_DECIDE);
+                Core.Settings.Set("LastSongPlayed", CurrentSong.GetHashCode());
+                Core.Settings.Set("LastSortMode", (int)_songSortDisplay.SongSortMode);
+                Core.Settings.SaveToFile("settings.txt");
         }
 
         private Thread _songLoadingThread;

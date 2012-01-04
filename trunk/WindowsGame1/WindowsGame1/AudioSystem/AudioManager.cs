@@ -21,9 +21,10 @@ namespace WGiBeat.AudioSystem
         private readonly FMOD.System _fmodSystem = new FMOD.System();
         private readonly Dictionary<string, Sound> _sounds = new Dictionary<string, Sound>();
 
-        private const int CHANNEL_COUNT = 8;
+        private const int CHANNEL_COUNT = 16;
         private float _masterVolume = 1.0f;
         private Channel _tmpChannel = new Channel();
+        private string[] _channelAssignments;
 
         public string FallbackSound { get; set; }
         #endregion 
@@ -31,6 +32,7 @@ namespace WGiBeat.AudioSystem
         public AudioManager(LogManager log)
         {
             Log = log;
+            _channelAssignments = new string[CHANNEL_COUNT];
             Log.AddMessage("Initializing Audio Manager...",LogLevel.INFO);
             CheckFMODErrors(Factory.System_Create(ref _fmodSystem));
             CheckFMODErrors(_fmodSystem.init(CHANNEL_COUNT, INITFLAGS.NORMAL, (IntPtr)null));
@@ -69,8 +71,9 @@ namespace WGiBeat.AudioSystem
         /// (recommended for song audio), but will cause delays.</param>
         /// <param name="loadPaused">Whether the audio file should be loaded but not played immediately. Useful for
         /// 'caching' audio large audio files.</param>
+        /// <param name="priority">The priority of the sound (used for channel assignment). Lower is considered more important.</param>
         /// <returns>The channel ID allocated by Fmod to the channel. Use this to control the playback.</returns>
-        public int PlaySoundEffect(string soundPath, bool loop, bool dontStream, bool loadPaused)
+        public int PlaySoundEffect(string soundPath, bool loop, bool dontStream, bool loadPaused, int priority)
         {
             if (!File.Exists(soundPath))
             {
@@ -98,14 +101,15 @@ namespace WGiBeat.AudioSystem
             CheckFMODErrors(_fmodSystem.playSound(CHANNELINDEX.FREE, mySound, loadPaused, ref myChannel));
             if (loop)
             {
-                CheckFMODErrors(myChannel.setPriority(0));
+                CheckFMODErrors(myChannel.setPriority(priority));
             }
 
 
                 CheckFMODErrors(myChannel.setVolume(_masterVolume));
             int index = -1;
             CheckFMODErrors(myChannel.getIndex(ref index));
-            System.Diagnostics.Debug.WriteLine("Channel: " + index);
+            System.Diagnostics.Debug.WriteLine("Assigned " + soundPath.Substring(soundPath.LastIndexOf("\\")) + " to channel: " + index);
+            _channelAssignments[index] = soundPath;
             return index;
         }
 
@@ -139,6 +143,10 @@ namespace WGiBeat.AudioSystem
             return PlaySoundEffect(soundPath, loop, dontStream, false);
         }
 
+        public int PlaySoundEffect(string soundPath, bool loop, bool dontStream, bool loadPaused)
+        {
+            return PlaySoundEffect(soundPath, loop, dontStream, loadPaused, 255);
+        }
 
         public int PlayFallbackSoundEffect(bool loadPaused)
         {
@@ -257,12 +265,22 @@ namespace WGiBeat.AudioSystem
         /// <param name="soundPath">The path and filename of the audio file to release.</param>
         public void ReleaseSound(string soundPath)
         {
-            var sound = _sounds[soundPath];
-
-            if (sound != null)
+            if (_sounds.ContainsKey(soundPath))
             {
-                CheckFMODErrors(sound.release());
+                var sound = _sounds[soundPath];
+                try
+                {
+                    if (sound != null)
+                    {
+                        CheckFMODErrors(sound.release());
+                    }
+                }
+                catch (Exception)
+                {
+
+                }
             }
+        
         }
         /// <summary>
         /// Stops playback of the a channel (and hence its audio), given its channel ID.
@@ -314,6 +332,7 @@ namespace WGiBeat.AudioSystem
         /// <param name="volume">The volume to set this channel to. 0 to mute, 1.0 for maximum volume.</param>
         public void SetChannelVolume(int index, float volume)
         {
+            CheckFMODErrors(_fmodSystem.update());
             CheckFMODErrors(_fmodSystem.getChannel(index, ref _tmpChannel));
             CheckFMODErrors(_tmpChannel.setVolume(_masterVolume * volume));
         }
@@ -399,6 +418,10 @@ namespace WGiBeat.AudioSystem
 
         public double GetFileLength(string filePath)
         {
+            if (!File.Exists(filePath))
+            {
+                return 0.0;
+            }
             Sound tmpSound = new Sound();
             CheckFMODErrors(_fmodSystem.createSound(filePath, MODE.SOFTWARE + (uint) MODE.CREATESTREAM, ref tmpSound));
             uint result = 0;

@@ -122,8 +122,8 @@ namespace WGiBeat.Screens
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            DrawBackground(spriteBatch);
-            _field.Draw(spriteBatch);
+            DrawBackground(spriteBatch,gameTime);
+
             DrawPlayerOptions(spriteBatch);
 
             _headerSprite.Position = (Core.Metrics["ModeSelectScreenHeader", 0]);
@@ -223,9 +223,10 @@ namespace WGiBeat.Screens
         }
 
 
-        private void DrawBackground(SpriteBatch spriteBatch)
+        private void DrawBackground(SpriteBatch spriteBatch, GameTime gameTime)
         {
             _background.Draw(spriteBatch);
+            _field.Draw(spriteBatch, gameTime);
         }
 
         private void DrawPlayerOptions(SpriteBatch spriteBatch)

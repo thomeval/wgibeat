@@ -13,6 +13,8 @@ namespace WGiBeat.Drawing
         private readonly List<BeatlineNote> _beatlineNotes;
         private readonly List<BeatlineNote> _notesToRemove;
         public double Speed { get; set; }
+        private double _displayedSpeed;
+
         public double Bpm { get; set; }
         public int Id { get; set; }
         public bool DisablePulse { get; set; }
@@ -119,6 +121,9 @@ namespace WGiBeat.Drawing
             DrawPlayerIdentifier(spriteBatch);
             DrawPulses(spriteBatch, phraseNumber);
             DrawNotes(spriteBatch, phraseNumber);
+
+            var diff = Speed - _displayedSpeed;
+            _displayedSpeed += diff / 10;
         }
 
         private void DrawPlayerIdentifier(SpriteBatch spriteBatch)
@@ -163,7 +168,7 @@ namespace WGiBeat.Drawing
         {
             foreach (BeatlineNote bn in _beatlineNotes)
             {
-                var markerBeatOffset = (int)(Speed * BEAT_ZOOM_DISTANCE * (phraseNumber - bn.Position));
+                var markerBeatOffset = (int)(_displayedSpeed * BEAT_ZOOM_DISTANCE * (phraseNumber - bn.Position));
 
                 //Dont render notes outside the visibility range.
                 if (((-1 * markerBeatOffset) > this.Width - LEFT_SIDE) && (!bn.Hit))
@@ -325,7 +330,7 @@ namespace WGiBeat.Drawing
 
         private int CalculateAbsoluteBeatlinePosition(double position, double phraseNumber)
         {
-            return (int)((position - phraseNumber) * Speed * BEAT_ZOOM_DISTANCE);
+            return (int)((position - phraseNumber) * _displayedSpeed * BEAT_ZOOM_DISTANCE);
         }
 
         public BeatlineNoteJudgement DetermineJudgement(double phraseNumber, bool completed)
@@ -340,6 +345,18 @@ namespace WGiBeat.Drawing
                 //Note that the COUNT judgement is essentially an 'ignored' judgement.
                 return BeatlineNoteJudgement.COUNT;
             }
+            BeatlineNoteJudgement result = GetJudgementResult(offset, completed);
+            //Mark the beatlinenote as hit (it will be displayed differently and hold position)
+            if (nearest != null)
+            {
+                MarkNoteAsHit(nearest, phraseNumber);
+            }
+          
+            return result;
+        }
+
+        private BeatlineNoteJudgement GetJudgementResult(double offset, bool completed)
+        {
             BeatlineNoteJudgement result = BeatlineNoteJudgement.FAIL;
             if (completed)
             {
@@ -351,15 +368,11 @@ namespace WGiBeat.Drawing
                         break;
                     }
                 }
+
             }
-            //Mark the beatlinenote as hit (it will be displayed differently and hold position)
-            if (nearest != null)
-            {
-                MarkNoteAsHit(nearest, phraseNumber);
-            }
-          
             return result;
         }
+
 
 
         public int AutoHit(double phraseNumber)

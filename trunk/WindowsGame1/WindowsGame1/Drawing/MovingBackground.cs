@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing
@@ -18,20 +19,24 @@ namespace WGiBeat.Drawing
         private double _offsetY;
 
  
-        public override void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            Move();
-
+            Move(gameTime);
             DrawTiled(spriteBatch,(int) _offsetX,(int) _offsetY, Width, Height);
         }
 
-        private void Move()
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            if (this.SpriteTexture != null)
-            {
-                _offsetX = (_offsetX + Math.Sin(Direction) * Speed) % SpriteTexture.Width;
-                _offsetY = (_offsetY + Math.Cos(Direction) * Speed) % SpriteTexture.Height;
-            }
+            Draw(spriteBatch,new GameTime());
+        }
+
+        private void Move(GameTime gameTime)
+        {
+            if (this.SpriteTexture == null) return;
+            var adj = Speed*gameTime.ElapsedRealTime.TotalSeconds;
+
+            _offsetX = (_offsetX + Math.Sin(Direction) * adj) % SpriteTexture.Width;
+            _offsetY = (_offsetY + Math.Cos(Direction) * adj) % SpriteTexture.Height;
         }
     }
 }
