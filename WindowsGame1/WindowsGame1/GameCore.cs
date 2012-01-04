@@ -79,7 +79,7 @@ namespace WGiBeat
             //Using this causes 100% CPU usage (one core) and a frame rate drop.
             this.IsFixedTimeStep = false;
             //NOTE: Uncomment to disable vsync.
-            GraphicsManager.SynchronizeWithVerticalRetrace = false;
+            //GraphicsManager.SynchronizeWithVerticalRetrace = false;
 
             WgibeatRootFolder = "" + Path.GetDirectoryName(
 Assembly.GetAssembly(typeof(GameCore)).CodeBase);
