@@ -43,4 +43,10 @@ namespace WGiBeat
     {
         public object Object { get; set; }
     }
+
+    public class GMAdjustment
+    {
+        public int Player { get; set; }
+        public Notes.BeatlineNoteJudgement Judgement { get; set; }
+    }
 }

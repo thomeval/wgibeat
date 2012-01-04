@@ -24,7 +24,7 @@ namespace WGiBeat.Screens
 
         private PrimitiveLine _line;
         private readonly SineSwayParticleField _field = new SineSwayParticleField();
-        private ProfileLevelDisplay levelDisplay;
+        private ProfileLevelDisplay _levelDisplay;
 
         private const int MAX_SCROLL = 5;
         public StatsScreen(GameCore core)
@@ -65,7 +65,7 @@ namespace WGiBeat.Screens
                 }
                 _profileMenus[x].AddItem(new MenuItem { ItemText = "Main Menu", ItemValue = null });
             }
-            levelDisplay = new ProfileLevelDisplay{Width = 365};
+            _levelDisplay = new ProfileLevelDisplay{Width = 365};
         }
 
         private void InitSprites()
@@ -87,11 +87,16 @@ namespace WGiBeat.Screens
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            _backgroundSprite.Draw(spriteBatch);
-            _field.Draw(spriteBatch);
+            DrawBackground(spriteBatch, gameTime);
             DrawBorder(spriteBatch);
             DrawHeader(spriteBatch);
             DrawText(spriteBatch);
+        }
+
+        private void DrawBackground(SpriteBatch spriteBatch, GameTime gameTime)
+        {
+            _backgroundSprite.Draw(spriteBatch);
+            _field.Draw(spriteBatch, gameTime);
         }
 
         private void DrawHeader(SpriteBatch spriteBatch)
@@ -194,7 +199,6 @@ namespace WGiBeat.Screens
             positions[1].Y = positions[0].Y;
 
             var totalArrows = profile.TotalHits + profile.JudgementCounts[(int)BeatlineNoteJudgement.COUNT];
-            string percentage;
             TextureManager.DrawString(spriteBatch, "Total arrows:", "LargeFont", positions[0], Color.Black, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, "" + totalArrows, "LargeFont", positions[1], Color.Black, FontAlign.LEFT);
             positions[0].Y += 25;
@@ -203,7 +207,7 @@ namespace WGiBeat.Screens
 
             TextureManager.DrawString(spriteBatch, "Hits", "DefaultFont", positions[0], Color.Black, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, "" + profile.TotalHits, "DefaultFont", positions[1], Color.Black, FontAlign.LEFT);
-            percentage = String.Format("{0:P0}", 1.0 * profile.TotalHits / totalArrows);
+            string percentage = String.Format("{0:P0}", 1.0 * profile.TotalHits / totalArrows);
             TextureManager.DrawString(spriteBatch, percentage, "DefaultFont", positions[2], Color.Black, FontAlign.LEFT);
             positions[0].Y += 20;
             positions[1].Y = positions[0].Y;
@@ -222,9 +226,9 @@ namespace WGiBeat.Screens
 
         private void DrawLevelBars(SpriteBatch spriteBatch, Vector2 position, Player player)
         {
-            levelDisplay.Player = player;
-            levelDisplay.Position = position;
-            levelDisplay.Draw(spriteBatch);
+            _levelDisplay.Player = player;
+            _levelDisplay.Position = position;
+            _levelDisplay.Draw(spriteBatch);
         }
 
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.AudioSystem;
@@ -74,10 +75,11 @@ namespace WGiBeat.Screens
             _beatlineSet.NoteMissed += BeatlineNoteMissed;
             _beatlineSet.CPUNoteHit += BeatlineNoteCPUHit;
             _beatlineSet.Large = LargeBeatlinesSuitable();
-            
+
             _displayState = 0;
             _songLoadDelay = 0.0;
             _lastLifeRecord = -0.5;
+            _lastUpdate = 0.0;
             
             for (int x = 0; x < PLAYER_COUNT; x++)
             {
@@ -224,9 +226,26 @@ namespace WGiBeat.Screens
             _beatlineSet.MaintainBeatlineNotes(_phraseNumber);
             _lifeBarSet.MaintainBlazings(_phraseNumber);
             _noteBarSet.MaintainCPUArrows(_phraseNumber);
+            MaintainGrooveMomentum(_phraseNumber);
             RecordPlayerLife();
             RecordPlayerPlayTime(gameTime.ElapsedRealTime.TotalMilliseconds);
+   
             base.Update(gameTime);
+        }
+
+        private double _lastUpdate;
+        private void MaintainGrooveMomentum(double phraseNumber)
+        {
+            if (_phraseNumber < 0.0)
+            {
+                return;
+            }
+            var diff = phraseNumber - _lastUpdate;
+            var amount = 0.25*diff;
+            
+  Player.GrooveMomentum = ((Player.GrooveMomentum - 0.5)*(1 - amount)) + 0.5;
+                
+            _lastUpdate = phraseNumber;
         }
 
         private void RecordPlayerPlayTime(double milliseconds)
@@ -423,6 +442,25 @@ namespace WGiBeat.Screens
             _noteJudgementSet.AwardJudgement(judgement, player, multiplier, _noteBarSet.NumberCompleted(player),
                                                               _noteBarSet.NumberIncomplete(player));
             _levelbarSet.AdjustMomentum(judgement, player);
+            
+            //Keep scoring sane by adding a delay to the awarding of Groove Momentum.
+            //Otherwise, the last player to hit each phrase has an advantage.
+            var timer = new Timer(AdjustGrooveMomentum, new GMAdjustment { Judgement = judgement, Player = player },
+                                  150, 0);
+        }
+
+        private readonly double[] _gmAdjustments = {0.08, 0.04, 0.014, 0.0, -0.15, -0.06};
+        private void AdjustGrooveMomentum(object input)
+        {
+            var adjustment = (GMAdjustment) input;
+            var isPositive = _gmAdjustments[(int) adjustment.Judgement] > 0.0;
+            var mx = Core.Players[adjustment.Player].Level;
+            if ((Core.Players[adjustment.Player].IsBlazing) && (isPositive))
+            {
+                mx *= 1.5;
+            }
+            Player.GrooveMomentum += _gmAdjustments[(int)adjustment.Judgement] * mx;
+            
         }
 
 
@@ -495,7 +533,7 @@ namespace WGiBeat.Screens
             _lifeBarSet.Draw(spriteBatch, _phraseNumber);
             _levelbarSet.Draw(spriteBatch, _phraseNumber);
             _hitsBarSet.Draw(spriteBatch);
-            
+
             _noteJudgementSet.Draw(spriteBatch, _phraseNumber);
             _beatlineSet.Draw(spriteBatch, _phraseNumber);
             _performanceBar.Draw(spriteBatch);
@@ -586,6 +624,9 @@ namespace WGiBeat.Screens
             TextureManager.DrawString(spriteBatch, String.Format("Length: {0:F3}", _gameSong.Length),
                 "DefaultFont", Core.Metrics["SongDebugLength", 0], Color.Black, FontAlign.LEFT);
           //  TextureManager.DrawString(spriteBatch, _gameSong.ConvertPhraseToMS(_phraseNumber) + " ms","DefaultFont",new Vector2(375,350),Color.Black,FontAlign.LEFT );
+            TextureManager.DrawString(spriteBatch, String.Format("GM: {0:0.00}, Peak: {1:0.00}", Player.GrooveMomentum, Player.PeakGrooveMomentum), "DefaultFont", new Vector2(200, 165), Color.Black, FontAlign.CENTER);
+            TextureManager.DrawString(spriteBatch, String.Format("GM: {0:0.00}, Peak: {1:0.00}", Player.GrooveMomentum, Player.PeakGrooveMomentum), "DefaultFont", new Vector2(600, 165), Color.Black, FontAlign.CENTER);
+
         }
 
 

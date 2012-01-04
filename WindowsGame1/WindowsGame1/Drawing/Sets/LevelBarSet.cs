@@ -111,8 +111,8 @@ namespace WGiBeat.Drawing.Sets
             //to ensure the correct result.
             if (_gameType == GameType.SYNC)
             {
-                const int activePlayers = 4;
-                amount = Math.Pow(amount, 1.0 / activePlayers);
+                const int ACTIVE_PLAYERS = 4;
+                amount = Math.Pow(amount, 1.0 / ACTIVE_PLAYERS);
                 SetMomentumSync((long) (Players[0].Momentum*amount));
             }
             else
@@ -165,8 +165,6 @@ namespace WGiBeat.Drawing.Sets
                     return 2.0 / 3;
                 case BeatlineNoteJudgement.OK:
                     return 1.0 / 3;
-                case BeatlineNoteJudgement.BAD:
-                    return 0.0;
                     
             }
             return 0.0;

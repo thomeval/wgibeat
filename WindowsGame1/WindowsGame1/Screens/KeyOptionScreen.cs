@@ -105,15 +105,15 @@ namespace WGiBeat.Screens
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            DrawBackground(spriteBatch);
+            DrawBackground(spriteBatch, gameTime);
             DrawOverlay(spriteBatch);
             DrawText(spriteBatch);
         }
 
-        private void DrawBackground(SpriteBatch spriteBatch)
+        private void DrawBackground(SpriteBatch spriteBatch, GameTime gameTime)
         {
             _backgroundSprite.Draw(spriteBatch);
-            _field.Draw(spriteBatch);
+            _field.Draw(spriteBatch,gameTime);
             _instructionBaseSprite.Draw(spriteBatch);
         }
 

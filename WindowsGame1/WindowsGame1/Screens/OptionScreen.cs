@@ -137,7 +137,7 @@ namespace WGiBeat.Screens
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            DrawBackground(spriteBatch);
+            DrawBackground(spriteBatch, gameTime);
             _optionsMenu.Draw(spriteBatch);
             DrawOptionDescription(spriteBatch);
         }
@@ -149,11 +149,10 @@ namespace WGiBeat.Screens
             TextureManager.DrawString(spriteBatch, optionText, "DefaultFont", Core.Metrics["OptionsDescription", 0], Color.White, FontAlign.CENTER);
         }
 
-        private void DrawBackground(SpriteBatch spriteBatch)
+        private void DrawBackground(SpriteBatch spriteBatch, GameTime gameTime)
         {
-
             _background.Draw(spriteBatch);
-            _field.Draw(spriteBatch);
+            _field.Draw(spriteBatch, gameTime);
             _header.Draw(spriteBatch);
 
         }

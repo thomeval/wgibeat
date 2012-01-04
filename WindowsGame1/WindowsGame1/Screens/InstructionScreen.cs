@@ -29,7 +29,7 @@ namespace WGiBeat.Screens
         private void InitSprites()
         {
             _background = new MovingBackground
-                              {Direction = Math.PI / 4, Speed = 0.5, SpriteTexture = TextureManager.Textures("MovingBackground1"), Width = 800, Height = 600};
+                              {Direction = Math.PI / 4, Speed = 30, SpriteTexture = TextureManager.Textures("MovingBackground1"), Width = 800, Height = 600};
             _instructionPages = new Sprite[TOTAL_PAGES];
             for (int x = 0; x < TOTAL_PAGES; x++)
             {
@@ -44,7 +44,7 @@ namespace WGiBeat.Screens
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            _background.Draw(spriteBatch);
+            _background.Draw(spriteBatch,gameTime);
             _baseSprite.Draw(spriteBatch);
             _instructionPages[PageNumber-1].Draw(spriteBatch);
             TextureManager.DrawString(spriteBatch, "Press start to continue.", "LargeFont", Core.Metrics["LoadMessage", 0], Color.White, FontAlign.LEFT);

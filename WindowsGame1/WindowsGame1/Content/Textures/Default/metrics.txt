@@ -37,9 +37,10 @@ SyncHitsText=[535,50][225,505];
 SyncPlayerDifficultiesBase=[190,45][490,500];
 SyncPlayerDifficulties=[210,50][520,505];
 MainGameTextBackground=[0,270];
+AbilityBar=[[200,140][600,140][200,420][600,420];
 
 #Main Menu;
-MainMenuOptions=[250,150][250,225][250,275][250,325][250,375][250,425][250,475][250,525];
+MainMenuOptions=[250,120][250,195][250,245][250,295][250,345][250,395][250,445][250,495];
 MainMenuNoSongsError=[270,200];
 UpdaterFrame=[0,544];
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing
@@ -77,8 +78,8 @@ namespace WGiBeat.Drawing
             MinFrequency = 0.01;
             MaxFrequency = 5;
 
-            MinStepSize = 0.01 / 20;
-            MaxStepSize = 0.01 / 5;
+            MinStepSize = 0.6 / 20;
+            MaxStepSize = 0.6 / 5;
 
             MinShift = 0;
             MaxShift = 1;
@@ -116,19 +117,25 @@ namespace WGiBeat.Drawing
             particle.Height = _rand.Next(MinHeight, MaxHeight);
  
             particle.StepSize = MinStepSize + (_rand.NextDouble() * (MaxStepSize - MinStepSize));
+            particle.RotationStepSize = 0.75f;
 
             if (RandomizeTextures) //Hacky. Must fix.
             {
                 particle.ParticleType = _rand.Next(0, 5);
             }
         }
-        public override void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             foreach (SineSwayParticle particle in _swayers)
             {
-                particle.Draw(spriteBatch);
+                particle.Draw(spriteBatch, gameTime);
             }
         }
 
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            Draw(spriteBatch,new GameTime());
+        }
     }
 }

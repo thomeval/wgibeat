@@ -14,7 +14,7 @@ namespace WGiBeat.Players
         public Player()
         {
             Judgements = new int[8];
-            PlayerOptions = new PlayerOptions {BeatlineSpeed = 1.0};
+            PlayerOptions = new PlayerOptions { BeatlineSpeed = 1.0 };
 
         }
 
@@ -43,6 +43,19 @@ namespace WGiBeat.Players
         public long MaxHits { get; set; }
         public int TotalHits { get; set; }
         public long Momentum { get; set; }
+
+        private static double _grooveMomentum;
+        public static double GrooveMomentum
+        {
+            get { return _grooveMomentum; }
+            set
+            {
+                _grooveMomentum = Math.Max(0.5, value);
+                PeakGrooveMomentum = Math.Max(PeakGrooveMomentum, GrooveMomentum);
+            }
+        }
+
+        public static double PeakGrooveMomentum {get; set; }
 
         private int _streak;
         public int Streak
@@ -76,11 +89,11 @@ namespace WGiBeat.Players
                 {
                     return 1;
                 }
- 
-                double x = Math.Log((Momentum + 150)/100.0, 1.5);
+
+                double x = Math.Log((Momentum + 150) / 100.0, 1.5);
                 x = Math.Min(MaxArrowLevel(PlayerOptions.PlayDifficulty), x);
-                
-                return Math.Max(1,x);
+
+                return Math.Max(1, x);
 
             }
         }
@@ -109,6 +122,7 @@ namespace WGiBeat.Players
             return MaxArrowLevel(PlayerOptions.PlayDifficulty);
         }
 
+
         private readonly List<float> _lifeHistory = new List<float>();
 
         public List<float> LifeHistory
@@ -123,7 +137,7 @@ namespace WGiBeat.Players
 
         public bool IsCPUPlayer
         {
-            get { return Playing && CPU;}
+            get { return Playing && CPU; }
         }
 
         public string SafeName
@@ -146,7 +160,7 @@ namespace WGiBeat.Players
 
         public void RecordCurrentLife()
         {
-            _lifeHistory.Add((float) Life);
+            _lifeHistory.Add((float)Life);
         }
 
         public double MissedArrow()
@@ -177,7 +191,7 @@ namespace WGiBeat.Players
 
         public double MissedBeat()
         {
-           
+
             var result = 0;
             switch (PlayerOptions.PlayDifficulty)
             {
@@ -213,6 +227,8 @@ namespace WGiBeat.Players
             Streak = 0;
             MaxStreak = 0;
             Momentum = 0;
+            GrooveMomentum = 1.0;
+            PeakGrooveMomentum = 1.0;
             Life = this.GetMaxLife() / 2;
             KO = false;
             IsBlazing = false;
@@ -220,7 +236,7 @@ namespace WGiBeat.Players
             _lifeHistory.Clear();
             NextCPUJudgement = BeatlineNoteJudgement.COUNT;
         }
-        
+
         public void UpdateToProfile()
         {
             if (Profile == null)
@@ -236,17 +252,18 @@ namespace WGiBeat.Players
             Profile.EXP += AwardXP();
         }
 
-        private readonly int[] _gradeBonusCutoffs = {90, 86, 82, 78,70};
-        private readonly double[] _gradeBonusAmounts = {1.4, 1.3, 1.2, 1.1, 1.05};
-        private readonly double[] _difficultyMultipliers = {0.5, 0.75, 1.0, 1.1, 1.2};
+        private readonly int[] _gradeBonusCutoffs = { 90, 86, 82, 78, 70 };
+        private readonly double[] _gradeBonusAmounts = { 1.4, 1.3, 1.2, 1.1, 1.05 };
+        private readonly double[] _difficultyMultipliers = { 0.5, 0.75, 1.0, 1.1, 1.2 };
+     
 
         public long AwardXP()
         {
             double result = 0;
 
-            result += Judgements[0]*3;
-            result += Judgements[1]*2;
-            result += Judgements[2]*1;
+            result += Judgements[0] * 3;
+            result += Judgements[1] * 2;
+            result += Judgements[2] * 1;
 
             var grade = CalculatePercentage();
 
@@ -262,7 +279,7 @@ namespace WGiBeat.Players
             var difficulty = (int)PlayerOptions.PlayDifficulty;
 
             result *= _difficultyMultipliers[difficulty];
-            return (long) Math.Floor(result);
+            return (long)Math.Floor(result);
 
         }
 
@@ -289,7 +306,6 @@ namespace WGiBeat.Players
 
             return 100.0 * playerScore / maxPossible;
         }
- 
     }
 
     [Serializable]

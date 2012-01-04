@@ -84,7 +84,7 @@ namespace WGiBeat.Drawing.Sets
                     PlayerArrowHit(player, null);
                 }
             }
-            else if (_noteBars[player].CurrentNote() != null)
+            else if ((_noteBars[player].CurrentNote() != null))
             {
                 _noteBars[player].ResetAll();
 
@@ -108,9 +108,32 @@ namespace WGiBeat.Drawing.Sets
             }
             //Create next note bar.
             var numArrow = (int)Players[player].Level;
-            var numReverse = (Players[player].IsBlazing) ? (int)Players[player].Level / 2 : 0;
+            int numReverse = GetReverseNoteCount(player);
+
             _noteBars[player] = NoteBar.CreateNoteBar(numArrow, numReverse, _metrics["NoteBar", player]);
             SyncNoteBars(_noteBars[player]);
+        }
+
+        private int GetReverseNoteCount(int player)
+        {
+            var numReverse = 0;
+
+            if (Players[player].IsBlazing)
+            {
+                if (Players[player].Life >= 200)
+                {
+                    numReverse = (int) Players[player].Level*2/3;
+                }
+                else if (Players[player].Life >= 150)
+                {
+                    numReverse = (int)Players[player].Level * 2 / 3;
+                }
+                else
+                {
+                    numReverse = (int) Players[player].Level/3;
+                }
+            }
+            return numReverse;
         }
 
         public void SyncNoteBars(NoteBar notebar)

@@ -18,7 +18,6 @@ namespace WGiBeat.Drawing
         private Sprite _2ndOverchargePart;
         private Sprite _blazingPart;
         private SpriteMap _blazingSidePart;
-
         private double _overchargeTextureOffset;
         private Vector2 _sidePos;
 

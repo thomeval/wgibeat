@@ -10,6 +10,7 @@ namespace WGiBeat.Drawing
         public double Frequency { get; set; }
         public bool Vertical { get; set; }
         public double StepSize { get; set; }
+        public float RotationStepSize { get; set; }
         public double Shift { get; set; }
 
 
@@ -29,14 +30,14 @@ namespace WGiBeat.Drawing
             };
         }
 
-        private void Step()
+        private void Step(GameTime gameTime)
         {
-            ParticlePosition += StepSize;
+            ParticlePosition += StepSize * gameTime.ElapsedRealTime.TotalSeconds;
 
             if (ParticlePosition >= 1)
                 ParticlePosition -= 1;
 
-            this.Rotation += 0.0075f;
+            this.Rotation += RotationStepSize * (float) gameTime.ElapsedRealTime.TotalSeconds;
         }
 
         private Vector2 GetVector()
@@ -50,12 +51,18 @@ namespace WGiBeat.Drawing
             return new Vector2(X + widthAlt, Y + heightAlt);
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
            // this.Width = ParticleSize;
           //  this.Height = ParticleSize;
+            Step(gameTime);
             ParticleSpriteMap.Draw(spriteBatch, ParticleType, ParticleSize, ParticleSize, (int) GetVector().X, (int) GetVector().Y, Rotation);
-            Step();
+            
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            Draw(spriteBatch,new GameTime());
         }
 
 

@@ -61,10 +61,6 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Lidgren.Network, Version=2011.3.12.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Lidgren.Network.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
       <Private>False</Private>
       <SpecificVersion>True</SpecificVersion>
@@ -80,16 +76,8 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml">
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
       <Private>False</Private>
     </Reference>
@@ -108,6 +96,7 @@
     <Compile Include="AudioSystem\SongTimeline.cs" />
     <Compile Include="AudioSystem\SongTimingPoint.cs" />
     <Compile Include="AudioSystem\SoundEffectManager.cs" />
+    <Compile Include="Drawing\AbilityBar.cs" />
     <Compile Include="Drawing\ActionBinding.cs" />
     <Compile Include="Drawing\PerformanceBar.cs" />
     <Compile Include="Drawing\ProfileLevelDisplay.cs" />
@@ -255,6 +244,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\MainGame\NoteJudgements.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Default\MainGame\ScorePulse.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\MainGame\SyncDifficultyBar.png">
