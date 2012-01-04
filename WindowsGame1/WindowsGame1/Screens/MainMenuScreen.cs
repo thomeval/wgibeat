@@ -14,7 +14,7 @@ namespace WGiBeat.Screens
 
         private readonly SineSwayParticleField _field = new SineSwayParticleField();
 
-        private bool _displayNoSongsError;
+
         private readonly string[] _menuText = { "Start Game", "Stats","How to play", "Keys", "Options", "Song Editor", "Website", "Exit"};
         private Sprite _background;
         private Sprite _header;
@@ -22,6 +22,7 @@ namespace WGiBeat.Screens
         private Sprite _foreground;
         private UpdaterFrame _updaterFrame;
         private string _website = "http://wgibeat.googlecode.com/";
+        private string _errorMessage = "";
         private Thread _updateThread;
 
 
@@ -110,10 +111,8 @@ namespace WGiBeat.Screens
             DrawBackground(spriteBatch,gameTime);
             DrawMenu(spriteBatch);
 
-            if (_displayNoSongsError)
-            {
-                TextureManager.DrawString(spriteBatch,"Error: No songs loaded","DefaultFont", Core.Metrics["MainMenuNoSongsError", 0], Color.Black,FontAlign.LEFT);
-            }
+    
+                TextureManager.DrawString(spriteBatch,_errorMessage,"DefaultFont", Core.Metrics["MainMenuNoSongsError", 0], Color.Black,FontAlign.LEFT);
             DrawUpdater(spriteBatch);
 
         }
@@ -192,10 +191,11 @@ namespace WGiBeat.Screens
                     {
                         Core.Cookies["JoiningPlayer"] =  player;
                         Core.ScreenTransition("NewGame");
+                        _errorMessage = "";
                     }
                     else
                     {
-                        _displayNoSongsError = true;
+                        _errorMessage = "Error: No songs loaded.";
                     }
                     break;
                     /*
@@ -222,12 +222,29 @@ namespace WGiBeat.Screens
                     Core.ScreenTransition("SongEdit");
                     break;
                 case MainMenuOption.WEBSITE:
-                    System.Diagnostics.Process.Start(_website);
+                    var thread = new Thread(LaunchBrowser);
+                    thread.Start();
+          
+                    
                     break;
 
                 case MainMenuOption.EXIT:
                     Core.Exit();
                     break;
+            }
+        }
+
+        private void LaunchBrowser()
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(_website);
+            }
+            catch (Exception ex)
+            {
+                _errorMessage = "Error: Failed to launch browser.";
+                Core.Log.AddMessage(ex.Message, LogLevel.ERROR);
+                Core.Log.AddException(ex);
             }
         }
     }

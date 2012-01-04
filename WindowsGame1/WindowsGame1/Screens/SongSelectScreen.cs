@@ -506,7 +506,6 @@ namespace WGiBeat.Screens
             _previewStarted = false;
             _songListDrawOffset += 50;
             RaiseSoundTriggered(SoundEvent.SONG_SELECT_DOWN);
-
         }
 
     }
