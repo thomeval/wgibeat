@@ -26,9 +26,9 @@ namespace WGiBeat.Drawing
 
             var actMx = _displayedGrooveMomentum - 0.5;
             const double MAX_MX = 5.5;
-            if (actMx > 4.0)
+            if (actMx > 3.5)
             {
-                actMx -= (actMx - 4.0)/2;
+                actMx -= (actMx - 3.5)/2;
             }
             actMx = Math.Min(MAX_MX, actMx);
 
@@ -43,9 +43,9 @@ namespace WGiBeat.Drawing
             TextureManager.DrawString(spriteBatch, string.Format("{0:0.0}x", _displayedGrooveMomentum), "DefaultFont",
                                       textPosition, Color.Black, FontAlign.LEFT);
             textPosition.Y -= 4;
-            textPosition.X += 77;
+            textPosition.X += 112;
             TextureManager.DrawString(spriteBatch, string.Format("{0:0.0}x", Player.PeakGrooveMomentum), "DefaultFont",
-                          textPosition, Color.Black, FontAlign.LEFT);
+                          textPosition, Color.Black, FontAlign.RIGHT);
         }
 
         private void UpdateDisplayedGM()
