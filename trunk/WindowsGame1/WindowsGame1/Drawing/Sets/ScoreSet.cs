@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Managers;
 using WGiBeat.Players;
@@ -8,16 +9,17 @@ namespace WGiBeat.Drawing.Sets
     public class ScoreSet: DrawableObjectSet
     {
 
-        private long[] _displayedScores;
+        private readonly long[] _displayedScores;
         private SpriteMap _iconSpriteMap;
         private SpriteMap _coopBaseSprite;
+        private Sprite _coopPulseSprite;
         private Sprite _individualBaseSprite;
         private Sprite _individualPulseSprite;
         private SpriteMap _playerIdentifierSpriteMap;
 
         private TeamScoreMeter _teamScoreMeter;
         private SpriteMap _iconSyncBaseSpriteMap;
-        private readonly Color[] _pulseColors = {new Color(255,128,128),new Color(128,128,255), new Color(128,255,255),new Color(255,255,128)    };
+        private readonly Color[] _pulseColors = {new Color(255,128,128),new Color(128,128,255), new Color(128,255,128),new Color(255,255,128)    };
 
         public ScoreSet(MetricsManager metrics, Player[] players, GameType type)
             : base(metrics,players,type)
@@ -29,7 +31,6 @@ namespace WGiBeat.Drawing.Sets
         public override void Draw(SpriteBatch spriteBatch)
         {
             AdjustDisplayedScores();
-
             DrawIndividualScores(spriteBatch);
             DrawCombinedScores(spriteBatch);
             DrawPlayerDifficulties(spriteBatch);
@@ -73,6 +74,10 @@ namespace WGiBeat.Drawing.Sets
                                          {
                                              SpriteTexture = TextureManager.Textures("ScorePulse")
                                          };
+            _coopPulseSprite = new Sprite
+            {
+                SpriteTexture = TextureManager.Textures("ScorePulse")
+            };
         }
         private void DrawPlayerDifficulties(SpriteBatch spriteBatch)
         {
@@ -137,6 +142,9 @@ namespace WGiBeat.Drawing.Sets
                 {
 
                     _coopBaseSprite.Draw(spriteBatch, 0, 240, 40, _metrics["ScoreCombinedBase", x]);
+                    _coopPulseSprite.Position = _metrics["ScoreCombinedBase", x];
+                    _coopPulseSprite.ColorShading.A = (byte)Math.Min(255, 2 * Math.Sqrt(Players[0].Score - scoreText));
+                    _coopPulseSprite.Draw(spriteBatch);
                     TextureManager.DrawString(spriteBatch, "" + scoreText, "LargeFont",
                                            _metrics["ScoreCombinedText", x], Color.White, FontAlign.RIGHT);
                 }
@@ -154,12 +162,17 @@ namespace WGiBeat.Drawing.Sets
                 }
             }
 
+            long totalScore = (from e in Players where e.Playing select e.Score).Sum();
             for (int x = 0; x < 2; x++)
             {
                 if ((Players[2 * x].Playing) || (Players[(2 * x) + 1].Playing))
                 {
 
                     _coopBaseSprite.Draw(spriteBatch, 0, 240, 40, _metrics["ScoreCombinedBase", x]);
+                    _coopPulseSprite.Position = _metrics["ScoreCombinedBase", x];
+                    _coopPulseSprite.ColorShading.A = (byte) Math.Min(255, 2* Math.Sqrt(totalScore - scoreText));
+                    _coopPulseSprite.Draw(spriteBatch);
+
                     TextureManager.DrawString(spriteBatch, "" + scoreText, "LargeFont",
                                            _metrics["ScoreCombinedText", x], Color.White, FontAlign.RIGHT);
                 }
@@ -248,8 +261,6 @@ namespace WGiBeat.Drawing.Sets
                 case GameType.COOPERATIVE:
                 case GameType.TEAM:
                 case GameType.VS_CPU:
-                    Players[player].Score += amount;
-                    break;
                 case GameType.SYNC:
                     Players[player].Score += amount;
                         break;

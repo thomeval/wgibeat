@@ -81,6 +81,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AudioSystem\FMOD\fmod.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="AudioSystem\SoundEffectManager.cs" />
     <Compile Include="Drawing\AbilityBar.cs" />
     <Compile Include="Drawing\ActionBinding.cs" />
+    <Compile Include="Drawing\GrooveMomentumBar.cs" />
     <Compile Include="Drawing\PerformanceBar.cs" />
     <Compile Include="Drawing\ProfileLevelDisplay.cs" />
     <Compile Include="Drawing\Sets\CountdownSet.cs" />
@@ -226,6 +228,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\MainGame\CoopLifebarMiddleBlazing.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Default\MainGame\GrooveMomentumBarBack.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Default\MainGame\GrooveMomentumBarFront.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\MainGame\LevelBarMaxBase.png">
