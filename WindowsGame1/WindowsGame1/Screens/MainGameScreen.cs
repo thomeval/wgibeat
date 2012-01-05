@@ -453,7 +453,7 @@ namespace WGiBeat.Screens
 
         }
 
-        private readonly double[] _gmAdjustments = {0.08, 0.05, 0.03, 0.0, -0.15, -0.06};
+        private readonly double[] _gmAdjustments = {0.08, 0.06, 0.03, 0.0, -0.15, -0.06};
         private void AdjustGrooveMomentum(object input)
         {
             Thread.Sleep(150);
