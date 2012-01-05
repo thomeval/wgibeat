@@ -32,6 +32,8 @@ namespace WGiBeat.Screens
         private BeatlineHitAggregator _hitAggregator;
 
         private PerformanceBar _performanceBar;
+        private GrooveMomentumBar _gmbar;
+
         private const int PLAYER_COUNT = 4;
         private GameSong _gameSong;
         private TimeSpan? _startTime;
@@ -57,6 +59,7 @@ namespace WGiBeat.Screens
                                   {Width = 350, Players = Core.Players, GameType = currentGameType};
             var freeLocation = _performanceBar.GetFreeLocation(currentGameType == GameType.COOPERATIVE);
             _performanceBar.Position = Core.Metrics["PerformanceBar", freeLocation];
+            _gmbar = new GrooveMomentumBar {Position = Core.Metrics["GrooveMomentumBar", 0], Width = 275};
             _lifeBarSet = new LifeBarSet(Core.Metrics, Core.Players, currentGameType);
             _lifeBarSet.BlazingEnded += ((sender, e) => _noteBarSet.CancelReverse((int) e.Object));
 
@@ -481,11 +484,7 @@ namespace WGiBeat.Screens
         {
             var player = (int) sender;
             _hitAggregator.RegisterHit(player, BeatlineNoteJudgement.MISS);
-            /*
-       _noteJudgementSet.AwardJudgement(BeatlineNoteJudgement.MISS, player,1, 0, 0);
-
-            _levelbarSet.AdjustMomentum(BeatlineNoteJudgement.MISS, player);
-             */
+       
             
             if (Core.Players[player].CPU)
             {
@@ -535,7 +534,7 @@ namespace WGiBeat.Screens
             _noteJudgementSet.Draw(spriteBatch, _phraseNumber);
             _beatlineSet.Draw(spriteBatch, _phraseNumber);
             _performanceBar.Draw(spriteBatch);
-             
+            _gmbar.Draw(spriteBatch);
             
             if (_phraseNumber < 0)
             {
@@ -622,9 +621,6 @@ namespace WGiBeat.Screens
             TextureManager.DrawString(spriteBatch, String.Format("Length: {0:F3}", _gameSong.Length),
                 "DefaultFont", Core.Metrics["SongDebugLength", 0], Color.Black, FontAlign.LEFT);
           //  TextureManager.DrawString(spriteBatch, _gameSong.ConvertPhraseToMS(_phraseNumber) + " ms","DefaultFont",new Vector2(375,350),Color.Black,FontAlign.LEFT );
-            TextureManager.DrawString(spriteBatch, String.Format("GM: {0:0.00}, Peak: {1:0.00}", Player.GrooveMomentum, Player.PeakGrooveMomentum), "DefaultFont", new Vector2(200, 165), Color.Black, FontAlign.CENTER);
-            TextureManager.DrawString(spriteBatch, String.Format("GM: {0:0.00}, Peak: {1:0.00}", Player.GrooveMomentum, Player.PeakGrooveMomentum), "DefaultFont", new Vector2(600, 165), Color.Black, FontAlign.CENTER);
-
         }
 
 
