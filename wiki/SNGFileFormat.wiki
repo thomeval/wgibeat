@@ -2,7 +2,7 @@
 #labels Documentation
 
 =Basics=
-Each song needs a .sng file to be playable in the game. The format of the .sng file is as follows:
+In order for a song to be playable in WGiBeat, certain information must be provided. This information is typically stored in a .sng file alongside the song itself, although the information can also be extracted from a .sm or .dwi file if the song is already playable in Stepmania. The format of the .sng file is as follows:
 
 {{{
 #SONG-1.0;
@@ -22,7 +22,7 @@ Note that each line *must* end in a semicolon, and the file must start with #SON
 
 Place the song file (can be .mp3, .wma or .ogg) and its .sng file in the same folder. Multiple songs can be placed in the same folder.
 
-The easiest way to create a .sng file is to use the built-in song editor, WGiEdit. It will also calculate the MD5 automatically. See [EditorTutorial this page] for more information.
+The easiest way to create a .sng file is to use the built-in song editor, WGiEdit. It will also calculate the MD5 automatically. See [SongEditorTutorial this page] for more information.
 
 Once the .sng file is created, the BPM, offset and length attributes (necessary to properly synchronize the game with the music) can be
 adjusted on the fly from inside WGiBeat itself. See [TipsAndTricks this page] for more information.
