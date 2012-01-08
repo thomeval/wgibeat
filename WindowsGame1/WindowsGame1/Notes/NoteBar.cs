@@ -114,9 +114,29 @@ namespace WGiBeat.Notes
             }
             newNoteBar.X = posX;
             newNoteBar.Y = posY;
+
+            CheckForTriples(newNoteBar);
             return newNoteBar;
         }
- 
+
+        private static void CheckForTriples(NoteBar newNoteBar)
+        {
+            if (newNoteBar.Notes.Count < 3)
+            {
+                return;
+            }
+           for (int x = 0; x <= newNoteBar.Notes.Count - 3; x++)
+           {
+               if ((newNoteBar.Notes[x].Direction == newNoteBar.Notes[x + 1].Direction) && (newNoteBar.Notes[x].Direction == newNoteBar.Notes[x + 2].Direction))
+               {
+                   var temp = (int) newNoteBar.Notes[x + 1].Direction;
+                   var adj = _rnd.Next(1, 4);
+                   newNoteBar.Notes[x + 1].Direction = (NoteDirection) ((temp + adj) % (int) NoteDirection.COUNT);
+               }
+               
+           }
+        }
+
         public NoteBar Clone()
         {
             var result = new NoteBar();

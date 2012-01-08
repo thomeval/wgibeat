@@ -21,7 +21,7 @@ namespace WGiBeat.Screens
         private SpriteMap _menuOptionSprite;
         private Sprite _foreground;
         private UpdaterFrame _updaterFrame;
-        private string _website = "http://wgibeat.googlecode.com/";
+        private const string WEBSITE = "http://code.google.com/p/wgibeat/?lol=orz";
         private string _errorMessage = "";
         private Thread _updateThread;
 
@@ -68,11 +68,12 @@ namespace WGiBeat.Screens
         private void UpdateInfoFailed(object sender, EventArgs e)
         {
             _updaterFrame.Status = UpdaterStatus.FAILED;
-            _updaterFrame.NewsMessage = Core.UpdateManager.ErrorMessage;
+            _updaterFrame.UpdateDetails = Core.UpdateManager.ErrorMessage;
         }
 
         private void UpdateInfoAvailable(object sender, EventArgs e)
         {
+            _updaterFrame.UpdateDetails = Core.UpdateManager.UpdateDetails;
             _updaterFrame.NewsMessage = Core.UpdateManager.NewsFeed;
             _updaterFrame.AvailableVersion = Core.UpdateManager.LatestVersion;
             _updaterFrame.CurrentVersion = GameCore.VERSION_STRING.Substring(1);
@@ -238,7 +239,7 @@ namespace WGiBeat.Screens
         {
             try
             {
-                System.Diagnostics.Process.Start(_website);
+                System.Diagnostics.Process.Start(WEBSITE);
             }
             catch (Exception ex)
             {

@@ -261,7 +261,7 @@ namespace WGiBeat.Drawing
             if (_reverseDirection)
             {
                 result = this.Width - result;
-                result -= 4;
+                result -= IMPACT_WIDTH;
             }
             result += this.X;
             return result;

@@ -29,6 +29,31 @@ namespace WGiBeat.Notes
                     return NoteDirection.COUNT;
             }
         }
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != typeof (Note)) return false;
+            return Equals((Note) obj);
+        }
+
+        public bool Equals(Note other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Equals(other.Direction, Direction) && other.Reverse.Equals(Reverse) && other.Completed.Equals(Completed);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int result = Direction.GetHashCode();
+                result = (result*397) ^ Reverse.GetHashCode();
+                result = (result*397) ^ Completed.GetHashCode();
+                return result;
+            }
+        }
     }
 
     public enum NoteDirection

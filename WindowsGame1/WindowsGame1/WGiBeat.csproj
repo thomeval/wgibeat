@@ -97,7 +97,6 @@
     <Compile Include="AudioSystem\SongTimeline.cs" />
     <Compile Include="AudioSystem\SongTimingPoint.cs" />
     <Compile Include="AudioSystem\SoundEffectManager.cs" />
-    <Compile Include="Drawing\AbilityBar.cs" />
     <Compile Include="Drawing\ActionBinding.cs" />
     <Compile Include="Drawing\GrooveMomentumBar.cs" />
     <Compile Include="Drawing\PerformanceBar.cs" />
@@ -106,6 +105,7 @@
     <Compile Include="Drawing\FileSelectDialog.cs" />
     <Compile Include="Drawing\MovingBackground.cs" />
     <Compile Include="Drawing\Sets\DrawableObjectSet.cs" />
+    <Compile Include="Drawing\Sets\GrooveMomentumBarSet.cs" />
     <Compile Include="Drawing\Sets\NoteBarSet.cs" />
     <Compile Include="Drawing\SongTimeLine.cs" />
     <Compile Include="Drawing\SongTypeDisplay.cs" />
@@ -210,6 +210,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\Common\PlayerOptionsFrameAttract.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Default\Instruction\InstructionPage4.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\MainGame\BeatlineEffectIcons.png">

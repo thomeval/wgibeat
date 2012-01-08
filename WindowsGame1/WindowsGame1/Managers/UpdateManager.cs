@@ -8,6 +8,7 @@ namespace WGiBeat.Managers
     {
 
         public string LatestVersion { get; private set; }
+        public string UpdateDetails { get; private set; }
         public string NewsFeed { get; private set; }
         public string ErrorMessage { get; private set; }
 
@@ -36,8 +37,8 @@ namespace WGiBeat.Managers
 
                 var buffer = new byte[8192];
                 var stringBuilder = new StringBuilder();
-                string tempString = null;
-                int count = 0;
+                string tempString;
+                int count;
 
                 do
                 {
@@ -79,14 +80,19 @@ namespace WGiBeat.Managers
             str = str.Replace('\r', ' ');
             var lines = str.Split('\n');
             LatestVersion = lines[0].Trim();
-            NewsFeed = lines[1].Trim();
+            UpdateDetails = lines[1].Trim();
+
+            if (lines.Length > 2)
+            {
+                NewsFeed = lines[2].Trim();
+            }
         }
 
         public void Reset()
         {
             LatestVersion = "";
             ErrorMessage = "";
-            NewsFeed = "";
+            UpdateDetails = "";
         }
 
     }

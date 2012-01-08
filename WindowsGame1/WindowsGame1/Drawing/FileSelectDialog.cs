@@ -227,5 +227,10 @@ namespace WGiBeat.Drawing
             FileSelected = null;
             FileSelectCancelled = null;
         }
+
+        public void RefreshFolder()
+        {
+            CreateFileList(_currentFolder);
+        }
     }
 }

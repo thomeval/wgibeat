@@ -32,7 +32,7 @@ namespace WGiBeat.Screens
         private BeatlineHitAggregator _hitAggregator;
 
         private PerformanceBar _performanceBar;
-        private GrooveMomentumBar _gmbar;
+        private GrooveMomentumBarSet _gmBarSet;
 
         private const int PLAYER_COUNT = 4;
         private GameSong _gameSong;
@@ -59,7 +59,7 @@ namespace WGiBeat.Screens
                                   {Width = 350, Players = Core.Players, GameType = currentGameType};
             var freeLocation = _performanceBar.GetFreeLocation(currentGameType == GameType.COOPERATIVE);
             _performanceBar.Position = Core.Metrics["PerformanceBar", freeLocation];
-            _gmbar = new GrooveMomentumBar {Position = Core.Metrics["GrooveMomentumBar", 0], Width = 275};
+            
             _lifeBarSet = new LifeBarSet(Core.Metrics, Core.Players, currentGameType);
             _lifeBarSet.BlazingEnded += ((sender, e) => _noteBarSet.CancelReverse((int) e.Object));
 
@@ -69,6 +69,7 @@ namespace WGiBeat.Screens
             _noteJudgementSet = new NoteJudgementSet(Core.Metrics, Core.Players, currentGameType,_lifeBarSet,_scoreSet);
             _countdownSet = new CountdownSet(Core.Metrics, Core.Players, currentGameType);
             _beatlineSet = new BeatlineSet(Core.Metrics, Core.Players, currentGameType);
+            _gmBarSet = new GrooveMomentumBarSet(Core.Metrics,Core.Players,currentGameType);
             _hitAggregator = new BeatlineHitAggregator(Core.Players, currentGameType);
             _hitAggregator.HitsAggregated += HitsAggregated;
             _noteBarSet = new NoteBarSet(Core.Metrics, Core.Players, currentGameType);
@@ -461,7 +462,6 @@ namespace WGiBeat.Screens
              
             var isPositive = _gmAdjustments[(int) adjustment.Judgement] > 0.0;
             var mx = (isPositive) ? adjustment.Multiplier : 1;
-            System.Diagnostics.Debug.WriteLine("GMAdjust: " + mx + "x, " + adjustment.Judgement);
             Player.GrooveMomentum += _gmAdjustments[(int)adjustment.Judgement] * mx;          
         }
 
@@ -534,7 +534,7 @@ namespace WGiBeat.Screens
             _noteJudgementSet.Draw(spriteBatch, _phraseNumber);
             _beatlineSet.Draw(spriteBatch, _phraseNumber);
             _performanceBar.Draw(spriteBatch);
-            _gmbar.Draw(spriteBatch);
+            _gmBarSet.Draw(spriteBatch);
             
             if (_phraseNumber < 0)
             {

@@ -9,7 +9,7 @@ namespace WGiBeat.Screens
     public class InstructionScreen : GameScreen
     {
         public int PageNumber = 1;
-        public const int TOTAL_PAGES = 3;
+        public const int TOTAL_PAGES = 4;
         private MovingBackground _background;
         private Sprite _baseSprite;
         private Sprite[] _instructionPages;

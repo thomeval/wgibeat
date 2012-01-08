@@ -440,6 +440,7 @@ namespace WGiBeat.Screens
 
             _selectingCPUSkill = true;
             var cpuDifficulty = (from e in Core.Players where e.Playing select e.PlayerOptions.PlayDifficulty).Max();
+            //Find a free player slot for the CPU player.
             for (int x = 0; x < 4; x++)
             {
                 if (!Core.Players[x].Playing)
@@ -449,6 +450,8 @@ namespace WGiBeat.Screens
                     Core.Players[x].Profile = null;
                     Core.Players[x].Team = 2;
                     Core.Players[x].PlayerOptions.PlayDifficulty = cpuDifficulty;
+                    Core.Players[x].PlayerOptions.ScrollDirectionWest = false;
+                    Core.Players[x].PlayerOptions.ScrollDirectionEast = true;
                     return;
                 }
             }

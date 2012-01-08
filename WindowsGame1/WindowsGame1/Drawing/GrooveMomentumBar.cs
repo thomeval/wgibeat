@@ -11,9 +11,15 @@ namespace WGiBeat.Drawing
 
         private double _displayedGrooveMomentum = 1.0;
 
+        public double DisplayedGrooveMomentum
+        {
+            get { return _displayedGrooveMomentum; }
+            set { _displayedGrooveMomentum = value; }
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
-            UpdateDisplayedGM();
+            
             if (_barSpriteBack == null)
             {
                 _barSpriteBack = new Sprite { SpriteTexture = TextureManager.Textures("GrooveMomentumBarBack") };
@@ -48,18 +54,6 @@ namespace WGiBeat.Drawing
                           textPosition, Color.Black, FontAlign.RIGHT);
         }
 
-        private void UpdateDisplayedGM()
-        {
-            var diff = Player.GrooveMomentum - _displayedGrooveMomentum;
-            if (Math.Abs(diff) < 0.001)
-            {
-                _displayedGrooveMomentum = Player.GrooveMomentum;
-            }
-            else
-            {
-                _displayedGrooveMomentum += diff / 8.0;
-            }      
-           
-        }
+ 
     }
 }
