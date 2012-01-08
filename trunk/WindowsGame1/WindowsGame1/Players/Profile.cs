@@ -38,7 +38,7 @@ namespace WGiBeat.Players
         public Profile()
         {
             JudgementCounts = new long[(int)BeatlineNoteJudgement.COUNT + 2];
-            LastPlayerOptions = new PlayerOptions { BeatlineSpeed = 1.0, ScrollDirectionWest = true };
+            LastPlayerOptions = new PlayerOptions { BeatlineSpeed = 1.0, ScrollDirectionEast = true };
         }
 
         public static bool ProfileOutOfDate = false;

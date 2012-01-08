@@ -1173,6 +1173,7 @@ namespace WGiBeat.Screens
                case "0":
                    if (_cursorPosition == EditorCursorPosition.DONE_DELETE )
                    {
+                       _fileSelect.RefreshFolder();
                        _cursorPosition = EditorCursorPosition.SELECT_SONGFILE_DELETE;
                    }
                    else

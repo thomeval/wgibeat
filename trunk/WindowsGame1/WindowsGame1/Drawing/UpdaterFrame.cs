@@ -14,10 +14,12 @@ namespace WGiBeat.Drawing
         public string AvailableVersion { get; set; }
         //Expected to be like: 0.8 or 0.8 \s
         public string CurrentVersion { get; set; }
-        public string NewsMessage { get; set; }
+        public string UpdateDetails { get; set; }
         public UpdaterStatus Status { get; set; }
         public bool Visible { get; set; }
         public int XOffset { get; set; }
+
+        public string NewsMessage { get; set; }
 
         private Sprite _updaterFrame;
         private Vector2 _textPosition;
@@ -51,7 +53,7 @@ namespace WGiBeat.Drawing
                         message = "Checking for updates...";
                         break;
                     case UpdaterStatus.FAILED:
-                        message = "Update check failed: " + NewsMessage;
+                        message = "Update check failed: " + UpdateDetails;
                         break;
                     case UpdaterStatus.SUCCESSFUL:
                         message = DetermineVersionMessage();
@@ -96,11 +98,16 @@ namespace WGiBeat.Drawing
             switch (VersionUpToDate())
             {
                 case 0:
-                    return String.Format("This version of WGiBeat is up to date. (v{0})", CurrentVersion);
+                    if (string.IsNullOrEmpty(NewsMessage))
+                    {
+                        return String.Format("This version of WGiBeat is up to date. (v{0})", CurrentVersion);   
+                    }
+                    return String.Format(NewsMessage);
+
                 case 1:
                     return String.Format("This version is newer than the official release. (You have v{1}, official is v{0})   ", AvailableVersion, CurrentVersion);
                 default:
-                    return String.Format("WGiBeat version {0} released! {1} Visit http://wgibeat.googlecode.com for more information.   ", AvailableVersion, NewsMessage);
+                    return String.Format("WGiBeat version {0} released! {1} Visit http://wgibeat.googlecode.com for more information.   ", AvailableVersion, UpdateDetails);
             }
         }
 

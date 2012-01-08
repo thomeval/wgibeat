@@ -412,7 +412,7 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black, FontAlign.CENTER);
                                                   String.Format("{0:P0}",
                                                                 1.0*Core.Players[x].Judgements[y]/totalBeatlines),
                                                   "DefaultFont",
-                                                  percentagePosition, Color.Black, FontAlign.LEFT);
+                                                  percentagePosition, Color.Black, FontAlign.RIGHT);
                     }
                     y++;
                     labelPosition.Y += 18;
@@ -424,7 +424,7 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black, FontAlign.CENTER);
                 TextureManager.DrawString(spriteBatch, "Score:", "LargeFont",
                                        Core.Metrics["EvaluationLabelScore", x], Color.Black, FontAlign.LEFT);
                 TextureManager.DrawString(spriteBatch, "" + Core.Players[x].Score, "LargeFont",
-                                       Core.Metrics["EvaluationScore", x], Color.Black, FontAlign.LEFT);
+                                       Core.Metrics["EvaluationScore", x], Color.Black, FontAlign.RIGHT);
             }
         }
 
