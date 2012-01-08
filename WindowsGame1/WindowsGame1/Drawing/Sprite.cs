@@ -64,9 +64,16 @@ namespace WGiBeat.Drawing
 
         public void DrawTiled(SpriteBatch spriteBatch, int texU1, int texV1, int texU2, int texV2)
         {
+            CheckIfDimensionsSet();
+            //Ignore drawing 'zero' part of a texture.
+            if ((texU1 == texU2) || (texV1 == texV2))
+            {
+                return;
+            }
+
             Core.ShiftSpriteBatch(true);
             
-            CheckIfDimensionsSet();
+            
             var textureRect = new Rectangle(texU1, texV1, texU2, texV2);
             var dest = new Rectangle
             {
