@@ -7,24 +7,29 @@
 
  
 ==Delayed==
+ - Team colours
+ - Legend for life graph
  
 ==Post Release==
 
 ==TODO==
-- Better notebar visibility
-- News feed in Updater
-- Groove momentum
-- Fourth instruction page.
+- Groove momentum (gauge, coop only)
 
 
 ==0.9 - "Positive Trend" ==
+ * Introducing a brand new game mechanic exclusively for Coop mode: Groove Momentum. The current Groove Momentum is displayed during gameplay and increases or decreases based on player performance. It affects both the points awarded, and beatline speeds.
  * Added support for sound effects for menus. However, you will need to supply your own audio files for this to work. For more information on how to add your own sound effects, see...
  * Added an animation to the level bar when full.
+ * Added an animation to the score displays when points are awarded. 
  * Song Select Screen now remembers the last chosen song played when it is interrupted.
  * Song Select Screen now remembers the last used sort mode.
  * Fixed several issues with deleting song files in WGiEdit. Deleting multiple files is now somewhat easier.
  * Blazing mode now scales depending on the player's current Life.
- * Added a button to WGiBeat's website on the main menu. 
+ * Added a button to WGiBeat's website on the main menu.
+ * Note bars will no longer have three or more consecutive arrows with the same direction. 
+ * Bugfix: CPU Players now use the default beatline direction settings.
+ * Bugfix: Beatline notes are no longer slightly misaligned when playing with Right-scrolling beatlines.
+ * Bugfix: Lifebars will no longer have visual glitches near 200 life.     
  
 ==0.8 - "Patient Fury" ==
  * A new cooperative game mode is now playable: Sync Mode! Please report any bugs found when playing this mode to the development team.
