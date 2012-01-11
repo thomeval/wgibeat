@@ -66,7 +66,7 @@ namespace WGiBeat.Drawing
         {
             CheckIfDimensionsSet();
             //Ignore drawing 'zero' part of a texture.
-            if ((texU1 == texU2) || (texV1 == texV2))
+            if ((texU2 == 0) || (texV2 == 0))
             {
                 return;
             }

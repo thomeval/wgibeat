@@ -19,6 +19,7 @@ namespace WGiBeat.Drawing.Sets
 
         public void UpdateDisplayedGM()
         {
+
             var diff = Player.GrooveMomentum - _displayedGrooveMomentum;
             if (Math.Abs(diff) < 0.001)
             {
@@ -32,9 +33,24 @@ namespace WGiBeat.Drawing.Sets
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
+            if (_gameType != GameType.COOPERATIVE)
+            {
+                return;
+            }
+
             UpdateDisplayedGM();
             _gmbar.DisplayedGrooveMomentum = _displayedGrooveMomentum;
-            _gmbar.Draw(spriteBatch);
+            if (Players[0].Playing || Players[1].Playing)
+            {
+                _gmbar.Position = _metrics["GrooveMomentumBar", 0];
+                _gmbar.Draw(spriteBatch);
+            }
+            if (Players[2].Playing || Players[3].Playing)
+            {
+                _gmbar.Position = _metrics["GrooveMomentumBar", 1];
+                _gmbar.Draw(spriteBatch);
+            }
+        
         }
     }
 }

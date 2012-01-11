@@ -123,7 +123,7 @@ namespace WGiBeat.Drawing
             DrawNotes(spriteBatch, phraseNumber);
 
             var diff = Speed - _displayedSpeed;
-            _displayedSpeed += diff / 10;
+            _displayedSpeed += diff / 8.0;
         }
 
         private void DrawPlayerIdentifier(SpriteBatch spriteBatch)

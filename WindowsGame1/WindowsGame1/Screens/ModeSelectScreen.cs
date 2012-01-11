@@ -45,21 +45,19 @@ namespace WGiBeat.Screens
             _selectingCPUSkill = false;
             Core.Cookies["CurrentGameType"] = GameType.NORMAL;
             RemoveCPUPlayers();
+            ResetTeams();
             _playerOptionsSet = new PlayerOptionsSet { Players = Core.Players, Positions = Core.Metrics["PlayerOptionsFrame"] };
             _playerOptionsSet.CreatePlayerOptionsFrames();
-            //_playerOptionsSet.PlayerJoined += new EventHandler<ObjectEventArgs>(_playerOptionsSet_PlayerJoined);
-           // _playerOptionsSet.PlayerLeft += new EventHandler<ObjectEventArgs>(_playerOptionsSet_PlayerLeft);
+   
             base.Initialize();
         }
 
-        private void _playerOptionsSet_PlayerLeft(object sender, ObjectEventArgs e)
+        private void ResetTeams()
         {
-            
-        }
-
-        private void _playerOptionsSet_PlayerJoined(object sender, ObjectEventArgs e)
-        {
-           
+            for (int x = 0; x < 4; x++)
+            {
+                Core.Players[x].Team = 0;
+            }
         }
 
 
@@ -448,10 +446,9 @@ namespace WGiBeat.Screens
                     Core.Players[x].Playing = true;
                     Core.Players[x].CPU = true;
                     Core.Players[x].Profile = null;
+                    Core.Players[x].ApplyDefaultOptions();
                     Core.Players[x].Team = 2;
                     Core.Players[x].PlayerOptions.PlayDifficulty = cpuDifficulty;
-                    Core.Players[x].PlayerOptions.ScrollDirectionWest = false;
-                    Core.Players[x].PlayerOptions.ScrollDirectionEast = true;
                     return;
                 }
             }
