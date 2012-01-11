@@ -174,6 +174,7 @@ namespace WGiBeat.Managers
             Players[player - 1].ResetStats();
             Players[player - 1].Profile = null;
             Players[player - 1].Playing = true;
+            Players[player - 1].ApplyDefaultOptions();
 
             if (CurrentGameType == GameType.TEAM)
             {

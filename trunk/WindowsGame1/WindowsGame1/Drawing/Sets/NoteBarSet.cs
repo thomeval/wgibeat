@@ -126,7 +126,7 @@ namespace WGiBeat.Drawing.Sets
                 }
                 else if (Players[player].Life >= 150)
                 {
-                    numReverse = (int)Players[player].Level * 2 / 3;
+                    numReverse = (int)Players[player].Level * 1/2;
                 }
                 else
                 {

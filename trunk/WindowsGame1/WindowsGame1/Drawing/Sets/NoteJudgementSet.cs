@@ -109,7 +109,10 @@ namespace WGiBeat.Drawing.Sets
             }
 
             scoreAdjust *= givenMultiplier;
-            scoreAdjust = (long) Math.Ceiling(scoreAdjust*Math.Sqrt(Player.GrooveMomentum));
+            if (_gameType == GameType.COOPERATIVE)
+            {
+                scoreAdjust = (long) Math.Ceiling(scoreAdjust*(Player.GrooveMomentum));
+            }
             if (_scoreSet != null)
             {
                 _scoreSet.AdjustScore(scoreAdjust, player);

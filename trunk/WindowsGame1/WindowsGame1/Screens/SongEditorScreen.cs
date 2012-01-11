@@ -53,6 +53,7 @@ namespace WGiBeat.Screens
         private SpriteMap _editProgressSpriteMap;
         private SpriteMap _validitySpriteMap;
         private Sprite _validityTextBaseSprite;
+        private Sprite _textBackground;
         private BpmMeter _bpmMeter;
         private SongTypeDisplay _songTypeDisplay;
 
@@ -138,6 +139,12 @@ namespace WGiBeat.Screens
                                                 Position = Core.Metrics["EditorSongDetailsDisplay", 0],
                                                 SpriteTexture = TextureManager.Textures("EditorDetailsDisplay")
                                             };
+
+            _textBackground = new Sprite
+            {
+                SpriteTexture = TextureManager.Textures("MainGameTextBackground"),
+                Position = Core.Metrics["MainGameTextBackground", 0]
+            };
         }
 
         private void CreateMenus()
@@ -483,6 +490,7 @@ namespace WGiBeat.Screens
 
         private void DrawTweakControlsText(SpriteBatch spriteBatch)
         {
+         
             var textPosition = Core.Metrics["EditorTweakControls", 0].Clone();
 
             TextureManager.DrawString(spriteBatch, "F5 - Decrease BPM", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
@@ -517,6 +525,7 @@ namespace WGiBeat.Screens
 
         private void DrawDebugText(SpriteBatch spriteBatch)
         {
+            _textBackground.Draw(spriteBatch);
             TextureManager.DrawString(spriteBatch, String.Format("BPM: {0:F2}", NewGameSong.StartBPM),
                    "DefaultFont", Core.Metrics["SongDebugBPM", 0], Color.Black, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, String.Format("Offset: {0:F3}s", NewGameSong.Offset),
@@ -1134,6 +1143,7 @@ namespace WGiBeat.Screens
 
         private void SetupBeatline()
         {
+            Core.Cookies["CurrentGameType"] = GameType.NORMAL;
             _beatlineSet.Reset();
             _beatlineSet.EndingPhrase = NewGameSong.GetEndingTimeInPhrase();
             _beatlineSet.Bpm = NewGameSong.StartBPM;
@@ -1401,6 +1411,7 @@ namespace WGiBeat.Screens
         }
 
         private bool _songPlaying;
+
 
         private void SyncSong()
         {

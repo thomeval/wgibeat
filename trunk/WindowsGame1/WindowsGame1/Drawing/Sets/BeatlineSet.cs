@@ -95,12 +95,25 @@ namespace WGiBeat.Drawing.Sets
             {
                 if (Players[x].Playing)
                 {
-                    _beatlines[x].Speed = Player.GrooveMomentum;
+                    SetBeatlineSpeed(x);
+                    
                     _beatlines[x].DisablePulse = Players[x].KO;
                     _beatlines[x].Draw(spriteBatch, phraseNumber);
                 }
             }
 
+        }
+
+        private void SetBeatlineSpeed(int x)
+        {
+            if (_gameType == GameType.COOPERATIVE)
+            {
+                _beatlines[x].Speed = Player.GrooveMomentum;
+            }
+            else
+            {
+                _beatlines[x].Speed = Players[x].PlayerOptions.BeatlineSpeed;
+            }
         }
 
         public void MaintainBeatlineNotes(double phraseNumber)

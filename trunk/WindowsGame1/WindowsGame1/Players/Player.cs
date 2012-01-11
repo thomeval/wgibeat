@@ -14,7 +14,8 @@ namespace WGiBeat.Players
         public Player()
         {
             Judgements = new int[8];
-            PlayerOptions = new PlayerOptions { BeatlineSpeed = 1.0 };
+            PlayerOptions = new PlayerOptions();
+            ApplyDefaultOptions();
 
         }
 
@@ -305,6 +306,15 @@ namespace WGiBeat.Players
             playerScore += Judgements[6] * -1;
 
             return 100.0 * playerScore / maxPossible;
+        }
+
+        public void ApplyDefaultOptions()
+        {
+            PlayerOptions.BeatlineSpeed = 1.0;
+            PlayerOptions.DisableKO = false;
+            PlayerOptions.ScrollDirectionEast = true;
+            PlayerOptions.ScrollDirectionWest = false;
+            PlayerOptions.PlayDifficulty = Difficulty.BEGINNER;
         }
     }
 
