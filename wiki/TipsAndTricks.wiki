@@ -58,7 +58,7 @@ Where '!FileName' is the name of the audio file that should be used, and '!Scree
 
 For example, to have "!MyBackgroundMusic.mp3" play during the Main Menu Screen, use this line:
 {{{
-`MainMenu=MyBackgroundMusic.mp3;`
+MainMenu=MyBackgroundMusic.mp3;
 }}}
 Similar to game songs, .mp3, .ogg, .wma or .wav files can be used for menu music. The same audio can be used for any number of screens.
 
