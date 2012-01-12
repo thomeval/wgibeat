@@ -2,18 +2,20 @@
 ==Low Priority==
 - Netplay (major)
 - Transition effects for DrawableObjects.
- -  Battle (0.9?) Tag Team (0.9) game modes.
- - More Cooperative bonuses (Streaks? Sync perfects?)
-
+ -  Battle (>1.0?) Couple (>1.0?) game modes.
+  - Animated background / visualization. Lucidity based on total life?
+  
  
 ==Delayed==
  - Team colours
  - Legend for life graph
+ - Remove VSync requirement.
  
 ==Post Release==
-
+- Another song pack.
+- Image for Profile display in TipsAndTricks
+- Explain menu sound effect system.
 ==TODO==
-- Groove momentum (gauge, coop only)
 
 
 ==0.9 - "Positive Trend" ==
@@ -26,10 +28,14 @@
  * Fixed several issues with deleting song files in WGiEdit. Deleting multiple files is now somewhat easier.
  * Blazing mode now scales depending on the player's current Life.
  * Added a button to WGiBeat's website on the main menu.
- * Note bars will no longer have three or more consecutive arrows with the same direction. 
+ * Beatlines now react gradually to changing speed. This is most evident in the new Coop mode, and in WGiEdit. 
+ * Note bars will no longer have three or more consecutive arrows with the same direction.  
  * Bugfix: CPU Players now use the default beatline direction settings.
+ * Installer now more clearly indicates that WGiBeat needs .NET 3.5 SP1. Replaced outdated Microsoft website link with a new one. (thanks to eXeCutor18 for the feedback)  
+ * Installer now recommends against installing to Program Files (thanks to eXeCutor18 for the feedback)  
+ * Bugfix: Players that join in after the profile selection screen will now correctly use the default profile options. 
  * Bugfix: Beatline notes are no longer slightly misaligned when playing with Right-scrolling beatlines.
- * Bugfix: Lifebars will no longer have visual glitches near 200 life.     
+ * Bugfix: Lifebars will no longer have visual glitches near 200 life.      
  
 ==0.8 - "Patient Fury" ==
  * A new cooperative game mode is now playable: Sync Mode! Please report any bugs found when playing this mode to the development team.
