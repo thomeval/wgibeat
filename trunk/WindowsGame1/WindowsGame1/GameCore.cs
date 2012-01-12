@@ -50,13 +50,14 @@ namespace WGiBeat
         public string WgibeatRootFolder;
         private bool _drawInProgress;
 
-        public const string VERSION_STRING = "v0.9 pre";
+        public const string VERSION_STRING = "v0.9";
         private GameCore()
         {
             GraphicsManager = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
+        //TODO: Refactor to use this with Sets.
         private static GameCore _instance;
 
         public static GameCore Instance
