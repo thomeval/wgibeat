@@ -448,9 +448,12 @@ namespace WGiBeat.Screens
             _levelbarSet.AdjustMomentum(judgement, player);
             
             //Keep scoring sane by adding a delay to the awarding of Groove Momentum.
-            //Otherwise, the last player to hit each phrase has an advantage.      
-            var thread = new Thread(AdjustGrooveMomentum);
-            thread.Start(new GMAdjustment{Judgement = judgement, Multiplier = _noteBarSet.NumberCompleted(player)});
+            //Otherwise, the last player to hit each phrase has an advantage.
+            if (Core.Cookies["CurrentGameType"].Equals(GameType.COOPERATIVE))
+            {
+                var thread = new Thread(AdjustGrooveMomentum);
+                thread.Start(new GMAdjustment {Judgement = judgement, Multiplier = _noteBarSet.NumberCompleted(player)});
+            }
 
         }
 

@@ -48,10 +48,40 @@ namespace WGiBeat.Drawing
 
         private int SortByName(SongListItem first, SongListItem second)
         {
+            if (StartsWithSymbol(first.Song.Title) && !StartsWithSymbol(second.Song.Title))
+            {
+                return -1;
+            }
+            if (StartsWithSymbol(second.Song.Title) && !StartsWithSymbol(first.Song.Title))
+            {
+                return 1;
+            }
+            if (StartsWithSymbol(first.Song.Title) && StartsWithSymbol(second.Song.Title))
+            {
+                return 0;
+            }
             return first.Song.Title.CompareTo(second.Song.Title);
         }
+
+        private bool StartsWithSymbol(string text)
+        {
+            return Char.IsSymbol(text[0]);
+        }
+
         private int SortByArtist(SongListItem first, SongListItem second)
         {
+            if (StartsWithSymbol(first.Song.Artist) && !StartsWithSymbol(second.Song.Artist))
+            {
+                return -1;
+            }
+            if (StartsWithSymbol(second.Song.Artist) && !StartsWithSymbol(first.Song.Artist))
+            {
+                return 1;
+            }
+            if (StartsWithSymbol(first.Song.Artist) && StartsWithSymbol(second.Song.Artist))
+            {
+                return 0;
+            }
             return first.Song.Artist.CompareTo(second.Song.Artist);
         }
         private int SortByBpm(SongListItem first, SongListItem second)
@@ -229,7 +259,7 @@ namespace WGiBeat.Drawing
             {
                 for (int x = 0; x < SongList.Count; x++)
                 {
-                    if (Char.IsSymbol(SongList[x].Song.Title[0]))
+                    if (!Char.IsLetterOrDigit(SongList[x].Song.Title[0]))
                     {
                         return x;
                     }
@@ -240,7 +270,7 @@ namespace WGiBeat.Drawing
 
             for (int x = 0; x < SongList.Count; x++)
             {
-                if (SongList[x].Song.Title.ToUpperInvariant()[0] >= startChar)
+                if (SongList[x].Song.Title.ToUpperInvariant()[0] == startChar)
                 {
                     return x;
                 }
@@ -264,7 +294,7 @@ namespace WGiBeat.Drawing
             {
                 for (int x = 0; x < SongList.Count; x++)
                 {
-                    if (Char.IsSymbol(SongList[x].Song.Artist[0]))
+                    if (!Char.IsLetterOrDigit(SongList[x].Song.Artist[0]))
                     {
                         return x;
                     }
@@ -361,7 +391,10 @@ namespace WGiBeat.Drawing
                     result = CreateBPMBookmarks();
                     break;
             }
-
+            if (ContainsSymbol(validChars))
+            {
+                result.Add(new MenuItem { ItemText = "Sym", ItemValue = "@" });
+            }
             if (ContainsNumber(validChars))
             {
                 result.Add(new MenuItem { ItemText = "0-9", ItemValue = "#" });
@@ -373,10 +406,7 @@ namespace WGiBeat.Drawing
                     result.Add(new MenuItem { ItemText = "" + c, ItemValue = "" + c });
                 }
             }
-            if (ContainsSymbol(validChars))
-            {
-                result.Add(new MenuItem {ItemText = "Sym", ItemValue = "@"});
-            }
+           
 
             return result;
         }
@@ -385,7 +415,7 @@ namespace WGiBeat.Drawing
                                          "Slow", "80", "90", "100", "110", "120", "135", "150", "165", "180", "200", "Fast"
                                      };
 
-        private readonly int[] _bpmValues = {0,80,90,100,110,120,135,150,165,180,200,99999};
+        private readonly int[] _bpmValues = {0,80,90,100,110,120,135,150,165,180,200,300};
         private List<MenuItem> CreateBPMBookmarks()
         {
             var result = new List<MenuItem>();
@@ -400,7 +430,7 @@ namespace WGiBeat.Drawing
         {
             foreach (char c in chars)
             {
-                if (Char.IsSymbol(c))
+                if (!Char.IsLetterOrDigit(c))
                 {
                     return true;
                 }
@@ -451,7 +481,7 @@ namespace WGiBeat.Drawing
             {
                 return "#";
             }
-            if (Char.IsSymbol(value[0]))
+            if (!Char.IsLetterOrDigit(value[0]))
             {
                 return "@";
             }
