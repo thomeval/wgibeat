@@ -1,6 +1,11 @@
 ﻿#MENUSOUNDS-1.0;
-MainMenuDecide=test.ogg;
-MainMenuSelectUp=test2.ogg;
-MainMenuSelectDown=test2.ogg;
-MenuDecide=test.ogg;
-SongDecide=test.ogg;
+#This file defines which sound effects WGiBeat should use during menu actions. These actions are predetermined.
+#The general format of this file is as follows: Firstly, the file must begin with #MENUSOUNDS-1.0;
+#Every other line with beginning with a # is ignored, but comment blocks (like this one) must end with a ';' as well.
+#For the definitions themselves, the format is ActionName=AudioFile;
+#Where ActionName is a predetermined name of an action recognized by WGiBeat, and AudioFile is the name of the
+#audio file to be used. Audio files can be .mp3, .ogg, .wav, or .wma. An audio file can be used for any
+#number of actions. ActionNames are not case sensitive.
+#For example, to have WGiBeat play 'sound.ogg' every time the user picks a main menu option, use this line:
+#MainMenuDecide=sound.ogg;
+#Valid action names are:  MAINMENUDECIDE, MAINMENUBACK, MAINMENUSELECTUP,MAINMENUSELECTDOWN, MENUDECIDE, MENUBACK, MENUSELECTUP, MENUSELECTDOWN,MENUOPTIONSELECTLEFT,MENUOPTIONSELECTRIGHT,PLAYEROPTIONSDISPLAY, PLAYEROPTIONSHIDE, PLAYEROPTIONSCHANGE, SONGDECIDE, SONGSELECTUP, SONGSELECTDOWN, SONGSORTDISPLAY, SONGSORTHIDE, SONGSORTCHANGE, TEAMCHANGE, TEAMDECIDE, KEYCHANGECOMPLETE,KEYCHANGESTART;
