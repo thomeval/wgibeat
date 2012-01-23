@@ -2,7 +2,7 @@
 
 =Version History=
 
-==0.9 (r540) - "Positive Trend" ==
+==0.9 (r545) - "Positive Trend" ==
  * Introducing a brand new game mechanic exclusively for Coop mode: Groove Momentum. The current Groove Momentum is displayed during gameplay and increases or decreases based on player performance. It affects both the points awarded, and beatline speeds.
  * Added support for sound effects for menus. However, you will need to supply your own audio files for this to work. For more information on how to add your own sound effects, see [TipsAndTricks this page].
  * Added an animation to the level bar when full.
