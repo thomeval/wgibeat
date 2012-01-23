@@ -1,2 +1,2 @@
-0.8
-New features in this version include: A new game mode called Sync mode for 2 or more players, support for Beat Up Mania simfiles, customizable beatline direction and support for song backgrounds!
+0.9
+New features in this version include: A Groove Momentum system for Co-op mode, support for sound effects in menus, as well as several minor enhancements to Blazing mode, the song select screen, note bars, the installer and animations.
