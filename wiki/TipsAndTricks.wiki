@@ -63,7 +63,7 @@ MainMenu=MyBackgroundMusic.mp3;
 Similar to game songs, .mp3, .ogg, .wma or .wav files can be used for menu music. The same audio can be used for any number of screens.
 
 ==Adding Menu Sound Effects==
-WGiBeat can also play any provided audio as sound effects during the game's various screens, since v0.9. By default, no sound effects are provided. To add sound effects, edit the !MenuSounds.txt file inside the !Content\SoundEffects\Default folder. This file defines which audio file should be played for each event. The format of this file is as follows:
+WGiBeat can also play any provided audio as sound effects during the game's various screens, since v0.9. By default, no sound effects are provided. To add sound effects, edit the !MenuSounds.txt file inside the Content\!SoundEffects\Default folder. This file defines which audio file should be played for each event. The format of this file is as follows:
 
 {{{
 #MENUSOUNDS-1.0;
