@@ -62,6 +62,21 @@ MainMenu=MyBackgroundMusic.mp3;
 }}}
 Similar to game songs, .mp3, .ogg, .wma or .wav files can be used for menu music. The same audio can be used for any number of screens.
 
+==Adding Menu Sound Effects==
+WGiBeat can also play any provided audio as sound effects during the game's various screens, since v0.9. By default, no sound effects are provided. To add sound effects, edit the !MenuSounds.txt file inside the !Content\SoundEffects\Default folder. This file defines which audio file should be played for each event. The format of this file is as follows:
+
+{{{
+#MENUSOUNDS-1.0;
+ActionName=FileName;
+}}}
+Where '!FileName' is the name of the audio file that should be used, and '!ActionName' is the name of the event when this audio file should play. Valid action names are:  MAINMENUDECIDE, MAINMENUBACK, MAINMENUSELECTUP,MAINMENUSELECTDOWN, MENUDECIDE, MENUBACK, MENUSELECTUP, MENUSELECTDOWN,MENUOPTIONSELECTLEFT,MENUOPTIONSELECTRIGHT,PLAYEROPTIONSDISPLAY, PLAYEROPTIONSHIDE, PLAYEROPTIONSCHANGE, SONGDECIDE, SONGSELECTUP, SONGSELECTDOWN, SONGSORTDISPLAY, SONGSORTHIDE, SONGSORTCHANGE, TEAMCHANGE, TEAMDECIDE, KEYCHANGECOMPLETE,KEYCHANGESTART. These are not case sensitive.
+
+For example, to have WGiBeat play 'sound.ogg' every time the user picks a main menu option, use this line:
+{{{
+MainMenuDecide=sound.ogg;
+}}}
+Similar to menu music, .mp3, .ogg, .wma or .wav files can be used for menu sound effects. The same audio can be used for any number of sound effects.
+
 ==Profile System==
 WGiBeat supports a profile system for returning players. Profiles can be used to store a player's preferred gameplay options (such as Beatline speed and difficulty), and are also used to keep gameplay stats.
 
