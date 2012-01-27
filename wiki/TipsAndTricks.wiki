@@ -69,7 +69,7 @@ WGiBeat can also play any provided audio as sound effects during the game's vari
 #MENUSOUNDS-1.0;
 ActionName=FileName;
 }}}
-Where '!FileName' is the name of the audio file that should be used, and '!ActionName' is the name of the event when this audio file should play. Valid action names are:  MAINMENUDECIDE, MAINMENUBACK, MAINMENUSELECTUP,MAINMENUSELECTDOWN, MENUDECIDE, MENUBACK, MENUSELECTUP, MENUSELECTDOWN,MENUOPTIONSELECTLEFT,MENUOPTIONSELECTRIGHT,PLAYEROPTIONSDISPLAY, PLAYEROPTIONSHIDE, PLAYEROPTIONSCHANGE, SONGDECIDE, SONGSELECTUP, SONGSELECTDOWN, SONGSORTDISPLAY, SONGSORTHIDE, SONGSORTCHANGE, TEAMCHANGE, TEAMDECIDE, KEYCHANGECOMPLETE,KEYCHANGESTART. These are not case sensitive.
+Where '!FileName' is the name of the audio file that should be used, and '!ActionName' is the name of the event when this audio file should play. Valid action names are given in the default !MenuSounds.txt file. These are not case sensitive.
 
 For example, to have WGiBeat play 'sound.ogg' every time the user picks a main menu option, use this line:
 {{{
