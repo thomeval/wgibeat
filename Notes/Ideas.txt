@@ -1,15 +1,24 @@
 
 ==Low Priority==
 - Netplay (major)
+ 
+==WNX==
 - Transition effects for DrawableObjects.
  -  Battle (>1.0?) Couple (>1.0?) game modes.
   - Animated background / visualization. Lucidity based on total life?
-  
+ - Evaluation screen redesign / scrolling
+ - 3D graphics (fix jerky beatline notes) 
+ - !Arrows on different height depending on their direction.
+ - Complete UI redesign?
+ - Mix / nonstop play.
+ - 6 player support?!
  
 ==Delayed==
  - Team colours
  - Legend for life graph
  - Remove VSync requirement.
+ - Zoki's texture fixes.
+ - Song timeline in measurement tools (WGiEdit)
  
 ==Post Release==
 - Another song pack.
