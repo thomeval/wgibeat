@@ -21,7 +21,7 @@
  
 ==Post Release==
 - Another song pack.
-- Image for Profile display in TipsAndTricks / WGiEdit Step 3.
+- New collage image on main page.
 
 ==TODO==
 
