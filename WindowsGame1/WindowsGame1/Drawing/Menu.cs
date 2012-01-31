@@ -119,11 +119,10 @@ namespace WGiBeat.Drawing
                     drawColor = TextColor;
                 }
 
-                if (!menuItem.Enabled)
-                {
-                    drawColor = new Color(drawColor, (byte)(drawColor.A / 2));
-                }
-                drawColor.A = Opacity;
+             
+                drawColor.A = menuItem.Enabled ? Opacity : (byte) (Opacity/2);
+
+               
                 TextureManager.DrawString(spriteBatch, menuItem.ItemText, FontName, position, drawColor, FontAlign.LEFT);
                 position.X += xOptionOffset;
 

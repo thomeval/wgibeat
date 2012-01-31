@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -86,10 +85,10 @@ namespace WGiBeat.Managers
             _buttonMappings[0].Add(Buttons.DPadUp, new InputAction { Player = 4, Action = "UP" });
             _buttonMappings[0].Add(Buttons.DPadDown, new InputAction { Player = 4, Action = "DOWN" });
 
-            _buttonMappings[0].Add(Buttons.Back, new InputAction{ Player = 0, Action = "BACK"});
-            _buttonMappings[1].Add(Buttons.Back, new InputAction { Player = 1, Action = "BACK" });
-            _buttonMappings[2].Add(Buttons.Back, new InputAction { Player = 2, Action = "BACK" });
-            _buttonMappings[3].Add(Buttons.Back, new InputAction { Player = 3, Action = "BACK" });
+            _buttonMappings[0].Add(Buttons.Back, new InputAction{ Player = 1, Action = "BACK"});
+            _buttonMappings[1].Add(Buttons.Back, new InputAction { Player = 2, Action = "BACK" });
+            _buttonMappings[2].Add(Buttons.Back, new InputAction { Player = 3, Action = "BACK" });
+            _buttonMappings[3].Add(Buttons.Back, new InputAction { Player = 4, Action = "BACK" });
         }
 
         public bool LoadFromFile(string filename)
@@ -99,12 +98,13 @@ namespace WGiBeat.Managers
                 FileStream fs = null;
                 try
                 {
-                    Log.AddMessage("Loading saved key configuration from: " + filename, LogLevel.INFO);
+                    Log.AddMessage("Loading saved key configuration from: " + Path.GetFullPath(filename), LogLevel.INFO);
                     fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
                     var bf = new BinaryFormatter();
                     _mappings = (Dictionary<Keys, InputAction>)bf.Deserialize(fs);
                     _buttonMappings = (Dictionary<Buttons, InputAction>[])bf.Deserialize(fs);
                     fs.Close();
+                    Log.AddMessage("Key configuration loaded successfully.",LogLevel.INFO);
                 }
                 catch (Exception ex)
                 {
@@ -133,7 +133,7 @@ namespace WGiBeat.Managers
         public void SaveToFile(string filename)
         {
             FileStream fs = null;
-            BinaryFormatter bf = null;
+            BinaryFormatter bf;
 
             try
             {
@@ -156,12 +156,12 @@ namespace WGiBeat.Managers
             return (from e in _mappings.Keys where _mappings[e].Equals(inputAction) select e).SingleOrDefault();
         }
 
-        public Keys[] GetKeys(InputAction inputAction)
+        public IEnumerable<Keys> GetKeys(InputAction inputAction)
         {
             return (from e in _mappings.Keys where _mappings[e].Equals(inputAction) select e).ToArray();
         }
 
-        public Buttons[] GetButtons(InputAction inputAction, int controllerNumber)
+        public IEnumerable<Buttons> GetButtons(InputAction inputAction, int controllerNumber)
         {
             if (!_buttonMappings[controllerNumber -1].ContainsValue(inputAction))
             {
@@ -251,9 +251,5 @@ namespace WGiBeat.Managers
             }
         }
     }
-
-    /// <summary>
-    /// All predetermined Actions that are valid inputs for the game.
-    /// </summary>
    
 }

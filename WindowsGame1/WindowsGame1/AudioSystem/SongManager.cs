@@ -233,6 +233,15 @@ namespace WGiBeat.AudioSystem
             {
                 string currentFolder = folders[0];
                 Log.AddMessage("Loading songfiles in " + currentFolder, LogLevel.INFO);
+
+                if (!Directory.Exists(currentFolder))
+                {
+                    Log.AddMessage("Specified song folder doesn't exist: " + currentFolder, LogLevel.WARN);
+                    folders.Remove(currentFolder);
+                    continue;
+                }
+                //Add subfolders found to the list of searchable folders.
+                
                 folders.InsertRange(0,Directory.GetDirectories(currentFolder));
                 var selectedPattern = "";
 
@@ -264,6 +273,7 @@ namespace WGiBeat.AudioSystem
 
         private void LoadFromFolder(string path, string pattern)
         {
+       
             foreach (string file in Directory.GetFiles(path, pattern))
             {
                 var newSong = LoadFromFile(file, true);
@@ -284,6 +294,7 @@ namespace WGiBeat.AudioSystem
         public void SaveToFile(GameSong song)
         {
             Loaders["*.sng"].SaveToFile(song);
+            Log.AddMessage("Song saved successfully: " + song.Path + "\\" + song.DefinitionFile,LogLevel.INFO);
         }
 
         /// <summary>
@@ -350,11 +361,13 @@ namespace WGiBeat.AudioSystem
                 var existingSongFile = GetBySongFile(song.Path, song.AudioFile);
                 if (existingSongFile != null)
                 {
+                    Log.AddMessage("Deleting song file: " + existingSongFile.Path + "\\" + existingSongFile.DefinitionFile, LogLevel.INFO);
                     RemoveSong(existingSongFile);
                 }
                 File.Delete(song.Path + "\\" + song.DefinitionFile);
                 if ((deleteAudio) && File.Exists(song.Path + "\\" + song.AudioFile))
                 {
+                    
                     AudioManager.ReleaseSound(song.Path + "\\" + song.AudioFile);
                     File.Delete(song.Path + "\\" + song.AudioFile);
 
@@ -363,6 +376,7 @@ namespace WGiBeat.AudioSystem
                         Directory.Delete(song.Path);
                     }
                 }
+                Log.AddMessage("Song deleted successfully.", LogLevel.INFO);
 
                 return "";
             }
@@ -423,6 +437,7 @@ namespace WGiBeat.AudioSystem
             if ((song.AudioStart < 0.0) || (song.AudioStart > song.Offset))
             {
                 message = "Audio start position is invalid. Must be earlier than offset.";
+                return false;
             }
 
             switch (SettingsManager.Get<int>("SongMD5Behaviour"))

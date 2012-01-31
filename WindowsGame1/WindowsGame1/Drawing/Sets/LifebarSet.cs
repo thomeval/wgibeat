@@ -76,6 +76,7 @@ namespace WGiBeat.Drawing.Sets
                     break;
                 case GameType.COOPERATIVE:
                     AdjustLifeCoop(amount, player);
+                    ClipCoopMaxLife();
                     break;
                     case GameType.SYNC:
                     AdjustLifeSync(amount,player);
@@ -88,7 +89,7 @@ namespace WGiBeat.Drawing.Sets
         private void AdjustLifeCoop(double amount, int player)
         {
             
-            Players[player].Life = Math.Min(Players[player].GetMaxLife(), Players[player].Life + amount);
+            AdjustLifeNormal(amount,player);
             CheckForCoopKO();
         }
 
@@ -121,13 +122,13 @@ namespace WGiBeat.Drawing.Sets
             {
                 if (Players[player].Life >= 100)
                 {
-                    Players[player].Life += amount / 1.25;
+                    Players[player].Life += amount * 0.75;
                 }
                 else
                 {
                     
                     double over = Players[player].Life + amount - 100;
-                    Players[player].Life = 100 + (over / 1.25);
+                    Players[player].Life = 100 + (over * 0.75);
 
                 }
             }
@@ -151,12 +152,22 @@ namespace WGiBeat.Drawing.Sets
             Players[player].Life = Math.Min(Players[player].GetMaxLife(), Players[player].Life);   
         }
 
+        private void ClipCoopMaxLife()
+        {
+            var theLifeBar = (CoopLifeBar) _lifeBars[0];
+            if (theLifeBar.TotalLife() > GetTotalCapacity())
+            {
+                var adjustAmount = GetTotalCapacity()/theLifeBar.TotalLife();
+
+                for (int x = 0; x < 4; x++)
+                {
+                    Players[x].Life *= adjustAmount;
+                }
+            }
+        }
         private void AdjustLifeSync(double amount, int player)
         {
-            if (amount != 0.0)
-            {
-                System.Diagnostics.Debug.WriteLine("AdjustLifeSync: P" + player + ", amount: " + amount);
-            }
+     
             AdjustLifeNormal(amount, player);
             ClipSyncMaxLife(0);
             for (int x = 1; x < 4; x++)

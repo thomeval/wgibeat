@@ -53,7 +53,8 @@ namespace WGiBeat.Screens
             _lifeGraph = new LifeGraph
                              {
                                  LineDrawer = new PrimitiveLine(Core.GraphicsDevice),
-                                 Location = -1
+                                 Location = -1,
+                                 CPUPlayerID = GetCPUPlayerID()
                              };
             for (int x = 0; x < 4; x++)
             {
@@ -83,6 +84,19 @@ namespace WGiBeat.Screens
                                       Position = (Core.Metrics["EvaluationTeamScoreMeter", 0])
                                   };
             _teamScoreMeter.InitSprites();
+        }
+
+        private int GetCPUPlayerID()
+        {
+     
+            for (var x = 0; x < 4; x++)
+            {
+                if (Core.Players[x].IsCPUPlayer)
+                {
+                    return x;
+                } 
+            }
+            return -1;
         }
 
         private void InitSprites()
@@ -356,7 +370,7 @@ namespace WGiBeat.Screens
                 var idx = Core.Players[x].IsCPUPlayer ? 4 : x;
                 _headerSprite.Position = (Core.Metrics["EvaluationHeader", x]);
                 _headerSprite.Draw(spriteBatch);
-                _identifiersSpriteMap.Draw(spriteBatch,idx,_headerSprite.X + 10, _headerSprite.Y);
+                _identifiersSpriteMap.Draw(spriteBatch,idx,55,30,_headerSprite.X + 10, _headerSprite.Y);
             }
 
             DrawHighScoreNotification(spriteBatch, gameTime);

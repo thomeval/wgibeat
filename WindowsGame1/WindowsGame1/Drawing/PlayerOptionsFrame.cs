@@ -161,8 +161,8 @@ namespace WGiBeat.Drawing
             _indicatorArrows.ColorShading.A = _optionControlOpacity;
             _indicatorArrows.Draw(spriteBatch, 1, 15, 15, (int)_difficultyTextPosition.X, (int)_difficultyTextPosition.Y + 25);
             _indicatorArrows.Draw(spriteBatch, 0, 15, 15, (int)_difficultyTextPosition.X + 15, (int)_difficultyTextPosition.Y + 25);
-            _indicatorArrows.Draw(spriteBatch, 2, 15, 15, (int)_speedTextPosition.X - 32, (int)_speedTextPosition.Y - 8);
-            _indicatorArrows.Draw(spriteBatch, 3, 15, 15, (int)_speedTextPosition.X - 17, (int)_speedTextPosition.Y - 8);
+            _indicatorArrows.Draw(spriteBatch, 2, 15, 15, (int)_speedTextPosition.X - 32, (int)_speedTextPosition.Y - 11);
+            _indicatorArrows.Draw(spriteBatch, 3, 15, 15, (int)_speedTextPosition.X - 17, (int)_speedTextPosition.Y - 11);
             var speedText = string.Format("{0:0.0}x", Player.PlayerOptions.BeatlineSpeed);
             _textColor.A = _optionControlOpacity;
             TextureManager.DrawString(spriteBatch, speedText, "TwoTech", _speedTextPosition, _textColor,
@@ -175,7 +175,7 @@ namespace WGiBeat.Drawing
             {
                 TextureManager.DrawString(spriteBatch,
                                           String.Format("{0}/{1}", Player.GetEXP(), Player.GetNextEXPSafe()),
-                                          "TwoTech", _expTextPosition, _textColor,
+                                          "DefaultFont", _expTextPosition, _textColor,
                                           FontAlign.CENTER);
             }
         }
@@ -186,13 +186,13 @@ namespace WGiBeat.Drawing
             _nameTextPosition.X = this.X + 260;
             _nameTextPosition.Y = this.Y - 8;
             _speedTextPosition.X = this.X + this.Width - 35;
-            _speedTextPosition.Y = this.Y + 10;
+            _speedTextPosition.Y = this.Y + 13;
             _difficultyTextPosition.X = this.X + this.X + 70 + 35;
             _difficultyTextPosition.Y = this.Y - 5;
 
 
             _levelDisplayPosition.X = this.X + 100;
-            _levelDisplayPosition.Y = this.Y + 18;
+            _levelDisplayPosition.Y = this.Y + 19;
             _expTextPosition.X = this.X + 260;
             _expTextPosition.Y = this.Y + 13;
         }

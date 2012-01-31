@@ -10,6 +10,9 @@ namespace WGiBeat.Drawing
         private SpriteMap _barParts;
         private SpriteMap _barEdges;
 
+        public double? Offset { get; set; }
+        public double? Length { get; set; }
+        public double? AudioStart { get; set; }
         public GameSong Song { get; set; }
         public double AudioEnd { get; set; }
         public SongTimeLine()
@@ -80,19 +83,19 @@ namespace WGiBeat.Drawing
             _barParts.Draw(spriteBatch, 3,(int) width, barHeight,position);
 
             //Draw playable section.
-            width = Song.Length /ending * _totalBarWidth;
+            width = (Length ?? Song.Length) /ending * _totalBarWidth;
             width = Math.Min(width, _totalBarWidth);
             _labelPositions[2] = (int) width;
             _barParts.Draw(spriteBatch, 2, (int)width, barHeight, position);
 
             //Draw intro section.
-            width = Song.Offset / ending * _totalBarWidth;
+            width = (Offset ?? Song.Offset) / ending * _totalBarWidth;
             width = Math.Min(width, _totalBarWidth);
             _labelPositions[1] = (int)width;
             _barParts.Draw(spriteBatch, 1, (int)width, barHeight, position);
 
             //Draw skipped section.
-            width = Song.AudioStart / ending * _totalBarWidth;
+            width = (AudioStart ?? Song.AudioStart) / ending * _totalBarWidth;
             width = Math.Min(width, _totalBarWidth);
             _labelPositions[0] = (int)width;
             _barParts.Draw(spriteBatch, 0, (int)width, barHeight, position);
