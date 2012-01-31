@@ -80,9 +80,15 @@ Similar to menu music, .mp3, .ogg, .wma or .wav files can be used for menu sound
 ==Profile System==
 WGiBeat supports a profile system for returning players. Profiles can be used to store a player's preferred gameplay options (such as Beatline speed and difficulty), and are also used to keep gameplay stats.
 
+[http://wgibeat.googlecode.com/svn/wiki/ProfileSelect.png]
+
 To create a profile, select the "Create New" option after selecting the "Start Game" option from the main menu. A keyboard is then displayed to facilitate name entry. Once created, a profile can be selected from the profile list shown on this screen. Profiles are completely optional for gameplay - and each player can use a profile if desired.
 
 In addition to the above, players are also awarded with EXP when playing with a profile. When enough EXP is earned, the player's profile level increases, which provides certain benefits, such as increased maximum life. A player's profile level is displayed in the player options frame, located at the bottom of the screen.
+
+[http://wgibeat.googlecode.com/svn/wiki/ProfileDisplay.png]
+
+Finally, WGiBeat also records gameplay stats for players that use profiles. To view these gameplay stats, select the "Stats" option from the main menu.
 
 ==Song Debugging==
 Song debugging is a useful feature that allows players to change the offset, BPM or length of a song on-the-fly while it is being played. This is most useful to fine-tune a song that is not synchronized properly. By default, song debugging is disabled, and must be enabled from the options menu by setting "Song Debugging" to "On". 
