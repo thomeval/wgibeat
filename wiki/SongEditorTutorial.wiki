@@ -7,11 +7,12 @@ Since public release, WGiBeat has always had the ability to load user-created so
 
 Before explaining the use of WGiEdit, it is necessary to explain how WGiBeat itself works with songs. In order for WGiBeat to use any song, it needs three pieces of information:
 
- * What is the BPM (tempo) of the song?
+ * What is the BPM (tempo) of the song? 
  * When (relative to the song) should the gameplay begin?
  * When (relative to the song) should the gameplay end?
+ * And optionally: Should the song be played from the beginning, or does it contain a long introduction that should be skipped partially? 
 
-These three pieces of information need to be provided by the player. They are referred to as the "BPM", "Offset", and "Length" respectively. Other information, such as the title and artist of the song also need to be provided (so that the song displays correctly in the Song Select screen) but have minimal effect on gameplay.    
+These four pieces of information need to be provided by the player. They are referred to as the "BPM", "Offset", "Length", and "!AudioStart" respectively. Other information, such as the title and artist of the song also need to be provided (so that the song displays correctly in the Song Select screen) but have minimal effect on gameplay.    
 
  
 [http://wgibeat.googlecode.com/svn/wiki/SongPartitionDiagram.png]
@@ -39,9 +40,11 @@ First, select 'Create New Song' from the WGiEdit main menu. It will then ask for
 
 [http://wgibeat.googlecode.com/svn/wiki/WGiEditStep2.png]
 
-During this step, the details of the song are requested. The title, subtitle and artist of the song are read from the audio file's metadata if possible. Either way, it can be entered by selecting the appropriate options. For BPM, !AudioStart, Offset and Length, these values can either be entered manually (if you know them), or measured, Use the instructions on screen when using a measurement tool. Whether a song is valid or not is displayed on the right side of the screen, along with a reason why the song is not valid, if appropriate. When the song is considered valid, the 'Next Step' option will become available.
+During this step, the details of the song are requested. The title, subtitle and artist of the song are read from the audio file's metadata if possible. Either way, it can be entered by selecting the appropriate options. For BPM, !AudioStart, Offset and Length, these values can either be entered manually (if you know them), or measured. In addition, the optional AudioStart and Background fields can be filled in as well. Use the instructions on screen when using a measurement tool. Whether a song is valid or not is displayed on the right side of the screen, along with a reason why the song is not valid, if appropriate. When the song is considered valid, the 'Next Step' option will become available.
 
 == Step 3 ==
+
+[http://wgibeat.googlecode.com/svn/wiki/WGiEditStep3.png]
 
 During this step, all of the information needed for a song to be playable has already been provided. This step is used to fine-tune the information given in the previous step - particularly the !AudioStart, Offset, BPM and Length fields. To do this, the song gameplay is simulated using a beatline. The song is then played and beatline notes are shown as they would appear during actual gameplay. At any time, the BPM, Offset and Length can be adjusted by using the controls detailed at the bottom of this screen. It is also possible to increase the beatline speed for additional accuracy, or to restart the song.
 

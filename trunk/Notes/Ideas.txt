@@ -4,7 +4,7 @@
  
 ==WNX==
 - Transition effects for DrawableObjects.
- -  Battle (>1.0?) Couple (>1.0?) game modes.
+ -  Battle (>1.0?) Couple (>1.0?) game modes. Double notebars.
   - Animated background / visualization. Lucidity based on total life?
  - Evaluation screen redesign / scrolling
  - 3D graphics (fix jerky beatline notes) 
@@ -15,21 +15,31 @@
  
 ==Delayed==
  - Team colours
- - Legend for life graph
  - Remove VSync requirement.
  - Zoki's texture fixes.
- - Song timeline in measurement tools (WGiEdit)
+
  
 ==Post Release==
 - Another song pack.
-- Image for Profile display in TipsAndTricks
-- Explain menu sound effect system.
+- Image for Profile display in TipsAndTricks / WGiEdit Step 3.
+
 ==TODO==
 
+==1.0 - "???" ==
+ * Red arrows are now more effective at raising Groove Momentum in Coop mode.
+ * Slight changes to the Coop lifebar rules. Players can now earn more than their individual maximums if the lifebar has space.
+ * CPU Players are now shown with a gray line in the life graph during the evaluation screen, to reduce confusion.
+ * The life graph now has a legend for the colours used.  
+ * WGiEdit: Song backgrounds can now be selected and changed in Step 2.
+ * WGiEdit: Several slightly misaligned graphics in Step 2 have been fixed.   
+ * WGiEdit: Song timeline is now displayed in realtime during the measurement tools.
+ * WGiEdit: During measurement, the song can now be rewinded or fast forwarded by 3 seconds by pressing LEFT or RIGHT. The SELECT button no longer rewinds. 
+ * WGiEdit/Bugfix: An AudioStart later than a song Offset is now considered invalid.
+ * Bugfix: Menus now display disabled items correctly.  
 
 ==0.9 - "Positive Trend" ==
  * Introducing a brand new game mechanic exclusively for Coop mode: Groove Momentum. The current Groove Momentum is displayed during gameplay and increases or decreases based on player performance. It affects both the points awarded, and beatline speeds.
- * Added support for sound effects for menus. However, you will need to supply your own audio files for this to work. For more information on how to add your own sound effects, see...
+ * Added support for sound effects for menus. However, you will need to supply your own audio files for this to work. For more information on how to add your own sound effects, see the TipsAndTricks wiki page.
  * Added an animation to the level bar when full.
  * Added an animation to the score displays when points are awarded. 
  * Song Select Screen now remembers the last chosen song played when it is interrupted.
