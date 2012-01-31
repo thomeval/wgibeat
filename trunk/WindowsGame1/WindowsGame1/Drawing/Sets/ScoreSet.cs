@@ -236,7 +236,7 @@ namespace WGiBeat.Drawing.Sets
                 var identifierPosition = _metrics["ScoreBase", x].Clone();
                 identifierPosition.X += 12;
                 identifierPosition.Y += 5;
-                _playerIdentifierSpriteMap.Draw(spriteBatch,idx,identifierPosition);
+                _playerIdentifierSpriteMap.Draw(spriteBatch,idx,55,30,identifierPosition);
 
                 TextureManager.DrawString(spriteBatch, "" + _displayedScores[x], "LargeFont",
                                       _metrics["ScoreText", x], Color.White,FontAlign.RIGHT);

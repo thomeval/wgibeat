@@ -135,8 +135,9 @@ EditorBPMMeasurements=[200,200][200,225][500,200][500,225];
 EditorMeasurementDisplay=[400,250];
 EditorVersion=[795,575];
 EditorSongTimeLine=[10,455];
-EditorSongDetailsDisplay=[410,200];
-EditorSongTypeDisplay=[575,200];
+EditorSongDetailsDisplay=[410,195];
+EditorSongTypeDisplay=[575,195];
+EditorSongBackgroundDisplay=[410,170];
 
 #Key Options;
 KeyOptionGridTop=[225,100][300,100][375,100][450,100];

@@ -30,8 +30,8 @@ namespace WGiBeat.Screens
         private const int ABSOLUTE_MAX = 300;
 
         public int Location { get; set; }
-        
-        public readonly Color[] LineColours = {Color.Red, Color.Blue, Color.Green, Color.Yellow};
+        public int CPUPlayerID { get; set; }
+        public readonly Color[] LineColours = {Color.Red, Color.Blue, Color.Green, Color.Yellow, Color.Gray};
         private readonly float[][] _lineData;
         private int _topLine;
         private double _drawProgress;
@@ -40,6 +40,7 @@ namespace WGiBeat.Screens
         private SpriteMap _xborder;
         private SpriteMap _yborder;
         private Sprite _backgroundSprite;
+        private SpriteMap _legendSpriteMap;
         private SpriteMap _cornerSpriteMap;
 
         public float[] this[int index]
@@ -78,6 +79,12 @@ namespace WGiBeat.Screens
                                    {
                                        Columns = 2, Rows = 2, SpriteTexture = TextureManager.Textures("LifeGraphCorners")
                                    };
+            _legendSpriteMap = new SpriteMap
+                                   {
+                                       Columns = 1,
+                                       Rows = 5,
+                                       SpriteTexture = TextureManager.Textures("PlayerIdentifiers")
+                                   };
         }
         public void CycleTopLine()
         {
@@ -96,29 +103,54 @@ namespace WGiBeat.Screens
             _backgroundSprite.Draw(spriteBatch);
             CalculateMinMax();
             DrawAxis(spriteBatch);
+            DrawLegend(spriteBatch);
             DrawPlayerLines(spriteBatch);
             DrawLabels(spriteBatch);
             DrawBorder(spriteBatch);
         }
 
+        private void DrawLegend(SpriteBatch spriteBatch)
+        {
+            const int LEGEND_ITEM_HEIGHT = 30;
+            const int LEGEND_ITEM_WIDTH = 55;
+            var legendPosition = this.Position.Clone();
+            legendPosition.X += this.Width - LEGEND_ITEM_WIDTH - 5;
+            legendPosition.Y += this.Height - LEGEND_ITEM_HEIGHT - 5;
+            _legendSpriteMap.ColorShading.A = 128;
+            for (int x = 3; x >= 0; x--)
+            {
+                if (_lineData[x].Length <= 0)
+                {
+                    continue;
+                }
+
+                var colorID = (x == CPUPlayerID) ? 4 : x;
+
+                _legendSpriteMap.Draw(spriteBatch, colorID, LEGEND_ITEM_WIDTH, LEGEND_ITEM_HEIGHT, legendPosition);
+                legendPosition.X -= LEGEND_ITEM_WIDTH + 5;
+            }
+        }
+
         private void CalculateMinMax()
         {
-            if (!_minMaxSet)
+            if (_minMaxSet)
             {
-                _minMaxSet = true;
-                _min = 0;
-                _max = 100;
-                var actualMin = GetDataMinimum();
-                var actualMax = GetDataMaximum();
+                return;
+            }
 
-                while ((_min > actualMin) && (_min > ABSOLUTE_MIN))
-                {
-                    _min -= 50;
-                }
-                while ((_max < actualMax) && (_max < ABSOLUTE_MAX))
-                {
-                    _max += 50;
-                }
+            _minMaxSet = true;
+            _min = 0;
+            _max = 100;
+            var actualMin = GetDataMinimum();
+            var actualMax = GetDataMaximum();
+
+            while ((_min > actualMin) && (_min > ABSOLUTE_MIN))
+            {
+                _min -= 50;
+            }
+            while ((_max < actualMax) && (_max < ABSOLUTE_MAX))
+            {
+                _max += 50;
             }
         }
 
@@ -163,7 +195,7 @@ namespace WGiBeat.Screens
                 float posX = this.X;
                 loopedOnce = true;
                 LineDrawer.ClearVectors();
-                LineDrawer.Colour = LineColours[x];
+                LineDrawer.Colour = (x == CPUPlayerID) ? LineColours[4] : LineColours[x];
                 var limit = Math.Min(_lineData[x].Length, _drawProgress);
                 for (int y = 0; y < limit; y++)
                 {

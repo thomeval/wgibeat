@@ -338,6 +338,9 @@
     <Content Include="Content\Textures\Default\WGiEdit\EditorDetailsDisplay.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Textures\Default\WGiEdit\EditorSongBackgroundDisplay.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Textures\Default\WGiEdit\SongTimeLineEdges.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

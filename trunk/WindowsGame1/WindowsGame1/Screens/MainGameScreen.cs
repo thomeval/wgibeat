@@ -443,7 +443,7 @@ namespace WGiBeat.Screens
 
         private void ApplyJudgement(BeatlineNoteJudgement judgement, int player, int multiplier)
         {
-            _noteJudgementSet.AwardJudgement(judgement, player, multiplier, _noteBarSet.NumberCompleted(player),
+            _noteJudgementSet.AwardJudgement(judgement, player, multiplier, _noteBarSet.NumberCompleted(player) + _noteBarSet.NumberReverse(player),
                                                               _noteBarSet.NumberIncomplete(player));
             _levelbarSet.AdjustMomentum(judgement, player);
             
@@ -452,7 +452,7 @@ namespace WGiBeat.Screens
             if (Core.Cookies["CurrentGameType"].Equals(GameType.COOPERATIVE))
             {
                 var thread = new Thread(AdjustGrooveMomentum);
-                thread.Start(new GMAdjustment {Judgement = judgement, Multiplier = _noteBarSet.NumberCompleted(player)});
+                thread.Start(new GMAdjustment {Judgement = judgement, Multiplier = _noteBarSet.NumberCompleted(player) + 2 * _noteBarSet.NumberReverse(player)});
             }
 
         }
@@ -465,6 +465,7 @@ namespace WGiBeat.Screens
              
             var isPositive = _gmAdjustments[(int) adjustment.Judgement] > 0.0;
             var mx = (isPositive) ? adjustment.Multiplier : 1;
+            System.Diagnostics.Debug.WriteLine(adjustment.Judgement + " : x" + adjustment.Multiplier);
             Player.GrooveMomentum += _gmAdjustments[(int)adjustment.Judgement] * mx;          
         }
 

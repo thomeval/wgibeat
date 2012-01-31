@@ -268,17 +268,13 @@ namespace WGiBeat.AudioSystem
             if (_sounds.ContainsKey(soundPath))
             {
                 var sound = _sounds[soundPath];
-                try
-                {
+
                     if (sound != null)
                     {
                         CheckFMODErrors(sound.release());
                     }
-                }
-                catch (Exception)
-                {
-
-                }
+                
+         
             }
         
         }

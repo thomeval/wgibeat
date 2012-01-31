@@ -41,10 +41,9 @@ namespace WGiBeat.Managers
             
             AddMessage(new LogEntry{Message = message, Level = level});
 #if DEBUG
-            //System.Diagnostics.Debug.WriteLine(level + ":" + message);
             if (level == LogLevel.ERROR)
             {
-                throw new Exception(message);
+         //       throw new Exception(message);
             }
 #endif
         }
