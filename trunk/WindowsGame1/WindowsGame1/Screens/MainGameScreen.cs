@@ -352,13 +352,25 @@ namespace WGiBeat.Screens
                 case "SELECT":
                     _lifeBarSet.ToggleBlazing(inputAction.Player - 1);
                     break;
-                case  "BPM_DECREASE":
+                case "BPM_DECREASE_SMALL":
+                    if (songDebug)
+                    {
+                        _gameSong.SetCurrentBPM(_phraseNumber, _gameSong.CurrentBPM(_phraseNumber) - 0.01);
+                    }
+                    break;
+                case "BPM_INCREASE_SMALL":
+                    if (songDebug)
+                    {
+                        _gameSong.SetCurrentBPM(_phraseNumber, _gameSong.CurrentBPM(_phraseNumber) + 0.01);
+                    }
+                    break;
+                case  "BPM_DECREASE_BIG":
                     if (songDebug)
                     {
                         _gameSong.SetCurrentBPM(_phraseNumber, _gameSong.CurrentBPM(_phraseNumber) - 0.1);
                     }
                     break;
-                case "BPM_INCREASE":
+                case "BPM_INCREASE_BIG":
                     if (songDebug)
                     {
                         _gameSong.SetCurrentBPM(_phraseNumber, _gameSong.CurrentBPM(_phraseNumber) + 0.1);

@@ -59,10 +59,7 @@ namespace WGiBeat.Drawing.Sets
             set
             {
                 _endingPhrase = value;
-                foreach (Beatline bl in _beatlines)
-                {
-                    bl.AddBeatlineNote(new BeatlineNote{Player = -1 , NoteType = BeatlineNoteType.END_OF_SONG, Position = EndingPhrase});
-                }
+              
             }
         }
 
@@ -162,7 +159,7 @@ namespace WGiBeat.Drawing.Sets
         {
             //Extend method using switch block if different rules are required.
             //Keep generating until end of song.
-            if ((phraseNumber + 2 > _lastBeatlineNote) && (_lastBeatlineNote + 1 < EndingPhrase))
+            while ((phraseNumber + 2 > _lastBeatlineNote) && (_lastBeatlineNote + 1 < EndingPhrase))
             {
                 _lastBeatlineNote++;
                 for (int x = 0; x < 4; x++)
@@ -178,11 +175,18 @@ namespace WGiBeat.Drawing.Sets
 
         public void AddTimingPointMarkers(GameSong song)
         {
-            double prev;
-
             foreach (Beatline bl in _beatlines)
             {
-                prev = song.BPMs[0.0];
+                if (EndingPhrase != 0.0)
+                {
+                    bl.AddBeatlineNote(new BeatlineNote
+                                           {
+                                               Player = -1,
+                                               NoteType = BeatlineNoteType.END_OF_SONG,
+                                               Position = EndingPhrase
+                                           });
+                }
+                double prev = song.BPMs[0.0];
                 foreach (double bpmKey in song.BPMs.Keys)
                 {
                     if (bpmKey == 0.0)
@@ -245,5 +249,7 @@ namespace WGiBeat.Drawing.Sets
                 beatline.ClearNotes();
             }
         }
+
+
     }
 }
