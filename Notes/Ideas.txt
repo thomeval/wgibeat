@@ -14,16 +14,21 @@
  - 6 player support?!
  
 ==Delayed==
- - Team colours
- - Remove VSync requirement.
- - Zoki's texture fixes.
+- Speed indicator on beatline?
 
  
 ==Post Release==
 - Another song pack.
-- New collage image on main page.
 
 ==TODO==
+- Animated levelbar
+- Shrink player options frame and use on more screens.
+- Check if player options frames refresh correctly on VS CPU selection.
+- Notebar flash on fault/fail
+ - Team colours
+ - Remove VSync requirement.
+ - Zoki's texture fixes.
+ 
 
 ==1.0 - "???" ==
  * Red arrows are now more effective at raising Groove Momentum in Coop mode.

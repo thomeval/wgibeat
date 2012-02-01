@@ -61,8 +61,10 @@ namespace WGiBeat.Managers
 
             _mappings.Add(Keys.Add, new InputAction{Player = 4, Action = "START"});
 
-            _mappings.Add(Keys.F5, new InputAction { Action = "BPM_DECREASE" });
-            _mappings.Add(Keys.F6, new InputAction { Action = "BPM_INCREASE" });
+            _mappings.Add(Keys.F3, new InputAction { Action = "BPM_DECREASE_SMALL" });
+            _mappings.Add(Keys.F4, new InputAction { Action = "BPM_INCREASE_SMALL" });
+            _mappings.Add(Keys.F5, new InputAction { Action = "BPM_DECREASE_BIG" });
+            _mappings.Add(Keys.F6, new InputAction { Action = "BPM_INCREASE_BIG" });
             _mappings.Add(Keys.F7, new InputAction { Action = "OFFSET_DECREASE_BIG" });
             _mappings.Add(Keys.F8, new InputAction { Action = "OFFSET_INCREASE_BIG" });
             _mappings.Add(Keys.F9, new InputAction { Action = "OFFSET_DECREASE_SMALL" });

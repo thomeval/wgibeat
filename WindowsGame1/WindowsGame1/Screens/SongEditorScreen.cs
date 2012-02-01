@@ -530,36 +530,24 @@ namespace WGiBeat.Screens
 
         private void DrawTweakControlsText(SpriteBatch spriteBatch)
         {
-         
+
+            var lines = Core.Text["EditorTweakControlsLeft"].Split('\n');
+
             var textPosition = Core.Metrics["EditorTweakControls", 0].Clone();
+            foreach (string line in lines)
+            {
+                TextureManager.DrawString(spriteBatch, line, "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
+                textPosition.Y += 20;
+            }
 
-            TextureManager.DrawString(spriteBatch, "F5 - Decrease BPM", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
-            textPosition.Y += 20;
-            TextureManager.DrawString(spriteBatch, "F6 - Increase BPM", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
-            textPosition.Y += 20;
-            TextureManager.DrawString(spriteBatch, "F7 - Decrease Offset (0.1)", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
-            textPosition.Y += 20;
-            TextureManager.DrawString(spriteBatch, "F8 - Increase Offset (0.1)", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
-            textPosition.Y += 20;
-            TextureManager.DrawString(spriteBatch, "F9 - Decrease Offset (0.01)", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
-            textPosition.Y += 20;
-            TextureManager.DrawString(spriteBatch, "F10 - Increase Offset (0.01)", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
-            textPosition.Y += 20;
-            TextureManager.DrawString(spriteBatch, "F11 - Decrease Length", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
-            textPosition.Y += 20;
-            TextureManager.DrawString(spriteBatch, "F12 - Increase Length", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
-
+            lines = Core.Text["EditorTweakControlsRight"].Split('\n');
             textPosition = Core.Metrics["EditorTweakControls", 1].Clone();
 
-            TextureManager.DrawString(spriteBatch, "LEFT - Decrease Beatline Speed", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
-            textPosition.Y += 20;
-            TextureManager.DrawString(spriteBatch, "RIGHT - Increase Beatline Speed", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
-            textPosition.Y += 20;
-            TextureManager.DrawString(spriteBatch, "BEATLINE - Hit beatline", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
-            textPosition.Y += 20;
-            TextureManager.DrawString(spriteBatch, "SELECT - Restart Song", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
-            textPosition.Y += 20;
-            TextureManager.DrawString(spriteBatch, "START - Complete Tuning", "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
+            foreach (string line in lines)
+            {
+                TextureManager.DrawString(spriteBatch, line, "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
+                textPosition.Y += 20;
+            }
         }
 
 
@@ -572,10 +560,20 @@ namespace WGiBeat.Screens
                     "DefaultFont", Core.Metrics["SongDebugOffset", 0], Color.Black, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, "" + String.Format("{0:F3}", _phraseNumber),
                 "DefaultFont", Core.Metrics["EditorSongPhraseNumber", 0], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, CalculateTimeLeft(),
+                "DefaultFont", Core.Metrics["EditorSongTimeLeft", 0], Color.Black, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, String.Format("Speed: {0}x", Core.Players[0].PlayerOptions.BeatlineSpeed),
                 "DefaultFont", Core.Metrics["SongDebugHitOffset", 0], Color.Black, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, String.Format("Length: {0:F3}s", NewGameSong.Length),
                 "DefaultFont", Core.Metrics["SongDebugLength", 0], Color.Black, FontAlign.LEFT);       
+        }
+
+        private string CalculateTimeLeft()
+        {
+            var timeLeft = NewGameSong.Length * 1000 - _timeElapsed;
+            var ts = new TimeSpan(0, 0, 0, 0, (int)timeLeft);
+
+            return ts.Minutes + ":" + String.Format("{0:D2}", Math.Max(0, ts.Seconds));
         }
 
         private void DrawHeading(SpriteBatch spriteBatch)
@@ -806,11 +804,17 @@ namespace WGiBeat.Screens
                 case "SELECT":
                     RestartSong();
                     break;
-                case "BPM_DECREASE":
+                case "BPM_DECREASE_BIG":
                     NewGameSong.StartBPM -= 0.1;
                     break;
-                case "BPM_INCREASE":
+                case "BPM_INCREASE_BIG":
                     NewGameSong.StartBPM += 0.1;
+                    break;
+                case "BPM_DECREASE_SMALL":
+                    NewGameSong.StartBPM -= 0.01;
+                    break;
+                case "BPM_INCREASE_SMALL":
+                    NewGameSong.StartBPM += 0.01;
                     break;
                 case "OFFSET_DECREASE_BIG":
                         NewGameSong.Offset -= 0.1;
@@ -849,11 +853,21 @@ namespace WGiBeat.Screens
                     _songPlaying = false;
                     Core.Log.AddMessage(String.Format("SongFile '{0}' was saved successfully!", NewGameSong.DefinitionFile),LogLevel.DEBUG);
                     break;
-                case "LEFT":
+                case "DOWN":
                     AdjustSpeed(-1);
                     break;
-                case "RIGHT":
+                case "UP":
                     AdjustSpeed(1);
+                    break;
+                case "LEFT":
+                    AdjustSongPosition(-3000);
+                    SetupBeatline();  
+                    _noteJudgementSet.Reset();
+                    break;
+                case "RIGHT":
+                    AdjustSongPosition(3000);
+                    SetupBeatline();                    
+                    _noteJudgementSet.Reset();
                     break;
             }
         }
