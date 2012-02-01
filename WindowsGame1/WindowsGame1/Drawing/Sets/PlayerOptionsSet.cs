@@ -12,16 +12,17 @@ namespace WGiBeat.Managers
     class PlayerOptionsSet : DrawableObject
     {
 
-        private List<PlayerOptionsFrame> _optionsFrames;
+        private readonly List<PlayerOptionsFrame> _optionsFrames;
         private Sprite _optionsFrameAttract;
+        private readonly Vector2 _offScreen = new Vector2(-1000, -1000);
+        public bool DrawAttract { get; set; }
+        public bool StackableFrames { get; set; }
 
         public Player[] Players { get; set; }
         public Vector2[] Positions { get; set; }
         public GameType CurrentGameType { get; set; }
 
         public event EventHandler GameTypeInvalidated;
-        public event EventHandler<ObjectEventArgs> PlayerJoined;
-        public event EventHandler<ObjectEventArgs> PlayerLeft;
 
         public PlayerOptionsSet()
         {
@@ -41,34 +42,64 @@ namespace WGiBeat.Managers
 
         public void CreatePlayerOptionsFrames()
         {
-            var frameCount = 0;
+            CheckNumberOfPlayers();
             _optionsFrames.Clear();
+            for (int x = 0; x < 4; x++)
+            {
+                //Absolute positions for each player options frame.
+                _optionsFrames.Add(new PlayerOptionsFrame { Player = Players[x], PlayerIndex = x });
+                _optionsFrames[x].Position = (Positions[x]);
+            }
 
+            if (StackableFrames)
+            {
+                CreatePlayerOptionsFramesStack();
+                return;
+            }   
+
+            if (DrawAttract && (from e in _optionsFrames where !e.Player.Playing select e).Any())
+            {
+                var freeSlot = (from e in _optionsFrames where !e.Player.Playing select e.PlayerIndex).FirstOrDefault();
+                _optionsFrameAttract.Position = Positions[freeSlot];
+            }
+            else
+            {
+                _optionsFrameAttract.Position = _offScreen;
+            }
+   
+        }
+
+        private void CreatePlayerOptionsFramesStack()
+        {
+            var frameCount = 0;
+ 
+            //Stack each frame on top of each other - position is dependant on how many active players there are.
             for (int x = 3; x >= 0; x--)
             {
+
+                _optionsFrames[x].Position = (Positions[frameCount]);
                 if (Players[x].Playing)
                 {
-                    _optionsFrames.Add(new PlayerOptionsFrame { Player = Players[x], PlayerIndex = x });
-                    _optionsFrames[frameCount].Position = (Positions[frameCount]);
                     frameCount++;
                 }
             }
 
-            if (frameCount < 4)
+            //Draw the attract one if it is enabled and there are less than 4 players.
+            if (DrawAttract && (frameCount < 4))
             {
                 _optionsFrameAttract.Position = (Positions[frameCount]);
             }
             else
             {
-                _optionsFrameAttract.Position = new Vector2(-1000, -1000);
+                _optionsFrameAttract.Position = _offScreen;
             }
-
-            CheckNumberOfPlayers();
         }
+
+
         public override void Draw(SpriteBatch spriteBatch)
         {
-            foreach (PlayerOptionsFrame pof in _optionsFrames)
-            {
+            foreach (PlayerOptionsFrame pof in _optionsFrames.Where(e => e.Player.Playing))
+            {       
                 pof.Draw(spriteBatch);
             }
             _optionsFrameAttract.Draw(spriteBatch);
@@ -123,10 +154,7 @@ namespace WGiBeat.Managers
             Players[player - 1].Playing = false;
             CheckNumberOfPlayers();
             CreatePlayerOptionsFrames();
-            if (PlayerLeft != null)
-            {
-                PlayerLeft(this, new ObjectEventArgs {Object = player});
-            }
+   
         }
 
         private void CheckNumberOfPlayers()
@@ -185,10 +213,7 @@ namespace WGiBeat.Managers
                 Players[player - 1].Team = 1;
             }
             CreatePlayerOptionsFrames();
-            if (PlayerJoined != null)
-            {
-                PlayerJoined(this, new ObjectEventArgs { Object = player });
-            }
+          
         }
 
         private void AssignTeam(int player)

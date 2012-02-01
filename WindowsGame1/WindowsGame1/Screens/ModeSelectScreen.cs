@@ -46,7 +46,7 @@ namespace WGiBeat.Screens
             Core.Cookies["CurrentGameType"] = GameType.NORMAL;
             RemoveCPUPlayers();
             ResetTeams();
-            _playerOptionsSet = new PlayerOptionsSet { Players = Core.Players, Positions = Core.Metrics["PlayerOptionsFrame"] };
+            _playerOptionsSet = new PlayerOptionsSet { Players = Core.Players, Positions = Core.Metrics["PlayerOptionsFrame"], DrawAttract = true, StackableFrames = true };
             _playerOptionsSet.CreatePlayerOptionsFrames();
    
             base.Initialize();
@@ -453,9 +453,11 @@ namespace WGiBeat.Screens
                     Core.Players[x].ApplyDefaultOptions();
                     Core.Players[x].Team = 2;
                     Core.Players[x].PlayerOptions.PlayDifficulty = cpuDifficulty;
+                    _playerOptionsSet.CreatePlayerOptionsFrames();
                     return;
                 }
             }
+            
             Core.Log.AddMessage("Failed to add CPU Player.",LogLevel.ERROR);
         }
 

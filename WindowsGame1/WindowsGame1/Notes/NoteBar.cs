@@ -17,9 +17,10 @@ namespace WGiBeat.Notes
         private Sprite _barSpriteMiddle;
         private Sprite _barSpriteLeft;
         private Sprite _barSpriteRight;
+        private SpriteMap _noteBarCursor;
 
         public List<Note> Notes { get; set; }
-
+        public int ID { get; set; }
         public NoteBar()
         {
             Notes = new List<Note>();
@@ -28,20 +29,26 @@ namespace WGiBeat.Notes
 
         public void InitSprites()
         {
-            _barSpriteMiddle = new Sprite { Height = 40, SpriteTexture = TextureManager.Textures("noteBarMiddle") };
+            _barSpriteMiddle = new Sprite { Height = 40, SpriteTexture = TextureManager.Textures("NoteBarMiddle") };
             _barSpriteLeft = new Sprite
             {
                 Height = 40,
                 Width = 16,
 
-                SpriteTexture = TextureManager.Textures("noteBarLeft")
+                SpriteTexture = TextureManager.Textures("NoteBarLeft")
             };
             _barSpriteRight = new Sprite
             {
                 Height = 40,
                 Width = 16,
-                SpriteTexture = TextureManager.Textures("noteBarRight")
+                SpriteTexture = TextureManager.Textures("NoteBarRight")
             };
+            _noteBarCursor = new SpriteMap
+                                 {
+                                     SpriteTexture = TextureManager.Textures("NoteBarCombinedCursors"),
+                                     Columns = 1,
+                                     Rows = 4
+                                 };
         }
         public int NumberCompleted()
         {
@@ -93,6 +100,7 @@ namespace WGiBeat.Notes
         }
 
         private static Random _rnd = new Random();
+
 
         public static NoteBar CreateNoteBar(int numNotes, int numReverse, int posX, int posY)
         {
@@ -148,7 +156,7 @@ namespace WGiBeat.Notes
             return result;
         }
 
-        public override void Draw(SpriteBatch sb)
+        public override void Draw(SpriteBatch spriteBatch)
         {
            
             int posX = this.X - (16 * Notes.Count);
@@ -162,9 +170,9 @@ namespace WGiBeat.Notes
             _barSpriteRight.X = _barSpriteMiddle.X + _barSpriteMiddle.Width;
             _barSpriteRight.Y = _barSpriteMiddle.Y;
 
-            _barSpriteLeft.Draw(sb);
-            _barSpriteRight.Draw(sb);
-            _barSpriteMiddle.Draw(sb);
+            _barSpriteLeft.Draw(spriteBatch);
+            _barSpriteRight.Draw(spriteBatch);
+            _barSpriteMiddle.Draw(spriteBatch);
 
             var sprite = new SpriteMap { SpriteTexture = TextureManager.Textures("Arrows"), Columns = 4, Rows = 3 };
             foreach (Note note in Notes)
@@ -180,9 +188,12 @@ namespace WGiBeat.Notes
                     cell += 4;
                 }
 
-                sprite.Draw(sb, cell, 32, 32, posX, posY);
+                sprite.Draw(spriteBatch, cell, 32, 32, posX, posY);
                 posX += 32;
             }
+
+            posX = this.X - (16 * Notes.Count) +32*NumberCompleted() - (_noteBarCursor.SpriteTexture.Width/2);
+            _noteBarCursor.Draw(spriteBatch,ID, new Vector2(posX,posY));
         }
 
         public bool AllCompleted()

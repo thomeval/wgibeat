@@ -111,6 +111,7 @@ namespace WGiBeat.Drawing.Sets
             int numReverse = GetReverseNoteCount(player);
 
             _noteBars[player] = NoteBar.CreateNoteBar(numArrow, numReverse, _metrics["NoteBar", player]);
+            _noteBars[player].ID = player;
             SyncNoteBars(_noteBars[player]);
         }
 
