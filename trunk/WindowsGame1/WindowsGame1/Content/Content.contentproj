@@ -67,8 +67,15 @@
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>
-    <Compile Include="Fonts\TwoTech.spritefont">
-      <Name>TwoTech</Name>
+    <Compile Include="Fonts\TwoTech24.spritefont">
+      <Name>TwoTech24</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Fonts\TwoTech20.spritefont">
+      <Name>TwoTech20</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>

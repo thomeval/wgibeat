@@ -65,7 +65,7 @@ namespace WGiBeat.Drawing
             DrawEnteredTextBar(spriteBatch,this.Position.Clone());
             var enteredTextPosition = this.Position.Clone();
             enteredTextPosition.X += this.Width/2;
-           TextureManager.DrawString(spriteBatch,EnteredText,"TwoTech", enteredTextPosition, BaseColor,FontAlign.CENTER);
+           TextureManager.DrawString(spriteBatch,EnteredText,"TwoTech24", enteredTextPosition, BaseColor,FontAlign.CENTER);
 
             DrawKeyboard(spriteBatch);
         }
@@ -95,11 +95,11 @@ namespace WGiBeat.Drawing
                 drawPosition.Y = (initialPosition.Y) + (SpacingY*(counter/Columns));
                 if (counter == _selectedIndex)
                 {
-                    TextureManager.DrawString(spriteBatch, c.ToString(), "TwoTech", drawPosition, HighlightColor, FontAlign.LEFT);
+                    TextureManager.DrawString(spriteBatch, c.ToString(), "TwoTech24", drawPosition, HighlightColor, FontAlign.LEFT);
                 }
                 else
                 {
-                    TextureManager.DrawString(spriteBatch, c.ToString(), "TwoTech", drawPosition, BaseColor,FontAlign.LEFT);                  
+                    TextureManager.DrawString(spriteBatch, c.ToString(), "TwoTech24", drawPosition, BaseColor,FontAlign.LEFT);                  
                 }
 
                 counter++;

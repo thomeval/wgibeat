@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Players;
@@ -53,7 +50,7 @@ namespace WGiBeat.Drawing
             _levelFrontSprite.Position = new Vector2(this.X, this.Y + 12);
             _levelBaseSprite.ColorShading.A = this.Opacity;
             _levelFrontSprite.ColorShading.A = this.Opacity;
-            _levelTextPosition = new Vector2(this.X + this.Width - 3,this.Y-17);
+            _levelTextPosition = new Vector2(this.X + this.Width - 3,this.Y-15);
       
             var progress = Player.GetLevelProgressSafe();
             progress = Math.Min(1, progress);
@@ -66,7 +63,7 @@ namespace WGiBeat.Drawing
 
             //Draw level text.
             var playerlevel = String.Format("{0:00}", Player.GetLevel());
-            var scale = TextureManager.ScaleTextToFit(playerlevel, "TwoTech36", 34, 40);
+            var scale = TextureManager.ScaleTextToFit(playerlevel, "TwoTech36", 32, 38);
             TextureManager.DrawString(spriteBatch,playerlevel, "TwoTech36", _levelTextPosition, scale, _drawColor,
    FontAlign.RIGHT);
 

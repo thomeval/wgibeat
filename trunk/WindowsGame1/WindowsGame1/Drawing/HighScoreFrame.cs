@@ -59,12 +59,12 @@ namespace WGiBeat.Drawing
                 var displayedName = String.IsNullOrEmpty(HighScoreEntry.Name) ? "GUEST" : HighScoreEntry.Name;
                 _gradeSpriteMap.Draw(spriteBatch, HighScoreEntry.Grade, 71, 25, _gradePosition);
                 _difficultySpriteMap.Draw(spriteBatch, (int)HighScoreEntry.Difficulty + 1, 25, 25, _difficultyPosition);
-                TextureManager.DrawString(spriteBatch, "" + HighScoreEntry.Score, "TwoTech", _scorePosition, _textColor, FontAlign.CENTER);
-                TextureManager.DrawString(spriteBatch, "" + displayedName, "TwoTech", _namePosition, _textColor, FontAlign.CENTER);
+                TextureManager.DrawString(spriteBatch, "" + HighScoreEntry.Score, "TwoTech24", _scorePosition, _textColor, FontAlign.CENTER);
+                TextureManager.DrawString(spriteBatch, "" + displayedName, "TwoTech24", _namePosition, _textColor, FontAlign.CENTER);
             }
             else
             {
-                TextureManager.DrawString(spriteBatch, "No score", "TwoTech", _namePosition, _textColor, FontAlign.CENTER);
+                TextureManager.DrawString(spriteBatch, "No score", "TwoTech24", _namePosition, _textColor, FontAlign.CENTER);
             }
         }
 

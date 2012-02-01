@@ -42,7 +42,7 @@ namespace WGiBeat.Screens
             {
                 _ready[x] = false;
             }
-                _playerOptionsSet = new PlayerOptionsSet { Players = Core.Players, Positions = Core.Metrics["PlayerOptionsFrame"], CurrentGameType = (GameType)Core.Cookies["CurrentGameType"] };
+            _playerOptionsSet = new PlayerOptionsSet { Players = Core.Players, Positions = Core.Metrics["PlayerOptionsFrame"], CurrentGameType = GameType.TEAM,  DrawAttract = true, StackableFrames = true};
             _playerOptionsSet.CreatePlayerOptionsFrames();
 
             SetRestrictionMessage("Press left or right to \nchoose a team. Press start \nto confirm selection.", false);

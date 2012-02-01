@@ -28,13 +28,15 @@ namespace WGiBeat.Screens
         private TeamScoreMeter _teamScoreMeter;
         private Sprite _coopScoreDisplay;
         private SpriteMap _identifiersSpriteMap;
-        private ProfileLevelDisplay[] _profileLevelDisplays;
+        private readonly ProfileLevelDisplay[] _profileLevelDisplays;
         private long[] _xpAwarded;
+        private PlayerOptionsSet _playerOptionsSet;
 
         public EvaluationScreen(GameCore core) : base(core)
         {
             _profileLevelDisplays = new ProfileLevelDisplay[4];
             _xpAwarded = new long[4];
+            
         }
 
         #region Overrides
@@ -84,6 +86,10 @@ namespace WGiBeat.Screens
                                       Position = (Core.Metrics["EvaluationTeamScoreMeter", 0])
                                   };
             _teamScoreMeter.InitSprites();
+
+            _playerOptionsSet = new PlayerOptionsSet
+                                    {Players = Core.Players, Positions = Core.Metrics["EvaluationPlayerOptionsFrames"], DrawAttract = false};
+            _playerOptionsSet.CreatePlayerOptionsFrames();
         }
 
         private int GetCPUPlayerID()
@@ -361,18 +367,23 @@ namespace WGiBeat.Screens
 
         private void DrawMisc(SpriteBatch spriteBatch, GameTime gameTime)
         {
+            _playerOptionsSet.Draw(spriteBatch);
+            /*
             for (int x = 0; x < 4; x++)
             {
                 if (!Core.Players[x].Playing)
                 {
                     continue;
                 }
+                
+                
                 var idx = Core.Players[x].IsCPUPlayer ? 4 : x;
                 _headerSprite.Position = (Core.Metrics["EvaluationHeader", x]);
                 _headerSprite.Draw(spriteBatch);
                 _identifiersSpriteMap.Draw(spriteBatch,idx,55,30,_headerSprite.X + 10, _headerSprite.Y);
+                 
             }
-
+            */
             DrawHighScoreNotification(spriteBatch, gameTime);
             TextureManager.DrawString(spriteBatch, "Press Start to continue.","LargeFont",
                                    Core.Metrics["EvaluationInstruction", 0], Color.Black,FontAlign.LEFT);

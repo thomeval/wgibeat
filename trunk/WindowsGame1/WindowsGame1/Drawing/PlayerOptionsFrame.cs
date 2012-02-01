@@ -21,10 +21,12 @@ namespace WGiBeat.Drawing
             }
         }
 
-        private SpriteMap _backgrounds;
-        private SpriteMap _speedBlocks;
+        private Sprite _background;
+        private Sprite _speedBlocks;
         private SpriteMap _difficultyIcons;
         private SpriteMap _indicatorArrows;
+        private SpriteMap _playerIdentifiers;
+
         private Sprite _nameBackground;
 
         private Vector2 _levelDisplayPosition;
@@ -42,24 +44,20 @@ namespace WGiBeat.Drawing
         public PlayerOptionsFrame()
         {
             InitSprites();
-            this.Width = 450;
-            this.Height = 38;
+            this.Width = 400;
+            this.Height = 35;
             _optionControlOpacity = 0;
             _levelDisplay = new ProfileLevelDisplay();
         }
 
         private void InitSprites()
         {
-            _backgrounds = new SpriteMap
+            _background = new Sprite
                                {
-                                   Columns = 1,
-                                   Rows = 5,
                                    SpriteTexture = TextureManager.Textures("PlayerOptionsFrame")
                                };
-            _speedBlocks = new SpriteMap
+            _speedBlocks = new Sprite
                                {
-                                   Columns = 1,
-                                   Rows = 7,
                                    SpriteTexture = TextureManager.Textures("PlayerOptionsSpeedBlocks")
                                };
             _difficultyIcons = new SpriteMap
@@ -74,7 +72,12 @@ namespace WGiBeat.Drawing
                                    Rows = 1,
                                    SpriteTexture = TextureManager.Textures("IndicatorArrows")
                                };
-
+            _playerIdentifiers = new SpriteMap
+                                     {
+                                         Columns = 1,
+                                         Rows = 5,
+                                         SpriteTexture = TextureManager.Textures("PlayerIdentifiers")
+                                     };
             _nameBackground = new Sprite {SpriteTexture = TextureManager.BlankTexture()};
 
         }
@@ -83,8 +86,13 @@ namespace WGiBeat.Drawing
         {
 
             var idx = Player.IsCPUPlayer ? 4 : PlayerIndex;
-            _backgrounds.Draw(spriteBatch, idx, this.Width, this.Height, this.X, this.Y);
-            _difficultyIcons.Draw(spriteBatch, (int)Player.PlayerOptions.PlayDifficulty + 1, 32, 32, this.X + 65, this.Y + 3);
+            _background.Height = this.Height;
+            _background.Width = this.Width;
+            _background.Position = this.Position;
+            _background.Draw(spriteBatch);
+            
+            _playerIdentifiers.Draw(spriteBatch,idx, 45, this.Height - 8,this.X + 3, this.Y + 4);
+            _difficultyIcons.Draw(spriteBatch, (int)Player.PlayerOptions.PlayDifficulty + 1, 30, 30, this.X + 53, this.Y + 3);
 
             DrawNameBackgrounds(spriteBatch);
             DrawText(spriteBatch);
@@ -97,6 +105,7 @@ namespace WGiBeat.Drawing
         
             _levelDisplay.Position = _levelDisplayPosition;
             _levelDisplay.Opacity = (byte) (255 - _optionControlOpacity);
+            _levelDisplay.Width = 288;
             _levelDisplay.Draw(spriteBatch);
         }
 
@@ -120,9 +129,9 @@ namespace WGiBeat.Drawing
             {
                 _nameBackground.ColorShading = Color.TransparentWhite;
             }
-            _nameBackground.Width = this.Width - 133;
+            _nameBackground.Width = this.Width - 113;
             _nameBackground.Height = this.Height - 2;
-            _nameBackground.X = this.X + 100;
+            _nameBackground.X = this.X + 85;
             _nameBackground.Y = this.Y + 1;
             _nameBackground.Draw(spriteBatch);
         }
@@ -149,7 +158,7 @@ namespace WGiBeat.Drawing
             
             DrawChangeControls(spriteBatch);
             _textColor.A = (byte)(255 - _optionControlOpacity);
-            var scale = TextureManager.ScaleTextToFit(playerName, "TwoTech36", 310, 75);
+            var scale = TextureManager.ScaleTextToFit(playerName, "TwoTech36", 270, 50);
             TextureManager.DrawString(spriteBatch, playerName, "TwoTech36", _nameTextPosition, scale, _textColor,
                                       FontAlign.CENTER);
 
@@ -159,23 +168,23 @@ namespace WGiBeat.Drawing
         private void DrawChangeControls(SpriteBatch spriteBatch)
         {
             _indicatorArrows.ColorShading.A = _optionControlOpacity;
-            _indicatorArrows.Draw(spriteBatch, 1, 15, 15, (int)_difficultyTextPosition.X, (int)_difficultyTextPosition.Y + 25);
-            _indicatorArrows.Draw(spriteBatch, 0, 15, 15, (int)_difficultyTextPosition.X + 15, (int)_difficultyTextPosition.Y + 25);
-            _indicatorArrows.Draw(spriteBatch, 2, 15, 15, (int)_speedTextPosition.X - 32, (int)_speedTextPosition.Y - 11);
-            _indicatorArrows.Draw(spriteBatch, 3, 15, 15, (int)_speedTextPosition.X - 17, (int)_speedTextPosition.Y - 11);
+            _indicatorArrows.Draw(spriteBatch, 1, 15, 15, (int)_difficultyTextPosition.X, (int)_difficultyTextPosition.Y + 22);
+            _indicatorArrows.Draw(spriteBatch, 0, 15, 15, (int)_difficultyTextPosition.X + 15, (int)_difficultyTextPosition.Y + 22);
+            _indicatorArrows.Draw(spriteBatch, 2, 15, 15, (int)_speedTextPosition.X - 32, (int)_speedTextPosition.Y - 10);
+            _indicatorArrows.Draw(spriteBatch, 3, 15, 15, (int)_speedTextPosition.X - 17, (int)_speedTextPosition.Y - 10);
             var speedText = string.Format("{0:0.0}x", Player.PlayerOptions.BeatlineSpeed);
             _textColor.A = _optionControlOpacity;
-            TextureManager.DrawString(spriteBatch, speedText, "TwoTech", _speedTextPosition, _textColor,
+            TextureManager.DrawString(spriteBatch, speedText, "TwoTech20", _speedTextPosition, _textColor,
                                       FontAlign.RIGHT);
 
-            TextureManager.DrawString(spriteBatch, "" + Player.PlayerOptions.PlayDifficulty, "TwoTech", _difficultyTextPosition, _textColor,
+            TextureManager.DrawString(spriteBatch, "" + Player.PlayerOptions.PlayDifficulty, "TwoTech20", _difficultyTextPosition, _textColor,
                                       FontAlign.LEFT);
 
             if (Player.Profile != null)
             {
                 TextureManager.DrawString(spriteBatch,
                                           String.Format("{0}/{1}", Player.GetEXP(), Player.GetNextEXPSafe()),
-                                          "DefaultFont", _expTextPosition, _textColor,
+                                          "TwoTech20", _expTextPosition, _textColor,
                                           FontAlign.CENTER);
             }
         }
@@ -183,38 +192,48 @@ namespace WGiBeat.Drawing
         private void CalculateTextPositions()
         {
             //this.X + PlayerID.Width + Difficulty Icon width + half of available name space.
-            _nameTextPosition.X = this.X + 260;
+            _nameTextPosition.X = this.X + 210;
             _nameTextPosition.Y = this.Y - 8;
-            _speedTextPosition.X = this.X + this.Width - 35;
-            _speedTextPosition.Y = this.Y + 13;
-            _difficultyTextPosition.X = this.X + this.X + 70 + 35;
+            _speedTextPosition.X = this.X + this.Width - 29;
+            _speedTextPosition.Y = this.Y + 12;
+            _difficultyTextPosition.X = this.X + 87;
             _difficultyTextPosition.Y = this.Y - 5;
 
 
-            _levelDisplayPosition.X = this.X + 100;
-            _levelDisplayPosition.Y = this.Y + 19;
-            _expTextPosition.X = this.X + 260;
+            _levelDisplayPosition.X = this.X + 85;
+            _levelDisplayPosition.Y = this.Y + 16;
+            _expTextPosition.X = this.X + 230;
             _expTextPosition.Y = this.Y + 13;
         }
 
         private readonly double[] _speedOptions = { 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0 };
 
-        private const int BLOCK_HEIGHT = 5;
         private readonly Color _blockColor = new Color(64, 64, 64, 255);
 
 
         private void DrawSpeedBlocks(SpriteBatch spriteBatch)
         {
-            var posY = this.Y + this.Height - BLOCK_HEIGHT - 1;
-            for (int x = 0; x < _speedOptions.Length; x++)
-            {
+            const int TEXTURE_HEIGHT = 140;
+            const int TEXTURE_WIDTH = 100;
 
-                var drawColor = Player.PlayerOptions.BeatlineSpeed >= _speedOptions[x] ? Color.White : _blockColor;
-                _speedBlocks.ColorShading = drawColor;
-                _speedBlocks.Draw(spriteBatch, 6 - x, 30, BLOCK_HEIGHT, this.X + this.Width - 31, posY);
+            const int DRAW_HEIGHT = 35;
+            _speedBlocks.Y = this.Y + 1;
+            _speedBlocks.X = this.X + this.Width - _speedBlocks.Width - 2;
+            _speedBlocks.ColorShading = _blockColor;
+            _speedBlocks.Height = DRAW_HEIGHT;
+            _speedBlocks.Width = 25;
+            _speedBlocks.Draw(spriteBatch);
 
-                posY -= BLOCK_HEIGHT;
-            }
+            _speedBlocks.ColorShading = Color.White;
+            var numberLit = (from e in _speedOptions where Player.PlayerOptions.BeatlineSpeed >= e select e).Count();
+            var litHeight = 1.0 * DRAW_HEIGHT/_speedOptions.Count()*numberLit;
+            _speedBlocks.Height = (int) litHeight;
+            _speedBlocks.Y = this.Y +1 + DRAW_HEIGHT - _speedBlocks.Height;
+
+            var texV2 = TEXTURE_HEIGHT/_speedOptions.Count()*numberLit;
+            _speedBlocks.DrawTiled(spriteBatch, 0, TEXTURE_HEIGHT - texV2, TEXTURE_WIDTH, texV2);
+
+          
         }
 
         public void AdjustSpeed(int amount)

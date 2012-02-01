@@ -457,12 +457,12 @@ namespace WGiBeat.Screens
                     offsetPosition.X += 2;
                     offsetPosition.Y += 12;
                     var scale = TextureManager.ScaleTextToFit(String.Format("{0:0.00}", NewGameSong.AudioStart),
-                                                              "TwoTech", 70, 35);
-                    TextureManager.DrawString(spriteBatch, String.Format("{0:0.00}", NewGameSong.AudioStart), "TwoTech", offsetPosition,scale, Color.Black, FontAlign.LEFT);
+                                                              "TwoTech24", 70, 35);
+                    TextureManager.DrawString(spriteBatch, String.Format("{0:0.00}", NewGameSong.AudioStart), "TwoTech24", offsetPosition,scale, Color.Black, FontAlign.LEFT);
                     offsetPosition.X += 160;
                     scale = TextureManager.ScaleTextToFit(String.Format("{0:0.00}", NewGameSong.Offset),
-                                                              "TwoTech", 70, 35);
-                    TextureManager.DrawString(spriteBatch, String.Format("{0:0.00}", NewGameSong.Offset), "TwoTech", offsetPosition,scale, Color.Black, FontAlign.RIGHT);
+                                                              "TwoTech24", 70, 35);
+                    TextureManager.DrawString(spriteBatch, String.Format("{0:0.00}", NewGameSong.Offset), "TwoTech24", offsetPosition,scale, Color.Black, FontAlign.RIGHT);
 
                     if ((NewGameSong.StartBPM > 0) && (NewGameSong.Length > 0))
                     {

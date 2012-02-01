@@ -73,14 +73,15 @@ EvaluationTotalGrade=[660,275];
 EvaluationTeamScoreMeter=[410,280];
 EvaluationLevelDisplay=[0,258][400,258][0,583][400,583];
 EvaluationEXPAwarded=[75,242][475,242][75,567][475,567];
+EvaluationPlayerOptionsFrames=[0,0][400,0][0,325][400,325];
 LifeGraph=[20,20][420,20][20,345][420,345];
 
 #New Game;
 NewGameJoinNotification=[50,125][450,125][50,450][450,450];
 NewGameMenuStart=[25,0][425,0][25,300][425,300];
-NewGameMessageBorder=[0,220][400,220][0,545][400,545];
-OnScreenKeyboard=[10,40][410,40][10,365][410,365];
-OnScreenKeyboardDisplay=[200,10][600,10][200,335][600,335];
+NewGameMessageBorder=[0,220][400,220][0,520][400,520];
+NewGamePlayerOptionsFrames=[0,265][400,265][0,565][400,565];
+OnScreenKeyboard=[10,40][410,40][10,340][410,340];
 
 
 #Song Select;
@@ -90,7 +91,7 @@ SongSelectScreenHeader=[0,0];
 SongHighScoreFrame=[70,260];
 SongSortDisplay=[500,80];
 SongCountDisplay=[400,80][460,75];
-PlayerOptionsFrame=[0,562][0,524][0,486][0,448];
+PlayerOptionsFrame=[0,565][0,530][0,495][0,460];
 SelectedMode=[300,550];
 BPMMeter=[70,180];
 SelectedSongSpectrum=[235,325];

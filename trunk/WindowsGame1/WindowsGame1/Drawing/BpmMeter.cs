@@ -213,11 +213,11 @@ namespace WGiBeat.Drawing
             {
                 _bpmTextPosition.Y += 2;
                 TextureManager.DrawString(spriteBatch, String.Format("{0:000.0}", Math.Min(999.9, _displayedMinBpm)),
-                          "TwoTech",
+                          "TwoTech24",
                           _bpmTextPosition, Color.Black, FontAlign.RIGHT);
                 _bpmTextPosition.Y += 19;
                 TextureManager.DrawString(spriteBatch, String.Format("{0:000.0}", Math.Min(999.9, _displayedMaxBpm)),
-                          "TwoTech",
+                          "TwoTech24",
                           _bpmTextPosition, Color.Black, FontAlign.RIGHT);
                 _bpmTextPosition.Y -= 21;
 

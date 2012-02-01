@@ -68,7 +68,7 @@ namespace WGiBeat.Screens
             _highScoreFrame.InitSprites();
             _bpmMeter = new BpmMeter { Position = (Core.Metrics["BPMMeter", 0]) };
 
-            _playerOptionsSet = new PlayerOptionsSet { Players = Core.Players, Positions = Core.Metrics["PlayerOptionsFrame"], CurrentGameType = (GameType)Core.Cookies["CurrentGameType"] };
+            _playerOptionsSet = new PlayerOptionsSet { Players = Core.Players, Positions = Core.Metrics["PlayerOptionsFrame"], CurrentGameType = (GameType)Core.Cookies["CurrentGameType"], DrawAttract = true, StackableFrames = true };
             _playerOptionsSet.GameTypeInvalidated += delegate
                                                          { Core.ScreenTransition("MainMenu"); };
             _playerOptionsSet.CreatePlayerOptionsFrames();

@@ -24,7 +24,7 @@ namespace WGiBeat.AudioSystem
         private const int CHANNEL_COUNT = 16;
         private float _masterVolume = 1.0f;
         private Channel _tmpChannel = new Channel();
-        private string[] _channelAssignments;
+        private readonly string[] _channelAssignments;
 
         public string FallbackSound { get; set; }
         #endregion 
