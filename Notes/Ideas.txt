@@ -34,12 +34,16 @@
  * Red arrows are now more effective at raising Groove Momentum in Coop mode.
  * Slight changes to the Coop lifebar rules. Players can now earn more than their individual maximums if the lifebar has space.
  * CPU Players are now shown with a gray line in the life graph during the evaluation screen, to reduce confusion.
- * The life graph now has a legend for the colours used.  
+ * The life graph now has a legend for the colours used.
+ * Player options frames are now visible on the New Game and Evaluation screens. It is now possible to determine teams and difficulties used during the Evaluation screen as a result.     
  * WGiEdit: Song backgrounds can now be selected and changed in Step 2.
  * WGiEdit: Several slightly misaligned graphics in Step 2 have been fixed.   
  * WGiEdit: Song timeline is now displayed in realtime during the measurement tools.
  * WGiEdit: During measurement, the song can now be rewinded or fast forwarded by 3 seconds by pressing LEFT or RIGHT. The SELECT button no longer rewinds. 
  * WGiEdit/Bugfix: An AudioStart later than a song Offset is now considered invalid.
+ * WGiEdit/Song Debug: Added keys to change a song's BPM by 0.01 during Step 3 and song debugging. Use F3 and F4 for this.
+ * WGiEdit: The playing song can be rewinded and fast fowarded in Step 3.
+ * WGiEdit: The time remaining is displayed for a song during Step 3.  
  * Bugfix: Menus now display disabled items correctly.  
 
 ==0.9 - "Positive Trend" ==
