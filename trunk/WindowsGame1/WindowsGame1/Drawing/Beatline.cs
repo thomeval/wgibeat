@@ -36,8 +36,13 @@ namespace WGiBeat.Drawing
         private SpriteMap _beatlineEffects;
         private SpriteMap _pulseFront;
         private SpriteMap _pulseBack;
-        private byte _pulseFrontOpacity;
+        private double _pulseFrontOpacity;
         private Vector2 _indicatorPosition;
+       
+
+        private const double SPEED_CHANGE_SPEED = 4;
+        private const double PULSE_FADEOUT_SPEED = 500;
+        private const double HIT_NOTE_FADEOUT_SPEED = 350;
 
         public bool Large { get; set; }
 
@@ -123,7 +128,8 @@ namespace WGiBeat.Drawing
             DrawNotes(spriteBatch, phraseNumber);
 
             var diff = Speed - _displayedSpeed;
-            _displayedSpeed += diff / 8.0;
+            var changeMx = Math.Min(1, TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * SPEED_CHANGE_SPEED);
+            _displayedSpeed += diff*(changeMx);
         }
 
         private void DrawPlayerIdentifier(SpriteBatch spriteBatch)
@@ -148,11 +154,12 @@ namespace WGiBeat.Drawing
             var markerPosition = new Vector2 { X = this.X, Y = Large ? this.Y + 6 : this.Y + 3 };
             var markerHeight = Large ? LARGE_HEIGHT : NORMAL_HEIGHT;
             var phraseDecimal = (phraseNumber - (int)phraseNumber);
-            phraseDecimal = Math.Max(1 - (phraseDecimal * 6), 0);
+            phraseDecimal = Math.Max(1 - (phraseDecimal * 4), 0);
 
-            _pulseFront.ColorShading.A = _pulseFrontOpacity;
+            
             _pulseBack.ColorShading.A = (byte)(phraseDecimal * 255);
-            _pulseFrontOpacity = (byte)Math.Max(0, _pulseFrontOpacity - 20);
+            _pulseFrontOpacity = Math.Max(0, _pulseFrontOpacity - TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * PULSE_FADEOUT_SPEED);
+            _pulseFront.ColorShading.A = (byte) _pulseFrontOpacity;
 
             _pulseFront.Draw(spriteBatch, Id, this.Width, markerHeight, (int)markerPosition.X, (int)markerPosition.Y, flip);
 
@@ -222,7 +229,7 @@ namespace WGiBeat.Drawing
             byte result;
             if (bn.Hit)
             {
-                bn.Opacity = (byte)Math.Max(0, bn.Opacity - 8);
+                bn.Opacity = (byte)Math.Max(0, bn.Opacity - TextureManager.LastDrawnPhraseDiff * HIT_NOTE_FADEOUT_SPEED);
                 result = bn.Opacity;
                 return result;
             }
@@ -302,6 +309,10 @@ namespace WGiBeat.Drawing
                 }
             }
 
+            if (_notesToRemove.Count > 1)
+            {
+                System.Diagnostics.Debug.WriteLine("Trimmed:" + _notesToRemove.Count);
+            }
             foreach (BeatlineNote bnr in _notesToRemove)
             {
                 _beatlineNotes.Remove(bnr);
@@ -374,12 +385,11 @@ namespace WGiBeat.Drawing
         }
 
 
-
         public int AutoHit(double phraseNumber)
         {
             var passedNotes =
                 (from e in _beatlineNotes where (!e.Hit) && (CalculateHitOffset(e, phraseNumber) < 0) 
-                 && (e.NoteType == BeatlineNoteType.NORMAL ) select e);
+                 && (e.NoteType == BeatlineNoteType.NORMAL ) select e).ToList();
             var result = passedNotes.Count();
 
             foreach (BeatlineNote bln in passedNotes)

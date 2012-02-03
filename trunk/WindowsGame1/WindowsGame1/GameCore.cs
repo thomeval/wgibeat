@@ -80,7 +80,7 @@ namespace WGiBeat
             //Using this causes 100% CPU usage (one core) and a frame rate drop.
             this.IsFixedTimeStep = false;
             //NOTE: Uncomment to disable vsync.
-            //GraphicsManager.SynchronizeWithVerticalRetrace = false;
+            GraphicsManager.SynchronizeWithVerticalRetrace = false;
 
             WgibeatRootFolder = "" + Path.GetDirectoryName(
 Assembly.GetAssembly(typeof(GameCore)).CodeBase);
@@ -299,10 +299,10 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            TextureManager.LastGameTime = gameTime;
             GraphicsDevice.Clear(Color.Black);
 
             ShiftSpriteBatch(false);
-
             _activeScreen.Draw(gameTime, _spriteBatch);
             _spriteBatch.End();
             _drawInProgress = false;
@@ -318,7 +318,6 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
                 _spriteBatch.End();
             }
 
-            //TODO: Use Matrix.CreateScale for resolution effects.
             _spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None,Matrix.CreateScale(GraphicsManager.PreferredBackBufferWidth / 800.0f));
             if (enableWrap)
             {

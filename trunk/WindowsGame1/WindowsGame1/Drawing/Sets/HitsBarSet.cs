@@ -7,26 +7,28 @@ namespace WGiBeat.Drawing.Sets
 {
     public class HitsBarSet : DrawableObjectSet
     {
-        private readonly byte[] _opacity;
+        private readonly double[] _opacity;
         private Color _textColor = Color.Black;
         private SpriteMap _baseSprite;
         private SpriteMap _baseOvermaskSprite;
 
-        private readonly byte[] _overmaskOpacity;
+        private readonly double[] _overmaskOpacity;
         private readonly long[] _lastMilestone;
-        private readonly Color[] _overmaskColors = {Color.Red,  Color.Blue, Color.Lime, Color.Yellow};
+        private readonly Color[] _overmaskColors = {Color.Red,  Color.Blue, Color.Lime, Color.Yellow};       
 
         public HitsBarSet(MetricsManager metrics, Player[] players, GameType type)
             : base(metrics, players, type)
         {
-            _opacity = new byte[4];
-            _overmaskOpacity = new byte[4];
+            _opacity = new double[4];
+            _overmaskOpacity = new double[4];
             _lastMilestone = new long[4];
             SetupSprites();
         }
 
+
         public override void Draw(SpriteBatch spriteBatch)
         {
+ 
             if (_gameType == GameType.SYNC)
             {
                 if (Players[0].Playing || Players[1].Playing)
@@ -50,21 +52,25 @@ namespace WGiBeat.Drawing.Sets
             }
         }
 
+        private const int HITSBAR_SHOW_SPEED = 600;
+        private const int HITSBAR_HIDE_SPEED = 1000;
+        private const int OVERMASK_HIDE_SPEED = 750;
+
         private void DrawHitsBar(SpriteBatch spriteBatch, int player, string assetName)
         {
             if (Players[player].Hits < 25)
             {
-                _opacity[player] = (byte)Math.Max(_opacity[player] - 8, 0);
+                _opacity[player] = Math.Max(_opacity[player] - (TextureManager.LastDrawnPhraseDiff * HITSBAR_HIDE_SPEED), 0);
                 _lastMilestone[player] = 0;
             }
             else
             {
-                _opacity[player] = (byte)Math.Min(_opacity[player] + 8, 255);
+                _opacity[player] = Math.Min(_opacity[player] + (TextureManager.LastDrawnPhraseDiff * HITSBAR_SHOW_SPEED), 255);
             }
-            _overmaskOpacity[player] = (byte)Math.Max(0, _overmaskOpacity[player] - 4);
+            _overmaskOpacity[player] = Math.Max(0, _overmaskOpacity[player] - (TextureManager.LastDrawnPhraseDiff * OVERMASK_HIDE_SPEED));
             _baseSprite.SpriteTexture = TextureManager.Textures(assetName);
-            _baseSprite.ColorShading.A = _opacity[player];
-            _textColor.A = _opacity[player];
+            _baseSprite.ColorShading.A = (byte) _opacity[player];
+            _textColor.A = (byte) _opacity[player];
             _baseSprite.Draw(spriteBatch, player, _metrics[assetName, player]);
 
             DrawOvermask(spriteBatch, player,assetName);
@@ -77,12 +83,12 @@ namespace WGiBeat.Drawing.Sets
         {
             if (PlayerAtNewMilestone(player))
             {
-                _overmaskOpacity[player] = 160;
+                _overmaskOpacity[player] = 190;
                 _lastMilestone[player] = Players[player].Hits;
             }
 
             _baseOvermaskSprite.ColorShading = _overmaskColors[player];
-            _baseOvermaskSprite.ColorShading.A = _overmaskOpacity[player];
+            _baseOvermaskSprite.ColorShading.A = (byte) _overmaskOpacity[player];
             _baseOvermaskSprite.Draw(spriteBatch, player, _metrics[assetName, player]);
         }
 

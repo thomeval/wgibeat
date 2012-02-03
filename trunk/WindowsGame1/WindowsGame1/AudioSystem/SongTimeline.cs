@@ -81,7 +81,7 @@ namespace WGiBeat.AudioSystem
         private double GetCurrentBpmByMS(double milliseconds)
         {
             var lastBPMPoint =
-                (from e in TimingPoints where (e.PointType == PointType.BPM_CHANGE) && (e.MS <= milliseconds) select e).
+                (from e in TimingPoints where (e.PointType == PointType.BPM_CHANGE) && (e.MS < milliseconds) select e).
                     LastOrDefault();
             if (TimingPoints.Count == 0)
             {

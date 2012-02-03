@@ -168,6 +168,20 @@ namespace WGiBeat.Drawing
             return result;
         }
 
+        public static GameTime LastGameTime { get; set; }
+
+        private static double _lastDrawnPhraseNumber;
+        public static double LastDrawnPhraseNumber
+        {
+            get { return _lastDrawnPhraseNumber; }
+            set
+            {
+                LastDrawnPhraseDiff = Math.Max(0,value - LastDrawnPhraseNumber);
+                _lastDrawnPhraseNumber = value;
+            }
+        }
+
+        public static double LastDrawnPhraseDiff { get; private set; }
     }
 
     public enum FontAlign

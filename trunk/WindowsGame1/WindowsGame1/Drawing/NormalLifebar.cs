@@ -187,7 +187,7 @@ namespace WGiBeat.Drawing
             DrawSecondOvercharge(spriteBatch);
 
             DrawText(spriteBatch, _sidePos);
-            _overchargeTextureOffset = (_overchargeTextureOffset + 0.5) % OVERCHARGE_OFFSET_CLIP;
+            _overchargeTextureOffset = (_overchargeTextureOffset + (80*TextureManager.LastDrawnPhraseDiff)) % OVERCHARGE_OFFSET_CLIP;
         }
 
         private void DrawFullEffect(SpriteBatch spriteBatch)
