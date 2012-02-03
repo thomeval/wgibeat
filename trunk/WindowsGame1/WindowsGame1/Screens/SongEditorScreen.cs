@@ -238,7 +238,7 @@ namespace WGiBeat.Screens
         private void TextEntryEntryComplete(object sender, EventArgs e)
         {
             double temp;
-            bool isDouble = Double.TryParse(_textEntry.EnteredText, NumberStyles.Number,
+            bool isDouble = Double.TryParse(_textEntry.EnteredText.Replace(',','.'), NumberStyles.Number,
                                             CultureInfo.InvariantCulture.NumberFormat, out temp);
             switch (_textEntryDestination)
             {
@@ -283,7 +283,6 @@ namespace WGiBeat.Screens
                     break;
                 case "SongLength":
                     _cursorPosition = EditorCursorPosition.SONG_DETAILS;
-
                     if (isDouble)
                     {
                         NewGameSong.Length = temp;

@@ -539,7 +539,7 @@ namespace WGiBeat.Screens
             //DrawBorders(spriteBatch);
 
             //Draw the notebars.
-          _noteBarSet.Draw(spriteBatch);
+          _noteBarSet.Draw(spriteBatch,_phraseNumber);
 
             //Draw the component sets.
              _scoreSet.Draw(spriteBatch);

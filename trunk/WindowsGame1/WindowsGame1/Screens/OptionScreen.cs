@@ -29,7 +29,7 @@ namespace WGiBeat.Screens
         private void BuildMenu()
         {
             var item = new MenuItem { ItemText = "Song Volume" };
-            item.AddOption("0%", "0.0001");
+            item.AddOption("0%", "" + 0.0001);
 
             for (int x = 1; x < 11; x++)
             {
@@ -231,7 +231,7 @@ namespace WGiBeat.Screens
         private void SaveOptions()
         {
 
-            Core.Settings.Set("SongVolume", (Convert.ToDouble(_optionsMenu.GetByItemText("Song Volume").SelectedValue(),CultureInfo.InvariantCulture.NumberFormat)));
+            Core.Settings.Set("SongVolume", (Convert.ToDouble(_optionsMenu.GetByItemText("Song Volume").SelectedValue())));
             Core.Settings.Set("SongDebug", (_optionsMenu.GetByItemText("Song Debugging").SelectedValue()));
             Core.Settings.Set("SongPreview", (_optionsMenu.GetByItemText("Song Previews").SelectedValue()));
             Core.Settings.Set("FullScreen", _optionsMenu.GetByItemText("Full screen").SelectedValue());

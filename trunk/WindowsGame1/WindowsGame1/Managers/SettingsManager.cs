@@ -104,13 +104,21 @@ namespace WGiBeat.Managers
 
                 string id = rule.Substring(0, rule.IndexOf('='));
                 string value = rule.Substring(rule.IndexOf('=') + 1);
-
                 double doubleAttempt;
+
+                //Convert , to . for cultural friendliness.
+                if (value.IndexOf(',') != -1 && value.IndexOf('.') == -1)
+                {
+                    value = value.Replace(',', '.');
+                }
+
+               
                 bool boolAttempt;
                 if (bool.TryParse(value, out boolAttempt))
                 {
                     sm[id] = boolAttempt;
                 }
+                   
                 else if (double.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture.NumberFormat, out doubleAttempt))
                 {
                     if (IsDecimal(doubleAttempt))
@@ -143,7 +151,12 @@ namespace WGiBeat.Managers
 
             foreach (string rule in _settings.Keys)
             {
-                outText += "\r\n" + rule + "=" + _settings[rule] + ";";
+                string ruleValue = _settings[rule] + "";
+                if (_settings[rule] is double)
+                {
+                    ruleValue = ((double) _settings[rule]).ToString(CultureInfo.InvariantCulture);
+                }
+                outText += string.Format("\r\n{0}={1};",rule,ruleValue);
             }
 
             File.WriteAllText(filename,outText);

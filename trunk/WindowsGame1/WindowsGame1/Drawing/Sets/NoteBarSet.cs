@@ -11,6 +11,7 @@ namespace WGiBeat.Drawing.Sets
     public class NoteBarSet : DrawableObjectSet
     {
         private readonly NoteBar[] _noteBars;
+        private double _lastDraw;
 
         public event EventHandler PlayerFaulted;
         public event EventHandler PlayerArrowHit;
@@ -23,12 +24,22 @@ namespace WGiBeat.Drawing.Sets
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            Draw(spriteBatch,0.0);
+        }
+
+        private const int REDNESS_ANIMATION_SPEED = 384;
+        public void Draw(SpriteBatch spriteBatch, double phraseNumber)
+        {
+            var amount = Math.Max(0, (phraseNumber - _lastDraw) * REDNESS_ANIMATION_SPEED);
+            _lastDraw = phraseNumber;
+
             for (int x = 0; x < _noteBars.Length; x++)
             {
                 if (!Players[x].Playing)
                 {
                     continue;
                 }
+                _noteBars[x].Redness = (int) Math.Max(0, _noteBars[x].Redness - amount);
                 _noteBars[x].Draw(spriteBatch);
             }
         }
@@ -86,8 +97,8 @@ namespace WGiBeat.Drawing.Sets
             }
             else if ((_noteBars[player].CurrentNote() != null))
             {
-                _noteBars[player].ResetAll();
-
+                _noteBars[player].PlayerFaulted();
+                
                 if (PlayerFaulted != null)
                 {
                     PlayerFaulted(player, null);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using WGiBeat.Managers;
 
@@ -67,9 +68,9 @@ namespace WGiBeat.AudioSystem.Loaders
             sw.WriteLine("Artist={0};", song.Artist);
 
             sw.WriteLine(SaveSongBPMs(song));
-            sw.WriteLine("Offset={0};", Math.Round(song.Offset, 3));
-            sw.WriteLine("AudioStart={0};", Math.Round(song.AudioStart, 3));
-            sw.WriteLine("Length={0};", Math.Round(song.Length, 3));
+            sw.WriteLine("Offset={0};", Math.Round(song.Offset, 3).ToString(CultureInfo.InvariantCulture));
+            sw.WriteLine("AudioStart={0};", Math.Round(song.AudioStart, 3).ToString(CultureInfo.InvariantCulture));
+            sw.WriteLine("Length={0};", Math.Round(song.Length, 3).ToString(CultureInfo.InvariantCulture));
             sw.WriteLine("AudioFile={0};", song.AudioFile);
             sw.WriteLine("AudioFileMD5={0};", song.AudioFileMD5);
             sw.WriteLine(SaveSongStops(song));
@@ -97,8 +98,8 @@ namespace WGiBeat.AudioSystem.Loaders
 
             foreach (double key in song.BPMs.Keys)
             {
-                result += Math.Round(key, 3);
-                result += ":" + Math.Round(song.BPMs[key], 3);
+                result += Math.Round(key, 3).ToString(CultureInfo.InvariantCulture);
+                result += ":" + Math.Round(song.BPMs[key], 3).ToString(CultureInfo.InvariantCulture);
                 result += ",";
             }
             result = result.TrimEnd(',');
@@ -116,8 +117,8 @@ namespace WGiBeat.AudioSystem.Loaders
 
             foreach (double key in song.Stops.Keys)
             {
-                result += Math.Round(key, 3);
-                result += ":" + Math.Round(song.Stops[key], 3);
+                result += Math.Round(key, 3).ToString(CultureInfo.InvariantCulture); 
+                result += ":" + Math.Round(song.Stops[key], 3).ToString(CultureInfo.InvariantCulture); 
                 result += ",";
             }
             result = result.TrimEnd(',');
