@@ -27,7 +27,7 @@ namespace WGiBeat.Screens
         private Sprite _restrictionSprite;
         private PlayerOptionsSet _playerOptionsSet;
         private Sprite _messageBorderSprite;
-        private int _listDrawOffset;
+        private double _listDrawOffset;
 
         private bool _selectingCPUSkill;
         private int _selectedCPUSkill;
@@ -177,7 +177,7 @@ namespace WGiBeat.Screens
         {
 
             var midpoint = Core.Metrics["ModeSelectOptions", 0].Clone();
-            midpoint.X += _listDrawOffset;
+            midpoint.X += (int) _listDrawOffset;
 
             int index = _selectedGameType;
             //Draw selected game type.
@@ -215,9 +215,10 @@ namespace WGiBeat.Screens
                 _optionsSpriteMap.Draw(spriteBatch, index, 229, 139, (int)midpoint.X + 10, (int)midpoint.Y + 10);
             }
 
-            midpoint.X -= _listDrawOffset;
-            _listDrawOffset = (int)(_listDrawOffset * MODE_CHANGE_SPEED);
-
+            midpoint.X -= (int) _listDrawOffset;
+            var changeMx = Math.Min(1.0, TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds*10);
+            _listDrawOffset -= (_listDrawOffset*(changeMx));
+            System.Diagnostics.Debug.WriteLine(_listDrawOffset);
         }
 
 
@@ -414,9 +415,7 @@ namespace WGiBeat.Screens
                         return "Requires at least two players.";
                     }
                     break;
-                    
-                default:
-                    break;
+
             }
             return "";
         }

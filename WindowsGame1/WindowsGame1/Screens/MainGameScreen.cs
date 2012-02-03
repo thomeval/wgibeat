@@ -535,6 +535,7 @@ namespace WGiBeat.Screens
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            TextureManager.LastDrawnPhraseNumber = _phraseNumber;
             DrawBackground(spriteBatch);
             //DrawBorders(spriteBatch);
 

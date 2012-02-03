@@ -32,7 +32,7 @@ namespace WGiBeat.Drawing
         private Vector2 _levelDisplayPosition;
 
         public bool OptionChangeActive;
-        private byte _optionControlOpacity;
+        private double _optionControlOpacity;
 
         private Vector2 _nameTextPosition;
         private Vector2 _speedTextPosition;
@@ -41,6 +41,8 @@ namespace WGiBeat.Drawing
 
         private ProfileLevelDisplay _levelDisplay;
 
+        private const int FADEIN_SPEED = 600;
+        private const int FADEOUT_SPEED = 600;
         public PlayerOptionsFrame()
         {
             InitSprites();
@@ -140,13 +142,14 @@ namespace WGiBeat.Drawing
         private void DrawText(SpriteBatch spriteBatch)
         {
             CalculateTextPositions();
+            var timeDiff = TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds;
             if (OptionChangeActive)
             {
-                _optionControlOpacity = (byte) Math.Min(255, _optionControlOpacity + 10);
+                _optionControlOpacity =  Math.Min(255, _optionControlOpacity + (FADEIN_SPEED *timeDiff));
             }
             else
             {
-                _optionControlOpacity = (byte) Math.Max(0, _optionControlOpacity - 10);
+                _optionControlOpacity = Math.Max(0, _optionControlOpacity - (FADEOUT_SPEED * timeDiff));
             }
 
       
@@ -167,13 +170,13 @@ namespace WGiBeat.Drawing
 
         private void DrawChangeControls(SpriteBatch spriteBatch)
         {
-            _indicatorArrows.ColorShading.A = _optionControlOpacity;
+            _indicatorArrows.ColorShading.A = (byte) _optionControlOpacity;
             _indicatorArrows.Draw(spriteBatch, 1, 15, 15, (int)_difficultyTextPosition.X, (int)_difficultyTextPosition.Y + 22);
             _indicatorArrows.Draw(spriteBatch, 0, 15, 15, (int)_difficultyTextPosition.X + 15, (int)_difficultyTextPosition.Y + 22);
             _indicatorArrows.Draw(spriteBatch, 2, 15, 15, (int)_speedTextPosition.X - 32, (int)_speedTextPosition.Y - 10);
             _indicatorArrows.Draw(spriteBatch, 3, 15, 15, (int)_speedTextPosition.X - 17, (int)_speedTextPosition.Y - 10);
             var speedText = string.Format("{0:0.0}x", Player.PlayerOptions.BeatlineSpeed);
-            _textColor.A = _optionControlOpacity;
+            _textColor.A = (byte) _optionControlOpacity;
             TextureManager.DrawString(spriteBatch, speedText, "TwoTech20", _speedTextPosition, _textColor,
                                       FontAlign.RIGHT);
 
