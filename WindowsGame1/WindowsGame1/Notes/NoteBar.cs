@@ -17,8 +17,13 @@ namespace WGiBeat.Notes
         private Sprite _barSpriteMiddle;
         private Sprite _barSpriteLeft;
         private Sprite _barSpriteRight;
-        private SpriteMap _noteBarCursor;
 
+        private Sprite _barSpriteMiddleGlow;
+        private Sprite _barSpriteLeftGlow;
+        private Sprite _barSpriteRightGlow;
+
+        private SpriteMap _noteBarCursor;
+        public int Redness;
         public List<Note> Notes { get; set; }
         public int ID { get; set; }
         public NoteBar()
@@ -42,6 +47,26 @@ namespace WGiBeat.Notes
                 Height = 40,
                 Width = 16,
                 SpriteTexture = TextureManager.Textures("NoteBarRight")
+            };
+            _barSpriteLeftGlow = new Sprite
+                                     {
+                                         SpriteTexture = TextureManager.CreateWhiteMask("NoteBarLeft"),
+                                         Height = 40,
+                                         Width = 16,
+                                         ColorShading = Color.Red                                      
+                                     };
+            _barSpriteRightGlow = new Sprite
+            {
+                SpriteTexture = TextureManager.CreateWhiteMask("NoteBarRight"),
+                Height = 40,
+                Width = 16,
+                ColorShading = Color.Red
+            };
+            _barSpriteMiddleGlow = new Sprite
+            {
+                SpriteTexture = TextureManager.CreateWhiteMask("NoteBarMiddle"),
+                Height = 40,
+                ColorShading = Color.Red
             };
             _noteBarCursor = new SpriteMap
                                  {
@@ -162,17 +187,23 @@ namespace WGiBeat.Notes
             int posX = this.X - (16 * Notes.Count);
             int posY = this.Y;
 
-            _barSpriteMiddle.Width = (32 * Notes.Count) + 4;
-            _barSpriteMiddle.X = posX - 2;
-            _barSpriteMiddle.Y = posY - 4;
-            _barSpriteLeft.X = _barSpriteMiddle.X - 16;
-            _barSpriteLeft.Y = _barSpriteMiddle.Y;
-            _barSpriteRight.X = _barSpriteMiddle.X + _barSpriteMiddle.Width;
-            _barSpriteRight.Y = _barSpriteMiddle.Y;
-
+            _barSpriteMiddle.Width = _barSpriteMiddleGlow.Width =  (32 * Notes.Count) + 4;
+            _barSpriteMiddle.X = _barSpriteMiddleGlow.X =  posX - 2;
+            _barSpriteMiddle.Y = _barSpriteMiddleGlow.Y = posY - 4;
+            _barSpriteLeft.X = _barSpriteLeftGlow.X = _barSpriteMiddle.X - 16;
+            _barSpriteLeft.Y = _barSpriteLeftGlow.Y = _barSpriteMiddle.Y;
+            _barSpriteRight.X = _barSpriteRightGlow.X = _barSpriteMiddle.X + _barSpriteMiddle.Width;
+            _barSpriteRight.Y = _barSpriteRightGlow.Y = _barSpriteMiddle.Y;
+          
             _barSpriteLeft.Draw(spriteBatch);
             _barSpriteRight.Draw(spriteBatch);
             _barSpriteMiddle.Draw(spriteBatch);
+
+            _barSpriteLeftGlow.ColorShading.A =
+                _barSpriteMiddleGlow.ColorShading.A = _barSpriteRightGlow.ColorShading.A = Convert.ToByte(Redness);
+            _barSpriteLeftGlow.Draw(spriteBatch);
+            _barSpriteRightGlow.Draw(spriteBatch);
+            _barSpriteMiddleGlow.Draw(spriteBatch);
 
             var sprite = new SpriteMap { SpriteTexture = TextureManager.Textures("Arrows"), Columns = 4, Rows = 3 };
             foreach (Note note in Notes)
@@ -194,6 +225,7 @@ namespace WGiBeat.Notes
 
             posX = this.X - (16 * Notes.Count) +32*NumberCompleted() - (_noteBarCursor.SpriteTexture.Width/2);
             _noteBarCursor.Draw(spriteBatch,ID, new Vector2(posX,posY));
+
         }
 
         public bool AllCompleted()
@@ -213,8 +245,15 @@ namespace WGiBeat.Notes
         {
             while (Notes.Count > level)
             {
+                Redness = 255;
                 Notes.RemoveAt(Notes.Count-1);
             }
+        }
+
+        public void PlayerFaulted()
+        {
+            Redness = 255;
+            ResetAll();
         }
     }
 }

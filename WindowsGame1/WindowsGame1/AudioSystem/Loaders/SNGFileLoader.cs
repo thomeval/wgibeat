@@ -13,7 +13,6 @@ namespace WGiBeat.AudioSystem.Loaders
         {
             
             _newSong = GameSong.LoadDefaults();
-            var songVersion = "";
             _newSong.Path = filename.Substring(0, filename.LastIndexOf("\\"));
             _newSong.DefinitionFile = Path.GetFileName(filename);
             try
@@ -29,7 +28,7 @@ namespace WGiBeat.AudioSystem.Loaders
                 {
                     throw new Exception("Song is not a valid song file. It must start with #SONG- followed by the version number.");
                 }
-                songVersion = rules[0].Substring(rules[0].IndexOf("-") + 1);
+                var songVersion = rules[0].Substring(rules[0].IndexOf("-") + 1);
 
                 foreach (string rule in rules)
                 {
@@ -152,7 +151,7 @@ namespace WGiBeat.AudioSystem.Loaders
             }
             catch (Exception ex)
             {
-                throw new Exception("Failed to load song's BPM. ", ex);
+                throw new Exception("Failed to load song's Stops. ", ex);
             }
         }
     }
