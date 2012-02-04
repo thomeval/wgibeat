@@ -18,16 +18,30 @@
 
  
 ==Post Release==
-- Another song pack.
+
 
 ==TODO==
-- Animated levelbar
-- Shrink player options frame and use on more screens.
-- Check if player options frames refresh correctly on VS CPU selection.
+
+- Check for overflowing text in pof.
 - Notebar flash on fault/fail
- - Team colours
- - Remove VSync requirement.
+- Team colours
+- Remove VSync requirement.
+ -- Hitsbar broken.
+ -- Mode select left-right
+ -- Beatline hit notes
+ -- Beatline hit pulse
+ -- Score display
+ -- Performance bar
+ -- Song select up/down
+ -- Song select spectrum
+ -- song select length / bpm
+ -- Player options frames
+ -- Life graph
+ -- GM Bar
+ -- Tug of war bar.
+
  - Zoki's texture fixes.
+ - Beatline finish markers are missing.
  
 
 ==1.0 - "???" ==
@@ -35,6 +49,8 @@
  * Slight changes to the Coop lifebar rules. Players can now earn more than their individual maximums if the lifebar has space.
  * CPU Players are now shown with a gray line in the life graph during the evaluation screen, to reduce confusion.
  * The life graph now has a legend for the colours used.
+ * Note bars now flash red when their player faults or drops a level.
+ * Level bars are now more animated.  
  * Player options frames are now visible on the New Game and Evaluation screens. It is now possible to determine teams and difficulties used during the Evaluation screen as a result.     
  * WGiEdit: Song backgrounds can now be selected and changed in Step 2.
  * WGiEdit: Several slightly misaligned graphics in Step 2 have been fixed.   

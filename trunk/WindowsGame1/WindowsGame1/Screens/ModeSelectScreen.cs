@@ -218,7 +218,7 @@ namespace WGiBeat.Screens
             midpoint.X -= (int) _listDrawOffset;
             var changeMx = Math.Min(1.0, TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds*10);
             _listDrawOffset -= (_listDrawOffset*(changeMx));
-            System.Diagnostics.Debug.WriteLine(_listDrawOffset);
+
         }
 
 
