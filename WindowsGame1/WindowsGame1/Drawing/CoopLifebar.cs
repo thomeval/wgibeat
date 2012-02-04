@@ -86,6 +86,7 @@ namespace WGiBeat.Drawing
 
         const double BEAT_FRACTION_SEVERITY = 0.3;
         private const int BLOCK_WIDTH = 4;
+        private const int OVERCHARGE_FLOW_SPEED = 80;
         private int _blocksCount;
 
         public override void Draw(SpriteBatch spriteBatch, double gameTime)
@@ -135,7 +136,8 @@ namespace WGiBeat.Drawing
             _overchargePart.DrawTiled(spriteBatch,(int) (this.X + _overchargeTextureOffset),0,_overchargePart.Width,_overchargePart.Height);
             _overchargePart.X += this.Width - 5 - _overchargePart.Width;
             _overchargePart.DrawTiled(spriteBatch, (int) (this.X + _overchargeTextureOffset) + _overchargePart.Width, 0, _overchargePart.Width, _overchargePart.Height);
-            _overchargeTextureOffset = (_overchargeTextureOffset + 0.5) % OVERCHARGE_OFFSET_CLIP;
+            _overchargeTextureOffset = (_overchargeTextureOffset + (OVERCHARGE_FLOW_SPEED * TextureManager.LastDrawnPhraseDiff)) % OVERCHARGE_OFFSET_CLIP;
+
         }
 
         private void DrawBlocks(SpriteBatch spriteBatch, double gameTime)

@@ -13,8 +13,9 @@ namespace WGiBeat.Drawing
         private Sprite _teamGridSprite;
         private Sprite _tugBlueSprite;
         private Sprite _tugRedSprite;
-        private float _blueBarTextureStart;
-        private float _redBarTextureStart;
+        private double _blueBarTextureStart;
+        private double _redBarTextureStart;
+        private const double ANIMATION_SPEED = 35;
 
         public TeamScoreMeter()
         {
@@ -31,8 +32,9 @@ namespace WGiBeat.Drawing
 
         public void Update()
         {
-            _redBarTextureStart = (_redBarTextureStart + 0.01f + (0.0024f * _tugRedSprite.Width)) % 109;
-            _blueBarTextureStart = (_blueBarTextureStart - 0.01f - (0.0024f * _tugBlueSprite.Width));
+            double amount = ANIMATION_SPEED * TextureManager.LastDrawnPhraseDiff;
+            _redBarTextureStart = (_redBarTextureStart + amount * _tugRedSprite.Width / 109) % 109;
+            _blueBarTextureStart = (_blueBarTextureStart - amount * _tugBlueSprite.Width / 109);
             if (_blueBarTextureStart < 0)
             {
                 _blueBarTextureStart += 109;

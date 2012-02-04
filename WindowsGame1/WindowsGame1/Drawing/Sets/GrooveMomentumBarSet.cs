@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Managers;
 using WGiBeat.Players;
@@ -11,12 +8,13 @@ namespace WGiBeat.Drawing.Sets
     public class GrooveMomentumBarSet : DrawableObjectSet
     {
         private double _displayedGrooveMomentum;
-        private GrooveMomentumBar _gmbar;
+        private readonly GrooveMomentumBar _gmbar;
         public GrooveMomentumBarSet(MetricsManager metrics, Player[] players, GameType gameType) : base(metrics, players, gameType)
         {
             _gmbar = new GrooveMomentumBar {Position = metrics["GrooveMomentumBar", 0], Width = 275};
         }
 
+        private const int GM_CHANGE_SPEED = 12;
         public void UpdateDisplayedGM()
         {
 
@@ -27,7 +25,9 @@ namespace WGiBeat.Drawing.Sets
             }
             else
             {
-                _displayedGrooveMomentum += diff / 8.0;
+              
+                var changeMx = Math.Min(1, TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * GM_CHANGE_SPEED);
+                _displayedGrooveMomentum += diff * (changeMx);
             }
 
         }

@@ -137,10 +137,11 @@ namespace WGiBeat.Drawing
         const double BEAT_FRACTION_SEVERITY = 0.3;
         private const int FRONT_WIDTH = 4;
         private int _blocksCount;
+        private const int OVERCHARGE_FLOW_SPEED = 80;
 
         public override void Draw(SpriteBatch spriteBatch, double gameTime)
         {
-            _blocksCount = (int)Math.Ceiling((this.Width - 6) / 4.00);
+            _blocksCount = (int)Math.Ceiling((this.Width - 6) / (double) FRONT_WIDTH);
             var solidLife = Math.Min(Parent.Players[PlayerID].Life, 100);
 
             //Causes the bar to pulse on every beat.
@@ -187,7 +188,8 @@ namespace WGiBeat.Drawing
             DrawSecondOvercharge(spriteBatch);
 
             DrawText(spriteBatch, _sidePos);
-            _overchargeTextureOffset = (_overchargeTextureOffset + (80*TextureManager.LastDrawnPhraseDiff)) % OVERCHARGE_OFFSET_CLIP;
+            
+            _overchargeTextureOffset = (_overchargeTextureOffset + (OVERCHARGE_FLOW_SPEED*TextureManager.LastDrawnPhraseDiff)) % OVERCHARGE_OFFSET_CLIP;
         }
 
         private void DrawFullEffect(SpriteBatch spriteBatch)

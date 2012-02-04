@@ -8,8 +8,9 @@ namespace WGiBeat.Drawing.Sets
 {
     public class ScoreSet: DrawableObjectSet
     {
+        private const int SCORE_UPDATE_SPEED = 12;
 
-        private readonly long[] _displayedScores;
+        private readonly double[] _displayedScores;
         private SpriteMap _iconSpriteMap;
         private SpriteMap _coopBaseSprite;
         private Sprite _coopPulseSprite;
@@ -24,7 +25,7 @@ namespace WGiBeat.Drawing.Sets
         public ScoreSet(MetricsManager metrics, Player[] players, GameType type)
             : base(metrics,players,type)
         {
-            _displayedScores = new long[4];
+            _displayedScores = new double[4];
             InitSprites();
         }
 
@@ -134,7 +135,7 @@ namespace WGiBeat.Drawing.Sets
         private void DrawSyncCombinedScore(SpriteBatch spriteBatch)
         {
 
-            long scoreText = _displayedScores[0];
+            var scoreText = _displayedScores[0];
 
             for (int x = 0; x < 2; x++)
             {
@@ -145,7 +146,7 @@ namespace WGiBeat.Drawing.Sets
                     _coopPulseSprite.Position = _metrics["ScoreCombinedBase", x];
                     _coopPulseSprite.ColorShading.A = (byte)Math.Min(255, 2 * Math.Sqrt(Players[0].Score - scoreText));
                     _coopPulseSprite.Draw(spriteBatch);
-                    TextureManager.DrawString(spriteBatch, "" + scoreText, "LargeFont",
+                    TextureManager.DrawString(spriteBatch, "" + (long) scoreText, "LargeFont",
                                            _metrics["ScoreCombinedText", x], Color.White, FontAlign.RIGHT);
                 }
             }
@@ -153,7 +154,7 @@ namespace WGiBeat.Drawing.Sets
 
         private void DrawCoopCombinedScore(SpriteBatch spriteBatch)
         {
-            long scoreText = 0;
+            double scoreText = 0;
             for (int x = 0; x < 4; x++)
             {
                 if (Players[x].Playing)
@@ -173,14 +174,14 @@ namespace WGiBeat.Drawing.Sets
                     _coopPulseSprite.ColorShading.A = (byte) Math.Min(255, 2* Math.Sqrt(totalScore - scoreText));
                     _coopPulseSprite.Draw(spriteBatch);
 
-                    TextureManager.DrawString(spriteBatch, "" + scoreText, "LargeFont",
+                    TextureManager.DrawString(spriteBatch, "" + (long) scoreText, "LargeFont",
                                            _metrics["ScoreCombinedText", x], Color.White, FontAlign.RIGHT);
                 }
             }
         }
         private void DrawTeamCombinedScores(SpriteBatch spriteBatch)
         {
-            long blueScore = 0, redScore = 0;
+            double blueScore = 0, redScore = 0;
             for (int x = 0; x < 4; x++)
             {
                 if (Players[x].Playing)
@@ -196,8 +197,8 @@ namespace WGiBeat.Drawing.Sets
                 }
             }
 
-            _teamScoreMeter.BlueScore = blueScore;
-            _teamScoreMeter.RedScore = redScore;
+            _teamScoreMeter.BlueScore = (long) blueScore;
+            _teamScoreMeter.RedScore = (long) redScore;
 
             if (Players[0].Playing || Players[1].Playing)
             {
@@ -238,7 +239,7 @@ namespace WGiBeat.Drawing.Sets
                 identifierPosition.Y += 5;
                 _playerIdentifierSpriteMap.Draw(spriteBatch,idx,55,30,identifierPosition);
 
-                TextureManager.DrawString(spriteBatch, "" + _displayedScores[x], "LargeFont",
+                TextureManager.DrawString(spriteBatch, "" + (long) _displayedScores[x], "LargeFont",
                                       _metrics["ScoreText", x], Color.White,FontAlign.RIGHT);
             }
         }
@@ -248,8 +249,16 @@ namespace WGiBeat.Drawing.Sets
             for (int x = 0; x < 4; x++)
             {
 
-                var amount = Math.Max(25, (Players[x].Score - _displayedScores[x]) / 10);
-                _displayedScores[x] = Math.Min(Players[x].Score, _displayedScores[x] + amount);
+                var diff = Players[x].Score - _displayedScores[x];
+                if (diff <= 10)
+                {
+                    _displayedScores[x] = Players[x].Score;
+                    diff = 0;
+                }
+                var changeMx = Math.Min(0.5, TextureManager.LastDrawnPhraseDiff * SCORE_UPDATE_SPEED);
+                _displayedScores[x] += (diff * (changeMx));
+
+
             }
         }
 
