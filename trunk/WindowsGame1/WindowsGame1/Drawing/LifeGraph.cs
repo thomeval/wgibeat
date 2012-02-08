@@ -96,9 +96,11 @@ namespace WGiBeat.Screens
 
             } while ((_lineData[_topLine].Length == 0) && (temp != _topLine));
         }
+
+        private const int LINE_DRAW_SPEED = 30;
         public override void Draw(SpriteBatch spriteBatch)
         {
-            _drawProgress += 0.5;
+            _drawProgress += TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds*LINE_DRAW_SPEED;
             _backgroundSprite.Position = this.Position;
             _backgroundSprite.Draw(spriteBatch);
             CalculateMinMax();

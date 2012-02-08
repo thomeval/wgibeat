@@ -38,6 +38,7 @@ namespace WGiBeat.Drawing.Sets
                 int opacity = Convert.ToInt32(Math.Max(0, (_displayedJudgements[x].DisplayUntil - _phraseNumber) * 510));
                 opacity = Math.Max(0,Math.Min(opacity, 255));
                 _displayedJudgements[x].Opacity = Convert.ToByte(opacity);
+
                 _displayedJudgements[x].Draw(spriteBatch);
 
                 if (opacity == 0)

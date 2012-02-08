@@ -33,6 +33,8 @@ namespace WGiBeat.Drawing
         private SpriteMap _playerIdentifiers;
 
         private Sprite _baseSprite;
+        private Sprite _speedScaleSprite;
+
         private SpriteMap _beatlineEffects;
         private SpriteMap _pulseFront;
         private SpriteMap _pulseBack;
@@ -111,6 +113,10 @@ namespace WGiBeat.Drawing
                                         Columns = 1,
                                         Rows = 5
                                     };
+            _speedScaleSprite = new Sprite
+                                    {
+                                        SpriteTexture = TextureManager.Textures("BeatlineSpeedScale")
+                                    };
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -121,7 +127,7 @@ namespace WGiBeat.Drawing
         public void Draw(SpriteBatch spriteBatch, double phraseNumber)
         {
             this.Height = Large ? 80 : 40;
-            
+            DrawSpeedScale(spriteBatch, phraseNumber);
             DrawBase(spriteBatch);
             DrawPlayerIdentifier(spriteBatch);
             DrawPulses(spriteBatch, phraseNumber);
@@ -130,6 +136,24 @@ namespace WGiBeat.Drawing
             var diff = Speed - _displayedSpeed;
             var changeMx = Math.Min(1, TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * SPEED_CHANGE_SPEED);
             _displayedSpeed += diff*(changeMx);
+        }
+
+        private void DrawSpeedScale(SpriteBatch spriteBatch, double phraseNumber)
+        {
+            const int TEXTURE_WIDTH = 240;
+            var textureOffset = ((phraseNumber - Math.Floor(phraseNumber)) * TEXTURE_WIDTH) + 2;
+            _speedScaleSprite.ColorShading.A = 160;
+            _speedScaleSprite.Height = Large ? 5 : 2;
+            _speedScaleSprite.Position = this.Position.Clone();
+            _speedScaleSprite.Width = this.Width - LEFT_SIDE - 10;
+            _speedScaleSprite.X += LEFT_SIDE + IMPACT_WIDTH;
+            if (ReverseDirection)
+            {
+                _speedScaleSprite.X = (int) this.Position.X;
+            }
+            var mxFactor = 1.0* _speedScaleSprite.Width/BEAT_ZOOM_DISTANCE / _displayedSpeed; 
+            _speedScaleSprite.Y += this.Height/2 - _speedScaleSprite.Height/2;
+            _speedScaleSprite.DrawTiled(spriteBatch, (int)textureOffset, 0, (int)(TEXTURE_WIDTH * mxFactor), 5);
         }
 
         private void DrawPlayerIdentifier(SpriteBatch spriteBatch)

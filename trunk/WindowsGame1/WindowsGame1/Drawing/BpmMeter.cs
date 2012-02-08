@@ -17,6 +17,8 @@ namespace WGiBeat.Drawing
         private double _actualMinBpm;
         private double _actualMaxBpm;
 
+        private const int BPM_LENGTH_ANIMATION_SPEED = 10;
+
         private GameSong _displayedSong;
         public GameSong DisplayedSong
         {
@@ -153,8 +155,8 @@ namespace WGiBeat.Drawing
         {
             _songLengthBase.Draw(spriteBatch);
             var diff = DisplayedSong.Length - _displayedLength;
-
-            _displayedLength += (diff / 6);
+            var changeMx = Math.Min(0.5, TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * BPM_LENGTH_ANIMATION_SPEED);
+            _displayedLength += (diff * (changeMx));
             var textPosition = _songLengthBase.Position.Clone();
             textPosition.X += 100;
             textPosition.Y -= 0;
@@ -167,12 +169,13 @@ namespace WGiBeat.Drawing
         private const double BEAT_FRACTION_SEVERITY = 0.35;
         private void DrawBPMMeter(SpriteBatch spriteBatch)
         {
+            var changeMx = Math.Min(0.5, TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * BPM_LENGTH_ANIMATION_SPEED);
 
             var diff = _displayedMinBpm - _actualMinBpm;
-            _displayedMinBpm -= diff / 6;
+            _displayedMinBpm -= (diff * (changeMx));
 
             diff = _displayedMaxBpm - _actualMaxBpm;
-            _displayedMaxBpm -= diff / 6;
+            _displayedMaxBpm -= (diff * (changeMx));
 
             var beatFraction = (SongTime) - Math.Floor(SongTime);
             beatFraction *= BEAT_FRACTION_SEVERITY;

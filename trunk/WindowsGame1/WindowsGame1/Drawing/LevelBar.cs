@@ -25,7 +25,7 @@ namespace WGiBeat.Drawing
         private const int MAX_FRONT_SHOW_SPEED = 360;
         private const int MAX_FRONT_HIDE_SPEED = 750;
         private const int FRONT_BAR_CHANGE_SPEED = 16;
-        private const int FULL_BAR_FADEOUT_SPEED = 120;
+        private const int FULL_BAR_FADEOUT_SPEED = 300;
         private double _displayedLevel = 1;
 
         private bool LevelBarFull
@@ -151,7 +151,7 @@ namespace WGiBeat.Drawing
                 _barSprite.ColorShading.A = Convert.ToByte(_lastLevelOpacity);
                 _barSprite.Draw(spriteBatch, _lastLevelDrawn - 1, maxWidth, this.Height - 6, _barPosition );
                 diff = TextureManager.LastDrawnPhraseDiff*FULL_BAR_FADEOUT_SPEED;
-                _lastLevelOpacity = (byte)Math.Max(_lastLevelOpacity - diff, 0);
+                _lastLevelOpacity = Math.Max(_lastLevelOpacity - diff, 0);
             }
 
             //Draw the current level bar.

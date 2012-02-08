@@ -79,8 +79,8 @@ namespace WGiBeat
             //For some reason XNA has a bug when using FixedTimeSteps, which is enabled by default.
             //Using this causes 100% CPU usage (one core) and a frame rate drop.
             this.IsFixedTimeStep = false;
-            //NOTE: Uncomment to disable vsync.
-            GraphicsManager.SynchronizeWithVerticalRetrace = false;
+
+  
 
             WgibeatRootFolder = "" + Path.GetDirectoryName(
 Assembly.GetAssembly(typeof(GameCore)).CodeBase);
@@ -207,6 +207,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
         public void SetGraphicsSettings()
         {
             GraphicsManager.IsFullScreen = Settings.Get<bool>("FullScreen");
+            GraphicsManager.SynchronizeWithVerticalRetrace = Settings.Get<bool>("VSync");
             if (GraphicsManager.IsFullScreen)
             {
                 GraphicsManager.PreferredBackBufferHeight = 600;

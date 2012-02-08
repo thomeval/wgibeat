@@ -31,10 +31,10 @@ namespace WGiBeat.Screens
         private HighScoreFrame _highScoreFrame;
         private PlayerOptionsSet _playerOptionsSet;
 
-        private int _songListDrawOffset;
+        private double _songListDrawOffset;
         private const int LISTITEMS_DRAWN = 13;
-        private const double SONG_CHANGE_SPEED = 0.9;
-        private byte _songListDrawOpacity;
+        private const double SONG_CHANGE_SPEED = 7;
+        private double _songListDrawOpacity;
 
         private readonly SineSwayParticleField _field = new SineSwayParticleField();
 
@@ -198,12 +198,14 @@ namespace WGiBeat.Screens
                     if (averageLevels[x] >= _maxLevels[x])
                     {
                         _dropSpeed[x] = 0.0f;
+                        _maxLevels[x] = averageLevels[x];
                     }
                     else
                     {
-                        _dropSpeed[x] += 0.0005f;
+                        _dropSpeed[x] += 0.025f;
+                        _maxLevels[x] -= _dropSpeed[x]*(float) TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds;
                     }
-                    _maxLevels[x] = Math.Max(averageLevels[x], _maxLevels[x] - _dropSpeed[x]);
+             
 
                     line.AddVector(new Vector2(posX, 0));
                     line.AddVector(new Vector2(posX, -65 * averageLevels[x]));
@@ -234,7 +236,6 @@ namespace WGiBeat.Screens
 
                 var actualTime = Core.Audio.GetChannelPosition(Crossfader.ChannelIndexCurrent);
                 _bpmMeter.SongTime = CurrentSong.ConvertMSToPhrase(actualTime) * 4;
-
             }
             else
             {
@@ -270,16 +271,17 @@ namespace WGiBeat.Screens
             _field.Draw(spriteBatch, gameTime);
         }
 
+        private const int SONGLIST_FADEOUT_SPEED = 300;
         private void DrawSongList(SpriteBatch spriteBatch)
         {
             if (_preloadState == PreloadState.LOADING_STARTED)
             {
-                _songListDrawOpacity = (byte) Math.Max(0, _songListDrawOpacity - 5);
+                _songListDrawOpacity = Math.Max(0, _songListDrawOpacity - TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * SONGLIST_FADEOUT_SPEED);
             }
             _listBackend.Draw(spriteBatch);
 
             var midpoint = Core.Metrics["SongListMidpoint", 0];
-            midpoint.Y += _songListDrawOffset;
+            midpoint.Y += (int) _songListDrawOffset;
 
  
             _songList[_selectedIndex].Position = (midpoint);
@@ -289,7 +291,7 @@ namespace WGiBeat.Screens
 
             foreach (SongListItem sli in _songList)
             {
-                sli.Opacity = _songListDrawOpacity;
+                sli.Opacity = Convert.ToByte(_songListDrawOpacity);
             }
             //Draw SongListItems below (after) the selected one.
             for (int x = 1; x <= LISTITEMS_DRAWN; x++)
@@ -317,8 +319,9 @@ namespace WGiBeat.Screens
                 _songList[index].Draw(spriteBatch);
             }
 
-            midpoint.Y -= _songListDrawOffset;
-            _songListDrawOffset = (int)(_songListDrawOffset * SONG_CHANGE_SPEED);
+            midpoint.Y -= (int) _songListDrawOffset;
+            var changeMx = Math.Min(0.5, SONG_CHANGE_SPEED*TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds);
+            _songListDrawOffset -= (_songListDrawOffset*(changeMx));
 
         }
 
