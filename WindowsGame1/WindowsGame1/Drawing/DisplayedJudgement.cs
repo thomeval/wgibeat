@@ -18,8 +18,8 @@ namespace WGiBeat.Drawing
                 _judgementSprite = new SpriteMap {Columns = 1, Rows = (int) BeatlineNoteJudgement.COUNT, SpriteTexture = TextureManager.Textures("NoteJudgements")};
             }
             _judgementSprite.ColorShading.A = Opacity;
-
-            _judgementSprite.Draw(spriteBatch,Tier,this.Width, this.Height,this.X,this.Y);
+            var opacityScale = 0.8 + (1.0*Opacity/1500);
+            _judgementSprite.Draw(spriteBatch,Tier,(int) (this.Width * opacityScale), (int) (this.Height * opacityScale),this.X,this.Y);
         }
     }
 }

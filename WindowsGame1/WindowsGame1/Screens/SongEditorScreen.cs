@@ -343,6 +343,7 @@ namespace WGiBeat.Screens
                     break;
                 case EditorCursorPosition.SONG_TUNING:
                     _editProgress = 3;
+                    TextureManager.LastDrawnPhraseNumber = _phraseNumber;
                     _beatlineSet.Draw(spriteBatch, _phraseNumber);
                     _noteJudgementSet.Draw(spriteBatch, _phraseNumber);
                     _countdownSet.Draw(spriteBatch,_phraseNumber);
@@ -711,6 +712,35 @@ namespace WGiBeat.Screens
                     break;
                 case "START":
                     DoMenuAction();
+                    break;
+                case "BACK":
+                    DoMenuActionBack();
+                    break;
+            }
+        }
+
+        private void DoMenuActionBack()
+        {
+            switch (_cursorPosition)
+            {
+                case EditorCursorPosition.SONG_DETAILS:
+                    if (_editMode)
+                    {
+                        _cursorPosition = EditorCursorPosition.MAIN_MENU;
+                    }
+                    else
+                    {
+                        _cursorPosition = EditorCursorPosition.SONG_BASICS;
+                    }
+                    break;
+                case EditorCursorPosition.SONG_DETAILS_DELETE:
+                    _cursorPosition = EditorCursorPosition.SELECT_SONGFILE_DELETE;
+                    break;
+                    case EditorCursorPosition.SONG_BASICS:
+                    _cursorPosition = EditorCursorPosition.MAIN_MENU;
+                    break;
+                    case EditorCursorPosition.MAIN_MENU:
+                    Core.ScreenTransition("MainMenu");
                     break;
             }
         }

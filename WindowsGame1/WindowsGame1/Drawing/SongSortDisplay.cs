@@ -12,7 +12,7 @@ namespace WGiBeat.Drawing
     {
 
         public bool Active { get; set; }
-        private byte _activeOpacity;
+        private double _activeOpacity;
 
         private bool _initiated;
 
@@ -140,15 +140,18 @@ namespace WGiBeat.Drawing
             _textPosition = new Vector2();
  
         }
+
+        private const int FADEOUT_SPEED = 600;
+        private const int FADEIN_SPEED = 600;
         public override void Draw(SpriteBatch spriteBatch)
         {
             if (Active)
             {
-                _activeOpacity = (byte) Math.Min(_activeOpacity + 10, 255);
+                _activeOpacity = (byte) Math.Min(_activeOpacity + (FADEIN_SPEED * TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds), 255);
             }
             else
             {
-                _activeOpacity = (byte) Math.Max(_activeOpacity - 10, 0);
+                _activeOpacity = (byte)Math.Max(_activeOpacity - (FADEOUT_SPEED * TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds), 0);
             }
 
             SetSpritePositions();
@@ -157,7 +160,7 @@ namespace WGiBeat.Drawing
             _textPosition.Y = this.Y;
             TextureManager.DrawString(spriteBatch,"" + SongSortMode, "TwoTechLarge",_textPosition,Color.Black, FontAlign.CENTER);
 
-            _arrowSprites.ColorShading.A = _activeOpacity;
+            _arrowSprites.ColorShading.A = (byte) _activeOpacity;
             _arrowSprites.Draw(spriteBatch, 1, 35, 35, this.X + 15, this.Y + 8);
             _arrowSprites.Draw(spriteBatch, 0, 35, 35, this.X + this.Width - 40, this.Y + 8);
 
@@ -174,7 +177,7 @@ namespace WGiBeat.Drawing
         {
             _listBackgroundSprite.Height = 40 + (_bookmarkTextSize * (Math.Min(VisibleBookmarks,_bookmarkMenu.ItemCount)));
             _listBackgroundSprite.Width = 75;
-            _listBackgroundSprite.ColorShading.A = _activeOpacity;
+            _listBackgroundSprite.ColorShading.A = (byte) _activeOpacity;
             _listBackgroundSprite.SetPosition(this.X + this.Width - 75, this.Y + this.Height);
             _listBackgroundSprite.Draw(spriteBatch);
 
@@ -184,7 +187,7 @@ namespace WGiBeat.Drawing
                 CreateBookmarkMenu();
                 SetBookmark(_selectedSongIndex);
             }
-            _bookmarkMenu.Opacity = _activeOpacity;
+            _bookmarkMenu.Opacity =  (byte) _activeOpacity;
             _bookmarkMenu.Draw(spriteBatch);
 
         }

@@ -68,6 +68,7 @@ namespace WGiBeat.Managers
             sm["AllowPDA"] = false;
             sm["EnableMenuSounds"] = true;
             sm["LastSortMode"] = 0;
+            sm["VSync"] = false;
             return sm;
         }
 

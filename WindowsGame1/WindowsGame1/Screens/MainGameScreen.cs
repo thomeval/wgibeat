@@ -53,7 +53,7 @@ namespace WGiBeat.Screens
 
         public override void Initialize()
         {
-
+            _gameSong = (GameSong)Core.Cookies["CurrentSong"];
             var currentGameType = (GameType) Core.Cookies["CurrentGameType"];
             _performanceBar = new PerformanceBar
                                   {Width = 350, Players = Core.Players, GameType = currentGameType};
@@ -94,13 +94,13 @@ namespace WGiBeat.Screens
             }
             _noteBarSet.InitNoteBars();
 
-            _gameSong = (GameSong)Core.Cookies["CurrentSong"];
-            _beatlineSet.AddTimingPointMarkers(_gameSong);
-
+            
+            
             _startTime = null;
             _panic = Core.Cookies.ContainsKey("Panic");
             _beatlineSet.EndingPhrase = _gameSong.GetEndingTimeInPhrase();
             _beatlineSet.Bpm = _gameSong.CurrentBPM(0.0);
+            _beatlineSet.AddTimingPointMarkers(_gameSong);
             _beatlineSet.SetSpeeds();
 
             InitSprites();
@@ -540,7 +540,7 @@ namespace WGiBeat.Screens
             //DrawBorders(spriteBatch);
 
             //Draw the notebars.
-          _noteBarSet.Draw(spriteBatch,_phraseNumber);
+          _noteBarSet.Draw(spriteBatch);
 
             //Draw the component sets.
              _scoreSet.Draw(spriteBatch);

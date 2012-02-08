@@ -11,7 +11,6 @@ namespace WGiBeat.Drawing.Sets
     public class NoteBarSet : DrawableObjectSet
     {
         private readonly NoteBar[] _noteBars;
-        private double _lastDraw;
 
         public event EventHandler PlayerFaulted;
         public event EventHandler PlayerArrowHit;
@@ -22,16 +21,12 @@ namespace WGiBeat.Drawing.Sets
             InitNoteBars();
         }
 
+ 
+
+        private const int REDNESS_ANIMATION_SPEED = 300;
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Draw(spriteBatch,0.0);
-        }
-
-        private const int REDNESS_ANIMATION_SPEED = 384;
-        public void Draw(SpriteBatch spriteBatch, double phraseNumber)
-        {
-            var amount = Math.Max(0, (phraseNumber - _lastDraw) * REDNESS_ANIMATION_SPEED);
-            _lastDraw = phraseNumber;
+            var amount = Math.Max(0,  TextureManager.LastDrawnPhraseDiff * REDNESS_ANIMATION_SPEED);
 
             for (int x = 0; x < _noteBars.Length; x++)
             {
