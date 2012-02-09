@@ -64,6 +64,10 @@ namespace WGiBeat.Drawing
 
         public void DrawTiled(SpriteBatch spriteBatch, int texU1, int texV1, int texU2, int texV2)
         {
+            DrawTiled(spriteBatch,texU1,texV1,texU2,texV2,SpriteEffects.None);
+        }
+        public void DrawTiled(SpriteBatch spriteBatch, int texU1, int texV1, int texU2, int texV2, SpriteEffects flip)
+        {
             CheckIfDimensionsSet();
             //Ignore drawing 'zero' part of a texture.
             if ((texU2 == 0) || (texV2 == 0))
@@ -83,7 +87,7 @@ namespace WGiBeat.Drawing
                 Y = this.Y,
             };
 
-            spriteBatch.Draw(SpriteTexture, dest, textureRect, ColorShading);
+            spriteBatch.Draw(SpriteTexture, dest, textureRect, ColorShading,0.0f, new Vector2(0,0),flip,0.0f );
             Core.ShiftSpriteBatch(false);
             
         }
@@ -103,6 +107,6 @@ namespace WGiBeat.Drawing
                 Height = SpriteTexture.Height;
             }
         }
-
     }
+
 }
