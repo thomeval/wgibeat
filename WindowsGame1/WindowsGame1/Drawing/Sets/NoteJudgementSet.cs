@@ -47,7 +47,6 @@ namespace WGiBeat.Drawing.Sets
                 }
             }
 
-            DrawStreakCounters(spriteBatch);
         }
 
         public void Draw(SpriteBatch spriteBatch, double phraseNumber)
@@ -131,7 +130,9 @@ namespace WGiBeat.Drawing.Sets
                                     Height = 40,
                                     Width = 150,
                                     Player = player,
-                                    Tier = (int) judgement
+                                    Tier = (int) judgement,
+                                    Streak = Players[player].Streak,
+                                    TextPosition = _metrics["StreakText",player]
                                 };
                 newDj.Position = (_metrics["Judgement", player]);
                 _displayedJudgements[player] = newDj;
@@ -179,30 +180,7 @@ namespace WGiBeat.Drawing.Sets
             return (from e in Players where e.Playing && !(e.CPU) select e).Count();
         }
 
-        private void DrawStreakCounters(SpriteBatch spriteBatch)
-        {
-            var streakColor = new Color(10, 123, 237, 255);
-    
-            for (int x = 0; x < 4; x++)
-            {
-                if (Players[x].Streak > 1)
-                {
-                    
-                    if (_displayedJudgements[x] == null)
-                    {
-                        continue;
-                    }
-                    if (_displayedJudgements[x].Tier != 0)
-                    {
-                        continue;
-                    }
-                  
-                    streakColor.A = _displayedJudgements[x].Opacity;
-                    TextureManager.DrawString(spriteBatch,"x" + Players[x].Streak, "TwoTechLarge",_metrics["StreakText",x],streakColor,FontAlign.LEFT);
-              
-                }
-            }
-        }
+  
 
         public void Reset()
         {

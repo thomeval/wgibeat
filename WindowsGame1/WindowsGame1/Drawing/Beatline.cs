@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -44,7 +45,7 @@ namespace WGiBeat.Drawing
 
         private const double SPEED_CHANGE_SPEED = 4;
         private const double PULSE_FADEOUT_SPEED = 500;
-        private const double HIT_NOTE_FADEOUT_SPEED = 350;
+        private const double HIT_NOTE_FADEOUT_SPEED = 300;
 
         public bool Large { get; set; }
 
@@ -126,6 +127,7 @@ namespace WGiBeat.Drawing
 
         public void Draw(SpriteBatch spriteBatch, double phraseNumber)
         {
+           
             this.Height = Large ? 80 : 40;
             DrawSpeedScale(spriteBatch, phraseNumber);
             DrawBase(spriteBatch);
@@ -145,15 +147,19 @@ namespace WGiBeat.Drawing
             _speedScaleSprite.ColorShading.A = 160;
             _speedScaleSprite.Height = Large ? 5 : 2;
             _speedScaleSprite.Position = this.Position.Clone();
-            _speedScaleSprite.Width = this.Width - LEFT_SIDE - 10;
+            _speedScaleSprite.Width = this.Width - LEFT_SIDE - 25;
             _speedScaleSprite.X += LEFT_SIDE + IMPACT_WIDTH;
+
+            var flip = SpriteEffects.None; 
             if (ReverseDirection)
             {
-                _speedScaleSprite.X = (int) this.Position.X;
+                _speedScaleSprite.X = (int) this.Position.X + this.Width - _speedScaleSprite.Width - LEFT_SIDE - IMPACT_WIDTH;
+                flip = SpriteEffects.FlipHorizontally;
             }
             var mxFactor = 1.0* _speedScaleSprite.Width/BEAT_ZOOM_DISTANCE / _displayedSpeed; 
             _speedScaleSprite.Y += this.Height/2 - _speedScaleSprite.Height/2;
-            _speedScaleSprite.DrawTiled(spriteBatch, (int)textureOffset, 0, (int)(TEXTURE_WIDTH * mxFactor), 5);
+            _speedScaleSprite.DrawTiled(spriteBatch, (int)textureOffset, 0, (int)(TEXTURE_WIDTH * mxFactor), 5, flip);
+            
         }
 
         private void DrawPlayerIdentifier(SpriteBatch spriteBatch)
@@ -335,7 +341,7 @@ namespace WGiBeat.Drawing
 
             if (_notesToRemove.Count > 1)
             {
-                System.Diagnostics.Debug.WriteLine("Trimmed:" + _notesToRemove.Count);
+                Debug.WriteLine("Trimmed:" + _notesToRemove.Count);
             }
             foreach (BeatlineNote bnr in _notesToRemove)
             {
