@@ -34,6 +34,7 @@ namespace WGiBeat.AudioSystem
         public string Path { get; set; }
 
         public bool ReadOnly { get; set; }
+        public int RequiredLevel { get; set; }
 
         private Dictionary<double, double> _bpMS = new Dictionary<double, double>();
 

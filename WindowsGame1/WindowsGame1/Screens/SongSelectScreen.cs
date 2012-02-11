@@ -21,6 +21,8 @@ namespace WGiBeat.Screens
         private Sprite _spectrumBackground;
         private Sprite _listBackend;
         private Sprite _songCountBase;
+        private Sprite _songLockedSprite;
+
         private bool _previewStarted;
         private PreloadState _preloadState;
 
@@ -87,6 +89,7 @@ namespace WGiBeat.Screens
             _songTypeDisplay = new SongTypeDisplay { Position = Core.Metrics["SongTypeDisplay", 0], Width = 112, Height = 42 };
             InitSprites();
 
+            _songLockedSprite = new Sprite {Position = Core.Metrics["BPMMeter", 0], SpriteTexture= TextureManager.Textures("SongLocked")};
             base.Initialize();
         }
 
@@ -128,13 +131,19 @@ namespace WGiBeat.Screens
             {
                 _songList.Add(new SongListItem { Height = 50, Song = song, Width = 380, TextMaxWidth = 325 });
             }
+
             _songSortDisplay.SongList = _songList;
             _songSortDisplay.SongSortMode = Core.Settings.Get<SongSortMode>("LastSortMode");
             _highScoreFrame.HighScoreEntry = GetDisplayedHighScore((GameType)Core.Cookies["CurrentGameType"]);
         }
 
-
-
+        private void SetCurrentLevelInSongList()
+        {
+            foreach (SongListItem sli in _songList)
+            {
+                sli.PlayerLevel = GetPlayerLevel();
+            }
+        }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
 
@@ -202,7 +211,7 @@ namespace WGiBeat.Screens
                     }
                     else
                     {
-                        _dropSpeed[x] += 0.025f;
+                        _dropSpeed[x] += 1.5f * (float) TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds;
                         _maxLevels[x] -= _dropSpeed[x]*(float) TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds;
                     }
              
@@ -243,6 +252,12 @@ namespace WGiBeat.Screens
             }
 
             _bpmMeter.Draw(spriteBatch);
+
+            if (CurrentSong.RequiredLevel > GetPlayerLevel())
+            {
+                _songLockedSprite.Draw(spriteBatch);
+                TextureManager.DrawString(spriteBatch,"Unlocked at level: " + CurrentSong.RequiredLevel,"LargeFont",Core.Metrics["SongLockedRequirements",0],Color.Black,FontAlign.CENTER);
+            }
         }
 
         private void DrawHighScoreFrame(SpriteBatch spriteBatch)
@@ -283,10 +298,15 @@ namespace WGiBeat.Screens
             var midpoint = Core.Metrics["SongListMidpoint", 0];
             midpoint.Y += (int) _songListDrawOffset;
 
+            if (_songList[_selectedIndex].PlayerLevel != GetPlayerLevel())
+            {
+                SetCurrentLevelInSongList();
+            }
  
             _songList[_selectedIndex].Position = (midpoint);
             _songList[_selectedIndex].IsSelected = true;
             _songList[_selectedIndex].Opacity = 255;
+            
             _songList[_selectedIndex].Draw(spriteBatch);
 
             foreach (SongListItem sli in _songList)
@@ -323,6 +343,11 @@ namespace WGiBeat.Screens
             var changeMx = Math.Min(0.5, SONG_CHANGE_SPEED*TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds);
             _songListDrawOffset -= (_songListDrawOffset*(changeMx));
 
+        }
+
+        private int GetPlayerLevel()
+        {
+            return (from e in Core.Players where e.Playing select e.GetLevel()).Max();
         }
 
         public override void Update(GameTime gameTime)
@@ -450,7 +475,10 @@ namespace WGiBeat.Screens
 
         private void StartSong()
         {
-
+            if (GetPlayerLevel() < CurrentSong.RequiredLevel)
+            {
+                return;
+            }
             Core.Cookies["CurrentSong"] = CurrentSong;
             if (((GameType)Core.Cookies["CurrentGameType"]) == GameType.SYNC)
             {

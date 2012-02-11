@@ -85,6 +85,9 @@ namespace WGiBeat.AudioSystem.Loaders
                         case "BACKGROUND":
                             _newSong.BackgroundFile = value;
                             break;
+                        case "REQUIREDLEVEL":
+                            _newSong.RequiredLevel = Convert.ToInt32(value);
+                            break;
                     }
                 }
 

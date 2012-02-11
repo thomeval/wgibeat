@@ -145,9 +145,9 @@ namespace WGiBeat.Screens
             var tempPlayer = new Player { Profile = profile };
 
             Vector2[] positions = { Core.Metrics["StatsColumns", (3 * side)].Clone(), Core.Metrics["StatsColumns", (3 * side) + 1].Clone(), Core.Metrics["StatsColumns", (3 * side) + 2].Clone() };
-            TextureManager.DrawString(spriteBatch, profile.Name, "TwoTech36", positions[0], Color.Black, FontAlign.LEFT);
-            positions[0].Y += 30;
-            positions[1].Y += 30;
+            TextureManager.DrawString(spriteBatch, profile.Name, "TwoTech36", positions[0],TextureManager.ScaleTextToFit(profile.Name,"TwoTech36",280,80), Color.Black, FontAlign.LEFT);
+            positions[0].Y += 28;
+            positions[1].Y += 28;
 
             DrawLevelBars(spriteBatch, positions[0], tempPlayer);
             positions[0].Y += 15;

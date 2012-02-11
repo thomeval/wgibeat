@@ -311,12 +311,14 @@ namespace WGiBeat.AudioSystem
             bool isValid;
             var newSong = Loaders[pattern].LoadFromFile(filename, out isValid);
 
-            if (!isValid)
-            {
-                return null;
-            }
+           
                 if (validate)
                 {
+                    if (!isValid)
+                    {
+                        return null;
+                    }
+
                     string message;
                     bool validated = ValidateSongFile(newSong, out message);
 

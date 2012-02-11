@@ -18,6 +18,8 @@ namespace WGiBeat.Drawing
         private readonly SpriteMap _itemSpriteMap;
         public byte Opacity;
 
+        private readonly Color LOCKED_COLOUR = new Color(255,160,160);
+        private readonly Color UNLOCKED_COLOR = new Color(255,255,160);
         public SongListItem()
         {
             _itemSpriteMap = new SpriteMap
@@ -25,10 +27,14 @@ namespace WGiBeat.Drawing
         }
 
         private Color _textDrawColor = Color.Black;
+        public int PlayerLevel { get; set; }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             //Draw Base
             var idx = IsSelected ? 1 : 0;
+            _itemSpriteMap.ColorShading = GetBaseColour();
+
             _itemSpriteMap.ColorShading.A = Opacity;
             _textDrawColor.A = Opacity;
             _itemSpriteMap.Draw(spriteBatch,idx,this.X,this.Y);
@@ -40,6 +46,19 @@ namespace WGiBeat.Drawing
             scale = TextureManager.ScaleTextToFit(Song.Artist, "DefaultFont", TextMaxWidth, this.Height);
             TextureManager.DrawString(spriteBatch, Song.Artist, "DefaultFont", textPosition, scale, _textDrawColor, FontAlign.LEFT);
             
+        }
+
+        private Color GetBaseColour()
+        {
+            if (Song.RequiredLevel <= 1)
+            {
+                return Color.White;
+            }
+            if (PlayerLevel >= Song.RequiredLevel)
+            {
+                return UNLOCKED_COLOR;
+            }
+            return LOCKED_COLOUR;
         }
     }
 }

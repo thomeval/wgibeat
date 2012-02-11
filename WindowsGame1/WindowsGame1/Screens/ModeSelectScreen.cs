@@ -170,8 +170,8 @@ namespace WGiBeat.Screens
         }
 
         private const int LIST_ITEMS_DRAWN = 4;
-        public const double MODE_CHANGE_SPEED = 0.9;
         private static readonly Color _disabledColor = new Color(255, 255, 255, 64);
+        private const int MODE_CHANGE_SPEED = 6;
 
         private void DrawModeOptions(SpriteBatch spriteBatch)
         {
@@ -216,7 +216,8 @@ namespace WGiBeat.Screens
             }
 
             midpoint.X -= (int) _listDrawOffset;
-            var changeMx = Math.Min(1.0, TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds*10);
+            
+            var changeMx = Math.Min(1.0, TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds*MODE_CHANGE_SPEED);
             _listDrawOffset -= (_listDrawOffset*(changeMx));
 
         }
