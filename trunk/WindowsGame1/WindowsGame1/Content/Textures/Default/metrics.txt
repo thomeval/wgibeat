@@ -98,6 +98,7 @@ BPMMeter=[70,180];
 SelectedSongSpectrum=[235,325];
 SongTypeDisplay=[150,370];
 SongSelectLoadingMessage=[475,330];
+SongLockedRequirements=[260,380];
 
 #Options;
 OptionsMenuStart=[50,100];

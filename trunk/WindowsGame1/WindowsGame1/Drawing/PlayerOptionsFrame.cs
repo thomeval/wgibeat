@@ -161,7 +161,7 @@ namespace WGiBeat.Drawing
             
             DrawChangeControls(spriteBatch);
             _textColor.A = (byte)(255 - _optionControlOpacity);
-            var scale = TextureManager.ScaleTextToFit(playerName, "TwoTech36", 270, 50);
+            var scale = TextureManager.ScaleTextToFit(playerName, "TwoTech36", 230, 50);
             TextureManager.DrawString(spriteBatch, playerName, "TwoTech36", _nameTextPosition, scale, _textColor,
                                       FontAlign.CENTER);
 
@@ -195,7 +195,7 @@ namespace WGiBeat.Drawing
         private void CalculateTextPositions()
         {
             //this.X + PlayerID.Width + Difficulty Icon width + half of available name space.
-            _nameTextPosition.X = this.X + 210;
+            _nameTextPosition.X = this.X + 200;
             _nameTextPosition.Y = this.Y - 8;
             _speedTextPosition.X = this.X + this.Width - 29;
             _speedTextPosition.Y = this.Y + 12;
