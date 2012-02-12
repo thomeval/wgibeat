@@ -4,17 +4,16 @@
  
 ==WNX==
 - Transition effects for DrawableObjects.
- -  Battle (>1.0?) Couple (>1.0?) game modes. Double notebars.
-  - Animated background / visualization. Lucidity based on total life?
- - Evaluation screen redesign / scrolling
- - 3D graphics (fix jerky beatline notes) 
- - !Arrows on different height depending on their direction.
- - Complete UI redesign?
- - Mix / nonstop play.
- - 6 player support?!
+-  Battle (>1.0?) Couple (>1.0?) game modes. Double notebars.
+- Animated background / visualization. Lucidity based on total life?
+- Evaluation screen redesign / scrolling
+- 3D graphics (fix jerky beatline notes) 
+- Arrows on different height depending on their direction.
+- Complete UI redesign?
+- Mix / nonstop play.
+- 6 player support?!
  
 ==Delayed==
-- Speed indicator on beatline?
 
  
 ==Post Release==
@@ -22,36 +21,25 @@
 
 ==TODO==
 
-- Check for overflowing text in pof.
-- Notebar flash on fault/fail
-- Team colours
-- Remove VSync requirement.
- -- Hitsbar broken.
- -- Mode select left-right
- -- Beatline hit notes
- -- Beatline hit pulse
- -- Score display
- -- Performance bar
- -- Song select up/down
- -- Song select spectrum
- -- song select length / bpm
- -- Player options frames
- -- Life graph
- -- GM Bar
- -- Tug of war bar.
-
  - Zoki's texture fixes.
- - Beatline finish markers are missing.
+ - Vospi's menu song.
+ - Find menu sounds.
+ - 25-30 free songs, bundle with game.
  
-
-==1.0 - "???" ==
+==1.0 - "Exceptional Review" ==
  * Red arrows are now more effective at raising Groove Momentum in Coop mode.
  * Slight changes to the Coop lifebar rules. Players can now earn more than their individual maximums if the lifebar has space.
- * CPU Players are now shown with a gray line in the life graph during the evaluation screen, to reduce confusion.
- * The life graph now has a legend for the colours used.
+ * CPU Players are now shown with a gray line in the life graph during the evaluation screen, to reduce confusion. (Thanks to XcepticZP for the feedback)
+ * The life graph now has a legend for the colours used (Thanks to XcepticZP for the feedback).
  * Note bars now flash red when their player faults or drops a level.
- * Level bars are now more animated.  
- * Player options frames are now visible on the New Game and Evaluation screens. It is now possible to determine teams and difficulties used during the Evaluation screen as a result.     
+ * Level bars are now more animated.
+ * Added a shrinking animation to displayed judgements.   
+ * Player options frames are now visible on the New Game and Evaluation screens. It is now possible to determine teams and difficulties used during the Evaluation screen as a result.
+ * Added a scale/speed indicator to beatlines. This provides a good sense of speed, as well as indicating the beat of the song. Especially useful during Coop mode.
+ * The instruction screen now has a fifth page, which explains the factors that affect the difficulty of the game (thanks to Dawkirst for the feedback).
+ * The instruction screen now has a real, animated beatline in Page 2.  
+ * WGiBeat no longer requires V-Sync! It can be switched on or off on the Options Screen.
+ * Added an unlock system to songs. Songs can be marked as unlockable by using the RequiredLevel field in the .sng file. This specifies the minimum profile level needed to play the song.          
  * WGiEdit: Song backgrounds can now be selected and changed in Step 2.
  * WGiEdit: Several slightly misaligned graphics in Step 2 have been fixed.   
  * WGiEdit: Song timeline is now displayed in realtime during the measurement tools.
@@ -59,8 +47,12 @@
  * WGiEdit/Bugfix: An AudioStart later than a song Offset is now considered invalid.
  * WGiEdit/Song Debug: Added keys to change a song's BPM by 0.01 during Step 3 and song debugging. Use F3 and F4 for this.
  * WGiEdit: The playing song can be rewinded and fast fowarded in Step 3.
- * WGiEdit: The time remaining is displayed for a song during Step 3.  
- * Bugfix: Menus now display disabled items correctly.  
+ * WGiEdit: The time remaining is displayed for a song during Step 3.
+ * WGiEdit: The BACK Key (Escape and Xbox Back button) now works in more places in WGiEdit.   
+ * Bugfix: Menus now display disabled items correctly.
+ * Bugfix: More issues relating to cultural hostility (running the game in a non-english region environment) have been resolved (Thanks to SoonDead for the bug report).
+ * Bugfix: Fixed long profile names overflowing in the Stats Screen.
+ * Bugfix: Fixed graphics glitch with beatline note judgements.     
 
 ==0.9 - "Positive Trend" ==
  * Introducing a brand new game mechanic exclusively for Coop mode: Groove Momentum. The current Groove Momentum is displayed during gameplay and increases or decreases based on player performance. It affects both the points awarded, and beatline speeds.
