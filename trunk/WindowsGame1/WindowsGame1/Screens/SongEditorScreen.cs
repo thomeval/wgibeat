@@ -1211,12 +1211,13 @@ namespace WGiBeat.Screens
 
                     break;
                 case 4:
+                    _cursorPosition = EditorCursorPosition.MEASURE_BPM;
                     ActivateMeasureMode();
                     _numBeats = -1;
                     _guessedBPM = 0;
                     Core.Players[0].Streak = 0;
                     _lastHitTime = null;
-                    _cursorPosition = EditorCursorPosition.MEASURE_BPM;
+                    
                     break;
                 case 5:
                     ActivateTextEntryMode();
@@ -1225,8 +1226,8 @@ namespace WGiBeat.Screens
                     
                     break;
                 case 6:
-                    ActivateMeasureMode();
                     _cursorPosition = EditorCursorPosition.MEASURE_OFFSET;
+                    ActivateMeasureMode();               
                     break;
                 case 7:
                     ActivateTextEntryMode();
@@ -1482,15 +1483,28 @@ namespace WGiBeat.Screens
             _audioChannel = Core.Audio.PlaySoundEffect(NewGameSong.Path + "\\" + NewGameSong.AudioFile, false, false);
 
             //Only play the last 15 seconds of the song when measuring the length of the song.
-            if (_cursorPosition == EditorCursorPosition.MEASURE_LENGTH)
+            var songLength = Core.Audio.GetChannelLength(_audioChannel);
+            double desiredStartPoint = 0;
+
+            switch (_cursorPosition)
             {
-                var songLength = Core.Audio.GetChannelLength(_audioChannel);
-                if (songLength > 15000)
-                {
-                    _timeElapsed += songLength - 15000;
-                    Core.Audio.SetPosition(_audioChannel, songLength - 15000);
-                }
+                case EditorCursorPosition.MEASURE_LENGTH:
+                    desiredStartPoint = songLength - 15000;
+                    break;
+                case EditorCursorPosition.MEASURE_BPM:
+                    desiredStartPoint = NewGameSong.Offset * 1000;
+                    break;
+                    case EditorCursorPosition.MEASURE_OFFSET:
+                    desiredStartPoint = NewGameSong.AudioStart * 1000;
+                    break;
             }
+  
+                if (songLength > desiredStartPoint)
+                {
+                    _timeElapsed += desiredStartPoint;
+                    Core.Audio.SetPosition(_audioChannel, desiredStartPoint);
+                }
+        
         }
 
         private void ActivateEditMode(EditorCursorPosition position)

@@ -1,4 +1,4 @@
-﻿WGiBeat v0.8 - License terms
+WGiBeat License terms
 
 WGiBeat uses the FMOD Sound System for its sound engine. The FMOD Sound System is copyright © Firelight Technologies Pty, Ltd., 1994-2010.
 For more information, see: http://www.fmod.org/

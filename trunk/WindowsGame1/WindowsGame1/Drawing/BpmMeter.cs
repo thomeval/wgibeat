@@ -154,7 +154,7 @@ namespace WGiBeat.Drawing
         private void DrawLengthDisplay(SpriteBatch spriteBatch)
         {
             _songLengthBase.Draw(spriteBatch);
-            var diff = DisplayedSong.Length - _displayedLength;
+            var diff = (DisplayedSong.Length - DisplayedSong.Offset) - _displayedLength;
             var changeMx = Math.Min(0.5, TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * BPM_LENGTH_ANIMATION_SPEED);
             _displayedLength += (diff * (changeMx));
             var textPosition = _songLengthBase.Position.Clone();

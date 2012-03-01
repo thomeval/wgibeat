@@ -1,4 +1,4 @@
-﻿WGiBeat - v0.8 Readme
+WGiBeat - v1.0 Readme
 http://code.google.com/p/wgibeat/
 wgibeat{at}gmail{period}com
 By thomeval
@@ -51,7 +51,7 @@ Numpad 2 = Select
 Player 3:
 Numpad 8 = Up
 Numpad 4 = Left
-Numpad 2 = Down
+Numpad 5 = Down
 Numpad 6 = Right
 Insert = Beatline
 Page Down = Start
