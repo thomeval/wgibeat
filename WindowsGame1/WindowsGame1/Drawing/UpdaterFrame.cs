@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -17,15 +14,17 @@ namespace WGiBeat.Drawing
         public string UpdateDetails { get; set; }
         public UpdaterStatus Status { get; set; }
         public bool Visible { get; set; }
-        public int XOffset { get; set; }
+        public double XOffset { get; set; }
 
         public string NewsMessage { get; set; }
 
         private Sprite _updaterFrame;
         private Vector2 _textPosition;
+
         public UpdaterFrame()
         {
             InitSprites();
+            XOffset = 25;
         }
 
         private void InitSprites()
@@ -64,7 +63,7 @@ namespace WGiBeat.Drawing
             
             _updaterFrame.Position = this.Position;
             _updaterFrame.Draw(spriteBatch);
-            _textPosition.X = this.X + XOffset + 20;
+            _textPosition.X = this.X + (int) XOffset + 20;
             _textPosition.Y = this.Y + 25;
 
 
@@ -72,12 +71,13 @@ namespace WGiBeat.Drawing
               FontAlign.LEFT);
         }
 
+        private const int SCROLL_SPEED = 60;
         private string ScrollText(string message)
         {
             var messageLength = TextureManager.Fonts("DefaultFont").MeasureString(message);
             if (messageLength.X > 780)
             {
-                XOffset -= 1;
+                XOffset -= TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * SCROLL_SPEED;
                 if (XOffset < 0-messageLength.X - 25)
                 {
                     XOffset += (int)messageLength.X;
@@ -102,7 +102,7 @@ namespace WGiBeat.Drawing
                     {
                         return String.Format("This version of WGiBeat is up to date. (v{0})", CurrentVersion);   
                     }
-                    return String.Format(NewsMessage);
+                    return String.Format(NewsMessage+ "    ");
 
                 case 1:
                     return String.Format("This version is newer than the official release. (You have v{1}, official is v{0})   ", AvailableVersion, CurrentVersion);
