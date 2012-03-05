@@ -17,6 +17,7 @@ namespace WGiBeat.AudioSystem.Loaders
     public class SMFileLoader : SongFileLoader
     {
         private readonly string[] _notes;
+        //Check for TECHNO-SINGLE8 steps too, since those are used by Beat Up Mania simfiles.
         private readonly string[] _preferredStyleOrder = { "DANCE-SINGLE", "TECHNO-SINGLE8" };
         private readonly string[] _preferredNoteOrder = {"Hard", "Challenge", "Medium", "Easy", "Beginner", "Edit"};
         private GameSong _newSong;

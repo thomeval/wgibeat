@@ -45,7 +45,7 @@ namespace WGiBeat.Drawing
 
         private const double SPEED_CHANGE_SPEED = 4;
         private const double PULSE_FADEOUT_SPEED = 500;
-        private const double HIT_NOTE_FADEOUT_SPEED = 300;
+        private const double HIT_NOTE_FADEOUT_SPEED = 900;
 
         public bool Large { get; set; }
 
@@ -236,7 +236,7 @@ namespace WGiBeat.Drawing
                 }
 
                 _markerSprite.Draw(spriteBatch, noteIdx, width, markerHeight, (int)markerPosition.X, (int)markerPosition.Y);
-
+     
                 //Draw the effect icon on top of the marker if appropriate (such as a BPM change arrow)
                 var flip = _reverseDirection ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
                 if (bn.NoteType != 0)
@@ -259,8 +259,10 @@ namespace WGiBeat.Drawing
             byte result;
             if (bn.Hit)
             {
-                bn.Opacity = (byte)Math.Max(0, bn.Opacity - TextureManager.LastDrawnPhraseDiff * HIT_NOTE_FADEOUT_SPEED);
-                result = bn.Opacity;
+                //TODO: Doesn't work in high frame rates. Must fix.
+                bn.Opacity = Math.Max(0, bn.Opacity - TextureManager.LastDrawnPhraseDiff * HIT_NOTE_FADEOUT_SPEED);
+  
+                result = (byte) bn.Opacity;
                 return result;
             }
 

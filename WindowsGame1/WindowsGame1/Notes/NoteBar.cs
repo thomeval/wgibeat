@@ -23,7 +23,7 @@ namespace WGiBeat.Notes
         private Sprite _barSpriteRightGlow;
 
         private SpriteMap _noteBarCursor;
-        public int Redness;
+        public double Redness;
         public List<Note> Notes { get; set; }
         public int ID { get; set; }
         public NoteBar()
@@ -224,6 +224,7 @@ namespace WGiBeat.Notes
             }
 
             posX = this.X - (16 * Notes.Count) +32*NumberCompleted() - (_noteBarCursor.SpriteTexture.Width/2);
+            posY -= 16;
             _noteBarCursor.Draw(spriteBatch,ID, new Vector2(posX,posY));
 
         }
