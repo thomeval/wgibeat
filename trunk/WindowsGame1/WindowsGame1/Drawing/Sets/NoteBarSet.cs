@@ -23,7 +23,7 @@ namespace WGiBeat.Drawing.Sets
 
  
 
-        private const int REDNESS_ANIMATION_SPEED = 300;
+        private const int REDNESS_ANIMATION_SPEED = 750;
         public override void Draw(SpriteBatch spriteBatch)
         {
             var amount = Math.Max(0,  TextureManager.LastDrawnPhraseDiff * REDNESS_ANIMATION_SPEED);
@@ -34,7 +34,7 @@ namespace WGiBeat.Drawing.Sets
                 {
                     continue;
                 }
-                _noteBars[x].Redness = (int) Math.Max(0, _noteBars[x].Redness - amount);
+                _noteBars[x].Redness = Math.Max(0, _noteBars[x].Redness - amount);
                 _noteBars[x].Draw(spriteBatch);
             }
         }
@@ -154,6 +154,7 @@ namespace WGiBeat.Drawing.Sets
                         continue;
                     }
                     _noteBars[x] = notebar.Clone();
+                    _noteBars[x].ID = x;
                     _noteBars[x].Position = _metrics["NoteBar", x];
                 }
             }

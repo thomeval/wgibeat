@@ -168,7 +168,12 @@ namespace WGiBeat.Drawing
             return result;
         }
 
-        public static GameTime LastGameTime { get; set; }
+        private static GameTime _lastGameTime = new GameTime();
+        public static GameTime LastGameTime
+        {
+            get { return _lastGameTime; }
+            set { _lastGameTime = value; }
+        }
 
         private static double _lastDrawnPhraseNumber;
         public static double LastDrawnPhraseNumber

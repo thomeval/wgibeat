@@ -113,7 +113,7 @@ namespace WGiBeat.Screens
             DrawMenu(spriteBatch);
 
     
-                TextureManager.DrawString(spriteBatch,_errorMessage,"DefaultFont", Core.Metrics["MainMenuNoSongsError", 0], Color.Black,FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch,_errorMessage,"DefaultFont", Core.Metrics["MainMenuNoSongsError", 0], Color.Black,FontAlign.LEFT);
             DrawUpdater(spriteBatch);
 
         }

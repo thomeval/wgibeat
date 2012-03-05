@@ -347,6 +347,10 @@ namespace WGiBeat.Screens
 
         private int GetPlayerLevel()
         {
+            if (!(from e in Core.Players where e.Playing select e).Any())
+            {
+                return 1;
+            }
             return (from e in Core.Players where e.Playing select e.GetLevel()).Max();
         }
 

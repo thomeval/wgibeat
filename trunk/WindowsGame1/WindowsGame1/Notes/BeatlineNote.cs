@@ -8,12 +8,7 @@ namespace WGiBeat.Notes
     /// </summary>
     public class BeatlineNote
     {
-        private byte _opacity;
-        public byte Opacity
-        {
-            get { return _opacity; }
-            set { _opacity = value; }
-        }
+        public double Opacity { get; set; }
 
         public int Player { get; set; }
         public double Position { get; set; }
