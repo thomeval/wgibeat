@@ -110,6 +110,8 @@ namespace WGiBeat.AudioSystem
         TEAM_CHANGE,
         TEAM_DECIDE,
         KEY_CHANGE_COMPLETE,
-        KEY_CHANGE_START
+        KEY_CHANGE_START,
+        KEYBOARD_MOVE,
+        KEY_CHANGE_CANCEL
     }
 }

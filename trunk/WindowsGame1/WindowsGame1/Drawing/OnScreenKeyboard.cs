@@ -120,6 +120,7 @@ namespace WGiBeat.Drawing
             switch (dir)
             {
                 case "LEFT":
+                    
                     _selectedIndex--;
                     if (_selectedIndex < 0)
                     {

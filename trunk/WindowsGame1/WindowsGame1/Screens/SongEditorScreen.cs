@@ -104,6 +104,7 @@ namespace WGiBeat.Screens
             _songTimeLine = new SongTimeLine
                                 {Height = 60, Width = 780, Position = Core.Metrics["EditorSongTimeLine", 0]};
             _songTypeDisplay = new SongTypeDisplay { Position = Core.Metrics["EditorSongTypeDisplay", 0], Width = 155, Height = 40 };
+            _fileSelect.SoundEventTriggered += (s, e) => RaiseSoundTriggered((SoundEvent) e.Object);
         }
 
         public void InitSprites()
@@ -679,6 +680,7 @@ namespace WGiBeat.Screens
                 case EditorCursorPosition.SELECT_SONGFILE_DELETE:
                 case EditorCursorPosition.SELECT_BACKGROUND_IMAGE:
                     _fileSelect.PerformAction(inputAction);
+                    
                     return;
                 case EditorCursorPosition.SONG_TUNING:
                     PerformActionTweak(inputAction);
@@ -706,9 +708,11 @@ namespace WGiBeat.Screens
                     break;
                 case "UP":
                     _menus[_activeMenu].DecrementSelected();
+                    RaiseSoundTriggered(SoundEvent.MENU_SELECT_UP);
                     break;
                 case "DOWN":
                     _menus[_activeMenu].IncrementSelected();
+                    RaiseSoundTriggered(SoundEvent.MENU_SELECT_DOWN);
                     break;
                 case "START":
                     DoMenuAction();
@@ -732,15 +736,19 @@ namespace WGiBeat.Screens
                     {
                         _cursorPosition = EditorCursorPosition.SONG_BASICS;
                     }
+                    RaiseSoundTriggered(SoundEvent.MENU_BACK);
                     break;
                 case EditorCursorPosition.SONG_DETAILS_DELETE:
                     _cursorPosition = EditorCursorPosition.SELECT_SONGFILE_DELETE;
+                    RaiseSoundTriggered(SoundEvent.MENU_BACK);
                     break;
                     case EditorCursorPosition.SONG_BASICS:
                     _cursorPosition = EditorCursorPosition.MAIN_MENU;
+                    RaiseSoundTriggered(SoundEvent.MENU_BACK);
                     break;
                     case EditorCursorPosition.MAIN_MENU:
                     Core.ScreenTransition("MainMenu");
+                    RaiseSoundTriggered(SoundEvent.MENU_BACK);
                     break;
             }
         }
@@ -997,6 +1005,7 @@ namespace WGiBeat.Screens
                     DoMenuActionDone(_menus[_activeMenu]);
                     break;
             }
+            
         }
 
         private void DoMenuActionMain(Menu menu)
@@ -1011,10 +1020,12 @@ namespace WGiBeat.Screens
                     _sourceFilePath = "";
                     _editMode = false;
                     _importMode = false;
+                    RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     break;
                 case "1":
                     _cursorPosition = EditorCursorPosition.SELECT_SONGFILE;
                     ActivateEditMode(EditorCursorPosition.SONG_DETAILS);
+                    RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     break;
                 case "2":
                     _cursorPosition = EditorCursorPosition.SONG_BASICS;
@@ -1023,13 +1034,16 @@ namespace WGiBeat.Screens
                     _sourceFilePath = "";
                     _editMode = false;
                     _importMode = true;
+                    RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     break;
                 case "3":
                     _cursorPosition = EditorCursorPosition.SELECT_SONGFILE_DELETE;
                     ActivateEditMode(EditorCursorPosition.SONG_DETAILS_DELETE);
+                    RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     break;
                 case "4":
                     Core.ScreenTransition("MainMenu");
+                    RaiseSoundTriggered(SoundEvent.MENU_BACK);
                     break;
             }
         }
@@ -1047,17 +1061,20 @@ namespace WGiBeat.Screens
                     {
                         BasicsSelectAudioFile();
                     }
+
                     break;
                 case "1":
                     ActivateTextEntryMode();
                     _textEntry.DescriptionText = Core.Text["EditorEnterDestinationFolder"];
                         
                     _textEntryDestination = "SongFolder";
+                    RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     break;
                 case "2":
                     ActivateTextEntryMode();
                     _textEntry.DescriptionText = Core.Text["EditorEnterDestinationFile"];                  
                     _textEntryDestination = "DefinitionFile";
+                    RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     break;
                 case "3":
                     if (!_menus["Basics"].GetByItemText("Next Step").Enabled)
@@ -1081,10 +1098,11 @@ namespace WGiBeat.Screens
                         _bpmMeter.DisplayedSong = NewGameSong;
                         _songTimeLine.AudioEnd = Core.Audio.GetFileLength(NewGameSong.Path + "\\" + NewGameSong.AudioFile) / 1000.0;
                         _cursorPosition = EditorCursorPosition.SONG_DETAILS;
-                    
+                        RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     break;
                 case "4":
                     _cursorPosition = EditorCursorPosition.MAIN_MENU;
+                    RaiseSoundTriggered(SoundEvent.MENU_BACK);
                     break;
             }
         }
@@ -1192,23 +1210,25 @@ namespace WGiBeat.Screens
                     ActivateTextEntryMode();
                     _textEntryDestination = "SongTitle";
                     _textEntry.DescriptionText = Core.Text["EditorEnterSongTitle"];
+                    RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     break;
                 case 1:
                     ActivateTextEntryMode();
                     _textEntryDestination = "SongSubtitle";
                     _textEntry.DescriptionText = Core.Text["EditorEnterSongSubtitle"];
+                    RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     break;
                 case 2:
                     ActivateTextEntryMode();
                     _textEntryDestination = "SongArtist";
                     _textEntry.DescriptionText = Core.Text["EditorEnterSongArtist"];
-
+                    RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     break;
                 case 3:
                     ActivateTextEntryMode();
                     _textEntryDestination = "SongBPM";
                     _textEntry.DescriptionText = Core.Text["EditorEnterSongBPM"];
-
+                    RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     break;
                 case 4:
                     _cursorPosition = EditorCursorPosition.MEASURE_BPM;
@@ -1223,7 +1243,7 @@ namespace WGiBeat.Screens
                     ActivateTextEntryMode();
                     _textEntryDestination = "SongOffset";
                     _textEntry.DescriptionText = Core.Text["EditorEnterSongOffset"];
-                    
+                    RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     break;
                 case 6:
                     _cursorPosition = EditorCursorPosition.MEASURE_OFFSET;
@@ -1233,6 +1253,7 @@ namespace WGiBeat.Screens
                     ActivateTextEntryMode();
                     _textEntryDestination = "SongLength";
                     _textEntry.DescriptionText = Core.Text["EditorEnterSongLength"];
+                    RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     break;
                 case 8:
                     _cursorPosition = EditorCursorPosition.MEASURE_LENGTH;
@@ -1242,6 +1263,7 @@ namespace WGiBeat.Screens
                     ActivateTextEntryMode();
                     _textEntryDestination = "SongAudioStart";
                     _textEntry.DescriptionText = Core.Text["EditorEnterSongAudioStart"];
+                    RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     break;
                 case 10:
                     _cursorPosition = EditorCursorPosition.MEASURE_AUDIO_START;
@@ -1250,9 +1272,11 @@ namespace WGiBeat.Screens
                 case 11:
                     _cursorPosition = EditorCursorPosition.SELECT_BACKGROUND_IMAGE;
                     SelectSongBackground();
+                    RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     break;
                 case 12:
                     ApplySongBackground(null);
+                    RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     break;
                 case 13:    
                     if (Core.Songs.ValidateSongFile(NewGameSong))
@@ -1267,6 +1291,7 @@ namespace WGiBeat.Screens
 
                         _noteJudgementSet.Reset();
                         _numHits = 0;
+                        RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     }
                     break;
                 case 14:
@@ -1278,6 +1303,7 @@ namespace WGiBeat.Screens
                     {
                         _cursorPosition = EditorCursorPosition.SONG_BASICS;
                     }
+                    RaiseSoundTriggered(SoundEvent.MENU_BACK);
                     break;
             }
         }
@@ -1302,6 +1328,7 @@ namespace WGiBeat.Screens
                     {
                         _cursorPosition = EditorCursorPosition.DONE_DELETE;
                     }
+                    RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     break;
                 case 1:
                     _errorMessage = Core.Songs.DeleteSongFile(NewGameSong, true);
@@ -1309,9 +1336,11 @@ namespace WGiBeat.Screens
                     {
                         _cursorPosition = EditorCursorPosition.DONE_DELETE;
                     }
+                    RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     break;
                 case 2:
                     _cursorPosition = EditorCursorPosition.MAIN_MENU;
+                    RaiseSoundTriggered(SoundEvent.MENU_BACK);
                     break;
 
             }

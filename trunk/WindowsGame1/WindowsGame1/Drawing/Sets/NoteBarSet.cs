@@ -21,8 +21,6 @@ namespace WGiBeat.Drawing.Sets
             InitNoteBars();
         }
 
- 
-
         private const int REDNESS_ANIMATION_SPEED = 750;
         public override void Draw(SpriteBatch spriteBatch)
         {

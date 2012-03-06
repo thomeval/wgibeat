@@ -169,6 +169,7 @@ namespace WGiBeat.Screens
             }
             Core.Profiles.SaveToFolder(Core.Settings["ProfileFolder"] + "");
             ChangeCursorPosition(player,CursorPosition.MAIN_MENU);
+            RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
             _infoMessages[player] = "";
  
         }
@@ -177,6 +178,7 @@ namespace WGiBeat.Screens
         {
             var player = ((OnScreenKeyboard) sender).Id;
             _cursorPositions[player] = CursorPosition.PROFILE_LIST;
+            RaiseSoundTriggered(SoundEvent.MENU_BACK);
             _infoMessages[player] = "";
         }
 
@@ -282,6 +284,7 @@ namespace WGiBeat.Screens
             if ((playerIdx > -1) && (_cursorPositions[playerIdx] == CursorPosition.KEYBOARD))
             {
                 _keyboards[playerIdx].MoveSelection(inputAction.Action);
+                RaiseSoundTriggered(SoundEvent.KEYBOARD_MOVE);
                 return;
             }
 
@@ -326,6 +329,10 @@ namespace WGiBeat.Screens
                     _infoMessages[number] = "Select a profile.";
                     Core.Players[number].Playing = true;
                     Core.Players[number].CPU = false;
+                    if (!Core.Cookies.ContainsKey("JoiningPlayer"))
+                    {
+                        RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
+                    }
                     break;
                 case CursorPosition.MAIN_MENU:
                     SelectMainMenuItem(number);
@@ -441,6 +448,7 @@ namespace WGiBeat.Screens
                     break;
                 case "Decision":
                     ChangeCursorPosition(number,CursorPosition.READY);
+                    RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     TryToStart();
                     break;
                 case "Profile":

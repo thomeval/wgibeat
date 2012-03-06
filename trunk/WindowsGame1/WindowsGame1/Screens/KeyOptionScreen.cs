@@ -196,6 +196,7 @@ namespace WGiBeat.Screens
                     if (key == Keys.Escape)
                     {
                         State.CurrentState = 1;
+                        RaiseSoundTriggered(SoundEvent.KEY_CHANGE_CANCEL);
                         return;
                     }
 
