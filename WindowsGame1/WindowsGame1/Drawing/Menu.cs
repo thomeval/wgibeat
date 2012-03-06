@@ -208,6 +208,7 @@ namespace WGiBeat.Drawing
                 }
             }
             _animationOffset = (SelectedIndex - temp)*25;
+
         }
 
         public void AddItem(MenuItem item)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.AudioSystem;
 
 namespace WGiBeat.Drawing
 {
@@ -175,12 +176,15 @@ namespace WGiBeat.Drawing
             {
                 case "UP":
                     FileList.DecrementSelected();
+                    RaiseSoundEvent(SoundEvent.MENU_SELECT_UP);
                     break;
                 case "DOWN":
                     FileList.IncrementSelected();
+                    RaiseSoundEvent(SoundEvent.MENU_SELECT_DOWN);
                     break;
                 case "LEFT":
                     CurrentFolder = Path.GetFullPath(CurrentFolder + "\\..");
+                    RaiseSoundEvent(SoundEvent.MENU_OPTION_SELECT_LEFT);
                     break;
                 case "START":
                     if (SelectedItemIsFolder())
@@ -199,16 +203,28 @@ namespace WGiBeat.Drawing
                         
                         FileSelected(this, null);
                     }
+
+                    RaiseSoundEvent(SoundEvent.MENU_DECIDE);
                     break;
                 case "SELECT":
                     CurrentFolder = "";
+                    RaiseSoundEvent(SoundEvent.MENU_BACK);
                     break;
                 case "BACK":
                     if (FileSelectCancelled != null)
                     {
                         FileSelectCancelled(this, null);
                     }
+                    RaiseSoundEvent(SoundEvent.MENU_BACK);
                     break;
+            }
+        }
+
+        private void RaiseSoundEvent(SoundEvent sevent)
+        {
+            if (SoundEventTriggered != null)
+            {
+                SoundEventTriggered(this, new ObjectEventArgs {Object = sevent});
             }
         }
 
@@ -232,5 +248,7 @@ namespace WGiBeat.Drawing
         {
             CreateFileList(_currentFolder);
         }
+
+        public event EventHandler<ObjectEventArgs> SoundEventTriggered;
     }
 }
