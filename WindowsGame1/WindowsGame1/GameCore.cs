@@ -115,7 +115,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
 
             Audio = new AudioManager(this.Log)
             {
-                FallbackSound = (WgibeatRootFolder + "\\Content\\Audio\\Fallback.ogg")
+                FallbackSound = (WgibeatRootFolder + "\\Content\\SoundEffects\\Fallback.ogg")
             };
             Audio.SetMasterVolume((float)Settings.Get<double>("SongVolume"));
 

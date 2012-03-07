@@ -65,7 +65,12 @@ namespace WGiBeat.AudioSystem
                 return;
             }
             var channelId = AudioManager.PlaySoundEffect(song.Path + "\\" + song.AudioFile,false,false,false,0);
+         
             SetNewChannel(channelId);
+            if (channelId == -1)
+            {
+                return;
+            }
             AudioManager.SetPosition(channelId, song.Offset * 1000);
             AudioManager.SetChannelVolume(channelId, 0.0f);
             _currentSong = song;

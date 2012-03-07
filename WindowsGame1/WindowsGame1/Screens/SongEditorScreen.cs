@@ -234,6 +234,7 @@ namespace WGiBeat.Screens
                     break;
             }
             _keyInput = false;
+            RaiseSoundTriggered(SoundEvent.MENU_BACK);
         }
 
         private void TextEntryEntryComplete(object sender, EventArgs e)
@@ -298,6 +299,7 @@ namespace WGiBeat.Screens
                     break;
             }
             _keyInput = false;
+            RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
         }
 
         #endregion

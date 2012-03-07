@@ -111,6 +111,10 @@ namespace WGiBeat.AudioSystem
 
         public void PlayCachedSong(int channelIndex)
         {
+            if (channelIndex == -1)
+            {
+                return;
+            }
             AudioManager.SetPosition(channelIndex, _cachedAudioStart);
             AudioManager.SetChannelPause(channelIndex, false);
             _songChannelIndex = channelIndex;
