@@ -73,6 +73,12 @@ namespace WGiBeat.AudioSystem.Loaders
             sw.WriteLine("Length={0};", Math.Round(song.Length, 3).ToString(CultureInfo.InvariantCulture));
             sw.WriteLine("AudioFile={0};", song.AudioFile);
             sw.WriteLine("AudioFileMD5={0};", song.AudioFileMD5);
+
+            if (song.RequiredLevel > 1)
+            {
+                sw.WriteLine("RequiredLevel={0};",song.RequiredLevel);
+            }
+
             sw.WriteLine(SaveSongStops(song));
             sw.WriteLine(SaveSongBackground(song));
             sw.Close();

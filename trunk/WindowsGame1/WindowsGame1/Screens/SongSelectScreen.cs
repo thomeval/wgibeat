@@ -256,7 +256,7 @@ namespace WGiBeat.Screens
             if (CurrentSong.RequiredLevel > GetPlayerLevel())
             {
                 _songLockedSprite.Draw(spriteBatch);
-                TextureManager.DrawString(spriteBatch,"Unlocked at level: " + CurrentSong.RequiredLevel,"LargeFont",Core.Metrics["SongLockedRequirements",0],Color.Black,FontAlign.CENTER);
+                TextureManager.DrawString(spriteBatch,"Unlocked at profile level: " + CurrentSong.RequiredLevel,"LargeFont",Core.Metrics["SongLockedRequirements",0],Color.Black,FontAlign.CENTER);
             }
         }
 
