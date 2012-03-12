@@ -1,8 +1,9 @@
 #summary A list of all the songs included in the WGiBeat release and song package.
+#labels Documentation
 
 = Introduction =
 
-This page contains a list of all the songs included with WGiBeat, along with links to the respective artists' pages. It is ordered alphabetically by artist.
+This page contains a list of all the songs included with WGiBeat, along with links to the respective artists' pages. It is ordered alphabetically by artist. For more detailed licence information, consult the individual licence.txt files that are included in the download packages.
 
  ===Aaron Musslewhite=== 
  * (http://aaronmusslewhite.newgrounds.com/)
@@ -30,7 +31,7 @@ This page contains a list of all the songs included with WGiBeat, along with lin
  * Crispyness
  * System Split
 
- ===GenocidalToaster===
+ ===!GenocidalToaster===
  * (http://genocidaltoaster.newgrounds.com/)
  * -Velocity- 
 
@@ -66,6 +67,6 @@ This page contains a list of all the songs included with WGiBeat, along with lin
  * Video Out E
  * You Wanna Me
 
- ===YourSmile===
+ ===!YourSmile===
  * (http://kirja100.newgrounds.com/)
- * |NiCe Mood|
+ * !|NiCe Mood|
