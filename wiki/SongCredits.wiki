@@ -69,4 +69,4 @@ This page contains a list of all the songs included with WGiBeat, along with lin
 
  ===!YourSmile===
  * (http://kirja100.newgrounds.com/)
- * !|NiCe Mood|
+ * |NiCe Mood|
