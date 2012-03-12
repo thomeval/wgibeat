@@ -1,6 +1,7 @@
 
 ==Low Priority==
 - Netplay (major)
+- 6 player support?!
  
 ==WNX==
 - Transition effects for DrawableObjects.
@@ -11,20 +12,20 @@
 - Arrows on different height depending on their direction.
 - Complete UI redesign?
 - Mix / nonstop play.
-- 6 player support?!
+
  
 ==Delayed==
-
+- Apparent inconsistency between WGiEdit Step 2 and Step 3 song timing (esp. AudioStart)?
  
 ==Post Release==
 
 
 ==TODO==
 
- - Zoki's texture fixes.
- - Vospi's menu song.
- - Find menu sounds.
- - 25-30 free songs, bundle with game.
+ - Zoki's texture fixes, unlikely.
+ - Vospi's menu song,unlikely.
+ 
+
  
 ==1.0 - "Exceptional Review" ==
  * Red arrows are now more effective at raising Groove Momentum in Coop mode.
@@ -39,6 +40,7 @@
  * The instruction screen now has a fifth page, which explains the factors that affect the difficulty of the game (thanks to Dawkirst for the feedback).
  * The instruction screen now has a real, animated beatline in Page 2.  
  * WGiBeat no longer requires V-Sync! It can be switched on or off on the Options Screen.
+ * Song Length display now displays the length of the playable section of the song, not the position of the ending marker. 
  * Added an unlock system to songs. Songs can be marked as unlockable by using the RequiredLevel field in the .sng file. This specifies the minimum profile level needed to play the song.          
  * WGiEdit: Song backgrounds can now be selected and changed in Step 2.
  * WGiEdit: Several slightly misaligned graphics in Step 2 have been fixed.   
