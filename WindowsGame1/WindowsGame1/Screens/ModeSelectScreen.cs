@@ -387,7 +387,7 @@ namespace WGiBeat.Screens
         {
             switch (gameType)
             {
-                /*
+                
             case GameType.COOPERATIVE:
                     
                 if (PlayerCount() < 2)
@@ -396,7 +396,7 @@ namespace WGiBeat.Screens
                 }
                      
                 break;
-                 * */
+                 
                 case GameType.TEAM:
                     if (PlayerCount() < 2)
                     {
