@@ -1,3 +1,2 @@
-0.9
-New features in this version include: A Groove Momentum system for Co-op mode, support for sound effects in menus, as well as several minor enhancements to Blazing mode, the song select screen, note bars, the installer and animations.
-WGiBeat v1.0 will be released within a week! Check the website regularly!
+1.0
+Over two dozen playable songs are included in this release, along with upgrades to WGiEdit, several new animations, an unlock system and an option to turn off V-Sync.
