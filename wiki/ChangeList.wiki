@@ -2,7 +2,7 @@
 
 =Version History=
 
-==1.0 - "Exceptional Review" ==
+==1.0 (r580) - "Exceptional Review" ==
  * Red arrows are now more effective at raising Groove Momentum in Coop mode.
  * Slight changes to the Coop lifebar rules. Players can now earn more than their individual maximums if the lifebar has space.
  * CPU Players are now shown with a gray line in the life graph during the evaluation screen, to reduce confusion. (Thanks to XcepticZP for the feedback)
