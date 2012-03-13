@@ -147,11 +147,11 @@ namespace WGiBeat.Drawing
         {
             if (Active)
             {
-                _activeOpacity = (byte) Math.Min(_activeOpacity + (FADEIN_SPEED * TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds), 255);
+                _activeOpacity = Math.Min(_activeOpacity + (FADEIN_SPEED * TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds), 255);
             }
             else
             {
-                _activeOpacity = (byte)Math.Max(_activeOpacity - (FADEOUT_SPEED * TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds), 0);
+                _activeOpacity = Math.Max(_activeOpacity - (FADEOUT_SPEED * TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds), 0);
             }
 
             SetSpritePositions();
