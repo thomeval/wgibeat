@@ -1,2 +1,0 @@
-1.0
-Over two dozen playable songs are included in this release, along with upgrades to WGiEdit, several new animations, an unlock system and an option to turn off V-Sync.

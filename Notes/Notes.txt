@@ -1,3 +1,0 @@
-http://roundline.codeplex.com/ //For drawing arbitrarily thick lines in XNA.
-
-FMOD can handle mp3, ogg, wma and wav but not m4a.
