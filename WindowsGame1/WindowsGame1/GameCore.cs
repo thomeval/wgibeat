@@ -204,6 +204,8 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
 
         }
 
+        private Matrix viewMatrix;
+        private Matrix projectionMatrix;
         public void SetGraphicsSettings()
         {
             GraphicsManager.IsFullScreen = Settings.Get<bool>("FullScreen");
@@ -223,6 +225,9 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
 
             Sprite.Core = this;
             Sprite.Device = this.GraphicsDevice;
+
+
+           
             GraphicsManager.ApplyChanges();
         }
 

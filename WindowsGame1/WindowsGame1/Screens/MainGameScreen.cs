@@ -78,7 +78,6 @@ namespace WGiBeat.Screens
 
             _beatlineSet.NoteMissed += BeatlineNoteMissed;
             _beatlineSet.CPUNoteHit += BeatlineNoteCPUHit;
-            _beatlineSet.Large = LargeBeatlinesSuitable();
 
             _displayState = 0;
             _songLoadDelay = 0.0;
@@ -539,8 +538,7 @@ namespace WGiBeat.Screens
             DrawBackground(spriteBatch);
             //DrawBorders(spriteBatch);
 
-            //Draw the notebars.
-          _noteBarSet.Draw(spriteBatch);
+
 
             //Draw the component sets.
              _scoreSet.Draw(spriteBatch);
@@ -552,7 +550,10 @@ namespace WGiBeat.Screens
             _beatlineSet.Draw(spriteBatch, _phraseNumber);
             _performanceBar.Draw(spriteBatch);
             _gmBarSet.Draw(spriteBatch);
-            
+
+            //Draw the notebars.
+            _noteBarSet.Draw(spriteBatch);
+
             if (_phraseNumber < 0)
             {
                 DrawCountdowns(spriteBatch);

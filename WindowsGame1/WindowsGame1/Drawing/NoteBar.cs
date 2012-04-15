@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using WGiBeat.Drawing;
+using WGiBeat.Notes;
 
-namespace WGiBeat.Notes
+namespace WGiBeat.Drawing
 {
     /// <summary>
     /// A NoteBar consists of a number of arrows that must be pressed in sequence. A NoteBar is responsible for drawing
@@ -14,67 +14,31 @@ namespace WGiBeat.Notes
     /// </summary>
     public class NoteBar : DrawableObject
     {
-        private Sprite _barSpriteMiddle;
-        private Sprite _barSpriteLeft;
-        private Sprite _barSpriteRight;
 
-        private Sprite _barSpriteMiddleGlow;
-        private Sprite _barSpriteLeftGlow;
-        private Sprite _barSpriteRightGlow;
 
-        private SpriteMap _noteBarCursor;
-        public double Redness;
+        private SpriteMap _arrowsSpriteMap;
+
+        public double Redness { get; set; }
+        public Sprite RednessSprite { get; set; }
+
+        public double XDisplayOffset { get; set; }
         public List<Note> Notes { get; set; }
         public int ID { get; set; }
+
         public NoteBar()
         {
             Notes = new List<Note>();
             InitSprites();
         }
 
-        public void InitSprites()
-        {
-            _barSpriteMiddle = new Sprite { Height = 40, SpriteTexture = TextureManager.Textures("NoteBarMiddle") };
-            _barSpriteLeft = new Sprite
-            {
-                Height = 40,
-                Width = 16,
+        public const int NOTE_SIZE = 48;
 
-                SpriteTexture = TextureManager.Textures("NoteBarLeft")
-            };
-            _barSpriteRight = new Sprite
-            {
-                Height = 40,
-                Width = 16,
-                SpriteTexture = TextureManager.Textures("NoteBarRight")
-            };
-            _barSpriteLeftGlow = new Sprite
-                                     {
-                                         SpriteTexture = TextureManager.CreateWhiteMask("NoteBarLeft"),
-                                         Height = 40,
-                                         Width = 16,
-                                         ColorShading = Color.Red                                      
-                                     };
-            _barSpriteRightGlow = new Sprite
-            {
-                SpriteTexture = TextureManager.CreateWhiteMask("NoteBarRight"),
-                Height = 40,
-                Width = 16,
-                ColorShading = Color.Red
-            };
-            _barSpriteMiddleGlow = new Sprite
-            {
-                SpriteTexture = TextureManager.CreateWhiteMask("NoteBarMiddle"),
-                Height = 40,
-                ColorShading = Color.Red
-            };
-            _noteBarCursor = new SpriteMap
-                                 {
-                                     SpriteTexture = TextureManager.Textures("NoteBarCombinedCursors"),
-                                     Columns = 1,
-                                     Rows = 4
-                                 };
+        private void InitSprites()
+        {
+            _arrowsSpriteMap = new SpriteMap { SpriteTexture = TextureManager.Textures("Arrows"), Columns = 4, Rows = 3 };
         }
+
+        
         public int NumberCompleted()
         {
             return (from e in Notes where e.Completed select e).Count();
@@ -96,6 +60,7 @@ namespace WGiBeat.Notes
                 throw new InvalidOperationException("Note bar doesn't have a current note to mark as complete.");
             }
             currentNote.Completed = true;
+            XDisplayOffset += NOTE_SIZE;
         }
 
         public void MarkAllCompleted()
@@ -115,18 +80,13 @@ namespace WGiBeat.Notes
         }
 
 
-        public static NoteBar CreateNoteBar(int numNotes, int numReverse)
-        {
-            return CreateNoteBar(numNotes, numReverse, 0, 0);
-        }
+ 
         public static NoteBar CreateNoteBar(int numNotes, int numReverse, Vector2 position)
         {
             return CreateNoteBar(numNotes, numReverse, (int) position.X, (int) position.Y);
         }
 
         private static Random _rnd = new Random();
-
-
         public static NoteBar CreateNoteBar(int numNotes, int numReverse, int posX, int posY)
         {
             var newNoteBar = new NoteBar();
@@ -181,34 +141,23 @@ namespace WGiBeat.Notes
             return result;
         }
 
+ 
         public override void Draw(SpriteBatch spriteBatch)
         {
-           
-            int posX = this.X - (16 * Notes.Count);
+
+            int posX = this.X;
             int posY = this.Y;
 
-            _barSpriteMiddle.Width = _barSpriteMiddleGlow.Width =  (32 * Notes.Count) + 4;
-            _barSpriteMiddle.X = _barSpriteMiddleGlow.X =  posX - 2;
-            _barSpriteMiddle.Y = _barSpriteMiddleGlow.Y = posY - 4;
-            _barSpriteLeft.X = _barSpriteLeftGlow.X = _barSpriteMiddle.X - 16;
-            _barSpriteLeft.Y = _barSpriteLeftGlow.Y = _barSpriteMiddle.Y;
-            _barSpriteRight.X = _barSpriteRightGlow.X = _barSpriteMiddle.X + _barSpriteMiddle.Width;
-            _barSpriteRight.Y = _barSpriteRightGlow.Y = _barSpriteMiddle.Y;
-          
-            _barSpriteLeft.Draw(spriteBatch);
-            _barSpriteRight.Draw(spriteBatch);
-            _barSpriteMiddle.Draw(spriteBatch);
+            if (RednessSprite != null)
+            {
+                DrawRednessSprite(spriteBatch);
+            }
 
-            _barSpriteLeftGlow.ColorShading.A =
-                _barSpriteMiddleGlow.ColorShading.A = _barSpriteRightGlow.ColorShading.A = Convert.ToByte(Redness);
-            _barSpriteLeftGlow.Draw(spriteBatch);
-            _barSpriteRightGlow.Draw(spriteBatch);
-            _barSpriteMiddleGlow.Draw(spriteBatch);
-
-            var sprite = new SpriteMap { SpriteTexture = TextureManager.Textures("Arrows"), Columns = 4, Rows = 3 };
+            var xdrawOffset = 0 - NumberCompleted() * NOTE_SIZE + (int)XDisplayOffset;
+                 
             foreach (Note note in Notes)
             {
-
+                var heightOffset = (int) note.Direction * NOTE_SIZE / 3;
                 var cell = ((int) note.Direction);
                 if (note.Completed)
                 {
@@ -218,16 +167,39 @@ namespace WGiBeat.Notes
                 {
                     cell += 4;
                 }
-
-                sprite.Draw(spriteBatch, cell, 32, 32, posX, posY);
-                posX += 32;
+                _arrowsSpriteMap.ColorShading.A = CalculateOpacity(xdrawOffset);
+                _arrowsSpriteMap.Draw(spriteBatch, cell, NOTE_SIZE,  NOTE_SIZE, posX + xdrawOffset, posY + heightOffset);
+                xdrawOffset += NOTE_SIZE;
             }
 
-            posX = this.X - (16 * Notes.Count) +32*NumberCompleted() - (_noteBarCursor.SpriteTexture.Width/2);
-            posY -= 16;
-            _noteBarCursor.Draw(spriteBatch,ID, new Vector2(posX,posY));
-
         }
+
+        private void DrawRednessSprite(SpriteBatch spriteBatch)
+        {
+
+            RednessSprite.ColorShading.A = Convert.ToByte(Redness);
+
+            RednessSprite.Draw(spriteBatch);
+        }
+
+        private const int NOTE_FADEOUT_START = 180;
+        private byte CalculateOpacity(int drawOffset)
+        {
+            int result = 255;
+            if (drawOffset < 0)
+            {
+                result = 255 + ((drawOffset) * 3);
+            }
+            else if (drawOffset > NOTE_FADEOUT_START)
+            {
+                result = 255 - ((drawOffset - NOTE_FADEOUT_START)*3);
+            
+            }
+            result = Math.Max(0,Math.Min(255, result));
+            return (byte) result;
+            
+        }
+
 
         public bool AllCompleted()
         {

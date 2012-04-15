@@ -20,15 +20,7 @@ namespace WGiBeat.Drawing
         public int Id { get; set; }
         public bool DisablePulse { get; set; }
 
-        private bool _reverseDirection;
-        public bool ReverseDirection
-        {
-            get { return _reverseDirection; }
-            set
-            {
-                _reverseDirection = value;
-            }
-        }
+    
 
         private SpriteMap _markerSprite;
         private SpriteMap _playerIdentifiers;
@@ -47,7 +39,6 @@ namespace WGiBeat.Drawing
         private const double PULSE_FADEOUT_SPEED = 500;
         private const double HIT_NOTE_FADEOUT_SPEED = 900;
 
-        public bool Large { get; set; }
 
         //When a player presses the beatline key, only notes closer than this cutoff are considered.
         //Otherwise, the event is ignored completely.
@@ -57,9 +48,6 @@ namespace WGiBeat.Drawing
         //Increase this to make them move faster and more apart.
         const int BEAT_ZOOM_DISTANCE = 200;
 
-        //The height of the beatline markers.
-        private const int NORMAL_HEIGHT = 34;
-        private const int LARGE_HEIGHT = 68;
 
         //The distance from the left edge of the beatline to the impact area of the beatline.
         private const int LEFT_SIDE = 40;
@@ -74,7 +62,7 @@ namespace WGiBeat.Drawing
 
         private void InitSprites()
         {
-            this.Height = 40;
+            this.Height = 125;
             this.Width = 350;
             _markerSprite = new SpriteMap
             {
@@ -127,8 +115,7 @@ namespace WGiBeat.Drawing
 
         public void Draw(SpriteBatch spriteBatch, double phraseNumber)
         {
-           
-            this.Height = Large ? 80 : 40;
+
             DrawSpeedScale(spriteBatch, phraseNumber);
             DrawBase(spriteBatch);
             DrawPlayerIdentifier(spriteBatch);
@@ -145,17 +132,13 @@ namespace WGiBeat.Drawing
             const int TEXTURE_WIDTH = 240;
             var textureOffset = ((phraseNumber - Math.Floor(phraseNumber)) * TEXTURE_WIDTH) + 2;
             _speedScaleSprite.ColorShading.A = 160;
-            _speedScaleSprite.Height = Large ? 5 : 2;
+            _speedScaleSprite.Height = 5;
             _speedScaleSprite.Position = this.Position.Clone();
             _speedScaleSprite.Width = this.Width - LEFT_SIDE - 25;
             _speedScaleSprite.X += LEFT_SIDE + IMPACT_WIDTH;
 
             var flip = SpriteEffects.None; 
-            if (ReverseDirection)
-            {
-                _speedScaleSprite.X = (int) this.Position.X + this.Width - _speedScaleSprite.Width - LEFT_SIDE - IMPACT_WIDTH;
-                flip = SpriteEffects.FlipHorizontally;
-            }
+      
             var mxFactor = 1.0* _speedScaleSprite.Width/BEAT_ZOOM_DISTANCE / _displayedSpeed; 
             _speedScaleSprite.Y += this.Height/2 - _speedScaleSprite.Height/2;
             _speedScaleSprite.DrawTiled(spriteBatch, (int)textureOffset, 0, (int)(TEXTURE_WIDTH * mxFactor), 5, flip);
@@ -165,11 +148,8 @@ namespace WGiBeat.Drawing
         private void DrawPlayerIdentifier(SpriteBatch spriteBatch)
         {
             _indicatorPosition.Y = this.Y + this.Height - 27;
-            if (Large)
-            {
-                _indicatorPosition.Y -= 2;
-            }
-            _indicatorPosition.X = _reverseDirection ? this.X + 25 : this.X + this.Width - 60;
+     
+            _indicatorPosition.X = this.X + this.Width - 60;
             _playerIdentifiers.Draw(spriteBatch,Id,_indicatorPosition);
         }
 
@@ -180,9 +160,9 @@ namespace WGiBeat.Drawing
                 return;
             }
 
-            var flip = _reverseDirection ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-            var markerPosition = new Vector2 { X = this.X, Y = Large ? this.Y + 6 : this.Y + 3 };
-            var markerHeight = Large ? LARGE_HEIGHT : NORMAL_HEIGHT;
+  
+            var markerPosition = new Vector2 { X = this.X, Y = this.Y + 3 };
+            var markerHeight = this.Height - 12;
             var phraseDecimal = (phraseNumber - (int)phraseNumber);
             phraseDecimal = Math.Max(1 - (phraseDecimal * 4), 0);
 
@@ -191,14 +171,14 @@ namespace WGiBeat.Drawing
             _pulseFrontOpacity = Math.Max(0, _pulseFrontOpacity - TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * PULSE_FADEOUT_SPEED);
             _pulseFront.ColorShading.A = (byte) _pulseFrontOpacity;
 
-            _pulseFront.Draw(spriteBatch, Id, this.Width, markerHeight, (int)markerPosition.X, (int)markerPosition.Y, flip);
+            _pulseFront.Draw(spriteBatch, Id, this.Width, markerHeight, (int)markerPosition.X, (int)markerPosition.Y);
 
             if (phraseNumber < 0.0)
             {
                 return;
             }
 
-            _pulseBack.Draw(spriteBatch, Id, this.Width, markerHeight, (int)markerPosition.X, (int)markerPosition.Y, flip);
+            _pulseBack.Draw(spriteBatch, Id, this.Width, markerHeight, (int)markerPosition.X, (int)markerPosition.Y);
         }
 
         private void DrawNotes(SpriteBatch spriteBatch, double phraseNumber)
@@ -213,10 +193,10 @@ namespace WGiBeat.Drawing
                     continue;
                 }
 
-                var markerPosition = new Vector2 {Y = Large ? this.Y + 6 : this.Y + 3, X = CalculateNotePosition(bn, markerBeatOffset)};
+                var markerPosition = new Vector2 {Y = this.Y + 6, X = CalculateNotePosition(bn, markerBeatOffset)};
                  _markerSprite.ColorShading.A = CalculateNoteOpacity(bn,markerBeatOffset);
 
-                var markerHeight = Large ? LARGE_HEIGHT : NORMAL_HEIGHT;
+                var markerHeight = this.Height-12;
 
                 int noteIdx = 0;
                 int width = IMPACT_WIDTH;
@@ -238,11 +218,10 @@ namespace WGiBeat.Drawing
                 _markerSprite.Draw(spriteBatch, noteIdx, width, markerHeight, (int)markerPosition.X, (int)markerPosition.Y);
      
                 //Draw the effect icon on top of the marker if appropriate (such as a BPM change arrow)
-                var flip = _reverseDirection ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
                 if (bn.NoteType != 0)
                 {
                     _beatlineEffects.ColorShading.A = (byte) (_markerSprite.ColorShading.A  * 0.8);
-                    _beatlineEffects.Draw(spriteBatch, (int)bn.NoteType - 1, markerHeight, markerHeight, (int)(markerPosition.X - markerHeight / 2), (int)markerPosition.Y,flip);
+                    _beatlineEffects.Draw(spriteBatch, (int)bn.NoteType - 1, markerHeight, markerHeight, (int)(markerPosition.X - markerHeight / 2), (int)markerPosition.Y);
                 }
             }
         }
@@ -297,23 +276,17 @@ namespace WGiBeat.Drawing
                 result = LEFT_SIDE - (markerBeatOffset);
             }
 
-            if (_reverseDirection)
-            {
-                result = this.Width - result;
-                result -= IMPACT_WIDTH;
-            }
             result += this.X;
             return result;
         }
 
         private void DrawBase(SpriteBatch spriteBatch)
         {
-            var flip = _reverseDirection ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-  
+
                 _baseSprite.SetPosition(this.X, this.Y);
                 _baseSprite.Height = this.Height;
                 _baseSprite.Width = this.Width;
-                _baseSprite.Draw(spriteBatch,flip);
+                _baseSprite.Draw(spriteBatch);
         }
 
         public void AddBeatlineNote(BeatlineNote bln)

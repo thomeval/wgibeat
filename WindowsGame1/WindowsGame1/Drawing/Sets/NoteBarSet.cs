@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Helpers;
 using WGiBeat.Managers;
@@ -11,6 +12,7 @@ namespace WGiBeat.Drawing.Sets
     public class NoteBarSet : DrawableObjectSet
     {
         private readonly NoteBar[] _noteBars;
+
 
         public event EventHandler PlayerFaulted;
         public event EventHandler PlayerArrowHit;
@@ -25,7 +27,8 @@ namespace WGiBeat.Drawing.Sets
         public override void Draw(SpriteBatch spriteBatch)
         {
             var amount = Math.Max(0,  TextureManager.LastDrawnPhraseDiff * REDNESS_ANIMATION_SPEED);
-
+            var mx = Math.Max(0.5, 1 - (TextureManager.LastDrawnPhraseDiff * 20));
+          //  TextureManager.DrawString(spriteBatch,"" +mx,"DefaultFont",new Vector2(200,200),Color.Black,FontAlign.LEFT );
             for (int x = 0; x < _noteBars.Length; x++)
             {
                 if (!Players[x].Playing)
@@ -33,6 +36,7 @@ namespace WGiBeat.Drawing.Sets
                     continue;
                 }
                 _noteBars[x].Redness = Math.Max(0, _noteBars[x].Redness - amount);
+                _noteBars[x].XDisplayOffset *= mx;
                 _noteBars[x].Draw(spriteBatch);
             }
         }
@@ -44,10 +48,19 @@ namespace WGiBeat.Drawing.Sets
 
         public void InitNoteBars()
         {
-            
+
+         
             for (int x = 0; x < _noteBars.Length; x++)
             {
                 CreateNextNoteBar(x);
+                _noteBars[x].RednessSprite =  new Sprite()
+                {
+                    ColorShading = Color.Red,
+                    SpriteTexture = TextureManager.CreateWhiteMask("BeatMeter"),
+                    Height = 125,
+                    Width = 350,
+                    Position = _metrics["BeatlineBarBase",x]
+                };
             }
         }
 
@@ -116,6 +129,14 @@ namespace WGiBeat.Drawing.Sets
 
             _noteBars[player] = NoteBar.CreateNoteBar(numArrow, numReverse, _metrics["NoteBar", player]);
             _noteBars[player].ID = player;
+            _noteBars[player].RednessSprite = new Sprite()
+            {
+                ColorShading = Color.Red,
+                SpriteTexture = TextureManager.CreateWhiteMask("BeatMeter"),
+                Height = 125,
+                Width = 350,
+                Position = _metrics["BeatlineBarBase", player]
+            };
             SyncNoteBars(_noteBars[player]);
         }
 

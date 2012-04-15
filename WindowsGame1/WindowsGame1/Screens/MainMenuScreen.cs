@@ -24,6 +24,8 @@ namespace WGiBeat.Screens
         private const string WEBSITE = "http://code.google.com/p/wgibeat/?lol=orz";
         private string _errorMessage = "";
         private Thread _updateThread;
+        private Matrix viewMatrix;
+        private Matrix projectionMatrix;
 
 
         public MainMenuScreen(GameCore core)
@@ -109,12 +111,58 @@ namespace WGiBeat.Screens
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            DrawBackground(spriteBatch,gameTime);
-            DrawMenu(spriteBatch);
+           // DrawBackground(spriteBatch,gameTime);
+          //  DrawMenu(spriteBatch);
 
     
-            TextureManager.DrawString(spriteBatch,_errorMessage,"DefaultFont", Core.Metrics["MainMenuNoSongsError", 0], Color.Black,FontAlign.LEFT);
-            DrawUpdater(spriteBatch);
+          //  TextureManager.DrawString(spriteBatch,_errorMessage,"DefaultFont", Core.Metrics["MainMenuNoSongsError", 0], Color.Black,FontAlign.LEFT);
+           // DrawUpdater(spriteBatch);
+
+            DrawExperimental();
+        }
+
+        private void DrawExperimental()
+        {
+            var effect = new BasicEffect(Core.GraphicsDevice, null);
+            viewMatrix = Matrix.CreateLookAt(new Vector3(400, 300, 0), new Vector3(400, 300, 1), new Vector3(0, -1, 0));
+            projectionMatrix = Matrix.CreateOrthographic(800, 600, -10, 10);
+            
+            effect.View = viewMatrix;
+            effect.Projection = projectionMatrix;
+       
+          
+            effect.Texture = _background.SpriteTexture;
+            effect.TextureEnabled = true;
+          //  effect.VertexColorEnabled = true;
+
+            var vertices = new VertexPositionColorTexture[6];
+
+            vertices[0].Position = new Vector3(0,0, 0);
+            vertices[0].TextureCoordinate = new Vector2(0, 0);
+            vertices[0].Color = Color.Red;
+
+            vertices[1].Position = new Vector3(800, 0, 0);
+            vertices[1].TextureCoordinate = new Vector2(1, 0);       
+            vertices[1].Color = Color.Green;
+
+            vertices[2].Position = new Vector3(800, 600, 0);
+            vertices[2].Color = Color.Yellow;
+            vertices[2].TextureCoordinate = new Vector2(1, 1);
+
+            vertices[3] = vertices[0];
+            vertices[4] = vertices[2];
+            vertices[5].Position = new Vector3(0, 600, 0);
+            vertices[5].Color = Color.Blue;
+            vertices[5].TextureCoordinate = new Vector2(0, 1);
+
+            effect.Begin();
+            foreach (var pass in effect.CurrentTechnique.Passes)
+            {
+                pass.Begin();
+                Core.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, vertices, 0, 2);
+                pass.End();
+            }
+            effect.End();
 
         }
 

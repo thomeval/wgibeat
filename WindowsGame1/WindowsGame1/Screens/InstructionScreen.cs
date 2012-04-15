@@ -52,8 +52,6 @@ namespace WGiBeat.Screens
                             {
                                 Bpm = BEATLINE_BPM,
                                 Id = 0,
-                                Large = true,
-                                ReverseDirection = false,
                                 Position = Core.Metrics["InstructionBeatline", 0],
                                 Speed = 1.0,
                                 Width = 320
