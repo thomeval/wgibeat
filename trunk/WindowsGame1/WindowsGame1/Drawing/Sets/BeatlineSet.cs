@@ -28,29 +28,7 @@ namespace WGiBeat.Drawing.Sets
             }
         }
 
-        private bool _large;
-        public bool Large
-        {
-            get { return _large; }
-            set
-            {
-                _large = value;
-                for (int x = 0; x <4; x++)
-                {
-                    _beatlines[x].Large = value;
-                }
-                if (Large)
-                {
-                    _beatlines[1].Position = (_metrics["BeatlineBarBase",0]);
-                    _beatlines[3].Position = (_metrics["BeatlineBarBase",2]);
-                }
-                else
-                {
-                    _beatlines[1].Position = (_metrics["BeatlineBarBase", 1]);
-                    _beatlines[3].Position = (_metrics["BeatlineBarBase", 3]);
-                }
-            }
-        }
+  
 
         private double _endingPhrase;
         public double EndingPhrase
@@ -75,9 +53,6 @@ namespace WGiBeat.Drawing.Sets
             for (int x = 0; x < 4; x++)
             {
                 _beatlines[x] = new Beatline {Position = (_metrics["BeatlineBarBase", x]), Id = x};
-
-                var direction = x%2 == 0 ? players[x].PlayerOptions.ScrollDirectionWest : players[x].PlayerOptions.ScrollDirectionEast;
-                _beatlines[x].ReverseDirection = direction;
             }
         }
 

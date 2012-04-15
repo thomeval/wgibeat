@@ -184,18 +184,14 @@ namespace WGiBeat.AudioSystem
                 var md5 = MD5.Create();
                 var fs = File.Open(Path + "\\" + AudioFile, FileMode.Open);
                 var temp = md5.ComputeHash(fs);
-                var output = "";
-                foreach (Byte b in temp)
-                {
-                    output += b.ToString("X2");
-                }
+                var output = temp.Aggregate("", (current, b) => current + b.ToString("X2"));
 
                 fs.Close();
                 return output;
             }
             catch (Exception ex)
             {
-                return "FAIL";
+                return "FAIL: " +ex.Message;
             }
 
         }

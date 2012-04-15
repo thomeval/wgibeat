@@ -59,9 +59,10 @@ namespace WGiBeat.Notes
     public enum NoteDirection
     {
         UP = 0,
-        RIGHT = 1,
-        DOWN = 2,
-        LEFT = 3,
+        LEFT = 1,
+        RIGHT = 2,
+        DOWN = 3,
+        
         COUNT = 4
     }
 }
