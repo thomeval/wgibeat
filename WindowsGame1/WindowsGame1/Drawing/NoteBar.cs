@@ -31,7 +31,7 @@ namespace WGiBeat.Drawing
             InitSprites();
         }
 
-        public const int NOTE_SIZE = 48;
+        public const int NOTE_SIZE = 44;
 
         private void InitSprites()
         {
@@ -154,21 +154,23 @@ namespace WGiBeat.Drawing
             }
 
             var xdrawOffset = 0 - NumberCompleted() * NOTE_SIZE + (int)XDisplayOffset;
-                 
+            
             foreach (Note note in Notes)
             {
+                var completedOffset = 0;
                 var heightOffset = (int) note.Direction * NOTE_SIZE / 3;
                 var cell = ((int) note.Direction);
                 if (note.Completed)
                 {
                     cell += 8;
+                    completedOffset = -6;
                 }
                 else if (note.Reverse)
                 {
                     cell += 4;
                 }
                 _arrowsSpriteMap.ColorShading.A = CalculateOpacity(xdrawOffset);
-                _arrowsSpriteMap.Draw(spriteBatch, cell, NOTE_SIZE,  NOTE_SIZE, posX + xdrawOffset, posY + heightOffset);
+                _arrowsSpriteMap.Draw(spriteBatch, cell, NOTE_SIZE,  NOTE_SIZE, posX + xdrawOffset + completedOffset, posY + heightOffset);
                 xdrawOffset += NOTE_SIZE;
             }
 

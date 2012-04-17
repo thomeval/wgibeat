@@ -31,6 +31,7 @@ namespace WGiBeat.Screens
         private CountdownSet _countdownSet;
         private BeatlineHitAggregator _hitAggregator;
 
+
         private PerformanceBar _performanceBar;
         private GrooveMomentumBarSet _gmBarSet;
 
@@ -78,6 +79,7 @@ namespace WGiBeat.Screens
 
             _beatlineSet.NoteMissed += BeatlineNoteMissed;
             _beatlineSet.CPUNoteHit += BeatlineNoteCPUHit;
+            
 
             _displayState = 0;
             _songLoadDelay = 0.0;
@@ -219,6 +221,7 @@ namespace WGiBeat.Screens
             {
                 Core.Songs.PlayCachedSong((int) Core.Cookies["GameSongChannel"]);
                 _startTime = new TimeSpan(gameTime.TotalRealTime.Ticks);
+
             }
             _timeElapsed = (int)(gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay);
             
@@ -232,7 +235,6 @@ namespace WGiBeat.Screens
             MaintainGrooveMomentum(_phraseNumber);
             RecordPlayerLife();
             RecordPlayerPlayTime(gameTime.ElapsedRealTime.TotalMilliseconds);
-   
             base.Update(gameTime);
         }
 
@@ -288,7 +290,7 @@ namespace WGiBeat.Screens
                 {
                     Core.Songs.SaveToFile(_gameSong);
                 }
-                
+
                 Core.ScreenTransition("Evaluation");
             }
         }
@@ -546,13 +548,13 @@ namespace WGiBeat.Screens
             _levelbarSet.Draw(spriteBatch, _phraseNumber);
             _hitsBarSet.Draw(spriteBatch);
 
-            _noteJudgementSet.Draw(spriteBatch, _phraseNumber);
             _beatlineSet.Draw(spriteBatch, _phraseNumber);
             _performanceBar.Draw(spriteBatch);
             _gmBarSet.Draw(spriteBatch);
 
             //Draw the notebars.
             _noteBarSet.Draw(spriteBatch);
+            _noteJudgementSet.Draw(spriteBatch, _phraseNumber);
 
             if (_phraseNumber < 0)
             {
@@ -570,6 +572,7 @@ namespace WGiBeat.Screens
         {
             _background.Draw(spriteBatch);
             _textBackground.Draw(spriteBatch);
+
         }
 
         private void DrawCountdowns(SpriteBatch spriteBatch)

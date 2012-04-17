@@ -324,7 +324,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
                 _spriteBatch.End();
             }
 
-            _spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None,Matrix.CreateScale(GraphicsManager.PreferredBackBufferWidth / 800.0f));
+            _spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.SaveState,Matrix.CreateScale(GraphicsManager.PreferredBackBufferWidth / 800.0f));
             if (enableWrap)
             {
    

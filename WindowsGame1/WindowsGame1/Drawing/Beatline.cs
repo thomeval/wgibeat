@@ -54,16 +54,14 @@ namespace WGiBeat.Drawing
         private const int IMPACT_WIDTH = 5;
 
         public Beatline()
-        {
+        {           
             _beatlineNotes = new List<BeatlineNote>();
             _notesToRemove = new List<BeatlineNote>();
-            InitSprites();
         }
 
         private void InitSprites()
         {
-            this.Height = 125;
-            this.Width = 350;
+     
             _markerSprite = new SpriteMap
             {
                 Columns = 1,
@@ -87,7 +85,9 @@ namespace WGiBeat.Drawing
                              };
             _baseSprite = new Sprite
             {
-                SpriteTexture = TextureManager.Textures("BeatMeter")
+                SpriteTexture = TextureManager.Textures("BeatMeter"),
+                Position = this.Position,
+                Size = this.Size
             };
 
             _beatlineEffects = new SpriteMap
@@ -104,8 +104,12 @@ namespace WGiBeat.Drawing
                                     };
             _speedScaleSprite = new Sprite
                                     {
-                                        SpriteTexture = TextureManager.Textures("BeatlineSpeedScale")
+                                        SpriteTexture = TextureManager.Textures("BeatlineSpeedScale"),
+                                        Size = new Vector2(this.Width - LEFT_SIDE - 25, 5),
+                                        X = (int) (this.Position.X + LEFT_SIDE + IMPACT_WIDTH),
+                                        Y = (int) (this.Position.Y + this.Height / 2 - 2)
                                     };
+       
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -115,7 +119,10 @@ namespace WGiBeat.Drawing
 
         public void Draw(SpriteBatch spriteBatch, double phraseNumber)
         {
-
+            if (_baseSprite == null)
+            {
+                InitSprites();
+            }
             DrawSpeedScale(spriteBatch, phraseNumber);
             DrawBase(spriteBatch);
             DrawPlayerIdentifier(spriteBatch);
@@ -132,25 +139,20 @@ namespace WGiBeat.Drawing
             const int TEXTURE_WIDTH = 240;
             var textureOffset = ((phraseNumber - Math.Floor(phraseNumber)) * TEXTURE_WIDTH) + 2;
             _speedScaleSprite.ColorShading.A = 160;
-            _speedScaleSprite.Height = 5;
-            _speedScaleSprite.Position = this.Position.Clone();
-            _speedScaleSprite.Width = this.Width - LEFT_SIDE - 25;
-            _speedScaleSprite.X += LEFT_SIDE + IMPACT_WIDTH;
 
-            var flip = SpriteEffects.None; 
       
             var mxFactor = 1.0* _speedScaleSprite.Width/BEAT_ZOOM_DISTANCE / _displayedSpeed; 
-            _speedScaleSprite.Y += this.Height/2 - _speedScaleSprite.Height/2;
-            _speedScaleSprite.DrawTiled(spriteBatch, (int)textureOffset, 0, (int)(TEXTURE_WIDTH * mxFactor), 5, flip);
+
+            _speedScaleSprite.DrawTiled(spriteBatch, (int)textureOffset, 0, (int)(TEXTURE_WIDTH * mxFactor), 5);
             
         }
 
         private void DrawPlayerIdentifier(SpriteBatch spriteBatch)
         {
-            _indicatorPosition.Y = this.Y + this.Height - 27;
+            _indicatorPosition.Y = this.Y + this.Height - 51;
      
-            _indicatorPosition.X = this.X + this.Width - 60;
-            _playerIdentifiers.Draw(spriteBatch,Id,_indicatorPosition);
+            _indicatorPosition.X = this.X + this.Width - 65;
+            _playerIdentifiers.Draw(spriteBatch,Id, 64,48,_indicatorPosition);
         }
 
         private void DrawPulses(SpriteBatch spriteBatch, double phraseNumber)
@@ -160,25 +162,27 @@ namespace WGiBeat.Drawing
                 return;
             }
 
-  
-            var markerPosition = new Vector2 { X = this.X, Y = this.Y + 3 };
-            var markerHeight = this.Height - 12;
-            var phraseDecimal = (phraseNumber - (int)phraseNumber);
-            phraseDecimal = Math.Max(1 - (phraseDecimal * 4), 0);
 
-            
-            _pulseBack.ColorShading.A = (byte)(phraseDecimal * 255);
-            _pulseFrontOpacity = Math.Max(0, _pulseFrontOpacity - TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * PULSE_FADEOUT_SPEED);
+            var pulsePosition = new Vector2 {X = this.X, Y = this.Y + 6};
+            var pulseHeight = this.Height - 12;
+            var phraseDecimal = (phraseNumber - (int) phraseNumber);
+            phraseDecimal = Math.Max(1 - (phraseDecimal*4), 0);
+
+
+            _pulseBack.ColorShading.A = (byte) (phraseDecimal*255);
+            _pulseFrontOpacity = Math.Max(0,
+                                          _pulseFrontOpacity -
+                                          TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds*PULSE_FADEOUT_SPEED);
             _pulseFront.ColorShading.A = (byte) _pulseFrontOpacity;
 
-            _pulseFront.Draw(spriteBatch, Id, this.Width, markerHeight, (int)markerPosition.X, (int)markerPosition.Y);
+            _pulseFront.Draw(spriteBatch, Id, this.Width, pulseHeight, pulsePosition);
 
             if (phraseNumber < 0.0)
             {
                 return;
             }
 
-            _pulseBack.Draw(spriteBatch, Id, this.Width, markerHeight, (int)markerPosition.X, (int)markerPosition.Y);
+            _pulseBack.Draw(spriteBatch, Id, this.Width, pulseHeight, pulsePosition);
         }
 
         private void DrawNotes(SpriteBatch spriteBatch, double phraseNumber)
@@ -221,7 +225,7 @@ namespace WGiBeat.Drawing
                 if (bn.NoteType != 0)
                 {
                     _beatlineEffects.ColorShading.A = (byte) (_markerSprite.ColorShading.A  * 0.8);
-                    _beatlineEffects.Draw(spriteBatch, (int)bn.NoteType - 1, markerHeight, markerHeight, (int)(markerPosition.X - markerHeight / 2), (int)markerPosition.Y);
+                    _beatlineEffects.Draw(spriteBatch, (int)bn.NoteType - 1, markerHeight, 32, (int)(markerPosition.X - markerHeight / 2), (int)markerPosition.Y);
                 }
             }
         }
@@ -238,7 +242,7 @@ namespace WGiBeat.Drawing
             byte result;
             if (bn.Hit)
             {
-                //TODO: Doesn't work in high frame rates. Must fix.
+         
                 bn.Opacity = Math.Max(0, bn.Opacity - TextureManager.LastDrawnPhraseDiff * HIT_NOTE_FADEOUT_SPEED);
   
                 result = (byte) bn.Opacity;
@@ -282,10 +286,6 @@ namespace WGiBeat.Drawing
 
         private void DrawBase(SpriteBatch spriteBatch)
         {
-
-                _baseSprite.SetPosition(this.X, this.Y);
-                _baseSprite.Height = this.Height;
-                _baseSprite.Width = this.Width;
                 _baseSprite.Draw(spriteBatch);
         }
 

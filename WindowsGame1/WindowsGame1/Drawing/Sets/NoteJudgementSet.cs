@@ -127,8 +127,8 @@ namespace WGiBeat.Drawing.Sets
                 var newDj = new DisplayedJudgement
                                 {
                                     DisplayUntil = _phraseNumber + 0.5,
-                                    Height = 40,
-                                    Width = 150,
+                                    Height = 175,
+                                    Width = 50,
                                     Player = player,
                                     Tier = (int) judgement,
                                     Streak = Players[player].Streak,

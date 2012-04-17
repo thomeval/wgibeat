@@ -136,7 +136,13 @@ namespace WGiBeat.Drawing
         {
             _backgroundSprite = new Sprite {SpriteTexture = TextureManager.Textures("SongSortBackground")};
             _arrowSprites = new SpriteMap {SpriteTexture = TextureManager.Textures("IndicatorArrows"), Columns=4, Rows = 1};
-            _listBackgroundSprite = new Sprite {SpriteTexture = TextureManager.Textures("SongSortListBackground")};
+            _listBackgroundSprite = new Sprite
+                                        {
+                                            SpriteTexture = TextureManager.Textures("SongSortListBackground"),
+                                            X = (this.X + this.Width - 75),
+                                            Y = this.Y + this.Height,
+                                            Width = 75
+                                        };
             _textPosition = new Vector2();
  
         }
@@ -170,15 +176,14 @@ namespace WGiBeat.Drawing
 
         private void SetSpritePositions()
         {
-            _backgroundSprite.SetPosition(this.X,this.Y);
+            _backgroundSprite.Position = this.Position;
         }
 
         private void DrawList(SpriteBatch spriteBatch)
         {
             _listBackgroundSprite.Height = 40 + (_bookmarkTextSize * (Math.Min(VisibleBookmarks,_bookmarkMenu.ItemCount)));
-            _listBackgroundSprite.Width = 75;
             _listBackgroundSprite.ColorShading.A = (byte) _activeOpacity;
-            _listBackgroundSprite.SetPosition(this.X + this.Width - 75, this.Y + this.Height);
+     
             _listBackgroundSprite.Draw(spriteBatch);
 
             if (!_initiated)

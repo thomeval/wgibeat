@@ -50,7 +50,7 @@ namespace WGiBeat.Drawing
 
         private void DrawGrid(SpriteBatch spriteBatch)
         {
-            _teamGridSprite.SetPosition(this.X, this.Y);
+            _teamGridSprite.Position = this.Position;
             _teamGridSprite.Draw(spriteBatch);
         }
 
@@ -68,10 +68,12 @@ namespace WGiBeat.Drawing
         private void DrawBars(SpriteBatch spriteBatch)
         {
             var scoreDiff = CalculateBarDifference();
-            _tugBlueSprite.SetPosition(this.X + 16, this.Y +3);
+            _tugBlueSprite.X = this.X + 16;
+             _tugBlueSprite.Y = this.Y +3;
             _tugBlueSprite.Width = 124 + scoreDiff;
             _tugRedSprite.Width = 124 - scoreDiff;
-            _tugRedSprite.SetPosition(_tugBlueSprite.X + _tugBlueSprite.Width, this.Y+3);
+            _tugRedSprite.X = _tugBlueSprite.X + _tugBlueSprite.Width;
+            _tugRedSprite.Y = this.Y+3;
             _tugBlueSprite.DrawTiled(spriteBatch,(int)_blueBarTextureStart,0, _tugBlueSprite.Width, _tugBlueSprite.Height);
             _tugRedSprite.DrawTiled(spriteBatch, (int)_redBarTextureStart, 0, _tugRedSprite.Width, _tugRedSprite.Height);
         }
@@ -95,7 +97,7 @@ namespace WGiBeat.Drawing
 
         private void DrawBase(SpriteBatch spriteBatch)
         {
-            _teamBaseSprite.SetPosition(this.X,this.Y);
+            _teamBaseSprite.Position = this.Position;
             _teamBaseSprite.Draw(spriteBatch);
 
         }

@@ -222,7 +222,8 @@ namespace WGiBeat.Drawing
 
         private void DrawGrid(SpriteBatch spriteBatch)
         {
-            _gridPart.SetPosition(this.X + 2, this.Y + 3);
+            _gridPart.X = this.X + 2;
+            _gridPart.Y = this.Y + 3;
             _gridPart.Width = this.Width - 4;
             _gridPart.Height = this.Height - 4;
             _gridPart.DrawTiled(spriteBatch, 0, 0, this.Width - 4, this.Height - 4);
@@ -289,7 +290,7 @@ namespace WGiBeat.Drawing
 
         private void DrawBase(SpriteBatch spriteBatch)
         {
-            _basePart.SetPosition(this.X, this.Y);
+            _basePart.Position = this.Position;
             _basePart.Draw(spriteBatch);
         }
 

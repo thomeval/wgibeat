@@ -12,7 +12,7 @@ namespace WGiBeat.Drawing.Sets
     public class NoteBarSet : DrawableObjectSet
     {
         private readonly NoteBar[] _noteBars;
-
+        private readonly NoteBarProgress[] _noteBarProgresses;
 
         public event EventHandler PlayerFaulted;
         public event EventHandler PlayerArrowHit;
@@ -20,6 +20,7 @@ namespace WGiBeat.Drawing.Sets
         public NoteBarSet(MetricsManager metrics, Player[] players, GameType gameType) : base(metrics, players, gameType)
         {
             _noteBars = new NoteBar[4];
+            _noteBarProgresses = new NoteBarProgress[4];
             InitNoteBars();
         }
 
@@ -38,6 +39,9 @@ namespace WGiBeat.Drawing.Sets
                 _noteBars[x].Redness = Math.Max(0, _noteBars[x].Redness - amount);
                 _noteBars[x].XDisplayOffset *= mx;
                 _noteBars[x].Draw(spriteBatch);
+                _noteBarProgresses[x].Value = _noteBars[x].NumberCompleted();
+                _noteBarProgresses[x].Maximum = _noteBars[x].Notes.Count();
+                _noteBarProgresses[x].Draw(spriteBatch);
             }
         }
 
@@ -61,7 +65,9 @@ namespace WGiBeat.Drawing.Sets
                     Width = 350,
                     Position = _metrics["BeatlineBarBase",x]
                 };
+                _noteBarProgresses[x] = new NoteBarProgress { Height = 175, Width = 50, ID = x, Position = _metrics["NoteBarProgress", x] };
             }
+        
         }
 
         public void MaintainCPUArrows(double phraseNumber)
