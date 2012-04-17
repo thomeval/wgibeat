@@ -1,7 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-# SharpDevelop 3.2.0.5777
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WGiBeat", "WindowsGame1\WGiBeat.csproj", "{FD908542-5D88-4E20-8624-42FC33B8D250}"
 EndProject
 Global
@@ -19,13 +18,19 @@ Global
 		{FD908542-5D88-4E20-8624-42FC33B8D250}.Debug|x86.ActiveCfg = Debug|x86
 		{FD908542-5D88-4E20-8624-42FC33B8D250}.Debug|x86.Build.0 = Debug|x86
 		{FD908542-5D88-4E20-8624-42FC33B8D250}.Debug|Xbox 360.ActiveCfg = Debug|x86
+		{FD908542-5D88-4E20-8624-42FC33B8D250}.Debug|Xbox 360.Build.0 = Debug|Xbox 360
 		{FD908542-5D88-4E20-8624-42FC33B8D250}.Release|Mixed Platforms.ActiveCfg = Release|x86
 		{FD908542-5D88-4E20-8624-42FC33B8D250}.Release|Mixed Platforms.Build.0 = Release|x86
 		{FD908542-5D88-4E20-8624-42FC33B8D250}.Release|x86.ActiveCfg = Release|x86
 		{FD908542-5D88-4E20-8624-42FC33B8D250}.Release|x86.Build.0 = Release|x86
 		{FD908542-5D88-4E20-8624-42FC33B8D250}.Release|Xbox 360.ActiveCfg = Release|x86
-		{FD908542-5D88-4E20-8624-42FC33B8D250}.Debug|Xbox 360.Build.0 = Debug|Xbox 360
 		{FD908542-5D88-4E20-8624-42FC33B8D250}.Release|Xbox 360.Build.0 = Release|Xbox 360
+		{5AFCFB80-1A90-4EF0-902B-DB05C84134B8}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{5AFCFB80-1A90-4EF0-902B-DB05C84134B8}.Debug|x86.ActiveCfg = Debug|x86
+		{5AFCFB80-1A90-4EF0-902B-DB05C84134B8}.Debug|Xbox 360.ActiveCfg = Debug|x86
+		{5AFCFB80-1A90-4EF0-902B-DB05C84134B8}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{5AFCFB80-1A90-4EF0-902B-DB05C84134B8}.Release|x86.ActiveCfg = Release|x86
+		{5AFCFB80-1A90-4EF0-902B-DB05C84134B8}.Release|Xbox 360.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

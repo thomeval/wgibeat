@@ -36,8 +36,8 @@ namespace WGiBeat.Drawing.Sets
                     {
                         _lifeBars[x] = new NormalLifeBar
                                            {
-                                               Height = 30,
-                                               Width = 260,
+                                               Height = 25,
+                                               Width = 350,
                                                PlayerID = x,
                                                Parent = this,
                                                Position = (_metrics["NormalLifeBar", x])

@@ -91,7 +91,7 @@ namespace WGiBeat.Drawing
 
         private void CalculatePositions()
         {
-            _baseSprite.SetPosition(this.X, this.Y);
+            _baseSprite.Position = this.Position;
             _baseSprite.Height = this.Height;
             _baseSprite.Width = this.Width;
             _gradePosition.X = this.X + this.Width - 74;

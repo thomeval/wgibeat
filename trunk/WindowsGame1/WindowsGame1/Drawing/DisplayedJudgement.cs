@@ -21,14 +21,12 @@ namespace WGiBeat.Drawing
         {
             if (_judgementSprite == null)
             {
-                _judgementSprite = new SpriteMap {Columns = 1, Rows = (int) BeatlineNoteJudgement.COUNT, SpriteTexture = TextureManager.Textures("NoteJudgements")};
+                _judgementSprite = new SpriteMap {Columns =(int) BeatlineNoteJudgement.COUNT, Rows = 1, SpriteTexture = TextureManager.Textures("NoteJudgements")};
             }
             _judgementSprite.ColorShading.A = Opacity;
-            var opacityScale = 0.8 + (1.0*Opacity/1500);
-            var xloss = (int) (this.Width*(1 - opacityScale)/2);
- 
-            _judgementSprite.Draw(spriteBatch,Tier,(int) (this.Width * opacityScale), (int) (this.Height * opacityScale),this.X + xloss,this.Y);
-            DrawStreakCounter(spriteBatch, opacityScale);
+
+            _judgementSprite.Draw(spriteBatch,Tier,this.Width, this.Height,this.X,this.Y);
+            DrawStreakCounter(spriteBatch, 1.0);
         }
 
         public void DrawStreakCounter(SpriteBatch spriteBatch, double opacityScale)

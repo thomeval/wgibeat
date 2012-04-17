@@ -71,7 +71,7 @@ namespace WGiBeat.Drawing.Sets
             _baseSprite.SpriteTexture = TextureManager.Textures(assetName);
             _baseSprite.ColorShading.A = (byte) _opacity[player];
             _textColor.A = (byte) _opacity[player];
-            _baseSprite.Draw(spriteBatch, player, _metrics[assetName, player]);
+            _baseSprite.Draw(spriteBatch, 0, _metrics[assetName, player]);
 
             DrawOvermask(spriteBatch, player,assetName);
 
@@ -89,7 +89,7 @@ namespace WGiBeat.Drawing.Sets
 
             _baseOvermaskSprite.ColorShading = _overmaskColors[player];
             _baseOvermaskSprite.ColorShading.A = (byte) _overmaskOpacity[player];
-            _baseOvermaskSprite.Draw(spriteBatch, player, _metrics[assetName, player]);
+            _baseOvermaskSprite.Draw(spriteBatch, 0, _metrics[assetName, player]);
         }
 
         private bool PlayerAtNewMilestone(int x)

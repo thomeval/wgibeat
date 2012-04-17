@@ -80,7 +80,8 @@ namespace WGiBeat.Screens
                                      Position = (Core.Metrics["MessageBorder", 0])
                                  };
             _restrictionIcon = new Sprite {SpriteTexture = TextureManager.Textures("RestrictionIcon"), Width = 48, Height = 48};
-            _restrictionIcon.SetPosition(_messageBorder.X + 7, _messageBorder.Y + 7);
+            _restrictionIcon.X = _messageBorder.X + 7;
+            _restrictionIcon.Y = _messageBorder.Y + 7;
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {

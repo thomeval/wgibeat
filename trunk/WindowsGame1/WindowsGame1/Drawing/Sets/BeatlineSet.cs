@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.AudioSystem;
 using WGiBeat.Managers;
@@ -28,7 +29,7 @@ namespace WGiBeat.Drawing.Sets
             }
         }
 
-  
+
 
         private double _endingPhrase;
         public double EndingPhrase
@@ -37,7 +38,7 @@ namespace WGiBeat.Drawing.Sets
             set
             {
                 _endingPhrase = value;
-              
+
             }
         }
 
@@ -46,15 +47,15 @@ namespace WGiBeat.Drawing.Sets
 
 
         public BeatlineSet(MetricsManager metrics, Player[] players, GameType gameType)
-            : base(metrics,players,gameType)
+            : base(metrics, players, gameType)
         {
             _beatlines = new Beatline[4];
 
             for (int x = 0; x < 4; x++)
-            {
-                _beatlines[x] = new Beatline {Position = (_metrics["BeatlineBarBase", x]), Id = x};
-            }
+
+                _beatlines[x] = new Beatline { Position = (_metrics["BeatlineBarBase", x]), Size = new Vector2(350, 125), Id = x };
         }
+
 
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -68,7 +69,7 @@ namespace WGiBeat.Drawing.Sets
                 if (Players[x].Playing)
                 {
                     SetBeatlineSpeed(x);
-                    
+
                     _beatlines[x].DisablePulse = Players[x].KO;
                     _beatlines[x].Draw(spriteBatch, phraseNumber);
                 }
@@ -116,7 +117,7 @@ namespace WGiBeat.Drawing.Sets
                     _beatlines[x].RemoveAll();
                 }
                 var missedNotes = _beatlines[x].TrimExpired(phraseNumber);
-               // _beatlines[x].Id = x;
+                // _beatlines[x].Id = x;
                 for (int y = 0; y < missedNotes; y++)
                 {
                     if (NoteMissed != null)
@@ -175,14 +176,14 @@ namespace WGiBeat.Drawing.Sets
                         continue;
                     }
 
-                        var noteType = song.BPMs[bpmKey] > prev
-                                           ? BeatlineNoteType.BPM_INCREASE
-                                           : BeatlineNoteType.BPM_DECREASE;
-                    
+                    var noteType = song.BPMs[bpmKey] > prev
+                                       ? BeatlineNoteType.BPM_INCREASE
+                                       : BeatlineNoteType.BPM_DECREASE;
 
-                        bl.InsertBeatlineNote(new BeatlineNote {Player = -1, NoteType = noteType, Position = bpmKey}, 0);
 
-                    
+                    bl.InsertBeatlineNote(new BeatlineNote { Player = -1, NoteType = noteType, Position = bpmKey }, 0);
+
+
                     prev = song.BPMs[bpmKey];
 
                 }
@@ -190,10 +191,10 @@ namespace WGiBeat.Drawing.Sets
                 foreach (double stopKey in song.Stops.Keys)
                 {
                     bl.InsertBeatlineNote(
-                        new BeatlineNote {Player = -1, NoteType = BeatlineNoteType.STOP, Position = stopKey}, 0);
+                        new BeatlineNote { Player = -1, NoteType = BeatlineNoteType.STOP, Position = stopKey }, 0);
                 }
             }
-  
+
         }
         public BeatlineNoteJudgement AwardJudgement(double phraseNumber, int player, bool completed)
         {

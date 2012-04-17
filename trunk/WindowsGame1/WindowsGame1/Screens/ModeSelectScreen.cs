@@ -111,7 +111,9 @@ namespace WGiBeat.Screens
                                            Position = (Core.Metrics["MessageBorder", 0])
                                        };
             _restrictionSprite = new Sprite { SpriteTexture = TextureManager.Textures("RestrictionIcon"), Width = 48, Height = 48 };
-            _restrictionSprite.SetPosition(_messageBorderSprite.X + 7, _messageBorderSprite.Y + 7);
+            _restrictionSprite.X = _messageBorderSprite.X + 7;
+            _restrictionSprite.Y = _messageBorderSprite.Y + 7;
+
         }
 
         #endregion
