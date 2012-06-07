@@ -108,6 +108,20 @@ namespace WGiBeat.Screens
             item.AddOption("On", true);
             _optionsMenu.AddItem(item);
 
+            item = new MenuItem { ItemText = "Background Animation" };
+            item.AddOption("Off", 0);
+            item.AddOption("Normal", 1);
+            item.AddOption("ARGH! MY EYES!", 2);
+
+            _optionsMenu.AddItem(item);
+
+            item = new MenuItem { ItemText = "Blazing Bass Boost" };
+            item.AddOption("Off", 1.0);
+            item.AddOption("Light", 1.25);
+            item.AddOption("Mild", 1.5);
+            item.AddOption("Max", 2.0);
+            _optionsMenu.AddItem(item);
+
             item = new MenuItem { ItemText = "Save" };
             _optionsMenu.AddItem(item);
             item = new MenuItem { ItemText = "Cancel" };
@@ -227,7 +241,7 @@ namespace WGiBeat.Screens
                 _optionsMenu.GetByItemText("Convert Files to .sng").SetSelectedByValue(Core.Settings.Get<object>("ConvertToSNG"));
                 _optionsMenu.GetByItemText("Screen Resolution").SetSelectedByValue(Core.Settings.Get<object>("ScreenResolution"));
                 _optionsMenu.GetByItemText("Check For Updates").SetSelectedByValue(Core.Settings.Get<object>("CheckForUpdates"));
-   
+                _optionsMenu.GetByItemText("Blazing Bass Boost").SetSelectedByValue(Core.Settings.Get<object>("BlazingBassBoost"));
             }
             catch (Exception ex)
             {
@@ -251,6 +265,7 @@ namespace WGiBeat.Screens
             Core.Settings.Set("ScreenResolution", _optionsMenu.GetByItemText("Screen Resolution").SelectedValue());
             Core.Settings.Set("CheckForUpdates", _optionsMenu.GetByItemText("Check For Updates").SelectedValue());
             Core.Settings.Set("VSync", _optionsMenu.GetByItemText("V-Sync").SelectedValue());
+            Core.Settings.Set("BlazingBassBoost", _optionsMenu.GetByItemText("Blazing Bass Boost").SelectedValue());
             Core.Audio.SetMasterVolume((float)Core.Settings.Get<double>("SongVolume"));
             Core.Log.LogLevel = (LogLevel)Core.Settings.Get<int>("LogLevel");
             Core.Log.SaveLog = Core.Settings.Get<bool>("SaveLog");

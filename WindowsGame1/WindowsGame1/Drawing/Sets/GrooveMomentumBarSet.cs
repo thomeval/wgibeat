@@ -40,16 +40,9 @@ namespace WGiBeat.Drawing.Sets
 
             UpdateDisplayedGM();
             _gmbar.DisplayedGrooveMomentum = _displayedGrooveMomentum;
-            if (Players[0].Playing || Players[1].Playing)
-            {
-                _gmbar.Position = _metrics["GrooveMomentumBar", 0];
-                _gmbar.Draw(spriteBatch);
-            }
-            if (Players[2].Playing || Players[3].Playing)
-            {
-                _gmbar.Position = _metrics["GrooveMomentumBar", 1];
-                _gmbar.Draw(spriteBatch);
-            }
+             _gmbar.Position = _metrics["GrooveMomentumBar", 0];
+             _gmbar.Draw(spriteBatch);
+
         
         }
     }

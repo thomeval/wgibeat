@@ -53,7 +53,15 @@ namespace WGiBeat.Drawing.Sets
 
             for (int x = 0; x < 4; x++)
 
-                _beatlines[x] = new Beatline { Position = (_metrics["BeatlineBarBase", x]), Size = new Vector2(350, 125), Id = x };
+                _beatlines[x] = new Beatline
+                                    {
+                                        Position = (_metrics["BeatlineBarBase", x]),
+                                        Size = new Vector2(350, 125),
+                                        Id = x,
+                                        IdentifierSize = _metrics["BeatlinePlayerIdentifiers.Size", 0],
+                                        EffectIconSize = _metrics["BeatlineEffectIcons.Size",0]
+                                        
+                                    };
         }
 
 

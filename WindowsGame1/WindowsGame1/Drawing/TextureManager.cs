@@ -111,7 +111,9 @@ namespace WGiBeat.Drawing
                         measuredPosition.X -= measurements.X;
                         break;
                 }
+                spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
                 spriteBatch.DrawString(_fonts[fontName], line, measuredPosition, color, 0.0f, _noRotation, scale, SpriteEffects.None, 0.0f);
+                spriteBatch.End();
                 measuredPosition.Y += measurements.Y;
                 measuredPosition.X = position.X;
             }
@@ -187,6 +189,7 @@ namespace WGiBeat.Drawing
         }
 
         public static double LastDrawnPhraseDiff { get; private set; }
+
     }
 
     public enum FontAlign

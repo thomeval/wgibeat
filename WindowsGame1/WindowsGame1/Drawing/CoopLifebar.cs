@@ -9,29 +9,35 @@ namespace WGiBeat.Drawing
     public class CoopLifeBar : LifeBar
     {
 
-        public bool SideLocationTop;
         private readonly double[] _displayedLife;
 
         private Sprite _basePart;
-        private SpriteMap _sidePart;
+        private Sprite _sidePart;
         private Sprite _gridPart;
-        private SpriteMap _middlePart;
+        private Sprite _middlePart;
         private SpriteMap _frontPart;
         private Sprite _overchargePart;
         private Sprite _blazingPart;
-        private SpriteMap _blazingSidePart;
-        private SpriteMap _blazingMiddlePart;
+        private Sprite _blazingSidePart;
+        private Sprite _blazingMiddlePart;
+        
 
         private double _overchargeTextureOffset;
         private const double OVERCHARGE_OFFSET_CLIP = 250;
 
         public double BaseCapacity { get; set;}
         public double TrueCapacity { get; set; }
+        public Vector2[] SidePositions { get; set; }
+        public Vector2 SideSize { get; set; }
+        public Vector2 MiddlePosition { get; set; }
+        public Vector2 MiddleSize { get; set; }
 
         public CoopLifeBar()
         {
+
             _displayedLife = new double[4];
-            InitSprites();
+            SidePositions = new Vector2[4];
+        
         }
 
 
@@ -41,7 +47,7 @@ namespace WGiBeat.Drawing
             {
                 Height = this.Height,
                 Width = this.Width,
-                SpriteTexture = TextureManager.Textures("CoopLifebarBase")
+                SpriteTexture = TextureManager.Textures("CoopLifeBarBase")
             };
 
             _gridPart = new Sprite
@@ -51,14 +57,13 @@ namespace WGiBeat.Drawing
                 SpriteTexture = TextureManager.Textures("LifeBarGridBase")
             };
 
-            _sidePart = new SpriteMap
+            _sidePart = new Sprite
                             {
-                                SpriteTexture = TextureManager.Textures("LifeBarBaseSide"),
-                                Rows = 2,
-                                Columns = 1
+                                SpriteTexture = TextureManager.Textures("LifeBarBaseCoop"),
+                                Size = SideSize,                      
                             };
-
-            _middlePart = new SpriteMap { Columns = 1, Rows = 2, SpriteTexture = TextureManager.Textures("CoopLifebarMiddle") };
+            
+            _middlePart = new Sprite { SpriteTexture = TextureManager.Textures("CoopLifeBarMiddle"), Position = MiddlePosition, Size = MiddleSize };
 
             _frontPart = new SpriteMap { Columns = 1, Rows = 4, SpriteTexture = TextureManager.Textures("LifeBarFront") };
 
@@ -69,18 +74,17 @@ namespace WGiBeat.Drawing
                                   };
 
             _blazingPart = new Sprite { SpriteTexture = TextureManager.Textures("LifeBarBlazingCoop") };
-            _blazingSidePart = new SpriteMap
+            _blazingSidePart = new Sprite
             {
-                Columns = 1,
-                Rows = 2,
-                SpriteTexture = TextureManager.CreateWhiteMask("LifeBarBaseSide")
+                SpriteTexture = TextureManager.CreateWhiteMask("LifeBarBaseCoop"),
+                Size = SideSize
             };
 
-            _blazingMiddlePart = new SpriteMap
+            _blazingMiddlePart = new Sprite
                                      {
-                                         Columns = 1,
-                                         Rows = 2,
-                                         SpriteTexture = TextureManager.Textures("CoopLifebarMiddleBlazing")
+                                         SpriteTexture = TextureManager.Textures("CoopLifebarMiddleBlazing"),
+                                         Position = _middlePart.Position,
+                                         Size = _middlePart.Size
                                      };
         }
 
@@ -91,6 +95,10 @@ namespace WGiBeat.Drawing
 
         public override void Draw(SpriteBatch spriteBatch, double gameTime)
         {
+            if (_basePart == null)
+            {
+                InitSprites();
+            }
             DrawBase(spriteBatch);
             DrawSides(spriteBatch);
             DrawBlocks(spriteBatch, gameTime);
@@ -109,12 +117,7 @@ namespace WGiBeat.Drawing
                 {
                     continue;
                 }
-                //Only draw P3 and P4's life totals on the bottom, and only P1 and P2 on top.
-                if ((!SideLocationTop && x >= 2) || (SideLocationTop && x < 2))
-                {
-                    continue;
-                }
-                DrawText(spriteBatch,x,_sidePositions[x]);
+                DrawText(spriteBatch,x,SidePositions[x]);
             }
         }
 
@@ -254,31 +257,32 @@ namespace WGiBeat.Drawing
                 {
                     continue;
                 }
-                _blazingSidePart.Draw(spriteBatch, x/2, 50, 25, _sidePositions[x]);
+                _blazingSidePart.Draw(spriteBatch);
             }
 
-            var middlePosition = SideLocationTop ? 1 : 0;
             _blazingMiddlePart.ColorShading.A = opacity;
-            _blazingMiddlePart.Draw(spriteBatch,middlePosition, _middlePositions[middlePosition]);
+            _blazingMiddlePart.Draw(spriteBatch);
         }
 
 
         private void DrawFullEffect(SpriteBatch spriteBatch)
         {
+            if (TotalLife() < TrueCapacity)
+            {
+                return;
+            }
             for (int x = 0; x < 4; x++)
             {
-                if (!((x >= 2 && SideLocationTop) || (x < 2 && !SideLocationTop)))
-                {
-                    continue;
-                }
 
-                if ((Parent.Players[x].Life == Parent.Players[x].GetMaxLife()) &&
-                    (!Parent.Players[x].IsBlazing))
-                {
-                    _blazingSidePart.ColorShading.A = 255;
+                   if (!Parent.Players[x].Playing)
+                   {
+                       continue;
+                   }
                     _blazingSidePart.ColorShading = Parent.FullHighlightColors[x];
-                    _blazingSidePart.Draw(spriteBatch, x/2, 50, 25, _sidePositions[x]);
-                }
+                    _blazingSidePart.ColorShading.A = 192;
+                    _blazingSidePart.Position = SidePositions[x];
+                    _blazingSidePart.Draw(spriteBatch);
+                
             }
         }
 
@@ -301,63 +305,33 @@ namespace WGiBeat.Drawing
 
             TextureManager.DrawString(spriteBatch, String.Format("{0:D3}", (int)Parent.Players[player].Life),
                     "DefaultFont",textPosition, Color.Black,FontAlign.CENTER);
+
+            textPosition.X += 60;
+            TextureManager.DrawString(spriteBatch, String.Format("{0:P0}",  Parent.Players[player].Life / TrueCapacity),
+        "DefaultFont", textPosition, Color.Black, FontAlign.CENTER);
            
         }
-
-        private int GetBonusMultiplier()
-        {
-            var blazers = (from e in Parent.Players where e.IsBlazing select e).Count();
-            switch (blazers)
-            {
-                case 4:
-                    return 8;
-                case 3:
-                    return 4;
-                case 2:
-                    return 2;
-                  default:
-                    return 1;
-            }
-
-        }
-
-        private void DrawTotal(SpriteBatch spriteBatch, int x, int y)
-        {
-            var position = new Vector2(x, y);
-            TextureManager.DrawString(spriteBatch, GetBonusMultiplier() + "x",
-"DefaultFont", position, Color.Black, FontAlign.CENTER);
-            position.X += 65;
-            TextureManager.DrawString(spriteBatch, String.Format("{0:D3}", (int)TotalLife()),"DefaultFont",
-                    position, Color.Black,FontAlign.CENTER);
-
-        }
-
-        private Vector2[] _sidePositions = new Vector2[4];
-        private Vector2[] _middlePositions = new Vector2[2];
+  
         private void DrawSides(SpriteBatch spriteBatch)
         {
-            int playerIdx = 0;
-            SetPositions();
 
-            //Lifebar amounts appear on top for Player 3 and 4.
-            if (SideLocationTop)
+            for (int x = 0; x < 4; x++)
             {
-                playerIdx += 2;
-            }
+                if (!Parent.Players[x].Playing)
+                {
+                    continue;
+                }
 
-            //Draw on the right side.
-            if (Parent.Players[playerIdx + 1].Playing)
-            {
-                _sidePart.Draw(spriteBatch, playerIdx / 2, 50, 25,_sidePositions[playerIdx+1]);
-            }
-            //Draw on the left.
-            if (Parent.Players[playerIdx].Playing)
-            {
-                _sidePart.Draw(spriteBatch, playerIdx / 2, 50, 25, _sidePositions[playerIdx]);
-            }
+                _sidePart.Position = SidePositions[x];
+                _sidePart.Draw(spriteBatch);
 
-            _middlePart.Draw(spriteBatch, playerIdx / 2, 139, 25, _middlePositions[playerIdx/2]);
-            DrawTotal(spriteBatch, (this.X + this.Width - 90) / 2, (int)_sidePositions[playerIdx].Y);
+            }
+            _middlePart.Draw(spriteBatch);
+
+            var position = MiddlePosition.Clone();
+            position.X += 25;
+            TextureManager.DrawString(spriteBatch, String.Format("{0:D3}", (int)TotalLife()), "LargeFont",
+                    position, Color.Black, FontAlign.CENTER);
 
         }
 
@@ -403,21 +377,7 @@ namespace WGiBeat.Drawing
             return (gameTime - Math.Floor(gameTime)) * BEAT_FRACTION_SEVERITY;
         }
 
-        private void SetPositions()
-        {
-            _sidePositions[0].X = this.X;
-            _sidePositions[0].Y = this.Y + this.Height;
-            _sidePositions[1].X = this.X + this.Width - 50;
-            _sidePositions[1].Y = this.Y + this.Height;
-            _sidePositions[2].X = this.X;
-            _sidePositions[2].Y = this.Y - 25;
-            _sidePositions[3].X = this.X + this.Width - 50;
-            _sidePositions[3].Y = this.Y - 25;
-            _middlePositions[0].X = (this.X + this.Width - 134) / 2;
-            _middlePositions[0].Y = this.Y + this.Height;
-            _middlePositions[1].X = (this.X + this.Width - 134) / 2;
-            _middlePositions[1].Y = this.Y - 25;
-        }
+ 
         #endregion
     }
 }

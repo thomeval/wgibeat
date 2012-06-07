@@ -113,6 +113,8 @@ namespace WGiBeat.Players
                     return 9;
                 case Difficulty.INSANE:
                     return 11;
+                case Difficulty.RUTHLESS:
+                    return 13;
                 default:
                     return 10;
             }
@@ -186,6 +188,9 @@ namespace WGiBeat.Players
                 case Difficulty.INSANE:
                     result -= 6;
                     break;
+                    case Difficulty.RUTHLESS:
+                    result -= 8;
+                    break;
             }
             return result;
         }
@@ -210,6 +215,9 @@ namespace WGiBeat.Players
                     break;
                 case Difficulty.INSANE:
                     result -= 16;
+                    break;
+                case Difficulty.RUTHLESS:
+                    result -= 20;
                     break;
             }
             return result;
@@ -255,7 +263,7 @@ namespace WGiBeat.Players
 
         private readonly int[] _gradeBonusCutoffs = { 90, 86, 82, 78, 70 };
         private readonly double[] _gradeBonusAmounts = { 1.4, 1.3, 1.2, 1.1, 1.05 };
-        private readonly double[] _difficultyMultipliers = { 0.5, 0.75, 1.0, 1.1, 1.2 };
+        private readonly double[] _difficultyMultipliers = { 0.5, 0.75, 1.0, 1.1, 1.2, 1.25 };
      
 
         public long AwardXP()
@@ -342,6 +350,7 @@ namespace WGiBeat.Players
         MEDIUM = 2,
         HARD = 3,
         INSANE = 4,
-        COUNT = 5
+        RUTHLESS =5,
+        COUNT = 6
     }
 }

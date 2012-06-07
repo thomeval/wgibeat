@@ -103,10 +103,6 @@ namespace WGiBeat.Drawing.Sets
             {
                 scoreAdjust *= NumHumanPlayers();
             }
-            else
-            {
-                scoreAdjust *= GetBonusMultiplier();
-            }
 
             scoreAdjust *= givenMultiplier;
             if (_gameType == GameType.COOPERATIVE)
@@ -131,7 +127,6 @@ namespace WGiBeat.Drawing.Sets
                                     Width = 50,
                                     Player = player,
                                     Tier = (int) judgement,
-                                    Streak = Players[player].Streak,
                                     TextPosition = _metrics["StreakText",player]
                                 };
                 newDj.Position = (_metrics["Judgement", player]);
@@ -155,26 +150,7 @@ namespace WGiBeat.Drawing.Sets
             }
         }
 
-        private int GetBonusMultiplier()
-        {
-            if (_gameType != GameType.COOPERATIVE)
-            {
-                return 1;
-            }
-            var blazers = (from e in Players where e.IsBlazing select e).Count();
-            switch (blazers)
-            {
-                case 4:
-                    return 8;
-                case 3:
-                    return 4;
-                case 2:
-                    return 2;
-                default:
-                    return 1;
-            }
 
-        }
         private long NumHumanPlayers()
         {
             return (from e in Players where e.Playing && !(e.CPU) select e).Count();

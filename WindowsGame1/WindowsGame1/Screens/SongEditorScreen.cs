@@ -308,7 +308,7 @@ namespace WGiBeat.Screens
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            Core.ShiftSpriteBatch(false);
+          //  Core.ShiftSpriteBatch(false);
             _backgroundSprite.Draw(spriteBatch);
             DrawHeading(spriteBatch);
 
@@ -378,7 +378,7 @@ namespace WGiBeat.Screens
             {
                 _menus[_activeMenu].Draw(spriteBatch);
             }
-            Core.ShiftSpriteBatch(true);
+         //   Core.ShiftSpriteBatch(true);
         }
 
         private void DrawSongTimeLine(SpriteBatch spriteBatch)

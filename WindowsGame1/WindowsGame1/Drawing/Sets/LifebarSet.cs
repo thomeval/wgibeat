@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Managers;
 using WGiBeat.Players;
@@ -36,8 +37,7 @@ namespace WGiBeat.Drawing.Sets
                     {
                         _lifeBars[x] = new NormalLifeBar
                                            {
-                                               Height = 25,
-                                               Width = 350,
+                                               Size = _metrics["NormalLifeBar.Size",0],
                                                PlayerID = x,
                                                Parent = this,
                                                Position = (_metrics["NormalLifeBar", x])
@@ -45,7 +45,15 @@ namespace WGiBeat.Drawing.Sets
                     }
                     break;
                 case GameType.COOPERATIVE:
-                    _lifeBars[0] = new CoopLifeBar {Height = 30, Width = 785, Parent = this};
+                    _lifeBars[0] = new CoopLifeBar
+                                       {
+                                           Size = _metrics["CoopLifeBar.Size",0], 
+                                           Parent = this, 
+                                           SidePositions = _metrics["NormalLifeBar"],
+                                           SideSize = new Vector2(120,25),
+                                           MiddlePosition = _metrics["CoopLifeBarMiddle",0],
+                                           MiddleSize = _metrics["CoopLifeBarMiddle.Size",0]
+                                       };
                     ((CoopLifeBar)_lifeBars[0]).TrueCapacity = GetTotalCapacity();
                     ((CoopLifeBar)_lifeBars[0]).BaseCapacity = GetBaseCapacity();
                     break;
@@ -224,30 +232,16 @@ namespace WGiBeat.Drawing.Sets
                     }
                     break;
                 case GameType.COOPERATIVE:
-                    if (Players[0].Playing || Players[1].Playing)
-                    {
-                        ((CoopLifeBar) _lifeBars[0]).SideLocationTop = false;
+                    
                         _lifeBars[0].Position = (_metrics["CoopLifeBar", 0]);
                         _lifeBars[0].Draw(spriteBatch,gameTime);
-                    }
-                    if (Players[2].Playing || Players[3].Playing)
-                    {
-                        ((CoopLifeBar)_lifeBars[0]).SideLocationTop = true;
-                        _lifeBars[0].Position = (_metrics["CoopLifeBar", 1]);
-                        _lifeBars[0].Draw(spriteBatch, gameTime);
-                    }
+                    
                     break;
                     case GameType.SYNC:
-                    if (Players[0].Playing || Players[1].Playing)
-                    {
+
                         _lifeBars[0].Position = (_metrics["SyncLifeBar", 0]);
                         _lifeBars[0].Draw(spriteBatch, gameTime);
-                    }
-                    if (Players[2].Playing || Players[3].Playing)
-                    {
-                        _lifeBars[3].Position = (_metrics["SyncLifeBar", 1]);
-                        _lifeBars[3].Draw(spriteBatch, gameTime);
-                    }
+                    
                     break;
             }
         }

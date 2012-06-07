@@ -19,7 +19,7 @@ namespace WGiBeat.Drawing
 
         public void Draw(SpriteBatch spriteBatch, int cellnumber, int width, int height, int x, int y)
         {
-
+            spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
             Rectangle sourceRect = CalculateSourceRectangle(cellnumber);
             var destRect = new Rectangle
                                {
@@ -28,11 +28,13 @@ namespace WGiBeat.Drawing
                                    X = x,
                                    Y = y
                                };
-            spriteBatch.Draw(SpriteTexture, destRect, sourceRect, ColorShading);         
+            spriteBatch.Draw(SpriteTexture, destRect, sourceRect, ColorShading);
+            spriteBatch.End();
         }
 
         public void Draw(SpriteBatch spriteBatch, int cellnumber, int width, int height, int x, int y, float rotation)
         {
+            spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
             Rectangle sourceRect = CalculateSourceRectangle(cellnumber);
             var destRect = new Rectangle
             {
@@ -46,6 +48,7 @@ namespace WGiBeat.Drawing
             destRect.Y += (int) origin.Y;
 
             spriteBatch.Draw(SpriteTexture, destRect, sourceRect, ColorShading,rotation,origin, SpriteEffects.None,0);
+            spriteBatch.End();
         }
 
 
@@ -60,7 +63,9 @@ namespace WGiBeat.Drawing
                 Y = y
             };
 
+            spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
             spriteBatch.Draw(SpriteTexture, destRect, sourceRect, ColorShading, 0.0f, new Vector2(0,0), flip, 0);
+            spriteBatch.End();
         }
         public void Draw(SpriteBatch spriteBatch, int cellnumber, int width, int height, Vector2 position)
         {
@@ -97,6 +102,11 @@ namespace WGiBeat.Drawing
         public void Draw(SpriteBatch spriteBatch, int cellnumber, Vector2 position)
         {
             Draw(spriteBatch, cellnumber, SpriteTexture.Width / Columns, SpriteTexture.Height / Rows, position);
+        }
+
+        public void Draw(SpriteBatch spriteBatch, int cellnumber, Vector2 size, Vector2 position)
+        {
+            Draw(spriteBatch, cellnumber, (int) size.X, (int) size.Y, (int) position.X, (int) position.Y);
         }
     }
 }

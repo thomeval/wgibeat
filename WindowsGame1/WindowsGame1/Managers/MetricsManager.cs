@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using Microsoft.Xna.Framework;
+using WGiBeat.Drawing;
 
 namespace WGiBeat.Managers
 {
@@ -47,7 +48,7 @@ namespace WGiBeat.Managers
             foreach (string rule in rules)
             {
                 
-                if ((rule.Length < 1) || (rule[0] == '#'))
+                if ((rule.Length < 1) || (rule[0] == '#') || (rule.IndexOf('=') == -1))
                     continue;
 
                 string id = rule.Substring(0, rule.IndexOf('='));
@@ -109,6 +110,21 @@ namespace WGiBeat.Managers
             {
                 _metrics[id] = value;
             }
+        }
+
+        public void SetupFromMetrics(ref Sprite sprite, string metricsKey, int id)
+        {
+            if (_metrics.ContainsKey(metricsKey))
+            {
+                sprite.Position = this[metricsKey,id];
+            }
+            if (_metrics.ContainsKey(metricsKey + ".Size"))
+            {
+                //Handle both a single size definition and multiple (one per ID).
+                sprite.Size = _metrics[metricsKey + ".Size"].Count() > id ? this[metricsKey + ".Size", id] : this[metricsKey + ".Size", 0];
+            }
+            sprite.SpriteTexture = TextureManager.Textures(metricsKey);
+
         }
     }
 }

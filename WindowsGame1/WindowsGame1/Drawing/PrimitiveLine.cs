@@ -113,8 +113,12 @@ namespace WGiBeat.Drawing
         /// <param name="spriteBatch">The sprite batch to use to render the primitive line object.</param>
         public void Render(SpriteBatch spriteBatch)
         {
+            spriteBatch.Begin();
             if (vectors.Count < 2)
+            {
+                spriteBatch.End();
                 return;
+            }
 
             var actualPosition = Position*Multiplier;
 
@@ -141,6 +145,7 @@ namespace WGiBeat.Drawing
                                  SpriteEffects.None,
                                  Depth);
             }
+            spriteBatch.End();
         }
 
         /// <summary>

@@ -204,8 +204,6 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
 
         }
 
-        private Matrix viewMatrix;
-        private Matrix projectionMatrix;
         public void SetGraphicsSettings()
         {
             GraphicsManager.IsFullScreen = Settings.Get<bool>("FullScreen");
@@ -223,11 +221,14 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
               
             }
 
-            Sprite.Core = this;
             Sprite.Device = this.GraphicsDevice;
+            Sprite3D.Device = this.GraphicsDevice;
 
+            Sprite3D.EffectInit = false;
+            GraphicsDevice.VertexDeclaration = new VertexDeclaration(
+ GraphicsDevice, VertexPositionColorTexture.VertexElements);
 
-           
+            
             GraphicsManager.ApplyChanges();
         }
 
@@ -306,11 +307,8 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
         protected override void Draw(GameTime gameTime)
         {
             TextureManager.LastGameTime = gameTime;
-            GraphicsDevice.Clear(Color.Black);
-
-            ShiftSpriteBatch(false);
+            GraphicsDevice.Clear(Color.Black);     
             _activeScreen.Draw(gameTime, _spriteBatch);
-            _spriteBatch.End();
             _drawInProgress = false;
             base.Draw(gameTime);
         }

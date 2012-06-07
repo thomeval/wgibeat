@@ -33,7 +33,9 @@ namespace WGiBeat.Drawing
         private SpriteMap _pulseBack;
         private double _pulseFrontOpacity;
         private Vector2 _indicatorPosition;
-       
+        public Vector2 IdentifierSize { get; set; }
+        public Vector2 EffectIconSize { get; set; }
+
 
         private const double SPEED_CHANGE_SPEED = 4;
         private const double PULSE_FADEOUT_SPEED = 500;
@@ -149,10 +151,10 @@ namespace WGiBeat.Drawing
 
         private void DrawPlayerIdentifier(SpriteBatch spriteBatch)
         {
-            _indicatorPosition.Y = this.Y + this.Height - 51;
+            _indicatorPosition.Y = this.Y + this.Height - IdentifierSize.Y - 5;
      
-            _indicatorPosition.X = this.X + this.Width - 65;
-            _playerIdentifiers.Draw(spriteBatch,Id, 64,48,_indicatorPosition);
+            _indicatorPosition.X = this.X + this.Width - IdentifierSize.X - 5;
+            _playerIdentifiers.Draw(spriteBatch,Id, (int) IdentifierSize.X,(int) IdentifierSize.Y,_indicatorPosition);
         }
 
         private void DrawPulses(SpriteBatch spriteBatch, double phraseNumber)
@@ -225,7 +227,7 @@ namespace WGiBeat.Drawing
                 if (bn.NoteType != 0)
                 {
                     _beatlineEffects.ColorShading.A = (byte) (_markerSprite.ColorShading.A  * 0.8);
-                    _beatlineEffects.Draw(spriteBatch, (int)bn.NoteType - 1, markerHeight, 32, (int)(markerPosition.X - markerHeight / 2), (int)markerPosition.Y);
+                    _beatlineEffects.Draw(spriteBatch, (int)bn.NoteType - 1, EffectIconSize, new Vector2(markerPosition.X - EffectIconSize.X / 2,markerPosition.Y));
                 }
             }
         }
