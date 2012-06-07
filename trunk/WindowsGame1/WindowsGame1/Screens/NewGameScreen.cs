@@ -119,6 +119,15 @@ namespace WGiBeat.Screens
             difficulty.AddOption("Medium", 2);
             difficulty.AddOption("Hard", 3);
 
+
+            if (Core.Players[x].GetMaxDifficulty() >= 4)
+            {
+                difficulty.AddOption("Insane", 4);
+            }
+            if (Core.Players[x].GetMaxDifficulty() >= 5)
+            {
+                difficulty.AddOption("Ruthless", 5);
+            }
             _playerMenus[x].AddItem(difficulty);
 
             var noteSpeed = new MenuItem { ItemText = "Beatline Speed" };
@@ -419,6 +428,18 @@ namespace WGiBeat.Screens
         }
         private void RefereshSelectedOptions(int number)
         {
+            _playerMenus[number].GetByItemText("Difficulty").RemoveOption("Insane");
+            if (Core.Players[number].GetMaxDifficulty() >= 4)
+            {
+                _playerMenus[number].GetByItemText("Difficulty").AddOption("Insane", 4);
+            }
+
+            _playerMenus[number].GetByItemText("Difficulty").RemoveOption("Ruthless");
+            if (Core.Players[number].GetMaxDifficulty() >= 5)
+            {
+                _playerMenus[number].GetByItemText("Difficulty").AddOption("Ruthless", 5);
+            }
+
             _playerMenus[number].GetByItemText("Beatline Speed").SetSelectedByValue(Core.Players[number].PlayerOptions.BeatlineSpeed);
             _playerMenus[number].GetByItemText("Difficulty").SetSelectedByValue((int)Core.Players[number].PlayerOptions.PlayDifficulty);
             _playerMenus[number].GetByItemText("Disable KO").SetSelectedByValue(Core.Players[number].PlayerOptions.DisableKO);
@@ -428,11 +449,7 @@ namespace WGiBeat.Screens
             _playerMenus[number].GetByItemText("Scroll Direction").SetSelectedByValue(
                 direction);
 
-            _playerMenus[number].GetByItemText("Difficulty").RemoveOption("Insane");
-            if (Core.Players[number].GetMaxDifficulty() >= 4)
-            {
-                _playerMenus[number].GetByItemText("Difficulty").AddOption("Insane",4);
-            }
+
         }
 
         private void SelectMainMenuItem(int number)
@@ -498,15 +515,6 @@ namespace WGiBeat.Screens
                 Core.Players[x].PlayerOptions.BeatlineSpeed = (double)_playerMenus[x].GetByItemText("Beatline Speed").SelectedValue();
                 Core.Players[x].PlayerOptions.DisableKO = (bool)_playerMenus[x].GetByItemText("Disable KO").SelectedValue();
                 
-                var direction = (bool) _playerMenus[x].GetByItemText("Scroll Direction").SelectedValue();
-                if (x % 2 == 0)
-                {
-                    Core.Players[x].PlayerOptions.ScrollDirectionWest = direction;
-                }
-                else
-                {
-                    Core.Players[x].PlayerOptions.ScrollDirectionEast = direction;
-                }
 
                 Core.Players[x].UpdatePreferences();
             }

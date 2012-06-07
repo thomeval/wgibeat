@@ -29,6 +29,7 @@ namespace WGiBeat.Screens
         private BpmMeter _bpmMeter;
         private SongSortDisplay _songSortDisplay;
         private SongTypeDisplay _songTypeDisplay;
+        private SpectrumDrawer _spectrumDrawer;
 
         private HighScoreFrame _highScoreFrame;
         private PlayerOptionsSet _playerOptionsSet;
@@ -36,6 +37,8 @@ namespace WGiBeat.Screens
         private double _songListDrawOffset;
         private const int LISTITEMS_DRAWN = 13;
         private const double SONG_CHANGE_SPEED = 7;
+        private const int SPECTRUM_POINTS = 64;
+        private const int SPECTRUM_CLUSTER_SIZE = 1;
         private double _songListDrawOpacity;
 
         private readonly SineSwayParticleField _field = new SineSwayParticleField();
@@ -88,7 +91,13 @@ namespace WGiBeat.Screens
 
             _songTypeDisplay = new SongTypeDisplay { Position = Core.Metrics["SongTypeDisplay", 0], Width = 112, Height = 42 };
             InitSprites();
-
+            _spectrumDrawer = new SpectrumDrawer
+                                  {
+                                      LevelsCount = SPECTRUM_POINTS/SPECTRUM_CLUSTER_SIZE,
+                                      Size = Core.Metrics["SelectedSongSpectrum.Size", 0],
+                                      Position = Core.Metrics["SelectedSongSpectrum", 0],
+                                      ColorShading = Color.White
+                                  };
             _songLockedSprite = new Sprite {Position = Core.Metrics["BPMMeter", 0], SpriteTexture= TextureManager.Textures("SongLocked")};
             base.Initialize();
         }
@@ -175,67 +184,15 @@ namespace WGiBeat.Screens
 
         }
 
-        private const int WAVEFORM_POINTS = 512;
-        private const int WAVEFORM_CLUSTER_SIZE = 16;
-        private readonly float[] _maxLevels = new float[WAVEFORM_POINTS / WAVEFORM_CLUSTER_SIZE];
-        private readonly float[] _dropSpeed = new float[WAVEFORM_POINTS / WAVEFORM_CLUSTER_SIZE];
 
         private void DrawWaveForm(SpriteBatch spriteBatch)
         {
             _spectrumBackground.Draw(spriteBatch);
 
-            if (Crossfader.ChannelIndexCurrent != -1)
-            {
-                float[] levels = Core.Audio.GetChannelSpectrum(Crossfader.ChannelIndexCurrent, WAVEFORM_POINTS);
-
-                var line = new PrimitiveLine(Core.GraphicsDevice)
-                               {
-                                   Colour = Color.White,
-                                   Position = Core.Metrics["SelectedSongSpectrum", 0]
-                               };
-
-                int posX = 0;
-
-                var averageLevels = new float[levels.Count() / WAVEFORM_CLUSTER_SIZE];
-
-                for (int x = 0; x < averageLevels.Count() - 4; x++)
-                {
-                    averageLevels[x] = levels.Skip(WAVEFORM_CLUSTER_SIZE * x).Take(WAVEFORM_CLUSTER_SIZE).Average();
-                    // averageLevels[x] = averageLevels[x]* 2 * (float) Math.Pow(x, 1.5);  
-                    averageLevels[x] = Math.Min(1, averageLevels[x] * 8 * (x + 1));
-
-                    if (averageLevels[x] >= _maxLevels[x])
-                    {
-                        _dropSpeed[x] = 0.0f;
-                        _maxLevels[x] = averageLevels[x];
-                    }
-                    else
-                    {
-                        _dropSpeed[x] += 1.5f * (float) TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds;
-                        _maxLevels[x] -= _dropSpeed[x]*(float) TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds;
-                    }
-             
-
-                    line.AddVector(new Vector2(posX, 0));
-                    line.AddVector(new Vector2(posX, -65 * averageLevels[x]));
-                    line.AddVector(new Vector2(posX + 6, -65 * averageLevels[x]));
-                    posX += 6;
-                }
-
-                line.Render(spriteBatch);
-
-                posX = 0;
-                for (int x = 0; x < _maxLevels.Count(); x++)
-                {
-                    line.ClearVectors();
-
-                    line.AddVector(new Vector2(posX, -65 * _maxLevels[x]));
-                    line.AddVector(new Vector2(posX + 6, -65 * _maxLevels[x]));
-                    line.Render(spriteBatch);
-                    posX += 6;
-
-                }
-            }
+            if (Crossfader.ChannelIndexCurrent == -1) 
+                return;
+            float[] levels = Core.Audio.GetChannelSpectrum(Crossfader.ChannelIndexCurrent, SPECTRUM_POINTS);
+            _spectrumDrawer.Draw(spriteBatch, levels);
         }
         private void DrawBpmMeter(SpriteBatch spriteBatch)
         {
@@ -366,7 +323,8 @@ namespace WGiBeat.Screens
 
                 if (previewsOn)
                 {
-                    Crossfader.SetPreviewedSong(CurrentSong, true);
+                    _spectrumDrawer.ResetMaxLevels();
+                        Crossfader.SetPreviewedSong(CurrentSong, true);
                 }
             }
 

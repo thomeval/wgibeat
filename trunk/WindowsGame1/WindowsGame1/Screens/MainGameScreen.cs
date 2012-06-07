@@ -30,7 +30,7 @@ namespace WGiBeat.Screens
         private BeatlineSet _beatlineSet;
         private CountdownSet _countdownSet;
         private BeatlineHitAggregator _hitAggregator;
-
+        private VisualizerBackground _visualBackground;
 
         private PerformanceBar _performanceBar;
         private GrooveMomentumBarSet _gmBarSet;
@@ -98,12 +98,19 @@ namespace WGiBeat.Screens
             
             
             _startTime = null;
+            _dspActive = false;
             _panic = Core.Cookies.ContainsKey("Panic");
             _beatlineSet.EndingPhrase = _gameSong.GetEndingTimeInPhrase();
             _beatlineSet.Bpm = _gameSong.CurrentBPM(0.0);
             _beatlineSet.AddTimingPointMarkers(_gameSong);
             _beatlineSet.SetSpeeds();
-
+            _visualBackground = new VisualizerBackground
+                                    {
+                                        Size = new Vector2(800, 600),
+                                        AudioManager = Core.Audio,
+                                        Position = new Vector2(0, 0),
+                                        SongChannel = (int)Core.Cookies["GameSongChannel"]
+                                    };
             InitSprites();
 
             base.Initialize();
@@ -203,13 +210,6 @@ namespace WGiBeat.Screens
                                   };
         }
 
-        private bool LargeBeatlinesSuitable()
-        {
-            var result = !(Core.Players[0].Playing && Core.Players[1].Playing);
-            result = result && !(Core.Players[2].Playing && Core.Players[3].Playing);
-            return result;
-        }
-
         #region Updating, Beatline maintenance
 
         private int _timeElapsed;
@@ -221,6 +221,7 @@ namespace WGiBeat.Screens
             {
                 Core.Songs.PlayCachedSong((int) Core.Cookies["GameSongChannel"]);
                 _startTime = new TimeSpan(gameTime.TotalRealTime.Ticks);
+               
 
             }
             _timeElapsed = (int)(gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay);
@@ -231,11 +232,43 @@ namespace WGiBeat.Screens
             _beatlineSet.Bpm = _gameSong.CurrentBPM(_phraseNumber);
             _beatlineSet.MaintainBeatlineNotes(_phraseNumber);
             _lifeBarSet.MaintainBlazings(_phraseNumber);
+            MaintainBlazingDSP();
             _noteBarSet.MaintainCPUArrows(_phraseNumber);
             MaintainGrooveMomentum(_phraseNumber);
             RecordPlayerLife();
             RecordPlayerPlayTime(gameTime.ElapsedRealTime.TotalMilliseconds);
             base.Update(gameTime);
+        }
+
+        private bool _dspActive;
+        private float _dspIntensity;
+       
+        private void MaintainBlazingDSP()
+        {
+            var anyBlazing = (from e in Core.Players where e.IsBlazing && e.Playing select e).Any();
+
+            if (!_dspActive)
+            {
+                Core.Audio.ActivateDSP((int) Core.Cookies["GameSongChannel"]);
+                _dspActive = true;
+            }
+
+            if (anyBlazing)
+            {
+                _dspIntensity =
+                    (float)
+                    Math.Min( Convert.ToDouble(Core.Settings["BlazingBassBoost"],System.Globalization.CultureInfo.InvariantCulture.NumberFormat),
+                             _dspIntensity + TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds / 2);
+            }
+            else
+            {
+                _dspIntensity =
+          (float)
+          Math.Max(1.0f,
+                   _dspIntensity - TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds / 2);
+            }
+
+            Core.Audio.SetDSPIntensity(_dspIntensity);
         }
 
         private double _lastUpdate;
@@ -444,8 +477,6 @@ namespace WGiBeat.Screens
 
             //Award Score
             _hitAggregator.RegisterHit(player,judgement);
-            //ApplyJudgement(judgement, player, 1);
-
 
         }
 
@@ -470,7 +501,9 @@ namespace WGiBeat.Screens
 
         }
 
-        private readonly double[] _gmAdjustments = {0.08, 0.06, 0.03, 0.0, -0.15, -0.06};
+        private readonly double[] _gmAdjustments = {0.08, 0.06, 0.03, 0.0, -0.15, -0.04};
+
+
         private void AdjustGrooveMomentum(object input)
         {
             Thread.Sleep(150);
@@ -478,7 +511,6 @@ namespace WGiBeat.Screens
              
             var isPositive = _gmAdjustments[(int) adjustment.Judgement] > 0.0;
             var mx = (isPositive) ? adjustment.Multiplier : 1;
-            System.Diagnostics.Debug.WriteLine(adjustment.Judgement + " : x" + adjustment.Multiplier);
             Player.GrooveMomentum += _gmAdjustments[(int)adjustment.Judgement] * mx;          
         }
 
@@ -538,9 +570,6 @@ namespace WGiBeat.Screens
         {
             TextureManager.LastDrawnPhraseNumber = _phraseNumber;
             DrawBackground(spriteBatch);
-            //DrawBorders(spriteBatch);
-
-
 
             //Draw the component sets.
              _scoreSet.Draw(spriteBatch);
@@ -568,11 +597,57 @@ namespace WGiBeat.Screens
             
         }
 
+        private readonly Color[] _visualizerColors = {
+                                                new Color(0, 0, 128),
+                                                new Color(0, 0, 255),
+                                                new Color(0, 128, 255),
+                                                new Color(0, 192, 192),
+                                                new Color(0, 192, 96),
+                                                new Color(0, 255, 0),
+                                                new Color(128, 255, 0),
+                                                new Color(255, 255, 0),
+                                                new Color(255, 192, 0),
+                                                new Color(255, 120, 0),
+                                                new Color(255, 0, 0),
+                                                new Color(255, 0, 128),
+                                                new Color(255, 0, 255),
+                                            };
+
+        private readonly Color[] _blazingColors = {
+                                                      new Color(255, 0, 0),
+                                                      new Color(0, 255, 0),
+                                                      new Color(0, 0, 255),
+                                                      new Color(255, 0, 0)
+                                                  };
+
+        private double _rainbowPoint;
         private void DrawBackground(SpriteBatch spriteBatch)
         {
+            
             _background.Draw(spriteBatch);
+            _visualBackground.Opacity = Math.Min(255,(Math.Pow(GetAverageLevel(),1.8) - 1)*5);
+
+            var anyBlazing = (from e in Core.Players where e.Playing && e.IsBlazing select e).Any();
+            
+            if (anyBlazing)
+            {
+                _rainbowPoint = (_rainbowPoint + TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * 2) %3;
+                _visualBackground.Colour = Color.Lerp(_blazingColors[(int) Math.Floor(_rainbowPoint)], _blazingColors[(int) Math.Ceiling(_rainbowPoint)],
+                                                      (float) (_rainbowPoint - Math.Floor(_rainbowPoint)));
+            }
+            else
+            {
+                _visualBackground.Colour = _visualizerColors[(int)Math.Floor(GetAverageLevel() - 1)]; 
+            }
+            
+            _visualBackground.Draw(spriteBatch,_phraseNumber);
             _textBackground.Draw(spriteBatch);
 
+        }
+
+        private double GetAverageLevel()
+        {
+            return (from e in Core.Players where e.Playing select e.Level).Average();
         }
 
         private void DrawCountdowns(SpriteBatch spriteBatch)
@@ -601,7 +676,7 @@ namespace WGiBeat.Screens
 
             for (int x = 0; x < PLAYER_COUNT; x++)
             {
-                if (Core.Players[x].KO)
+                if ((Core.Players[x].KO) && (Core.Players[x].Playing))
                 {
                     _koSprite.Position = (Core.Metrics["KOIndicator", x]);
                     _koSprite.Draw(spriteBatch);

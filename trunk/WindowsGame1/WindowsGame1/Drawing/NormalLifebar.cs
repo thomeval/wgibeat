@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Players;
@@ -104,6 +105,7 @@ namespace WGiBeat.Drawing
                 solidLife *= (1 - beatFraction);
             }
 
+            Debug.Assert(_basePart != null);
             _basePart.Draw(spriteBatch);
 
             //Draw each block in sequence. Either in colour, or black depending on the Player's life.
@@ -192,7 +194,7 @@ namespace WGiBeat.Drawing
 
             var amount = Math.Min(_displayedLife - 200, 100);
             var opacity = (_displayedLife - 200) * 2.55;
-            opacity = Math.Max(opacity, 80);
+            opacity = Math.Max(opacity, 150);
             opacity = Math.Min(255, opacity);
 
             _2ndOverchargePart.Width = (int)((this.Width - BAR_X_OFFSET - 4) / LIFEBAR_CAPACITY * amount);

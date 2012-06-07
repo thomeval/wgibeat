@@ -408,6 +408,24 @@ namespace WGiBeat.AudioSystem
 
             CheckFMODErrors(_fmodSystem.getChannel(index, ref _tmpChannel));
             CheckFMODErrors(_tmpChannel.getSpectrum(returnData, numPoints, 0, DSP_FFT_WINDOW.RECT));
+          
+            return returnData;
+        }
+
+        /// <summary>
+        /// Calculates and returns a sound waveform of the a given Channel ID, based on the sound currently
+        /// playing in that channel.
+        /// </summary>
+        /// <param name="index">The ID of the desired channel.</param>
+        /// <param name="numPoints">The number of points of the waveform to return. Higher numbers will take
+        /// more memory and have more lag, but will be more accurate.</param>
+        /// <returns>The sound waveform of the currently playing sound in the given Channel ID, as an array of decimal numbers.</returns>
+        public float[] GetChannelWaveform(int index, int numPoints)
+        {
+            var returnData = new float[numPoints];
+
+            CheckFMODErrors(_fmodSystem.getChannel(index, ref _tmpChannel));
+            CheckFMODErrors(_tmpChannel.getWaveData(returnData, numPoints, 0));
 
             return returnData;
         }
@@ -428,6 +446,36 @@ namespace WGiBeat.AudioSystem
         }
 
 
+        private DSP _dsp;
+        private int  _dspIndex ;
+        public void ActivateDSP(int index)
+        {
+            _dspIndex = index;
+            var channel = new Channel();
+            _dsp = new DSP();
+  
+            var dspc = new DSPConnection();
+            CheckFMODErrors(_fmodSystem.getChannel(index, ref channel));
+            CheckFMODErrors(_fmodSystem.createDSPByType(DSP_TYPE.PARAMEQ,ref _dsp));
+            _dsp.setParameter((int)DSP_PARAMEQ.CENTER, 70);   
+            _dsp.setParameter((int) DSP_PARAMEQ.BANDWIDTH, 1.5f);
+            CheckFMODErrors(channel.addDSP(_dsp,ref dspc));
+        }
 
+        public void DeactivateDSP(int index)
+        {
+        if (_dsp != null)
+        {
+            _dsp.setBypass(true);
+        }
+        }
+
+        public void SetDSPIntensity(float intensity)
+        {
+            if (_dsp != null)
+            {
+                _dsp.setParameter((int)DSP_PARAMEQ.GAIN, intensity);
+            }
+        }
     }
 }

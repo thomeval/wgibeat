@@ -112,10 +112,14 @@
     <Compile Include="Drawing\Sets\DrawableObjectSet.cs" />
     <Compile Include="Drawing\Sets\GrooveMomentumBarSet.cs" />
     <Compile Include="Drawing\Sets\NoteBarSet.cs" />
+    <Compile Include="Drawing\WaveformDrawer.cs" />
     <Compile Include="Drawing\SongTimeLine.cs" />
     <Compile Include="Drawing\SongTypeDisplay.cs" />
+    <Compile Include="Drawing\SpectrumDrawer.cs" />
+    <Compile Include="Drawing\Sprite3D.cs" />
     <Compile Include="Drawing\TextEntry.cs" />
     <Compile Include="Drawing\UpdaterFrame.cs" />
+    <Compile Include="Drawing\VisualizerBackground.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="AudioSystem\Loaders\SMFileLoader.cs" />
     <Compile Include="AudioSystem\Loaders\SongFileLoader.cs" />
@@ -256,6 +260,12 @@
     <Content Include="Content\Textures\Default\MainGame\LevelBarMaxFront.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Textures\Default\MainGame\LifeBarBaseCoop.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Default\MainGame\LifeBarBaseCoopBlazing.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Textures\Default\MainGame\LifeBarBlazing.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -290,6 +300,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\MainGame\ScorePulse.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Default\MainGame\SpectrumBar.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Default\MainGame\StreakBar.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\MainGame\SyncDifficultyBar.png">

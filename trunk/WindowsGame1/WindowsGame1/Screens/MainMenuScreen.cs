@@ -16,16 +16,14 @@ namespace WGiBeat.Screens
 
 
         private readonly string[] _menuText = { "Start Game", "Stats","How to play", "Keys", "Options", "Song Editor", "Website", "Exit"};
-        private Sprite _background;
-        private Sprite _header;
+        private Sprite3D _background;
+        private Sprite3D _header;
         private SpriteMap _menuOptionSprite;
-        private Sprite _foreground;
+        private Sprite3D _foreground;
         private UpdaterFrame _updaterFrame;
         private const string WEBSITE = "http://code.google.com/p/wgibeat/?lol=orz";
         private string _errorMessage = "";
         private Thread _updateThread;
-        private Matrix viewMatrix;
-        private Matrix projectionMatrix;
 
 
         public MainMenuScreen(GameCore core)
@@ -84,21 +82,21 @@ namespace WGiBeat.Screens
 
         private void InitSprites()
         {
-            _background = new Sprite
+            _background = new Sprite3D
                               {
                                   Height = 600,
                                   Width = 800,
-                                  SpriteTexture = TextureManager.Textures("MainMenuBackground"),
+                                  Texture = TextureManager.Textures("MainMenuBackground"),
                               };
-            _foreground = new Sprite
+            _foreground = new Sprite3D
                               {
-                                  SpriteTexture = TextureManager.Textures("MainMenuForeground"),
+                                  Texture = TextureManager.Textures("MainMenuForeground"),
                                   Height = 600,
                                   Width = 800,
                               };
-            _header = new Sprite
+            _header = new Sprite3D
                           {
-                              SpriteTexture = TextureManager.Textures("MainMenuHeader")
+                              Texture = TextureManager.Textures("MainMenuHeader")
                           };
             _menuOptionSprite = new SpriteMap
                                     {
@@ -107,64 +105,24 @@ namespace WGiBeat.Screens
                                         Rows = 2
                                     };
 
+
+
+
+
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-           // DrawBackground(spriteBatch,gameTime);
-          //  DrawMenu(spriteBatch);
+            DrawBackground(spriteBatch,gameTime);
+            DrawMenu(spriteBatch);
 
     
-          //  TextureManager.DrawString(spriteBatch,_errorMessage,"DefaultFont", Core.Metrics["MainMenuNoSongsError", 0], Color.Black,FontAlign.LEFT);
-           // DrawUpdater(spriteBatch);
+            TextureManager.DrawString(spriteBatch,_errorMessage,"DefaultFont", Core.Metrics["MainMenuNoSongsError", 0], Color.Black,FontAlign.LEFT);
+            DrawUpdater(spriteBatch);
 
-            DrawExperimental();
+  
         }
 
-        private void DrawExperimental()
-        {
-            var effect = new BasicEffect(Core.GraphicsDevice, null);
-            viewMatrix = Matrix.CreateLookAt(new Vector3(400, 300, 0), new Vector3(400, 300, 1), new Vector3(0, -1, 0));
-            projectionMatrix = Matrix.CreateOrthographic(800, 600, -10, 10);
-            
-            effect.View = viewMatrix;
-            effect.Projection = projectionMatrix;
-       
-          
-            effect.Texture = _background.SpriteTexture;
-            effect.TextureEnabled = true;
-          //  effect.VertexColorEnabled = true;
-
-            var vertices = new VertexPositionColorTexture[6];
-
-            vertices[0].Position = new Vector3(0,0, 0);
-            vertices[0].TextureCoordinate = new Vector2(0, 0);
-            vertices[0].Color = Color.Red;
-
-            vertices[1].Position = new Vector3(800, 0, 0);
-            vertices[1].TextureCoordinate = new Vector2(1, 0);       
-            vertices[1].Color = Color.Green;
-
-            vertices[2].Position = new Vector3(800, 600, 0);
-            vertices[2].Color = Color.Yellow;
-            vertices[2].TextureCoordinate = new Vector2(1, 1);
-
-            vertices[3] = vertices[0];
-            vertices[4] = vertices[2];
-            vertices[5].Position = new Vector3(0, 600, 0);
-            vertices[5].Color = Color.Blue;
-            vertices[5].TextureCoordinate = new Vector2(0, 1);
-
-            effect.Begin();
-            foreach (var pass in effect.CurrentTechnique.Passes)
-            {
-                pass.Begin();
-                Core.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, vertices, 0, 2);
-                pass.End();
-            }
-            effect.End();
-
-        }
 
         private void DrawUpdater(SpriteBatch spriteBatch)
         {
@@ -176,15 +134,13 @@ namespace WGiBeat.Screens
         {
             _background.Draw(spriteBatch);
             _field.Draw(spriteBatch, gameTime);                                
-            _foreground.Draw(spriteBatch);        
+            _foreground.Draw(spriteBatch);
+            _header.Draw(spriteBatch);
         }
 
         private void DrawMenu(SpriteBatch spriteBatch)
-        {
-      
+        {      
 
-            _header.Draw(spriteBatch);
-            
             for (int menuOption = 0; menuOption < (int)MainMenuOption.COUNT; menuOption++)
             {
 
@@ -195,6 +151,7 @@ namespace WGiBeat.Screens
                 textPosition.Y += _menuOptionSprite.SpriteTexture.Height / 4 - 25;
                 TextureManager.DrawString(spriteBatch,_menuText[menuOption],"TwoTech36",textPosition,Color.Black, FontAlign.CENTER);
             }
+
         }
 
         public override void PerformAction(InputAction inputAction)

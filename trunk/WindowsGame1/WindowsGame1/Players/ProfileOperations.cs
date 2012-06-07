@@ -78,7 +78,12 @@ namespace WGiBeat.Players
             {
                 return 3;
             }
-
+            
+            if (player.GetLevel() >= 50)
+            {
+                return 5;
+            }
+              
             return 4;
         }
    

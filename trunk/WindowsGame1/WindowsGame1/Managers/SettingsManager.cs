@@ -69,6 +69,7 @@ namespace WGiBeat.Managers
             sm["EnableMenuSounds"] = true;
             sm["LastSortMode"] = 0;
             sm["VSync"] = false;
+            sm["BlazingBassBoost"] = 1.5f;
             return sm;
         }
 

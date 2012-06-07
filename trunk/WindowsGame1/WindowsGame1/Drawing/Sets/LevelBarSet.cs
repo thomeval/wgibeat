@@ -150,6 +150,8 @@ namespace WGiBeat.Drawing.Sets
                     return 175;
                 case Difficulty.INSANE:
                     return 300;
+                    case Difficulty.RUTHLESS:
+                    return 750;
                 default:
                     return 0;
             }
