@@ -34,6 +34,8 @@ namespace WGiBeat.Drawing.Sets
         }
         public void Draw(SpriteBatch spriteBatch, double phraseNumber)
         {
+
+            var visiblePlayers = 0;
             for (int x = 0; x < Players.Count(); x++)
             {
                 if (!Players[x].Playing)
@@ -47,11 +49,11 @@ namespace WGiBeat.Drawing.Sets
                     if (phraseNumber < _threshholds[y])
                     {
                         _countdownSpriteMap.ColorShading.A = (byte)Math.Min(255, (_threshholds[y] - phraseNumber) * 255 * 4);
-                        _countdownSpriteMap.Draw(spriteBatch, y, 200, 60, _metrics["Countdown", x]);
+                        _countdownSpriteMap.Draw(spriteBatch, y, 200, 60, _gameType == GameType.SYNC ? _metrics["SyncCountdown",visiblePlayers]: _metrics["Countdown", x]);
                         break;
                     }
                 }
-
+                visiblePlayers++;
             }
         }
     }

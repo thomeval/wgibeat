@@ -19,7 +19,7 @@ namespace WGiBeat.Drawing.Sets
         private SpriteMap _playerIdentifierSpriteMap;
 
         private TeamScoreMeter _teamScoreMeter;
-        private SpriteMap _iconSyncBaseSpriteMap;
+        private Sprite _iconSyncBaseSpriteMap;
         private readonly Color[] _pulseColors = {new Color(255,128,128),new Color(128,128,255), new Color(128,255,128),new Color(255,255,128)    };
 
         public ScoreSet(MetricsManager metrics, Player[] players, GameType type)
@@ -47,11 +47,10 @@ namespace WGiBeat.Drawing.Sets
                 SpriteTexture = TextureManager.Textures("PlayerDifficulties")
             };
 
-            _iconSyncBaseSpriteMap = new SpriteMap
+            _iconSyncBaseSpriteMap = new Sprite
                                          {
-                                             Columns = 1,
-                                             Rows = 2,
-                                             SpriteTexture = TextureManager.Textures("SyncDifficultyBar")
+                                             SpriteTexture = TextureManager.Textures("SyncDifficultyBar"),
+                                             Position = _metrics["SyncPlayerDifficultiesBase", 0]
                                          };
             _coopBaseSprite = new SpriteMap
             {
@@ -101,16 +100,12 @@ namespace WGiBeat.Drawing.Sets
 
         private void DrawPlayerDifficultiesSync(SpriteBatch spriteBatch)
         {
-            int idx = 1 + (int)(Players[0].PlayerOptions.PlayDifficulty);
 
-            for (int x = 0; x < 2; x++)
-            {
-                if (Players[x * 2].Playing || Players[(x * 2) + 1].Playing)
-                {
-                    _iconSyncBaseSpriteMap.Draw(spriteBatch, x, _metrics["SyncPlayerDifficultiesBase", x]);
-                    _iconSpriteMap.Draw(spriteBatch, idx, 30, 30, _metrics["SyncPlayerDifficulties", x]);
-                }
-            }
+            var idx = (from e in Players where e.Playing select e.PlayerOptions.PlayDifficulty).Min() + 1;
+                    _iconSyncBaseSpriteMap.Draw(spriteBatch);
+                    _iconSpriteMap.Draw(spriteBatch, (int) idx, 30, 30, _metrics["SyncPlayerDifficulties", 0]);
+                
+            
         }
 
         private void DrawCombinedScores(SpriteBatch spriteBatch)
@@ -137,19 +132,16 @@ namespace WGiBeat.Drawing.Sets
 
             var scoreText = _displayedScores[0];
 
-            for (int x = 0; x < 2; x++)
-            {
-                if ((Players[2 * x].Playing) || (Players[(2 * x) + 1].Playing))
-                {
+       
 
-                    _coopBaseSprite.Draw(spriteBatch, 0, 240, 40, _metrics["ScoreCombinedBase", x]);
-                    _coopPulseSprite.Position = _metrics["ScoreCombinedBase", x];
+                    _coopBaseSprite.Draw(spriteBatch, 0, 240, 40, _metrics["SyncScoreBase", 0]);
+                    _coopPulseSprite.Position = _metrics["SyncScoreBase", 0];
                     _coopPulseSprite.ColorShading.A = (byte)Math.Min(255, 2 * Math.Sqrt(Players[0].Score - scoreText));
                     _coopPulseSprite.Draw(spriteBatch);
-                    TextureManager.DrawString(spriteBatch, "" + (long) scoreText, "LargeFont",
-                                           _metrics["ScoreCombinedText", x], Color.White, FontAlign.RIGHT);
-                }
-            }
+                    TextureManager.DrawString(spriteBatch, "" + Math.Ceiling(scoreText), "LargeFont",
+                                           _metrics["SyncScoreText", 0], Color.White, FontAlign.RIGHT);
+                
+            
         }
 
         private void DrawCoopCombinedScore(SpriteBatch spriteBatch)
@@ -174,7 +166,7 @@ namespace WGiBeat.Drawing.Sets
                     _coopPulseSprite.ColorShading.A = (byte) Math.Min(255, 2* Math.Sqrt(totalScore - scoreText));
                     _coopPulseSprite.Draw(spriteBatch);
 
-                    TextureManager.DrawString(spriteBatch, "" + (long) scoreText, "LargeFont",
+                    TextureManager.DrawString(spriteBatch, "" + Math.Ceiling(scoreText), "LargeFont",
                                            _metrics["ScoreCombinedText", x], Color.White, FontAlign.RIGHT);
                 }
             }
@@ -197,8 +189,8 @@ namespace WGiBeat.Drawing.Sets
                 }
             }
 
-            _teamScoreMeter.BlueScore = (long) blueScore;
-            _teamScoreMeter.RedScore = (long) redScore;
+            _teamScoreMeter.BlueScore = (long) Math.Ceiling(blueScore);
+            _teamScoreMeter.RedScore = (long) Math.Ceiling(redScore);
 
             if (Players[0].Playing || Players[1].Playing)
             {
@@ -239,7 +231,7 @@ namespace WGiBeat.Drawing.Sets
                 identifierPosition.Y += 5;
                 _playerIdentifierSpriteMap.Draw(spriteBatch,idx,55,30,identifierPosition);
 
-                TextureManager.DrawString(spriteBatch, "" + (long) _displayedScores[x], "LargeFont",
+                TextureManager.DrawString(spriteBatch, "" + Math.Ceiling(_displayedScores[x]), "LargeFont",
                                       _metrics["ScoreText", x], Color.White,FontAlign.RIGHT);
             }
         }
@@ -250,15 +242,9 @@ namespace WGiBeat.Drawing.Sets
             {
 
                 var diff = Players[x].Score - _displayedScores[x];
-                if (diff <= 10)
-                {
-                    _displayedScores[x] = Players[x].Score;
-                    diff = 0;
-                }
+             
                 var changeMx = Math.Min(0.5, TextureManager.LastDrawnPhraseDiff * SCORE_UPDATE_SPEED);
                 _displayedScores[x] += (diff * (changeMx));
-
-
             }
         }
 

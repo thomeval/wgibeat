@@ -43,7 +43,7 @@ namespace WGiBeat.Helpers
                         return;
                     }
                     SendResponse(new AggregatorResponse
-                                     {Judgement = GetWorstJudgement(), Multiplier = PlayerCount(), Player = AggregatorPlayerID.ALL});
+                                     {Judgement = GetWorstJudgement(), Multiplier = PlayerCount(), Player = (AggregatorPlayerID)0});
                     ResetReceivedHits();
                     break;
                     default:

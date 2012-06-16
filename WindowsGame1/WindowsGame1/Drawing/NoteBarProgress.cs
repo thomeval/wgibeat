@@ -60,9 +60,10 @@ namespace WGiBeat.Drawing
             }
 
             var drawHeight = this.Height * Value / Maximum;
+            var texHeight = _frontSprite.SpriteTexture.Height*Value/Maximum;
             _frontSprite.Height = drawHeight;
             _frontSprite.Y = this.Y + this.Height - drawHeight;
-            _frontSprite.DrawTiled(spriteBatch, 0, this.Height - drawHeight, _frontSprite.Width, drawHeight);
+            _frontSprite.DrawTiled(spriteBatch, 0, _frontSprite.SpriteTexture.Height  - texHeight, _frontSprite.Width, texHeight);
             if (Value == Maximum)
             {
              

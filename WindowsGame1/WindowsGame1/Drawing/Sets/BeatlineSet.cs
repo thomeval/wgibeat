@@ -50,18 +50,26 @@ namespace WGiBeat.Drawing.Sets
             : base(metrics, players, gameType)
         {
             _beatlines = new Beatline[4];
-
+            var visibleCount = 0;
+            
             for (int x = 0; x < 4; x++)
-
+            {
+              
                 _beatlines[x] = new Beatline
                                     {
-                                        Position = (_metrics["BeatlineBarBase", x]),
+                                        //Beatlines are arranged differently for SYNC mode.
+                                        Position = _gameType == GameType.SYNC ? _metrics["SyncBeatlineBarBase",visibleCount]: (_metrics["BeatlineBarBase", x]),
                                         Size = new Vector2(350, 125),
                                         Id = x,
                                         IdentifierSize = _metrics["BeatlinePlayerIdentifiers.Size", 0],
-                                        EffectIconSize = _metrics["BeatlineEffectIcons.Size",0]
-                                        
+                                        EffectIconSize = _metrics["BeatlineEffectIcons.Size", 0]
+
                                     };
+                if (Players[x].Playing)
+                {
+                    visibleCount++;
+                }
+            }
         }
 
 

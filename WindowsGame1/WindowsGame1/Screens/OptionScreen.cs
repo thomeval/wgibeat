@@ -116,10 +116,10 @@ namespace WGiBeat.Screens
             _optionsMenu.AddItem(item);
 
             item = new MenuItem { ItemText = "Blazing Bass Boost" };
-            item.AddOption("Off", 1.0);
+            item.AddOption("Off", 1);
             item.AddOption("Light", 1.25);
             item.AddOption("Mild", 1.5);
-            item.AddOption("Max", 2.0);
+            item.AddOption("Max", 2);
             _optionsMenu.AddItem(item);
 
             item = new MenuItem { ItemText = "Save" };

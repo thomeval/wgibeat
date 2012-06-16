@@ -133,7 +133,12 @@ namespace WGiBeat.Drawing
         public NoteBar Clone()
         {
             var result = new NoteBar();
-
+            result.RednessSprite = new Sprite
+                                       {
+                                           Position = RednessSprite.Position,
+                                           Size = RednessSprite.Size,
+                                           SpriteTexture = RednessSprite.SpriteTexture
+                                       };
             foreach (Note n in Notes)
             {
                 result.Notes.Add(new Note{Completed = n.Completed, Direction = n.Direction, Reverse = n.Reverse});

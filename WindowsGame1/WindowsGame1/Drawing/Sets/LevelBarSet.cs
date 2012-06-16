@@ -58,16 +58,10 @@ namespace WGiBeat.Drawing.Sets
                     break;
 
                     case GameType.SYNC:
-                    if (Players[0].Playing || Players[1].Playing)
-                    {
+
                         _levelBars[0].Position = _metrics["SyncLevelBarBase", 0];
                         _levelBars[0].Draw(spriteBatch,gameTime); 
-                    }
-                    if (Players[2].Playing || Players[3].Playing)
-                    {
-                        _levelBars[0].Position = _metrics["SyncLevelBarBase", 1];
-                        _levelBars[0].Draw(spriteBatch,gameTime);
-                    }
+         
                     break;
             }
 
@@ -93,7 +87,7 @@ namespace WGiBeat.Drawing.Sets
                      MomentumIncreaseByDifficulty(Players[player].PlayerOptions.PlayDifficulty));
                 if (_gameType == GameType.SYNC)
                 {
-                    amount /= 4;
+                 
                     SetMomentumSync(Players[0].Momentum + amount);
                 }
                 else
@@ -111,8 +105,7 @@ namespace WGiBeat.Drawing.Sets
             //to ensure the correct result.
             if (_gameType == GameType.SYNC)
             {
-                const int ACTIVE_PLAYERS = 4;
-                amount = Math.Pow(amount, 1.0 / ACTIVE_PLAYERS);
+          
                 SetMomentumSync((long) (Players[0].Momentum*amount));
             }
             else
