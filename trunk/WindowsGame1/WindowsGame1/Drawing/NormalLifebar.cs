@@ -24,6 +24,14 @@ namespace WGiBeat.Drawing
         private const int BAR_X_OFFSET = 45;
         public int PlayerID { private get; set; }
 
+        private Color[] _fullColors =
+            {
+                new Color(255, 128, 128),
+                new Color(128, 128, 255),
+                new Color(128, 255, 128),
+                new Color(128, 255, 25),
+
+            };
         public NormalLifeBar()
         {
             _displayedLife = 0;
@@ -147,7 +155,10 @@ namespace WGiBeat.Drawing
         {
             if ((Parent.Players[PlayerID].Life == Parent.Players[PlayerID].GetMaxLife()) && (!Parent.Players[PlayerID].IsBlazing))
             {
-                //TODO: Fix
+                _blazingPart.ColorShading = _fullColors[PlayerID];
+                _blazingPart.ColorShading.A = 128;
+                _blazingPart.Draw(spriteBatch);
+               
             }
         }
 
@@ -159,6 +170,7 @@ namespace WGiBeat.Drawing
             }
             beatFraction /= BEAT_FRACTION_SEVERITY;
             var opacity = (byte)((1 - beatFraction) * 255);
+            _blazingPart.ColorShading = Color.White;
             _blazingPart.ColorShading.A = opacity;
             _blazingPart.Draw(spriteBatch);
         }

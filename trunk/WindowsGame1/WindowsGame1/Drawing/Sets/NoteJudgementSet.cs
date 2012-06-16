@@ -123,13 +123,19 @@ namespace WGiBeat.Drawing.Sets
                 var newDj = new DisplayedJudgement
                                 {
                                     DisplayUntil = _phraseNumber + 0.5,
-                                    Height = 175,
-                                    Width = 50,
+                                    Size = _metrics["Judgement.Size",0],
                                     Player = player,
                                     Tier = (int) judgement,
-                                    TextPosition = _metrics["StreakText",player]
+                                  
                                 };
                 newDj.Position = (_metrics["Judgement", player]);
+
+                if (_gameType == GameType.SYNC)
+                {
+                    newDj.Position = _metrics["SyncJudgement", player];
+                    newDj.Size = _metrics["SyncJudgement.Size",0].Clone();
+                    newDj.Height *= (from e in Players where e.Playing select e).Count();
+                }
                 _displayedJudgements[player] = newDj;
             }
         }
@@ -140,7 +146,7 @@ namespace WGiBeat.Drawing.Sets
             Players[player].Judgements[(int)judgement]++;
 
             if (_gameType != GameType.SYNC) return;
-
+            
             for (int x = 1; x < 4; x++)
             {
                 if (Players[x].Playing)

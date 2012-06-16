@@ -13,6 +13,7 @@ namespace WGiBeat.Drawing.Sets
     {
         private readonly NoteBar[] _noteBars;
         private readonly NoteBarProgress[] _noteBarProgresses;
+        private int[] _syncNotebarPositions;
 
         public event EventHandler PlayerFaulted;
         public event EventHandler PlayerArrowHit;
@@ -20,6 +21,7 @@ namespace WGiBeat.Drawing.Sets
         public NoteBarSet(MetricsManager metrics, Player[] players, GameType gameType) : base(metrics, players, gameType)
         {
             _noteBars = new NoteBar[4];
+            _syncNotebarPositions = new int[4];
             _noteBarProgresses = new NoteBarProgress[4];
             InitNoteBars();
         }
@@ -29,7 +31,7 @@ namespace WGiBeat.Drawing.Sets
         {
             var amount = Math.Max(0,  TextureManager.LastDrawnPhraseDiff * REDNESS_ANIMATION_SPEED);
             var mx = Math.Max(0.5, 1 - (TextureManager.LastDrawnPhraseDiff * 20));
-          //  TextureManager.DrawString(spriteBatch,"" +mx,"DefaultFont",new Vector2(200,200),Color.Black,FontAlign.LEFT );
+
             for (int x = 0; x < _noteBars.Length; x++)
             {
                 if (!Players[x].Playing)
@@ -39,10 +41,40 @@ namespace WGiBeat.Drawing.Sets
                 _noteBars[x].Redness = Math.Max(0, _noteBars[x].Redness - amount);
                 _noteBars[x].XDisplayOffset *= mx;
                 _noteBars[x].Draw(spriteBatch);
+   
+            }
+
+            if (_gameType == GameType.SYNC)
+            {
+                DrawProgressSync(spriteBatch);
+            }
+            else
+            {
+                DrawProgress(spriteBatch);
+            }
+        
+        }
+
+        private void DrawProgressSync(SpriteBatch spriteBatch)
+        {
+            _noteBarProgresses[0].Value = (from e in _noteBars where Players[e.ID].Playing select e.NumberCompleted()).Sum();
+            _noteBarProgresses[0].Maximum = (from e in _noteBars where Players[e.ID].Playing select e.Notes.Count).Sum();
+            _noteBarProgresses[0].Draw(spriteBatch);
+        }
+
+        private void DrawProgress(SpriteBatch spriteBatch)
+        {
+            for (int x = 0; x < _noteBars.Length; x++)
+            {
+                if (!Players[x].Playing)
+                {
+                    continue;
+                }
                 _noteBarProgresses[x].Value = _noteBars[x].NumberCompleted();
                 _noteBarProgresses[x].Maximum = _noteBars[x].Notes.Count();
                 _noteBarProgresses[x].Draw(spriteBatch);
             }
+          
         }
 
         public void CancelReverse(int player)
@@ -52,21 +84,43 @@ namespace WGiBeat.Drawing.Sets
 
         public void InitNoteBars()
         {
-
+            var visibleCount = 0;
+            for (int x = 0; x < 4; x++)
+            {
+                _syncNotebarPositions[x] = visibleCount;
+                if (Players[x].Playing)
+                {
+                    visibleCount++;
+                }
+            }
          
             for (int x = 0; x < _noteBars.Length; x++)
             {
+              
                 CreateNextNoteBar(x);
-                _noteBars[x].RednessSprite =  new Sprite()
-                {
+                _noteBars[x].RednessSprite =  new Sprite
+                                                  {
                     ColorShading = Color.Red,
                     SpriteTexture = TextureManager.CreateWhiteMask("BeatMeter"),
                     Height = 125,
                     Width = 350,
-                    Position = _metrics["BeatlineBarBase",x]
+                    Position = _gameType == GameType.SYNC ? _metrics["SyncBeatlineBarBase",_syncNotebarPositions[x]]: _metrics["BeatlineBarBase",x]
                 };
-                _noteBarProgresses[x] = new NoteBarProgress { Height = 175, Width = 50, ID = x, Position = _metrics["NoteBarProgress", x] };
+                _noteBarProgresses[x] = new NoteBarProgress
+                                            {
+                                                Size = _gameType == GameType.SYNC ? _metrics["SyncNoteBarProgress.Size", 0] : _metrics["NoteBarProgress.Size", 0], 
+                                                ID = x, 
+                                                Position = _gameType == GameType.SYNC ? _metrics["SyncNoteBarProgress",0] :_metrics["NoteBarProgress", x]
+                                            };
+              
             }
+
+            if (_gameType == GameType.SYNC)
+            {
+                _noteBarProgresses[0].Height *= visibleCount;
+            }
+
+            
         
         }
 
@@ -133,7 +187,7 @@ namespace WGiBeat.Drawing.Sets
             var numArrow = (int)Players[player].Level;
             int numReverse = GetReverseNoteCount(player);
 
-            _noteBars[player] = NoteBar.CreateNoteBar(numArrow, numReverse, _metrics["NoteBar", player]);
+            _noteBars[player] = NoteBar.CreateNoteBar(numArrow, numReverse, _gameType == GameType.SYNC ? _metrics["SyncNoteBar",_syncNotebarPositions[player]] : _metrics["NoteBar", player]);
             _noteBars[player].ID = player;
             _noteBars[player].RednessSprite = new Sprite()
             {
@@ -141,7 +195,7 @@ namespace WGiBeat.Drawing.Sets
                 SpriteTexture = TextureManager.CreateWhiteMask("BeatMeter"),
                 Height = 125,
                 Width = 350,
-                Position = _metrics["BeatlineBarBase", player]
+                Position =  _metrics["BeatlineBarBase", player]
             };
             SyncNoteBars(_noteBars[player]);
         }
@@ -180,7 +234,8 @@ namespace WGiBeat.Drawing.Sets
                     }
                     _noteBars[x] = notebar.Clone();
                     _noteBars[x].ID = x;
-                    _noteBars[x].Position = _metrics["NoteBar", x];
+                    _noteBars[x].Position = _metrics["SyncNoteBar", _syncNotebarPositions[x]];
+                    _noteBars[x].RednessSprite.Position = _metrics["SyncBeatlineBarBase", _syncNotebarPositions[x]];
                 }
             }
         }

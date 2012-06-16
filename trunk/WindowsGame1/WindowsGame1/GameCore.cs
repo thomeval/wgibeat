@@ -225,11 +225,12 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             Sprite3D.Device = this.GraphicsDevice;
 
             Sprite3D.EffectInit = false;
-            GraphicsDevice.VertexDeclaration = new VertexDeclaration(
- GraphicsDevice, VertexPositionColorTexture.VertexElements);
+
 
             
             GraphicsManager.ApplyChanges();
+            GraphicsDevice.VertexDeclaration = new VertexDeclaration(
+GraphicsDevice, VertexPositionColorTexture.VertexElements);
         }
 
         #endregion

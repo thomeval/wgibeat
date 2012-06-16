@@ -63,14 +63,9 @@ namespace WGiBeat.Drawing.Sets
             }
             if (_gameType == GameType.SYNC)
             {
-                if (Players[0].Playing || Players[1].Playing)
-                {
+
                     DrawHitsBar(spriteBatch, 0);
-                }
-                if (Players[2].Playing || Players[3].Playing)
-                {
-                    DrawHitsBar(spriteBatch,1);
-                }
+
                 return;
             }
             for (int x = 0; x < 4; x++)

@@ -79,7 +79,7 @@ namespace WGiBeat.Drawing
                     _barSprite.ColorShading = this.ColorShading;
                     _barSprite.Position = new Vector2(this.X + posX, this.Y);
                     _barSprite.Size = new Vector2(this.Width, this.Height * levels[x]);
-                    _barSprite.DrawTiled(0,0,_barSprite.Texture.Width,_barSprite.Height);
+                    _barSprite.DrawTiled(0,0,_barSprite.Texture.Width,_barSprite.Height * 2);
                     posX += this.Width;
                 }
 
@@ -94,8 +94,8 @@ namespace WGiBeat.Drawing
             {
                 line.ClearVectors();
 
-                line.AddVector(new Vector2(posX, this.Height*_lineLevels[x]));
-                line.AddVector(new Vector2(posX + this.Width, this.Height*_lineLevels[x]));
+                line.AddVector(new Vector2(posX + 1, this.Height*_lineLevels[x]));
+                line.AddVector(new Vector2(posX + this.Width - 1, this.Height*_lineLevels[x]));
                 line.Render(spriteBatch);
                 posX += this.Width;
             }
