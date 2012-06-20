@@ -38,7 +38,7 @@ namespace WGiBeat.Screens
         private const int LISTITEMS_DRAWN = 13;
         private const double SONG_CHANGE_SPEED = 7;
         private const int SPECTRUM_POINTS = 64;
-        private const int SPECTRUM_CLUSTER_SIZE = 1;
+        private const int SPECTRUM_CLUSTER_SIZE = 2;
         private double _songListDrawOpacity;
 
         private readonly SineSwayParticleField _field = new SineSwayParticleField();
@@ -192,7 +192,12 @@ namespace WGiBeat.Screens
             if (Crossfader.ChannelIndexCurrent == -1) 
                 return;
             float[] levels = Core.Audio.GetChannelSpectrum(Crossfader.ChannelIndexCurrent, SPECTRUM_POINTS);
-            _spectrumDrawer.Draw(spriteBatch, levels);
+            var averageLevels = new float[SPECTRUM_POINTS/SPECTRUM_CLUSTER_SIZE];
+            for (int x = 0; x < levels.Length; x+= SPECTRUM_CLUSTER_SIZE )
+            {
+                averageLevels[x/SPECTRUM_CLUSTER_SIZE] = levels.Skip(x).Take(SPECTRUM_CLUSTER_SIZE).Average();
+            }
+                _spectrumDrawer.Draw(spriteBatch, averageLevels);
         }
         private void DrawBpmMeter(SpriteBatch spriteBatch)
         {

@@ -18,9 +18,7 @@ namespace WGiBeat.Screens
             this.Width = 360;
             this.Height = 235;
             InitSprites();
-        }
-
-        
+        }  
 
         private int _max;
         private int _min;

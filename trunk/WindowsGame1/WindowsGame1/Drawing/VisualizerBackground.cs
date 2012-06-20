@@ -10,6 +10,7 @@ namespace WGiBeat.Drawing
     {
         public AudioManager AudioManager { get; set; }
 
+        public byte MaxBrightness { get; set; }
         public int SongChannel { get; set; }
 
         public double Opacity { get; set; }
@@ -55,14 +56,17 @@ namespace WGiBeat.Drawing
             Draw(spriteBatch,0.0);
         }
 
-        private const int WAVEFORM_POINTS = 128;
+        private const int WAVEFORM_POINTS = 512;
         private const int SPECTRUM_POINTS = 64;
         private const int BAR_WIDTH = 15;
         private const int BAR_HEIGHT = 300;
         private const int OPACITY_CHANGE_SPEED = 1;
         public void Draw(SpriteBatch spriteBatch, double phraseNumber)
         {
- 
+            if (MaxBrightness == 0)
+            {
+                return;
+            }
             if (!_init)
             {
                 Initialize();
@@ -74,7 +78,7 @@ namespace WGiBeat.Drawing
             var changeMx = Math.Min(0.5, TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * OPACITY_CHANGE_SPEED);
             _displayOpacity += (diff * (changeMx));
 
-            var myOpacity = 255 * _displayOpacity / 255 *(GetBeatFraction(phraseNumber));
+            var myOpacity = 255 * Math.Min(MaxBrightness, _displayOpacity) / 255 * (GetBeatFraction(phraseNumber));
 
    
                 float[] levels = AudioManager.GetChannelSpectrum(SongChannel, SPECTRUM_POINTS);
@@ -89,11 +93,11 @@ namespace WGiBeat.Drawing
                _lastUpdate = DateTime.Now;
            }
 
-            _spectrumDrawer.ColorShading.A = _spectrumDrawerTop.ColorShading.A = _waveformDrawer.ColorShading.A = (byte) _displayOpacity;
+            _spectrumDrawer.ColorShading.A = _spectrumDrawerTop.ColorShading.A = _waveformDrawer.ColorShading.A = (byte) Math.Min(MaxBrightness, _displayOpacity);
             _spectrumDrawerTop.Height = 50 + (int)(250 * _displayOpacity / 255);
             _spectrumDrawer.Height = -_spectrumDrawerTop.Height;
             _waveformDrawer.Height = 25 + (int)(125 * _displayOpacity / 255);
-                DrawLevels(spriteBatch, levels);
+            DrawLevels(spriteBatch, levels);
 
             DrawWaveform(spriteBatch, waveLevels);
         }

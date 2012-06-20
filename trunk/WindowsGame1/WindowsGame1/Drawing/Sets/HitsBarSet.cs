@@ -63,8 +63,8 @@ namespace WGiBeat.Drawing.Sets
             }
             if (_gameType == GameType.SYNC)
             {
-
-                    DrawHitsBar(spriteBatch, 0);
+                DrawStreakBar(spriteBatch,0);
+                DrawHitsBar(spriteBatch,0);
 
                 return;
             }
@@ -80,9 +80,6 @@ namespace WGiBeat.Drawing.Sets
 
             }
         }
-
-
-
         private const int HITSBAR_SHOW_SPEED = 600;
         private const int HITSBAR_HIDE_SPEED = 1000;
         private const int OVERMASK_HIDE_SPEED = 750;
@@ -129,7 +126,7 @@ namespace WGiBeat.Drawing.Sets
             _streakOvermaskOpacity[player] = Math.Max(0, _streakOvermaskOpacity[player] - (TextureManager.LastDrawnPhraseDiff * OVERMASK_HIDE_SPEED));
 
             _streakBaseSprite.ColorShading.A = (byte)_streakOpacity[player];
-            _streakBaseSprite.Position = _streakOvermaskSprite.Position = _metrics["StreakBar", player];
+            _streakBaseSprite.Position = _streakOvermaskSprite.Position = _metrics[DeterminePrefix() + "StreakBar", player];
             _textColor.A = (byte)_streakOpacity[player];
             _streakBaseSprite.Draw(spriteBatch);
 

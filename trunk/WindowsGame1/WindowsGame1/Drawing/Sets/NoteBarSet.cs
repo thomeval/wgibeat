@@ -14,9 +14,11 @@ namespace WGiBeat.Drawing.Sets
         private readonly NoteBar[] _noteBars;
         private readonly NoteBarProgress[] _noteBarProgresses;
         private int[] _syncNotebarPositions;
+        public bool Visible { get; set; }
 
         public event EventHandler PlayerFaulted;
         public event EventHandler PlayerArrowHit;
+       
 
         public NoteBarSet(MetricsManager metrics, Player[] players, GameType gameType) : base(metrics, players, gameType)
         {
@@ -27,9 +29,11 @@ namespace WGiBeat.Drawing.Sets
         }
 
         private const int REDNESS_ANIMATION_SPEED = 750;
+        private const int FADEOUT_SPEED = 500;
         public override void Draw(SpriteBatch spriteBatch)
         {
             var amount = Math.Max(0,  TextureManager.LastDrawnPhraseDiff * REDNESS_ANIMATION_SPEED);
+            var fadeAmount = Math.Max(0, TextureManager.LastDrawnPhraseDiff*FADEOUT_SPEED);
             var mx = Math.Max(0.5, 1 - (TextureManager.LastDrawnPhraseDiff * 20));
 
             for (int x = 0; x < _noteBars.Length; x++)
@@ -37,6 +41,14 @@ namespace WGiBeat.Drawing.Sets
                 if (!Players[x].Playing)
                 {
                     continue;
+                }
+                if ((!Visible) || (Players[x].KO))
+                {
+                    _noteBars[x].Opacity = Math.Max(0, _noteBars[x].Opacity - fadeAmount);
+                }
+                else
+                {
+                    _noteBars[x].Opacity = 255;
                 }
                 _noteBars[x].Redness = Math.Max(0, _noteBars[x].Redness - amount);
                 _noteBars[x].XDisplayOffset *= mx;

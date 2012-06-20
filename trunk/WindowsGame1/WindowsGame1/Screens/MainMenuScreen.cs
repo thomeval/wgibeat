@@ -120,9 +120,7 @@ namespace WGiBeat.Screens
             TextureManager.DrawString(spriteBatch,_errorMessage,"DefaultFont", Core.Metrics["MainMenuNoSongsError", 0], Color.Black,FontAlign.LEFT);
             DrawUpdater(spriteBatch);
 
-  
         }
-
 
         private void DrawUpdater(SpriteBatch spriteBatch)
         {
@@ -132,10 +130,10 @@ namespace WGiBeat.Screens
 
         private void DrawBackground(SpriteBatch spriteBatch,GameTime gameTime)
         {
-            _background.Draw(spriteBatch);
+            _background.Draw();
             _field.Draw(spriteBatch, gameTime);                                
-            _foreground.Draw(spriteBatch);
-            _header.Draw(spriteBatch);
+            _foreground.Draw();
+            _header.Draw();
         }
 
         private void DrawMenu(SpriteBatch spriteBatch)

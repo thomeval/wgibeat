@@ -52,18 +52,11 @@ namespace WGiBeat.Drawing
             for (int i = 0; i < Count; i++)
             {
                 _swayers[i] = new SineSwayParticle();
+                InitializeSwayer(_swayers[i]);
             }
 
-            foreach (SineSwayParticle token in _swayers)
-            {
-                InitializeSwayer(token);
-            }
-
-            var sorted = from s in _swayers 
-                         orderby (s.Width + s.Height)
-                         select s; //Forgot why I did this.
-
-            _swayers = sorted.ToArray();
+            //Forgot why I did this.
+            _swayers = _swayers.OrderBy(e => e.Width + e.Height).ToArray();
 
         }
 
@@ -119,7 +112,7 @@ namespace WGiBeat.Drawing
             particle.StepSize = MinStepSize + (_rand.NextDouble() * (MaxStepSize - MinStepSize));
             particle.RotationStepSize = 0.75f;
 
-            if (RandomizeTextures) //Hacky. Must fix.
+            if (RandomizeTextures)
             {
                 particle.ParticleType = _rand.Next(0, 5);
             }
@@ -128,6 +121,7 @@ namespace WGiBeat.Drawing
         {
             foreach (SineSwayParticle particle in _swayers)
             {
+
                 particle.Draw(spriteBatch, gameTime);
             }
         }

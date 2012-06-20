@@ -25,6 +25,8 @@ namespace WGiBeat.Drawing
         public List<Note> Notes { get; set; }
         public int ID { get; set; }
 
+        public double Opacity { get; set; }
+
         public NoteBar()
         {
             Notes = new List<Note>();
@@ -137,7 +139,9 @@ namespace WGiBeat.Drawing
                                        {
                                            Position = RednessSprite.Position,
                                            Size = RednessSprite.Size,
-                                           SpriteTexture = RednessSprite.SpriteTexture
+                                           SpriteTexture = RednessSprite.SpriteTexture,
+                                           ColorShading = RednessSprite.ColorShading
+
                                        };
             foreach (Note n in Notes)
             {
@@ -174,8 +178,13 @@ namespace WGiBeat.Drawing
                 {
                     cell += 4;
                 }
-                _arrowsSpriteMap.ColorShading.A = CalculateOpacity(xdrawOffset);
-                _arrowsSpriteMap.Draw(spriteBatch, cell, NOTE_SIZE,  NOTE_SIZE, posX + xdrawOffset + completedOffset, posY + heightOffset);
+
+                _arrowsSpriteMap.ColorShading.A = (byte) (CalculateOpacity(xdrawOffset) * Opacity / 255);
+                if (_arrowsSpriteMap.ColorShading.A > 0)
+                {
+                    _arrowsSpriteMap.Draw(spriteBatch, cell, NOTE_SIZE, NOTE_SIZE, posX + xdrawOffset + completedOffset,
+                                          posY + heightOffset);
+                }
                 xdrawOffset += NOTE_SIZE;
             }
 

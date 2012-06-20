@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing
 {
-    public class Sprite3D : DrawableObject
+    public class Sprite3D
     {
         public Sprite3D()
         {
@@ -18,10 +18,38 @@ namespace WGiBeat.Drawing
         private static BasicEffect _effect;
         public static bool EffectInit;
         private VertexPositionColorTexture[] _vertices;
-        private Matrix _viewMatrix;
-        private Matrix _projectionMatrix;
+        private static Matrix _viewMatrix;
+        private static Matrix _projectionMatrix;
         private static VertexDeclaration _vertexDeclaration;
         private bool _dimensionsSet;
+
+        public float X { get; set; }
+        public float Y { get; set; }
+        public float Width { get; set; }
+        public float Height { get; set; }
+
+        public float Rotation { get; set; }
+
+
+        public virtual Vector2 Position
+        {
+            get { return new Vector2(X, Y); }
+            set
+            {
+                X = value.X;
+                Y = value.Y;
+            }
+        }
+
+        public virtual Vector2 Size
+        {
+            get { return new Vector2(Width, Height); }
+            set
+            {
+                Width = value.X;
+                Height = value.Y;
+            }
+        }
 
         private void SetupPrimitives()
         {
@@ -66,7 +94,7 @@ namespace WGiBeat.Drawing
         };         
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public void Draw()
         {
             CheckIfEffectInit();
             CheckIfDimensionsSet();
@@ -97,8 +125,13 @@ namespace WGiBeat.Drawing
             _effect = GetEffect();
         }
 
-        public BasicEffect GetEffect()
+        public static BasicEffect GetEffect()
         {
+            if (EffectInit)
+            {
+                
+                return _effect;
+            }
             var result = new BasicEffect(Device, null);
 
            
@@ -107,6 +140,8 @@ namespace WGiBeat.Drawing
 
             result.View = _viewMatrix;
             result.Projection = _projectionMatrix;
+    
+
 
             result.TextureEnabled = true;
             result.VertexColorEnabled = true;
@@ -115,17 +150,18 @@ namespace WGiBeat.Drawing
             _vertexDeclaration = new VertexDeclaration(
         Device, VertexPositionColorTexture.VertexElements);
             Device.VertexDeclaration = _vertexDeclaration;
+            _effect = result;
             return result;
         }
 
-        public void DrawTiled(int texU1, int texV1, int texU2, int texV2)
+        public void DrawTiled(float texU1, float texV1, float texU2, float texV2)
         {
             CheckIfEffectInit();
             CheckIfDimensionsSet();
 
             SetupPrimitives();
 
-            SetupTextureCoords((float) texU1 / Texture.Width, (float)texV1 / Texture.Height, (float)texU2 / Texture.Width, (float)texV2 / Texture.Height);
+            SetupTextureCoords(texU1 / Texture.Width, texV1 / Texture.Height, texU2 / Texture.Width, texV2 / Texture.Height);
   
             _effect.Texture = this.Texture;
             Device.RenderState.CullMode = CullMode.None;

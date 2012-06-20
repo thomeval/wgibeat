@@ -70,6 +70,7 @@ namespace WGiBeat.Managers
             sm["LastSortMode"] = 0;
             sm["VSync"] = false;
             sm["BlazingBassBoost"] = 1.5f;
+            sm["BackgroundAnimation"] = 128;
             return sm;
         }
 

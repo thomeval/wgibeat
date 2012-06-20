@@ -110,8 +110,8 @@ namespace WGiBeat.Screens
 
             item = new MenuItem { ItemText = "Background Animation" };
             item.AddOption("Off", 0);
-            item.AddOption("Normal", 1);
-            item.AddOption("ARGH! MY EYES!", 2);
+            item.AddOption("Normal", 128);
+            item.AddOption("ARGH! MY EYES!", 255);
 
             _optionsMenu.AddItem(item);
 
@@ -242,6 +242,7 @@ namespace WGiBeat.Screens
                 _optionsMenu.GetByItemText("Screen Resolution").SetSelectedByValue(Core.Settings.Get<object>("ScreenResolution"));
                 _optionsMenu.GetByItemText("Check For Updates").SetSelectedByValue(Core.Settings.Get<object>("CheckForUpdates"));
                 _optionsMenu.GetByItemText("Blazing Bass Boost").SetSelectedByValue(Core.Settings.Get<object>("BlazingBassBoost"));
+                _optionsMenu.GetByItemText("Background Animation").SetSelectedByValue(Core.Settings.Get<object>("BackgroundAnimation"));
             }
             catch (Exception ex)
             {
@@ -266,6 +267,7 @@ namespace WGiBeat.Screens
             Core.Settings.Set("CheckForUpdates", _optionsMenu.GetByItemText("Check For Updates").SelectedValue());
             Core.Settings.Set("VSync", _optionsMenu.GetByItemText("V-Sync").SelectedValue());
             Core.Settings.Set("BlazingBassBoost", _optionsMenu.GetByItemText("Blazing Bass Boost").SelectedValue());
+            Core.Settings.Set("BackgroundAnimation", _optionsMenu.GetByItemText("Background Animation").SelectedValue());
             Core.Audio.SetMasterVolume((float)Core.Settings.Get<double>("SongVolume"));
             Core.Log.LogLevel = (LogLevel)Core.Settings.Get<int>("LogLevel");
             Core.Log.SaveLog = Core.Settings.Get<bool>("SaveLog");
