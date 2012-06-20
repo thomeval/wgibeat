@@ -245,8 +245,7 @@ namespace WGiBeat.Drawing
             beatFraction = 1 - beatFraction;
             var opacity = (byte)(beatFraction * 255);
             _blazingPart.ColorShading.A = opacity;
-            _blazingPart.X = this.X;
-            _blazingPart.Y = this.Y;
+            _blazingPart.Position = this.Position;
             _blazingPart.Draw(spriteBatch);
             _blazingSidePart.ColorShading = Color.White;
             _blazingSidePart.ColorShading.A = opacity;
@@ -257,6 +256,7 @@ namespace WGiBeat.Drawing
                 {
                     continue;
                 }
+                _blazingSidePart.Position = SidePositions[x];
                 _blazingSidePart.Draw(spriteBatch);
             }
 

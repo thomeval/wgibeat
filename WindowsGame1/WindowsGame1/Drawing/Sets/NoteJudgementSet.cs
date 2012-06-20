@@ -152,6 +152,7 @@ namespace WGiBeat.Drawing.Sets
                 if (Players[x].Playing)
                 {
                     Players[x].Judgements[(int) judgement] = Players[0].Judgements[(int) judgement];
+                    Players[x].Streak = Players[0].Streak;
                 }
             }
         }

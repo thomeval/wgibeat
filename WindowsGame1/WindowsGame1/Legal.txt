@@ -13,11 +13,11 @@ Licence: http://www.iconian.com/commercial.html
 The WGiBeat developers use Resharper, which is very kindly provided by JetBrains through an Open Source licence.
 For more information, see: http://www.jetbrains.com/resharper/
 Licence: http://www.jetbrains.com/resharper/buy/buy.jsp#openSource_licenseTerms
-(valid only as long as WGiBeat remains open source, and expires April 2012)
+(valid only as long as WGiBeat remains open source, and expires April 2013)
 
 The remainder of WGiBeat is licensed under the 3-clause BSD license, displayed below:
 
-Copyright (c) 2011, WGiBeat team
+Copyright (c) 2011-2012, WGiBeat team
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

@@ -16,15 +16,15 @@ namespace WGiBeat.Drawing
 
         public int ParticleSize { get; set; }
 
-        public SpriteMap ParticleSpriteMap { get; set; }
+        public SpriteMap3D ParticleSpriteMap { get; set; }
         public int ParticleType { get; set; }
 
         //Convert sine wave amplitude to fit width. default Vertical = true.
         public SineSwayParticle()
         {
-            ParticleSpriteMap = new SpriteMap
+            ParticleSpriteMap = new SpriteMap3D
             {
-                SpriteTexture = TextureManager.Textures("BackgroundParticles"),
+                Texture = TextureManager.Textures("BackgroundParticles"),
                 Columns = 5,
                 Rows = 1
             };
@@ -56,7 +56,7 @@ namespace WGiBeat.Drawing
            // this.Width = ParticleSize;
           //  this.Height = ParticleSize;
             Step(gameTime);
-            ParticleSpriteMap.Draw(spriteBatch, ParticleType, ParticleSize, ParticleSize, (int) GetVector().X, (int) GetVector().Y, Rotation);
+            ParticleSpriteMap.Draw(ParticleType, ParticleSize, ParticleSize, (int) GetVector().X, (int) GetVector().Y);
             
         }
 

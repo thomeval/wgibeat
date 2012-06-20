@@ -223,10 +223,8 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
 
             Sprite.Device = this.GraphicsDevice;
             Sprite3D.Device = this.GraphicsDevice;
-
+            SpriteMap3D.Device = this.GraphicsDevice;
             Sprite3D.EffectInit = false;
-
-
             
             GraphicsManager.ApplyChanges();
             GraphicsDevice.VertexDeclaration = new VertexDeclaration(

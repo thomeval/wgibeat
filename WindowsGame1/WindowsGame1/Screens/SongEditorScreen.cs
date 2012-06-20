@@ -151,7 +151,7 @@ namespace WGiBeat.Screens
             _textBackground = new Sprite
             {
                 SpriteTexture = TextureManager.Textures("MainGameTextBackground"),
-                Position = Core.Metrics["MainGameTextBackground", 0]
+                Position = Core.Metrics["EditorTextBackground", 0]
             };
         }
 
@@ -558,17 +558,17 @@ namespace WGiBeat.Screens
         {
             _textBackground.Draw(spriteBatch);
             TextureManager.DrawString(spriteBatch, String.Format("BPM: {0:F2}", NewGameSong.StartBPM),
-                   "DefaultFont", Core.Metrics["SongDebugBPM", 0], Color.Black, FontAlign.LEFT);
+                   "DefaultFont", Core.Metrics["EditorSongBPM", 0], Color.Black, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, String.Format("Offset: {0:F3}s", NewGameSong.Offset),
-                    "DefaultFont", Core.Metrics["SongDebugOffset", 0], Color.Black, FontAlign.LEFT);
+                    "DefaultFont", Core.Metrics["EditorSongOffset", 0], Color.Black, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, "" + String.Format("{0:F3}", _phraseNumber),
                 "DefaultFont", Core.Metrics["EditorSongPhraseNumber", 0], Color.Black, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, CalculateTimeLeft(),
                 "DefaultFont", Core.Metrics["EditorSongTimeLeft", 0], Color.Black, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, String.Format("Speed: {0}x", Core.Players[0].PlayerOptions.BeatlineSpeed),
-                "DefaultFont", Core.Metrics["SongDebugHitOffset", 0], Color.Black, FontAlign.LEFT);
+                "DefaultFont", Core.Metrics["EditorTweakBeatlineSpeed", 0], Color.Black, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, String.Format("Length: {0:F3}s", NewGameSong.Length),
-                "DefaultFont", Core.Metrics["SongDebugLength", 0], Color.Black, FontAlign.LEFT);       
+                "DefaultFont", Core.Metrics["EditorSongLength", 0], Color.Black, FontAlign.LEFT);       
         }
 
         private string CalculateTimeLeft()
@@ -1432,6 +1432,11 @@ namespace WGiBeat.Screens
             }
             NewGameSong.Length = Convert.ToInt32(tags["LENGTH"]) / 1000.0;
 
+            double testBPM;
+            if (tags.ContainsKey("TBPM") && Double.TryParse(tags["TBPM"],out testBPM))
+            {
+                NewGameSong.StartBPM = testBPM;
+            }
         }
 
         private void ValidateInputs()

@@ -112,6 +112,7 @@
     <Compile Include="Drawing\Sets\DrawableObjectSet.cs" />
     <Compile Include="Drawing\Sets\GrooveMomentumBarSet.cs" />
     <Compile Include="Drawing\Sets\NoteBarSet.cs" />
+    <Compile Include="Drawing\SpriteMap3D.cs" />
     <Compile Include="Drawing\WaveformDrawer.cs" />
     <Compile Include="Drawing\SongTimeLine.cs" />
     <Compile Include="Drawing\SongTypeDisplay.cs" />

@@ -50,7 +50,8 @@ namespace WGiBeat.Drawing.Sets
             _iconSyncBaseSpriteMap = new Sprite
                                          {
                                              SpriteTexture = TextureManager.Textures("SyncDifficultyBar"),
-                                             Position = _metrics["SyncPlayerDifficultiesBase", 0]
+                                             Position = _metrics["SyncPlayerDifficultiesBase", 0],
+                                             Size = _metrics["SyncPlayerDifficultiesBase.Size",0]
                                          };
             _coopBaseSprite = new SpriteMap
             {
@@ -81,9 +82,9 @@ namespace WGiBeat.Drawing.Sets
         }
         private void DrawPlayerDifficulties(SpriteBatch spriteBatch)
         {
+   
             if (_gameType == GameType.SYNC)
             {
-                DrawPlayerDifficultiesSync(spriteBatch);
                 return;
             }
             for (int x = 0; x < 4; x++)
@@ -103,7 +104,7 @@ namespace WGiBeat.Drawing.Sets
 
             var idx = (from e in Players where e.Playing select e.PlayerOptions.PlayDifficulty).Min() + 1;
                     _iconSyncBaseSpriteMap.Draw(spriteBatch);
-                    _iconSpriteMap.Draw(spriteBatch, (int) idx, 30, 30, _metrics["SyncPlayerDifficulties", 0]);
+                    _iconSpriteMap.Draw(spriteBatch, (int) idx, _metrics["SyncPlayerDifficulties.Size",0], _metrics["SyncPlayerDifficulties", 0]);
                 
             
         }
@@ -129,7 +130,7 @@ namespace WGiBeat.Drawing.Sets
 
         private void DrawSyncCombinedScore(SpriteBatch spriteBatch)
         {
-
+            DrawPlayerDifficultiesSync(spriteBatch);
             var scoreText = _displayedScores[0];
 
        

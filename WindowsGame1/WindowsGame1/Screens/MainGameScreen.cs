@@ -104,12 +104,14 @@ namespace WGiBeat.Screens
             _beatlineSet.Bpm = _gameSong.CurrentBPM(0.0);
             _beatlineSet.AddTimingPointMarkers(_gameSong);
             _beatlineSet.SetSpeeds();
+            _noteBarSet.Visible = true;
             _visualBackground = new VisualizerBackground
                                     {
                                         Size = new Vector2(800, 600),
                                         AudioManager = Core.Audio,
                                         Position = new Vector2(0, 0),
-                                        SongChannel = (int)Core.Cookies["GameSongChannel"]
+                                        SongChannel = (int)Core.Cookies["GameSongChannel"],
+                                        MaxBrightness = Convert.ToByte(Core.Settings["BackgroundAnimation"])
                                     };
             InitSprites();
 
@@ -157,8 +159,8 @@ namespace WGiBeat.Screens
             //TODO: Life adjustments and momentum adjustments are handled inconsistently. Refactor
             if ((GameType) Core.Cookies["CurrentGameType"] == GameType.SYNC)
             {
-
-                    _lifeBarSet.AdjustLife(Core.Players[player].MissedArrow(), 0); 
+                var numPlayers = (from e2 in Core.Players where e2.Playing select e2).Count();
+                    _lifeBarSet.AdjustLife(Core.Players[player].MissedArrow() / numPlayers, 0); 
             }
             else
             {
@@ -316,6 +318,7 @@ namespace WGiBeat.Screens
             {
                 _displayState = 1;
                 _transitionTime = gameTime.TotalRealTime.TotalSeconds + 3;
+                _noteBarSet.Visible = false;
             }
             if ((_displayState == 1) && (gameTime.TotalRealTime.TotalSeconds >= _transitionTime))
             {

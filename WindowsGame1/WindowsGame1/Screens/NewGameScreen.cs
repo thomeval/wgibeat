@@ -12,7 +12,7 @@ namespace WGiBeat.Screens
 {
     public class NewGameScreen : GameScreen
     {
-        private SineSwayParticleField _field = new SineSwayParticleField();
+        private readonly SineSwayParticleField _field = new SineSwayParticleField();
 
         private readonly CursorPosition[] _cursorPositions = new CursorPosition[4];
         private readonly Menu[] _playerMenus = new Menu[4];
@@ -145,11 +145,6 @@ namespace WGiBeat.Screens
             disableKO.AddOption("Off",false);
             disableKO.AddOption("On",true);
             _playerMenus[x].AddItem(disableKO);
-
-            var beatlineDirection = new MenuItem {ItemText = "Scroll Direction"};
-            beatlineDirection.AddOption("Left",false);
-            beatlineDirection.AddOption("Right",true);
-            _playerMenus[x].AddItem(beatlineDirection);
 
             _playerMenus[x].Position = (Core.Metrics["NewGameMenuStart", x]);
             _playerMenus[x].MaxVisibleItems = 6;
@@ -444,12 +439,6 @@ namespace WGiBeat.Screens
             _playerMenus[number].GetByItemText("Difficulty").SetSelectedByValue((int)Core.Players[number].PlayerOptions.PlayDifficulty);
             _playerMenus[number].GetByItemText("Disable KO").SetSelectedByValue(Core.Players[number].PlayerOptions.DisableKO);
             
-            var direction = number % 2 == 0 ? Core.Players[number].PlayerOptions.ScrollDirectionWest :
-            Core.Players[number].PlayerOptions.ScrollDirectionEast;
-            _playerMenus[number].GetByItemText("Scroll Direction").SetSelectedByValue(
-                direction);
-
-
         }
 
         private void SelectMainMenuItem(int number)
