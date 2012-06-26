@@ -55,7 +55,7 @@ namespace WGiBeat.Drawing.Sets
             Draw(spriteBatch);
         }
 
-        public void AwardJudgement(BeatlineNoteJudgement judgement, int player, int givenMultiplier, int numCompleted, int numNotCompleted)
+        public void AwardJudgement(BeatlineNoteJudgement judgement, int player, int givenMultiplier, int numCompleted)
         {
             double lifeAdjust = 0;
             long scoreAdjust = 0;
@@ -89,7 +89,7 @@ namespace WGiBeat.Drawing.Sets
                     break;
                 case BeatlineNoteJudgement.FAIL:
                     Players[player].Streak = 0;
-                    lifeAdjust = 0 - (int)(1 + Players[player].PlayerOptions.PlayDifficulty) * (numNotCompleted + 1);
+                    lifeAdjust = Players[player].FailedBeat();
                     break;
                     case BeatlineNoteJudgement.COUNT:
                     //Ignore judgement
@@ -108,6 +108,10 @@ namespace WGiBeat.Drawing.Sets
             if (_gameType == GameType.COOPERATIVE)
             {
                 scoreAdjust = (long) Math.Ceiling(scoreAdjust*(Player.GrooveMomentum));
+            }
+            if (_gameType == GameType.SYNC_PLUS && lifeAdjust > 0)
+            {
+                lifeAdjust /= (from e in Players where e.Playing select e).Count();
             }
             if (_scoreSet != null)
             {
@@ -130,11 +134,12 @@ namespace WGiBeat.Drawing.Sets
                                 };
                 newDj.Position = (_metrics["Judgement", player]);
 
-                if (_gameType == GameType.SYNC)
+                if (SyncGameType)
                 {
                     newDj.Position = _metrics["SyncJudgement", player];
                     newDj.Size = _metrics["SyncJudgement.Size",0].Clone();
                     newDj.Height *= (from e in Players where e.Playing select e).Count();
+                    newDj.TextureSet = (from e in Players where e.Playing select e).Count();
                 }
                 _displayedJudgements[player] = newDj;
             }
@@ -145,7 +150,7 @@ namespace WGiBeat.Drawing.Sets
 
             Players[player].Judgements[(int)judgement]++;
 
-            if (_gameType != GameType.SYNC) return;
+            if (!SyncGameType) return;
             
             for (int x = 1; x < 4; x++)
             {

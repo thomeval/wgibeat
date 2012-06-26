@@ -77,7 +77,8 @@ namespace WGiBeat.Managers
                         awardedPlayer = 4;
                     }
                     break;
-                    case GameType.SYNC:
+                    case GameType.SYNC_PRO:
+                    case GameType.SYNC_PLUS:
                     currentTotal = (from e in players where e.Playing select e.Score).First();
                     if (currentTotal > highest)
                     {

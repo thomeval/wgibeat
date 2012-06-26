@@ -223,6 +223,35 @@ namespace WGiBeat.Players
             return result;
         }
 
+        public double FailedBeat()
+        {
+
+            var result = 0;
+            switch (PlayerOptions.PlayDifficulty)
+            {
+                case Difficulty.BEGINNER:
+                    result = -4;
+                    break;
+                case Difficulty.EASY:
+                    result = -8;
+                    break;
+                case Difficulty.MEDIUM:
+                    result = -16;
+                    break;
+                case Difficulty.HARD:
+                    result = -24;
+                    break;
+                case Difficulty.INSANE:
+                    result -= 32;
+                    break;
+                case Difficulty.RUTHLESS:
+                    result -= 40;
+                    break;
+            }
+            return result;
+        }
+
+
         public void ResetStats()
         {
             for (int x = 0; x < Judgements.Count(); x++)

@@ -329,10 +329,11 @@ namespace WGiBeat.Drawing
             _middlePart.Draw(spriteBatch);
 
             var position = MiddlePosition.Clone();
-            position.X += 25;
+            position.X += 30;
             TextureManager.DrawString(spriteBatch, String.Format("{0:D3}", (int)TotalLife()), "LargeFont",
                     position, Color.Black, FontAlign.CENTER);
-
+            position.X += 50;
+            TextureManager.DrawString(spriteBatch,string.Format("{0:D3}",(int)TrueCapacity),"DefaultFont",position,Color.Black,FontAlign.CENTER);
         }
 
         #region Helper Methods

@@ -4,8 +4,8 @@ NormalLifeBar=[50,200][450,200][50,470][450,470];
 NormalLifeBar.Size=[350,25];
 CoopLifeBar=[5,225];
 CoopLifeBar.Size=[785,30];
-CoopLifeBarMiddle=[350,255];
-CoopLifeBarMiddle.Size=[50,25];
+CoopLifeBarMiddle=[340,255];
+CoopLifeBarMiddle.Size=[110,30];
 LevelBarBase=[50,50][450,50][50,320][450,320];
 LevelBarBaseSync=[50,50];
 HitsBar=[265,50][665,50][265,320][665,320];
@@ -68,6 +68,7 @@ AbilityBar=[200,140][600,140][200,420][600,420];
 
 #Main Menu;
 MainMenuOptions=[250,120][250,195][250,245][250,295][250,345][250,395][250,445][250,495];
+MainMenuOptions.Size=[300,50];
 MainMenuNoSongsError=[260,170];
 UpdaterFrame=[0,544];
 

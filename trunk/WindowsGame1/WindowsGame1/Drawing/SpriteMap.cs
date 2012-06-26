@@ -52,21 +52,6 @@ namespace WGiBeat.Drawing
         }
 
 
-        public void Draw(SpriteBatch spriteBatch, int cellnumber, int width, int height, int x, int y, SpriteEffects flip)
-        {
-            Rectangle sourceRect = CalculateSourceRectangle(cellnumber);
-            var destRect = new Rectangle
-            {
-                Height = height,
-                Width = width,
-                X = x,
-                Y = y
-            };
-
-            spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
-            spriteBatch.Draw(SpriteTexture, destRect, sourceRect, ColorShading, 0.0f, new Vector2(0,0), flip, 0);
-            spriteBatch.End();
-        }
         public void Draw(SpriteBatch spriteBatch, int cellnumber, int width, int height, Vector2 position)
         {
             Draw(spriteBatch, cellnumber, width, height,(int) position.X, (int) position.Y);

@@ -57,8 +57,8 @@ namespace WGiBeat.Drawing.Sets
               
                 _beatlines[x] = new Beatline
                                     {
-                                        //Beatlines are arranged differently for SYNC mode.
-                                        Position = _gameType == GameType.SYNC ? _metrics["SyncBeatlineBarBase",visibleCount]: (_metrics["BeatlineBarBase", x]),
+                                        //Beatlines are arranged differently for SYNC_PRO mode.
+                                        Position = SyncGameType ? _metrics["SyncBeatlineBarBase",visibleCount]: (_metrics["BeatlineBarBase", x]),
                                         Size = new Vector2(350, 125),
                                         Id = x,
                                         IdentifierSize = _metrics["BeatlinePlayerIdentifiers.Size", 0],

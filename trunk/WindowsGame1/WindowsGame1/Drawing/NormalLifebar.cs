@@ -153,7 +153,7 @@ namespace WGiBeat.Drawing
 
         private void DrawFullEffect(SpriteBatch spriteBatch)
         {
-            if ((Parent.Players[PlayerID].Life == Parent.Players[PlayerID].GetMaxLife()) && (!Parent.Players[PlayerID].IsBlazing))
+            if (Parent.LifebarFull(PlayerID) && (!Parent.Players[PlayerID].IsBlazing))
             {
                 _blazingPart.ColorShading = _fullColors[PlayerID];
                 _blazingPart.ColorShading.A = 128;
@@ -161,6 +161,8 @@ namespace WGiBeat.Drawing
                
             }
         }
+
+
 
         private void DrawBlazingEffect(SpriteBatch spriteBatch, double beatFraction)
         {

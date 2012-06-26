@@ -200,7 +200,7 @@ namespace WGiBeat.Screens
         {
 
             _background.Draw(spriteBatch);
-            _field.Draw(spriteBatch, gameTime);
+            _field.Draw(gameTime);
             
             for (int x = 0; x < 4; x++)
             {
@@ -261,15 +261,13 @@ namespace WGiBeat.Screens
 
         private void DrawBorders(SpriteBatch spriteBatch)
         {
-            var brush = new PrimitiveLine(Core.GraphicsDevice) { Colour = Color.Black };
+            var brush = new PrimitiveLine3D(Core.GraphicsDevice) { Colour = Color.Black };
             brush.AddVector(new Vector2(400, 0));
             brush.AddVector(new Vector2(400, 600));
             brush.Render(spriteBatch);
             brush.ClearVectors();
             brush.AddVector(new Vector2(0, 300));
             brush.AddVector(new Vector2(800, 300));
-            brush.Render(spriteBatch);
-            brush.ClearVectors();
             brush.Render(spriteBatch);
             brush.ClearVectors();
         }

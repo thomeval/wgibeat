@@ -83,7 +83,7 @@ namespace WGiBeat.Drawing.Sets
         private void DrawPlayerDifficulties(SpriteBatch spriteBatch)
         {
    
-            if (_gameType == GameType.SYNC)
+            if (SyncGameType)
             {
                 return;
             }
@@ -122,7 +122,8 @@ namespace WGiBeat.Drawing.Sets
                 case GameType.VS_CPU:
                     DrawTeamCombinedScores(spriteBatch);
                     break;
-                    case GameType.SYNC:
+                    case GameType.SYNC_PRO:
+                    case GameType.SYNC_PLUS:
                     DrawSyncCombinedScore(spriteBatch);
                     break;
             }
@@ -209,7 +210,7 @@ namespace WGiBeat.Drawing.Sets
 
         private void DrawIndividualScores(SpriteBatch spriteBatch)
         {
-            if (_gameType == GameType.SYNC)
+            if (SyncGameType)
             {
                 return;
             }
@@ -257,7 +258,8 @@ namespace WGiBeat.Drawing.Sets
                 case GameType.COOPERATIVE:
                 case GameType.TEAM:
                 case GameType.VS_CPU:
-                case GameType.SYNC:
+                case GameType.SYNC_PRO:
+                    case GameType.SYNC_PLUS:
                     Players[player].Score += amount;
                         break;
             }

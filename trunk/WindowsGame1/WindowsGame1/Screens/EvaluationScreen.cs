@@ -213,8 +213,12 @@ namespace WGiBeat.Screens
                 case GameType.COOPERATIVE:
                     _grades[0] = PercentageToGradeIndex(CalculateTeamPercentage());
                     break;
-                    case GameType.SYNC:
-                    _grades[0] = GetSyncGradeIndex();
+                    case GameType.SYNC_PRO:
+                    case GameType.SYNC_PLUS:
+                    for (int x = 0; x < 4; x++)
+                    {
+                        _grades[x] = GetSyncGradeIndex();
+                    }
                     break;
             }
         }
@@ -334,7 +338,7 @@ namespace WGiBeat.Screens
         private void DrawBackground(SpriteBatch spriteBatch, GameTime gameTime)
         {
             _background.Draw(spriteBatch);
-            _field.Draw(spriteBatch, gameTime);
+            _field.Draw(gameTime);
         }
 
         private void DrawModeSpecific(SpriteBatch spriteBatch)

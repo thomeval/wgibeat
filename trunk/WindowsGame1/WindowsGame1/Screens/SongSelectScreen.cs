@@ -245,7 +245,7 @@ namespace WGiBeat.Screens
         private void DrawBackground(SpriteBatch spriteBatch, GameTime gameTime)
         {
             _background.Draw(spriteBatch);
-            _field.Draw(spriteBatch, gameTime);
+            _field.Draw(gameTime);
         }
 
         private const int SONGLIST_FADEOUT_SPEED = 300;
@@ -447,7 +447,8 @@ namespace WGiBeat.Screens
                 return;
             }
             Core.Cookies["CurrentSong"] = CurrentSong;
-            if (((GameType)Core.Cookies["CurrentGameType"]) == GameType.SYNC)
+            var gameType = (GameType) Core.Cookies["CurrentGameType"];
+            if (gameType == GameType.SYNC_PRO || gameType == GameType.SYNC_PLUS)
             {
                 _playerOptionsSet.CheckSyncDifficulty();
             }

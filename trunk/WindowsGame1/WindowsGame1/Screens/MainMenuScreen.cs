@@ -18,14 +18,14 @@ namespace WGiBeat.Screens
         private readonly string[] _menuText = { "Start Game", "Stats","How to play", "Keys", "Options", "Song Editor", "Website", "Exit"};
         private Sprite3D _background;
         private Sprite3D _header;
-        private SpriteMap _menuOptionSprite;
+        private SpriteMap3D _menuOptionSprite;
         private Sprite3D _foreground;
         private UpdaterFrame _updaterFrame;
         private const string WEBSITE = "http://code.google.com/p/wgibeat/?lol=orz";
         private string _errorMessage = "";
         private Thread _updateThread;
 
-
+        private VertexPositionColorTexture[] _vertices;
         public MainMenuScreen(GameCore core)
             : base(core)
         {
@@ -33,6 +33,7 @@ namespace WGiBeat.Screens
 
         public override void Initialize()
         {
+            _vertices = new VertexPositionColorTexture[_menuText.Length*6];
             _updaterFrame = new UpdaterFrame
             {
                 Position = Core.Metrics["UpdaterFrame", 0],
@@ -98,22 +99,19 @@ namespace WGiBeat.Screens
                           {
                               Texture = TextureManager.Textures("MainMenuHeader")
                           };
-            _menuOptionSprite = new SpriteMap
+            _menuOptionSprite = new SpriteMap3D
                                     {
-                                        SpriteTexture = TextureManager.Textures("MainMenuOption"),
+                                        Texture = TextureManager.Textures("MainMenuOption"),
                                         Columns = 1,
                                         Rows = 2
                                     };
-
-
-
 
 
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            DrawBackground(spriteBatch,gameTime);
+            DrawBackground(gameTime);
             DrawMenu(spriteBatch);
 
     
@@ -128,26 +126,34 @@ namespace WGiBeat.Screens
             _updaterFrame.Draw(spriteBatch);
         }
 
-        private void DrawBackground(SpriteBatch spriteBatch,GameTime gameTime)
+        private void DrawBackground(GameTime gameTime)
         {
             _background.Draw();
-            _field.Draw(spriteBatch, gameTime);                                
+            _field.Draw(gameTime);                                
             _foreground.Draw();
             _header.Draw();
         }
 
         private void DrawMenu(SpriteBatch spriteBatch)
-        {      
-
+        {
+            var size = Core.Metrics["MainMenuOptions.Size", 0];
             for (int menuOption = 0; menuOption < (int)MainMenuOption.COUNT; menuOption++)
             {
 
                 var idx = (menuOption == (int) _selectedMenuOption) ? 1 : 0;
-                _menuOptionSprite.Draw(spriteBatch,idx,Core.Metrics["MainMenuOptions",menuOption]);
+                VertexPositionColorTexture[] result = _menuOptionSprite.GetVertices(idx, Core.Metrics["MainMenuOptions", menuOption], Core.Metrics["MainMenuOptions.Size", 0]);
+                result.CopyTo(_vertices,0,menuOption*6);
+               
+
+            }
+
+            _menuOptionSprite.DrawVertices(_vertices);
+            for (int menuOption = 0; menuOption < (int) MainMenuOption.COUNT; menuOption++)
+            {
                 var textPosition = Core.Metrics["MainMenuOptions", menuOption].Clone();
-                textPosition.X +=  _menuOptionSprite.SpriteTexture.Width / 2 - 0 ;
-                textPosition.Y += _menuOptionSprite.SpriteTexture.Height / 4 - 25;
-                TextureManager.DrawString(spriteBatch,_menuText[menuOption],"TwoTech36",textPosition,Color.Black, FontAlign.CENTER);
+                textPosition.X += size.X / 2;
+                textPosition.Y += size.Y / 2 - 25;
+                TextureManager.DrawString(spriteBatch, _menuText[menuOption], "TwoTech36", textPosition, Color.Black, FontAlign.CENTER);
             }
 
         }
