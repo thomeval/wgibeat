@@ -53,7 +53,7 @@ namespace WGiBeat.Drawing
             DrawHeader(spriteBatch, position);
             position.Y += 30;
 
-            if (GameType == GameType.SYNC)
+            if (GameType == GameType.SYNC_PRO || GameType == GameType.SYNC_PLUS)
             {
                 DrawSingleBar(spriteBatch, position, 0);
                 return;

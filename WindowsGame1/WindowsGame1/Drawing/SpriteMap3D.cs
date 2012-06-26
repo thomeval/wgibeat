@@ -24,12 +24,12 @@ namespace WGiBeat.Drawing
                 Rows = 1;
             }
 
-            public void Draw(int cellnumber, float width, float height, float x, float y)
+            public void DrawVertices(VertexPositionColorTexture[] vertices)
             {
-                Vector2 sourcePosition, sourceSize;
-                CalculateSourceRectangle(cellnumber, out sourcePosition, out sourceSize);
-                SetupPrimitives(sourcePosition,sourceSize, new Vector2(x,y), new Vector2(width,height) );
-               
+                if (vertices.Length % 3 != 0)
+                {
+                    throw new ArgumentException("Wrong number of vertices supplied. Should be divisible by 3.");
+                }
                 Device.RenderState.CullMode = CullMode.None;
                 Device.SamplerStates[0].AddressU = TextureAddressMode.Clamp;
                 Device.SamplerStates[0].AddressV = TextureAddressMode.Clamp;
@@ -39,10 +39,30 @@ namespace WGiBeat.Drawing
                 foreach (var pass in effect.CurrentTechnique.Passes)
                 {
                     pass.Begin();
-                    Device.DrawUserPrimitives(PrimitiveType.TriangleList, _vertices, 0, 2);
+                    Device.DrawUserPrimitives(PrimitiveType.TriangleList, vertices, 0, vertices.Length / 3);
                     pass.End();
                 }
                 effect.End();
+            }
+
+            public VertexPositionColorTexture[] GetVertices(int cellnumber,  float x, float y, float width, float height)
+            {
+                return GetVertices(cellnumber, new Vector2(x, y), new Vector2(width,height));
+            }
+
+            public VertexPositionColorTexture[] GetVertices(int cellnumber, Vector2 position, Vector2 size)
+            {
+                Vector2 sourcePosition, sourceSize;
+                CalculateSourceRectangle(cellnumber, out sourcePosition, out sourceSize);
+                var result = SetupPrimitives(sourcePosition, sourceSize, position, size);
+                return result;
+            }
+
+            public void Draw(int cellnumber, float width, float height, float x, float y)
+            {
+                _vertices = GetVertices(cellnumber, width, height, x, y);
+                DrawVertices(_vertices);
+
             }
 
  
@@ -88,9 +108,9 @@ namespace WGiBeat.Drawing
                 Draw(cellnumber, size.X, size.Y, position.X, position.Y);
             }
 
-            private void SetupPrimitives(Vector2 sourcePosition, Vector2 sourceSize, Vector2 destPosition, Vector2 destSize)
+            private VertexPositionColorTexture[] SetupPrimitives(Vector2 sourcePosition, Vector2 sourceSize, Vector2 destPosition, Vector2 destSize)
             {
-                _vertices = new[]
+                var result = new[]
                             {
                                 new VertexPositionColorTexture
                                     {
@@ -129,7 +149,10 @@ namespace WGiBeat.Drawing
                     Color = ColorShading
                 }
         };
+                return result;
             }
+
+        
         }
     }
 

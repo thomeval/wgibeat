@@ -51,18 +51,21 @@ namespace WGiBeat.Drawing
             return new Vector2(X + widthAlt, Y + heightAlt);
         }
 
-        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        public void Draw(GameTime gameTime)
         {
-           // this.Width = ParticleSize;
-          //  this.Height = ParticleSize;
             Step(gameTime);
             ParticleSpriteMap.Draw(ParticleType, ParticleSize, ParticleSize, (int) GetVector().X, (int) GetVector().Y);
             
         }
 
+        public VertexPositionColorTexture[] GetVertices(GameTime gameTime)
+        {
+            Step(gameTime);
+            return ParticleSpriteMap.GetVertices(ParticleType, (int) GetVector().X, (int)GetVector().Y, ParticleSize, ParticleSize);
+        }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Draw(spriteBatch,new GameTime());
+            Draw(new GameTime());
         }
 
 

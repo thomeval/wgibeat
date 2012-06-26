@@ -61,7 +61,7 @@ namespace WGiBeat.Drawing.Sets
             {
                 SetupSprites();
             }
-            if (_gameType == GameType.SYNC)
+            if (SyncGameType)
             {
                 DrawStreakBar(spriteBatch,0);
                 DrawHitsBar(spriteBatch,0);
@@ -80,6 +80,9 @@ namespace WGiBeat.Drawing.Sets
 
             }
         }
+
+
+
         private const int HITSBAR_SHOW_SPEED = 600;
         private const int HITSBAR_HIDE_SPEED = 1000;
         private const int OVERMASK_HIDE_SPEED = 750;
@@ -174,7 +177,8 @@ namespace WGiBeat.Drawing.Sets
         {
             switch (_gameType)
             {
-                    case GameType.SYNC:
+                    case GameType.SYNC_PRO:
+                    case GameType.SYNC_PLUS:
                     return "Sync";
                 default:
                     return "";
@@ -192,7 +196,8 @@ namespace WGiBeat.Drawing.Sets
                     Players[player].Hits += amount;
                     Players[player].TotalHits+= amount;
                     break;
-                case GameType.SYNC:
+                case GameType.SYNC_PRO:
+                    case GameType.SYNC_PLUS:
                     Players[0].Hits += amount;
                     //Total Hits aren't shared, but normal hits are.
                     Players[player].TotalHits+= amount;
@@ -214,7 +219,8 @@ namespace WGiBeat.Drawing.Sets
                 case GameType.VS_CPU:
                     Players[player].Hits = 0;
                     break;
-                case GameType.SYNC:
+                case GameType.SYNC_PRO:
+                    case GameType.SYNC_PLUS:
                     for (int x = 0; x < 4; x++)
                     {
                         Players[x].Hits = 0;

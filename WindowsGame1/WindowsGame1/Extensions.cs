@@ -24,6 +24,17 @@ namespace WGiBeat
             return Array.IndexOf(array, item);
         }
 
+        public static void CopyTo<T>(this T[] source, T[] destination, int sourceIndex, int destIndex)
+        {
+            int x = sourceIndex;
+
+            while ((sourceIndex + x < source.Length) && (destIndex + x < destination.Length))
+            {
+                destination[destIndex + x] = source[sourceIndex + x];
+                x++;
+            }
+        }
+
         public static bool ContainsAny<T>(this T[] array, params T[] items)
         {
             

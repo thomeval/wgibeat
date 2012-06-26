@@ -32,7 +32,8 @@ namespace WGiBeat.Drawing.Sets
                 case GameType.NORMAL:
                 case GameType.TEAM:
                 case GameType.VS_CPU:
-                case GameType.SYNC:
+                case GameType.SYNC_PRO:
+                    case GameType.SYNC_PLUS:
                     for (int x = 0; x < 4; x++)
                     {
                         _lifeBars[x] = new NormalLifeBar
@@ -86,7 +87,8 @@ namespace WGiBeat.Drawing.Sets
                     AdjustLifeCoop(amount, player);
                     ClipCoopMaxLife();
                     break;
-                    case GameType.SYNC:
+                    case GameType.SYNC_PRO:
+                    case GameType.SYNC_PLUS:
                     AdjustLifeSync(amount,player);
                     break;
                     
@@ -237,8 +239,8 @@ namespace WGiBeat.Drawing.Sets
                         _lifeBars[0].Draw(spriteBatch,gameTime);
                     
                     break;
-                    case GameType.SYNC:
-
+                    case GameType.SYNC_PRO:
+                    case GameType.SYNC_PLUS:
                         _lifeBars[0].Position = (_metrics["SyncLifeBar", 0]);
                         _lifeBars[0].Draw(spriteBatch, gameTime);
                     
@@ -259,7 +261,7 @@ namespace WGiBeat.Drawing.Sets
             {
                 SetLife(Players[x].Life, x);
             }
-            if (_gameType == GameType.SYNC)
+            if (SyncGameType)
             {
                 var maxLife = (from e in Players where e.Playing select e.GetMaxLife()).Min();
                 Players[0].Life = maxLife/2;
@@ -279,7 +281,8 @@ namespace WGiBeat.Drawing.Sets
                 case GameType.TEAM:
                     MaintainBlazingsNormal();
                     break;
-                    case GameType.SYNC:
+                    case GameType.SYNC_PRO:
+                    case GameType.SYNC_PLUS:
                     MaintainBlazingsNormal();
                     AdjustLifeSync(0,0);
                     break;
@@ -363,7 +366,8 @@ namespace WGiBeat.Drawing.Sets
                         Players[player].IsBlazing = true;
                     }
                     break;
-                    case GameType.SYNC:
+                    case GameType.SYNC_PRO:
+                    case GameType.SYNC_PLUS:
                     {
                         if (Players[0].Life > 100)
                         {
@@ -380,6 +384,16 @@ namespace WGiBeat.Drawing.Sets
                     break;
             }
 
+        }
+
+        public bool LifebarFull(int playerID)
+        {
+            if (SyncGameType)
+            {
+                var maxLife = (from e in Players where e.Playing select e.GetMaxLife()).Min();
+                return (Players[playerID].Life == maxLife);
+            }
+            return (Players[playerID].Life == Players[playerID].GetMaxLife());
         }
     }
 }

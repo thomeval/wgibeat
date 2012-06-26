@@ -171,7 +171,7 @@ namespace WGiBeat.Screens
         private void DrawBackground(SpriteBatch spriteBatch, GameTime gameTime)
         {
             _background.Draw(spriteBatch);
-            _field.Draw(spriteBatch, gameTime);
+            _field.Draw(gameTime);
             _header.Draw(spriteBatch);
 
         }

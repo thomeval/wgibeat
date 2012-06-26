@@ -156,8 +156,9 @@ namespace WGiBeat.Screens
         private void PlayerFaulted(object sender, EventArgs e)
         {
             var player = (int) sender;
+            var gameType = (GameType) Core.Cookies["CurrentGameType"];
             //TODO: Life adjustments and momentum adjustments are handled inconsistently. Refactor
-            if ((GameType) Core.Cookies["CurrentGameType"] == GameType.SYNC)
+            if (gameType == GameType.SYNC_PRO || gameType == GameType.SYNC_PLUS)
             {
                 var numPlayers = (from e2 in Core.Players where e2.Playing select e2).Count();
                     _lifeBarSet.AdjustLife(Core.Players[player].MissedArrow() / numPlayers, 0); 
@@ -490,8 +491,7 @@ namespace WGiBeat.Screens
 
         private void ApplyJudgement(BeatlineNoteJudgement judgement, int player, int multiplier)
         {
-            _noteJudgementSet.AwardJudgement(judgement, player, multiplier, _noteBarSet.NumberCompleted(player) + _noteBarSet.NumberReverse(player),
-                                                              _noteBarSet.NumberIncomplete(player));
+            _noteJudgementSet.AwardJudgement(judgement, player, multiplier, _noteBarSet.NumberCompleted(player) + _noteBarSet.NumberReverse(player));
             _levelbarSet.AdjustMomentum(judgement, player);
             
             //Keep scoring sane by adding a delay to the awarding of Groove Momentum.

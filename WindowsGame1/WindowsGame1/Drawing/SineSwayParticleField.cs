@@ -38,6 +38,7 @@ namespace WGiBeat.Drawing
 
         private bool RandomizeTextures { get; set; }
 
+        private VertexPositionColorTexture[] _vertices;
   
         public SineSwayParticleField()
         {
@@ -55,12 +56,9 @@ namespace WGiBeat.Drawing
                 InitializeSwayer(_swayers[i]);
             }
 
-            //Forgot why I did this.
-            _swayers = _swayers.OrderBy(e => e.Width + e.Height).ToArray();
-
         }
 
-        private void InitDefaultRanges() //Add into settings file.
+        private void InitDefaultRanges() 
         {
 
             RandomizeTextures = true;
@@ -80,7 +78,7 @@ namespace WGiBeat.Drawing
             MinSize = 3;
             MaxSize = 15;
 
-            MinWidth = 1; //5
+            MinWidth = 3; //5
             MaxWidth = 30; //30
 
             MinHeight = 700;
@@ -93,6 +91,7 @@ namespace WGiBeat.Drawing
             MaxX = 800;
 
             Count = 520;
+            _vertices = new VertexPositionColorTexture[Count*6];
         }
 
         private void InitializeSwayer(SineSwayParticle particle)
@@ -117,19 +116,33 @@ namespace WGiBeat.Drawing
                 particle.ParticleType = _rand.Next(0, 5);
             }
         }
-        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        public void Draw(GameTime gameTime)
         {
-            foreach (SineSwayParticle particle in _swayers)
+            if (Count == 0)
             {
-
-                particle.Draw(spriteBatch, gameTime);
+                return;
             }
+            int pos = 0;
+
+            //Calculate vertices for every single particle.
+            foreach (SineSwayParticle particle in _swayers)
+            {               
+                var result = particle.GetVertices(gameTime);
+                for (int x = 0; x < result.Length; x++ )
+                {
+                    _vertices[pos + x] = result[x];
+                }
+                    pos += result.Length;
+            }
+
+            //Send the entire batch of vertices to SpriteMap3D for drawing (any Particle object's SpriteMap will do).
+            _swayers[0].ParticleSpriteMap.DrawVertices(_vertices);
         }
 
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Draw(spriteBatch,new GameTime());
+            Draw(new GameTime());
         }
     }
 }

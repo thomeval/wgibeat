@@ -21,6 +21,7 @@ namespace WGiBeat.Drawing
 
         public LevelBarSet Parent { get; set; }
         public int PlayerID { get; set; }
+        public double Multiplier { get; set; }
 
         private const int MAX_FRONT_SHOW_SPEED = 360;
         private const int MAX_FRONT_HIDE_SPEED = 750;
@@ -55,6 +56,7 @@ namespace WGiBeat.Drawing
  
         private void InitSprites()
         {
+            
             _baseSprite = new Sprite
             {
                 SpriteTexture = TextureManager.Textures("LevelBarBase")
@@ -112,7 +114,7 @@ namespace WGiBeat.Drawing
             _maxFrontSprite.Height = this.Height - 6;
             _maxBaseSprite.Position = this.Position;
             _maxBaseSprite.Draw(spriteBatch);
-                TextureManager.DrawString(spriteBatch, "" + (int)Parent.Players[PlayerID].Level, "DefaultFont",
+                TextureManager.DrawString(spriteBatch, "" + (int)(Parent.Players[PlayerID].Level * Multiplier), "DefaultFont",
                        _textPosition, Color.Black,FontAlign.CENTER);
 
              DrawBars(spriteBatch);
@@ -122,9 +124,11 @@ namespace WGiBeat.Drawing
 
         private void DrawBars(SpriteBatch spriteBatch)
         {
-            var diff = Parent.Players[PlayerID].Level - _displayedLevel;
+            _displayedLevel *= Multiplier;
+            var diff = (Multiplier * Parent.Players[PlayerID].Level) - _displayedLevel;
             _displayedLevel += diff * Math.Min(TextureManager.LastDrawnPhraseDiff * FRONT_BAR_CHANGE_SPEED, 0.5);
 
+         
             //The maximum possible width of the bar.
             var maxWidth = this.Width - 32;
             //The current progress towards the next level.
@@ -142,7 +146,7 @@ namespace WGiBeat.Drawing
             //Level maxed out, draw a full bar.
             if (Math.Floor(_displayedLevel) - 1 > _lastLevelDrawn)
             {
-                _lastLevelDrawn = (int)Parent.Players[PlayerID].Level - 1;
+                _lastLevelDrawn = (int) ((Parent.Players[PlayerID].Level*Multiplier) - 1);
                 _lastLevelOpacity = 255;
             }
             //Draw the last level bar (gradually fading out) if appropriate.
@@ -156,8 +160,11 @@ namespace WGiBeat.Drawing
 
             //Draw the current level bar.
             _barSprite.ColorShading.A = LevelBarFull ? (byte) 255 : (byte) (40 + (215 * levelFraction));
-            _barSprite.Draw(spriteBatch, (int) _displayedLevel -1, barWidth, this.Height - 6, _barPosition);
+            _barSprite.Draw(spriteBatch, ((int) (_displayedLevel -1) % _barSprite.Rows), barWidth, this.Height - 6, _barPosition);
+
+            _displayedLevel /= Multiplier;
         }
 
+   
     }
 }

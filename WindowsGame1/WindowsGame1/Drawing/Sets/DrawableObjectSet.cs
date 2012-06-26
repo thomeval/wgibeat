@@ -21,6 +21,9 @@ namespace WGiBeat.Drawing.Sets
         {
             
         }
-
+        protected bool SyncGameType
+        {
+            get { return _gameType == GameType.SYNC_PRO || _gameType == GameType.SYNC_PLUS; }
+        }
     }
 }

@@ -16,7 +16,6 @@ namespace WGiBeat.Drawing
         public double Opacity { get; set; }
         private double _displayOpacity;
 
-        public double HeightMx { get; set; }
         public Color _colour = Color.Black;
 
         public Color Colour 
@@ -44,7 +43,7 @@ namespace WGiBeat.Drawing
         private DateTime _lastUpdate;
         private SpectrumDrawer _spectrumDrawer;
         private WaveformDrawer _waveformDrawer;
-        private const double _updateRate = 1/60;
+ 
 
         private bool _init;
         private SpectrumDrawer _spectrumDrawerTop;
@@ -73,6 +72,7 @@ namespace WGiBeat.Drawing
                 _init = true;
             }
 
+            _lastUpdate = DateTime.Now;
             var diff = Opacity - _displayOpacity;
        
             var changeMx = Math.Min(0.5, TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * OPACITY_CHANGE_SPEED);
@@ -88,10 +88,7 @@ namespace WGiBeat.Drawing
            _mySprite.Draw(spriteBatch);
 
 
-           if (DateTime.Now.Subtract(_lastUpdate).TotalSeconds >= _updateRate)
-           {
-               _lastUpdate = DateTime.Now;
-           }
+     
 
             _spectrumDrawer.ColorShading.A = _spectrumDrawerTop.ColorShading.A = _waveformDrawer.ColorShading.A = (byte) Math.Min(MaxBrightness, _displayOpacity);
             _spectrumDrawerTop.Height = 50 + (int)(250 * _displayOpacity / 255);

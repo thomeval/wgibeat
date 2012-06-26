@@ -22,14 +22,17 @@ namespace WGiBeat.Drawing.Sets
 
         private void CreateLevelBars()
         {
+            var numPlayers = (from e in Players where e.Playing select e).Count();
             for (int x = 0; x < _levelBars.Length; x++)
             {
+                
                 _levelBars[x] = new LevelBar
                                     {
                                         Parent = this,
                                         Height = 25,
                                         Width = 216,
                                         PlayerID = x,
+                                        Multiplier = _gameType == GameType.SYNC_PLUS ?  numPlayers : 1
                                     };
                 _levelBars[x].Position = (_metrics["LevelBarBase", x]);
                 
@@ -57,8 +60,8 @@ namespace WGiBeat.Drawing.Sets
                     }
                     break;
 
-                    case GameType.SYNC:
-
+                    case GameType.SYNC_PRO:
+                    case GameType.SYNC_PLUS:
                         _levelBars[0].Position = _metrics["SyncLevelBarBase", 0];
                         _levelBars[0].Draw(spriteBatch,gameTime); 
          
@@ -85,7 +88,7 @@ namespace WGiBeat.Drawing.Sets
                 var amount = (long)
                     (MomentumJudgementMultiplier(judgement)*
                      MomentumIncreaseByDifficulty(Players[player].PlayerOptions.PlayDifficulty));
-                if (_gameType == GameType.SYNC)
+                if (_gameType == GameType.SYNC_PRO)
                 {
                  
                     SetMomentumSync(Players[0].Momentum + amount);
@@ -101,9 +104,8 @@ namespace WGiBeat.Drawing.Sets
 
         public void MultiplyMomentum(double amount, int player)
         {
-            //In SYNC mode, this function will be called for every player, so we need to dampen it
-            //to ensure the correct result.
-            if (_gameType == GameType.SYNC)
+
+            if (SyncGameType)
             {
           
                 SetMomentumSync((long) (Players[0].Momentum*amount));

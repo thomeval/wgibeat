@@ -18,29 +18,44 @@ namespace WGiBeat.Drawing
         public int Value { get; set; }
         public int Maximum { get; set; }
         public int ID { get; set; }
+
+        public int TextureSet { get; set; }
         private void InitSprites()
         {
             _baseSprite = new Sprite
                               {
-                                  SpriteTexture = TextureManager.Textures("NoteBarProgressBase"),
+                                  SpriteTexture = TextureManager.Textures("NoteBarProgressBase" + TextureSuffix),
                                   Position = this.Position.Clone(),
                                   Height = this.Height,
                                   Width = this.Width
                               };
             _frontSprite = new Sprite
             {
-                SpriteTexture = TextureManager.Textures("NoteBarProgressFront"),
+                SpriteTexture = TextureManager.Textures("NoteBarProgressFront" + TextureSuffix),
                 Position = this.Position.Clone(),
                 Height = this.Height,
                 Width = this.Width
             };
             _readySprite = new Sprite
             {
-                SpriteTexture = TextureManager.Textures("NoteBarProgressReady"),
+                SpriteTexture = TextureManager.Textures("NoteBarProgressReady" + TextureSuffix),
                 Position = this.Position.Clone(),
                 Height = this.Height,
                 Width = this.Width
             };
+        }
+
+        private string TextureSuffix
+        {
+            get
+            {
+                if (TextureSet < 2)
+                {
+                    return "";
+                }
+                return TextureSet + "x";
+            }
+         
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -58,7 +73,7 @@ namespace WGiBeat.Drawing
             {
                 return;
             }
-
+            Value = Math.Min(Value, Maximum);
             var drawHeight = this.Height * Value / Maximum;
             var texHeight = _frontSprite.SpriteTexture.Height*Value/Maximum;
             _frontSprite.Height = drawHeight;

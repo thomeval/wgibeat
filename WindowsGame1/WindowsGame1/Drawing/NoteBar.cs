@@ -24,7 +24,7 @@ namespace WGiBeat.Drawing
         public double XDisplayOffset { get; set; }
         public List<Note> Notes { get; set; }
         public int ID { get; set; }
-
+        public int DisplayLimit { get; set; }
         public double Opacity { get; set; }
 
         public NoteBar()
@@ -52,6 +52,10 @@ namespace WGiBeat.Drawing
 
         public Note CurrentNote()
         {
+            if (NumberCompleted() >= DisplayLimit)
+            {
+                return null;
+            }
             return (from e in Notes where !e.Completed select e).FirstOrDefault();
         }
         public void MarkCurrentCompleted()
@@ -163,9 +167,13 @@ namespace WGiBeat.Drawing
             }
 
             var xdrawOffset = 0 - NumberCompleted() * NOTE_SIZE + (int)XDisplayOffset;
-            
+            var drawCount = 0;
             foreach (Note note in Notes)
             {
+                if (drawCount >= DisplayLimit)
+                {
+                    return;
+                }
                 var completedOffset = 0;
                 var heightOffset = (int) note.Direction * NOTE_SIZE / 3;
                 var cell = ((int) note.Direction);
@@ -186,6 +194,7 @@ namespace WGiBeat.Drawing
                                           posY + heightOffset);
                 }
                 xdrawOffset += NOTE_SIZE;
+                drawCount++;
             }
 
         }

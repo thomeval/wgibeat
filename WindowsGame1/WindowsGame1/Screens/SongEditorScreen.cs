@@ -977,7 +977,7 @@ namespace WGiBeat.Screens
                 return;
             }
 
-            _noteJudgementSet.AwardJudgement(judgement, 0,1, 1,0);
+            _noteJudgementSet.AwardJudgement(judgement, 0,1, 1);
         }
 
         #endregion

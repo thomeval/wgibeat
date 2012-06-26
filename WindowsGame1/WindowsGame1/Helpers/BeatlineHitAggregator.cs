@@ -37,13 +37,17 @@ namespace WGiBeat.Helpers
 
             switch (GameType)
             {
-                case GameType.SYNC:
+                case GameType.SYNC_PRO:
+                    case GameType.SYNC_PLUS:
                     if (!AllHitsReceived())
                     {
                         return;
                     }
+                    //For Sync Pro, multiply the judgement given (for scoring purposes). For Sync Plus, the number of arrows means that 
+                    //the judgement should *not* be multiplied.
+                    var mx = GameType == GameType.SYNC_PRO ? PlayerCount() : 1;
                     SendResponse(new AggregatorResponse
-                                     {Judgement = GetWorstJudgement(), Multiplier = PlayerCount(), Player = (AggregatorPlayerID)0});
+                                     {Judgement = GetWorstJudgement(), Multiplier = mx, Player = (AggregatorPlayerID)0});
                     ResetReceivedHits();
                     break;
                     default:

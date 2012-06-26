@@ -228,7 +228,7 @@ namespace WGiBeat.Screens
         private void DrawBackground(SpriteBatch spriteBatch, GameTime gameTime)
         {
             _background.Draw(spriteBatch);
-            _field.Draw(spriteBatch, gameTime);
+            _field.Draw(gameTime);
         }
 
         private void DrawPlayerOptions(SpriteBatch spriteBatch)
@@ -356,7 +356,7 @@ namespace WGiBeat.Screens
                     }
                     Core.Cookies["CPUSkillLevel"] = Core.CPUManager.SkillNames[_selectedCPUSkill];
                 }
-                if (((GameType) _selectedGameType ) == GameType.SYNC)
+                if (((GameType) _selectedGameType ) == GameType.SYNC_PRO)
                 {
                         _playerOptionsSet.CheckSyncDifficulty();
                 }
@@ -412,7 +412,8 @@ namespace WGiBeat.Screens
                         return "Requires at most three players.";
                     }
                     break;
-                    case GameType.SYNC:
+                    case GameType.SYNC_PRO:
+                    case GameType.SYNC_PLUS:
                     if (PlayerCount() < 2)
                     {
                         return "Requires at least two players.";
