@@ -11,7 +11,7 @@ namespace WGiBeat.Drawing.Sets
         private readonly GrooveMomentumBar _gmbar;
         public GrooveMomentumBarSet(MetricsManager metrics, Player[] players, GameType gameType) : base(metrics, players, gameType)
         {
-            _gmbar = new GrooveMomentumBar {Position = metrics["GrooveMomentumBar", 0], Width = 275};
+            _gmbar = new GrooveMomentumBar {Position = metrics["GrooveMomentumBar", 0], Size = metrics["GrooveMomentumBar.Size",0], BarOffset = metrics["GrooveMomentumBar.Offset",0]};
         }
 
         private const int GM_CHANGE_SPEED = 12;

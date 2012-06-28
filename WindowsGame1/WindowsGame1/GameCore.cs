@@ -48,7 +48,9 @@ namespace WGiBeat
         private KeyboardState _lastKeystate;
         private GamePadState[] _lastGamePadState;
         public string WgibeatRootFolder;
-        private bool _drawInProgress;
+   
+        private bool _deviceSettingUp;
+        private bool _deviceDrawing;
 
         public const string VERSION_STRING = "v1.0";
         private GameCore()
@@ -59,6 +61,7 @@ namespace WGiBeat
 
         //TODO: Refactor to use this with Sets.
         private static GameCore _instance;
+      
 
         public static GameCore Instance
         {
@@ -206,6 +209,9 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
 
         public void SetGraphicsSettings()
         {
+            
+            _deviceSettingUp = true;
+ 
             GraphicsManager.IsFullScreen = Settings.Get<bool>("FullScreen");
             GraphicsManager.SynchronizeWithVerticalRetrace = Settings.Get<bool>("VSync");
             if (GraphicsManager.IsFullScreen)
@@ -225,10 +231,12 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             Sprite3D.Device = this.GraphicsDevice;
             SpriteMap3D.Device = this.GraphicsDevice;
             Sprite3D.EffectInit = false;
-            
+
             GraphicsManager.ApplyChanges();
             GraphicsDevice.VertexDeclaration = new VertexDeclaration(
 GraphicsDevice, VertexPositionColorTexture.VertexElements);
+            _deviceSettingUp = false;
+     
         }
 
         #endregion
@@ -305,38 +313,20 @@ GraphicsDevice, VertexPositionColorTexture.VertexElements);
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            if (_deviceSettingUp)
+            {
+                System.Diagnostics.Debug.WriteLine("Skip draw.");
+                return;
+            }
+            _deviceDrawing = true;
             TextureManager.LastGameTime = gameTime;
             GraphicsDevice.Clear(Color.Black);     
             _activeScreen.Draw(gameTime, _spriteBatch);
-            _drawInProgress = false;
+      
             base.Draw(gameTime);
+            _deviceDrawing = false;
         }
 
-
-        public void ShiftSpriteBatch(bool enableWrap)
-        {
-            if (_drawInProgress)
-            {
-                _drawInProgress = false;
-                _spriteBatch.End();
-            }
-
-            _spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.SaveState,Matrix.CreateScale(GraphicsManager.PreferredBackBufferWidth / 800.0f));
-            if (enableWrap)
-            {
-   
-                GraphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
-                GraphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
-            }
-            else
-            {
-                GraphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Clamp;
-                GraphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Clamp;
-            }
-       
-            _drawInProgress = true;
-
-        }
         #endregion
 
         #region Input Handling
