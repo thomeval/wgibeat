@@ -20,7 +20,6 @@ namespace WGiBeat.Drawing
         private VertexPositionColorTexture[] _vertices;
         private static Matrix _viewMatrix;
         private static Matrix _projectionMatrix;
-        private static VertexDeclaration _vertexDeclaration;
         private bool _dimensionsSet;
 
         public float X { get; set; }
@@ -166,9 +165,9 @@ namespace WGiBeat.Drawing
             result.VertexColorEnabled = true;
             EffectInit = true;
 
-            _vertexDeclaration = new VertexDeclaration(
+            
+            Device.VertexDeclaration = new VertexDeclaration(
         Device, VertexPositionColorTexture.VertexElements);
-            Device.VertexDeclaration = _vertexDeclaration;
             _effect = result;
             return result;
         }

@@ -162,13 +162,10 @@ namespace WGiBeat.Drawing.Sets
             }
         }
 
-
         private long NumHumanPlayers()
         {
             return (from e in Players where e.Playing && !(e.CPU) select e).Count();
         }
-
-  
 
         public void Reset()
         {

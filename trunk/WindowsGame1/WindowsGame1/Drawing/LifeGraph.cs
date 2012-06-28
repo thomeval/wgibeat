@@ -25,9 +25,9 @@ namespace WGiBeat.Screens
         private bool _minMaxSet;
 
         private const int ABSOLUTE_MIN = -100;
-        private const int ABSOLUTE_MAX = 300;
+        private const int ABSOLUTE_MAX = 400;
 
-        public int Location { get; set; }
+
         public int CPUPlayerID { get; set; }
         public readonly Color[] LineColours = {Color.Red, Color.Blue, Color.Green, Color.Yellow, Color.Gray};
         private readonly float[][] _lineData;
@@ -156,30 +156,28 @@ namespace WGiBeat.Screens
 
         private float GetDataMaximum()
         {
-            float result = 0;
-
-            for (int x = 0; x < 4; x++)
+            try
             {
-                if (_lineData[x].Length > 0)
-                {
-                    result = Math.Max(result, _lineData[x].Max());
-                }
+                return (from e in _lineData where e.Length > 0 select e.Max()).Max();
             }
-            return result;
+            catch (Exception)
+            {
+                return 0;
+            }
         }
 
         private float GetDataMinimum()
         {
-            float result = 999;
 
-            for (int x = 0; x < 4; x++)
+            try
             {
-                if (_lineData[x].Length > 0)
-                {
-                    result = Math.Min(result, _lineData[x].Min());
-                }
+              return  (from e in _lineData where e.Length > 0 select e.Min()).Min();
             }
-            return result;
+            catch (Exception)
+            {
+                return 9999;
+            }
+
         }
 
         private void DrawPlayerLines(SpriteBatch spriteBatch)
@@ -200,7 +198,7 @@ namespace WGiBeat.Screens
                 for (int y = 0; y < limit; y++)
                 {
                     float posY = this.Y + this.Height - 7;
-                    posY += Math.Max(_lineData[x][y] - _min, 0) * -tickY;
+                    posY += Math.Min(_max - _min, Math.Max(_lineData[x][y] - _min, 0)) * -tickY;
                     var pos = new Vector2(posX, posY);
                     posX += tickX;
                     LineDrawer.AddVector(pos);

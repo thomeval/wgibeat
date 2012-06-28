@@ -19,7 +19,6 @@ namespace WGiBeat.Screens
         private readonly SineSwayParticleField _field = new SineSwayParticleField();
         private Sprite _background;
         private SpriteMap _gradeSpriteMap;
-        private Sprite _headerSprite;
         private Sprite _maxSprite;
         private Sprite _recordSprite;
         private Sprite _gradeBaseSprite;
@@ -27,9 +26,8 @@ namespace WGiBeat.Screens
         private double _lastCycle;
         private TeamScoreMeter _teamScoreMeter;
         private Sprite _coopScoreDisplay;
-        private SpriteMap _identifiersSpriteMap;
         private readonly ProfileLevelDisplay[] _profileLevelDisplays;
-        private long[] _xpAwarded;
+        private readonly long[] _xpAwarded;
         private PlayerOptionsSet _playerOptionsSet;
 
         public EvaluationScreen(GameCore core) : base(core)
@@ -55,7 +53,7 @@ namespace WGiBeat.Screens
             _lifeGraph = new LifeGraph
                              {
                                  LineDrawer = new PrimitiveLine(Core.GraphicsDevice),
-                                 Location = -1,
+                                 Position = new Vector2(-1000,-1000),
                                  CPUPlayerID = GetCPUPlayerID()
                              };
             for (int x = 0; x < 4; x++)
@@ -73,14 +71,11 @@ namespace WGiBeat.Screens
                 else
                 {
                     _profileLevelDisplays[x].Player = null;
-                    _lifeGraph.Location = x;
+                    _lifeGraph.Position = Core.Metrics["LifeGraph", x];
                 }
             }
 
-            if (_lifeGraph.Location > -1)
-            {
-                _lifeGraph.Position = (Core.Metrics["LifeGraph", _lifeGraph.Location]);
-            }
+    
             _teamScoreMeter = new TeamScoreMeter
                                   {
                                       Position = (Core.Metrics["EvaluationTeamScoreMeter", 0])
@@ -108,10 +103,7 @@ namespace WGiBeat.Screens
         private void InitSprites()
         {
 
-            _headerSprite = new Sprite
-            {
-                SpriteTexture = TextureManager.Textures("EvaluationHeader")
-            };
+          
             _background = new Sprite
                               {
                                   Height = 600,
@@ -145,12 +137,7 @@ namespace WGiBeat.Screens
                                         SpriteTexture = TextureManager.Textures("ScoreBaseCombined"),
                                         Position = Core.Metrics["EvaluationTeamScoreMeter",0]
                                     };
-            _identifiersSpriteMap = new SpriteMap
-                                        {
-                                            SpriteTexture = TextureManager.Textures("PlayerIdentifiers"),
-                                            Rows = 5,
-                                            Columns = 1
-                                        };
+       
         }
 
         private void SaveHighScore()
@@ -329,7 +316,7 @@ namespace WGiBeat.Screens
                 _lastCycle = time.TotalRealTime.TotalSeconds;
                 _lifeGraph.CycleTopLine();
             }
-            if (_lifeGraph.Location > -1)
+            if (_lifeGraph.X > -100)
             {
                 _lifeGraph.Draw(spriteBatch);
             }

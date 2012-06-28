@@ -329,7 +329,7 @@ namespace WGiBeat.Drawing
             _middlePart.Draw(spriteBatch);
 
             var position = MiddlePosition.Clone();
-            position.X += 30;
+            position.X += 35;
             TextureManager.DrawString(spriteBatch, String.Format("{0:D3}", (int)TotalLife()), "LargeFont",
                     position, Color.Black, FontAlign.CENTER);
             position.X += 50;

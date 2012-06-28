@@ -3,8 +3,8 @@
 NormalLifeBar=[50,200][450,200][50,470][450,470];
 NormalLifeBar.Size=[350,25];
 CoopLifeBar=[5,225];
-CoopLifeBar.Size=[785,30];
-CoopLifeBarMiddle=[340,255];
+CoopLifeBar.Size=[790,30];
+CoopLifeBarMiddle=[285,255];
 CoopLifeBarMiddle.Size=[110,30];
 LevelBarBase=[50,50][450,50][50,320][450,320];
 LevelBarBaseSync=[50,50];
@@ -12,7 +12,9 @@ HitsBar=[265,50][665,50][265,320][665,320];
 HitsBar.Size=[70,25];
 StreakBar=[265,50][665,50][265,320][665,320];
 StreakBar.Size=[135,25];
-GrooveMomentumBar=[450,255];
+GrooveMomentumBar=[395,255];
+GrooveMomentumBar.Size=[400,30];
+GrooveMomentumBar.Offset=[75,0];
 
 ScoreBase=[5,5][555,5][5,500][555,500];
 ScoreCombinedBase=[260,5][260,500];

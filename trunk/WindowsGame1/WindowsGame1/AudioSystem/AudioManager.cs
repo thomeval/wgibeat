@@ -108,7 +108,6 @@ namespace WGiBeat.AudioSystem
                 CheckFMODErrors(myChannel.setVolume(_masterVolume));
             int index = -1;
             CheckFMODErrors(myChannel.getIndex(ref index));
-            System.Diagnostics.Debug.WriteLine("Assigned " + soundPath.Substring(soundPath.LastIndexOf("\\")) + " to channel: " + index);
             _channelAssignments[index] = soundPath;
             return index;
         }
