@@ -7,7 +7,6 @@ using RoundLineCode;
 using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
-//using WGiBeat.NetSystem;
 using WGiBeat.Players;
 
 namespace WGiBeat.Screens
@@ -20,9 +19,8 @@ namespace WGiBeat.Screens
         private readonly Menu[] _playerMenus = new Menu[4];
         private readonly Menu[] _profileMenus = new Menu[4];
         private readonly OnScreenKeyboard[] _keyboards = new OnScreenKeyboard[4];
-        private Sprite _background;
-        private Sprite _messageBackground;
-        private RoundLineManager _line = RoundLineManager.Instance;
+        private Sprite3D _background;
+        private Sprite3D _messageBackground;
         private readonly string[] _infoMessages = new string[4];
 
         private readonly Color[] _backgroundColors = {
@@ -78,15 +76,16 @@ namespace WGiBeat.Screens
 
         private void InitSprites()
         {
-            _background = new Sprite
+            _background = new Sprite3D
             {
                 Height = 600,
                 Width = 800,
-                SpriteTexture = TextureManager.Textures("AllBackground"),
+                Texture = TextureManager.Textures("AllBackground"),
             };
-            _messageBackground = new Sprite
+            _messageBackground = new Sprite3D
                                      {
-                                         SpriteTexture = TextureManager.Textures("NewGameMessageBorder")
+                                         Texture = TextureManager.Textures("NewGameMessageBorder"),
+                                         Size = Core.Metrics["NewGameMessageBorder.Size",0]
                                      };
         }
 
@@ -150,6 +149,12 @@ namespace WGiBeat.Screens
             disableKO.AddOption("On",true);
             _playerMenus[x].AddItem(disableKO);
 
+            var disableLB = new MenuItem { ItemText = "Disable Life Boost" };
+            disableLB.AddOption("Off", false);
+            disableLB.AddOption("On", true);
+
+
+            _playerMenus[x].AddItem(disableLB);
             _playerMenus[x].Position = (Core.Metrics["NewGameMenuStart", x]);
             _playerMenus[x].MaxVisibleItems = 6;
 
@@ -203,7 +208,7 @@ namespace WGiBeat.Screens
         private void DrawBackground(SpriteBatch spriteBatch, GameTime gameTime)
         {
 
-            _background.Draw(spriteBatch);
+            _background.Draw();
             _field.Draw(gameTime);
             
             for (int x = 0; x < 4; x++)
@@ -211,7 +216,7 @@ namespace WGiBeat.Screens
                 if (Core.Players[x].Playing)
                 {
                     _messageBackground.Position = (Core.Metrics["NewGameMessageBorder", x]);
-                    _messageBackground.Draw(spriteBatch);
+                    _messageBackground.Draw();
                 }
             }
             _playerOptionsSet.Draw(spriteBatch);
@@ -380,8 +385,12 @@ namespace WGiBeat.Screens
                        _infoMessages[number] = "";
                        break;
                }
-              
 
+               _playerMenus[number].GetByItemText("Disable Life Boost").Enabled = Core.Players[number].Profile != null;
+               if (Core.Players[number].Profile == null)
+               {
+                    _playerMenus[number].GetByItemText("Disable Life Boost").SetSelectedByValue(false);
+               }
            }
            else
            {

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.AudioSystem;
@@ -12,13 +11,13 @@ namespace WGiBeat.Screens
     public class TeamSelectScreen : GameScreen
     {
 
-        private Sprite _headingSprite;
+        private Sprite3D _headingSprite;
         private Sprite _teamBorderSprite;
-        private Sprite _backgroundSprite;
+        private Sprite3D _backgroundSprite;
         private SpriteMap _playerMarkers;
         private SpriteMap _playerReadyMarkers;
 
-        private bool[] _ready = new bool[4];
+        private readonly bool[] _ready = new bool[4];
         private PlayerOptionsSet _playerOptionsSet;
 
         private string _restrictionMessage = "";
@@ -48,17 +47,18 @@ namespace WGiBeat.Screens
             SetRestrictionMessage("Press left or right to \nchoose a team. Press start \nto confirm selection.", false);
 
         }
-        public void InitSprites()
+        private void InitSprites()
         {
-            _headingSprite = new Sprite
+            _headingSprite = new Sprite3D
                                  {
-                                     SpriteTexture = TextureManager.Textures("TeamSelectHeader"),
-                                     Position = (Core.Metrics["TeamSelectScreenHeader", 0])
+                                     Texture = TextureManager.Textures("TeamSelectHeader"),
+                                     Position = Core.Metrics["ScreenHeader", 0],
+                                     Size = Core.Metrics["ScreenHeader.Size", 0]
                                  };
 
-            _backgroundSprite = new Sprite 
+            _backgroundSprite = new Sprite3D 
             { 
-                SpriteTexture = TextureManager.Textures("AllBackground"),
+                Texture = TextureManager.Textures("AllBackground"),
                 Height = 600,
                 Width = 800
             };
@@ -128,8 +128,8 @@ namespace WGiBeat.Screens
 
         private void DrawBackground(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            _backgroundSprite.Draw(spriteBatch);
-            _headingSprite.Draw(spriteBatch);
+            _backgroundSprite.Draw();
+            _headingSprite.Draw();
             _teamBorderSprite.Draw(spriteBatch);
         }
 

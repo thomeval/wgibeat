@@ -16,8 +16,8 @@ namespace WGiBeat.Screens
     {
         private readonly List<SongListItem> _songList = new List<SongListItem>();
         private int _selectedIndex;
-        private Sprite _headerSprite;
-        private Sprite _background;
+        private Sprite3D _headerSprite;
+        private Sprite3D _background;
         private Sprite _spectrumBackground;
         private Sprite _listBackend;
         private Sprite _songCountBase;
@@ -104,17 +104,18 @@ namespace WGiBeat.Screens
 
         private void InitSprites()
         {
-            _background = new Sprite
+            _background = new Sprite3D
             {
                 Height = 600,
                 Width = 800,
-                SpriteTexture = TextureManager.Textures("AllBackground"),
+                Texture = TextureManager.Textures("AllBackground"),
             };
 
-            _headerSprite = new Sprite
+            _headerSprite = new Sprite3D
                                 {
-                                    SpriteTexture = TextureManager.Textures("SongSelectHeader"),
-                                    Position = (Core.Metrics["SongSelectScreenHeader", 0])
+                                    Texture = TextureManager.Textures("SongSelectHeader"),
+                                    Position = Core.Metrics["ScreenHeader",0],
+                                    Size = Core.Metrics["ScreenHeader.Size",0]
                                 };
 
             _spectrumBackground = new Sprite
@@ -157,7 +158,7 @@ namespace WGiBeat.Screens
         {
 
 
-            DrawBackground(spriteBatch, gameTime);
+            DrawBackground(gameTime);
             DrawPlayerOptions(spriteBatch);
             DrawHighScoreFrame(spriteBatch);
 
@@ -171,7 +172,7 @@ namespace WGiBeat.Screens
             DrawBpmMeter(spriteBatch);
 
             DrawSongList(spriteBatch);
-            _headerSprite.Draw(spriteBatch);
+            _headerSprite.Draw();
             DrawSongCount(spriteBatch);
             _songSortDisplay.Draw(spriteBatch);
 
@@ -242,9 +243,9 @@ namespace WGiBeat.Screens
             _playerOptionsSet.Draw(spriteBatch);
         }
 
-        private void DrawBackground(SpriteBatch spriteBatch, GameTime gameTime)
+        private void DrawBackground(GameTime gameTime)
         {
-            _background.Draw(spriteBatch);
+            _background.Draw();
             _field.Draw(gameTime);
         }
 

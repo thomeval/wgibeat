@@ -218,14 +218,14 @@ namespace WGiBeat.Drawing
 
         public void DecrementOption()
         {
-            if (_menuItems.Count > 0)
+            if ((_menuItems.Count > 0) && (_menuItems[SelectedIndex].Enabled))
             {
                 _menuItems[SelectedIndex].DecrementSelected();
             }
         }
         public void IncrementOption()
         {
-            if (_menuItems.Count > 0)
+            if ((_menuItems.Count > 0) && (_menuItems[SelectedIndex].Enabled))
             {
                 _menuItems[SelectedIndex].IncrementSelected();
             }

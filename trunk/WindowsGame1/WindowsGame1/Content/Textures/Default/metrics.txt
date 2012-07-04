@@ -65,10 +65,11 @@ SyncCountdown=[245,30][245,155][245,280][245,405];
 SyncJudgement=[50,25];
 SyncJudgement.Size=[50,125];
 MainGameTextBackground=[0,540];
-AbilityBar=[200,140][600,140][200,420][600,420];
 
 
 #Main Menu;
+ScreenHeader=[0,0];
+ScreenHeader.Size=[800,90];
 MainMenuOptions=[250,120][250,195][250,245][250,295][250,345][250,395][250,445][250,495];
 MainMenuOptions.Size=[300,50];
 MainMenuNoSongsError=[260,170];
@@ -110,9 +111,9 @@ LifeGraph=[20,20][420,20][20,345][420,345];
 NewGameJoinNotification=[50,125][450,125][50,450][450,450];
 NewGameMenuStart=[25,0][425,0][25,300][425,300];
 NewGameMessageBorder=[0,220][400,220][0,520][400,520];
+NewGameMessageBorder.Size=[400,55];
 NewGamePlayerOptionsFrames=[0,265][400,265][0,565][400,565];
 OnScreenKeyboard=[10,40][410,40][10,340][410,340];
-
 
 #Song Select;
 SongListMidpoint=[450,275];

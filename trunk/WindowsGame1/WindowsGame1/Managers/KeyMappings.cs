@@ -59,7 +59,13 @@ namespace WGiBeat.Managers
             _mappings.Add(Keys.PageDown, new InputAction { Player = 3, Action = "START" });
             _mappings.Add(Keys.PageUp, new InputAction { Player = 3, Action = "SELECT" });
 
-            _mappings.Add(Keys.Add, new InputAction{Player = 4, Action = "START"});
+            _mappings.Add(Keys.K, new InputAction { Player = 4, Action = "LEFT" });
+            _mappings.Add(Keys.OemSemicolon, new InputAction { Player = 4, Action = "RIGHT" });
+            _mappings.Add(Keys.O, new InputAction { Player = 4, Action = "UP" });
+            _mappings.Add(Keys.L, new InputAction { Player = 4, Action = "DOWN" });
+            _mappings.Add(Keys.RightShift, new InputAction { Player = 4, Action = "BEATLINE" });
+            _mappings.Add(Keys.I, new InputAction { Player = 4, Action = "START" });
+            _mappings.Add(Keys.P, new InputAction { Player = 4, Action = "SELECT" });
 
             _mappings.Add(Keys.F3, new InputAction { Action = "BPM_DECREASE_SMALL" });
             _mappings.Add(Keys.F4, new InputAction { Action = "BPM_INCREASE_SMALL" });

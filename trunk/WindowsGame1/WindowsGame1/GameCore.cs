@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -49,10 +50,8 @@ namespace WGiBeat
         private KeyboardState _lastKeystate;
         private GamePadState[] _lastGamePadState;
         public string WgibeatRootFolder;
-   
-        private bool _deviceSettingUp;
 
-        public const string VERSION_STRING = "v1.0";
+        public const string VERSION_STRING = "v2.0 a1";
         private GameCore()
         {
             GraphicsManager = new GraphicsDeviceManager(this);
@@ -62,7 +61,6 @@ namespace WGiBeat
         //TODO: Refactor to use this with Sets.
         private static GameCore _instance;
       
-
         public static GameCore Instance
         {
             get { return _instance ?? (_instance = new GameCore()); }
@@ -100,16 +98,17 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
 
         private void InitManagers()
         {
-            Log = new LogManager { Enabled = true, SaveLog = true, RootFolder = WgibeatRootFolder, LogLevel = LogLevel.INFO };
+            Log = new LogManager
+                      {Enabled = true, SaveLog = true, RootFolder = WgibeatRootFolder, LogLevel = LogLevel.INFO};
             Log.AddMessage("Initializing Cookies...", LogLevel.INFO);
             Cookies = new Dictionary<string, object>();
 
             TextureManager.Log = Log;
             TextureManager.GraphicsDevice = this.GraphicsDevice;
 
-            Metrics = new MetricsManager { Log = this.Log };
+            Metrics = new MetricsManager {Log = this.Log};
             Settings = SettingsManager.LoadFromFile(WgibeatRootFolder + "\\settings.txt", this.Log);
-            Log.LogLevel = (LogLevel)Settings.Get<int>("LogLevel");
+            Log.LogLevel = (LogLevel) Settings.Get<int>("LogLevel");
             HighScores = HighScoreManager.LoadFromFile(WgibeatRootFolder + "\\Scores.conf", this.Log);
             Profiles = ProfileManager.LoadFromFolder(WgibeatRootFolder + "\\Profiles", this.Log);
             Text = TextManager.LoadFromFile(WgibeatRootFolder + "\\Content\\Text\\OptionText.txt", this.Log);
@@ -117,10 +116,10 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             Text.AddResource(WgibeatRootFolder + "\\Content\\Text\\ModeText.txt");
 
             Audio = new AudioManager(this.Log)
-            {
-                FallbackSound = (WgibeatRootFolder + "\\Content\\SoundEffects\\Fallback.ogg")
-            };
-            Audio.SetMasterVolume((float)Settings.Get<double>("SongVolume"));
+                        {
+                            FallbackSound = (WgibeatRootFolder + "\\Content\\SoundEffects\\Fallback.ogg")
+                        };
+            Audio.SetMasterVolume((float) Settings.Get<double>("SongVolume"));
 
             Songs = new SongManager(this.Log, this.Audio, this.Settings);
             Sounds = new SoundEffectManager(this.Log, this.Audio, this.Settings);
@@ -131,11 +130,11 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             CPUManager.LoadWeights("CPUSkill.txt");
 
             _menuMusicManager = new MenuMusicManager(this.Log)
-            {
-                MusicFilePath = WgibeatRootFolder + "\\MenuMusic\\",
-                AudioManager = this.Audio,
-                Crossfader = this.Crossfader
-            };
+                                    {
+                                        MusicFilePath = WgibeatRootFolder + "\\MenuMusic\\",
+                                        AudioManager = this.Audio,
+                                        Crossfader = this.Crossfader
+                                    };
             _menuMusicManager.LoadMusicList(_menuMusicManager.MusicFilePath + "MusicList.txt");
 
             KeyMappings = new KeyMappings(this.Log);
@@ -144,22 +143,8 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             if (!passed)
                 KeyMappings.LoadDefault();
 
-            UpdateManager = new UpdateManager { Log = this.Log };
-
-            /*
-            Net = new NetManager {Log = this.Log};
-            Net.NetMessageReceived += NetMessageReceived;
-            NetHelper.NetManager = Net;
-            NetHelper.Core = this;
-             */
+            UpdateManager = new UpdateManager {Log = this.Log};
         }
-        /*
-        private void NetMessageReceived(object sender, ObjectEventArgs e)
-        {
-
-           _activeScreen.NetMessageReceived((NetMessage) e.Object);
-        }
-         */ 
 
         private void InitPlayers()
         {
@@ -210,7 +195,6 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
         public void SetGraphicsSettings()
         {
             
-            _deviceSettingUp = true;
  
             GraphicsManager.IsFullScreen = Settings.Get<bool>("FullScreen");
             GraphicsManager.SynchronizeWithVerticalRetrace = Settings.Get<bool>("VSync");
@@ -224,7 +208,9 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
                 string[] resolution = Settings.Get<string>("ScreenResolution").Split('x');
                 GraphicsManager.PreferredBackBufferWidth = Convert.ToInt32(resolution[0]);
                 GraphicsManager.PreferredBackBufferHeight = Convert.ToInt32(resolution[1]);
-              
+                //TODO: remove when stable
+                GraphicsManager.PreferredBackBufferHeight = 600;
+                GraphicsManager.PreferredBackBufferWidth = 800;
             }
 
             Sprite.Device = this.GraphicsDevice;
@@ -239,7 +225,6 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             GraphicsManager.ApplyChanges();
             GraphicsDevice.VertexDeclaration = new VertexDeclaration(
 GraphicsDevice, VertexPositionColorTexture.VertexElements);
-            _deviceSettingUp = false;
      
         }
 
@@ -317,11 +302,7 @@ GraphicsDevice, VertexPositionColorTexture.VertexElements);
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            if (_deviceSettingUp)
-            {
-                System.Diagnostics.Debug.WriteLine("Skip draw.");
-                return;
-            }
+         
 
             TextureManager.LastGameTime = gameTime;
             GraphicsDevice.Clear(Color.Black);     
@@ -339,8 +320,8 @@ GraphicsDevice, VertexPositionColorTexture.VertexElements);
 
             for (int x = 0; x < 4; x++)
             {
-                GamePadState currentState = GamePad.GetState((PlayerIndex) x);
-                foreach (Buttons button in GetPressedButtons(currentState))
+                var currentState = GamePad.GetState((PlayerIndex) x);
+                foreach (var button in GetPressedButtons(currentState))
                 {
 
                     if (_lastGamePadState[x].IsButtonUp(button))
@@ -352,7 +333,7 @@ GraphicsDevice, VertexPositionColorTexture.VertexElements);
                     }
                 }
 
-                foreach (Buttons button in GetPressedButtons(_lastGamePadState[x]))
+                foreach (var button in GetPressedButtons(_lastGamePadState[x]))
                 {
                     if (currentState.IsButtonUp(button))
                     {
@@ -365,30 +346,21 @@ GraphicsDevice, VertexPositionColorTexture.VertexElements);
 
         }
 
-        private List<Buttons> GetPressedButtons(GamePadState state)
+        private IEnumerable<Buttons> GetPressedButtons(GamePadState state)
         {
-            var result = new List<Buttons>();
-
             Buttons[] options = {
                                     Buttons.A, Buttons.B, Buttons.X, Buttons.Y, Buttons.LeftShoulder, Buttons.RightShoulder
                                     , Buttons.Start, Buttons.Back, Buttons.LeftTrigger, Buttons.RightTrigger, Buttons.DPadDown,
                                     Buttons.DPadLeft, Buttons.DPadUp, Buttons.DPadRight
                                 };
-            foreach (Buttons option in options)
-            {
-                if (state.IsButtonDown(option))
-                {
-                    result.Add(option);
-                }
-            }
-            return result;
+            return options.Where(state.IsButtonDown).ToList();
         }
 
         private void DetectKeyPresses()
         {
-            KeyboardState currentState = Keyboard.GetState();
+            var currentState = Keyboard.GetState();
             
-            foreach (Keys key in currentState.GetPressedKeys())
+            foreach (var key in currentState.GetPressedKeys())
             {
                 if (_lastKeystate.IsKeyUp(key))
                 {
@@ -399,7 +371,7 @@ GraphicsDevice, VertexPositionColorTexture.VertexElements);
                 }
             }
 
-            foreach (Keys key in _lastKeystate.GetPressedKeys())
+            foreach (var key in _lastKeystate.GetPressedKeys())
             {
                 if ((currentState.IsKeyUp(key)) && (KeyMappings.GetAction(key) != null))
                 {

@@ -26,7 +26,7 @@ namespace WGiBeat.Screens
         private int _selectedAction;
 
         private Sprite _backgroundSprite;
-        private Sprite _headerSprite;
+        private Sprite3D _headerSprite;
         private SpriteMap _gridInsideSpriteMap;
         private SpriteMap _gridTopSpriteMap;
         private SpriteMap _gridSideSpriteMap;
@@ -64,9 +64,11 @@ namespace WGiBeat.Screens
                 SpriteTexture = TextureManager.Textures("AllBackground"),
             };
 
-            _headerSprite = new Sprite
+            _headerSprite = new Sprite3D
             {
-                SpriteTexture = TextureManager.Textures("KeyOptionHeader"),
+                Texture = TextureManager.Textures("KeyOptionHeader"),
+                Position = Core.Metrics["ScreenHeader", 0],
+                Size = Core.Metrics["ScreenHeader.Size", 0]
             };
 
             _gridTopSpriteMap = new SpriteMap
@@ -121,7 +123,7 @@ namespace WGiBeat.Screens
         private Vector2 _textPosition;
         private void DrawOverlay(SpriteBatch spriteBatch)
         {
-            _headerSprite.Draw(spriteBatch);
+            _headerSprite.Draw();
 
             //Draw Grid top
             for (int x = 0; x < 4; x++)

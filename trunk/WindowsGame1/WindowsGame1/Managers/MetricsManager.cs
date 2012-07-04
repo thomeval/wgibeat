@@ -126,5 +126,20 @@ namespace WGiBeat.Managers
             sprite.SpriteTexture = TextureManager.Textures(metricsKey);
 
         }
+
+        public void SetupFromMetrics(ref Sprite3D sprite, string metricsKey, int id)
+        {
+            if (_metrics.ContainsKey(metricsKey))
+            {
+                sprite.Position = this[metricsKey, id];
+            }
+            if (_metrics.ContainsKey(metricsKey + ".Size"))
+            {
+                //Handle both a single size definition and multiple (one per ID).
+                sprite.Size = _metrics[metricsKey + ".Size"].Count() > id ? this[metricsKey + ".Size", id] : this[metricsKey + ".Size", 0];
+            }
+            sprite.Texture = TextureManager.Textures(metricsKey);
+
+        }
     }
 }

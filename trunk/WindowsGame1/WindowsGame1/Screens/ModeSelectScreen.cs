@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
-//using WGiBeat.NetSystem;
 using WGiBeat.Players;
 
 namespace WGiBeat.Screens
@@ -73,7 +71,8 @@ namespace WGiBeat.Screens
             _headerSprite = new Sprite
                                 {
                                     SpriteTexture = TextureManager.Textures("ModeSelectHeader"),
-                                    Position = (Core.Metrics["ModeSelectScreenHeader", 0])
+                                    Position = (Core.Metrics["ScreenHeader", 0]),
+                                    Size = Core.Metrics["ScreenHeader.Size",0]
                                 };
 
             _optionBaseSpriteMap = new SpriteMap
@@ -126,7 +125,6 @@ namespace WGiBeat.Screens
 
             DrawPlayerOptions(spriteBatch);
 
-            _headerSprite.Position = (Core.Metrics["ModeSelectScreenHeader", 0]);
             _headerSprite.Draw(spriteBatch);
 
             DrawModeOptions(spriteBatch);
