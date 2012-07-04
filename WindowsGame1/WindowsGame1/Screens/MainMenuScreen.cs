@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using RoundLineCode;
 using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
@@ -42,7 +44,8 @@ namespace WGiBeat.Screens
 
             InitSprites();
             InitUpdater();
-
+      
+            
             base.Initialize();
         }
 
@@ -111,10 +114,15 @@ namespace WGiBeat.Screens
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+          
             DrawBackground(gameTime);
+          
+
+           // _roundLine.BlurThreshold = _roundLine.ComputeBlurThreshold(5, _roundLine.ViewProjMatrix, 800);
+    
+
             DrawMenu(spriteBatch);
 
-    
             TextureManager.DrawString(spriteBatch,_errorMessage,"DefaultFont", Core.Metrics["MainMenuNoSongsError", 0], Color.Black,FontAlign.LEFT);
             DrawUpdater(spriteBatch);
 

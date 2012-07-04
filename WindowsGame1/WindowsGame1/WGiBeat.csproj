@@ -105,8 +105,8 @@
     <Compile Include="Drawing\GrooveMomentumBar.cs" />
     <Compile Include="Drawing\NoteBarProgress.cs" />
     <Compile Include="Drawing\PerformanceBar.cs" />
-    <Compile Include="Drawing\PrimitiveLine3D.cs" />
     <Compile Include="Drawing\ProfileLevelDisplay.cs" />
+    <Compile Include="Drawing\RoundLine\RoundLine.cs" />
     <Compile Include="Drawing\Sets\CountdownSet.cs" />
     <Compile Include="Drawing\FileSelectDialog.cs" />
     <Compile Include="Drawing\MovingBackground.cs" />
@@ -168,7 +168,6 @@
     <Compile Include="Screens\InstructionScreen.cs" />
     <Compile Include="Screens\ModeSelectScreen.cs" />
     <Compile Include="Drawing\NormalLifeBar.cs" />
-    <Compile Include="Drawing\PrimitiveLine.cs" />
     <Compile Include="Drawing\SineSwayParticle.cs" />
     <Compile Include="Drawing\SineSwayParticleField.cs" />
     <Compile Include="Drawing\SongListItem.cs" />
@@ -774,6 +773,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Content\RoundLine.fx" />
     <None Include="Content\SoundEffects\Default\keychangecomplete.ogg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

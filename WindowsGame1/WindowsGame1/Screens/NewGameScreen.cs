@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RoundLineCode;
 using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
@@ -20,6 +22,7 @@ namespace WGiBeat.Screens
         private readonly OnScreenKeyboard[] _keyboards = new OnScreenKeyboard[4];
         private Sprite _background;
         private Sprite _messageBackground;
+        private RoundLineManager _line = RoundLineManager.Instance;
         private readonly string[] _infoMessages = new string[4];
 
         private readonly Color[] _backgroundColors = {
@@ -28,6 +31,7 @@ namespace WGiBeat.Screens
                                             };
 
         private PlayerOptionsSet _playerOptionsSet;
+        private List<RoundLine> _lineList;
 
         public NewGameScreen(GameCore core)
             : base(core)
@@ -191,7 +195,7 @@ namespace WGiBeat.Screens
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             DrawBackground(spriteBatch, gameTime);
-            DrawBorders(spriteBatch);
+            DrawBorders();
             DrawMenus(spriteBatch);
             DrawMessages(spriteBatch);
         }
@@ -257,19 +261,16 @@ namespace WGiBeat.Screens
             }
         }
 
-
-
-        private void DrawBorders(SpriteBatch spriteBatch)
+        private void DrawBorders()
         {
-            var brush = new PrimitiveLine3D(Core.GraphicsDevice) { Colour = Color.Black };
-            brush.AddVector(new Vector2(400, 0));
-            brush.AddVector(new Vector2(400, 600));
-            brush.Render(spriteBatch);
-            brush.ClearVectors();
-            brush.AddVector(new Vector2(0, 300));
-            brush.AddVector(new Vector2(800, 300));
-            brush.Render(spriteBatch);
-            brush.ClearVectors();
+
+            if (_lineList == null)
+            {
+                _lineList = new List<RoundLine>();
+                _lineList.Add(new RoundLine(400, 0, 400, 600));
+                _lineList.Add(new RoundLine(0, 300, 800, 300));
+            }
+            RoundLineManager.Instance.Draw(_lineList, 1, Color.Black);
         }
 
 #endregion

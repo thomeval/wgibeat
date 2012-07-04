@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RoundLineCode;
 
 namespace WGiBeat.Drawing
 {
@@ -11,35 +12,46 @@ namespace WGiBeat.Drawing
     {
 
         public Color ColorShading;
+        private RoundLineManager _roundLine;
+        private List<RoundLine> _lineList;
 
+        public void Init()
+        {
+            _roundLine = RoundLineManager.Instance;
+            _lineList = new List<RoundLine>();
+        }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Draw(spriteBatch, new float[1]);
+            Draw(new float[1]);
         }
 
-        public void Draw(SpriteBatch spriteBatch, float[] levels)
+        public void Draw(float[] levels)
         {
-         
-          
-                var line = new PrimitiveLine(GameCore.Instance.GraphicsDevice)
-                {
-                    Colour = this.ColorShading,
-                    Position = this.Position,
-                    Width = 5
-                };
-
-                double posX = 0;
 
 
-                for (int x = 0; x < levels.Count(); x++)
-                {
-                    line.AddVector(new Vector2((int) posX, this.Height * levels[x]));
-                    posX += 1.0f * this.Width / (levels.Length-1);
-                }
-
-                line.Render(spriteBatch);
-
+            if (levels.Length < 2)
+            {
+                return;
             }
+            _lineList.Clear();
+            var step = 1.0f * this.Width / (levels.Length - 1);
+            float posX = 0;
+
+
+            for (int x = 1; x < levels.Count(); x++)
+            {
+                var p0 = new Vector2(posX, (this.Height * levels[x - 1]));
+                var p1 = new Vector2(posX + step, (this.Height * levels[x]));
+                p0 += this.Position;
+                p1 += this.Position;
+
+                _lineList.Add(new RoundLine(p0, p1));
+                posX += step;
+            }
+
+            _roundLine.Draw(_lineList,2,ColorShading,0,null);
+
+        }
 
     }
 }

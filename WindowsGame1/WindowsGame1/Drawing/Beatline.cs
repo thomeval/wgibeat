@@ -108,10 +108,16 @@ namespace WGiBeat.Drawing
                                     {
                                         SpriteTexture = TextureManager.Textures("BeatlineSpeedScale"),
                                         Size = new Vector2(this.Width - LEFT_SIDE - 25, 5),
-                                        X = (int) (this.Position.X + LEFT_SIDE + IMPACT_WIDTH),
+                                        X = (int) (this.Position.X + (LEFT_SIDE + IMPACT_WIDTH) * WidthRatio),
                                         Y = (int) (this.Position.Y + this.Height / 2 - 2)
                                     };
        
+        }
+
+        protected double WidthRatio
+        {
+            get { return this.Width/350.0; }
+    
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -273,13 +279,13 @@ namespace WGiBeat.Drawing
             float result;
             if (bn.Hit)
             {
-                result = LEFT_SIDE + (bn.DisplayPosition);
+                result = (float)((LEFT_SIDE * WidthRatio )+ (bn.DisplayPosition));
                 result = Math.Min(this.Width, result);
                 result = Math.Max(0, result);
             }
             else
             {
-                result = LEFT_SIDE - (markerBeatOffset);
+                result = (float) ((LEFT_SIDE * WidthRatio) - (markerBeatOffset));
             }
 
             result += this.X;
@@ -308,7 +314,7 @@ namespace WGiBeat.Drawing
         public int TrimExpired(double phraseNumber)
         {
             _notesToRemove.Clear();
-            foreach (BeatlineNote bn in _beatlineNotes)
+            foreach (var bn in _beatlineNotes)
             {
                 if ((CalculateHitOffset(bn, phraseNumber) < -200))
                 {
@@ -320,7 +326,7 @@ namespace WGiBeat.Drawing
             {
                 Debug.WriteLine("Trimmed:" + _notesToRemove.Count);
             }
-            foreach (BeatlineNote bnr in _notesToRemove)
+            foreach (var bnr in _notesToRemove)
             {
                 _beatlineNotes.Remove(bnr);
             }
@@ -375,7 +381,7 @@ namespace WGiBeat.Drawing
 
         private BeatlineNoteJudgement GetJudgementResult(double offset, bool completed)
         {
-            BeatlineNoteJudgement result = BeatlineNoteJudgement.FAIL;
+            var result = BeatlineNoteJudgement.FAIL;
             if (completed)
             {
                 for (int x = 0; x < NoteJudgementSet.JudgementCutoffs.Count(); x++)
@@ -399,7 +405,7 @@ namespace WGiBeat.Drawing
                  && (e.NoteType == BeatlineNoteType.NORMAL ) select e).ToList();
             var result = passedNotes.Count();
 
-            foreach (BeatlineNote bln in passedNotes)
+            foreach (var bln in passedNotes)
             {
                 MarkNoteAsHit(bln, phraseNumber);
             }

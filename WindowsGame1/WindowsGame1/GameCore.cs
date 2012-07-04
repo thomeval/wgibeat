@@ -5,6 +5,7 @@ using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using RoundLineCode;
 using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
@@ -50,7 +51,6 @@ namespace WGiBeat
         public string WgibeatRootFolder;
    
         private bool _deviceSettingUp;
-        private bool _deviceDrawing;
 
         public const string VERSION_STRING = "v1.0";
         private GameCore()
@@ -231,7 +231,11 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             Sprite3D.Device = this.GraphicsDevice;
             SpriteMap3D.Device = this.GraphicsDevice;
             Sprite3D.EffectInit = false;
-
+            RoundLineManager.Instance.Init(this.GraphicsDevice,this.Content, Sprite3D.GetViewProjMatrix());
+            RoundLineManager.Instance.BlurThreshold = RoundLineManager.Instance.ComputeBlurThreshold(1.0f,
+                                                                                                     Sprite3D.
+                                                                                                         GetViewProjMatrix
+                                                                                                         (), 800);
             GraphicsManager.ApplyChanges();
             GraphicsDevice.VertexDeclaration = new VertexDeclaration(
 GraphicsDevice, VertexPositionColorTexture.VertexElements);
@@ -318,13 +322,13 @@ GraphicsDevice, VertexPositionColorTexture.VertexElements);
                 System.Diagnostics.Debug.WriteLine("Skip draw.");
                 return;
             }
-            _deviceDrawing = true;
+
             TextureManager.LastGameTime = gameTime;
             GraphicsDevice.Clear(Color.Black);     
             _activeScreen.Draw(gameTime, _spriteBatch);
       
             base.Draw(gameTime);
-            _deviceDrawing = false;
+
         }
 
         #endregion
