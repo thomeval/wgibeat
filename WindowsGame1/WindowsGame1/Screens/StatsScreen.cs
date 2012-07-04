@@ -18,9 +18,9 @@ namespace WGiBeat.Screens
         private readonly int[] _scrollPosition;
         private readonly Profile[] _activeProfiles;
         private readonly Menu[] _profileMenus;
-        private Sprite _headerSprite;
+        private Sprite3D _headerSprite;
         private Sprite _instructionBaseSprite;
-        private Sprite _backgroundSprite;
+        private Sprite3D _backgroundSprite;
  
 
 
@@ -72,13 +72,19 @@ namespace WGiBeat.Screens
 
         private void InitSprites()
         {
-            _backgroundSprite = new Sprite
+            _backgroundSprite = new Sprite3D
                                     {
-                                        SpriteTexture = TextureManager.Textures("StatsBackground"),
+                                        Texture = TextureManager.Textures("StatsBackground"),
                                         Height = 600,
                                         Width = 800,
                                     };
-            _headerSprite = new Sprite { SpriteTexture = TextureManager.Textures("StatsHeader") };
+            _headerSprite = new Sprite3D
+                                {
+                                    Texture = TextureManager.Textures("StatsHeader"),
+                                    Position = (Core.Metrics["ScreenHeader", 0]),
+                                    Size = Core.Metrics["ScreenHeader.Size", 0]
+                                };
+
             _instructionBaseSprite = new Sprite
             {
                 SpriteTexture = TextureManager.Textures("StatsInstructionBase"),
@@ -89,21 +95,21 @@ namespace WGiBeat.Screens
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            DrawBackground(spriteBatch, gameTime);
+            DrawBackground(gameTime);
             DrawBorder();
             DrawHeader(spriteBatch);
             DrawText(spriteBatch);
         }
 
-        private void DrawBackground(SpriteBatch spriteBatch, GameTime gameTime)
+        private void DrawBackground(GameTime gameTime)
         {
-            _backgroundSprite.Draw(spriteBatch);
+            _backgroundSprite.Draw();
             _field.Draw(gameTime);
         }
 
         private void DrawHeader(SpriteBatch spriteBatch)
         {
-            _headerSprite.Draw(spriteBatch);
+            _headerSprite.Draw();
             _instructionBaseSprite.Draw(spriteBatch);
         }
 

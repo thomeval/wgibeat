@@ -2,7 +2,6 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using WGiBeat.Players;
 
 namespace WGiBeat.Drawing
 {
@@ -99,6 +98,8 @@ namespace WGiBeat.Drawing
             {
                 InitSprites();
             }
+
+            UpdateDisplayedLife();
             DrawBase(spriteBatch);
             DrawSides(spriteBatch);
             DrawBlocks(spriteBatch, gameTime);
@@ -191,7 +192,7 @@ namespace WGiBeat.Drawing
                     continue;
                 }
 
-                var displayedLife = Parent.Players[x].Life;
+                var displayedLife = _displayedLife[x];
                 displayedLife *= (1 - beatFraction) * penaltyMx;
                 //Draw each block in sequence. Either in colour, or black depending on the Player's life.
                 var highestBlock = GetHighestBlockLevel(x, capacity);
@@ -303,11 +304,11 @@ namespace WGiBeat.Drawing
             var textPosition = position.Clone();
             textPosition.X += 25;
 
-            TextureManager.DrawString(spriteBatch, String.Format("{0:D3}", (int)Parent.Players[player].Life),
+            TextureManager.DrawString(spriteBatch, String.Format("{0:D3}", (int)_displayedLife[player]),
                     "DefaultFont",textPosition, Color.Black,FontAlign.CENTER);
 
             textPosition.X += 60;
-            TextureManager.DrawString(spriteBatch, String.Format("{0:P0}",  Parent.Players[player].Life / TrueCapacity),
+            TextureManager.DrawString(spriteBatch, String.Format("{0:P0}",  _displayedLife[player] / TrueCapacity),
         "DefaultFont", textPosition, Color.Black, FontAlign.CENTER);
            
         }
@@ -340,7 +341,16 @@ namespace WGiBeat.Drawing
 
         public double TotalLife()
         {
-            return (from e in Parent.Players where e.Playing select e.Life).Sum();
+            double sum = 0;
+            for (int index = 0; index < Parent.Players.Length; index++)
+            {
+                if (Parent.Players[index].Playing)
+                {
+                    sum += _displayedLife[index];
+                }
+               
+            }
+            return sum;
         }
 
         private double TotalPositive()
@@ -351,7 +361,7 @@ namespace WGiBeat.Drawing
         {
             for (int x = 0; x < 4; x++)
             {
-                _displayedLife[x] = 0;
+                _displayedLife[x] = Parent.Players[x].Life;
             }
         }
 
@@ -378,7 +388,24 @@ namespace WGiBeat.Drawing
             return (gameTime - Math.Floor(gameTime)) * BEAT_FRACTION_SEVERITY;
         }
 
- 
+        private const double LIFE_CHANGE_SPEED = 8;
+        public void UpdateDisplayedLife()
+        {
+            for (var x = 0; x < 4; x++)
+            {
+                var diff = Parent.Players[x].Life - _displayedLife[x];
+                if (Math.Abs(diff) < 0.01)
+                {
+                    _displayedLife[x] = Parent.Players[x].Life;
+                }
+                else
+                {
+                    var changeMx = Math.Min(1,
+                                            TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds*LIFE_CHANGE_SPEED);
+                    _displayedLife[x] += diff*(changeMx);
+                }
+            }
+        }
         #endregion
     }
 }

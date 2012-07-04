@@ -15,7 +15,7 @@ namespace WGiBeat.Screens
 
         private readonly SineSwayParticleField _field = new SineSwayParticleField();
         private Sprite _background;
-        private Sprite _header;
+        private Sprite3D _header;
         private Sprite _optionBaseSprite;
 
         public OptionScreen(GameCore core)
@@ -86,7 +86,8 @@ namespace WGiBeat.Screens
             item.AddOption("On", true);
             _optionsMenu.AddItem(item);
 
-            item = new MenuItem {ItemText = "Screen Resolution"};
+            //TODO: enable again when stable
+            item = new MenuItem {ItemText = "Screen Resolution",Enabled=false};
             item.AddOption("800x600", "800x600");
             item.AddOption("1024x768", "1024x768");
             item.AddOption("1200x900","1200x900");
@@ -143,9 +144,11 @@ namespace WGiBeat.Screens
                 Width = 800,
                 SpriteTexture = TextureManager.Textures("AllBackground"),
             };
-            _header = new Sprite
+            _header = new Sprite3D
             {
-                SpriteTexture = TextureManager.Textures("OptionsHeader"),
+                Texture = TextureManager.Textures("OptionsHeader"),
+                Position = Core.Metrics["ScreenHeader", 0],
+                Size = Core.Metrics["ScreenHeader.Size", 0]
             };
             _optionBaseSprite = new Sprite
                                     {
@@ -172,7 +175,7 @@ namespace WGiBeat.Screens
         {
             _background.Draw(spriteBatch);
             _field.Draw(gameTime);
-            _header.Draw(spriteBatch);
+            _header.Draw();
 
         }
 

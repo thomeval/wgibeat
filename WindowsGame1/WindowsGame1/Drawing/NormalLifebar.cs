@@ -249,12 +249,12 @@ namespace WGiBeat.Drawing
             _displayedLife = Parent.Players[PlayerID].Life;
         }
 
-        private const double LIFE_CHANGE_SPEED = 12;
+        private const double LIFE_CHANGE_SPEED = 8;
         public void UpdateDisplayedLife()
         {
 
             var diff = Parent.Players[PlayerID].Life - _displayedLife;
-            if (Math.Abs(diff) < 0.001)
+            if (Math.Abs(diff) < 0.01)
             {
                 _displayedLife = Parent.Players[PlayerID].Life;
             }

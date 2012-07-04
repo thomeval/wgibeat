@@ -48,7 +48,7 @@ namespace WGiBeat.Screens
         private string _wgibeatSongsFolder;
 
         private Sprite _editProgressBaseSprite;
-        private Sprite _backgroundSprite;
+        private Sprite3D _backgroundSprite;
         private Sprite _songDetailsDisplaySprite;
         private Sprite _songBackgroundDisplaySprite;
 
@@ -109,9 +109,9 @@ namespace WGiBeat.Screens
 
         public void InitSprites()
         {
-            _backgroundSprite = new Sprite
+            _backgroundSprite = new Sprite3D
             {
-                SpriteTexture = TextureManager.Textures("EditorBackground"),
+                Texture = TextureManager.Textures("EditorBackground"),
                 Height = 600,
                 Width = 800,
             };
@@ -308,8 +308,8 @@ namespace WGiBeat.Screens
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-          //  Core.ShiftSpriteBatch(false);
-            _backgroundSprite.Draw(spriteBatch);
+         
+            _backgroundSprite.Draw();
             DrawHeading(spriteBatch);
 
             switch (_cursorPosition)

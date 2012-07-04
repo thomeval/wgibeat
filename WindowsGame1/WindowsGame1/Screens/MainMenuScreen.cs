@@ -100,7 +100,9 @@ namespace WGiBeat.Screens
                               };
             _header = new Sprite3D
                           {
-                              Texture = TextureManager.Textures("MainMenuHeader")
+                              Texture = TextureManager.Textures("MainMenuHeader"),
+                              Position = Core.Metrics["ScreenHeader",0],
+                              Size = Core.Metrics["ScreenHeader.Size",0]
                           };
             _menuOptionSprite = new SpriteMap3D
                                     {
@@ -116,11 +118,6 @@ namespace WGiBeat.Screens
         {
           
             DrawBackground(gameTime);
-          
-
-           // _roundLine.BlurThreshold = _roundLine.ComputeBlurThreshold(5, _roundLine.ViewProjMatrix, 800);
-    
-
             DrawMenu(spriteBatch);
 
             TextureManager.DrawString(spriteBatch,_errorMessage,"DefaultFont", Core.Metrics["MainMenuNoSongsError", 0], Color.Black,FontAlign.LEFT);
