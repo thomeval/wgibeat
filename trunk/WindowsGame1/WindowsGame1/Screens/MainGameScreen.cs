@@ -650,6 +650,10 @@ namespace WGiBeat.Screens
 
         private double GetAverageLevel()
         {
+            if ((GameType) Core.Cookies["CurrentGameType"] == GameType.SYNC_PLUS)
+            {
+                return Core.Players[0].Level;
+            }
             return (from e in Core.Players where e.Playing select e.Level).Average();
         }
 

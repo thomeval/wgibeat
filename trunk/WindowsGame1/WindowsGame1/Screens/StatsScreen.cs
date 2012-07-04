@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RoundLineCode;
 using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
@@ -22,7 +23,7 @@ namespace WGiBeat.Screens
         private Sprite _backgroundSprite;
  
 
-        private PrimitiveLine _line;
+
         private readonly SineSwayParticleField _field = new SineSwayParticleField();
         private ProfileLevelDisplay _levelDisplay;
 
@@ -43,7 +44,8 @@ namespace WGiBeat.Screens
             _activePlayers[1] = -1;
             InitSprites();
             InitObjects();
-            _line = new PrimitiveLine(Core.GraphicsDevice);
+   
+
             base.Initialize();
         }
 
@@ -88,7 +90,7 @@ namespace WGiBeat.Screens
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             DrawBackground(spriteBatch, gameTime);
-            DrawBorder(spriteBatch);
+            DrawBorder();
             DrawHeader(spriteBatch);
             DrawText(spriteBatch);
         }
@@ -105,14 +107,11 @@ namespace WGiBeat.Screens
             _instructionBaseSprite.Draw(spriteBatch);
         }
 
-        private void DrawBorder(SpriteBatch spriteBatch)
+        private void DrawBorder()
         {
-            _line.Width = 1;
-            _line.Colour = Color.Black;
-            _line.ClearVectors();
-            _line.AddVector(new Vector2(400, 0));
-            _line.AddVector(new Vector2(400, 600));
-            _line.Render(spriteBatch);
+          
+            var lineSegment = new RoundLine(400,0,400,600);
+            RoundLineManager.Instance.Draw(lineSegment,1,Color.Black,0,null);
         }
 
         private void DrawText(SpriteBatch spriteBatch)

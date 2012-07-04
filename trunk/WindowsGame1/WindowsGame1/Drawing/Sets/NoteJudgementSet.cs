@@ -85,6 +85,7 @@ namespace WGiBeat.Drawing.Sets
                     lifeAdjust = -1 * numCompleted;
                     break;
                 case BeatlineNoteJudgement.MISS:
+                    Players[player].Streak = 0;
                     lifeAdjust = Players[player].MissedBeat();
                     break;
                 case BeatlineNoteJudgement.FAIL:
@@ -122,8 +123,7 @@ namespace WGiBeat.Drawing.Sets
                 _lifeBarSet.AdjustLife(lifeAdjust, player);
             }
 
-            if (Players[player].Playing)
-            {
+        
                 var newDj = new DisplayedJudgement
                                 {
                                     DisplayUntil = _phraseNumber + 0.5,
@@ -142,7 +142,7 @@ namespace WGiBeat.Drawing.Sets
                     newDj.TextureSet = (from e in Players where e.Playing select e).Count();
                 }
                 _displayedJudgements[player] = newDj;
-            }
+            
         }
 
         private void RecordJudgement(int player, BeatlineNoteJudgement judgement)

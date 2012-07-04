@@ -34,6 +34,7 @@ namespace WGiBeat.Drawing
                 Device.SamplerStates[0].AddressU = TextureAddressMode.Clamp;
                 Device.SamplerStates[0].AddressV = TextureAddressMode.Clamp;
                 var effect = Sprite3D.GetEffect();
+                Device.VertexDeclaration = Sprite3D.VertexDeclaration;
                 effect.Texture = this.Texture;
                 effect.Begin();
                 foreach (var pass in effect.CurrentTechnique.Passes)

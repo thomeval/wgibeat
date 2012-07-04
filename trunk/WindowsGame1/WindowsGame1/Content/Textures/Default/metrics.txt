@@ -197,7 +197,8 @@ StatsColumns=[25,85][250,85][325,85][425,85][650,85][725,85];
 StatsProfileMenu=[25,100][425,100];
 
 #Instruction;
-InstructionBeatline=[10,350];
+InstructionBeatline=[15,350];
+InstructionBeatline.Size=[300,100];
 
 #PDA;
 NetMainMenu=[25,150][400,150];

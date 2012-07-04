@@ -93,11 +93,16 @@ namespace WGiBeat.Drawing
         }
 
         private static readonly Vector2 _noRotation = new Vector2(0, 0);
+        private static readonly Vector2 _noScaling = new Vector2(1, 1);
         public static void DrawString(SpriteBatch spriteBatch, string text, string fontName, Vector2 position, Vector2 scale, Color color, FontAlign align)
         {
+            
             var measuredPosition = new Vector2(position.X, position.Y);
             var lines = text.Split('\n');
             fontName = fontName.ToUpper();
+           
+                spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+            
             foreach (string line in lines)
             {
                 var measurements = _fonts[fontName].MeasureString(line);
@@ -111,15 +116,18 @@ namespace WGiBeat.Drawing
                         measuredPosition.X -= measurements.X;
                         break;
                 }
-                spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+               
                 spriteBatch.DrawString(_fonts[fontName], line, measuredPosition, color, 0.0f, _noRotation, scale, SpriteEffects.None, 0.0f);
-                spriteBatch.End();
+          
+            
                 measuredPosition.Y += measurements.Y;
                 measuredPosition.X = position.X;
             }
+           
+                spriteBatch.End();
+            
         }
 
-        private static readonly Vector2 _noScaling = new Vector2(1, 1);
         public static void DrawString(SpriteBatch spriteBatch, string text, string fontName, Vector2 position, Color color, FontAlign align)
         {
             DrawString(spriteBatch,text,fontName,position,_noScaling,color,align);

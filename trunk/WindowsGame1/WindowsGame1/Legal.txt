@@ -10,6 +10,10 @@ For more information, see: http://www.iconian.com/index.html
 Licence: http://www.iconian.com/commercial.html 
 (free non-commercial use)
 
+WGiBeat uses the XNA RoundLine library, developed by By Michael D. Anderson.
+For more information, see: http://roundline.codeplex.com/
+Licence: (Microsoft-PL) http://www.microsoft.com/en-us/openness/licenses.aspx
+
 The WGiBeat developers use Resharper, which is very kindly provided by JetBrains through an Open Source licence.
 For more information, see: http://www.jetbrains.com/resharper/
 Licence: http://www.jetbrains.com/resharper/buy/buy.jsp#openSource_licenseTerms

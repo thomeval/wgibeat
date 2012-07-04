@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing
 {
-    public class MovingBackground : Sprite
+    public class MovingBackground : Sprite3D
     {
         public double Direction { get; set; }
 
@@ -22,21 +22,18 @@ namespace WGiBeat.Drawing
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             Move(gameTime);
-            DrawTiled(spriteBatch,(int) _offsetX,(int) _offsetY, Width, Height);
+            DrawTiled( (float) _offsetX, (float) _offsetY,  (float) (_offsetX + Width), (float) (_offsetY + Height));
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            Draw(spriteBatch,new GameTime());
-        }
+
 
         private void Move(GameTime gameTime)
         {
-            if (this.SpriteTexture == null) return;
+            if (this.Texture == null) return;
             var adj = Speed*gameTime.ElapsedRealTime.TotalSeconds;
 
-            _offsetX = (_offsetX + Math.Sin(Direction) * adj) % SpriteTexture.Width;
-            _offsetY = (_offsetY + Math.Cos(Direction) * adj) % SpriteTexture.Height;
+            _offsetX = (_offsetX + Math.Sin(Direction) * adj) % Texture.Width;
+            _offsetY = (_offsetY + Math.Cos(Direction) * adj) % Texture.Height;
         }
     }
 }

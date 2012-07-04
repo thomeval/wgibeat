@@ -37,7 +37,7 @@ namespace WGiBeat.Screens
         private void InitSprites()
         {
             _background = new MovingBackground
-                              {Direction = Math.PI / 4, Speed = 30, SpriteTexture = TextureManager.Textures("MovingBackground1"), Width = 800, Height = 600};
+                              {Direction = Math.PI / 4, Speed = 30, Texture = TextureManager.Textures("MovingBackground1"), Width = 800, Height = 600};
             _instructionPages = new Sprite[TOTAL_PAGES];
             for (int x = 0; x < TOTAL_PAGES; x++)
             {
@@ -53,8 +53,9 @@ namespace WGiBeat.Screens
                                 Bpm = BEATLINE_BPM,
                                 Id = 0,
                                 Position = Core.Metrics["InstructionBeatline", 0],
+                                Size = Core.Metrics["InstructionBeatline.Size",0],
                                 Speed = 1.0,
-                                Width = 320
+                                
                             };
         }
 

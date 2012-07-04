@@ -101,7 +101,7 @@ namespace WGiBeat.Drawing
 
         private void DrawWaveform(SpriteBatch spriteBatch, float[] waveLevels)
         {
-            _waveformDrawer.Draw(spriteBatch, waveLevels);
+            _waveformDrawer.Draw(waveLevels);
         }
 
         private void Initialize()
@@ -135,6 +135,8 @@ namespace WGiBeat.Drawing
                                       Position = new Vector2(0, 300),
                                    
                                   };
+            _waveformDrawer.Init();
+            _spectrumDrawer.Init();
         }
 
         private void DrawLevels(SpriteBatch spriteBatch, float[] levels)

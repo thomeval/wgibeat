@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RoundLineCode;
 
 namespace WGiBeat.Drawing
 {
@@ -29,7 +29,16 @@ namespace WGiBeat.Drawing
         private float[] _maxLevels;
         private float[] _lineLevels;
         private bool _spritesInit;
-        private PrimitiveLine3D _line;
+        private RoundLineManager _line;
+        private List<RoundLine> _lineList;
+
+        public void Init()
+        {
+            _line = RoundLineManager.Instance;
+
+            _lineList = new List<RoundLine>();
+        }
+
 
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -43,14 +52,7 @@ namespace WGiBeat.Drawing
             {
                 _spritesInit = true;
                 _barSprite = new Sprite3D { Texture = TextureManager.Textures("SpectrumBar") };
-
-                _line = new PrimitiveLine3D(GameCore.Instance.GraphicsDevice)
-                {
-                    Colour = this.ColorShading,
-                    Position = this.Position,
-                    MultiLine = true
-
-                };
+                Init();
             }
             if (levels.Length > LevelsCount)
             {
@@ -88,23 +90,26 @@ namespace WGiBeat.Drawing
                 }
 
 
-                DrawLineLevels(spriteBatch);
+                DrawLineLevels();
         }
 
-        private void DrawLineLevels(SpriteBatch spriteBatch)
+        private void DrawLineLevels()
         {
             int posX = 0;
-            _line.Colour = ColorShading;
-            _line.ClearVectors();
+            _lineList.Clear();
             for (int x = 0; x < _lineLevels.Count(); x++)
             {
                 
 
-                _line.AddVector(new Vector2(posX + 1, this.Height*_lineLevels[x]));
-                _line.AddVector(new Vector2(posX + this.Width - 1, this.Height*_lineLevels[x]));
-                _line.Render(spriteBatch);
+                var p0 = new Vector2(posX + 1, this.Height*_lineLevels[x]);
+                var p1 = new Vector2(posX + this.Width - 1, this.Height*_lineLevels[x]);
+                p0 += this.Position;
+                p1 += this.Position;
+                _lineList.Add(new RoundLine(p0,p1));
                 posX += this.Width;
             }
+
+            _line.Draw(_lineList,1,ColorShading,0,null);
         }
 
         public void ResetMaxLevels()
@@ -114,6 +119,7 @@ namespace WGiBeat.Drawing
                 _maxLevels[x] = 0;
             }
         }
+
     }
     
 }

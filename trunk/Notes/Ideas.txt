@@ -1,19 +1,23 @@
 
 ==Low Priority==
 - Netplay (major)
-- 6 player support?!
  
 ==WNX==
 - Transition effects for DrawableObjects.
--  Battle (>1.0?) Couple (>1.0?) game modes. Double notebars.
-- Animated background / visualization. Lucidity based on total life?
+
 - Evaluation screen redesign / scrolling
 - 3D graphics (fix jerky beatline notes) 
-- Arrows on different height depending on their direction.
-- Complete UI redesign?
+ - Higher Resolution Textures
 - Mix / nonstop play.
-
- 
+ - Replace MENU_DECIDE sfx.
+ - Refactor WGiEdit.
+ - Support for Stops/BPM Changes in WGiEdit.
+  - Score graph + Life graph (alternating)
+  - Fix crash when enabling full screen.
+  - Animated lifebars when life changes (Coop)
+  - Credits screen
+  - Fix resolution option
+  
 ==Delayed==
 - Apparent inconsistency between WGiEdit Step 2 and Step 3 song timing (esp. AudioStart)?
  
@@ -22,10 +26,17 @@
 
 ==TODO==
 
- - Zoki's texture fixes, unlikely.
- - Vospi's menu song,unlikely.
+ ==Done==
+ - Arrows on different height depending on their direction.
+ - Animated background / visualization. Lucidity based on player level.
+ - Beatlines underneath arrows.
+ - Migrate to RoundLine library
+ - Blazing Bass Boost
+ - New UI for sync mode.
+ - Sync Plus mode, where players can assist each other to complete arrows.
+ - MISS now cancels streak.
+ - Animated lifebars when life changes (normal)
  
-
  
 ==1.0 - "Exceptional Review" ==
  * Red arrows are now more effective at raising Groove Momentum in Coop mode.

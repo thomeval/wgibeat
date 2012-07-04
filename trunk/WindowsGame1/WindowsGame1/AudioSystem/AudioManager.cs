@@ -35,7 +35,8 @@ namespace WGiBeat.AudioSystem
             _channelAssignments = new string[CHANNEL_COUNT];
             Log.AddMessage("Initializing Audio Manager...",LogLevel.INFO);
             CheckFMODErrors(Factory.System_Create(ref _fmodSystem));
-            CheckFMODErrors(_fmodSystem.init(CHANNEL_COUNT, INITFLAGS.NORMAL, (IntPtr)null));
+          
+            CheckFMODErrors(_fmodSystem.init(CHANNEL_COUNT, INITFLAGS.NORMAL, new IntPtr(0)));
         }
 
         #region Helpers

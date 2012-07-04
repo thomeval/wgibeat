@@ -22,6 +22,19 @@ namespace WGiBeat.Drawing
         private static Matrix _projectionMatrix;
         private bool _dimensionsSet;
 
+        private static VertexDeclaration _vertexDeclaration;
+        public static VertexDeclaration VertexDeclaration
+        {
+            get
+            {
+                if (_vertexDeclaration == null)
+                {
+                    _vertexDeclaration = new VertexDeclaration(Device, VertexPositionColorTexture.VertexElements);
+                }
+                return _vertexDeclaration;
+            }
+        }
+
         public float X { get; set; }
         public float Y { get; set; }
         public float Width { get; set; }
@@ -135,6 +148,7 @@ namespace WGiBeat.Drawing
 
         private void CheckIfEffectInit()
         {
+            Device.VertexDeclaration = VertexDeclaration;
             if (EffectInit)
             {
                 return;
@@ -147,7 +161,6 @@ namespace WGiBeat.Drawing
         {
             if (EffectInit)
             {
-
                 return _effect;
             }
             var result = new BasicEffect(Device, null);
@@ -166,9 +179,6 @@ namespace WGiBeat.Drawing
             EffectInit = true;
 
             
-            Device.VertexDeclaration = new VertexDeclaration(
-        Device, VertexPositionColorTexture.VertexElements);
-            _effect = result;
             return result;
         }
 
@@ -210,6 +220,16 @@ namespace WGiBeat.Drawing
                 Height = Texture.Height;
             }
             _dimensionsSet = true;
+        }
+
+        public static Matrix GetViewProjMatrix()
+        {
+            if (!EffectInit)
+            {
+                _viewMatrix = Matrix.CreateLookAt(new Vector3(400, 300, 0), new Vector3(400, 300, 1), new Vector3(0, -1, 0));
+                _projectionMatrix = Matrix.CreateOrthographic(800, 600, -10, 10);
+            }
+            return _viewMatrix*_projectionMatrix;
         }
     }
 

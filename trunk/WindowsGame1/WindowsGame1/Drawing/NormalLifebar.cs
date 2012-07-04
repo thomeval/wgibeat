@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using WGiBeat.Players;
 
 namespace WGiBeat.Drawing
 {
@@ -24,13 +23,12 @@ namespace WGiBeat.Drawing
         private const int BAR_X_OFFSET = 45;
         public int PlayerID { private get; set; }
 
-        private Color[] _fullColors =
+        private readonly Color[] _fullColors =
             {
                 new Color(255, 128, 128),
                 new Color(128, 128, 255),
                 new Color(128, 255, 128),
-                new Color(128, 255, 25),
-
+                new Color(128, 255, 255)
             };
         public NormalLifeBar()
         {
@@ -100,7 +98,7 @@ namespace WGiBeat.Drawing
             }
             
             _blocksCount = (int)Math.Ceiling((this.Width - BAR_X_OFFSET - 8) / (double)FRONT_WIDTH);
-            var solidLife = Math.Min(Parent.Players[PlayerID].Life, 100);
+            var solidLife = Math.Min(_displayedLife, 100);
 
             //Causes the bar to pulse on every beat.
             gameTime *= 4;
@@ -137,7 +135,7 @@ namespace WGiBeat.Drawing
                 _frontPart.Draw(spriteBatch, PlayerID, FRONT_WIDTH, this.Height - 6, startPoint + (FRONT_WIDTH * x), this.Y + 3);
             }
 
-            _displayedLife = Parent.Players[PlayerID].Life;
+            UpdateDisplayedLife();
 
             //Draw the overcharge above the normal bar.
             DrawFirstOvercharge(spriteBatch);
@@ -225,7 +223,7 @@ namespace WGiBeat.Drawing
             {
                 var minLife = LIFEBAR_CAPACITY / _blocksCount * x;
 
-                if (Parent.Players[PlayerID].Life > minLife)
+                if (_displayedLife > minLife)
                 {
                     return x;
                 }
@@ -240,7 +238,7 @@ namespace WGiBeat.Drawing
         private void DrawText(SpriteBatch spriteBatch)
         {
 
-            TextureManager.DrawString(spriteBatch, String.Format("{0:D3}", (int)Parent.Players[PlayerID].Life),
+            TextureManager.DrawString(spriteBatch, String.Format("{0:D3}", (int)_displayedLife),
                     "DefaultFont", _textPosition, Color.Black, FontAlign.CENTER);
 
         }
@@ -248,9 +246,24 @@ namespace WGiBeat.Drawing
 
         public override void Reset()
         {
-            _displayedLife = 0;
+            _displayedLife = Parent.Players[PlayerID].Life;
         }
 
+        private const double LIFE_CHANGE_SPEED = 12;
+        public void UpdateDisplayedLife()
+        {
 
+            var diff = Parent.Players[PlayerID].Life - _displayedLife;
+            if (Math.Abs(diff) < 0.001)
+            {
+                _displayedLife = Parent.Players[PlayerID].Life;
+            }
+            else
+            {
+                var changeMx = Math.Min(1, TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * LIFE_CHANGE_SPEED);
+                _displayedLife += diff * (changeMx);
+            }
+
+        }
     }
 }

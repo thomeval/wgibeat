@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RoundLineCode;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
 using WGiBeat.Notes;
@@ -29,6 +31,8 @@ namespace WGiBeat.Screens
         private readonly ProfileLevelDisplay[] _profileLevelDisplays;
         private readonly long[] _xpAwarded;
         private PlayerOptionsSet _playerOptionsSet;
+        private List<RoundLine> _lineList;
+
 
         public EvaluationScreen(GameCore core) : base(core)
         {
@@ -52,7 +56,7 @@ namespace WGiBeat.Screens
         {
             _lifeGraph = new LifeGraph
                              {
-                                 LineDrawer = new PrimitiveLine(Core.GraphicsDevice),
+
                                  Position = new Vector2(-1000,-1000),
                                  CPUPlayerID = GetCPUPlayerID()
                              };
@@ -280,7 +284,7 @@ namespace WGiBeat.Screens
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             DrawBackground(spriteBatch, gameTime);
-            DrawBorders(spriteBatch);
+            DrawBorders();
             DrawJudgementLines(spriteBatch);
             DrawMax(spriteBatch);
             DrawGrades(spriteBatch);
@@ -471,21 +475,18 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black, FontAlign.CENTER);
             }
         }
 
-        private void DrawBorders(SpriteBatch spriteBatch)
+        private void DrawBorders()
         {
-            var brush = new PrimitiveLine(Core.GraphicsDevice) { Colour = Color.Black };
-            brush.AddVector(new Vector2(400, 0));
-            brush.AddVector(new Vector2(400, 600));
-            brush.Render(spriteBatch);
-            brush.ClearVectors();
-            brush.AddVector(new Vector2(0, 275));
-            brush.AddVector(new Vector2(800, 275));
-            brush.Render(spriteBatch);
-            brush.ClearVectors();
-            brush.AddVector(new Vector2(0, 325));
-            brush.AddVector(new Vector2(800, 325));
-            brush.Render(spriteBatch);
-            brush.ClearVectors();
+            
+           if (_lineList == null)
+           {
+               _lineList = new List<RoundLine>();
+               _lineList.Add(new RoundLine(400,0,400,600));
+               _lineList.Add(new RoundLine(0,275,800,275));
+               _lineList.Add(new RoundLine(0,325,800,325));
+           }
+            RoundLineManager.Instance.Draw(_lineList,1,Color.Black);
+            
         }
 
         #endregion

@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RoundLineCode;
 using WGiBeat.Drawing;
 
 namespace WGiBeat.Screens
@@ -34,7 +36,9 @@ namespace WGiBeat.Screens
         private int _topLine;
         private double _drawProgress;
 
-        public PrimitiveLine LineDrawer;
+        public RoundLineManager LineDrawer;
+        private List<RoundLine>[] _playerLines;
+        private List<RoundLine> _axisLineList; 
         private SpriteMap _xborder;
         private SpriteMap _yborder;
         private Sprite _backgroundSprite;
@@ -83,6 +87,8 @@ namespace WGiBeat.Screens
                                        Rows = 5,
                                        SpriteTexture = TextureManager.Textures("PlayerIdentifiers")
                                    };
+            LineDrawer = RoundLineManager.Instance;
+    
         }
         public void CycleTopLine()
         {
@@ -98,13 +104,14 @@ namespace WGiBeat.Screens
         private const int LINE_DRAW_SPEED = 30;
         public override void Draw(SpriteBatch spriteBatch)
         {
+            
             _drawProgress += TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds*LINE_DRAW_SPEED;
             _backgroundSprite.Position = this.Position;
             _backgroundSprite.Draw(spriteBatch);
             CalculateMinMax();
-            DrawAxis(spriteBatch);
+            DrawAxis();
             DrawLegend(spriteBatch);
-            DrawPlayerLines(spriteBatch);
+            DrawPlayerLines();
             DrawLabels(spriteBatch);
             DrawBorder(spriteBatch);
         }
@@ -180,44 +187,58 @@ namespace WGiBeat.Screens
 
         }
 
-        private void DrawPlayerLines(SpriteBatch spriteBatch)
+        private void CalculatePlayerLines()
         {
-            LineDrawer.Width = 2;
+            _playerLines = new List<RoundLine>[4];
             int maxLength = (from e in _lineData select e.Length).Max() - 1;
-
             float tickX = (float)this.Width / maxLength;
             float tickY = (float)(this.Height - 11) / (_max - _min);
-            bool loopedOnce = false;
-            for (int x = _topLine; (x != _topLine) || (!loopedOnce); x = (x+1) % 4)
+
+            for (int x = 0; x < 4; x++)
             {
+                _playerLines[x] = new List<RoundLine>();
                 float posX = this.X;
-                loopedOnce = true;
-                LineDrawer.ClearVectors();
-                LineDrawer.Colour = (x == CPUPlayerID) ? LineColours[4] : LineColours[x];
-                var limit = Math.Min(_lineData[x].Length, _drawProgress);
-                for (int y = 0; y < limit; y++)
+               
+       
+                
+                for (int y = 1; y < _lineData[x].Length; y++)
                 {
                     float posY = this.Y + this.Height - 7;
-                    posY += Math.Min(_max - _min, Math.Max(_lineData[x][y] - _min, 0)) * -tickY;
-                    var pos = new Vector2(posX, posY);
+                    posY += Math.Min(_max - _min, Math.Max(_lineData[x][y-1] - _min, 0)) * -tickY;
+                    var p0 = new Vector2(posX, posY);
                     posX += tickX;
-                    LineDrawer.AddVector(pos);
+                    posY = this.Y + this.Height - 7;
+                    posY += Math.Min(_max - _min, Math.Max(_lineData[x][y] - _min, 0)) * -tickY;
+                    var p1 = new Vector2(posX, posY);
+                    _playerLines[x].Add(new RoundLine(p0,p1));
                 }
-                LineDrawer.Render(spriteBatch);
             }
+        }
+        
+        private void DrawPlayerLines()
+        {
+           if (_playerLines == null)
+           {
+               CalculatePlayerLines();
+               return;
+           }
+            //TODO: Refactor
+            LineDrawer.BlurThreshold = LineDrawer.ComputeBlurThreshold(1.0f, LineDrawer.ViewProjMatrix,800);
+            bool loopedOnce = false;
+
+            for (int x = _topLine; (x != _topLine) || (!loopedOnce); x = (x+1) % 4)
+            {
+                loopedOnce = true;
+                var limit = (int) Math.Min(_lineData[x].Length, _drawProgress);
+                var colour = (x == CPUPlayerID) ? LineColours[4] : LineColours[x];
+                LineDrawer.Draw(_playerLines[x].Take(limit),1,colour,0,null);
+            }
+
         }
 
         private void DrawBorder(SpriteBatch spriteBatch)
         {
-            LineDrawer.Colour = Color.Black;
-            LineDrawer.Width = 1;
-            LineDrawer.ClearVectors();
-            LineDrawer.AddVector(new Vector2(this.X, this.Y));
-            LineDrawer.AddVector(new Vector2(this.X + this.Width, this.Y));
-            LineDrawer.AddVector(new Vector2(this.X + this.Width, this.Y + this.Height));
-            LineDrawer.AddVector(new Vector2(this.X, this.Y + this.Height));
-            LineDrawer.AddVector(new Vector2(this.X, this.Y));
-            LineDrawer.Render(spriteBatch);
+
 
             _xborder.Draw(spriteBatch,1,20,this.Height,this.X - 20, this.Y);
             _xborder.Draw(spriteBatch,0,20, this.Height,this.X + this.Width, this.Y);
@@ -229,29 +250,32 @@ namespace WGiBeat.Screens
             _cornerSpriteMap.Draw(spriteBatch, 3, this.X + this.Width, this.Y  + this.Height);
         }
 
-        private void DrawAxis(SpriteBatch spriteBatch)
+        private void DrawAxis()
         {
-            LineDrawer.Colour = Color.White;
-            LineDrawer.ClearVectors();
-            LineDrawer.Width = 1;
-            float tickY = (float)this.Height / (_max - _min);
-
-            for (int x = _min; x < _max; x+=50)
+            if (_axisLineList == null)
             {
-                if (x % 100 == 0)
+                _axisLineList = new List<RoundLine>();
+                float tickY = (float)this.Height / (_max - _min);
+
+                for (int x = _min; x < _max; x += 50)
                 {
-                    LineDrawer.ClearVectors();
-                    var posY = (x - _min)*-tickY;
-                    LineDrawer.AddVector(new Vector2(this.X, this.Y + this.Height + posY));
-                    LineDrawer.AddVector(new Vector2(this.X + this.Width, this.Y + this.Height + posY));
-                    LineDrawer.Render(spriteBatch);
+                    if (x % 100 == 0)
+                    {
+
+                        var posY = (x - _min) * -tickY;
+                        _axisLineList.Add(new RoundLine(new Vector2(this.X, this.Y + this.Height + posY), new Vector2(this.X + this.Width, this.Y + this.Height + posY)));
+
+                    }
                 }
             }
-          
+    
+            LineDrawer.Draw(_axisLineList, 0.8f, Color.White, 0, null);
+
         }
 
         private Vector2 _minLabelPosition;
         private Vector2 _maxLabelPosition;
+ 
 
         private void DrawLabels(SpriteBatch spriteBatch)
         {
