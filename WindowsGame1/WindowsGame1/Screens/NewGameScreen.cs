@@ -149,7 +149,7 @@ namespace WGiBeat.Screens
             disableKO.AddOption("On",true);
             _playerMenus[x].AddItem(disableKO);
 
-            var disableLB = new MenuItem { ItemText = "Disable Life Boost" };
+            var disableLB = new MenuItem { ItemText = "Disable Extra Life" };
             disableLB.AddOption("Off", false);
             disableLB.AddOption("On", true);
 
@@ -386,10 +386,10 @@ namespace WGiBeat.Screens
                        break;
                }
 
-               _playerMenus[number].GetByItemText("Disable Life Boost").Enabled = Core.Players[number].Profile != null;
+               _playerMenus[number].GetByItemText("Disable Extra Life").Enabled = Core.Players[number].Profile != null;
                if (Core.Players[number].Profile == null)
                {
-                    _playerMenus[number].GetByItemText("Disable Life Boost").SetSelectedByValue(false);
+                    _playerMenus[number].GetByItemText("Disable Extra Life").SetSelectedByValue(false);
                }
            }
            else
@@ -511,7 +511,8 @@ namespace WGiBeat.Screens
     (Difficulty)(int)_playerMenus[x].GetByItemText("Difficulty").SelectedValue();
                 Core.Players[x].PlayerOptions.BeatlineSpeed = (double)_playerMenus[x].GetByItemText("Beatline Speed").SelectedValue();
                 Core.Players[x].PlayerOptions.DisableKO = (bool)_playerMenus[x].GetByItemText("Disable KO").SelectedValue();
-                
+                Core.Players[x].PlayerOptions.DisableExtraLife =
+                    (bool) _playerMenus[x].GetByItemText("Disable Extra Life").SelectedValue();
 
                 Core.Players[x].UpdatePreferences();
             }

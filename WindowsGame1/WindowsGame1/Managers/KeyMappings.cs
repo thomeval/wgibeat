@@ -15,7 +15,7 @@ namespace WGiBeat.Managers
     {
         private Dictionary<Keys, InputAction> _mappings = new Dictionary<Keys, InputAction>();
         private Dictionary<Buttons, InputAction>[] _buttonMappings = new Dictionary<Buttons, InputAction>[4];
-        private static String DEFAULT_KEYFILE = "Keys.conf";
+        private const string DEFAULT_KEYFILE = "Keys.conf";
 
         public KeyMappings(LogManager log)
         {

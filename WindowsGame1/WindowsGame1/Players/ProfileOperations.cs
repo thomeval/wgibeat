@@ -5,8 +5,6 @@ namespace WGiBeat.Players
 {
     public static class ProfileOperations
     {
-
-
         public static int GetLevel(this Player player)
         {
             if (player.Profile == null)
@@ -94,6 +92,10 @@ namespace WGiBeat.Players
                 return 100;
             }
 
+            if (player.PlayerOptions.DisableExtraLife)
+            {
+                return 100;
+            }
             var maxLife = 100;
 
             maxLife += (player.GetLevel() - 1)*5;
