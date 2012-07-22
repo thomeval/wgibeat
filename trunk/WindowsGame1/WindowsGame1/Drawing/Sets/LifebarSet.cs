@@ -109,8 +109,9 @@ namespace WGiBeat.Drawing.Sets
             {
                 return;
             }
-            var theLifebar = (CoopLifeBar)_lifeBars[0];
-            if (theLifebar.TotalLife() <= 0)
+           
+            var totalLife = (from e in Players where e.Playing select e.Life).Sum();
+            if (totalLife <= 0)
             {
                 for (int x = 0; x < 4; x++)
                 {
@@ -164,10 +165,10 @@ namespace WGiBeat.Drawing.Sets
 
         private void ClipCoopMaxLife()
         {
-            var theLifeBar = (CoopLifeBar) _lifeBars[0];
-            if (theLifeBar.TotalLife() > GetTotalCapacity())
+            var totalLife = (from e in Players where e.Playing select e.Life).Sum();
+            if (totalLife > GetTotalCapacity())
             {
-                var adjustAmount = GetTotalCapacity()/theLifeBar.TotalLife();
+                var adjustAmount = GetTotalCapacity() / totalLife;
 
                 for (int x = 0; x < 4; x++)
                 {
@@ -391,9 +392,9 @@ namespace WGiBeat.Drawing.Sets
             if (SyncGameType)
             {
                 var maxLife = (from e in Players where e.Playing select e.GetMaxLife()).Min();
-                return (Players[playerID].Life == maxLife);
+                return (Players[playerID].Life >= maxLife);
             }
-            return (Players[playerID].Life == Players[playerID].GetMaxLife());
+            return (Players[playerID].Life >= Players[playerID].GetMaxLife());
         }
     }
 }

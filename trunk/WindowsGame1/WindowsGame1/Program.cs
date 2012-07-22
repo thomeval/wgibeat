@@ -12,6 +12,23 @@ namespace WGiBeat
         static void Main(string[] args)
         {
 #if (DEBUG)
+            if (!File.Exists("RanDebug.txt"))
+            {
+                MessageBox.Show(
+                    "Thank you for trying out this alpha version of WGiBeat. Since this is not a stable release, there WILL be bugs, and some features will not work as expected. " +
+                    "Please report any bugs you find to the issue tracker on the WGiBeat website, or send an email to wgibeat@gmail.com.",
+                    "Attention", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+            }
+            try
+            {
+                File.Create("RanDebug.txt");
+            }
+            catch (Exception)
+            {
+                
+                
+            }
             using (var game = GameCore.Instance)
             {
                 game.Run();

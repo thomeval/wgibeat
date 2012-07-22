@@ -26,6 +26,7 @@ namespace WGiBeat.Drawing
         private SpriteMap _playerIdentifiers;
 
         private Sprite _baseSprite;
+
         private Sprite _speedScaleSprite;
 
         private SpriteMap _beatlineEffects;
@@ -91,7 +92,7 @@ namespace WGiBeat.Drawing
                 Position = this.Position,
                 Size = this.Size
             };
-
+ 
             _beatlineEffects = new SpriteMap
                                    {
                                        SpriteTexture = TextureManager.Textures("BeatlineEffectIcons"),

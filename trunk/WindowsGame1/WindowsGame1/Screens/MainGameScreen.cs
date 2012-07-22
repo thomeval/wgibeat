@@ -57,10 +57,10 @@ namespace WGiBeat.Screens
             _gameSong = (GameSong)Core.Cookies["CurrentSong"];
             var currentGameType = (GameType) Core.Cookies["CurrentGameType"];
             _performanceBar = new PerformanceBar
-                                  {Width = 350, Players = Core.Players, GameType = currentGameType};
-            var freeLocation = _performanceBar.GetFreeLocation(currentGameType == GameType.COOPERATIVE);
-            _performanceBar.Position = Core.Metrics["PerformanceBar", freeLocation];
-            
+                                  { Metrics = Core.Metrics, Players = Core.Players, GameType = currentGameType};
+            _performanceBar.SetPosition();
+          
+           
             _lifeBarSet = new LifeBarSet(Core.Metrics, Core.Players, currentGameType);
             _lifeBarSet.BlazingEnded += ((sender, e) => _noteBarSet.CancelReverse((int) e.Object));
 
@@ -613,8 +613,8 @@ namespace WGiBeat.Screens
                                                 new Color(255, 120, 0),
                                                 new Color(255, 0, 0),
                                                 new Color(255, 0, 128),
-                                                new Color(255, 0, 255),
-                                            };
+                                                new Color(255, 0, 255)
+                                                     };
 
         private readonly Color[] _blazingColors = {
                                                       new Color(255, 0, 0),

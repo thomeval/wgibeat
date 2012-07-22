@@ -144,7 +144,7 @@ namespace WGiBeat.Screens
 
             _songSortDisplay.SongList = _songList;
             _songSortDisplay.SongSortMode = Core.Settings.Get<SongSortMode>("LastSortMode");
-            _highScoreFrame.HighScoreEntry = GetDisplayedHighScore((GameType)Core.Cookies["CurrentGameType"]);
+       //     _highScoreFrame.HighScoreEntry = GetDisplayedHighScore((GameType)Core.Cookies["CurrentGameType"]);
         }
 
         private void SetCurrentLevelInSongList()
@@ -330,7 +330,8 @@ namespace WGiBeat.Screens
                 if (previewsOn)
                 {
                     _spectrumDrawer.ResetMaxLevels();
-                        Crossfader.SetPreviewedSong(CurrentSong, true);
+
+                    Crossfader.SetPreviewedSong(CurrentSong, true, GetPlayerLevel() < CurrentSong.RequiredLevel);
                 }
             }
 
@@ -412,7 +413,7 @@ namespace WGiBeat.Screens
             {
                 return;
             }
-            if ((from e in Core.Players where e.IsHumanPlayer select e).Count() == 0)
+            if (!(from e in Core.Players where e.IsHumanPlayer select e).Any())
             {
                 return;
             }
