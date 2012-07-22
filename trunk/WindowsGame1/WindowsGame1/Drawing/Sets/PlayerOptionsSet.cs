@@ -240,6 +240,7 @@ namespace WGiBeat.Managers
                 {
                     Players[x].Playing = true;
                     Players[x].CPU = true;
+                    Players[x].Profile = null;
                     Players[x].Team = 2;
                     return;
                 }            
