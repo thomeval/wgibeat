@@ -373,7 +373,7 @@ namespace WGiBeat.Drawing
             {
                 var minLife = capacity / _blocksCount * x;
 
-                if (Parent.Players[player].Life * penaltyMx > minLife)
+                if (_displayedLife[player] * penaltyMx > minLife)
                 {
                     return x;
                 }

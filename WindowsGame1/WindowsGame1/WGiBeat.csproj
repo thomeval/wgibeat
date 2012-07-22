@@ -354,6 +354,9 @@
     <Content Include="Content\Textures\Default\MainMenu\UpdaterFrame.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Textures\Default\SongSelect\BpmMeterBlink.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Textures\Default\SongSelect\SongLocked.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -58,7 +58,8 @@ namespace WGiBeat.AudioSystem
         /// <param name="song">The GameSong to preview.</param>
         /// <param name="force">Whether the provided game song should be played regardless of whether it 
         /// was already playing.</param>
-        public void SetPreviewedSong(GameSong song, bool force)
+        /// <param name="slow">Whether the provided game song should be played at slow speed (for locked songs) </param>
+        public void SetPreviewedSong(GameSong song, bool force, bool slow)
         {
             if ((_currentSong == song) && !force)
             {
@@ -73,6 +74,10 @@ namespace WGiBeat.AudioSystem
             }
             AudioManager.SetPosition(channelId, song.Offset * 1000);
             AudioManager.SetChannelVolume(channelId, 0.0f);
+            if (slow)
+            {
+                AudioManager.SetChannelSpeed(channelId, 0.333f);
+            }
             _currentSong = song;
         }
 

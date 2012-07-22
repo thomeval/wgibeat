@@ -18,7 +18,7 @@ namespace WGiBeat.Managers
 
         public void GetLatestVersion()
         {
-            if (!String.IsNullOrEmpty(LatestVersion))
+            if (!string.IsNullOrEmpty(LatestVersion))
             {
                 Log.AddMessage("Skipping version information web request.", LogLevel.DEBUG);
                 if (UpdateInfoAvailable != null)

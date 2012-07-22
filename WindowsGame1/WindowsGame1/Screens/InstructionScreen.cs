@@ -19,7 +19,7 @@ namespace WGiBeat.Screens
         private double _phraseNumber;
         private int _lastBeatline;
 
-        private const int BEATLINE_BPM = 100;
+        private const int BEATLINE_BPM = 80;
         public InstructionScreen(GameCore core) : base(core)
         {
         }

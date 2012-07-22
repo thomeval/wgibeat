@@ -375,6 +375,14 @@ namespace WGiBeat.AudioSystem
             CheckFMODErrors(_tmpChannel.setPaused(paused));
         }
 
+        public void SetChannelSpeed(int index, float speed)
+        {
+            CheckFMODErrors(_fmodSystem.getChannel(index, ref _tmpChannel));
+            float freq = 0;
+            CheckFMODErrors(_tmpChannel.getFrequency(ref freq));
+            CheckFMODErrors(_tmpChannel.setFrequency(freq * speed));
+        }
+
         /// <summary>
         /// Gets the length of the sound playing in a given Channel ID.
         /// </summary>
@@ -477,5 +485,7 @@ namespace WGiBeat.AudioSystem
                 _dsp.setParameter((int)DSP_PARAMEQ.GAIN, intensity);
             }
         }
+
+       
     }
 }

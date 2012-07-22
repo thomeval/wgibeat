@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.Managers;
 using WGiBeat.Notes;
 using WGiBeat.Players;
 
@@ -13,6 +14,8 @@ namespace WGiBeat.Drawing
         public double Opacity { get; set; }
         public Player[] Players { get; set; }
         public GameType GameType { get; set; }
+
+        public MetricsManager Metrics { get; set; }
 
         private SpriteMap _partsSpriteMap;
         private SpriteMap _leftSpriteMap;
@@ -51,7 +54,7 @@ namespace WGiBeat.Drawing
             var position = this.Position.Clone();
             
             DrawHeader(spriteBatch, position);
-            position.Y += 30;
+            position.Y += _headerSprite.Height;
 
             if (GameType == GameType.SYNC_PRO || GameType == GameType.SYNC_PLUS)
             {
@@ -66,7 +69,7 @@ namespace WGiBeat.Drawing
                     continue;
                 }
                 DrawSingleBar(spriteBatch, position, x);
-                position.Y += 30;
+                position.Y += this.Height;
             }
         }
 
@@ -82,16 +85,17 @@ namespace WGiBeat.Drawing
         private void DrawSingleBar(SpriteBatch spriteBatch, Vector2 position, int player)
         {
             _rightSprite.Position = position.Clone();
+            _rightSprite.Height = this.Height;
             _rightSprite.X += this.Width - 70;
             var barWidth = this.Width - 120;
             var totalBeatlines = (from e in Players[player].Judgements select e).Take(6).Sum();
 
             var idx = (Players[player].IsCPUPlayer) ? 4 : player;
 
-            _leftSpriteMap.Draw(spriteBatch, idx, 50, 30, position);
+            _leftSpriteMap.Draw(spriteBatch, idx, 50, this.Height, position);
             position.X += 50;
             _middleSprite.Width = barWidth;
-            _middleSprite.Height = 30;
+            _middleSprite.Height = this.Height;
             _middleSprite.Position = position.Clone();
 
             var maxWidth = barWidth;
@@ -105,7 +109,7 @@ namespace WGiBeat.Drawing
                     var width = (int) Math.Ceiling((double) (barWidth)*Players[player].Judgements[y]/totalBeatlines);
                     width = Math.Min(width, maxWidth);
                     maxWidth -= width;
-                    _partsSpriteMap.Draw(spriteBatch, y, width, 30, position);
+                    _partsSpriteMap.Draw(spriteBatch, y, width, this.Height, position);
                     position.X += width;
                 }
                 Opacity = Math.Min(255, Opacity + (TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * BAR_SHOW_SPEED));
@@ -119,15 +123,16 @@ namespace WGiBeat.Drawing
 
             _rightSprite.Draw(spriteBatch);
             _rightSprite.X += 35;
-            _rightSprite.Y += 5;
+            _rightSprite.Y += (this.Height / 2) - 10;
             TextureManager.DrawString(spriteBatch, percentageText, "DefaultFont", _rightSprite.Position, Color.Black,
                                       FontAlign.CENTER);
 
             position.X = this.Position.X;
         }
 
-        public int GetFreeLocation(bool coop)
+        public int GetFreeLocation()
         {
+            
             var result = 4;
             for (int x = 0; x < 4; x++)
             {
@@ -137,28 +142,28 @@ namespace WGiBeat.Drawing
                 }
             }
 
-            if (coop)
-            {
-                if ((!Players[0].Playing) && (!Players[1].Playing))
-                {
-                    result = 0;
-                }
-                else if ((!Players[2].Playing) && (!Players[3].Playing))
-                {
-                    result = 2;
-                }
-                else
-                {
-                    result = 4;
-                }
-            }
-            return result;
+           return result;
             
         }
 
         public void Reset()
         {
             Opacity = 0;
+        }
+
+        public void SetPosition()
+        {
+            if (Metrics == null)
+            {
+                return;
+            }
+
+            var freeLocation = GetFreeLocation();
+            var metric = (GameType == GameType.SYNC_PLUS || GameType == GameType.SYNC_PRO)
+                             ? "SyncPerformanceBar"
+                             : "PerformanceBar";
+            this.Position = Metrics[metric, freeLocation];
+            this.Size = Metrics[metric + ".Size", 0];
         }
     }
 }

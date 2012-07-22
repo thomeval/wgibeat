@@ -145,8 +145,19 @@ namespace WGiBeat.Drawing
             DrawSecondOvercharge(spriteBatch);
 
             DrawText(spriteBatch);
+            UpdateOverchargeTexture();
 
-            _overchargeTextureOffset = (_overchargeTextureOffset + (OVERCHARGE_FLOW_SPEED * TextureManager.LastDrawnPhraseDiff)) % OVERCHARGE_OFFSET_CLIP;
+        }
+
+        private void UpdateOverchargeTexture()
+        {
+            var amount = + (OVERCHARGE_FLOW_SPEED*TextureManager.LastDrawnPhraseDiff);
+            if (Parent.Players[PlayerID].IsBlazing)
+            {
+                amount *= 4;
+            }
+            
+            _overchargeTextureOffset = (_overchargeTextureOffset + amount ) % OVERCHARGE_OFFSET_CLIP;
         }
 
         private void DrawFullEffect(SpriteBatch spriteBatch)

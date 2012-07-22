@@ -12,12 +12,18 @@
  - Replace MENU_DECIDE sfx.
  - Refactor WGiEdit.
  - Support for Stops/BPM Changes in WGiEdit.
-  - Score graph + Life graph (alternating)
+  - Score graph + Level + Life graph (alternating)
   - Fix crash when enabling full screen.
-
+  - More size metrics
   - Credits screen
   - Fix resolution option
   - Level up indicator in evaluation screen. 
+  - Fix Menu object sfx
+  - Fix POF object sfx
+  - BPM meter [!] display and blink.
+  - Support to remove / add arbitrary beatlines
+  - Super beatlines (bonus points, possibly double length)
+  - Arrow truncate bug in Sync Plus mode when level drops.
   
 ==Delayed==
 - Apparent inconsistency between WGiEdit Step 2 and Step 3 song timing (esp. AudioStart)?
@@ -38,6 +44,8 @@
  - MISS now cancels streak.
  - Animated lifebars when life changes (normal + Coop)
  - Disable extra life option.
+ - Several bugfixes in Sync Pro mode.
+ - New, bigger GM gauge.
  
  
 ==1.0 - "Exceptional Review" ==

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -123,7 +122,7 @@ namespace WGiBeat.AudioSystem
         {
             unchecked
             {
-                int result = (Title != null ? Title.GetHashCode() : 0);
+                int result = (Title != null ? Title.GetHashCode() : 1);
                 result = (result * 397) ^ (Subtitle != null ? Subtitle.GetHashCode() : 0);
                 result = (result*397) ^ (Artist != null ? Artist.GetHashCode() : 0);
                 result = (result * 397) ^ BPMs.GetHashCode();

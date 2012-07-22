@@ -115,15 +115,15 @@ namespace WGiBeat.Drawing
         {
             try
             {
-                var temp = CurrentVersion.Split(' ');
-
+                var currentParts = CurrentVersion.Split(' ');
+                var availableParts = AvailableVersion.Split(' ');
                 //Version ID's are EXACTLY the same (eg. 0.8 vs 0.8)
                 if (CurrentVersion == AvailableVersion)
                 {
                     return 0;
                 }
-                var availableNum = Convert.ToDouble(AvailableVersion, System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-                var currentNum = Convert.ToDouble(temp[0], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                var availableNum = Convert.ToDouble(availableParts[0], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                var currentNum = Convert.ToDouble(currentParts[0], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
 
                 //Cases where the a pre-release version is used (eg. 0.85 pre vs 0.8)
                 if (availableNum < currentNum)
@@ -131,6 +131,11 @@ namespace WGiBeat.Drawing
                     return 1;
                 }
 
+                //Cases where version number is the same, but suffix is different (eg. 2.0 a1 vs 2.0 a2)
+                if (availableNum == currentNum && currentParts.Length > 1 && availableParts.Length > 1)
+                {
+                    return String.CompareOrdinal(currentParts[1], availableParts[1]);
+                }
                 //Cases where either an old release is used (eg 0.7 vs 0.8)
                 //Or Version numbers don't quite match, (like 0.8 beta 1 vs 0.8)
                 return -1;

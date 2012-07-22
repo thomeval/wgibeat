@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using RoundLineCode;
 using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
@@ -78,7 +76,7 @@ namespace WGiBeat.Screens
         private void UpdateInfoAvailable(object sender, EventArgs e)
         {
             _updaterFrame.UpdateDetails = Core.UpdateManager.UpdateDetails;
-            _updaterFrame.NewsMessage = Core.UpdateManager.NewsFeed;
+            _updaterFrame.NewsMessage = Core.UpdateManager.NewsFeed;  
             _updaterFrame.AvailableVersion = Core.UpdateManager.LatestVersion;
             _updaterFrame.CurrentVersion = GameCore.VERSION_STRING.Substring(1);
             _updaterFrame.Status = UpdaterStatus.SUCCESSFUL;
@@ -110,8 +108,6 @@ namespace WGiBeat.Screens
                                         Columns = 1,
                                         Rows = 2
                                     };
-
-
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)

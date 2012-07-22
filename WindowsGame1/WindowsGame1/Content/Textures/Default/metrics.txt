@@ -44,7 +44,10 @@ SongDebugOffset=[410,570];
 SongDebugHitOffset=[550,545];
 SongDebugPhrase=[340,570];
 SongDebugLength=[550,570];
-PerformanceBar=[25,50][425,50][25,410][425,410][-1000,-1000];
+PerformanceBar=[25,50][425,50][25,320][425,320][-1000,-1000];
+PerformanceBar.Size=[350,50];
+SyncPerformanceBar=[455,170][455,170][455,170][455,170][455,170];
+SyncPerformanceBar.Size=[340,30];
 SyncBeatlineBarBase=[100,25][100,150][100,275][100,400];
 SyncNoteBar=[145,35][145,160][145,285][145,410];
 SyncNoteBarProgress=[50,25];
@@ -198,7 +201,7 @@ StatsColumns=[25,85][250,85][325,85][425,85][650,85][725,85];
 StatsProfileMenu=[25,100][425,100];
 
 #Instruction;
-InstructionBeatline=[15,350];
+InstructionBeatline=[15,360];
 InstructionBeatline.Size=[300,100];
 
 #PDA;
