@@ -389,12 +389,12 @@ namespace WGiBeat.Screens
             {
                 
             case GameType.COOPERATIVE:
-                    /*
+                    
                 if (PlayerCount() < 2)
                 {
                    return "Requires at least two players.";
                 }
-                     */
+                     
                 break;
                  
                 case GameType.TEAM:

@@ -80,6 +80,14 @@ namespace WGiBeat.Managers
 
         public void SaveToFolder(string path)
         {
+            try
+            {
+
+            
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
             var bf = new BinaryFormatter();
             foreach (Profile profile in _profiles)
             {
@@ -88,6 +96,13 @@ namespace WGiBeat.Managers
                 fs.Close();
             }
             Log.AddMessage("" + Count + " Profiles save successfully.",LogLevel.INFO);
+            }
+            catch (Exception ex)
+            {
+                Log.AddException(ex);
+                Log.AddMessage("Failed to save profiles: " + ex.Message, LogLevel.ERROR);
+                throw;
+            }
         }
 
     }
