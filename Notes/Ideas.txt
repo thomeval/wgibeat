@@ -24,6 +24,7 @@
   - Support to remove / add arbitrary beatlines
   - Super beatlines (bonus points, possibly double length)
   - Arrow truncate bug in Sync Plus mode when level drops.
+  - WIN / LOSE / Max GM display in evaluation screen.
   
 ==Delayed==
 - Apparent inconsistency between WGiEdit Step 2 and Step 3 song timing (esp. AudioStart)?
@@ -34,18 +35,21 @@
 ==TODO==
 
  ==Done==
+  - New UI (especially for sync mode).
  - Arrows on different height depending on their direction.
  - Animated background / visualization. Lucidity based on player level.
  - Beatlines underneath arrows.
- - Migrated to RoundLine library
- - Blazing Bass Boost
- - New UI for sync mode.
  - Sync Plus mode, where players can assist each other to complete arrows.
+ - Blazing Bass Boost
+ - Migrated to RoundLine library
  - MISS now cancels streak.
  - Animated lifebars when life changes (normal + Coop)
- - Disable extra life option.
+ - Disable extra life option added to players. Only relevant to players that use profiles.
  - Several bugfixes in Sync Pro mode.
  - New, bigger GM gauge.
+ - Improved spectrum display in the Song Select Screen.
+ - The BPM meter has a new blinking animation in the Song Select Screen.
+ - Locked songs are now previewed distorted in the Song Select Screen.
  
  
 ==1.0 - "Exceptional Review" ==
