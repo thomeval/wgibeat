@@ -1,2 +1,2 @@
-1.0
-Over two dozen playable songs are included in this release, along with upgrades to WGiEdit, several new animations, an unlock system and an option to turn off V-Sync.
+2.0 a1
+This alpha release features a redesigned UI, background animation, blazing bass boost, a new Sync Plus game mode and much more.
