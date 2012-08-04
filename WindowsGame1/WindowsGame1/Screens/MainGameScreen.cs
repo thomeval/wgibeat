@@ -31,6 +31,7 @@ namespace WGiBeat.Screens
         private CountdownSet _countdownSet;
         private BeatlineHitAggregator _hitAggregator;
         private VisualizerBackground _visualBackground;
+        private RecordReplayer _recordReplayer;
 
         private PerformanceBar _performanceBar;
         private GrooveMomentumBarSet _gmBarSet;
@@ -79,11 +80,13 @@ namespace WGiBeat.Screens
 
             _beatlineSet.NoteMissed += BeatlineNoteMissed;
             _beatlineSet.CPUNoteHit += BeatlineNoteCPUHit;
-            
-
+            _recordReplayer = new RecordReplayer();
+            _recordReplayer.LoadRecord(_gameSong.GetHashCode(), currentGameType);
+            _recordReplayer.Position = Core.Metrics["RecordReplayer",GetFreeLocation()];
+            _recordReplayer.Size = Core.Metrics["RecordReplayer.Size",0];
             _displayState = 0;
             _songLoadDelay = 0.0;
-            _lastLifeRecord = -0.5;
+            _lastLifeRecord = 0.5;
             _lastUpdate = 0.0;
             
             for (int x = 0; x < PLAYER_COUNT; x++)
@@ -116,6 +119,19 @@ namespace WGiBeat.Screens
             InitSprites();
 
             base.Initialize();
+        }
+
+        private int GetFreeLocation()
+        {           
+            for (int x = 3; x > -1; x--)
+            {
+                if (!Core.Players[x].Playing)
+                {
+                    return x;                    
+                }
+            }
+
+            return 4;
         }
 
         private void HitsAggregated(object sender, ObjectEventArgs e)
@@ -302,7 +318,7 @@ namespace WGiBeat.Screens
 
         private void RecordPlayerLife()
         {
-            if (_phraseNumber + 1 > _lastLifeRecord)
+            if (_phraseNumber  > _lastLifeRecord)
             {
                 foreach (Player player in Core.Players)
                 {
@@ -582,6 +598,7 @@ namespace WGiBeat.Screens
 
             _beatlineSet.Draw(spriteBatch, _phraseNumber);
             _performanceBar.Draw(spriteBatch);
+            _recordReplayer.Draw(spriteBatch,_phraseNumber);
             _gmBarSet.Draw(spriteBatch);
 
             //Draw the notebars.
@@ -624,6 +641,8 @@ namespace WGiBeat.Screens
                                                   };
 
         private double _rainbowPoint;
+
+
         private void DrawBackground(SpriteBatch spriteBatch)
         {
             

@@ -472,7 +472,7 @@ namespace RoundLineCode
         /// <param name="roundLines">A collection of RoundLines to draw.</param>
         /// <param name="lineRadius">The radius (half width) of the lines to draw.</param>
         /// <param name="lineColor">The colour of the lines to draw.</param>
-        public void Draw(IEnumerable<RoundLine> roundLines, int lineRadius, Color lineColor)
+        public void Draw(IEnumerable<RoundLine> roundLines, float lineRadius, Color lineColor)
         {
             Draw(roundLines,lineRadius,lineColor,0,null);
         }

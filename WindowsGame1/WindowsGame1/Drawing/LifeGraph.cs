@@ -12,27 +12,32 @@ namespace WGiBeat.Screens
     {
         public LifeGraph()
         {
-            _lineData = new float[4][];
+            _lineData = new double[4][];
             for (int x = 0; x < 4; x++)
             {
-                _lineData[x] = new float[0];
+                _lineData[x] = new double[0];
             }
             this.Width = 360;
             this.Height = 235;
             InitSprites();
         }  
 
-        private int _max;
-        private int _min;
+        private float _max;
+        private float _min;
         private bool _minMaxSet;
 
-        private const int ABSOLUTE_MIN = -100;
-        private const int ABSOLUTE_MAX = 400;
+
+        public float Min;
+        public float Max = 1;
+        public float Tick = 50; 
 
 
         public int CPUPlayerID { get; set; }
+
+        public LegendStyle LegendStyle { get; set; }
+
         public readonly Color[] LineColours = {Color.Red, Color.Blue, Color.Green, Color.Yellow, Color.Gray};
-        private readonly float[][] _lineData;
+        private readonly double[][] _lineData;
         private int _topLine;
         private double _drawProgress;
 
@@ -43,9 +48,10 @@ namespace WGiBeat.Screens
         private SpriteMap _yborder;
         private Sprite _backgroundSprite;
         private SpriteMap _legendSpriteMap;
+        private SpriteMap _teamLegendSpriteMap;
         private SpriteMap _cornerSpriteMap;
 
-        public float[] this[int index]
+        public double[] this[int index]
         {
             get
             {
@@ -53,8 +59,18 @@ namespace WGiBeat.Screens
             }
             set
             {
-                _lineData[index] = value;
+                
+                _lineData[index] = value ?? new double[0];
+                ResetDrawing();
             }
+        }
+
+        private void ResetDrawing()
+        {
+            _minMaxSet = false;
+            _axisLineList = null;
+            _playerLines = null;
+            _drawProgress = 0;
         }
 
         public void InitSprites()
@@ -87,6 +103,12 @@ namespace WGiBeat.Screens
                                        Rows = 5,
                                        SpriteTexture = TextureManager.Textures("PlayerIdentifiers")
                                    };
+            _teamLegendSpriteMap = new SpriteMap
+            {
+                Columns = 1,
+                Rows = 2,
+                SpriteTexture = TextureManager.Textures("TeamIdentifiers")
+            };
             LineDrawer = RoundLineManager.Instance;
     
         }
@@ -118,24 +140,44 @@ namespace WGiBeat.Screens
 
         private void DrawLegend(SpriteBatch spriteBatch)
         {
-            const int LEGEND_ITEM_HEIGHT = 30;
-            const int LEGEND_ITEM_WIDTH = 55;
+         
+           
             var legendPosition = this.Position.Clone();
-            legendPosition.X += this.Width - LEGEND_ITEM_WIDTH - 5;
-            legendPosition.Y += this.Height - LEGEND_ITEM_HEIGHT - 5;
-            _legendSpriteMap.ColorShading.A = 128;
-            for (int x = 3; x >= 0; x--)
+            var legendItemSize = GameCore.Instance.Metrics["GraphLegendItem.Size", 0];
+            
+         
+            _legendSpriteMap.ColorShading.A = _teamLegendSpriteMap.ColorShading.A =  96;
+
+            switch (LegendStyle)
             {
-                if (_lineData[x].Length <= 0)
-                {
-                    continue;
-                }
+                case LegendStyle.NORMAL:
+                    legendPosition.Y += this.Height - legendItemSize.Y - 5;
+                    legendPosition.X += this.Width - legendItemSize.X - 5;
+                    for (int x = 3; x >= 0; x--)
+                    {
+                        if (_lineData[x].Length <= 0)
+                        {
+                            continue;
+                        }
 
-                var colorID = (x == CPUPlayerID) ? 4 : x;
+                        var colorID = (x == CPUPlayerID) ? 4 : x;
 
-                _legendSpriteMap.Draw(spriteBatch, colorID, LEGEND_ITEM_WIDTH, LEGEND_ITEM_HEIGHT, legendPosition);
-                legendPosition.X -= LEGEND_ITEM_WIDTH + 5;
+                        _legendSpriteMap.Draw(spriteBatch, colorID, legendItemSize, legendPosition);
+                        legendPosition.X -= legendItemSize.X + 5;
+                    }
+                    break;
+                    case LegendStyle.TEAMS:
+                
+                    var tlegendItemSize = GameCore.Instance.Metrics["GraphLegendItem.Size", 1];
+                    legendPosition.Y += this.Height - tlegendItemSize.Y - 5;
+                    legendPosition.X += this.Width - tlegendItemSize.X - 5;
+                    _teamLegendSpriteMap.Draw(spriteBatch, 1, tlegendItemSize, legendPosition);
+                    legendPosition.X -= tlegendItemSize.X + 5;
+                    _teamLegendSpriteMap.Draw(spriteBatch, 0, tlegendItemSize, legendPosition);
+                    break;
+
             }
+      
         }
 
         private void CalculateMinMax()
@@ -146,22 +188,22 @@ namespace WGiBeat.Screens
             }
 
             _minMaxSet = true;
-            _min = 0;
-            _max = 100;
+            _min = Max;
+            _max = Min;
             var actualMin = GetDataMinimum();
             var actualMax = GetDataMaximum();
 
-            while ((_min > actualMin) && (_min > ABSOLUTE_MIN))
+            while ((_min > actualMin) && (_min > Min))
             {
-                _min -= 50;
+                _min -= Tick;
             }
-            while ((_max < actualMax) && (_max < ABSOLUTE_MAX))
+            while ((_max < actualMax) && (_max < Max))
             {
-                _max += 50;
+                _max += Tick;
             }
         }
 
-        private float GetDataMaximum()
+        private double GetDataMaximum()
         {
             try
             {
@@ -173,7 +215,7 @@ namespace WGiBeat.Screens
             }
         }
 
-        private float GetDataMinimum()
+        private double GetDataMinimum()
         {
 
             try
@@ -187,12 +229,18 @@ namespace WGiBeat.Screens
 
         }
 
+        public void SetMinMaxTick(float min, float max, float tick)
+        {
+            Min = min;
+            Max = max;
+            Tick = tick;
+        }
         private void CalculatePlayerLines()
         {
             _playerLines = new List<RoundLine>[4];
             int maxLength = (from e in _lineData select e.Length).Max() - 1;
             float tickX = (float)this.Width / maxLength;
-            float tickY = (float)(this.Height - 11) / (_max - _min);
+            float tickY = (this.Height - 11) / (_max - _min);
 
             for (int x = 0; x < 4; x++)
             {
@@ -204,11 +252,11 @@ namespace WGiBeat.Screens
                 for (int y = 1; y < _lineData[x].Length; y++)
                 {
                     float posY = this.Y + this.Height - 7;
-                    posY += Math.Min(_max - _min, Math.Max(_lineData[x][y-1] - _min, 0)) * -tickY;
+                    posY += (float) (Math.Min(_max - _min, Math.Max(_lineData[x][y-1] - _min, 0)) * -tickY);
                     var p0 = new Vector2(posX, posY);
                     posX += tickX;
                     posY = this.Y + this.Height - 7;
-                    posY += Math.Min(_max - _min, Math.Max(_lineData[x][y] - _min, 0)) * -tickY;
+                    posY += (float) (Math.Min(_max - _min, Math.Max(_lineData[x][y] - _min, 0)) * -tickY);
                     var p1 = new Vector2(posX, posY);
                     _playerLines[x].Add(new RoundLine(p0,p1));
                 }
@@ -230,8 +278,8 @@ namespace WGiBeat.Screens
             {
                 loopedOnce = true;
                 var limit = (int) Math.Min(_lineData[x].Length, _drawProgress);
-                var colour = (x == CPUPlayerID) ? LineColours[4] : LineColours[x];
-                LineDrawer.Draw(_playerLines[x].Take(limit),1,colour,0,null);
+                var colour = (x == CPUPlayerID && LegendStyle == LegendStyle.NORMAL) ? LineColours[4] : LineColours[x];
+                LineDrawer.Draw(_playerLines[x].Take(limit),1.5f,colour,0,null);
             }
 
         }
@@ -255,17 +303,13 @@ namespace WGiBeat.Screens
             if (_axisLineList == null)
             {
                 _axisLineList = new List<RoundLine>();
-                float tickY = (float)this.Height / (_max - _min);
+                float tickY = this.Height / (_max - _min);
 
-                for (int x = _min; x < _max; x += 50)
+                for (float x = _min; x < _max; x += Tick)
                 {
-                    if (x % 100 == 0)
-                    {
-
+   
                         var posY = (x - _min) * -tickY;
                         _axisLineList.Add(new RoundLine(new Vector2(this.X, this.Y + this.Height + posY), new Vector2(this.X + this.Width, this.Y + this.Height + posY)));
-
-                    }
                 }
             }
     
@@ -286,5 +330,12 @@ namespace WGiBeat.Screens
             TextureManager.DrawString(spriteBatch, "" + _min, "DefaultFont",_minLabelPosition,Color.White, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, "" + _max, "DefaultFont", _maxLabelPosition, Color.White, FontAlign.LEFT);
         }
+    }
+
+    public enum LegendStyle
+    {
+        NORMAL,
+        TEAMS,
+        NONE
     }
 }

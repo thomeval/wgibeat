@@ -126,12 +126,31 @@ namespace WGiBeat.Players
         }
 
 
-        private readonly List<float> _lifeHistory = new List<float>();
-
-        public List<float> LifeHistory
+        private readonly List<double> _lifeHistory = new List<double>();
+        public List<double> LifeHistory
         {
             get { return _lifeHistory; }
         }
+
+        private readonly List<double> _levelHistory = new List<double>();
+        public List<double> LevelHistory
+        {
+            get { return _levelHistory; }
+        }
+
+        private readonly List<long> _scoreHistory = new List<long>();
+        public List<long> ScoreHistory
+        {
+            get { return _scoreHistory; }
+        }
+
+        private readonly static List<double> _gmHistory = new List<double>();
+        public static List<double> GMHistory
+        {
+            get { return _gmHistory; }
+        }
+
+
 
         public bool IsHumanPlayer
         {
@@ -164,6 +183,9 @@ namespace WGiBeat.Players
         public void RecordCurrentLife()
         {
             _lifeHistory.Add((float)Life);
+            _gmHistory.Add(Player.GrooveMomentum);
+            _levelHistory.Add(Level);
+            _scoreHistory.Add(Score);
         }
 
         public double MissedArrow()
@@ -272,6 +294,9 @@ namespace WGiBeat.Players
             IsBlazing = false;
             PlayTime = 0;
             _lifeHistory.Clear();
+            _scoreHistory.Clear();
+            _levelHistory.Clear();
+            _gmHistory.Clear();
             NextCPUJudgement = BeatlineNoteJudgement.COUNT;
         }
 
