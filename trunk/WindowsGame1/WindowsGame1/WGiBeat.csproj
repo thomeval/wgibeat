@@ -106,6 +106,7 @@
     <Compile Include="Drawing\NoteBarProgress.cs" />
     <Compile Include="Drawing\PerformanceBar.cs" />
     <Compile Include="Drawing\ProfileLevelDisplay.cs" />
+    <Compile Include="Drawing\RecordReplayer.cs" />
     <Compile Include="Drawing\RoundLine\RoundLine.cs" />
     <Compile Include="Drawing\Sets\CountdownSet.cs" />
     <Compile Include="Drawing\FileSelectDialog.cs" />
@@ -220,6 +221,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\Common\PlayerOptionsFrameAttract.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Default\Common\TeamIdentifiers.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\Instruction\InstructionPage4.png">
