@@ -162,8 +162,8 @@ namespace WGiBeat.Screens
             switch (_highScorePlayer)
             {
                 case 4:
-
-                    scores = Core.Players[0].ScoreHistory;
+                    scores = (from e in CombineScoreData(0) select (long) e).ToList();
+                  
                     //TODO: Combine high scores.
                     break;
                 case 5:
@@ -232,7 +232,18 @@ namespace WGiBeat.Screens
                     }
                     break;
                 case GameType.COOPERATIVE:
-                    _grades[0] = PercentageToGradeIndex(CalculateTeamPercentage());
+                    if ((from e in Core.Players where e.Playing && e.KO select e).
+                    Any())
+                    {
+                        //Fail
+                        _grades[0] = NUM_EVALUATIONS - 1;
+                        
+                    }
+                    else
+                    {
+                        _grades[0] = PercentageToGradeIndex(CalculateTeamPercentage());  
+                    }
+                    
                     break;
                 case GameType.SYNC_PRO:
                 case GameType.SYNC_PLUS:
@@ -363,10 +374,7 @@ namespace WGiBeat.Screens
         {
             for (int x = 0; x < 4; x++)
             {
-                if (!Core.Players[x].Playing)
-                {
-                    continue;
-                }
+             
                 switch (_graphMode)
                 {
                     case 0:
@@ -413,7 +421,7 @@ namespace WGiBeat.Screens
                 default:
                     for (int x = 0; x < 4; x++)
                     {
-                        _lifeGraph[x] = (from e in Core.Players[x].ScoreHistory select (double)e).ToArray();
+                        _lifeGraph[x] = Core.Players[x].Playing ? (from e in Core.Players[x].ScoreHistory select (double)e).ToArray() : null;
                     }
                     break;
             }

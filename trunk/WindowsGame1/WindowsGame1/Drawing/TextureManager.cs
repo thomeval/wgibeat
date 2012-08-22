@@ -198,6 +198,7 @@ namespace WGiBeat.Drawing
 
         public static double LastDrawnPhraseDiff { get; private set; }
 
+   
     }
 
     public enum FontAlign

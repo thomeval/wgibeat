@@ -65,6 +65,7 @@ namespace WGiBeat
         {
             get { return _instance ?? (_instance = new GameCore()); }
         }
+
         #region Initialization
 
         /// <summary>

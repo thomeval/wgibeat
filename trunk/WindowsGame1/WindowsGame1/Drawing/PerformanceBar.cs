@@ -12,6 +12,7 @@ namespace WGiBeat.Drawing
     {
 
         public double Opacity { get; set; }
+        private double _barOpacity { get; set; }
         public Player[] Players { get; set; }
         public GameType GameType { get; set; }
 
@@ -78,12 +79,16 @@ namespace WGiBeat.Drawing
             var headerOffset = (this.Width/2.0f) - (_headerSprite.Width/2.0f);
             position.X += headerOffset;
             _headerSprite.Position = position;
+            _headerSprite.ColorShading.A = (byte) Opacity;
             _headerSprite.Draw(spriteBatch);
             position.X -= headerOffset;   
         }
 
         private void DrawSingleBar(SpriteBatch spriteBatch, Vector2 position, int player)
         {
+            _rightSprite.ColorShading.A =
+                _leftSpriteMap.ColorShading.A =
+                _middleSprite.ColorShading.A = (byte) Opacity;
             _rightSprite.Position = position.Clone();
             _rightSprite.Height = this.Height;
             _rightSprite.X += this.Width - 70;
@@ -103,7 +108,7 @@ namespace WGiBeat.Drawing
 
             if (totalBeatlines >= 5)
             {
-                _partsSpriteMap.ColorShading.A = (byte) Opacity;
+                _partsSpriteMap.ColorShading.A = (byte) (_barOpacity * Opacity / 255);
                 for (int y = 0; y < (int) BeatlineNoteJudgement.COUNT; y++)
                 {
                     var width = (int) Math.Ceiling((double) (barWidth)*Players[player].Judgements[y]/totalBeatlines);
@@ -112,19 +117,21 @@ namespace WGiBeat.Drawing
                     _partsSpriteMap.Draw(spriteBatch, y, width, this.Height, position);
                     position.X += width;
                 }
-                Opacity = Math.Min(255, Opacity + (TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * BAR_SHOW_SPEED));
+                _barOpacity = Math.Min(255, _barOpacity + (TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * BAR_SHOW_SPEED));
                 percentageText = String.Format("{0:F1}%", Players[player].CalculatePercentage());
             }
             else
             {
-                Opacity = 0;
+                _barOpacity = 0;
             }
             _middleSprite.Draw(spriteBatch);
 
             _rightSprite.Draw(spriteBatch);
             _rightSprite.X += 35;
             _rightSprite.Y += (this.Height / 2) - 10;
-            TextureManager.DrawString(spriteBatch, percentageText, "DefaultFont", _rightSprite.Position, Color.Black,
+            var textColour = Color.Black;
+            textColour.A = (byte) Opacity;
+            TextureManager.DrawString(spriteBatch, percentageText, "DefaultFont", _rightSprite.Position, textColour,
                                       FontAlign.CENTER);
 
             position.X = this.Position.X;
