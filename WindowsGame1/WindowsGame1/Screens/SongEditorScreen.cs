@@ -1409,26 +1409,25 @@ namespace WGiBeat.Screens
 
             var tags = Core.Audio.GetAudioFileMetadata(_sourceFilePath);
             var titleTag = "";
-            if (tags.ContainsKey("TITLE"))
+            if (tags.ContainsKey("TITLE") && !string.IsNullOrEmpty(tags["TITLE"]))
             {
                 titleTag = tags["TITLE"];
             }
-            if (tags.ContainsKey("TIT2"))
+            if (tags.ContainsKey("TIT2") && !string.IsNullOrEmpty(tags["TIT2"]))
             {
                 titleTag = tags["TIT2"];
             }
-
-            NewGameSong.Title = titleTag;
+            NewGameSong.Title = titleTag.Trim();
 
             SongManager.SplitTitle(NewGameSong);
 
-            if (tags.ContainsKey("ARTIST"))
+            if (tags.ContainsKey("ARTIST") && !string.IsNullOrEmpty(tags["ARTIST"]))
             {
-                NewGameSong.Artist = tags["ARTIST"];
+                NewGameSong.Artist = tags["ARTIST"].Trim();
             }
-            if (tags.ContainsKey("TPE1"))
+            if (tags.ContainsKey("TPE1") && !string.IsNullOrEmpty(tags["TPE1"]))
             {
-                NewGameSong.Artist = tags["TPE1"];
+                NewGameSong.Artist = tags["TPE1"].Trim();
             }
             NewGameSong.Length = Convert.ToInt32(tags["LENGTH"]) / 1000.0;
 

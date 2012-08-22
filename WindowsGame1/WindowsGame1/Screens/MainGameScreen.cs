@@ -80,7 +80,7 @@ namespace WGiBeat.Screens
 
             _beatlineSet.NoteMissed += BeatlineNoteMissed;
             _beatlineSet.CPUNoteHit += BeatlineNoteCPUHit;
-            _recordReplayer = new RecordReplayer();
+            _recordReplayer = new RecordReplayer(currentGameType);
             _recordReplayer.LoadRecord(_gameSong.GetHashCode(), currentGameType);
             _recordReplayer.Position = Core.Metrics["RecordReplayer",GetFreeLocation()];
             _recordReplayer.Size = Core.Metrics["RecordReplayer.Size",0];
@@ -597,6 +597,7 @@ namespace WGiBeat.Screens
             _hitsBarSet.Draw(spriteBatch);
 
             _beatlineSet.Draw(spriteBatch, _phraseNumber);
+            _performanceBar.Opacity = 255 - _recordReplayer.Opacity;
             _performanceBar.Draw(spriteBatch);
             _recordReplayer.Draw(spriteBatch,_phraseNumber);
             _gmBarSet.Draw(spriteBatch);

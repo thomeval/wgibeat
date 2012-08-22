@@ -61,7 +61,7 @@ namespace WGiBeat.Drawing
 
             public void Draw(int cellnumber, float width, float height, float x, float y)
             {
-                _vertices = GetVertices(cellnumber, width, height, x, y);
+                _vertices = GetVertices(cellnumber, x, y, width, height);
                 DrawVertices(_vertices);
 
             }

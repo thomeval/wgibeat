@@ -25,6 +25,7 @@
   - Super beatlines (bonus points, possibly double length)
   - Arrow truncate bug in Sync Plus mode when level drops.
   - WIN / LOSE / Max GM display in evaluation screen.
+  - Record replaying (ghost data)
   
 ==Delayed==
 - Apparent inconsistency between WGiEdit Step 2 and Step 3 song timing (esp. AudioStart)?
@@ -35,6 +36,9 @@
 ==TODO==
 
  ==Done==
+ * Fixed FAIL grades not being awarded in Coop mode.
+ 
+ ==2.0 A1==
  * New UI (especially for sync mode).
  * Arrows on different height depending on their direction.
  * Animated background / visualization. Lucidity based on player level.
