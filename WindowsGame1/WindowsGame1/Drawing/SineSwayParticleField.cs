@@ -116,23 +116,35 @@ namespace WGiBeat.Drawing
                 particle.ParticleType = _rand.Next(0, 5);
             }
         }
+
         public void Draw(GameTime gameTime)
+        {
+            Draw(gameTime,0.0);
+        }
+        public void Draw(GameTime gameTime, double phraseNumber)
         {
             if (Count == 0)
             {
                 return;
             }
             int pos = 0;
-
             //Calculate vertices for every single particle.
             foreach (SineSwayParticle particle in _swayers)
-            {               
+            {
+                var beatOffset = (4* phraseNumber) - Math.Floor(4* phraseNumber);
+                if (beatOffset < 0.5)
+                {
+                    beatOffset = 1 - beatOffset;
+                }
+                var amount = (int) Math.Min((Math.Tan(beatOffset*Math.PI/2)*1), 15);
+                particle.Width += amount;
                 var result = particle.GetVertices(gameTime);
                 for (int x = 0; x < result.Length; x++ )
                 {
                     _vertices[pos + x] = result[x];
                 }
                     pos += result.Length;
+                particle.Width -= amount;
             }
 
             //Send the entire batch of vertices to SpriteMap3D for drawing (any Particle object's SpriteMap will do).

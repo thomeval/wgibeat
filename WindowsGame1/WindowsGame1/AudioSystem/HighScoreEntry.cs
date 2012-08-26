@@ -16,5 +16,10 @@ namespace WGiBeat.AudioSystem
         public string Name { get; set; }
         public int SongID { get; set; }
         public GameType GameType { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0:20} | {1:15} | {2:15} | {3:15} | {4:2} | {5:15} ", Score.ToString(), SongID.ToString(), GameType.ToString() ,Name.ToString(), Grade.ToString(), Difficulty.ToString());   
+        }
     }
 }

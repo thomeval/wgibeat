@@ -170,7 +170,7 @@ namespace WGiBeat.Managers
                 var bf = new BinaryFormatter();
                 result._highScoreEntries = (List<HighScoreEntry>)bf.Deserialize(fs);
                 fs.Close();
-                result.Log.AddMessage("High scores loaded successfully.", LogLevel.INFO);
+                result.Log.AddMessage("High scores loaded successfully." + result._highScoreEntries.Count + " entries.", LogLevel.INFO);
                 return result;
             }
             catch (Exception ex)
@@ -178,6 +178,40 @@ namespace WGiBeat.Managers
                 log.AddMessage("Error loading high scores." + ex.Message, LogLevel.WARN);
                 return new HighScoreManager();
             }
+        }
+
+        public string PrintHighScores()
+        {
+            string result = "";
+            foreach (HighScoreEntry entry in _highScoreEntries)
+            {
+                result+= (entry);
+                var song = GameCore.Instance.Songs.GetBySongID(entry.SongID);
+                if (song == null)
+                {
+                    result += "| MISSING";
+                }
+                else
+                {
+                    result += "| " + song.Title;
+                }
+                result += "\n";
+            }
+            return result;
+        }
+
+        public void CleanHighScores(SongManager songs)
+        {
+            int count = 0;
+            foreach (var entry in _highScoreEntries.ToArray())
+            {
+                if (songs.GetBySongID(entry.SongID) == null)
+                {
+                    _highScoreEntries.Remove(entry);
+                    count++;
+                }     
+            }
+            Log.AddMessage(string.Format("Removed {0} stale high scores.",count), LogLevel.DEBUG);
         }
         #endregion
     }

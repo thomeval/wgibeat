@@ -246,7 +246,13 @@ namespace WGiBeat.Screens
         private void DrawBackground(GameTime gameTime)
         {
             _background.Draw();
-            _field.Draw(gameTime);
+            double phrase = 0.0;
+            if (Core.Settings.Get<bool>("SongPreview") && Crossfader.ChannelIndexCurrent > -1)
+            {
+                phrase = CurrentSong.ConvertMSToPhrase(Core.Audio.GetChannelPosition(Crossfader.ChannelIndexCurrent));
+      
+            }
+            _field.Draw(gameTime, phrase);
         }
 
         private const int SONGLIST_FADEOUT_SPEED = 300;

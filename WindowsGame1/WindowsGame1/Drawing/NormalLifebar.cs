@@ -28,7 +28,7 @@ namespace WGiBeat.Drawing
                 new Color(255, 128, 128),
                 new Color(128, 128, 255),
                 new Color(128, 255, 128),
-                new Color(128, 255, 255)
+                new Color(255, 255, 128)
             };
         public NormalLifeBar()
         {

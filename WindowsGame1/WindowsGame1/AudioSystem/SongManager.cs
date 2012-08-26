@@ -223,6 +223,11 @@ namespace WGiBeat.AudioSystem
             return (from e in _songs where (e.Path == path) && (e.AudioFile == songfilename) select e).SingleOrDefault();
         }
 
+        public GameSong GetBySongID(int id)
+        {
+            return (from e in _songs where e.GetHashCode() == id select e).SingleOrDefault();
+        }
+
         /// <summary>
         /// Populates this SongManager's song database by parsing all valid song files 
         /// (file types for which it has a loader) from a folder. Subfolders are also parsed.
@@ -494,5 +499,7 @@ namespace WGiBeat.AudioSystem
                 loader.ConvertToSNG = enable ? false : SettingsManager.Get<bool>("ConvertToSNG");
             }
         }
+
+    
     }
 }

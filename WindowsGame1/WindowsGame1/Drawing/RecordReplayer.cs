@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Managers;
-using WGiBeat.Notes;
 
 namespace WGiBeat.Drawing
 {
@@ -20,16 +18,26 @@ namespace WGiBeat.Drawing
         private Sprite3D _rightSprite;
         private Sprite3D _headerSprite;
 
+        private double _displayedRecordScore;
+        private readonly double[] _displayedPlayerScore = new double[4];
         private readonly GameType _gameType;
         public List<long> ScoreHistory { get; set; }
 
 
         public double Opacity { get; set; }
-
+        public bool AutoHide { get; set; }
         public RecordReplayer(GameType gameType)
         {
             _gameType = gameType;
-            
+            AutoHide = true;
+        }
+
+        private bool UseCombinedScoring
+        {
+            get { return _gameType == GameType.COOPERATIVE 
+                || _gameType == GameType.SYNC_PRO
+                || _gameType == GameType.SYNC_PLUS; }
+         
         }
 
         private void InitSprites()
@@ -44,9 +52,9 @@ namespace WGiBeat.Drawing
             {
                 Texture = TextureManager.Textures("PerformanceBarLeft"),
                 Columns = 1,
-                Rows = 5
+                Rows = 6
             };
-            _middleSprite = new Sprite3D { Texture = TextureManager.Textures("PerformanceBarMiddle") };
+            _middleSprite = new Sprite3D { Texture = TextureManager.Textures("RecordReplayBarMiddle") };
             _rightSprite = new Sprite3D { Texture = TextureManager.Textures("PerformanceBarRight") };
             _headerSprite = new Sprite3D{ Texture = TextureManager.Textures("PerformanceBarHeader") };
         }
@@ -57,8 +65,8 @@ namespace WGiBeat.Drawing
         Draw(spriteBatch,0);     
         }
 
-        private const int FADEIN_SPEED = 120;
-        private const int FADEOUT_SPEED = 120;
+        private const int FADEIN_SPEED = 240;
+        private const int FADEOUT_SPEED = 240;
         public void Draw(SpriteBatch spriteBatch, double phraseNumber)
         {
             if (_middleSprite == null)
@@ -70,18 +78,67 @@ namespace WGiBeat.Drawing
                 return;
             }
 
-            
+            UpdateDisplayedScores(phraseNumber);
             var position = this.Position.Clone();
 
-            var displayScore = GetScoreToDisplay(phraseNumber);
-            var maxScore = GetMaxScore();
-            if (displayScore == 0)
+         
+            var maxScore = GetCombinedScore();
+            if (_displayedRecordScore == 0)
             {
                 return;
             }
-            var ratio = 1.0 * maxScore/displayScore;
+            var ratio = 1.0 * maxScore / _displayedRecordScore;
 
-            if (ratio > 0.8 && ratio < 1.3)
+            SetOpacity(ratio, phraseNumber);
+            var drawColor = Color.Black;
+            drawColor.A = (byte)Opacity;
+            TextureManager.DrawString(spriteBatch, string.Format("Record: {0:F0}", _displayedRecordScore), "LargeFont", position, drawColor, FontAlign.LEFT);
+            position.Y += 30;
+            DrawChallenges(spriteBatch, (long) _displayedRecordScore, position);
+        }
+
+
+        private void UpdateDisplayedScores(double phraseNumber)
+        {
+
+            AnimateNumber(ref _displayedRecordScore, GetScoreToDisplay(phraseNumber));
+
+            if (UseCombinedScoring)
+            {
+                AnimateNumber(ref _displayedPlayerScore[0],GetCombinedScore());
+                return;
+            }
+
+            for (int x = 0; x < 4; x++)
+            {
+                AnimateNumber(ref _displayedPlayerScore[x], GameCore.Instance.Players[x].Score);                   
+            }
+        }
+
+        private const int SCORE_UPDATE_SPEED = 6;
+        private void AnimateNumber(ref double displayedNumber, double acutalNumber)
+        {
+        
+            var diff = acutalNumber - displayedNumber;
+            if (diff < 0.1)
+            {
+                displayedNumber += diff;
+            }
+            else
+            {
+                displayedNumber += diff*TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds*SCORE_UPDATE_SPEED;
+            }
+        }
+
+
+        private void SetOpacity(double ratio, double phraseNumber)
+        {
+            if (!AutoHide)
+            {
+                return;
+            }
+
+            if ((phraseNumber >= 10) && (ratio > 0.8 && ratio <1.3))
             {
                 Opacity += FADEIN_SPEED*TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds;
             }
@@ -90,39 +147,30 @@ namespace WGiBeat.Drawing
                 Opacity -= FADEOUT_SPEED*TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds;
             }
             Opacity = Math.Min(Math.Max(0, Opacity), 255);
-            var drawColor = Color.Black;
-            drawColor.A = (byte)Opacity;  
-            TextureManager.DrawString(spriteBatch,string.Format("Record: {0}",displayScore),"LargeFont",position,drawColor, FontAlign.LEFT);
-            position.Y += 30;
-            DrawChallenges(spriteBatch, displayScore, position);
         }
 
         private void DrawChallenges(SpriteBatch spriteBatch, long recordScore, Vector2 position)
         {
             var drawColor = Color.Black;
             drawColor.A = (byte) Opacity;
-            switch (_gameType)
+
+            if (UseCombinedScoring)
             {
-                case GameType.COOPERATIVE:
-                case GameType.SYNC_PLUS:
-                case GameType.SYNC_PRO:
-                   DrawSingleBar(spriteBatch,position,5,GetMaxScore(),recordScore);
-                                      
-                    break;
-                default:
-                    for (int x = 0; x < 4; x++)
-                    {
-                        if (!GameCore.Instance.Players[x].IsHumanPlayer)
-                        {
-                            continue;
-                        }
-                    
-                        DrawSingleBar(spriteBatch,position,x,GameCore.Instance.Players[x].Score,recordScore);
-                        position.Y += this.Height;
-                    }
-                    break;
+                DrawSingleBar(spriteBatch, position, 5, (long) _displayedPlayerScore[0], recordScore);
             }
-    
+            else
+            {
+                for (int x = 0; x < 4; x++)
+                {
+                    if (!GameCore.Instance.Players[x].IsHumanPlayer)
+                    {
+                        continue;
+                    }
+
+                    DrawSingleBar(spriteBatch, position, x, (long) _displayedPlayerScore[x], recordScore);
+                    position.Y += this.Height;
+                }
+            }
         }
 
 
@@ -139,7 +187,7 @@ namespace WGiBeat.Drawing
             _rightSprite.X += this.Width - RIGHT_SIDE_WIDTH;
             var barWidth = this.Width - LEFT_SIDE_WIDTH - RIGHT_SIDE_WIDTH;
 
-            var idx = (GameCore.Instance.Players[player].IsCPUPlayer) ? 4 : player;
+            var idx = (player < 5 && GameCore.Instance.Players[player].IsCPUPlayer) ? 4 : player;
 
             _leftSpriteMap.Draw(idx, LEFT_SIDE_WIDTH, this.Height, position);
             position.X += LEFT_SIDE_WIDTH;
@@ -152,7 +200,7 @@ namespace WGiBeat.Drawing
             var ratio = 1.0 * challengeScore/recordScore;
             ratio = Math.Max(Math.Min(1.2, ratio), 0.8);
             var width = barWidth*(ratio - 0.8) / 0.4;
-                    _partsSpriteMap.Draw(ratio >= 1.0 ? 0 : 3, (float) width, this.Height, position);              
+                    _partsSpriteMap.Draw(GetBarColour(ratio), (float) width, this.Height, position);              
 
             _middleSprite.Draw();
             _rightSprite.Draw();
@@ -166,7 +214,16 @@ namespace WGiBeat.Drawing
      
         }
 
-        private long GetMaxScore()
+        private int GetBarColour(double ratio)
+        {
+            if (ratio > 0.9999999 && ratio < 1.0000001)
+            {
+                return 1;
+            }
+            return ratio > 1 ? 0 : 3;
+        }
+
+        private long GetCombinedScore()
         {
             switch (_gameType)
             {

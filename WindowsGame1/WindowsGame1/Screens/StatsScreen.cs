@@ -168,7 +168,7 @@ namespace WGiBeat.Screens
             TextureManager.DrawString(spriteBatch, "Total play time:", "LargeFont", positions[0], Color.Black, FontAlign.LEFT);
             var playTime = new TimeSpan(0, 0, 0, 0, (int)profile.TotalPlayTime);
 
-            TextureManager.DrawString(spriteBatch, String.Format("{0}h:{1:00}m:{2:00}s ", playTime.Hours, playTime.Minutes, playTime.Seconds), "LargeFont", positions[1], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, String.Format("{0:F0}:{1:00}:{2:00} ", playTime.TotalHours, playTime.Minutes, playTime.Seconds), "LargeFont", positions[1], Color.Black, FontAlign.LEFT);
 
             positions[0].Y += 25;
             positions[1].Y += 25;

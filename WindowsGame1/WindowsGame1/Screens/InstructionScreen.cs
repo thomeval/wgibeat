@@ -12,8 +12,8 @@ namespace WGiBeat.Screens
         public int PageNumber = 1;
         public const int TOTAL_PAGES = 5;
         private MovingBackground _background;
-        private Sprite _baseSprite;
-        private Sprite[] _instructionPages;
+        private Sprite3D _baseSprite;
+        private Sprite3D[] _instructionPages;
         private double _startTime;
         private Beatline _beatline;
         private double _phraseNumber;
@@ -38,14 +38,14 @@ namespace WGiBeat.Screens
         {
             _background = new MovingBackground
                               {Direction = Math.PI / 4, Speed = 30, Texture = TextureManager.Textures("MovingBackground1"), Width = 800, Height = 600};
-            _instructionPages = new Sprite[TOTAL_PAGES];
+            _instructionPages = new Sprite3D[TOTAL_PAGES];
             for (int x = 0; x < TOTAL_PAGES; x++)
             {
-                _instructionPages[x] = new Sprite {SpriteTexture = TextureManager.Textures("InstructionPage" + (x + 1))};
+                _instructionPages[x] = new Sprite3D { Texture = TextureManager.Textures("InstructionPage" + (x + 1)), Size = new Vector2(800, 600) };
             }
-            _baseSprite = new Sprite
+            _baseSprite = new Sprite3D
                               {
-                                  SpriteTexture = TextureManager.Textures("LoadingMessageBase"),
+                                  Texture = TextureManager.Textures("LoadingMessageBase"),
                                   Position = (Core.Metrics["LoadMessageBase", 0])
                               };
             _beatline = new Beatline
@@ -62,8 +62,8 @@ namespace WGiBeat.Screens
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             _background.Draw(spriteBatch,gameTime);
-            _baseSprite.Draw(spriteBatch);      
-            _instructionPages[PageNumber-1].Draw(spriteBatch);
+            _baseSprite.Draw();      
+            _instructionPages[PageNumber-1].Draw();
             DrawBeatline(spriteBatch, gameTime);
             TextureManager.DrawString(spriteBatch, "Press start to continue.", "LargeFont", Core.Metrics["LoadMessage", 0], Color.White, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, String.Format("Page {0} of {1}",PageNumber, TOTAL_PAGES), "DefaultFont", Core.Metrics["LoadErrorCount", 0], Color.White, FontAlign.LEFT);
