@@ -15,7 +15,7 @@ namespace WGiBeat.Screens
         private readonly SineSwayParticleField _field = new SineSwayParticleField();
 
 
-        private readonly string[] _menuText = { "Start Game", "Stats","How to play", "Keys", "Options", "Song Editor", "Website", "Exit"};
+        private readonly string[] _menuText = { "Start Game", "Stats","How to play", "Keys", "Options", "Song Editor", "Website", "Credits", "Exit"};
         private Sprite3D _background;
         private Sprite3D _header;
         private SpriteMap3D _menuOptionSprite;
@@ -137,12 +137,15 @@ namespace WGiBeat.Screens
 
         private void DrawMenu(SpriteBatch spriteBatch)
         {
-            var size = Core.Metrics["MainMenuOptions.Size", 0];
+
             for (int menuOption = 0; menuOption < (int)MainMenuOption.COUNT; menuOption++)
             {
-
+                var size = menuOption == 0
+                  ? Core.Metrics["MainMenuOptions.Size", 1]
+                  : Core.Metrics["MainMenuOptions.Size", 0];
                 var idx = (menuOption == (int) _selectedMenuOption) ? 1 : 0;
-                VertexPositionColorTexture[] result = _menuOptionSprite.GetVertices(idx, Core.Metrics["MainMenuOptions", menuOption], Core.Metrics["MainMenuOptions.Size", 0]);
+                
+                VertexPositionColorTexture[] result = _menuOptionSprite.GetVertices(idx, Core.Metrics["MainMenuOptions", menuOption],size);
                 result.CopyTo(_vertices,0,menuOption*6);
                
 
@@ -152,6 +155,9 @@ namespace WGiBeat.Screens
             for (int menuOption = 0; menuOption < (int) MainMenuOption.COUNT; menuOption++)
             {
                 var textPosition = Core.Metrics["MainMenuOptions", menuOption].Clone();
+                var size = menuOption == 0
+                       ? Core.Metrics["MainMenuOptions.Size", 1]
+                       : Core.Metrics["MainMenuOptions.Size", 0];
                 textPosition.X += size.X / 2;
                 textPosition.Y += size.Y / 2 - 25;
                 TextureManager.DrawString(spriteBatch, _menuText[menuOption], "TwoTech36", textPosition, Color.Black, FontAlign.CENTER);
@@ -161,23 +167,31 @@ namespace WGiBeat.Screens
 
         public override void PerformAction(InputAction inputAction)
         {
-            int newOptionValue;
+  
 
             switch (inputAction.Action)
             {
                 case "UP":
-                    newOptionValue = (int)_selectedMenuOption - 1;
-                    if (newOptionValue < 0)
-                    {
-                        newOptionValue += (int)MainMenuOption.COUNT;
-                    }
-                    _selectedMenuOption = (MainMenuOption)newOptionValue;
+                    AdjustMenuOption(-1);
+                    
                     RaiseSoundTriggered(SoundEvent.MAIN_MENU_SELECT_UP);
                     break;
                 case "DOWN":
-                    newOptionValue = (int)_selectedMenuOption + 1;
-                    newOptionValue %= (int)MainMenuOption.COUNT;
-                    _selectedMenuOption = (MainMenuOption)newOptionValue;
+                    AdjustMenuOption(1);
+                    RaiseSoundTriggered(SoundEvent.MAIN_MENU_SELECT_DOWN);
+                    break;
+                case "LEFT":
+                    if (_selectedMenuOption != 0)
+                    {
+                        AdjustMenuOption(-4);
+                    }
+                    RaiseSoundTriggered(SoundEvent.MAIN_MENU_SELECT_UP);
+                    break;
+                case "RIGHT":
+                    if (_selectedMenuOption != 0)
+                    {
+                        AdjustMenuOption(4);
+                    }
                     RaiseSoundTriggered(SoundEvent.MAIN_MENU_SELECT_DOWN);
                     break;
                 case "START":
@@ -190,6 +204,19 @@ namespace WGiBeat.Screens
                     Core.Exit();
                     break;
             }
+        }
+
+        private void AdjustMenuOption(int value)
+        {
+            
+            var newOptionValue = (int) _selectedMenuOption + value;
+            newOptionValue %= (int) MainMenuOption.COUNT;
+            if (newOptionValue < 0)
+            {
+                newOptionValue += (int) MainMenuOption.COUNT;
+            }
+            _selectedMenuOption = (MainMenuOption) newOptionValue;
+        
         }
 
         private void MenuOptionSelected(int player)
@@ -232,6 +259,9 @@ namespace WGiBeat.Screens
                     case MainMenuOption.SONG_EDIT:
                     Core.ScreenTransition("SongEdit");
                     break;
+                    case MainMenuOption.CREDITS:
+                    Core.ScreenTransition("Credits");
+                    break;
                 case MainMenuOption.WEBSITE:
                     var thread = new Thread(LaunchBrowser);
                     thread.Start();
@@ -269,9 +299,10 @@ namespace WGiBeat.Screens
         OPTIONS = 4,
         SONG_EDIT = 5,
         WEBSITE = 6,
-        EXIT = 7,
-        NETPLAY = 8,
-        COUNT = 8,
+        CREDITS = 7,
+        EXIT = 8,
+        NETPLAY = 9,
+        COUNT = 9,
     }
 
 }

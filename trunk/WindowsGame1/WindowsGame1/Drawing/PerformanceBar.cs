@@ -28,7 +28,7 @@ namespace WGiBeat.Drawing
 
         public PerformanceBar()
         {
-            InitSprites();
+          
         }
 
         private void InitSprites()
@@ -43,15 +43,23 @@ namespace WGiBeat.Drawing
                                  {
                                      SpriteTexture = TextureManager.Textures("PerformanceBarLeft"),
                                      Columns = 1,
-                                     Rows = 5
+                                     Rows = 6
                                  };
             _middleSprite = new Sprite {SpriteTexture = TextureManager.Textures("PerformanceBarMiddle")};
             _rightSprite = new Sprite {SpriteTexture = TextureManager.Textures("PerformanceBarRight")};
-            _headerSprite = new Sprite {SpriteTexture = TextureManager.Textures("PerformanceBarHeader")};
+            _headerSprite = new Sprite
+                                {
+                                    SpriteTexture = TextureManager.Textures("PerformanceBarHeader"),
+                                    Size = Metrics["PerformanceBarHeader.Size", 0]
+                                };
         }
       
         public override void Draw(SpriteBatch spriteBatch)
         {
+            if (_headerSprite == null)
+            {
+                InitSprites();
+            }
             var position = this.Position.Clone();
             
             DrawHeader(spriteBatch, position);
@@ -84,21 +92,23 @@ namespace WGiBeat.Drawing
             position.X -= headerOffset;   
         }
 
+        private const int LEFT_SIDE_WIDTH = 50;
+        private const int RIGHT_SIDE_WIDTH = 70;
         private void DrawSingleBar(SpriteBatch spriteBatch, Vector2 position, int player)
         {
             _rightSprite.ColorShading.A =
                 _leftSpriteMap.ColorShading.A =
                 _middleSprite.ColorShading.A = (byte) Opacity;
+            _rightSprite.Size = new Vector2(RIGHT_SIDE_WIDTH, this.Height);
             _rightSprite.Position = position.Clone();
-            _rightSprite.Height = this.Height;
-            _rightSprite.X += this.Width - 70;
-            var barWidth = this.Width - 120;
+            _rightSprite.X += this.Width - RIGHT_SIDE_WIDTH;
+            var barWidth = this.Width - RIGHT_SIDE_WIDTH - LEFT_SIDE_WIDTH;
             var totalBeatlines = (from e in Players[player].Judgements select e).Take(6).Sum();
 
             var idx = (Players[player].IsCPUPlayer) ? 4 : player;
 
-            _leftSpriteMap.Draw(spriteBatch, idx, 50, this.Height, position);
-            position.X += 50;
+            _leftSpriteMap.Draw(spriteBatch, idx, LEFT_SIDE_WIDTH, this.Height, position);
+            position.X += LEFT_SIDE_WIDTH;
             _middleSprite.Width = barWidth;
             _middleSprite.Height = this.Height;
             _middleSprite.Position = position.Clone();

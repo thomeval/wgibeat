@@ -165,6 +165,7 @@
     <Compile Include="Managers\UpdateManager.cs" />
     <Compile Include="Players\Profile.cs" />
     <Compile Include="Players\ProfileOperations.cs" />
+    <Compile Include="Screens\CreditsScreen.cs" />
     <Compile Include="Screens\InitialLoadScreen.cs" />
     <Compile Include="Screens\InstructionScreen.cs" />
     <Compile Include="Screens\ModeSelectScreen.cs" />
@@ -224,6 +225,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\Common\TeamIdentifiers.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Default\Credits\CreditsPage1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Default\Credits\CreditsPage2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\Instruction\InstructionPage4.png">
@@ -338,6 +345,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\MainGame\NoteJudgements4x.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Default\MainGame\RecordReplayBarMiddle.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\Default\MainGame\ScorePulse.png">

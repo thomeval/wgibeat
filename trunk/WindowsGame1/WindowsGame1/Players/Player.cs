@@ -183,7 +183,7 @@ namespace WGiBeat.Players
         public void RecordCurrentLife()
         {
             _lifeHistory.Add((float)Life);
-            _gmHistory.Add(Player.GrooveMomentum);
+            _gmHistory.Add(GrooveMomentum);
             _levelHistory.Add(Level);
             _scoreHistory.Add(Score);
         }
@@ -286,7 +286,7 @@ namespace WGiBeat.Players
             TotalHits = 0;
             Streak = 0;
             MaxStreak = 0;
-            Momentum = 0;
+            Momentum = GetStartingMomentum();
             GrooveMomentum = 1.0;
             PeakGrooveMomentum = 1.0;
             Life = this.GetMaxLife() / 2;
@@ -298,6 +298,23 @@ namespace WGiBeat.Players
             _levelHistory.Clear();
             _gmHistory.Clear();
             NextCPUJudgement = BeatlineNoteJudgement.COUNT;
+        }
+
+        private long GetStartingMomentum()
+        {
+            switch (PlayerOptions.PlayDifficulty)
+            {
+                case Difficulty.RUTHLESS:
+                    return 1000;
+                    case Difficulty.INSANE:
+                    return 360;
+                    case Difficulty.HARD:
+                    return 190;
+                    case Difficulty.MEDIUM:
+                    return 76;
+                default:
+                    return 0;
+            }
         }
 
         public void UpdateToProfile()

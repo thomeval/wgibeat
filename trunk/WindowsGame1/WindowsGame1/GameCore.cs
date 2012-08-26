@@ -173,6 +173,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             _screens.Add("Instruction", new InstructionScreen(this));
             _screens.Add("SongEdit", new SongEditorScreen(this));
             _screens.Add("Stats", new StatsScreen(this));
+            _screens.Add("Credits", new CreditsScreen(this));
            // _screens.Add("Net",new NetLobbyScreen(this));
 
             foreach (GameScreen screen in _screens.Values)

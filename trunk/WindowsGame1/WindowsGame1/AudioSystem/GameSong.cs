@@ -114,7 +114,7 @@ namespace WGiBeat.AudioSystem
 
         /// <summary>
         /// Returns a hashcode of this GameSong, for uniqueness. The hashcode only considers
-        /// the Title, Subtitle, Artist, BPM, Length and Offset fields. There are 2^32 
+        /// the Title, Subtitle, Artist, BPM, Stops, Length and Offset fields. There are 2^32 
         /// possible combinations.
         /// </summary>
         /// <returns>A calculated hashcode of this GameSong.</returns>
@@ -126,6 +126,16 @@ namespace WGiBeat.AudioSystem
                 result = (result * 397) ^ (Subtitle != null ? Subtitle.GetHashCode() : 0);
                 result = (result*397) ^ (Artist != null ? Artist.GetHashCode() : 0);
                 result = (result * 397) ^ BPMs.GetHashCode();
+                foreach (var bpm in BPMs)
+                {
+                    result = (result*397) ^ bpm.Key.GetHashCode();
+                    result = (result*397) ^ bpm.Value.GetHashCode();
+                }
+                foreach (var stop in Stops)
+                {
+                    result = (result * 397) ^  stop.Key.GetHashCode();
+                    result = (result * 397) ^ stop.Value.GetHashCode();
+                }
                 result = (result*397) ^ Offset.GetHashCode();
                 result = (result*397) ^ Length.GetHashCode();
                 return result;
