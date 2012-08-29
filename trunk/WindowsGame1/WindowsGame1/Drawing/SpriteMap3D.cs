@@ -69,7 +69,7 @@ namespace WGiBeat.Drawing
  
             public void Draw(int cellnumber, float width, float height, Vector2 position)
             {
-                Draw(cellnumber, width, height, (int)position.X, (int)position.Y);
+                Draw(cellnumber, width, height, position.X, position.Y);
             }
             private void CalculateSourceRectangle(int cellnumber, out Vector2 sourcePosition, out Vector2 sourceSize)
             {

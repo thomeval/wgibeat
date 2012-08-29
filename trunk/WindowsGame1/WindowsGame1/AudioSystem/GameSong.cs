@@ -59,6 +59,27 @@ namespace WGiBeat.AudioSystem
             }
         }
 
+        private List<double> _addNotes = new List<double>();
+        public List<double> AddNotes
+        {
+            get { return _addNotes; }
+            set { _addNotes = value; }
+        }
+
+        private List<double> _removeNotes = new List<double>();
+        public List<double> RemoveNotes
+        {
+            get { return _removeNotes; }
+            set { _removeNotes = value; }
+        }
+
+        private List<double> _superNotes = new List<double>();
+        public List<double> SuperNotes
+        {
+            get { return _superNotes; }
+            set { _superNotes = value; }
+        }
+
         public double StartBPM
         {
             get
@@ -135,6 +156,18 @@ namespace WGiBeat.AudioSystem
                 {
                     result = (result * 397) ^  stop.Key.GetHashCode();
                     result = (result * 397) ^ stop.Value.GetHashCode();
+                }
+                foreach (var note in AddNotes)
+                {
+                    result = (result * 397) ^ note.GetHashCode();
+                }
+                foreach (var note in RemoveNotes)
+                {
+                    result = (result * 397) ^ note.GetHashCode();
+                }
+                foreach (var note in SuperNotes)
+                {
+                    result = (result * 397) ^ note.GetHashCode();
                 }
                 result = (result*397) ^ Offset.GetHashCode();
                 result = (result*397) ^ Length.GetHashCode();

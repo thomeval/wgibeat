@@ -22,16 +22,16 @@ namespace WGiBeat.Drawing
 
     
 
-        private SpriteMap _markerSprite;
-        private SpriteMap _playerIdentifiers;
+        private SpriteMap3D _markerSprite;
+        private SpriteMap3D _playerIdentifiers;
 
-        private Sprite _baseSprite;
+        private Sprite3D _baseSprite;
 
-        private Sprite _speedScaleSprite;
+        private Sprite3D _speedScaleSprite;
 
-        private SpriteMap _beatlineEffects;
-        private SpriteMap _pulseFront;
-        private SpriteMap _pulseBack;
+        private SpriteMap3D _beatlineEffects;
+        private SpriteMap3D _pulseFront;
+        private SpriteMap3D _pulseBack;
         private double _pulseFrontOpacity;
         private Vector2 _indicatorPosition;
         public Vector2 IdentifierSize { get; set; }
@@ -65,49 +65,49 @@ namespace WGiBeat.Drawing
         private void InitSprites()
         {
      
-            _markerSprite = new SpriteMap
+            _markerSprite = new SpriteMap3D
             {
                 Columns = 1,
                 Rows = 5,
-                SpriteTexture = TextureManager.Textures("BeatMarkers"),
+                Texture = TextureManager.Textures("BeatMarkers"),
 
             };
 
-            _pulseFront = new SpriteMap
+            _pulseFront = new SpriteMap3D
             {
-                SpriteTexture = TextureManager.Textures("BeatMeterPulseFront"),
+                Texture = TextureManager.Textures("BeatMeterPulseFront"),
                 Rows = 5,
                 Columns = 1,
             };
 
-            _pulseBack = new SpriteMap
+            _pulseBack = new SpriteMap3D
                              {
-                                 SpriteTexture = TextureManager.Textures("BeatMeterPulseBack"),
+                                 Texture = TextureManager.Textures("BeatMeterPulseBack"),
                                  Rows = 5,
                                  Columns = 1,
                              };
-            _baseSprite = new Sprite
+            _baseSprite = new Sprite3D
             {
-                SpriteTexture = TextureManager.Textures("BeatMeter"),
+                Texture = TextureManager.Textures("BeatMeter"),
                 Position = this.Position,
                 Size = this.Size
             };
- 
-            _beatlineEffects = new SpriteMap
+
+            _beatlineEffects = new SpriteMap3D
                                    {
-                                       SpriteTexture = TextureManager.Textures("BeatlineEffectIcons"),
+                                       Texture = TextureManager.Textures("BeatlineEffectIcons"),
                                        Columns = 1,
                                        Rows = 4
                                    };
-            _playerIdentifiers = new SpriteMap
+            _playerIdentifiers = new SpriteMap3D
                                     {
-                                        SpriteTexture = TextureManager.Textures("BeatlinePlayerIdentifiers"),
+                                        Texture = TextureManager.Textures("BeatlinePlayerIdentifiers"),
                                         Columns = 1,
                                         Rows = 5
                                     };
-            _speedScaleSprite = new Sprite
+            _speedScaleSprite = new Sprite3D
                                     {
-                                        SpriteTexture = TextureManager.Textures("BeatlineSpeedScale"),
+                                        Texture = TextureManager.Textures("BeatlineSpeedScale"),
                                         Size = new Vector2(this.Width - LEFT_SIDE - 25, 5),
                                         X = (int) (this.Position.X + (LEFT_SIDE + IMPACT_WIDTH) * WidthRatio),
                                         Y = (int) (this.Position.Y + this.Height / 2 - 2)
@@ -152,7 +152,7 @@ namespace WGiBeat.Drawing
       
             var mxFactor = 1.0* _speedScaleSprite.Width/BEAT_ZOOM_DISTANCE / _displayedSpeed; 
 
-            _speedScaleSprite.DrawTiled(spriteBatch, (int)textureOffset, 0, (int)(TEXTURE_WIDTH * mxFactor), 5);
+            _speedScaleSprite.DrawTiled((float) textureOffset, 0, (float) textureOffset + (float) (TEXTURE_WIDTH * mxFactor), 5);
             
         }
 
@@ -161,7 +161,7 @@ namespace WGiBeat.Drawing
             _indicatorPosition.Y = this.Y + this.Height - IdentifierSize.Y - 5;
      
             _indicatorPosition.X = this.X + this.Width - IdentifierSize.X - 5;
-            _playerIdentifiers.Draw(spriteBatch,Id, (int) IdentifierSize.X,(int) IdentifierSize.Y,_indicatorPosition);
+            _playerIdentifiers.Draw(Id, IdentifierSize.X, IdentifierSize.Y,_indicatorPosition);
         }
 
         private void DrawPulses(SpriteBatch spriteBatch, double phraseNumber)
@@ -184,21 +184,21 @@ namespace WGiBeat.Drawing
                                           TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds*PULSE_FADEOUT_SPEED);
             _pulseFront.ColorShading.A = (byte) _pulseFrontOpacity;
 
-            _pulseFront.Draw(spriteBatch, Id, this.Width, pulseHeight, pulsePosition);
+            _pulseFront.Draw(Id, this.Width, pulseHeight, pulsePosition);
 
             if (phraseNumber < 0.0)
             {
                 return;
             }
 
-            _pulseBack.Draw(spriteBatch, Id, this.Width, pulseHeight, pulsePosition);
+            _pulseBack.Draw(Id, this.Width, pulseHeight, pulsePosition);
         }
 
         private void DrawNotes(SpriteBatch spriteBatch, double phraseNumber)
         {
             foreach (BeatlineNote bn in _beatlineNotes)
             {
-                var markerBeatOffset = (int)(_displayedSpeed * BEAT_ZOOM_DISTANCE * (phraseNumber - bn.Position));
+                var markerBeatOffset = (_displayedSpeed * BEAT_ZOOM_DISTANCE * (phraseNumber - bn.Position));
 
                 //Dont render notes outside the visibility range.
                 if (((-1 * markerBeatOffset) > this.Width - LEFT_SIDE) && (!bn.Hit))
@@ -228,13 +228,13 @@ namespace WGiBeat.Drawing
                         break;
                 }
 
-                _markerSprite.Draw(spriteBatch, noteIdx, width, markerHeight, (int)markerPosition.X, (int)markerPosition.Y);
+                _markerSprite.Draw(noteIdx, width, markerHeight,markerPosition);
      
                 //Draw the effect icon on top of the marker if appropriate (such as a BPM change arrow)
                 if (bn.NoteType != 0)
                 {
                     _beatlineEffects.ColorShading.A = (byte) (_markerSprite.ColorShading.A  * 0.8);
-                    _beatlineEffects.Draw(spriteBatch, (int)bn.NoteType - 1, EffectIconSize, new Vector2(markerPosition.X - EffectIconSize.X / 2,markerPosition.Y));
+                    _beatlineEffects.Draw((int)bn.NoteType - 1, EffectIconSize, new Vector2(markerPosition.X - EffectIconSize.X / 2.0f,markerPosition.Y));
                 }
             }
         }
@@ -246,7 +246,7 @@ namespace WGiBeat.Drawing
         /// <param name="bn">The BeatlineNote to calculate the opacity for.</param>
         /// <param name="markerBeatOffset">The calculated markerBeatOffset (calculated as beatline speed * Zoom Distance (constant) * (phrase number - BeatlineNote position value))</param>
         /// <returns>The opacity of the beatline note.</returns>
-        private byte CalculateNoteOpacity(BeatlineNote bn, int markerBeatOffset)
+        private byte CalculateNoteOpacity(BeatlineNote bn, double markerBeatOffset)
         {
             byte result;
             if (bn.Hit)
@@ -275,7 +275,7 @@ namespace WGiBeat.Drawing
             return result;
         }
 
-        private float CalculateNotePosition(BeatlineNote bn, int markerBeatOffset)
+        private float CalculateNotePosition(BeatlineNote bn, double markerBeatOffset)
         {
             float result;
             if (bn.Hit)
@@ -295,7 +295,7 @@ namespace WGiBeat.Drawing
 
         private void DrawBase(SpriteBatch spriteBatch)
         {
-                _baseSprite.Draw(spriteBatch);
+           _baseSprite.Draw();
         }
 
         public void AddBeatlineNote(BeatlineNote bln)

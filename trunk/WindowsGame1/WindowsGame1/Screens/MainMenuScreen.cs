@@ -14,7 +14,6 @@ namespace WGiBeat.Screens
 
         private readonly SineSwayParticleField _field = new SineSwayParticleField();
 
-
         private readonly string[] _menuText = { "Start Game", "Stats","How to play", "Keys", "Options", "Song Editor", "Website", "Credits", "Exit"};
         private Sprite3D _background;
         private Sprite3D _header;
@@ -167,8 +166,7 @@ namespace WGiBeat.Screens
 
         public override void PerformAction(InputAction inputAction)
         {
-  
-
+          
             switch (inputAction.Action)
             {
                 case "UP":
@@ -179,21 +177,7 @@ namespace WGiBeat.Screens
                 case "DOWN":
                     AdjustMenuOption(1);
                     RaiseSoundTriggered(SoundEvent.MAIN_MENU_SELECT_DOWN);
-                    break;
-                case "LEFT":
-                    if (_selectedMenuOption != 0)
-                    {
-                        AdjustMenuOption(-4);
-                    }
-                    RaiseSoundTriggered(SoundEvent.MAIN_MENU_SELECT_UP);
-                    break;
-                case "RIGHT":
-                    if (_selectedMenuOption != 0)
-                    {
-                        AdjustMenuOption(4);
-                    }
-                    RaiseSoundTriggered(SoundEvent.MAIN_MENU_SELECT_DOWN);
-                    break;
+                    break; 
                 case "START":
                      MenuOptionSelected(inputAction.Player - 1);
                     break;
@@ -284,7 +268,7 @@ namespace WGiBeat.Screens
             catch (Exception ex)
             {
                 _errorMessage = "Error: Failed to launch browser.";
-                Core.Log.AddMessage(ex.Message, LogLevel.ERROR);
+                Core.Log.AddMessage(ex.Message, LogLevel.WARN);
                 Core.Log.AddException(ex);
             }
         }
