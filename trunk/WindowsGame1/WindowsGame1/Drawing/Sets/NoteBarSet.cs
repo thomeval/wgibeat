@@ -326,6 +326,7 @@ namespace WGiBeat.Drawing.Sets
                         _noteBars[x].TruncateNotes(SyncPlusLevel);
                     }
                 }
+                SyncRemainingNotes();
             }
             else
             {

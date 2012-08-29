@@ -50,7 +50,7 @@ PerformanceBarHeader.Size=[250,30];
 RecordReplayer=[25,50][425,50][25,320][425,320][-1000,-1000];
 RecordReplayer.Size=[350,50];
 SyncPerformanceBar=[455,170][455,170][455,170][455,170][455,170];
-SyncPerformanceBar.Size=[340,30];
+SyncPerformanceBar.Size=[340,50];
 SyncBeatlineBarBase=[100,25][100,150][100,275][100,400];
 SyncNoteBar=[145,35][145,160][145,285][145,410];
 SyncNoteBarProgress=[50,25];
@@ -74,8 +74,8 @@ MainGameTextBackground=[0,540];
 
 
 #Main Menu;
-ScreenHeader=[0,0];
-ScreenHeader.Size=[800,90];
+MainMenuHeader=[0,0];
+MainMenuHeader.Size=[800,145];
 MainMenuOptions=[100,220][100,295][100,345][100,395][100,445][400,295][400,345][400,395][400,445];
 MainMenuOptions.Size=[300,50][600,50];
 MainMenuNoSongsError=[260,270];
@@ -214,3 +214,7 @@ InstructionBeatline.Size=[300,100];
 
 #PDA;
 NetMainMenu=[25,150][400,150];
+
+#Common;
+ScreenHeader=[0,0];
+ScreenHeader.Size=[800,90];

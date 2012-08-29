@@ -51,7 +51,7 @@ namespace WGiBeat
         private GamePadState[] _lastGamePadState;
         public string WgibeatRootFolder;
 
-        public const string VERSION_STRING = "v2.0 a1";
+        public const string VERSION_STRING = "v2.0 a2 pre";
         private GameCore()
         {
             GraphicsManager = new GraphicsDeviceManager(this);
@@ -112,6 +112,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             Log.LogLevel = (LogLevel) Settings.Get<int>("LogLevel");
             HighScores = HighScoreManager.LoadFromFile(WgibeatRootFolder + "\\Scores.conf", this.Log);
             Profiles = ProfileManager.LoadFromFolder(WgibeatRootFolder + "\\Profiles", this.Log);
+            //TODO: Refactor
             Text = TextManager.LoadFromFile(WgibeatRootFolder + "\\Content\\Text\\OptionText.txt", this.Log);
             Text.AddResource(WgibeatRootFolder + "\\Content\\Text\\EditorText.txt");
             Text.AddResource(WgibeatRootFolder + "\\Content\\Text\\ModeText.txt");
