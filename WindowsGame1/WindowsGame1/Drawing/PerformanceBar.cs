@@ -26,11 +26,6 @@ namespace WGiBeat.Drawing
         private const double BAR_SHOW_SPEED = 180;
 
 
-        public PerformanceBar()
-        {
-          
-        }
-
         private void InitSprites()
         {
             _partsSpriteMap = new SpriteMap
@@ -67,7 +62,7 @@ namespace WGiBeat.Drawing
 
             if (GameType == GameType.SYNC_PRO || GameType == GameType.SYNC_PLUS)
             {
-                DrawSingleBar(spriteBatch, position, 0);
+                DrawSingleBar(spriteBatch, position, 0,true);
                 return;
             }
             for (int x = 0; x < Players.Length; x++)
@@ -77,7 +72,7 @@ namespace WGiBeat.Drawing
                 {
                     continue;
                 }
-                DrawSingleBar(spriteBatch, position, x);
+                DrawSingleBar(spriteBatch, position, x, false);
                 position.Y += this.Height;
             }
         }
@@ -94,7 +89,7 @@ namespace WGiBeat.Drawing
 
         private const int LEFT_SIDE_WIDTH = 50;
         private const int RIGHT_SIDE_WIDTH = 70;
-        private void DrawSingleBar(SpriteBatch spriteBatch, Vector2 position, int player)
+        private void DrawSingleBar(SpriteBatch spriteBatch, Vector2 position, int player, bool allPlayers)
         {
             _rightSprite.ColorShading.A =
                 _leftSpriteMap.ColorShading.A =
@@ -106,7 +101,10 @@ namespace WGiBeat.Drawing
             var totalBeatlines = (from e in Players[player].Judgements select e).Take(6).Sum();
 
             var idx = (Players[player].IsCPUPlayer) ? 4 : player;
-
+            if (allPlayers)
+            {
+                idx = 5;
+            }
             _leftSpriteMap.Draw(spriteBatch, idx, LEFT_SIDE_WIDTH, this.Height, position);
             position.X += LEFT_SIDE_WIDTH;
             _middleSprite.Width = barWidth;

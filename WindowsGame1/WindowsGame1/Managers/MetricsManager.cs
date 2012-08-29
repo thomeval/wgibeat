@@ -112,34 +112,37 @@ namespace WGiBeat.Managers
             }
         }
 
-        public void SetupFromMetrics(ref Sprite sprite, string metricsKey, int id)
+
+        public Sprite Setup2DFromMetrics(string metricsKey, int id)
         {
+            var result = new Sprite();
             if (_metrics.ContainsKey(metricsKey))
             {
-                sprite.Position = this[metricsKey,id];
+                result.Position = this[metricsKey, id];
             }
             if (_metrics.ContainsKey(metricsKey + ".Size"))
             {
                 //Handle both a single size definition and multiple (one per ID).
-                sprite.Size = _metrics[metricsKey + ".Size"].Count() > id ? this[metricsKey + ".Size", id] : this[metricsKey + ".Size", 0];
+                result.Size = _metrics[metricsKey + ".Size"].Count() > id ? this[metricsKey + ".Size", id] : this[metricsKey + ".Size", 0];
             }
-            sprite.SpriteTexture = TextureManager.Textures(metricsKey);
-
+            result.SpriteTexture = TextureManager.Textures(metricsKey);
+            return result;
         }
 
-        public void SetupFromMetrics(ref Sprite3D sprite, string metricsKey, int id)
+        public Sprite3D SetupFromMetrics(string metricsKey, int id)
         {
+            var result = new Sprite3D();
             if (_metrics.ContainsKey(metricsKey))
             {
-                sprite.Position = this[metricsKey, id];
+                result.Position = this[metricsKey, id];
             }
             if (_metrics.ContainsKey(metricsKey + ".Size"))
             {
                 //Handle both a single size definition and multiple (one per ID).
-                sprite.Size = _metrics[metricsKey + ".Size"].Count() > id ? this[metricsKey + ".Size", id] : this[metricsKey + ".Size", 0];
+                result.Size = _metrics[metricsKey + ".Size"].Count() > id ? this[metricsKey + ".Size", id] : this[metricsKey + ".Size", 0];
             }
-            sprite.Texture = TextureManager.Textures(metricsKey);
-
+            result.Texture = TextureManager.Textures(metricsKey);
+            return result;
         }
     }
 }

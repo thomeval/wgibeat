@@ -43,12 +43,12 @@ namespace WGiBeat.Drawing.Sets
             _baseOvermaskSprite = new Sprite();
             _streakBaseSprite = new Sprite();
             _streakOvermaskSprite = new Sprite();
-            _metrics.SetupFromMetrics(ref _baseSprite, DeterminePrefix() + "HitsBar",0);
-            _metrics.SetupFromMetrics(ref _streakBaseSprite, "StreakBar", 0);
+            _baseSprite = _metrics.Setup2DFromMetrics(DeterminePrefix() + "HitsBar",0);
+            _streakBaseSprite = _metrics.Setup2DFromMetrics("StreakBar", 0);
             _baseOvermaskSprite = new Sprite();
-       
-            _metrics.SetupFromMetrics(ref _baseOvermaskSprite, DeterminePrefix() + "HitsBar",0);
-            _metrics.SetupFromMetrics(ref _streakOvermaskSprite, "StreakBar", 0);
+
+            _baseOvermaskSprite = _metrics.Setup2DFromMetrics(DeterminePrefix() + "HitsBar", 0);
+            _streakOvermaskSprite = _metrics.Setup2DFromMetrics("StreakBar", 0);
             _baseOvermaskSprite.SpriteTexture = TextureManager.CreateWhiteMask(DeterminePrefix() + "HitsBar");
             _streakOvermaskSprite.SpriteTexture = TextureManager.CreateWhiteMask("StreakBar");
 

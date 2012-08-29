@@ -95,12 +95,7 @@ namespace WGiBeat.Screens
                                   Height = 600,
                                   Width = 800,
                               };
-            _header = new Sprite3D
-                          {
-                              Texture = TextureManager.Textures("MainMenuHeader"),
-                              Position = Core.Metrics["ScreenHeader",0],
-                              Size = Core.Metrics["ScreenHeader.Size",0]
-                          };
+            _header = Core.Metrics.SetupFromMetrics("MainMenuHeader",0);
             _menuOptionSprite = new SpriteMap3D
                                     {
                                         Texture = TextureManager.Textures("MainMenuOption"),

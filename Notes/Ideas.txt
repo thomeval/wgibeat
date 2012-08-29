@@ -7,16 +7,16 @@
 
 - Main menu new layout
   - Record replaying (ghost data)  gfx
-  - Credits screen
-  - Fix instruction screen gfx
-  - HD Header gfx
-   - Arrow truncate bug in Sync Plus mode when level drops.
+
+   
   - BPM meter [!] display and blink.
-  
+  - Install desktop icon
   - Support to remove / add arbitrary beatlines
   - Super beatlines (bonus points, possibly double length)
-    - Level up indicator in evaluation screen. 
+  - Level up indicator in evaluation screen.
+  - Disable highscore / replay saving option.  
   - Mode select screen preview gfx
+  - Mode select options gfx
   - Fix resolution option
 - Transition effects for DrawableObjects.
  - Higher Resolution Textures
@@ -45,7 +45,11 @@
  * New menu sounds for MAIN_MENU_DECIDE and MENU_DECIDE, which suck slightly less than the previous ones. :)
  * Bugfix: Stats screen will now show total play times above 24 hours correctly.
  * The particle field background will now react to the beat in the Song Select Screen. 
- * Updated the How to Play instructions to reflect the WGiBeat Transcedance layout. 
+ * Updated the How to Play instructions to reflect the WGiBeat Transcedance layout.
+ * Screen header graphics have been updated.
+ * A new Credits screen has been added. It is accessible from the Main Menu.  
+ * Added an indicator next to each song listed in the Song Select Screen that indicates the difficulty of that song's current high score.
+ * Bugfix: Arrow sequences are now shortened properly in Sync Plus mode after a MISS judgement.   
      
  ==2.0 A1==
  * New UI (especially for sync mode).
