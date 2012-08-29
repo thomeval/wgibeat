@@ -134,25 +134,26 @@ namespace WGiBeat.Screens
             _songCountBase = new Sprite { SpriteTexture = TextureManager.Textures("SongCountBase"), Position = Core.Metrics["SongCountDisplay", 0] };
         }
 
+        private const int FAIL_GRADE = 18;
         private void CreateSongList()
         {
             _songList.Clear();
-            foreach (GameSong song in Core.Songs.Songs)
+            SongListItem.ClearIndicatorSize = Core.Metrics["SongListItem.ClearIndicatorSize",0];
+            foreach (var song in Core.Songs.Songs)
             {
-                _songList.Add(new SongListItem { Height = 50, Song = song, Width = 380, TextMaxWidth = 325 });
+                var hse = Core.HighScores.GetHighScoreEntry(song.GetHashCode(), HighScoreManager.TranslateGameType((GameType) Core.Cookies["CurrentGameType"]));
+                var clearColour = (hse == null) || (hse.Grade == FAIL_GRADE) ? -1 : (int) hse.Difficulty;
+                _songList.Add(new SongListItem { Size = Core.Metrics["SongListItem.Size",0], Song = song, TextMaxWidth = 325, 
+                    ClearColour= clearColour });
             }
 
             _songSortDisplay.SongList = _songList;
             _songSortDisplay.SongSortMode = Core.Settings.Get<SongSortMode>("LastSortMode");
-       //     _highScoreFrame.HighScoreEntry = GetDisplayedHighScore((GameType)Core.Cookies["CurrentGameType"]);
         }
 
         private void SetCurrentLevelInSongList()
         {
-            foreach (SongListItem sli in _songList)
-            {
-                sli.PlayerLevel = GetPlayerLevel();
-            }
+            SongListItem.PlayerLevel = GetPlayerLevel();      
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
@@ -265,12 +266,9 @@ namespace WGiBeat.Screens
             _listBackend.Draw(spriteBatch);
 
             var midpoint = Core.Metrics["SongListMidpoint", 0];
-            midpoint.Y += (int) _songListDrawOffset;
-
-            if (_songList[_selectedIndex].PlayerLevel != GetPlayerLevel())
-            {
-                SetCurrentLevelInSongList();
-            }
+            midpoint.Y += (int) _songListDrawOffset;    
+            
+            SetCurrentLevelInSongList();          
  
             _songList[_selectedIndex].Position = (midpoint);
             _songList[_selectedIndex].IsSelected = true;
@@ -430,7 +428,6 @@ namespace WGiBeat.Screens
                 player.PlayerOptions.PlayDifficulty = cpuDifficulty;
             }
         }
-
 
         public override void PerformActionReleased(InputAction inputAction)
         {

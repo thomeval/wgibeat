@@ -1,32 +1,31 @@
 
 ==Low Priority==
 - Netplay (major)
+- Mix / nonstop play.
  
 ==WNX==
-- Transition effects for DrawableObjects.
 
-- Evaluation screen redesign / scrolling
-- 3D graphics (fix jerky beatline notes) 
- - Higher Resolution Textures
-- Mix / nonstop play.
- - Replace MENU_DECIDE sfx.
- - Refactor WGiEdit.
- - Support for Stops/BPM Changes in WGiEdit.
-  - Score graph + Level + Life graph (alternating)
-  - Fix crash when enabling full screen.
-  - More size metrics
+- Main menu new layout
+  - Record replaying (ghost data)  gfx
   - Credits screen
-  - Fix resolution option
-  - Level up indicator in evaluation screen. 
-  - Fix Menu object sfx
-  - Fix POF object sfx
+  - Fix instruction screen gfx
+  - HD Header gfx
+   - Arrow truncate bug in Sync Plus mode when level drops.
   - BPM meter [!] display and blink.
+  
   - Support to remove / add arbitrary beatlines
   - Super beatlines (bonus points, possibly double length)
-  - Arrow truncate bug in Sync Plus mode when level drops.
-  - WIN / LOSE / Max GM display in evaluation screen.
-  - Record replaying (ghost data)
-  
+    - Level up indicator in evaluation screen. 
+  - Mode select screen preview gfx
+  - Fix resolution option
+- Transition effects for DrawableObjects.
+ - Higher Resolution Textures
+ - Refactor WGiEdit.
+ - Support for Stops/BPM Changes in WGiEdit.
+   - Fix Menu object sfx
+  - Fix POF object sfx
+  - More size metrics
+     
 ==Delayed==
 - Apparent inconsistency between WGiEdit Step 2 and Step 3 song timing (esp. AudioStart)?
  
@@ -36,8 +35,18 @@
 ==TODO==
 
  ==Done==
- * Fixed FAIL grades not being awarded in Coop mode.
- 
+ * Bugfix: FAIL grades are now awarded correctly in Coop mode.
+ * The evaluation screen now displays the overall performance percentage in Normal Mode, the Peak Groove Momentum in Coop mode, and Win/Lose judgements in Team and VS CPU modes. 
+ * Bugfix: Improved handling of present but blank ID3 tags in WGiEdit.
+ * The evaluation screen can now display life, score and level graphs. Cycle using the BEATLINE key.  
+ * Bugfix: Fixed highscores randomly disappearing, due to a song hashcode bug. Unfortunately, this fix will invalidate existing high scores.
+ * During gameplay, a player's performance can now be tracked in real time against the current high score. A comparison gauge will display will any player is close to the recorded score.
+ * Higher difficulty levels no longer start at level 1 at the beginning of a song. Medium will start with 2, Hard with 3, etc.
+ * New menu sounds for MAIN_MENU_DECIDE and MENU_DECIDE, which suck slightly less than the previous ones. :)
+ * Bugfix: Stats screen will now show total play times above 24 hours correctly.
+ * The particle field background will now react to the beat in the Song Select Screen. 
+ * Updated the How to Play instructions to reflect the WGiBeat Transcedance layout. 
+     
  ==2.0 A1==
  * New UI (especially for sync mode).
  * Arrows on different height depending on their direction.
