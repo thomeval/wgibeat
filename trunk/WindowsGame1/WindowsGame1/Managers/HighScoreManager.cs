@@ -183,6 +183,7 @@ namespace WGiBeat.Managers
         public string PrintHighScores()
         {
             string result = "";
+            int missingCount = 0, scoreCount = 0;
             foreach (HighScoreEntry entry in _highScoreEntries)
             {
                 result+= (entry);
@@ -190,13 +191,16 @@ namespace WGiBeat.Managers
                 if (song == null)
                 {
                     result += "| MISSING";
+                    missingCount++;
                 }
                 else
                 {
                     result += "| " + song.Title;
                 }
+                scoreCount++;
                 result += "\n";
             }
+            result += string.Format("{0} scores, {1} are orphaned.", scoreCount, missingCount);
             return result;
         }
 
@@ -213,6 +217,7 @@ namespace WGiBeat.Managers
             }
             Log.AddMessage(string.Format("Removed {0} stale high scores.",count), LogLevel.DEBUG);
         }
+
         #endregion
     }
 }
