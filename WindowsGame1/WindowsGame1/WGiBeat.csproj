@@ -346,6 +346,9 @@
     <Content Include="Content\Textures\Default\MainGame\NoteJudgements4x.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Textures\Default\MainGame\RecordReplayBarHeader.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Textures\Default\MainGame\RecordReplayBarMiddle.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

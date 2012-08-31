@@ -144,9 +144,9 @@ namespace WGiBeat.AudioSystem
             unchecked
             {
                 int result = (Title != null ? Title.GetHashCode() : 1);
-                result = (result * 397) ^ (Subtitle != null ? Subtitle.GetHashCode() : 0);
-                result = (result*397) ^ (Artist != null ? Artist.GetHashCode() : 0);
-                result = (result * 397) ^ BPMs.GetHashCode();
+                result = (result * 397) ^ (Subtitle != null ? Subtitle.GetHashCode() : 1);
+                result = (result*397) ^ (Artist != null ? Artist.GetHashCode() : 1);
+               
                 foreach (var bpm in BPMs)
                 {
                     result = (result*397) ^ bpm.Key.GetHashCode();
@@ -175,6 +175,41 @@ namespace WGiBeat.AudioSystem
             }
         }
 
+        public int GetHashCodeOld()
+        {
+            unchecked
+            {
+                int result = (Title != null ? Title.GetHashCode() : 1);
+                result = (result * 397) ^ (Subtitle != null ? Subtitle.GetHashCode() : 1);
+                result = (result * 397) ^ (Artist != null ? Artist.GetHashCode() : 1);
+                result = (result*397) ^ BPMs.GetHashCode();
+                foreach (var bpm in BPMs)
+                {
+                    result = (result * 397) ^ bpm.Key.GetHashCode();
+                    result = (result * 397) ^ bpm.Value.GetHashCode();
+                }
+                foreach (var stop in Stops)
+                {
+                    result = (result * 397) ^ stop.Key.GetHashCode();
+                    result = (result * 397) ^ stop.Value.GetHashCode();
+                }
+                foreach (var note in AddNotes)
+                {
+                    result = (result * 397) ^ note.GetHashCode();
+                }
+                foreach (var note in RemoveNotes)
+                {
+                    result = (result * 397) ^ note.GetHashCode();
+                }
+                foreach (var note in SuperNotes)
+                {
+                    result = (result * 397) ^ note.GetHashCode();
+                }
+                result = (result * 397) ^ Offset.GetHashCode();
+                result = (result * 397) ^ Length.GetHashCode();
+                return result;
+            }
+        }
         /// <summary>
         /// Returns a 'blank' GameSong with all fields written with Default values.
         /// Note that no fields are returned null EXCEPT for the DefinitionFile, by design.

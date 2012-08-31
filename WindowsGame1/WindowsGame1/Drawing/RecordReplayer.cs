@@ -54,9 +54,14 @@ namespace WGiBeat.Drawing
                 Columns = 1,
                 Rows = 6
             };
+         
             _middleSprite = new Sprite3D { Texture = TextureManager.Textures("RecordReplayBarMiddle") };
             _rightSprite = new Sprite3D { Texture = TextureManager.Textures("PerformanceBarRight") };
-            _headerSprite = new Sprite3D{ Texture = TextureManager.Textures("PerformanceBarHeader") };
+            _headerSprite = new Sprite3D
+                                {
+                                    Texture = TextureManager.Textures("RecordReplayBarHeader"),
+                                    Size = new Vector2(290,30)
+                                };
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -88,15 +93,21 @@ namespace WGiBeat.Drawing
                 return;
             }
             var ratio = 1.0 * maxScore / _displayedRecordScore;
-
+          
             SetOpacity(ratio, phraseNumber);
             var drawColor = Color.Black;
             drawColor.A = (byte)Opacity;
-            TextureManager.DrawString(spriteBatch, string.Format("Record: {0:F0}", _displayedRecordScore), "LargeFont", position, drawColor, FontAlign.LEFT);
+            position.X += this.Width - _headerSprite.Width;
+            _headerSprite.Position = position.Clone();
+            _headerSprite.ColorShading.A = (byte) Opacity;
+            _headerSprite.Draw();
+     
+            var textPosition = new Vector2(this.X + this.Width - RIGHT_SIDE_WIDTH/2, this.Y - 13 + (_headerSprite.Height/2));
+            TextureManager.DrawString(spriteBatch, string.Format("{0:F0}", _displayedRecordScore), "DefaultFont", textPosition, drawColor, FontAlign.CENTER);
+            position.X = this.X;
             position.Y += 30;
             DrawChallenges(spriteBatch, (long) _displayedRecordScore, position);
         }
-
 
         private void UpdateDisplayedScores(double phraseNumber)
         {
@@ -115,18 +126,18 @@ namespace WGiBeat.Drawing
             }
         }
 
-        private const int SCORE_UPDATE_SPEED = 6;
+        private const int SCORE_UPDATE_SPEED = 12;
         private void AnimateNumber(ref double displayedNumber, double acutalNumber)
         {
         
             var diff = acutalNumber - displayedNumber;
-            if (diff < 0.1)
+            if (diff < 0.5)
             {
                 displayedNumber += diff;
             }
             else
             {
-                displayedNumber += diff*TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds*SCORE_UPDATE_SPEED;
+                displayedNumber += diff*(Math.Min(0.5, TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds*SCORE_UPDATE_SPEED));
             }
         }
 
