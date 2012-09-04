@@ -416,9 +416,10 @@ namespace WGiBeat.Screens
 
         private void DrawBPMMeasurement(SpriteBatch spriteBatch)
         {
-            
-            TextureManager.DrawString(spriteBatch, String.Format("Last hit: {0:F1}", 60 / _beatTimings[0] * 1000), "DefaultFont", Core.Metrics["EditorBPMMeasurements", 0], Color.Black, FontAlign.LEFT);
-            var avgAmount = (_numBeats >= 5) ? String.Format("{0:F1}", 60 / _beatTimings.Take(5).Average() * 1000) : "-----" ;
+
+            var avgAmount = _beatTimings[0] == 0 ? "-----" : string.Format("{0:F1}",60/_beatTimings[0]*1000);
+            TextureManager.DrawString(spriteBatch,  "Last Hit: " + avgAmount, "DefaultFont", Core.Metrics["EditorBPMMeasurements", 0], Color.Black, FontAlign.LEFT);
+             avgAmount = (_numBeats >= 5) ? String.Format("{0:F1}", 60 / _beatTimings.Take(5).Average() * 1000) : "-----" ;
 
             TextureManager.DrawString(spriteBatch, "Last 5 avg: " + avgAmount, "DefaultFont", Core.Metrics["EditorBPMMeasurements", 1], Color.Black, FontAlign.LEFT);
             
