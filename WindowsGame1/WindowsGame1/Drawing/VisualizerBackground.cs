@@ -40,7 +40,6 @@ namespace WGiBeat.Drawing
            
         private Sprite _mySprite;
 
-        private DateTime _lastUpdate;
         private SpectrumDrawer _spectrumDrawer;
         private WaveformDrawer _waveformDrawer;
  
@@ -72,7 +71,6 @@ namespace WGiBeat.Drawing
                 _init = true;
             }
 
-            _lastUpdate = DateTime.Now;
             var diff = Opacity - _displayOpacity;
        
             var changeMx = Math.Min(0.5, TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * OPACITY_CHANGE_SPEED);

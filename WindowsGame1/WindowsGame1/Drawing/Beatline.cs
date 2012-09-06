@@ -121,6 +121,8 @@ namespace WGiBeat.Drawing
     
         }
 
+        public Color Colour { get; set; }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             Draw(spriteBatch, 0.0);
@@ -132,6 +134,9 @@ namespace WGiBeat.Drawing
             {
                 InitSprites();
             }
+            _baseSprite.ColorShading = Colour;
+            _speedScaleSprite.ColorShading = Colour;
+
             DrawSpeedScale(spriteBatch, phraseNumber);
             DrawBase(spriteBatch);
             DrawPlayerIdentifier(spriteBatch);

@@ -13,7 +13,16 @@ namespace WGiBeat.Drawing.Sets
     {
 
         private double _lastBeatlineNote = -1;
+        private double _rainbowPoint;
+
         private readonly Beatline[] _beatlines;
+
+        private readonly Color[] _blazingColors = {
+                                                      new Color(255, 128, 128),
+                                                      new Color(128, 255, 128),
+                                                      new Color(128, 128, 255),
+                                                      new Color(255, 128, 128)
+                                                  };
 
         private double _bpm;
         public double Bpm
@@ -85,12 +94,24 @@ namespace WGiBeat.Drawing.Sets
                 if (Players[x].Playing)
                 {
                     SetBeatlineSpeed(x);
-
+                    _beatlines[x].Colour = GetBeatlineColour(x);
                     _beatlines[x].DisablePulse = Players[x].KO;
                     _beatlines[x].Draw(spriteBatch, phraseNumber);
                 }
             }
 
+        }
+
+        private Color GetBeatlineColour(int player)
+        {
+            if (Players[player].IsBlazing || SyncGameType && Players[0].IsBlazing)
+            {
+                _rainbowPoint = (_rainbowPoint + TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * 2) % 3;
+                return Color.Lerp(_blazingColors[(int)Math.Floor(_rainbowPoint)], _blazingColors[(int)Math.Ceiling(_rainbowPoint)],
+                                                      (float)(_rainbowPoint - Math.Floor(_rainbowPoint)));
+            }
+
+            return Color.White;
         }
 
         private void SetBeatlineSpeed(int x)
