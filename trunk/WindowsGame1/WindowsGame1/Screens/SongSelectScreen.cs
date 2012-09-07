@@ -178,12 +178,15 @@ namespace WGiBeat.Screens
             _songSortDisplay.Draw(spriteBatch);
 
             //TODO: Debug info
+            /*
             var scores = Core.HighScores.PrintHighScores();
             if (scores.LastIndexOf('\n') == -1)
             {
                 return;
             }
             TextureManager.DrawString(spriteBatch,scores.Substring(scores.LastIndexOf('\n')),"DefaultFont",new Vector2(30,120),Color.Black,FontAlign.LEFT );
+            TextureManager.DrawString(spriteBatch, "SongID: " + CurrentSong.GetHashCode(), "DefaultFont", new Vector2(30, 150), Color.Black, FontAlign.LEFT);
+             */
         }
 
         private void DrawSongCount(SpriteBatch spriteBatch)
