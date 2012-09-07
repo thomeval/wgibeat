@@ -888,7 +888,7 @@ namespace WGiBeat.Screens
                     {
                         Core.Songs.RemoveSong(oldSongFile);
                     }
-                    Core.Songs.AddSong(NewGameSong);
+                    Core.Songs.AddSong(Core.Songs.LoadFromFile(NewGameSong.Path + "\\" + NewGameSong.DefinitionFile, true));
                     _cursorPosition = EditorCursorPosition.DONE;
                     _songPlaying = false;
                     Core.Log.AddMessage(String.Format("SongFile '{0}' was saved successfully!", NewGameSong.DefinitionFile),LogLevel.DEBUG);
