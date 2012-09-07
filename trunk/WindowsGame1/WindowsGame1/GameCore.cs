@@ -51,7 +51,7 @@ namespace WGiBeat
         private GamePadState[] _lastGamePadState;
         public string WgibeatRootFolder;
 
-        public const string VERSION_STRING = "v2.0 a2 pre";
+        public const string VERSION_STRING = "v2.0 a2";
         private GameCore()
         {
             GraphicsManager = new GraphicsDeviceManager(this);
