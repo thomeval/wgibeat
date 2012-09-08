@@ -38,21 +38,25 @@
 ==TODO==
 
  ==Done==
- * Bugfix: FAIL grades are now awarded correctly in Coop mode.
+ 
+ ==2.0 A2 - "Continued Habit" ==
  * The evaluation screen now displays the overall performance percentage in Normal Mode, the Peak Groove Momentum in Coop mode, and Win/Lose judgements in Team and VS CPU modes. 
- * Bugfix: Improved handling of present but blank ID3 tags in WGiEdit.
  * The evaluation screen can now display life, score and level graphs. Cycle using the BEATLINE key.  
- * Bugfix: Fixed highscores randomly disappearing, due to a song hashcode bug. Unfortunately, this fix will invalidate existing high scores.
- * During gameplay, a player's performance can now be tracked in real time against the current high score. A comparison gauge will display will any player is close to the recorded score.
+ * During gameplay, a player's performance can now be tracked in real time against the current high score. A comparison gauge will display when any player is close to the recorded score.
  * Higher difficulty levels no longer start at level 1 at the beginning of a song. Medium will start with 2, Hard with 3, etc.
  * New menu sounds for MAIN_MENU_DECIDE and MENU_DECIDE, which suck slightly less than the previous ones. :)
- * Bugfix: Stats screen will now show total play times above 24 hours correctly.
  * The particle field background will now react to the beat in the Song Select Screen. 
- * Updated the How to Play instructions to reflect the WGiBeat Transcedance layout.
- * Screen header graphics have been updated.
+ * Updated the How to Play instructions to reflect the WGiBeat Transcendence layout.
+ * Screen header graphics and main menu screen graphics have been updated.
  * A new Credits screen has been added. It is accessible from the Main Menu.  
  * Added an indicator next to each song listed in the Song Select Screen that indicates the difficulty of that song's current high score.
- * Bugfix: Arrow sequences are now shortened properly in Sync Plus mode after a MISS judgement.   
+ * A new animation has been added to the beatline frames when players activate Blazing Mode. 
+ * Bugfix: Arrow sequences are now shortened properly in Sync Plus mode after a MISS judgement.
+ * Bugfix: Songs created in WGiEdit will now have their high scores saved properly when played immediately after creation.    
+ * Bugfix: FAIL grades are now awarded correctly in Coop mode.
+ * Bugfix: Improved handling of present but blank ID3 tags in WGiEdit.
+ * Bugfix: Stats screen will now show total play times above 24 hours correctly.
+ * Bugfix: Fixed highscores randomly disappearing, due to a song hashcode bug. Unfortunately, this fix will invalidate existing high scores.
      
  ==2.0 A1==
  * New UI (especially for sync mode).
