@@ -1,2 +1,2 @@
-2.0 a1
-This alpha release features a redesigned UI, background animation, blazing bass boost, a new Sync Plus game mode and much more.
+2.0 a2
+This alpha release fixes several major bugs while adding several minor new features, detailed on the website wiki.

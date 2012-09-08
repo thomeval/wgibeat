@@ -60,11 +60,13 @@ namespace WGiBeat.Drawing
         {           
             _beatlineNotes = new List<BeatlineNote>();
             _notesToRemove = new List<BeatlineNote>();
+            Colour = Color.White;
         }
 
         private void InitSprites()
         {
      
+            
             _markerSprite = new SpriteMap3D
             {
                 Columns = 1,
