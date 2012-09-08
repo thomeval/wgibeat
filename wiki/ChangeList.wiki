@@ -2,7 +2,7 @@
 
 =Version History=
 
-==2.0 Alpha 2 (r618) - "Continued Habit"==
+==2.0 Alpha 2 (r623) - "Continued Habit"==
  * The evaluation screen now displays the overall performance percentage in Normal Mode, the Peak Groove Momentum in Coop mode, and Win/Lose judgements in Team and VS CPU modes. 
  * The evaluation screen can now display life, score and level graphs. Cycle using the BEATLINE key.  
  * During gameplay, a player's performance can now be tracked in real time against the current high score. A comparison gauge will display when any player is close to the recorded score.
