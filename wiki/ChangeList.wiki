@@ -2,6 +2,25 @@
 
 =Version History=
 
+==2.0 Alpha 2 (r618) - "Continued Habit"==
+ * The evaluation screen now displays the overall performance percentage in Normal Mode, the Peak Groove Momentum in Coop mode, and Win/Lose judgements in Team and VS CPU modes. 
+ * The evaluation screen can now display life, score and level graphs. Cycle using the BEATLINE key.  
+ * During gameplay, a player's performance can now be tracked in real time against the current high score. A comparison gauge will display when any player is close to the recorded score.
+ * Higher difficulty levels no longer start at level 1 at the beginning of a song. Medium will start with 2, Hard with 3, etc.
+ * New menu sounds for MAIN_MENU_DECIDE and MENU_DECIDE, which suck slightly less than the previous ones.
+ * The particle field background will now react to the beat in the Song Select Screen. 
+ * Updated the How to Play instructions to reflect the WGiBeat Transcendence layout.
+ * Screen header graphics and main menu screen graphics have been updated.
+ * A new Credits screen has been added. It is accessible from the Main Menu.  
+ * Added an indicator next to each song listed in the Song Select Screen that indicates the difficulty of that song's current high score.
+ * A new animation has been added to the beatline frames when players activate Blazing Mode. 
+ * Bugfix: Arrow sequences are now shortened properly in Sync Plus mode after a MISS judgement.
+ * Bugfix: Songs created in WGiEdit will now have their high scores saved properly when played immediately after creation.    
+ * Bugfix: FAIL grades are now awarded correctly in Coop mode.
+ * Bugfix: Improved handling of present but blank ID3 tags in WGiEdit.
+ * Bugfix: Stats screen will now show total play times above 24 hours correctly.
+ * Bugfix: Fixed highscores randomly disappearing, due to a song hashcode bug. Unfortunately, this fix will invalidate existing high scores.
+
 ==2.0 Alpha 1 (r604) - "Able Engineering"==
  * The UI of the main gameplay screen has been completely redesigned. In addition, Sync Mode has received its own UI redesign.
  * Arrows now scroll as they are completed and are drawn on different height depending on their direction, making sequences much easier to read.
