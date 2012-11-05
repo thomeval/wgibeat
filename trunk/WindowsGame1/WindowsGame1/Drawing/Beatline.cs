@@ -70,7 +70,7 @@ namespace WGiBeat.Drawing
             _markerSprite = new SpriteMap3D
             {
                 Columns = 1,
-                Rows = 5,
+                Rows = 6,
                 Texture = TextureManager.Textures("BeatMarkers"),
 
             };
@@ -127,30 +127,31 @@ namespace WGiBeat.Drawing
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Draw(spriteBatch, 0.0);
+            Draw(0.0);
         }
 
-        public void Draw(SpriteBatch spriteBatch, double phraseNumber)
+        public void Draw(double phraseNumber)
         {
             if (_baseSprite == null)
             {
                 InitSprites();
+                
             }
             _baseSprite.ColorShading = Colour;
             _speedScaleSprite.ColorShading = Colour;
 
-            DrawSpeedScale(spriteBatch, phraseNumber);
-            DrawBase(spriteBatch);
-            DrawPlayerIdentifier(spriteBatch);
-            DrawPulses(spriteBatch, phraseNumber);
-            DrawNotes(spriteBatch, phraseNumber);
+            DrawSpeedScale(phraseNumber);
+            DrawBase();
+            DrawPlayerIdentifier();
+            DrawPulses(phraseNumber);
+            DrawNotes(phraseNumber);
 
             var diff = Speed - _displayedSpeed;
             var changeMx = Math.Min(1, TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * SPEED_CHANGE_SPEED);
             _displayedSpeed += diff*(changeMx);
         }
 
-        private void DrawSpeedScale(SpriteBatch spriteBatch, double phraseNumber)
+        private void DrawSpeedScale(double phraseNumber)
         {
             const int TEXTURE_WIDTH = 240;
             var textureOffset = ((phraseNumber - Math.Floor(phraseNumber)) * TEXTURE_WIDTH) + 2;
@@ -163,7 +164,7 @@ namespace WGiBeat.Drawing
             
         }
 
-        private void DrawPlayerIdentifier(SpriteBatch spriteBatch)
+        private void DrawPlayerIdentifier()
         {
             _indicatorPosition.Y = this.Y + this.Height - IdentifierSize.Y - 5;
      
@@ -171,7 +172,7 @@ namespace WGiBeat.Drawing
             _playerIdentifiers.Draw(Id, IdentifierSize.X, IdentifierSize.Y,_indicatorPosition);
         }
 
-        private void DrawPulses(SpriteBatch spriteBatch, double phraseNumber)
+        private void DrawPulses(double phraseNumber)
         {
             if (DisablePulse)
             {
@@ -201,7 +202,7 @@ namespace WGiBeat.Drawing
             _pulseBack.Draw(Id, this.Width, pulseHeight, pulsePosition);
         }
 
-        private void DrawNotes(SpriteBatch spriteBatch, double phraseNumber)
+        private void DrawNotes(double phraseNumber)
         {
             foreach (BeatlineNote bn in _beatlineNotes)
             {
@@ -224,7 +225,10 @@ namespace WGiBeat.Drawing
                 switch (bn.NoteType)
                 {
                     case BeatlineNoteType.NORMAL:
-                        noteIdx = bn.Player;
+                        noteIdx = this.Id;
+                        break;
+                    case BeatlineNoteType.SUPER:
+                        noteIdx = 5;
                         break;
                     case BeatlineNoteType.END_OF_SONG:
                     case BeatlineNoteType.BPM_INCREASE:
@@ -238,7 +242,7 @@ namespace WGiBeat.Drawing
                 _markerSprite.Draw(noteIdx, width, markerHeight,markerPosition);
      
                 //Draw the effect icon on top of the marker if appropriate (such as a BPM change arrow)
-                if (bn.NoteType != 0)
+                if ((bn.NoteType != BeatlineNoteType.NORMAL) && (bn.NoteType != BeatlineNoteType.SUPER))
                 {
                     _beatlineEffects.ColorShading.A = (byte) (_markerSprite.ColorShading.A  * 0.8);
                     _beatlineEffects.Draw((int)bn.NoteType - 1, EffectIconSize, new Vector2(markerPosition.X - EffectIconSize.X / 2.0f,markerPosition.Y));
@@ -300,18 +304,20 @@ namespace WGiBeat.Drawing
             return result;
         }
 
-        private void DrawBase(SpriteBatch spriteBatch)
+        private void DrawBase()
         {
            _baseSprite.Draw();
         }
 
         public void AddBeatlineNote(BeatlineNote bln)
         {
+            
             _beatlineNotes.Insert(0,bln);
         }
 
         public void InsertBeatlineNote(BeatlineNote bln, int index)
         {
+       
             _beatlineNotes.Insert(index,bln);
         }
         public void RemoveAll()
@@ -357,7 +363,7 @@ namespace WGiBeat.Drawing
 
         public BeatlineNote NearestBeatlineNote(double phraseNumber)
         {
-            return (from e in _beatlineNotes where (!e.Hit && e.NoteType == BeatlineNoteType.NORMAL) orderby CalculateHitOffset(e, phraseNumber) select e).FirstOrDefault();
+            return (from e in _beatlineNotes where (!e.Hit && e.CanBeHit) orderby CalculateHitOffset(e, phraseNumber) select e).FirstOrDefault();
         }
 
         private int CalculateAbsoluteBeatlinePosition(double position, double phraseNumber)

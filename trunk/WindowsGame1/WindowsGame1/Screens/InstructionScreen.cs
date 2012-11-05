@@ -88,7 +88,7 @@ namespace WGiBeat.Screens
                  _lastBeatline++;
             }
             
-           _beatline.Draw(spriteBatch,_phraseNumber);
+           _beatline.Draw(_phraseNumber);
             _beatline.TrimExpired(_phraseNumber);
         }
 

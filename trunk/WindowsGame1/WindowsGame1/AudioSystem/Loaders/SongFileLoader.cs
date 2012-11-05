@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using WGiBeat.Managers;
 
 namespace WGiBeat.AudioSystem.Loaders
@@ -81,9 +82,38 @@ namespace WGiBeat.AudioSystem.Loaders
 
             sw.WriteLine(SaveSongStops(song));
             sw.WriteLine(SaveSongBackground(song));
+            sw.WriteLine(SaveSongNotes(song));
             sw.Close();
             
             Log.AddMessage(String.Format("Song file saved successfully: {0}\\{1}",song.Path,song.DefinitionFile),LogLevel.INFO);
+        }
+
+        private string SaveSongNotes(GameSong song)
+        {
+            var result = "";
+            if (song.AddNotes.Count > 0)
+            {
+                result += "AddNotes=";
+                result = song.AddNotes.Aggregate(result, (current, note) => current + string.Format("{0:F3},", note));
+                result = result.TrimEnd(',');
+                result += ";\n";
+            }
+
+            if (song.RemoveNotes.Count > 0)
+            {
+                result += "RemoveNotes=";
+                result = song.RemoveNotes.Aggregate(result, (current, note) => current + string.Format("{0:F3},", note));
+                result = result.TrimEnd(',');
+                result += ";\n";
+            }
+            if (song.SuperNotes.Count > 0)
+            {
+                result += "SuperNotes=";
+                result = song.SuperNotes.Aggregate(result, (current, note) => current + string.Format("{0:F3},", note));
+                result = result.TrimEnd(',');
+                result += ";\n";
+            }
+            return result;
         }
 
         private string SaveSongBackground(GameSong song)

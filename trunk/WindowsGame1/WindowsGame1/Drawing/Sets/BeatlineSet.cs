@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.AudioSystem;
@@ -39,17 +41,10 @@ namespace WGiBeat.Drawing.Sets
         }
 
 
-
-        private double _endingPhrase;
-        public double EndingPhrase
-        {
-            get { return _endingPhrase; }
-            set
-            {
-                _endingPhrase = value;
-
-            }
-        }
+        public double EndingPhrase { get; set; }
+        public IEnumerable<double> AddNotes { get; set; }
+        public IEnumerable<double> RemoveNotes { get; set; }
+        public IEnumerable<double> SuperNotes { get; set; } 
 
         public event EventHandler NoteMissed;
         public event EventHandler CPUNoteHit;
@@ -60,7 +55,10 @@ namespace WGiBeat.Drawing.Sets
         {
             _beatlines = new Beatline[4];
             var visibleCount = 0;
-            
+            AddNotes = new double[0];
+            RemoveNotes = new double[0];
+            SuperNotes = new double[0];
+
             for (int x = 0; x < 4; x++)
             {
               
@@ -96,7 +94,7 @@ namespace WGiBeat.Drawing.Sets
                     SetBeatlineSpeed(x);
                     _beatlines[x].Colour = GetBeatlineColour(x);
                     _beatlines[x].DisablePulse = Players[x].KO;
-                    _beatlines[x].Draw(spriteBatch, phraseNumber);
+                    _beatlines[x].Draw(phraseNumber);
                 }
             }
 
@@ -154,7 +152,7 @@ namespace WGiBeat.Drawing.Sets
                     _beatlines[x].RemoveAll();
                 }
                 var missedNotes = _beatlines[x].TrimExpired(phraseNumber);
-                // _beatlines[x].Id = x;
+            
                 for (int y = 0; y < missedNotes; y++)
                 {
                     if (NoteMissed != null)
@@ -163,8 +161,8 @@ namespace WGiBeat.Drawing.Sets
                     }
                 }
             }
-
-            GenerateMoreBeatlineNotes(phraseNumber);
+//
+  //          GenerateMoreBeatlineNotes(phraseNumber);
 
         }
 
@@ -177,62 +175,111 @@ namespace WGiBeat.Drawing.Sets
                 _lastBeatlineNote++;
                 for (int x = 0; x < 4; x++)
                 {
-                    if ((!Players[x].KO) && (Players[x].Playing))
+                    if ((!Players[x].KO) && (Players[x].Playing) && (!RemoveNotes.Contains(_lastBeatlineNote)))
                     {
-                        _beatlines[x].AddBeatlineNote(new BeatlineNote { Player = x, Position = _lastBeatlineNote, NoteType = BeatlineNoteType.NORMAL });
+                        _beatlines[x].AddBeatlineNote(new BeatlineNote {Position = _lastBeatlineNote, NoteType = BeatlineNoteType.NORMAL });
                     }
                 }
             }
         }
-
+        
 
         public void AddTimingPointMarkers(GameSong song)
         {
-            foreach (Beatline bl in _beatlines)
+            for (int index = 0; index < _beatlines.Length; index++)
             {
-                if (EndingPhrase != 0.0)
+                if (!Players[index].Playing)
                 {
-                    bl.AddBeatlineNote(new BeatlineNote
-                                           {
-                                               Player = -1,
-                                               NoteType = BeatlineNoteType.END_OF_SONG,
-                                               Position = EndingPhrase
-                                           });
+                    continue;
                 }
-                double prev = song.BPMs[0.0];
-                foreach (double bpmKey in song.BPMs.Keys)
+                var bl = _beatlines[index];
+                GenerateStandardNotes(song, bl);
+                GenerateSongEndNote(song, bl);
+                GenerateBPMChangeNotes(song, bl);
+                GenerateStopNotes(song, bl);
+            }
+        }
+
+        public BeatlineNote NearestBeatlineNote(int player, double phraseNumber)
+        {
+            return _beatlines[player].NearestBeatlineNote(phraseNumber);
+        }
+        private void GenerateStandardNotes(GameSong song, Beatline bl)
+        {
+
+            for (int beat = 0; beat < song.GetEndingTimeInPhrase(); beat++ )
+            {
+                if (song.RemoveNotes.Contains(beat))
                 {
-                    if (bpmKey == 0.0)
-                    {
-                        continue;
-                    }
-
-                    //Don't mark a BPM change if there isn't actually a change in the BPM.
-                    if (song.BPMs[bpmKey] == prev)
-                    {
-                        continue;
-                    }
-
-                    var noteType = song.BPMs[bpmKey] > prev
-                                       ? BeatlineNoteType.BPM_INCREASE
-                                       : BeatlineNoteType.BPM_DECREASE;
-
-
-                    bl.InsertBeatlineNote(new BeatlineNote { Player = -1, NoteType = noteType, Position = bpmKey }, 0);
-
-
-                    prev = song.BPMs[bpmKey];
-
+                    continue;
                 }
-
-                foreach (double stopKey in song.Stops.Keys)
+                if (song.SuperNotes.Contains(beat))
                 {
-                    bl.InsertBeatlineNote(
-                        new BeatlineNote { Player = -1, NoteType = BeatlineNoteType.STOP, Position = stopKey }, 0);
+                    continue;
                 }
+               bl.AddBeatlineNote(new BeatlineNote { Position = beat});
+
+            }
+             
+            foreach (var pos in song.AddNotes)
+            {
+                bl.AddBeatlineNote(new BeatlineNote{Position = pos});
             }
 
+            foreach (var pos in song.SuperNotes)
+            {
+                bl.AddBeatlineNote(new BeatlineNote { Position = pos, NoteType=BeatlineNoteType.SUPER });
+            }
+                  
         }
+
+        private void GenerateSongEndNote(GameSong song, Beatline bl)
+        {
+                bl.AddBeatlineNote(new BeatlineNote
+                                       {
+                                           NoteType = BeatlineNoteType.END_OF_SONG,
+                                           Position = song.GetEndingTimeInPhrase()
+                                       });
+ 
+        }
+
+        private static void GenerateBPMChangeNotes(GameSong song, Beatline bl)
+        {
+            double prev = song.BPMs[0.0];
+            foreach (double bpmKey in song.BPMs.Keys)
+            {
+                if (bpmKey == 0.0)
+                {
+                    continue;
+                }
+
+                //Don't mark a BPM change if there isn't actually a change in the BPM.
+                if (song.BPMs[bpmKey] == prev)
+                {
+                    continue;
+                }
+
+                var noteType = song.BPMs[bpmKey] > prev
+                                   ? BeatlineNoteType.BPM_INCREASE
+                                   : BeatlineNoteType.BPM_DECREASE;
+
+
+                bl.InsertBeatlineNote(new BeatlineNote {NoteType = noteType, Position = bpmKey}, 0);
+
+
+                prev = song.BPMs[bpmKey];
+            }
+        }
+
+        private static void GenerateStopNotes(GameSong song, Beatline bl)
+        {
+            foreach (var stopKey in song.Stops.Keys)
+            {
+                bl.InsertBeatlineNote(
+                    new BeatlineNote {NoteType = BeatlineNoteType.STOP, Position = stopKey }, 0);
+            }
+        }
+
         public BeatlineNoteJudgement AwardJudgement(double phraseNumber, int player, bool completed)
         {
             var result = _beatlines[player].DetermineJudgement(phraseNumber, completed);
