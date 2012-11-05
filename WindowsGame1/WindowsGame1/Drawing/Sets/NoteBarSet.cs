@@ -129,7 +129,7 @@ namespace WGiBeat.Drawing.Sets
             for (int x = 0; x < _noteBars.Length; x++)
             {
               
-                CreateNextNoteBar(x);
+                CreateNextNoteBar(x, false);
                 _noteBars[x].RednessSprite =  new Sprite
                                                   {
                     ColorShading = Color.Red,
@@ -230,16 +230,20 @@ namespace WGiBeat.Drawing.Sets
             return _noteBars[player].AllCompleted();
         }
 
-        public void CreateNextNoteBar(int player)
+        public void CreateNextNoteBar(int player, bool isSuper)
         {
             if (player == (int) AggregatorPlayerID.ALL)
             {
                 player = 0;
             }
             //Create next note bar.
-            var numArrow = _gameType == GameType.SYNC_PLUS ? SyncPlusLevel : (int) Players[player].Level;
+            var numArrow = _gameType == GameType.SYNC_PLUS ? SyncPlusLevel : (int) Players[player].Level;         
             int numReverse = GetReverseNoteCount(player);
-
+            if (isSuper)
+            {
+                numArrow *= 2;
+                numReverse *= 2;
+            }
             _noteBars[player] = NoteBar.CreateNoteBar(numArrow, numReverse, SyncGameType ? _metrics["SyncNoteBar", _syncNotebarPositions[player]] : _metrics["NoteBar", player]);
             _noteBars[player].DisplayLimit = numArrow;
             _noteBars[player].ID = player;

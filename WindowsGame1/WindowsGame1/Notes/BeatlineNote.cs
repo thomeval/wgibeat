@@ -8,9 +8,9 @@ namespace WGiBeat.Notes
     /// </summary>
     public class BeatlineNote
     {
+        public bool CanBeHit {get { return NoteType == BeatlineNoteType.NORMAL || NoteType == BeatlineNoteType.SUPER; }}
         public double Opacity { get; set; }
 
-        public int Player { get; set; }
         public double Position { get; set; }
         public int DisplayPosition { get; set; }
         //Whether this BeatlineNote has been hit already.
@@ -38,6 +38,7 @@ namespace WGiBeat.Notes
         END_OF_SONG = 1,
         BPM_INCREASE = 2,
         BPM_DECREASE = 3,
-        STOP = 4
+        STOP = 4,
+        SUPER = 5
     }
 }

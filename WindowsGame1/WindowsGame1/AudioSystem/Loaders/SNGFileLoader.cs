@@ -88,6 +88,15 @@ namespace WGiBeat.AudioSystem.Loaders
                         case "REQUIREDLEVEL":
                             _newSong.RequiredLevel = Convert.ToInt32(value);
                             break;
+                        case "ADDNOTES":
+                            _newSong.AddNotes = ToDoubleArray(value.Split(','));
+                            break;
+                        case "REMOVENOTES":
+                            _newSong.RemoveNotes = ToDoubleArray(value.Split(','));
+                            break;
+                        case "SUPERNOTES":
+                            _newSong.SuperNotes = ToDoubleArray(value.Split(','));
+                            break;
                     }
                 }
 
@@ -106,6 +115,22 @@ namespace WGiBeat.AudioSystem.Loaders
             }
 
             return _newSong;
+        }
+
+        private List<double> ToDoubleArray(IEnumerable<string> strings)
+        {
+            //Example: 3,5,8,12,13.5
+            var result = new List<double>();
+
+            foreach (var str in strings)
+            {
+                double temp;
+                if (Double.TryParse(str,out temp))
+               {
+                   result.Add(temp);
+               }
+            }
+            return result;            
         }
 
         private void ParseBPMs(string value)

@@ -164,7 +164,7 @@ namespace WGiBeat.Screens
             }
             else
             {
-                _noteBarSet.CreateNextNoteBar((int)ar.Player);
+                _noteBarSet.CreateNextNoteBar((int)ar.Player, IsNextNoteSuper((int) ar.Player));
             }
          
         }
@@ -576,9 +576,15 @@ namespace WGiBeat.Screens
 
             //Award Score
             ApplyJudgement(judgement, player, 1);
-            _noteBarSet.CreateNextNoteBar(player);
+            _noteBarSet.CreateNextNoteBar(player, IsNextNoteSuper(player));
             Core.Players[player].NextCPUJudgement = Core.CPUManager.GetNextJudgement(Core.Cookies["CPUSkillLevel"].ToString(), Core.Players[player].Streak);
             
+        }
+
+        private bool IsNextNoteSuper(int player)
+        {
+            var result = _beatlineSet.NearestBeatlineNote(player, _phraseNumber);
+            return result != null && result.NoteType == BeatlineNoteType.SUPER;
         }
 
         #endregion
