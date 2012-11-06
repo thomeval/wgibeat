@@ -1,5 +1,7 @@
 #summary An explanation on how to add downloaded songs (such as song packs) to WGiBeat
 
-= Introduction =
+= Basics =
 
-Page under construction.
+WGiBeat songs are normally stored in a Songs folder. This folder is created as part of the installation process.
+
+Inside this folder, individual songs can be located in any number of subfolders as desired, as long as each song's definition file (.sng, .sm or .dwi) and its corresponding audio file (.mp3 or .ogg) are in the same folder. Songs provided on the WGiBeat website are usually arranged into sub folders for each artist.
