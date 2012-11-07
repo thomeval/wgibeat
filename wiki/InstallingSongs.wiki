@@ -1,4 +1,5 @@
 #summary An explanation on how to add downloaded songs (such as song packs) to WGiBeat
+#labels Featured,Documentation
 
 = Basics =
 
@@ -14,4 +15,4 @@ Songs created with WGiEdit (the song editor), are stored in the sub folder speci
 
 = Advanced = 
 
-If desired, the location of the WGiBeat Songs folder can be changed to any other folder that WGiBeat has read/write access to, by changing the SongFolder line in the settings.txt file. It is also possible to use multiple song folders - see the [TipsAndTricks page] for more information.
+If desired, the location of the WGiBeat Songs folder can be changed to any other folder that WGiBeat has read/write access to, by changing the SongFolder line in the settings.txt file. It is also possible to use multiple song folders - see the [TipsAndTricks Tips and Tricks page] for more information.
