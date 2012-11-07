@@ -48,7 +48,7 @@ WGiBeat v0.7 has introduced a new feature to allow for quicker song list navigat
 When the song sort order is set to BPM, a list of common BPM's will be displayed in a similar fashion. Selecting one will cause the song list to jump to the first song that has a BPM equal to or faster than the selected BPM.
 
 ==Adding Menu Music==
-WGiBeat can play any provided audio as menu music during the game's various screens. By default, no menu music is provided. To add menu music, edit the !MusicList.txt file inside the !MenuMusic folder. This file defines which audio file should be played for each screen. The format of this file is as follows:
+WGiBeat can play any provided audio as menu music during the game's various screens. Since v1.0, menu music is included with all installations of the game. To add your own menu music, edit the !MusicList.txt file inside the !MenuMusic folder. This file defines which audio file should be played for each screen. The format of this file is as follows:
 
 {{{
 #MUSICLIST-1.0;
@@ -63,7 +63,7 @@ MainMenu=MyBackgroundMusic.mp3;
 Similar to game songs, .mp3, .ogg, .wma or .wav files can be used for menu music. The same audio can be used for any number of screens.
 
 ==Adding Menu Sound Effects==
-WGiBeat can also play any provided audio as sound effects during the game's various screens, since v0.9. By default, no sound effects are provided. To add sound effects, edit the !MenuSounds.txt file inside the Content\!SoundEffects\Default folder. This file defines which audio file should be played for each event. The format of this file is as follows:
+WGiBeat can also play any provided audio as sound effects during the game's various screens, since v0.9. Since v1.0, menu sounds are included in all installations of the game. To add your own sound effects, edit the !MenuSounds.txt file inside the Content\!SoundEffects\Default folder. This file defines which audio file should be played for each event. The format of this file is as follows:
 
 {{{
 #MENUSOUNDS-1.0;
