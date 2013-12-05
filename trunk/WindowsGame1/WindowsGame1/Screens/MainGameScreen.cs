@@ -32,6 +32,7 @@ namespace WGiBeat.Screens
         private BeatlineHitAggregator _hitAggregator;
         private VisualizerBackground _visualBackground;
         private RecordReplayer _recordReplayer;
+        private SongTimeLine _songTimeLine;
 
         private PerformanceBar _performanceBar;
         private GrooveMomentumBarSet _gmBarSet;
@@ -77,6 +78,7 @@ namespace WGiBeat.Screens
             _noteBarSet = new NoteBarSet(Core.Metrics, Core.Players, currentGameType);
             _noteBarSet.PlayerFaulted += (PlayerFaulted);
             _noteBarSet.PlayerArrowHit += (PlayerArrowHit);
+            _songTimeLine = new SongTimeLine {Position = new Vector2(365, 530), Size = new Vector2(370, 80)};
 
             _beatlineSet.NoteMissed += BeatlineNoteMissed;
             _beatlineSet.CPUNoteHit += BeatlineNoteCPUHit;
@@ -616,12 +618,24 @@ namespace WGiBeat.Screens
             {
                 DrawCountdowns(spriteBatch);
             }
-
+            DrawSongTimeLine(spriteBatch);
             DrawKOIndicators(spriteBatch);
             DrawSongInfo(spriteBatch);
             DrawClearIndicators(spriteBatch);
             DrawText(spriteBatch);
+           
             
+        }
+
+        private void DrawSongTimeLine(SpriteBatch spriteBatch)
+        {
+            if (!Core.Settings.Get<bool>("SongDebug"))
+            {
+                _songTimeLine.Song = _gameSong;
+                _songTimeLine.CurrentPosition = _gameSong.ConvertPhraseToMS(_phraseNumber) / 1000;
+                _songTimeLine.AudioEnd = Core.Audio.GetChannelLength((int) Core.Cookies["GameSongChannel"]) / 1000;               
+                _songTimeLine.Draw(spriteBatch);
+            }
         }
 
         private readonly Color[] _visualizerColors = {
@@ -727,6 +741,7 @@ namespace WGiBeat.Screens
             scale = TextureManager.ScaleTextToFit(_gameSong.Artist, "DefaultFont", 310, 100);
             TextureManager.DrawString(spriteBatch, _gameSong.Artist, "DefaultFont", 
                 Core.Metrics["SongArtist", 0],scale, Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, String.Format("{0:F2}", _phraseNumber), "DefaultFont", Core.Metrics["SongDebugPhrase", 0], Color.Black, FontAlign.LEFT);
         }
 
         private void DrawText(SpriteBatch spriteBatch)
@@ -740,7 +755,7 @@ namespace WGiBeat.Screens
 
         private void DrawDebugText(SpriteBatch spriteBatch)
         {
-            TextureManager.DrawString(spriteBatch,String.Format("{0:F3}", _phraseNumber), "DefaultFont", Core.Metrics["SongDebugPhrase", 0], Color.Black,FontAlign.LEFT);
+
             TextureManager.DrawString(spriteBatch, String.Format("BPM: {0:F2}", _beatlineSet.Bpm),
        "DefaultFont", Core.Metrics["SongDebugBPM", 0], Color.Black, FontAlign.LEFT);
             TextureManager.DrawString(spriteBatch, String.Format("Offset: {0:F3}", _gameSong.Offset),

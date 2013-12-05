@@ -102,7 +102,7 @@ namespace WGiBeat.Screens
             _noteJudgementSet = new NoteJudgementSet(Core.Metrics,Core.Players,GameType.NORMAL,null,null);
             _countdownSet = new CountdownSet(Core.Metrics, Core.Players, GameType.NORMAL);
             _songTimeLine = new SongTimeLine
-                                {Height = 60, Width = 780, Position = Core.Metrics["EditorSongTimeLine", 0]};
+                                {Height = 60, Width = 780, Position = Core.Metrics["EditorSongTimeLine", 0], ShowLabels=true};
             _songTypeDisplay = new SongTypeDisplay { Position = Core.Metrics["EditorSongTypeDisplay", 0], Width = 155, Height = 40 };
             _fileSelect.SoundEventTriggered += (s, e) => RaiseSoundTriggered((SoundEvent) e.Object);
         }
@@ -387,21 +387,24 @@ namespace WGiBeat.Screens
             _songTimeLine.AudioStart = null;
             _songTimeLine.Length = null;
             _songTimeLine.Offset = null;
-
+            _songTimeLine.CurrentPosition = null;
             switch (_cursorPosition)
             {
                 case EditorCursorPosition.MEASURE_AUDIO_START:
                     _songTimeLine.AudioStart = _timeElapsed / 1000;
+                    _songTimeLine.CurrentPosition = _timeElapsed / 1000;
                     break;
                 case EditorCursorPosition.MEASURE_LENGTH:
                     _songTimeLine.Length = _timeElapsed / 1000;
+                    _songTimeLine.CurrentPosition = _timeElapsed / 1000;
                     break;
                 case EditorCursorPosition.MEASURE_OFFSET:
                     _songTimeLine.Offset = _timeElapsed / 1000;
+                    _songTimeLine.CurrentPosition = _timeElapsed / 1000;
                     break;
             }
             _songTimeLine.AudioEnd = Core.Audio.GetFileLength(NewGameSong.Path + "\\" + NewGameSong.AudioFile)/1000.0;
-            
+           
             _songTimeLine.Draw(spriteBatch);
 
         }

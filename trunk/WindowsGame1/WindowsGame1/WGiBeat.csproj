@@ -220,6 +220,12 @@
     <Content Include="Content\Textures\Default\Common\PlayerOptionsFrameAttract.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Textures\Default\Common\SongTimeLineArrow.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\Default\Common\SongTimeLineCurrentPosition.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Textures\Default\Common\TeamIdentifiers.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
