@@ -48,7 +48,7 @@ namespace WGiBeat.Drawing
         public BpmMeter()
         {
             InitSprites();
-            SongTime = 0.9999;
+            SongTime = 1;
             this.Width = DEFAULT_WIDTH;
             this.Height = DEFAULT_HEIGHT;
 

@@ -9,12 +9,18 @@ namespace WGiBeat.Drawing
     {
         private SpriteMap _barParts;
         private SpriteMap _barEdges;
+        private Sprite _currentPosition;
+
 
         public double? Offset { get; set; }
         public double? Length { get; set; }
         public double? AudioStart { get; set; }
+        public double? CurrentPosition { get; set; }
+
         public GameSong Song { get; set; }
         public double AudioEnd { get; set; }
+
+        public bool ShowLabels { get; set; }
         public SongTimeLine()
         {
             InitSprites();
@@ -25,6 +31,11 @@ namespace WGiBeat.Drawing
             _barParts = new SpriteMap
                             {Columns = 1, Rows = 5, SpriteTexture = TextureManager.Textures("SongTimeLineParts")};
             _barEdges = new SpriteMap { Columns = 2, Rows = 1, SpriteTexture = TextureManager.Textures("SongTimeLineEdges") };
+            _currentPosition = new Sprite
+                                   {
+                                      SpriteTexture = TextureManager.Textures("SongTimeLineCurrentPosition"),
+                                      Width= 6
+                                   };
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -35,12 +46,34 @@ namespace WGiBeat.Drawing
             }
             DrawEdges(spriteBatch);
             DrawBars(spriteBatch);
+            DrawCurrentPosition(spriteBatch);
             DrawLabels(spriteBatch);
+        }
+
+        private void DrawCurrentPosition(SpriteBatch spriteBatch)
+        {
+            if (CurrentPosition == null || CurrentPosition.Value == 0)
+            {
+                return;
+            }
+            _currentPosition.Height = this.Height - 40;
+            var position = this.Position.Clone();
+            position.X += 10;
+            position.Y += 20;
+            var ending = Math.Max(Song.ConvertPhraseToMS(Song.GetEndingTimeInPhrase()) / 1000.0, AudioEnd);
+
+            position.X += (float) (CurrentPosition.Value/ ending * _totalBarWidth);
+            position.X -= _currentPosition.Width/2;
+            _currentPosition.Position = position;
+            _currentPosition.Draw(spriteBatch);
         }
 
         private void DrawLabels(SpriteBatch spriteBatch)
         {
-
+            if (!ShowLabels)
+            {
+                return;
+            }
             var position = new Vector2(_labelPositions[0] + this.X + 10, this.Y);
           if (_labelPositions[0] != 0.0)
           {
