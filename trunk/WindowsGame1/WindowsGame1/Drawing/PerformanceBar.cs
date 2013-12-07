@@ -18,33 +18,33 @@ namespace WGiBeat.Drawing
 
         public MetricsManager Metrics { get; set; }
 
-        private SpriteMap _partsSpriteMap;
-        private SpriteMap _leftSpriteMap;
-        private Sprite _middleSprite;
-        private Sprite _rightSprite;
-        private Sprite _headerSprite;
+        private SpriteMap3D _partsSpriteMap;
+        private SpriteMap3D _leftSpriteMap;
+        private Sprite3D _middleSprite;
+        private Sprite3D _rightSprite;
+        private Sprite3D _headerSprite;
         private const double BAR_SHOW_SPEED = 180;
 
 
         private void InitSprites()
         {
-            _partsSpriteMap = new SpriteMap
+            _partsSpriteMap = new SpriteMap3D
                                   {
-                                      SpriteTexture = TextureManager.Textures("PerformanceBarParts"),
+                                      Texture = TextureManager.Textures("PerformanceBarParts"),
                                       Columns = 1,
                                       Rows = 6
                                   };
-            _leftSpriteMap = new SpriteMap
+            _leftSpriteMap = new SpriteMap3D
                                  {
-                                     SpriteTexture = TextureManager.Textures("PerformanceBarLeft"),
+                                     Texture = TextureManager.Textures("PerformanceBarLeft"),
                                      Columns = 1,
                                      Rows = 6
                                  };
-            _middleSprite = new Sprite {SpriteTexture = TextureManager.Textures("PerformanceBarMiddle")};
-            _rightSprite = new Sprite {SpriteTexture = TextureManager.Textures("PerformanceBarRight")};
-            _headerSprite = new Sprite
+            _middleSprite = new Sprite3D {Texture = TextureManager.Textures("PerformanceBarMiddle")};
+            _rightSprite = new Sprite3D {Texture = TextureManager.Textures("PerformanceBarRight")};
+            _headerSprite = new Sprite3D
                                 {
-                                    SpriteTexture = TextureManager.Textures("PerformanceBarHeader"),
+                                    Texture = TextureManager.Textures("PerformanceBarHeader"),
                                     Size = Metrics["PerformanceBarHeader.Size", 0]
                                 };
         }
@@ -57,7 +57,7 @@ namespace WGiBeat.Drawing
             }
             var position = this.Position.Clone();
             
-            DrawHeader(spriteBatch, position);
+            DrawHeader(position);
             position.Y += _headerSprite.Height;
 
             if (GameType == GameType.SYNC_PRO || GameType == GameType.SYNC_PLUS)
@@ -77,13 +77,13 @@ namespace WGiBeat.Drawing
             }
         }
 
-        private void DrawHeader(SpriteBatch spriteBatch, Vector2 position)
+        private void DrawHeader(Vector2 position)
         {
             var headerOffset = (this.Width/2.0f) - (_headerSprite.Width/2.0f);
             position.X += headerOffset;
             _headerSprite.Position = position;
             _headerSprite.ColorShading.A = (byte) Opacity;
-            _headerSprite.Draw(spriteBatch);
+            _headerSprite.Draw();
             position.X -= headerOffset;   
         }
 
@@ -105,7 +105,7 @@ namespace WGiBeat.Drawing
             {
                 idx = 5;
             }
-            _leftSpriteMap.Draw(spriteBatch, idx, LEFT_SIDE_WIDTH, this.Height, position);
+            _leftSpriteMap.Draw( idx, LEFT_SIDE_WIDTH, this.Height, position);
             position.X += LEFT_SIDE_WIDTH;
             _middleSprite.Width = barWidth;
             _middleSprite.Height = this.Height;
@@ -122,7 +122,7 @@ namespace WGiBeat.Drawing
                     var width = (int) Math.Ceiling((double) (barWidth)*Players[player].Judgements[y]/totalBeatlines);
                     width = Math.Min(width, maxWidth);
                     maxWidth -= width;
-                    _partsSpriteMap.Draw(spriteBatch, y, width, this.Height, position);
+                    _partsSpriteMap.Draw( y, width, this.Height, position);
                     position.X += width;
                 }
                 _barOpacity = Math.Min(255, _barOpacity + (TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * BAR_SHOW_SPEED));
@@ -132,15 +132,15 @@ namespace WGiBeat.Drawing
             {
                 _barOpacity = 0;
             }
-            _middleSprite.Draw(spriteBatch);
+            _middleSprite.Draw();
 
-            _rightSprite.Draw(spriteBatch);
+            _rightSprite.Draw();
             _rightSprite.X += 35;
             _rightSprite.Y += (this.Height / 2) - 10;
             var textColour = Color.Black;
             textColour.A = (byte) Opacity;
             TextureManager.DrawString(spriteBatch, percentageText, "DefaultFont", _rightSprite.Position, textColour,
-                                      FontAlign.CENTER);
+                                      FontAlign.Center);
 
             position.X = this.Position.X;
         }

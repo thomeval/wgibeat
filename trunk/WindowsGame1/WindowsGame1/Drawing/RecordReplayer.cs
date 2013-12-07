@@ -67,7 +67,7 @@ namespace WGiBeat.Drawing
         public override void Draw(SpriteBatch spriteBatch)
         {
 
-        Draw(spriteBatch,0);     
+        Draw(spriteBatch, 0);     
         }
 
         private const int FADEIN_SPEED = 240;
@@ -103,7 +103,7 @@ namespace WGiBeat.Drawing
             _headerSprite.Draw();
      
             var textPosition = new Vector2(this.X + this.Width - RIGHT_SIDE_WIDTH/2, this.Y - 13 + (_headerSprite.Height/2));
-            TextureManager.DrawString(spriteBatch, string.Format("{0:F0}", _displayedRecordScore), "DefaultFont", textPosition, drawColor, FontAlign.CENTER);
+            TextureManager.DrawString(spriteBatch, string.Format("{0:F0}", _displayedRecordScore), "DefaultFont", textPosition, drawColor, FontAlign.Center);
             position.X = this.X;
             position.Y += 30;
             DrawChallenges(spriteBatch, (long) _displayedRecordScore, position);
@@ -220,7 +220,7 @@ namespace WGiBeat.Drawing
             var textColour = Color.Black;
             textColour.A = (byte)Opacity;
             TextureManager.DrawString(spriteBatch, "" + challengeScore, "DefaultFont", _rightSprite.Position, textColour,
-                                      FontAlign.CENTER);
+                                      FontAlign.Center);
 
      
         }

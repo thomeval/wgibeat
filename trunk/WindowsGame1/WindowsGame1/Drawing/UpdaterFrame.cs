@@ -18,7 +18,7 @@ namespace WGiBeat.Drawing
 
         public string NewsMessage { get; set; }
 
-        private Sprite _updaterFrame;
+        private Sprite3D _updaterFrame;
         private Vector2 _textPosition;
 
         public UpdaterFrame()
@@ -29,9 +29,9 @@ namespace WGiBeat.Drawing
 
         private void InitSprites()
         {
-            _updaterFrame = new Sprite
+            _updaterFrame = new Sprite3D
             {
-                SpriteTexture = TextureManager.Textures("UpdaterFrame"),
+                Texture = TextureManager.Textures("UpdaterFrame"),
             };
         }
 
@@ -62,13 +62,13 @@ namespace WGiBeat.Drawing
             message = ScrollText(message);
             
             _updaterFrame.Position = this.Position;
-            _updaterFrame.Draw(spriteBatch);
+            _updaterFrame.Draw();
             _textPosition.X = this.X + (int) XOffset + 20;
             _textPosition.Y = this.Y + 25;
 
 
             TextureManager.DrawString(spriteBatch, message, "DefaultFont", _textPosition, Color.White,
-              FontAlign.LEFT);
+              FontAlign.Left);
         }
 
         private const int SCROLL_SPEED = 60;

@@ -38,7 +38,7 @@ namespace WGiBeat.Drawing
             }
         }
            
-        private Sprite _mySprite;
+        private Sprite3D _mySprite;
 
         private SpectrumDrawer _spectrumDrawer;
         private WaveformDrawer _waveformDrawer;
@@ -83,7 +83,7 @@ namespace WGiBeat.Drawing
             float[] waveLevels = AudioManager.GetChannelWaveform(SongChannel, WAVEFORM_POINTS);
 
                 _mySprite.ColorShading.A = (byte)(myOpacity);
-           _mySprite.Draw(spriteBatch);
+           _mySprite.Draw();
 
 
      
@@ -94,19 +94,19 @@ namespace WGiBeat.Drawing
             _waveformDrawer.Height = 25 + (int)(125 * _displayOpacity / 255);
             DrawLevels(spriteBatch, levels);
 
-            DrawWaveform(spriteBatch, waveLevels);
+            DrawWaveform(waveLevels);
         }
 
-        private void DrawWaveform(SpriteBatch spriteBatch, float[] waveLevels)
+        private void DrawWaveform(float[] waveLevels)
         {
             _waveformDrawer.Draw(waveLevels);
         }
 
         private void Initialize()
         {
-            _mySprite = new Sprite
+            _mySprite = new Sprite3D
             {
-                SpriteTexture = TextureManager.BlankTexture(),
+                Texture = TextureManager.BlankTexture(),
                 Height = this.Height,
                 Width = this.Width,
                 ColorShading = Colour,
@@ -139,8 +139,8 @@ namespace WGiBeat.Drawing
 
         private void DrawLevels(SpriteBatch spriteBatch, float[] levels)
         {
-            _spectrumDrawer.Draw(spriteBatch, levels);
-            _spectrumDrawerTop.Draw(spriteBatch,levels);
+            _spectrumDrawer.Draw( levels);
+            _spectrumDrawerTop.Draw(levels);
         }
 
 

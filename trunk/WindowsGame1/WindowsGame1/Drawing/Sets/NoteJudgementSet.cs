@@ -14,8 +14,7 @@ namespace WGiBeat.Drawing.Sets
         private readonly ScoreSet _scoreSet;
 
         private double _phraseNumber;
-
-        
+      
         public static readonly int[] JudgementCutoffs = {20, 50, 125, 250,1500};
 
         public NoteJudgementSet(MetricsManager metrics, Player[] players, GameType type, LifeBarSet lifeBarSet, ScoreSet scoreSet)
@@ -64,10 +63,10 @@ namespace WGiBeat.Drawing.Sets
                 case BeatlineNoteJudgement.IDEAL:
                     Players[player].Streak++;
 
-                    decimal multiplier = Convert.ToDecimal((9 + Math.Max(1, Players[player].Streak)));
+                    double multiplier = Convert.ToDouble((9 + Math.Max(1, Players[player].Streak)));
                     multiplier /= 10;
-
-                    scoreAdjust = (long)(1000 * (numCompleted) * multiplier);
+                    multiplier = Math.Min(2.0, multiplier);
+                    scoreAdjust = (long) Math.Round(1000 * (numCompleted) * multiplier);
                     lifeAdjust = (1 * numCompleted);
                     break;
                 case BeatlineNoteJudgement.COOL:

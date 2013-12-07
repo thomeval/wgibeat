@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Drawing;
@@ -13,7 +12,7 @@ namespace WGiBeat.Managers
     {
 
         private readonly List<PlayerOptionsFrame> _optionsFrames;
-        private Sprite _optionsFrameAttract;
+        private Sprite3D _optionsFrameAttract;
         private readonly Vector2 _offScreen = new Vector2(-1000, -1000);
         public bool DrawAttract { get; set; }
         public bool StackableFrames { get; set; }
@@ -33,9 +32,9 @@ namespace WGiBeat.Managers
 
         private void InitSprites()
         {
-            _optionsFrameAttract = new Sprite
+            _optionsFrameAttract = new Sprite3D
                                        {
-                                           SpriteTexture = TextureManager.Textures("PlayerOptionsFrameAttract"),
+                                           Texture = TextureManager.Textures("PlayerOptionsFrameAttract"),
                                            ColorShading = new Color(255, 255, 255, 128)
                                        };
         }
@@ -98,11 +97,11 @@ namespace WGiBeat.Managers
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            foreach (PlayerOptionsFrame pof in _optionsFrames.Where(e => e.Player.Playing))
+            foreach (var pof in _optionsFrames.Where(e => e.Player.Playing))
             {       
                 pof.Draw(spriteBatch);
             }
-            _optionsFrameAttract.Draw(spriteBatch);
+            _optionsFrameAttract.Draw();
         }
 
         public bool PerformAction(InputAction inputAction)
@@ -110,6 +109,8 @@ namespace WGiBeat.Managers
             var playerIdx = inputAction.Player - 1;
             var playerOptions = (from e in _optionsFrames where e.PlayerIndex == playerIdx select e).SingleOrDefault();
 
+         
+            
             //Ignore inputs from players not playing EXCEPT for players joining in.
             if ((inputAction.Player == 0) || (!Players[inputAction.Player - 1].IsHumanPlayer))
             {

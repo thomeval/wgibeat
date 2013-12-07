@@ -11,8 +11,8 @@ namespace WGiBeat.Drawing
         public Player Player { get; set; }
         public byte Opacity { get; set; }
 
-        private Sprite _levelBaseSprite;
-        private Sprite _levelFrontSprite;
+        private Sprite3D _levelBaseSprite;
+        private Sprite3D _levelFrontSprite;
 
         public ProfileLevelDisplay()
         {
@@ -23,14 +23,14 @@ namespace WGiBeat.Drawing
 
         private void InitSprites()
         {
-            _levelBaseSprite = new Sprite
+            _levelBaseSprite = new Sprite3D
             {
-                SpriteTexture = TextureManager.Textures("PlayerLevelBarBase"),
+                Texture = TextureManager.Textures("PlayerLevelBarBase"),
 
             };
-            _levelFrontSprite = new Sprite
+            _levelFrontSprite = new Sprite3D
             {
-                SpriteTexture = TextureManager.Textures("PlayerLevelBarFront"),
+                Texture = TextureManager.Textures("PlayerLevelBarFront"),
 
             };
         }
@@ -56,16 +56,16 @@ namespace WGiBeat.Drawing
             progress = Math.Min(1, progress);
 
             _levelFrontSprite.Width = (int)(this.Width * progress);
-            _levelFrontSprite.Draw(spriteBatch);
+            _levelFrontSprite.Draw();
             _levelBaseSprite.Width = this.Width;
-            _levelBaseSprite.Draw(spriteBatch);
+            _levelBaseSprite.Draw();
 
 
             //Draw level text.
             var playerlevel = String.Format("{0:00}", Player.GetLevel());
             var scale = TextureManager.ScaleTextToFit(playerlevel, "TwoTech36", 32, 38);
             TextureManager.DrawString(spriteBatch,playerlevel, "TwoTech36", _levelTextPosition, scale, _drawColor,
-   FontAlign.RIGHT);
+   FontAlign.Right);
 
         
         }

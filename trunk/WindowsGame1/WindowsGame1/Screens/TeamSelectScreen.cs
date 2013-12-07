@@ -12,18 +12,18 @@ namespace WGiBeat.Screens
     {
 
         private Sprite3D _headingSprite;
-        private Sprite _teamBorderSprite;
+        private Sprite3D _teamBorderSprite;
         private Sprite3D _backgroundSprite;
-        private SpriteMap _playerMarkers;
-        private SpriteMap _playerReadyMarkers;
+        private SpriteMap3D _playerMarkers;
+        private SpriteMap3D _playerReadyMarkers;
 
         private readonly bool[] _ready = new bool[4];
         private PlayerOptionsSet _playerOptionsSet;
 
         private string _restrictionMessage = "";
         private bool _showWarningIcon;
-        private Sprite _messageBorder;
-        private Sprite _restrictionIcon;
+        private Sprite3D _messageBorder;
+        private Sprite3D _restrictionIcon;
 
         public TeamSelectScreen(GameCore core) : base(core)
         {
@@ -63,30 +63,30 @@ namespace WGiBeat.Screens
                 Width = 800
             };
 
-            _playerReadyMarkers = new SpriteMap { SpriteTexture = TextureManager.Textures("PlayerReady"), Columns = 1, Rows = 2 };
-            _teamBorderSprite = new Sprite
+            _playerReadyMarkers = new SpriteMap3D { Texture = TextureManager.Textures("PlayerReady"), Columns = 1, Rows = 2 };
+            _teamBorderSprite = new Sprite3D
                                     {
-                                        SpriteTexture = TextureManager.Textures("TeamScreenBackground"),
+                                        Texture = TextureManager.Textures("TeamScreenBackground"),
                                         Position = (Core.Metrics["TeamScreenBackground", 0])
                                     };
 
-            _playerMarkers = new SpriteMap
+            _playerMarkers = new SpriteMap3D
                                  {
-                                     SpriteTexture = TextureManager.Textures("PlayerTeamMarkers"), Columns = 1, Rows = 4
+                                     Texture = TextureManager.Textures("PlayerTeamMarkers"), Columns = 1, Rows = 4
                                  };
-            _messageBorder = new Sprite
+            _messageBorder = new Sprite3D
                                  {
-                                     SpriteTexture = TextureManager.Textures("MessageBorder"),
+                                     Texture = TextureManager.Textures("MessageBorder"),
                                      Position = (Core.Metrics["MessageBorder", 0])
                                  };
-            _restrictionIcon = new Sprite {SpriteTexture = TextureManager.Textures("RestrictionIcon"), Width = 48, Height = 48};
+            _restrictionIcon = new Sprite3D {Texture = TextureManager.Textures("RestrictionIcon"), Width = 48, Height = 48};
             _restrictionIcon.X = _messageBorder.X + 7;
             _restrictionIcon.Y = _messageBorder.Y + 7;
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            DrawBackground(spriteBatch, gameTime);
-            DrawMarkers(spriteBatch);
+            DrawBackground();
+            DrawMarkers();
             DrawPlayerOptions(spriteBatch);
             DrawRestrictionMessage(spriteBatch);
         }
@@ -96,7 +96,7 @@ namespace WGiBeat.Screens
             _playerOptionsSet.Draw(spriteBatch);
         }
 
-        private void DrawMarkers(SpriteBatch spriteBatch)
+        private void DrawMarkers()
         {
             for (int x =0; x < 4; x++)
             {
@@ -117,32 +117,34 @@ namespace WGiBeat.Screens
                 if (_ready[x])
                 {
                     markerPosition.X -= 55;
-                    _playerReadyMarkers.Draw(spriteBatch, 2 - Core.Players[x].Team, 165, 60, markerPosition);
+                    _playerReadyMarkers.Draw( 2 - Core.Players[x].Team, 165, 60, markerPosition);
                     markerPosition.X += 55;
                 }
 
-                _playerMarkers.Draw(spriteBatch, x, 60,60, markerPosition);
+                _playerMarkers.Draw( x, 60,60, markerPosition);
 
             }
         }
 
-        private void DrawBackground(SpriteBatch spriteBatch, GameTime gameTime)
+        private void DrawBackground()
         {
             _backgroundSprite.Draw();
             _headingSprite.Draw();
-            _teamBorderSprite.Draw(spriteBatch);
+            _teamBorderSprite.Draw();
         }
 
         private void DrawRestrictionMessage(SpriteBatch spriteBatch)
         {
-            if (_restrictionMessage != "")
+            if (_restrictionMessage == "")
             {
-                _messageBorder.Draw(spriteBatch);
-                TextureManager.DrawString(spriteBatch, _restrictionMessage, "DefaultFont", Core.Metrics["RestrictionMessage", 0], Color.White, FontAlign.LEFT);
-                if (_showWarningIcon)
-                    _restrictionIcon.Draw(spriteBatch);
+                return;
             }
-
+            _messageBorder.Draw();
+            TextureManager.DrawString(spriteBatch, _restrictionMessage, "DefaultFont", Core.Metrics["RestrictionMessage", 0], Color.White, FontAlign.Left);
+            if (_showWarningIcon)
+            {
+                _restrictionIcon.Draw();
+            }
         }
 
         public override void PerformAction(InputAction inputAction)

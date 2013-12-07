@@ -51,7 +51,7 @@ namespace WGiBeat
         private GamePadState[] _lastGamePadState;
         public string WgibeatRootFolder;
 
-        public const string VERSION_STRING = "v2.0 a2";
+        public const string VERSION_STRING = "v2.0 a3";
         private GameCore()
         {
             GraphicsManager = new GraphicsDeviceManager(this);
@@ -201,22 +201,15 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
  
             GraphicsManager.IsFullScreen = Settings.Get<bool>("FullScreen");
             GraphicsManager.SynchronizeWithVerticalRetrace = Settings.Get<bool>("VSync");
-            if (GraphicsManager.IsFullScreen)
-            {
-                GraphicsManager.PreferredBackBufferHeight = 600;
-                GraphicsManager.PreferredBackBufferWidth = 800;
-            }
-            else
-            {
-                string[] resolution = Settings.Get<string>("ScreenResolution").Split('x');
-                GraphicsManager.PreferredBackBufferWidth = Convert.ToInt32(resolution[0]);
-                GraphicsManager.PreferredBackBufferHeight = Convert.ToInt32(resolution[1]);
-                //TODO: remove when stable
-                GraphicsManager.PreferredBackBufferHeight = 600;
-                GraphicsManager.PreferredBackBufferWidth = 800;
-            }
+            string[] resolution = Settings.Get<string>("ScreenResolution").Split('x');
+            GraphicsManager.PreferredBackBufferWidth = Convert.ToInt32(resolution[0]);
+            GraphicsManager.PreferredBackBufferHeight = Convert.ToInt32(resolution[1]);
+            //TODO: remove when stable
+            GraphicsManager.PreferredBackBufferHeight = 720;
+            GraphicsManager.PreferredBackBufferWidth = 1280;
 
-            Sprite.Device = this.GraphicsDevice;
+
+            //Sprite.Device = this.GraphicsDevice;
             Sprite3D.Device = this.GraphicsDevice;
             SpriteMap3D.Device = this.GraphicsDevice;
             Sprite3D.EffectInit = false;
@@ -226,9 +219,10 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
                                                                                                          GetViewProjMatrix
                                                                                                          (), 800);
             GraphicsManager.ApplyChanges();
-            GraphicsDevice.VertexDeclaration = new VertexDeclaration(
-GraphicsDevice, VertexPositionColorTexture.VertexElements);
-     
+            GraphicsDevice.VertexDeclaration = new VertexDeclaration(GraphicsDevice, VertexPositionColorTexture.VertexElements);
+            TextureManager.FontMatrix = Matrix.CreateScale(GraphicsManager.PreferredBackBufferWidth/800.0f,
+                                                           GraphicsManager.PreferredBackBufferHeight/600.0f, 1);
+
         }
 
         #endregion

@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Notes;
 
 namespace WGiBeat.Drawing
@@ -13,17 +12,17 @@ namespace WGiBeat.Drawing
 
         public int TextureSet { get; set; }
 
-        private SpriteMap _judgementSprite;
+        private SpriteMap3D _judgementSprite;
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             if (_judgementSprite == null)
             {
-                _judgementSprite = new SpriteMap {Columns =(int) BeatlineNoteJudgement.COUNT, Rows = 1, SpriteTexture = TextureManager.Textures("NoteJudgements" + TextureSuffix)};
+                _judgementSprite = new SpriteMap3D {Columns =(int) BeatlineNoteJudgement.COUNT, Rows = 1, Texture = TextureManager.Textures("NoteJudgements" + TextureSuffix)};
             }
             _judgementSprite.ColorShading.A = Opacity;
 
-            _judgementSprite.Draw(spriteBatch,Tier,this.Width, this.Height,this.X,this.Y);
+            _judgementSprite.Draw(Tier,this.Width, this.Height,this.X,this.Y);
         }
 
         private string TextureSuffix

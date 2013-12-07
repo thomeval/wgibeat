@@ -41,7 +41,7 @@ namespace WGiBeat.Drawing.Sets
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-           Draw(spriteBatch,0.0);
+           Draw(spriteBatch, 0.0);
         }
         public void Draw(SpriteBatch spriteBatch, double gameTime)
         {

@@ -6,7 +6,7 @@ namespace WGiBeat.Drawing
     public class SpriteMap
     {
 
-        public Texture2D SpriteTexture { get; set; }
+        public Texture2D Texture { get; set; }
         public Color ColorShading = Color.White;
         public int Columns { get; set; }
         public int Rows { get; set; }
@@ -28,7 +28,7 @@ namespace WGiBeat.Drawing
                                    X = x,
                                    Y = y
                                };
-            spriteBatch.Draw(SpriteTexture, destRect, sourceRect, ColorShading);
+            spriteBatch.Draw(Texture, destRect, sourceRect, ColorShading);
             spriteBatch.End();
         }
 
@@ -47,7 +47,7 @@ namespace WGiBeat.Drawing
             destRect.X += (int) origin.X;
             destRect.Y += (int) origin.Y;
 
-            spriteBatch.Draw(SpriteTexture, destRect, sourceRect, ColorShading,rotation,origin, SpriteEffects.None,0);
+            spriteBatch.Draw(Texture, destRect, sourceRect, ColorShading,rotation,origin, SpriteEffects.None,0);
             spriteBatch.End();
         }
 
@@ -62,8 +62,8 @@ namespace WGiBeat.Drawing
             int xOffset = 0, yOffset = 0;
             int xSize = 0, ySize = 0;
 
-            xSize = SpriteTexture.Width / Columns;
-            ySize = SpriteTexture.Height / Rows;
+            xSize = Texture.Width / Columns;
+            ySize = Texture.Height / Rows;
 
 
             while (cellnumber >= Columns)
@@ -81,17 +81,17 @@ namespace WGiBeat.Drawing
 
         public void Draw(SpriteBatch spriteBatch, int cellnumber, int x, int y)
         {
-            Draw(spriteBatch,cellnumber,SpriteTexture.Width / Columns, SpriteTexture.Height / Rows,x,y);
+            Draw(spriteBatch, cellnumber, Texture.Width / Columns, Texture.Height / Rows,x,y);
         }
 
         public void Draw(SpriteBatch spriteBatch, int cellnumber, Vector2 position)
         {
-            Draw(spriteBatch, cellnumber, SpriteTexture.Width / Columns, SpriteTexture.Height / Rows, position);
+            Draw(spriteBatch, cellnumber, Texture.Width / Columns, Texture.Height / Rows, position);
         }
 
         public void Draw(SpriteBatch spriteBatch, int cellnumber, Vector2 size, Vector2 position)
         {
-            Draw(spriteBatch, cellnumber, (int) size.X, (int) size.Y, (int) position.X, (int) position.Y);
+            Draw(spriteBatch, cellnumber, (int)size.X, (int)size.Y, (int)position.X, (int)position.Y);
         }
     }
 }

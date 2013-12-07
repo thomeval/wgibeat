@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing
 {
+    /*
     public class Sprite : DrawableObject
     {
 
@@ -13,7 +14,7 @@ namespace WGiBeat.Drawing
         }
 
         public Color ColorShading;
-        public Texture2D SpriteTexture;
+        public Texture2D Texture;
 
         public static GraphicsDevice Device;
 
@@ -30,7 +31,7 @@ namespace WGiBeat.Drawing
                                   };
 
 
-            spriteBatch.Draw(SpriteTexture, boundingBox, ColorShading);
+            spriteBatch.Draw(Texture, boundingBox, ColorShading);
             spriteBatch.End();
         }
 
@@ -46,7 +47,7 @@ namespace WGiBeat.Drawing
                 Y = this.Y,
             };
 
-            spriteBatch.Draw(SpriteTexture, boundingBox, null, ColorShading, 0,new Vector2(0,0), flip, 0);
+            spriteBatch.Draw(Texture, boundingBox, null, ColorShading, 0,new Vector2(0,0), flip, 0);
             spriteBatch.End();
         }
 
@@ -79,7 +80,7 @@ namespace WGiBeat.Drawing
                 Y = this.Y,
             };
 
-            spriteBatch.Draw(SpriteTexture, dest, textureRect, ColorShading,0.0f, new Vector2(0,0),flip,0.0f );
+            spriteBatch.Draw(Texture, dest, textureRect, ColorShading,0.0f, new Vector2(0,0),flip,0.0f );
 
             spriteBatch.End();
             Device.SamplerStates[0].AddressU = TextureAddressMode.Clamp;
@@ -94,13 +95,13 @@ namespace WGiBeat.Drawing
         {
             if (Width == 0)
             {
-                Width = SpriteTexture.Width;
+                Width = Texture.Width;
             }
             if (Height == 0)
             {
-                Height = SpriteTexture.Height;
+                Height = Texture.Height;
             }
         }
     }
-
+    */
 }

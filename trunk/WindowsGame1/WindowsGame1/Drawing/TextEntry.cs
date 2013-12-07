@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,10 +9,10 @@ namespace WGiBeat.Drawing
     public class TextEntry : DrawableObject
     {
         private StringBuilder _result = new StringBuilder();
-        private Sprite _capsLockSprite;
-        private Sprite _shiftSprite;
-        private SpriteMap _barSideSpriteMap;
-        private Sprite _barMiddleSprite;
+        private Sprite3D _capsLockSprite;
+        private Sprite3D _shiftSprite;
+        private SpriteMap3D _barSideSpriteMap;
+        private Sprite3D _barMiddleSprite;
 
         public event EventHandler EntryComplete;
         public event EventHandler EntryCancelled;
@@ -34,15 +32,15 @@ namespace WGiBeat.Drawing
 
         private void InitSprites()
         {
-            _capsLockSprite = new Sprite { SpriteTexture = TextureManager.Textures("TextEntryCaps") };
-            _shiftSprite = new Sprite { SpriteTexture = TextureManager.Textures("TextEntryShift") };
-            _barSideSpriteMap = new SpriteMap
+            _capsLockSprite = new Sprite3D { Texture = TextureManager.Textures("TextEntryCaps") };
+            _shiftSprite = new Sprite3D { Texture = TextureManager.Textures("TextEntryShift") };
+            _barSideSpriteMap = new SpriteMap3D
                                     {
-                                        SpriteTexture = TextureManager.Textures("TextEntryBarSide"),
+                                        Texture = TextureManager.Textures("TextEntryBarSide"),
                                         Rows = 2,
                                         Columns = 1
                                     };
-            _barMiddleSprite = new Sprite {SpriteTexture = TextureManager.Textures("TextEntryBarMiddle")};
+            _barMiddleSprite = new Sprite3D {Texture = TextureManager.Textures("TextEntryBarMiddle")};
         }
 
         public string EnteredText
@@ -54,48 +52,48 @@ namespace WGiBeat.Drawing
         {
             var myPosition = this.Position.Clone();
 
-            DrawEnteredTextBar(spriteBatch, myPosition.Clone());
+            DrawEnteredTextBar(myPosition.Clone());
             myPosition.X += (this.Width/2.0f);
             
             TextureManager.DrawString(spriteBatch, _result.ToString(), "LargeFont", myPosition,
-                          TextColour, FontAlign.CENTER);
+                          TextColour, FontAlign.Center);
             myPosition.Y += 40;
             foreach (string line in DescriptionText.Split('\n'))
             {
                 TextureManager.DrawString(spriteBatch, line, "DefaultFont", myPosition,
-                                          TextColour, FontAlign.CENTER);
+                                          TextColour, FontAlign.Center);
                 myPosition.Y += 25;
             }
            
             TextureManager.DrawString(spriteBatch, "Press enter when done, or escape to cancel.", "DefaultFont", myPosition,
-                                      TextColour, FontAlign.CENTER);
+                                      TextColour, FontAlign.Center);
             myPosition.Y += 25;
 
             if (Shift)
             {
                 _shiftSprite.Y = (int) myPosition.Y;
                 _shiftSprite.X = (int) myPosition.X - 50;
-                _shiftSprite.Draw(spriteBatch);
+                _shiftSprite.Draw();
             }
             if (CapsLock)
             {
                 _capsLockSprite.Y = (int)myPosition.Y;
                 _capsLockSprite.X = (int)myPosition.X + 50;
-               _capsLockSprite.Draw(spriteBatch);
+               _capsLockSprite.Draw();
             }
 
         }
 
-        private void DrawEnteredTextBar(SpriteBatch spriteBatch, Vector2 position)
+        private void DrawEnteredTextBar(Vector2 position)
         {
             position.X += 25;
-            _barSideSpriteMap.Draw(spriteBatch,0,position);
+            _barSideSpriteMap.Draw(0,position);
             position.X += 35;
             _barMiddleSprite.Width = this.Width - 120;
             _barMiddleSprite.Position = position;
-            _barMiddleSprite.Draw(spriteBatch);
+            _barMiddleSprite.Draw();
             position.X += this.Width - 120;
-            _barSideSpriteMap.Draw(spriteBatch,1,position);
+            _barSideSpriteMap.Draw(1,position);
 
         }
 

@@ -147,7 +147,7 @@ namespace WGiBeat.Drawing
                 particle.Width -= amount;
             }
 
-            //Send the entire batch of vertices to SpriteMap3D for drawing (any Particle object's SpriteMap will do).
+            //Send the entire batch of vertices to SpriteMap3D for drawing (any Particle object's SpriteMap3D will do).
             _swayers[0].ParticleSpriteMap.DrawVertices(_vertices);
         }
 

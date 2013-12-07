@@ -63,11 +63,11 @@ namespace WGiBeat.Drawing
 //Draw Text
             var textPosition = new Vector2(this.X + 20, this.Y + 3);
             Vector2 scale = TextureManager.ScaleTextToFit(Song.Title, "LargeFont", _textMaxWidth, this.Height);
-            TextureManager.DrawString(spriteBatch, Song.Title, "LargeFont", textPosition, scale, _textDrawColor, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, Song.Title, "LargeFont", textPosition, scale, _textDrawColor, FontAlign.Left);
             textPosition.Y += 20;
             scale = TextureManager.ScaleTextToFit(Song.Artist, "DefaultFont", TextMaxWidth, this.Height);
             TextureManager.DrawString(spriteBatch, Song.Artist, "DefaultFont", textPosition, scale, _textDrawColor,
-                                      FontAlign.LEFT);
+                                      FontAlign.Left);
         }
 
         private Color GetBaseColour()

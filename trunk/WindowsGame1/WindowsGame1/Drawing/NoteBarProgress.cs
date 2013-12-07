@@ -1,44 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing
 {
     public class NoteBarProgress :DrawableObject
     {
-        private Sprite _baseSprite;
-        private Sprite _frontSprite;
-        private Sprite _readySprite;
+        private Sprite3D _baseSprite;
+        private Sprite3D _frontSprite;
+        private Sprite3D _readySprite;
         private double _opacity;
-        private const int READY_FADEIN_SPEED = 4000;
-
+        private const int READY_FADEIN_SPEED = 2500;
+        private const int PROGRESS_UPDATE_SPEED = 10;
         public int Value { get; set; }
         public int Maximum { get; set; }
         public int ID { get; set; }
 
+        private double _displayedValue;
         public int TextureSet { get; set; }
         private void InitSprites()
         {
-            _baseSprite = new Sprite
+            _baseSprite = new Sprite3D
                               {
-                                  SpriteTexture = TextureManager.Textures("NoteBarProgressBase" + TextureSuffix),
+                                  Texture = TextureManager.Textures("NoteBarProgressBase" + TextureSuffix),
                                   Position = this.Position.Clone(),
                                   Height = this.Height,
                                   Width = this.Width
                               };
-            _frontSprite = new Sprite
+            _frontSprite = new Sprite3D
             {
-                SpriteTexture = TextureManager.Textures("NoteBarProgressFront" + TextureSuffix),
+                Texture = TextureManager.Textures("NoteBarProgressFront" + TextureSuffix),
                 Position = this.Position.Clone(),
                 Height = this.Height,
                 Width = this.Width
             };
-            _readySprite = new Sprite
+            _readySprite = new Sprite3D
             {
-                SpriteTexture = TextureManager.Textures("NoteBarProgressReady" + TextureSuffix),
+                Texture = TextureManager.Textures("NoteBarProgressReady" + TextureSuffix),
                 Position = this.Position.Clone(),
                 Height = this.Height,
                 Width = this.Width
@@ -67,34 +65,41 @@ namespace WGiBeat.Drawing
             }
 
             Debug.Assert(_baseSprite != null);
-            _baseSprite.Draw(spriteBatch);
+            _baseSprite.Draw();
 
             if (Maximum == 0)
             {
                 return;
             }
             Value = Math.Min(Value, Maximum);
-            var drawHeight = this.Height * Value / Maximum;
-            var texHeight = _frontSprite.SpriteTexture.Height*Value/Maximum;
-            _frontSprite.Height = drawHeight;
-            _frontSprite.Y = this.Y + this.Height - drawHeight;
-            _frontSprite.DrawTiled(spriteBatch, 0, _frontSprite.SpriteTexture.Height  - texHeight, _frontSprite.Width, texHeight);
+
+            var diff = Value - _displayedValue;
+
+            var changeMx = Math.Min(0.5, TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * PROGRESS_UPDATE_SPEED);
+            _displayedValue += (diff * (changeMx));
+           
+            var drawHeight = this.Height * _displayedValue / Maximum;
+            var texHeight = (int) (_frontSprite.Texture.Height*_displayedValue/Maximum);
+            _frontSprite.Height = (int) drawHeight;
+            _frontSprite.Y = this.Y + this.Height - (int) drawHeight;
+            _frontSprite.DrawTiled(0, _frontSprite.Texture.Height  -  texHeight, _frontSprite.Width, texHeight);
+            DrawReadyIndicator();
+
+
+        }
+
+        private void DrawReadyIndicator()
+        {
             if (Value == Maximum)
             {
-             
-                _opacity = Math.Min(_opacity + (TextureManager.LastDrawnPhraseDiff * READY_FADEIN_SPEED), 255);
-
+                _opacity = Math.Min(_opacity + (TextureManager.LastDrawnPhraseDiff*READY_FADEIN_SPEED), 255);
                 _readySprite.ColorShading.A = (byte) _opacity;
-                _readySprite.Draw(spriteBatch);
-
+                _readySprite.Draw();
             }
             else
             {
                 _opacity = 0;
-
             }
-
-
         }
     }
 }

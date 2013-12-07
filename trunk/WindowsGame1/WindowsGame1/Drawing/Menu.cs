@@ -19,10 +19,10 @@ namespace WGiBeat.Drawing
         private string _fontName = "LargeFont";
         private int _animationOffset;
 
-        private SpriteMap _edgeSpriteMap;
-        private SpriteMap _arrowSpriteMap;
-        private SpriteMap _sideSpriteMap;
-        private Sprite _selectedItemSprite;
+        private SpriteMap3D _edgeSpriteMap;
+        private SpriteMap3D _arrowSpriteMap;
+        private SpriteMap3D _sideSpriteMap;
+        private Sprite3D _selectedItemSprite;
 
 
         public string FontName
@@ -51,11 +51,11 @@ namespace WGiBeat.Drawing
 
         private void InitSprites()
         {
-            _edgeSpriteMap = new SpriteMap{Columns = 1, Rows = 2, SpriteTexture = TextureManager.Textures("MenuEdge")};
-            _arrowSpriteMap = new SpriteMap
-                                  {Columns = 4, Rows = 1, SpriteTexture = TextureManager.Textures("IndicatorArrows")};
-            _sideSpriteMap = new SpriteMap {Columns = 1, Rows = 1, SpriteTexture = TextureManager.Textures("MenuSide")};
-            _selectedItemSprite = new Sprite {SpriteTexture = TextureManager.Textures("MenuSelectedItem")};
+            _edgeSpriteMap = new SpriteMap3D {Columns = 1, Rows = 2, Texture = TextureManager.Textures("MenuEdge")};
+            _arrowSpriteMap = new SpriteMap3D
+                                  {Columns = 4, Rows = 1, Texture = TextureManager.Textures("IndicatorArrows")};
+            _sideSpriteMap = new SpriteMap3D {Columns = 1, Rows = 1, Texture = TextureManager.Textures("MenuSide")};
+            _selectedItemSprite = new Sprite3D {Texture = TextureManager.Textures("MenuSelectedItem")};
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -88,7 +88,7 @@ namespace WGiBeat.Drawing
                 startItem++;
             }
 
-            DrawBorder(spriteBatch,startItem, lastItem);
+            DrawBorder(startItem, lastItem);
             DrawMenuItems(spriteBatch, startItem, lastItem);
 
         }
@@ -112,7 +112,7 @@ namespace WGiBeat.Drawing
                     _selectedItemSprite.X -= 5;
                     _selectedItemSprite.Width = this.Width - 10;
                     _selectedItemSprite.Height = ItemSpacing + 3;
-                    _selectedItemSprite.Draw(spriteBatch);
+                    _selectedItemSprite.Draw();
                 }
                 else
                 {
@@ -123,7 +123,7 @@ namespace WGiBeat.Drawing
                 drawColor.A = menuItem.Enabled ? Opacity : (byte) (Opacity/2);
 
                
-                TextureManager.DrawString(spriteBatch, menuItem.ItemText, FontName, position, drawColor, FontAlign.LEFT);
+                TextureManager.DrawString(spriteBatch, menuItem.ItemText, FontName, position, drawColor, FontAlign.Left);
                 position.X += xOptionOffset;
 
                 var menuOptionText = menuItem.SelectedText();
@@ -131,7 +131,7 @@ namespace WGiBeat.Drawing
                 var scale = TextureManager.ScaleTextToFit(menuOptionText, FontName, this.Width - 20 - xOptionOffset,
                                                           1000);
 
-                TextureManager.DrawString(spriteBatch, menuOptionText, FontName, position, scale, drawColor, FontAlign.LEFT);
+                TextureManager.DrawString(spriteBatch, menuOptionText, FontName, position, scale, drawColor, FontAlign.Left);
 
 
                 position.X -= xOptionOffset;
@@ -140,27 +140,27 @@ namespace WGiBeat.Drawing
             }
         }
 
-        private void DrawBorder(SpriteBatch spriteBatch, int startItem, int lastItem)
+        private void DrawBorder(int startItem, int lastItem)
         {
             _edgeSpriteMap.ColorShading.A = Opacity;
-            _edgeSpriteMap.Draw(spriteBatch, 0, this.Width, 30, this.X, this.Y);
+            _edgeSpriteMap.Draw( 0, this.Width, 30, this.X, this.Y);
             var menuBottom = Math.Min(MaxVisibleItems, _menuItems.Count);
             var bottomPosition = this.Y + (ItemSpacing * menuBottom) + 40;
-            _edgeSpriteMap.Draw(spriteBatch, 1, this.Width, 30, this.X, bottomPosition);
+            _edgeSpriteMap.Draw( 1, this.Width, 30, this.X, bottomPosition);
             _animationOffset = (int)(_animationOffset * 0.4);
 
             _sideSpriteMap.ColorShading.A = Opacity;
-            _sideSpriteMap.Draw(spriteBatch, 0, 5, bottomPosition - this.Y - 30, this.X, this.Y + 30);
-            _sideSpriteMap.Draw(spriteBatch, 0, 5, bottomPosition - this.Y - 30, this.X + this.Width - 5, this.Y + 30);
+            _sideSpriteMap.Draw( 0, 5, bottomPosition - this.Y - 30, this.X, this.Y + 30);
+            _sideSpriteMap.Draw( 0, 5, bottomPosition - this.Y - 30, this.X + this.Width - 5, this.Y + 30);
 
             _arrowSpriteMap.ColorShading.A = Opacity;
             if (startItem > 0)
             {
-                _arrowSpriteMap.Draw(spriteBatch, 2, 25, 25, this.X + (this.Width / 2) - 12, this.Y);
+                _arrowSpriteMap.Draw( 2, 25, 25, this.X + (this.Width / 2) - 12, this.Y);
             }
             if (lastItem < _menuItems.Count - 1)
             {
-                _arrowSpriteMap.Draw(spriteBatch, 3, 25, 25, this.X + (this.Width / 2) - 12, bottomPosition);
+                _arrowSpriteMap.Draw( 3, 25, 25, this.X + (this.Width / 2) - 12, bottomPosition);
             }
         }
 

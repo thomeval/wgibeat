@@ -6,7 +6,7 @@ namespace WGiBeat.Drawing
 {
     public class GraphicNumber
     {
-       public SpriteMap SpriteMap { get; set; }
+       public SpriteMap3D SpriteMap { get; set; }
        public int SpacingAdjustment { get; set; }
         public void DrawNumber(SpriteBatch sb, int number, int x, int y, int width, int height)
         {
@@ -14,14 +14,14 @@ namespace WGiBeat.Drawing
             int offset = 0;
             foreach (char c in temp)
             {
-                SpriteMap.Draw(sb,(int) Char.GetNumericValue(c),width,height,x + offset,y);
+                SpriteMap.Draw((int) Char.GetNumericValue(c),width,height,x + offset,y);
                 offset += width + SpacingAdjustment;
             }
         }
 
         public void DrawNumber(SpriteBatch sb, int number, int x, int y)
         {
-            DrawNumber(sb, number,x,y, SpriteMap.SpriteTexture.Width / SpriteMap.Columns, SpriteMap.SpriteTexture.Height / SpriteMap.Rows);
+            DrawNumber(sb, number,x,y, SpriteMap.Texture.Width / SpriteMap.Columns, SpriteMap.Texture.Height / SpriteMap.Rows);
         }
 
         public void DrawNumber(SpriteBatch sb, int number, Vector2 position)

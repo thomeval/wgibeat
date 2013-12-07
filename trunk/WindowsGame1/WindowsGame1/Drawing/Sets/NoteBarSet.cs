@@ -130,10 +130,10 @@ namespace WGiBeat.Drawing.Sets
             {
               
                 CreateNextNoteBar(x, false);
-                _noteBars[x].RednessSprite =  new Sprite
+                _noteBars[x].RednessSprite =  new Sprite3D
                                                   {
                     ColorShading = Color.Red,
-                    SpriteTexture = TextureManager.CreateWhiteMask("BeatMeter"),
+                    Texture = TextureManager.CreateWhiteMask("BeatMeter"),
                     Height = 125,
                     Width = 350,
                     Position = SyncGameType ? _metrics["SyncBeatlineBarBase",_syncNotebarPositions[x]]: _metrics["BeatlineBarBase",x]
@@ -247,10 +247,10 @@ namespace WGiBeat.Drawing.Sets
             _noteBars[player] = NoteBar.CreateNoteBar(numArrow, numReverse, SyncGameType ? _metrics["SyncNoteBar", _syncNotebarPositions[player]] : _metrics["NoteBar", player]);
             _noteBars[player].DisplayLimit = numArrow;
             _noteBars[player].ID = player;
-            _noteBars[player].RednessSprite = new Sprite
+            _noteBars[player].RednessSprite = new Sprite3D
                                                   {
                 ColorShading = Color.Red,
-                SpriteTexture = TextureManager.CreateWhiteMask("BeatMeter"),
+                Texture = TextureManager.CreateWhiteMask("BeatMeter"),
                 Height = 125,
                 Width = 350,
                 Position =  SyncGameType ? _metrics["SyncBeatlineBarBase", _syncNotebarPositions[player]] : _metrics["BeatlineBarBase", player]
@@ -265,23 +265,17 @@ namespace WGiBeat.Drawing.Sets
 
         private int GetReverseNoteCount(int player)
         {
-            var numReverse = 0;
-
-            if (Players[player].IsBlazing)
+            
+            if (!Players[player].IsBlazing)
             {
-                if (Players[player].Life >= 200)
-                {
-                    numReverse = (int) Players[player].Level*2/3;
-                }
-                else if (Players[player].Life >= 150)
-                {
-                    numReverse = (int)Players[player].Level * 1/2;
-                }
-                else
-                {
-                    numReverse = (int) Players[player].Level/3;
-                }
+                return 0;
             }
+
+            //Would normally cap at 100% reverse notes at 250 life. Actually capped at 75% reverse.
+            var reverseRatio =  Math.Min(0.75, (Players[player].Life - 100) / 150.0);
+
+            var numReverse = (int) Math.Max(1,reverseRatio*Players[player].Level);
+   
             if (_gameType == GameType.SYNC_PLUS)
             {
                 numReverse *= (from e in Players where e.Playing select e).Count();

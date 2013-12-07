@@ -110,15 +110,6 @@ namespace WGiBeat.Drawing
             return result;
         }
 
-        public VertexPositionColorTexture[] GetVerticesTiled(float texU1, float texV1, float texU2, float texV2)
-        {
-            CheckIfDimensionsSet();
-            var result = SetupPrimitives();
-            SetupTextureCoords(ref result, texU1,texV1,texU2,texV2);
-            Device.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
-            Device.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
-            return result;
-        }
         public void DrawVertices(VertexPositionColorTexture[] vertices)
         {
             if (vertices.Length % 3 != 0)
@@ -138,12 +129,11 @@ namespace WGiBeat.Drawing
             }
             _effect.End();
         }
+
         public void Draw()
         {
-
             _vertices = GetVertices();
             DrawVertices(_vertices);
-
         }
 
         private void CheckIfEffectInit()
@@ -189,14 +179,23 @@ namespace WGiBeat.Drawing
             DrawVertices(_vertices);
 
         }
+        public VertexPositionColorTexture[] GetVerticesTiled(float texU1, float texV1, float texU2, float texV2)
+        {
+            CheckIfDimensionsSet();
+            var result = SetupPrimitives();
+            SetupTextureCoords(ref result, texU1, texV1, texU2, texV2);
+            Device.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
+            Device.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
+            return result;
+        }
 
         private void SetupTextureCoords(ref VertexPositionColorTexture[] vertices, float texU1, float texV1, float texU2, float texV2)
         {
             vertices[0].TextureCoordinate = new Vector2(texU1, texV1);
-            vertices[1].TextureCoordinate = new Vector2(texU2, texV1);
-            vertices[2].TextureCoordinate = new Vector2(texU2, texV2);
-            vertices[3].TextureCoordinate = new Vector2(texU2, texV2);
-            vertices[4].TextureCoordinate = new Vector2(texU1, texV2);
+            vertices[1].TextureCoordinate = new Vector2(texU2 + texU1, texV1);
+            vertices[2].TextureCoordinate = new Vector2(texU2 + texU1, texV2 + texV1);
+            vertices[3].TextureCoordinate = new Vector2(texU2 + texU1, texV2 + texV1);
+            vertices[4].TextureCoordinate = new Vector2(texU1, texV2 + texV1);
             vertices[5].TextureCoordinate = new Vector2(texU1, texV1);
         }
 

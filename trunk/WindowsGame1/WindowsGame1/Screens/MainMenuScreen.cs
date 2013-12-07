@@ -110,7 +110,7 @@ namespace WGiBeat.Screens
             DrawBackground(gameTime);
             DrawMenu(spriteBatch);
 
-            TextureManager.DrawString(spriteBatch,_errorMessage,"DefaultFont", Core.Metrics["MainMenuNoSongsError", 0], Color.Black,FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch,_errorMessage,"DefaultFont", Core.Metrics["MainMenuNoSongsError", 0], Color.Black,FontAlign.Left);
             DrawUpdater(spriteBatch);
 
         }
@@ -154,7 +154,7 @@ namespace WGiBeat.Screens
                        : Core.Metrics["MainMenuOptions.Size", 0];
                 textPosition.X += size.X / 2;
                 textPosition.Y += size.Y / 2 - 25;
-                TextureManager.DrawString(spriteBatch, _menuText[menuOption], "TwoTech36", textPosition, Color.Black, FontAlign.CENTER);
+                TextureManager.DrawString(spriteBatch, _menuText[menuOption], "TwoTech36", textPosition, Color.Black, FontAlign.Center);
             }
 
         }

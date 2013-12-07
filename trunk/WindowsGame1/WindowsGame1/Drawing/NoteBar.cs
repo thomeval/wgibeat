@@ -16,10 +16,10 @@ namespace WGiBeat.Drawing
     {
 
 
-        private SpriteMap _arrowsSpriteMap;
+        private SpriteMap3D _arrowsSpriteMap;
 
         public double Redness { get; set; }
-        public Sprite RednessSprite { get; set; }
+        public Sprite3D RednessSprite { get; set; }
 
         public double XDisplayOffset { get; set; }
         public List<Note> Notes { get; set; }
@@ -37,7 +37,7 @@ namespace WGiBeat.Drawing
 
         private void InitSprites()
         {
-            _arrowsSpriteMap = new SpriteMap { SpriteTexture = TextureManager.Textures("Arrows"), Columns = 4, Rows = 3 };
+            _arrowsSpriteMap = new SpriteMap3D { Texture = TextureManager.Textures("Arrows"), Columns = 4, Rows = 3 };
         }
 
         
@@ -139,11 +139,11 @@ namespace WGiBeat.Drawing
         public NoteBar Clone()
         {
             var result = new NoteBar();
-            result.RednessSprite = new Sprite
+            result.RednessSprite = new Sprite3D
                                        {
                                            Position = RednessSprite.Position,
                                            Size = RednessSprite.Size,
-                                           SpriteTexture = RednessSprite.SpriteTexture,
+                                           Texture = RednessSprite.Texture,
                                            ColorShading = RednessSprite.ColorShading
 
                                        };
@@ -163,7 +163,7 @@ namespace WGiBeat.Drawing
 
             if (RednessSprite != null)
             {
-                DrawRednessSprite(spriteBatch);
+                DrawRednessSprite();
             }
 
             var xdrawOffset = 0 - NumberCompleted() * NOTE_SIZE + (int)XDisplayOffset;
@@ -190,7 +190,7 @@ namespace WGiBeat.Drawing
                 _arrowsSpriteMap.ColorShading.A = (byte) (CalculateOpacity(xdrawOffset) * Opacity / 255);
                 if (_arrowsSpriteMap.ColorShading.A > 0)
                 {
-                    _arrowsSpriteMap.Draw(spriteBatch, cell, NOTE_SIZE, NOTE_SIZE, posX + xdrawOffset + completedOffset,
+                    _arrowsSpriteMap.Draw( cell, NOTE_SIZE, NOTE_SIZE, posX + xdrawOffset + completedOffset,
                                           posY + heightOffset);
                 }
                 xdrawOffset += NOTE_SIZE;
@@ -199,12 +199,12 @@ namespace WGiBeat.Drawing
 
         }
 
-        private void DrawRednessSprite(SpriteBatch spriteBatch)
+        private void DrawRednessSprite()
         {
 
             RednessSprite.ColorShading.A = Convert.ToByte(Redness);
 
-            RednessSprite.Draw(spriteBatch);
+            RednessSprite.Draw();
         }
 
         private const int NOTE_FADEOUT_START = 180;

@@ -19,9 +19,9 @@ namespace WGiBeat.Drawing
         public int SpacingY { get; set; }
         public int MaxLength { get; set; }
         private int _selectedIndex;
-        private SpriteMap _specialChars;
-        private SpriteMap _barSideSpriteMap;
-        private Sprite _barMiddleSprite;
+        private SpriteMap3D _specialChars;
+        private SpriteMap3D _barSideSpriteMap;
+        private Sprite3D _barMiddleSprite;
 
         public event EventHandler EntryComplete;
         public event EventHandler EntryCancelled;
@@ -49,37 +49,37 @@ namespace WGiBeat.Drawing
 
         private void InitSprites()
         {
-            _specialChars = new SpriteMap
-                                {Columns = 3, Rows = 1, SpriteTexture = TextureManager.Textures("KeyboardIcons")};
-            _barSideSpriteMap = new SpriteMap
+            _specialChars = new SpriteMap3D
+                                {Columns = 3, Rows = 1, Texture = TextureManager.Textures("KeyboardIcons")};
+            _barSideSpriteMap = new SpriteMap3D
             {
-                SpriteTexture = TextureManager.Textures("TextEntryBarSide"),
+                Texture = TextureManager.Textures("TextEntryBarSide"),
                 Rows = 2,
                 Columns = 1
             };
-            _barMiddleSprite = new Sprite { SpriteTexture = TextureManager.Textures("TextEntryBarMiddle") };
+            _barMiddleSprite = new Sprite3D { Texture = TextureManager.Textures("TextEntryBarMiddle") };
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            DrawEnteredTextBar(spriteBatch,this.Position.Clone());
+            DrawEnteredTextBar(this.Position.Clone());
             var enteredTextPosition = this.Position.Clone();
             enteredTextPosition.X += this.Width/2;
-           TextureManager.DrawString(spriteBatch,EnteredText,"TwoTech24", enteredTextPosition, BaseColor,FontAlign.CENTER);
+           TextureManager.DrawString(spriteBatch,EnteredText,"TwoTech24", enteredTextPosition, BaseColor,FontAlign.Center);
 
             DrawKeyboard(spriteBatch);
         }
 
-        private void DrawEnteredTextBar(SpriteBatch spriteBatch, Vector2 position)
+        private void DrawEnteredTextBar(Vector2 position)
         {
             position.X += 25;
-            _barSideSpriteMap.Draw(spriteBatch, 0, position);
+            _barSideSpriteMap.Draw( 0, position);
             position.X += 35;
             _barMiddleSprite.Width = this.Width - 120;
             _barMiddleSprite.Position = position;
-            _barMiddleSprite.Draw(spriteBatch);
+            _barMiddleSprite.Draw();
             position.X += this.Width - 120;
-            _barSideSpriteMap.Draw(spriteBatch, 1, position);
+            _barSideSpriteMap.Draw( 1, position);
 
         }
 
@@ -95,13 +95,12 @@ namespace WGiBeat.Drawing
                 drawPosition.Y = (initialPosition.Y) + (SpacingY*(counter/Columns));
                 if (counter == _selectedIndex)
                 {
-                    TextureManager.DrawString(spriteBatch, c.ToString(), "TwoTech24", drawPosition, HighlightColor, FontAlign.LEFT);
+                    TextureManager.DrawString(spriteBatch, "" +c, "TwoTech24", drawPosition, HighlightColor, FontAlign.Left);
                 }
                 else
                 {
-                    TextureManager.DrawString(spriteBatch, c.ToString(), "TwoTech24", drawPosition, BaseColor,FontAlign.LEFT);                  
+                    TextureManager.DrawString(spriteBatch, "" + c, "TwoTech24", drawPosition, BaseColor,FontAlign.Left);                  
                 }
-
                 counter++;
             }
 
@@ -110,7 +109,7 @@ namespace WGiBeat.Drawing
                 drawPosition.X = (initialPosition.X) + (SpacingX * (counter % Columns));
                 drawPosition.Y = (initialPosition.Y) + (SpacingY * (counter / Columns));
                 _specialChars.ColorShading = (_selectedIndex == _chars.Count() + x) ? HighlightColor : BaseColor;
-                _specialChars.Draw(spriteBatch,x,25,25, (int) drawPosition.X, (int) drawPosition.Y);
+                _specialChars.Draw(x,25,25, (int) drawPosition.X, (int) drawPosition.Y);
                 counter++;
             }
         }

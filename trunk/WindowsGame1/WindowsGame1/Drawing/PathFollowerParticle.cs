@@ -8,16 +8,14 @@ namespace WGiBeat.Drawing
 {
     class PathFollowerParticle : DrawableObject
     {
-        public Sprite Particle { get; set; }
-        public Boolean Wrap { get; set; }
+        public Sprite3D Particle { get; set; }
+        public bool Wrap { get; set; }
         public Double PathPosition { get; set; }
         public Double StepSize { get; set; }
         public Double MoveSize { get; set; }
 
         public List<Vector2> Points { get; set; }
-        
-        
-        //public LineDrawingType Type { get; set; }
+             
 
         private List<Double> XCoef { get; set; }
         private List<Double> YCoef { get; set; }
@@ -56,9 +54,9 @@ namespace WGiBeat.Drawing
 
             SegmentIndex = 0;
 
-            Particle = new Sprite() //temp
+            Particle = new Sprite3D() //temp
             {
-                SpriteTexture = TextureManager.Textures("Particle_1")
+                Texture = TextureManager.Textures("Particle_1")
             };
 
             Wrap = true;
@@ -70,7 +68,7 @@ namespace WGiBeat.Drawing
         public override void Draw(SpriteBatch spriteBatch)
         {
 
-            Particle.Draw(spriteBatch);
+            Particle.Draw();
 
             if (Points.Count > 0)
                 IncrementPosition();
