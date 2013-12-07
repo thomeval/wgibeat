@@ -7,9 +7,9 @@ namespace WGiBeat.Drawing
 {
     public class SongTimeLine : DrawableObject 
     {
-        private SpriteMap _barParts;
-        private SpriteMap _barEdges;
-        private Sprite _currentPosition;
+        private SpriteMap3D _barParts;
+        private SpriteMap3D _barEdges;
+        private Sprite3D _currentPosition;
 
 
         public double? Offset { get; set; }
@@ -28,12 +28,12 @@ namespace WGiBeat.Drawing
 
         private void InitSprites()
         {
-            _barParts = new SpriteMap
-                            {Columns = 1, Rows = 5, SpriteTexture = TextureManager.Textures("SongTimeLineParts")};
-            _barEdges = new SpriteMap { Columns = 2, Rows = 1, SpriteTexture = TextureManager.Textures("SongTimeLineEdges") };
-            _currentPosition = new Sprite
+            _barParts = new SpriteMap3D
+                            {Columns = 1, Rows = 5, Texture = TextureManager.Textures("SongTimeLineParts")};
+            _barEdges = new SpriteMap3D { Columns = 2, Rows = 1, Texture = TextureManager.Textures("SongTimeLineEdges") };
+            _currentPosition = new Sprite3D
                                    {
-                                      SpriteTexture = TextureManager.Textures("SongTimeLineCurrentPosition"),
+                                      Texture = TextureManager.Textures("SongTimeLineCurrentPosition"),
                                       Width= 6
                                    };
         }
@@ -44,13 +44,13 @@ namespace WGiBeat.Drawing
             {
                 return;
             }
-            DrawEdges(spriteBatch);
-            DrawBars(spriteBatch);
-            DrawCurrentPosition(spriteBatch);
+            DrawEdges();
+            DrawBars();
+            DrawCurrentPosition();
             DrawLabels(spriteBatch);
         }
 
-        private void DrawCurrentPosition(SpriteBatch spriteBatch)
+        private void DrawCurrentPosition()
         {
             if (CurrentPosition == null || CurrentPosition.Value == 0)
             {
@@ -65,7 +65,7 @@ namespace WGiBeat.Drawing
             position.X += (float) (CurrentPosition.Value/ ending * _totalBarWidth);
             position.X -= _currentPosition.Width/2;
             _currentPosition.Position = position;
-            _currentPosition.Draw(spriteBatch);
+            _currentPosition.Draw();
         }
 
         private void DrawLabels(SpriteBatch spriteBatch)
@@ -82,7 +82,7 @@ namespace WGiBeat.Drawing
               {
                   position.X = 50;
               }        
-              TextureManager.DrawString(spriteBatch, "AudioStart", "DefaultFont", position, Color.Black, FontAlign.CENTER);
+              TextureManager.DrawString(spriteBatch, "AudioStart", "DefaultFont", position, Color.Black, FontAlign.Center);
           }
             position.X = (_labelPositions[1] + this.X + 10);
             position.Y = this.Y + 40;
@@ -91,16 +91,16 @@ namespace WGiBeat.Drawing
             {
                 position.X = 35;
             }
-            TextureManager.DrawString(spriteBatch, "Offset", "DefaultFont", position, Color.Black, FontAlign.CENTER);
+            TextureManager.DrawString(spriteBatch, "Offset", "DefaultFont", position, Color.Black, FontAlign.Center);
 
             position.X = (_labelPositions[2] + this.X + 10);
             position.Y = this.Y;
-          TextureManager.DrawString(spriteBatch, "Length", "DefaultFont", position, Color.Black, FontAlign.RIGHT);
+          TextureManager.DrawString(spriteBatch, "Length", "DefaultFont", position, Color.Black, FontAlign.Right);
         }
 
         private int _totalBarWidth;
         private int[] _labelPositions = new int[4];
-        private void DrawBars(SpriteBatch spriteBatch)
+        private void DrawBars()
         {
             var barHeight = this.Height - 40;
             var position = this.Position.Clone();
@@ -113,34 +113,34 @@ namespace WGiBeat.Drawing
             //Draw outro section.
             var width = AudioEnd / ending * _totalBarWidth;
             width = Math.Min(width, _totalBarWidth);
-            _barParts.Draw(spriteBatch, 3,(int) width, barHeight,position);
+            _barParts.Draw( 3,(int) width, barHeight,position);
 
             //Draw playable section.
             width = (Length ?? Song.Length) /ending * _totalBarWidth;
             width = Math.Min(width, _totalBarWidth);
             _labelPositions[2] = (int) width;
-            _barParts.Draw(spriteBatch, 2, (int)width, barHeight, position);
+            _barParts.Draw( 2, (int)width, barHeight, position);
 
             //Draw intro section.
             width = (Offset ?? Song.Offset) / ending * _totalBarWidth;
             width = Math.Min(width, _totalBarWidth);
             _labelPositions[1] = (int)width;
-            _barParts.Draw(spriteBatch, 1, (int)width, barHeight, position);
+            _barParts.Draw( 1, (int)width, barHeight, position);
 
             //Draw skipped section.
             width = (AudioStart ?? Song.AudioStart) / ending * _totalBarWidth;
             width = Math.Min(width, _totalBarWidth);
             _labelPositions[0] = (int)width;
-            _barParts.Draw(spriteBatch, 0, (int)width, barHeight, position);
+            _barParts.Draw( 0, (int)width, barHeight, position);
         }
 
-        private void DrawEdges(SpriteBatch spriteBatch)
+        private void DrawEdges()
         {
             var position = this.Position.Clone();
             position.Y += 20;
-            _barEdges.Draw(spriteBatch,0,10,this.Height - 40,position);
+            _barEdges.Draw(0,10,this.Height - 40,position);
             position.X += this.Width - 10;
-            _barEdges.Draw(spriteBatch,1,10,this.Height-40,position);
+            _barEdges.Draw(1,10,this.Height-40,position);
         }
     }
 }

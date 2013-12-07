@@ -112,10 +112,10 @@ namespace WGiBeat.Managers
             }
         }
 
-
-        public Sprite Setup2DFromMetrics(string metricsKey, int id)
+        /*
+        public Sprite SetupFromMetrics(string metricsKey, int id)
         {
-            var result = new Sprite();
+            var result = new Sprite3D();
             if (_metrics.ContainsKey(metricsKey))
             {
                 result.Position = this[metricsKey, id];
@@ -125,10 +125,10 @@ namespace WGiBeat.Managers
                 //Handle both a single size definition and multiple (one per ID).
                 result.Size = _metrics[metricsKey + ".Size"].Count() > id ? this[metricsKey + ".Size", id] : this[metricsKey + ".Size", 0];
             }
-            result.SpriteTexture = TextureManager.Textures(metricsKey);
+            result.Texture = TextureManager.Textures(metricsKey);
             return result;
         }
-
+        */
         public Sprite3D SetupFromMetrics(string metricsKey, int id)
         {
             var result = new Sprite3D();

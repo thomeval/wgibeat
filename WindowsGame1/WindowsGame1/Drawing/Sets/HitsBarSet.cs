@@ -13,10 +13,10 @@ namespace WGiBeat.Drawing.Sets
         private readonly double[] _overmaskOpacity;
         private readonly double[] _streakOvermaskOpacity;
         private Color _textColor = Color.Black;
-        private Sprite _baseSprite;
-        private Sprite _streakBaseSprite;
-        private Sprite _baseOvermaskSprite;
-        private Sprite _streakOvermaskSprite;
+        private Sprite3D _baseSprite;
+        private Sprite3D _streakBaseSprite;
+        private Sprite3D _baseOvermaskSprite;
+        private Sprite3D _streakOvermaskSprite;
 
 
         private readonly long[] _lastMilestone;
@@ -39,18 +39,18 @@ namespace WGiBeat.Drawing.Sets
 
         private void SetupSprites()
         {
-            _baseSprite = new Sprite();
-            _baseOvermaskSprite = new Sprite();
-            _streakBaseSprite = new Sprite();
-            _streakOvermaskSprite = new Sprite();
-            _baseSprite = _metrics.Setup2DFromMetrics(DeterminePrefix() + "HitsBar",0);
-            _streakBaseSprite = _metrics.Setup2DFromMetrics("StreakBar", 0);
-            _baseOvermaskSprite = new Sprite();
+            _baseSprite = new Sprite3D();
+            _baseOvermaskSprite = new Sprite3D();
+            _streakBaseSprite = new Sprite3D();
+            _streakOvermaskSprite = new Sprite3D();
+            _baseSprite = _metrics.SetupFromMetrics(DeterminePrefix() + "HitsBar",0);
+            _streakBaseSprite = _metrics.SetupFromMetrics("StreakBar", 0);
+            _baseOvermaskSprite = new Sprite3D();
 
-            _baseOvermaskSprite = _metrics.Setup2DFromMetrics(DeterminePrefix() + "HitsBar", 0);
-            _streakOvermaskSprite = _metrics.Setup2DFromMetrics("StreakBar", 0);
-            _baseOvermaskSprite.SpriteTexture = TextureManager.CreateWhiteMask(DeterminePrefix() + "HitsBar");
-            _streakOvermaskSprite.SpriteTexture = TextureManager.CreateWhiteMask("StreakBar");
+            _baseOvermaskSprite = _metrics.SetupFromMetrics(DeterminePrefix() + "HitsBar", 0);
+            _streakOvermaskSprite = _metrics.SetupFromMetrics("StreakBar", 0);
+            _baseOvermaskSprite.Texture = TextureManager.CreateWhiteMask(DeterminePrefix() + "HitsBar");
+            _streakOvermaskSprite.Texture = TextureManager.CreateWhiteMask("StreakBar");
 
         }
 
@@ -103,14 +103,14 @@ namespace WGiBeat.Drawing.Sets
             _baseSprite.ColorShading.A = (byte) _hitsOpacity[player];
             _baseSprite.Position = _baseOvermaskSprite.Position = _metrics[DeterminePrefix() + "HitsBar", player];
             _textColor.A = (byte) _hitsOpacity[player];
-            _baseSprite.Draw(spriteBatch);
+            _baseSprite.Draw();
 
             DrawOvermask(spriteBatch, player);
 
             var textPosition = _baseSprite.Position.Clone();
             textPosition.X += 25;
             TextureManager.DrawString(spriteBatch, String.Format("{0:D3}", Players[player].Hits), "DefaultFont",
-                   textPosition, _textColor, FontAlign.CENTER);
+                   textPosition, _textColor, FontAlign.Center);
         }
 
         private const int STREAKBAR_SHOW_SPEED = 600;
@@ -131,13 +131,13 @@ namespace WGiBeat.Drawing.Sets
             _streakBaseSprite.ColorShading.A = (byte)_streakOpacity[player];
             _streakBaseSprite.Position = _streakOvermaskSprite.Position = _metrics[DeterminePrefix() + "StreakBar", player];
             _textColor.A = (byte)_streakOpacity[player];
-            _streakBaseSprite.Draw(spriteBatch);
+            _streakBaseSprite.Draw();
 
             DrawStreakOvermask(spriteBatch,player);
             var textPosition = _streakBaseSprite.Position.Clone();
             textPosition.X += _streakBaseSprite.Width - 25;
             TextureManager.DrawString(spriteBatch, String.Format("x{0}", Players[player].Streak), "DefaultFont",
-                   textPosition, _textColor, FontAlign.CENTER);
+                   textPosition, _textColor, FontAlign.Center);
         }
 
         private void DrawOvermask(SpriteBatch spriteBatch, int player)
@@ -150,7 +150,7 @@ namespace WGiBeat.Drawing.Sets
 
             _baseOvermaskSprite.ColorShading = _overmaskColors[player];
             _baseOvermaskSprite.ColorShading.A = (byte) _overmaskOpacity[player];
-            _baseOvermaskSprite.Draw(spriteBatch);
+            _baseOvermaskSprite.Draw();
         }
 
         private void DrawStreakOvermask(SpriteBatch spriteBatch, int player)
@@ -165,7 +165,7 @@ namespace WGiBeat.Drawing.Sets
 
             _streakOvermaskSprite.ColorShading = _overmaskColors[player];
             _streakOvermaskSprite.ColorShading.A = (byte)_streakOvermaskOpacity[player];
-            _streakOvermaskSprite.Draw(spriteBatch);
+            _streakOvermaskSprite.Draw();
         }
         private bool PlayerAtNewMilestone(int x)
         {

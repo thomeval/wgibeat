@@ -13,6 +13,7 @@ namespace WGiBeat.Drawing
         private static readonly Dictionary<string, SpriteFont> _fonts = new Dictionary<string, SpriteFont>();
         public static GraphicsDevice GraphicsDevice;
         public static LogManager Log;
+        public static Matrix FontMatrix;
 
         public static Texture2D Textures(string id)
         {
@@ -46,8 +47,7 @@ namespace WGiBeat.Drawing
         {
             CreateAndAddTexture(filename, Path.GetFileNameWithoutExtension(filename));   
         }
-
-        
+   
         public static void CreateAndAddTexture(string filename, string assetName)
         {
             var newTexture = Texture2D.FromFile(GraphicsDevice, filename);
@@ -84,7 +84,6 @@ namespace WGiBeat.Drawing
                     }
                 }               
             }
-  
         }
 
         public static void AddFont(string name, SpriteFont font)
@@ -101,7 +100,8 @@ namespace WGiBeat.Drawing
             var lines = text.Split('\n');
             fontName = fontName.ToUpper();
            
-                spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+    
+                spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None,FontMatrix);
             
             foreach (string line in lines)
             {
@@ -109,10 +109,10 @@ namespace WGiBeat.Drawing
                 measurements *= scale;
                 switch (align)
                 {
-                    case FontAlign.CENTER:
+                    case FontAlign.Center:
                         measuredPosition.X -= measurements.X/2;
                         break;
-                    case FontAlign.RIGHT:
+                    case FontAlign.Right:
                         measuredPosition.X -= measurements.X;
                         break;
                 }
@@ -126,6 +126,16 @@ namespace WGiBeat.Drawing
            
                 spriteBatch.End();
             
+        }
+
+        public static void DrawString(SpriteBatch spriteBatch, string text, string fontName, Vector2 position)
+        {
+            DrawString(spriteBatch, text, fontName, position, _noScaling,Color.Black, FontAlign.Left);
+        }
+
+        public static void DrawString(SpriteBatch spriteBatch, string text, string fontName, Vector2 position, Color color)
+        {
+            DrawString(spriteBatch, text, fontName, position, _noScaling, color, FontAlign.Left);
         }
 
         public static void DrawString(SpriteBatch spriteBatch, string text, string fontName, Vector2 position, Color color, FontAlign align)
@@ -197,14 +207,13 @@ namespace WGiBeat.Drawing
         }
 
         public static double LastDrawnPhraseDiff { get; private set; }
-
-   
+  
     }
 
     public enum FontAlign
     {
-        LEFT = 0,
-        CENTER = 1,
-        RIGHT = 2
+        Left = 0,
+        Center = 1,
+        Right = 2
     }
 }

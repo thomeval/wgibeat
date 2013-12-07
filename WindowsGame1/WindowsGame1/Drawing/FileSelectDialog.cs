@@ -71,7 +71,7 @@ namespace WGiBeat.Drawing
 
 
             var pathWidth = TextureManager.ScaleTextToFit(shortPath, "LargeFont", this.Width - 10, 50);
-            TextureManager.DrawString(spriteBatch,shortPath,"LargeFont",position,pathWidth,Color.Black,FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch,shortPath,"LargeFont",position,pathWidth,Color.Black,FontAlign.Left);
             
             FileList.X = this.X;
             FileList.Y = this.Y + 35;
@@ -99,7 +99,7 @@ namespace WGiBeat.Drawing
             foreach (var line in instructions)
             {
                 TextureManager.DrawString(spriteBatch, line, "DefaultFont", position, Color.Black,
-                                          FontAlign.CENTER);
+                                          FontAlign.Center);
                 position.Y += 20;
             }
         }

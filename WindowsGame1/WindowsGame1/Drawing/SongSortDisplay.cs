@@ -60,7 +60,7 @@ namespace WGiBeat.Drawing
             {
                 return 0;
             }
-            return first.Song.Title.CompareTo(second.Song.Title);
+            return String.CompareOrdinal(first.Song.Title, second.Song.Title);
         }
 
         private bool StartsWithSymbol(string text)
@@ -82,7 +82,7 @@ namespace WGiBeat.Drawing
             {
                 return 0;
             }
-            return first.Song.Artist.CompareTo(second.Song.Artist);
+            return String.CompareOrdinal(first.Song.Artist, second.Song.Artist);
         }
         private int SortByBpm(SongListItem first, SongListItem second)
         {
@@ -103,16 +103,16 @@ namespace WGiBeat.Drawing
         }
 
 
-        private Sprite _backgroundSprite;
-        private Sprite _listBackgroundSprite;
-        private SpriteMap _arrowSprites;
+        private Sprite3D _backgroundSprite;
+        private Sprite3D _listBackgroundSprite;
+        private SpriteMap3D _arrowSprites;
         private Vector2 _textPosition;
 
         private Menu _bookmarkMenu;
         private int _selectedBookmarkIndex;
-        private int _bookmarkTextSize = 18;
+        private const int BOOKMARK_TEXT_SIZE = 18;
 
-        public int VisibleBookmarks = 10;
+        public const int VISIBLE_BOOKMARKS = 10;
         private int _lastSongHash;
 
         private int _selectedSongIndex;
@@ -134,11 +134,11 @@ namespace WGiBeat.Drawing
         }
         public void InitSprites()
         {
-            _backgroundSprite = new Sprite {SpriteTexture = TextureManager.Textures("SongSortBackground")};
-            _arrowSprites = new SpriteMap {SpriteTexture = TextureManager.Textures("IndicatorArrows"), Columns=4, Rows = 1};
-            _listBackgroundSprite = new Sprite
+            _backgroundSprite = new Sprite3D {Texture = TextureManager.Textures("SongSortBackground")};
+            _arrowSprites = new SpriteMap3D {Texture = TextureManager.Textures("IndicatorArrows"), Columns=4, Rows = 1};
+            _listBackgroundSprite = new Sprite3D
                                         {
-                                            SpriteTexture = TextureManager.Textures("SongSortListBackground"),
+                                            Texture = TextureManager.Textures("SongSortListBackground"),
                                             X = (this.X + this.Width - 75),
                                             Y = this.Y + this.Height,
                                             Width = 75
@@ -161,14 +161,14 @@ namespace WGiBeat.Drawing
             }
 
             SetSpritePositions();
-            _backgroundSprite.Draw(spriteBatch);
+            _backgroundSprite.Draw();
             _textPosition.X = this.X + (this.Width/2);
             _textPosition.Y = this.Y;
-            TextureManager.DrawString(spriteBatch,"" + SongSortMode, "TwoTechLarge",_textPosition,Color.Black, FontAlign.CENTER);
+            TextureManager.DrawString(spriteBatch,"" + SongSortMode, "TwoTechLarge",_textPosition,Color.Black, FontAlign.Center);
 
             _arrowSprites.ColorShading.A = (byte) _activeOpacity;
-            _arrowSprites.Draw(spriteBatch, 1, 35, 35, this.X + 15, this.Y + 8);
-            _arrowSprites.Draw(spriteBatch, 0, 35, 35, this.X + this.Width - 40, this.Y + 8);
+            _arrowSprites.Draw( 1, 35, 35, this.X + 15, this.Y + 8);
+            _arrowSprites.Draw( 0, 35, 35, this.X + this.Width - 40, this.Y + 8);
 
             DrawList(spriteBatch);
 
@@ -181,10 +181,10 @@ namespace WGiBeat.Drawing
 
         private void DrawList(SpriteBatch spriteBatch)
         {
-            _listBackgroundSprite.Height = 40 + (_bookmarkTextSize * (Math.Min(VisibleBookmarks,_bookmarkMenu.ItemCount)));
+            _listBackgroundSprite.Height = 40 + (BOOKMARK_TEXT_SIZE * (Math.Min(VISIBLE_BOOKMARKS,_bookmarkMenu.ItemCount)));
             _listBackgroundSprite.ColorShading.A = (byte) _activeOpacity;
      
-            _listBackgroundSprite.Draw(spriteBatch);
+            _listBackgroundSprite.Draw();
 
             if (!_initiated)
             {
@@ -252,7 +252,6 @@ namespace WGiBeat.Drawing
 
         private int JumpBookmarkTitle(string start)
         {
-            char startChar;
             if (start == "#")
             {
                 for (int x = 0; x < SongList.Count; x++)
@@ -274,7 +273,7 @@ namespace WGiBeat.Drawing
                 }
             }
 
-            startChar = start[0];
+            char startChar = start[0];
 
             for (int x = 0; x < SongList.Count; x++)
             {
@@ -287,7 +286,6 @@ namespace WGiBeat.Drawing
         }
         private int JumpBookmarkArtist(string start)
         {
-            char startChar;
             if (start == "#")
             {
                 for (int x = 0; x < SongList.Count; x++)
@@ -309,7 +307,7 @@ namespace WGiBeat.Drawing
                 }
             }
 
-           startChar = start[0];
+           char startChar = start[0];
 
 
             for (int x = 0; x < SongList.Count; x++)
@@ -367,11 +365,11 @@ namespace WGiBeat.Drawing
 
                 _bookmarkMenu = new Menu
                                     {
-                                        MaxVisibleItems = VisibleBookmarks,
+                                        MaxVisibleItems = VISIBLE_BOOKMARKS,
                                         FontName = "DefaultFont",
                                         Position = _listBackgroundSprite.Position.Clone(),
-                                        ItemSpacing = _bookmarkTextSize,
-                                        Width = _listBackgroundSprite.Width
+                                        ItemSpacing = BOOKMARK_TEXT_SIZE,
+                                        Width = (int) _listBackgroundSprite.Width
                                     };
             foreach (MenuItem item in CreateBookmarks())
             {
@@ -426,38 +424,17 @@ namespace WGiBeat.Drawing
         private readonly int[] _bpmValues = {0,80,90,100,110,120,135,150,165,180,200,300};
         private List<MenuItem> CreateBPMBookmarks()
         {
-            var result = new List<MenuItem>();
-            for (int x = 0; x < _bpmTexts.Length; x++)
-            {
-                result.Add(new MenuItem{ItemText = _bpmTexts[x],ItemValue = _bpmValues[x]});
-            }
-            return result;
+            return _bpmTexts.Select((t, x) => new MenuItem {ItemText = t, ItemValue = _bpmValues[x]}).ToList();
         }
 
         private bool ContainsSymbol(IEnumerable<char> chars)
         {
-            foreach (char c in chars)
-            {
-                if (!Char.IsLetterOrDigit(c))
-                {
-                    return true;
-                }
-                
-            }
-            return false;
+            return chars.Any(c => !Char.IsLetterOrDigit(c));
         }
 
         private bool ContainsNumber(IEnumerable<char> chars)
         {
-            foreach (char c in chars)
-            {
-                if (Char.IsNumber(c))
-                {
-                    return true;
-                }
-
-            }
-            return false;
+            return chars.Any(Char.IsNumber);
         }
 
         public void SetBookmark(int index)

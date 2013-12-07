@@ -13,8 +13,8 @@ namespace WGiBeat.Drawing
 
         private void InitSprites()
         {
-            _songTypeBackgroundSpriteMap = new SpriteMap { SpriteTexture = TextureManager.Textures("SongTypeBackgrounds"), Columns = 1, Rows = _songTypes.Length + 1 };
-            _songTypeIconSpriteMap = new SpriteMap { SpriteTexture = TextureManager.Textures("SongTypeIcons"), Columns = _songTypes.Length + 1, Rows = 1 };
+            _songTypeBackgroundSpriteMap = new SpriteMap3D { Texture = TextureManager.Textures("SongTypeBackgrounds"), Columns = 1, Rows = _songTypes.Length + 1 };
+            _songTypeIconSpriteMap = new SpriteMap3D { Texture = TextureManager.Textures("SongTypeIcons"), Columns = _songTypes.Length + 1, Rows = 1 };
         }
 
         private GameSong _song;
@@ -28,8 +28,8 @@ namespace WGiBeat.Drawing
             }
         }
 
-        private SpriteMap _songTypeBackgroundSpriteMap;
-        private SpriteMap _songTypeIconSpriteMap;
+        private SpriteMap3D _songTypeBackgroundSpriteMap;
+        private SpriteMap3D _songTypeIconSpriteMap;
 
         private readonly string[] _songTypes = {".sng", ".sm", ".dwi"};
 
@@ -44,18 +44,18 @@ namespace WGiBeat.Drawing
         {
 
             var position = this.Position.Clone();
-            _songTypeBackgroundSpriteMap.Draw(spriteBatch, _songIndex, this.Width, this.Height, position);
+            _songTypeBackgroundSpriteMap.Draw( _songIndex, this.Width, this.Height, position);
             position.Y += 1;
             position.X += 5;
-            _songTypeIconSpriteMap.Draw(spriteBatch, _songIndex, this.Height -1, this.Height - 1, position);
+            _songTypeIconSpriteMap.Draw( _songIndex, this.Height -1, this.Height - 1, position);
 
             position.X = this.X + this.Width - 10;
             position.Y = this.Y + 1;
             var audioExt = Path.GetExtension(Song.AudioFile).ToUpper().TrimStart('.');
             var songExt = Path.GetExtension(Song.DefinitionFile).ToUpper().TrimStart('.');
-            TextureManager.DrawString(spriteBatch,audioExt,"DefaultFont",position,Color.Black,FontAlign.RIGHT);
+            TextureManager.DrawString(spriteBatch,audioExt,"DefaultFont",position,Color.Black,FontAlign.Right);
             position.Y += 16;
-            TextureManager.DrawString(spriteBatch, songExt, "DefaultFont", position, Color.Black, FontAlign.RIGHT);
+            TextureManager.DrawString(spriteBatch, songExt, "DefaultFont", position, Color.Black, FontAlign.Right);
         }
     }
 }

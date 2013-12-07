@@ -10,10 +10,10 @@ namespace WGiBeat.Drawing
        
         private Vector2 _textPosition;
         private Vector2 _barPosition;
-        private SpriteMap _barSprite;
-        private Sprite _baseSprite;
-        private Sprite _maxBaseSprite;
-        private Sprite _maxFrontSprite;
+        private SpriteMap3D _barSprite;
+        private Sprite3D _baseSprite;
+        private Sprite3D _maxBaseSprite;
+        private Sprite3D _maxFrontSprite;
         private bool _spritesInit;
         private int _lastLevelDrawn;
         private double _lastLevelOpacity;
@@ -57,31 +57,31 @@ namespace WGiBeat.Drawing
         private void InitSprites()
         {
             
-            _baseSprite = new Sprite
+            _baseSprite = new Sprite3D
             {
-                SpriteTexture = TextureManager.Textures("LevelBarBase")
+                Texture = TextureManager.Textures("LevelBarBase")
             };
 
-            _maxBaseSprite = new Sprite
+            _maxBaseSprite = new Sprite3D
                                  {
-                                     SpriteTexture = TextureManager.Textures("LevelBarMaxBase")
+                                     Texture = TextureManager.Textures("LevelBarMaxBase")
                                  };
 
-            _barSprite = new SpriteMap
+            _barSprite = new SpriteMap3D
             {
                 Columns = 1,
                 Rows = 12,
-                SpriteTexture = TextureManager.Textures("LevelBarFronts")
+                Texture = TextureManager.Textures("LevelBarFronts")
             };
 
-            _maxFrontSprite = new Sprite {SpriteTexture = TextureManager.Textures("LevelBarMaxFront")};
+            _maxFrontSprite = new Sprite3D {Texture = TextureManager.Textures("LevelBarMaxFront")};
 
             _spritesInit = true;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Draw(spriteBatch,0.0);
+            Draw(spriteBatch, 0.0);
         }
         public void Draw(SpriteBatch spriteBatch, double phraseNumber)
         {
@@ -91,7 +91,7 @@ namespace WGiBeat.Drawing
             }
 
             _baseSprite.Position = this.Position;
-            _baseSprite.Draw(spriteBatch);
+            _baseSprite.Draw();
             _maxBaseSprite.ColorShading = Parent.MaxHighlightColors[PlayerID];
             _maxBaseSprite.ColorShading.A = Convert.ToByte(_lastLevelOpacity);
 
@@ -113,12 +113,12 @@ namespace WGiBeat.Drawing
             _maxFrontSprite.Width = this.Width - 32;
             _maxFrontSprite.Height = this.Height - 6;
             _maxBaseSprite.Position = this.Position;
-            _maxBaseSprite.Draw(spriteBatch);
+            _maxBaseSprite.Draw();
                 TextureManager.DrawString(spriteBatch, "" + (int)(Parent.Players[PlayerID].Level * Multiplier), "DefaultFont",
-                       _textPosition, Color.Black,FontAlign.CENTER);
+                       _textPosition, Color.Black,FontAlign.Center);
 
              DrawBars(spriteBatch);
-            _maxFrontSprite.DrawTiled(spriteBatch, (int)(maxFrontBeatFraction * _maxFrontSprite.Width), 0, _maxFrontSprite.Width, _maxFrontSprite.Height);
+            _maxFrontSprite.DrawTiled((int)(maxFrontBeatFraction * _maxFrontSprite.Width), 0, _maxFrontSprite.Width, _maxFrontSprite.Height);
          
         }
 
@@ -153,14 +153,14 @@ namespace WGiBeat.Drawing
             if (_lastLevelDrawn > 0)
             {
                 _barSprite.ColorShading.A = Convert.ToByte(_lastLevelOpacity);
-                _barSprite.Draw(spriteBatch, _lastLevelDrawn - 1, maxWidth, this.Height - 6, _barPosition );
+                _barSprite.Draw( _lastLevelDrawn - 1, maxWidth, this.Height - 6, _barPosition );
                 diff = TextureManager.LastDrawnPhraseDiff*FULL_BAR_FADEOUT_SPEED;
                 _lastLevelOpacity = Math.Max(_lastLevelOpacity - diff, 0);
             }
 
             //Draw the current level bar.
             _barSprite.ColorShading.A = LevelBarFull ? (byte) 255 : (byte) (40 + (215 * levelFraction));
-            _barSprite.Draw(spriteBatch, ((int) (_displayedLevel -1) % _barSprite.Rows), barWidth, this.Height - 6, _barPosition);
+            _barSprite.Draw( ((int) (_displayedLevel -1) % _barSprite.Rows), barWidth, this.Height - 6, _barPosition);
 
             _displayedLevel /= Multiplier;
         }

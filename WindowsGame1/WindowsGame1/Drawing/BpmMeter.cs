@@ -8,11 +8,11 @@ namespace WGiBeat.Drawing
 {
     public class BpmMeter : DrawableObject
     {
-        private SpriteMap _meterSprite;
-        private Sprite _baseSprite;
-        private Sprite _baseBlinkSprite;
-        private Sprite _songLengthBase;
-        private Sprite _songTitleBase;
+        private SpriteMap3D  _meterSprite;
+        private Sprite3D _baseSprite;
+        private Sprite3D _baseBlinkSprite;
+        private Sprite3D _songLengthBase;
+        private Sprite3D _songTitleBase;
         private double _displayedMinBpm;
         private double _displayedMaxBpm;
         private double _actualMinBpm;
@@ -70,27 +70,27 @@ namespace WGiBeat.Drawing
 
         private void InitSprites()
         {
-            _meterSprite = new SpriteMap
+            _meterSprite = new SpriteMap3D 
             {
                 Columns = 1,
                 Rows = BpmLevels.Count(),
-                SpriteTexture = TextureManager.Textures("BpmMeterOverlay")
+                Texture = TextureManager.Textures("BpmMeterOverlay")
             };
-            _baseSprite = new Sprite
+            _baseSprite = new Sprite3D
             {
-                SpriteTexture = TextureManager.Textures("BpmMeterBase")
+                Texture = TextureManager.Textures("BpmMeterBase")
             };
-            _songLengthBase = new Sprite
+            _songLengthBase = new Sprite3D
             {
-                SpriteTexture = TextureManager.Textures("LengthDisplayBase")
+                Texture = TextureManager.Textures("LengthDisplayBase")
             };
 
-            _songTitleBase = new Sprite { SpriteTexture = TextureManager.Textures("SongTitleBase") };
+            _songTitleBase = new Sprite3D { Texture = TextureManager.Textures("SongTitleBase") };
 
      
-            _baseBlinkSprite = new Sprite
+            _baseBlinkSprite = new Sprite3D
             {
-                SpriteTexture = TextureManager.Textures("BpmMeterBlink"),
+                Texture = TextureManager.Textures("BpmMeterBlink"),
             };
 
             RepositionSprites();
@@ -124,7 +124,7 @@ namespace WGiBeat.Drawing
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            DrawBase(spriteBatch);
+            DrawBase();
             DrawBPMMeter(spriteBatch);
             DrawLengthDisplay(spriteBatch);
             DrawTitleDisplay(spriteBatch);
@@ -132,7 +132,7 @@ namespace WGiBeat.Drawing
 
         private void DrawTitleDisplay(SpriteBatch spriteBatch)
         {
-            _songTitleBase.Draw(spriteBatch);
+            _songTitleBase.Draw();
 
             var textPosition = _songTitleBase.Position.Clone();
             Vector2 scale;
@@ -141,7 +141,7 @@ namespace WGiBeat.Drawing
             {
                 scale = TextureManager.ScaleTextToFit(DisplayedSong.Title, "LargeFont", 350, 100);
                 TextureManager.DrawString(spriteBatch, DisplayedSong.Title, "LargeFont",
-                                          textPosition, scale, Color.Black, FontAlign.CENTER);
+                                          textPosition, scale, Color.Black, FontAlign.Center);
             }
             textPosition.X += 5;
             textPosition.Y += 25;
@@ -149,20 +149,20 @@ namespace WGiBeat.Drawing
             {
                 scale = TextureManager.ScaleTextToFit(DisplayedSong.Subtitle, "DefaultFont", 360, 100);
                 TextureManager.DrawString(spriteBatch, DisplayedSong.Subtitle, "DefaultFont",
-                                          textPosition, scale, Color.Black, FontAlign.CENTER);
+                                          textPosition, scale, Color.Black, FontAlign.Center);
             }
             textPosition.Y += 30;
             if (!String.IsNullOrEmpty(DisplayedSong.Artist))
             {
                 scale = TextureManager.ScaleTextToFit(DisplayedSong.Artist, "DefaultFont", 360, 100);
                 TextureManager.DrawString(spriteBatch, DisplayedSong.Artist, "DefaultFont",
-                                          textPosition, scale, Color.Black, FontAlign.CENTER);
+                                          textPosition, scale, Color.Black, FontAlign.Center);
             }
         }
 
         private void DrawLengthDisplay(SpriteBatch spriteBatch)
         {
-            _songLengthBase.Draw(spriteBatch);
+            _songLengthBase.Draw();
             var diff = (DisplayedSong.Length - DisplayedSong.Offset) - _displayedLength;
             var changeMx = Math.Min(0.5, TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * BPM_LENGTH_ANIMATION_SPEED);
             _displayedLength += (diff * (changeMx));
@@ -171,7 +171,7 @@ namespace WGiBeat.Drawing
             textPosition.Y -= 0;
             var ts = TimeSpan.FromSeconds(_displayedLength);
 
-            TextureManager.DrawString(spriteBatch, String.Format("{0}:{1:00}", ts.Minutes, ts.Seconds), "TwoTech36", textPosition, Color.Black, FontAlign.RIGHT);
+            TextureManager.DrawString(spriteBatch, String.Format("{0}:{1:00}", ts.Minutes, ts.Seconds), "TwoTech36", textPosition, Color.Black, FontAlign.Right);
 
         }
 
@@ -203,23 +203,23 @@ namespace WGiBeat.Drawing
                 {
                     _meterSprite.ColorShading = _notLitColor;
                 }
-                _meterSprite.Draw(spriteBatch, x, this.Width, height, _baseSprite.X, _baseSprite.Y + (x * height));
+                _meterSprite.Draw(x, this.Width, height, _baseSprite.X, _baseSprite.Y + (x * height));
             }
 
             DrawBPMText(spriteBatch);
 
         }
 
-        private double[] _bpmColors = {70, 140, 195, 210};
+        private readonly double[] _bpmColors = {70, 140, 195, 210};
         private readonly Color[] _blinkColors = new[] { Color.Lime, Color.Yellow, Color.Red, new Color(234, 15, 158) };
-        private void DrawBase(SpriteBatch spriteBatch)
+        private void DrawBase()
         {
             var beatFraction = (SongTime) - Math.Floor(SongTime);
 
-            _baseSprite.Draw(spriteBatch);
+            _baseSprite.Draw();
             _baseBlinkSprite.ColorShading = GetBlinkColour();
             _baseBlinkSprite.ColorShading.A = (byte) (255 * (1-beatFraction));
-            _baseBlinkSprite.Draw(spriteBatch);
+            _baseBlinkSprite.Draw();
         }
 
         private Color GetBlinkColour()
@@ -251,27 +251,27 @@ namespace WGiBeat.Drawing
             {
                 TextureManager.DrawString(spriteBatch, String.Format("{0:000.0}", Math.Min(999.9, _displayedMinBpm)),
                                           "TwoTechLarge",
-                                          _bpmTextPosition, Color.Black, FontAlign.RIGHT);
+                                          _bpmTextPosition, Color.Black, FontAlign.Right);
             }
             else
             {
                 _bpmTextPosition.Y += 2;
                 TextureManager.DrawString(spriteBatch, String.Format("{0:000.0}", Math.Min(999.9, _displayedMinBpm)),
                           "TwoTech24",
-                          _bpmTextPosition, Color.Black, FontAlign.RIGHT);
+                          _bpmTextPosition, Color.Black, FontAlign.Right);
                 _bpmTextPosition.Y += 19;
                 TextureManager.DrawString(spriteBatch, String.Format("{0:000.0}", Math.Min(999.9, _displayedMaxBpm)),
                           "TwoTech24",
-                          _bpmTextPosition, Color.Black, FontAlign.RIGHT);
+                          _bpmTextPosition, Color.Black, FontAlign.Right);
                 _bpmTextPosition.Y -= 21;
 
                 TextureManager.DrawString(spriteBatch, "Min:",
                           "DefaultFont",
-                          bpmLabelText, Color.Black, FontAlign.LEFT);
+                          bpmLabelText, Color.Black, FontAlign.Left);
                 bpmLabelText.Y += 20;
                 TextureManager.DrawString(spriteBatch, "Max:",
            "DefaultFont",
-           bpmLabelText, Color.Black, FontAlign.LEFT);
+           bpmLabelText, Color.Black, FontAlign.Left);
             }
         }
     }

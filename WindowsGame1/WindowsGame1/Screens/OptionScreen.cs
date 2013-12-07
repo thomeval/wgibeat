@@ -14,9 +14,9 @@ namespace WGiBeat.Screens
         private readonly Menu _optionsMenu;
 
         private readonly SineSwayParticleField _field = new SineSwayParticleField();
-        private Sprite _background;
+        private Sprite3D _background;
         private Sprite3D _header;
-        private Sprite _optionBaseSprite;
+        private Sprite3D _optionBaseSprite;
 
         public OptionScreen(GameCore core)
             : base(core)
@@ -138,11 +138,11 @@ namespace WGiBeat.Screens
 
         private void InitSprites()
         {
-            _background = new Sprite
+            _background = new Sprite3D
             {
                 Height = 600,
                 Width = 800,
-                SpriteTexture = TextureManager.Textures("AllBackground"),
+                Texture = TextureManager.Textures("AllBackground"),
             };
             _header = new Sprite3D
             {
@@ -150,9 +150,9 @@ namespace WGiBeat.Screens
                 Position = Core.Metrics["ScreenHeader", 0],
                 Size = Core.Metrics["ScreenHeader.Size", 0]
             };
-            _optionBaseSprite = new Sprite
+            _optionBaseSprite = new Sprite3D
                                     {
-                                        SpriteTexture = TextureManager.Textures("OptionDescriptionBase"),
+                                        Texture = TextureManager.Textures("OptionDescriptionBase"),
                                         Position = Core.Metrics["OptionsDescriptionBase",0]
                                     };
         }
@@ -166,14 +166,14 @@ namespace WGiBeat.Screens
 
         private void DrawOptionDescription(SpriteBatch spriteBatch)
         {
-            _optionBaseSprite.Draw(spriteBatch);
+            _optionBaseSprite.Draw();
             var optionText = Core.Text["Option" + _optionsMenu.SelectedIndex];
-            TextureManager.DrawString(spriteBatch, optionText, "DefaultFont", Core.Metrics["OptionsDescription", 0], Color.White, FontAlign.CENTER);
+            TextureManager.DrawString(spriteBatch, optionText, "DefaultFont", Core.Metrics["OptionsDescription", 0], Color.White, FontAlign.Center);
         }
 
         private void DrawBackground(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            _background.Draw(spriteBatch);
+            _background.Draw();
             _field.Draw(gameTime);
             _header.Draw();
 

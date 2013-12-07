@@ -8,9 +8,9 @@ namespace WGiBeat.Drawing
 {
     public class HighScoreFrame : DrawableObject
     {
-        private SpriteMap _gradeSpriteMap;
-        private SpriteMap _difficultySpriteMap;
-        private Sprite _baseSprite;
+        private SpriteMap3D _gradeSpriteMap;
+        private SpriteMap3D _difficultySpriteMap;
+        private Sprite3D _baseSprite;
 
         public HighScoreEntry HighScoreEntry { get; set; }
         public bool EnableFadeout { get; set;}
@@ -33,19 +33,19 @@ namespace WGiBeat.Drawing
 
         public void InitSprites()
         {
-            _difficultySpriteMap = new SpriteMap
+            _difficultySpriteMap = new SpriteMap3D
             {
                 Columns = 1,
                 Rows = (int)Difficulty.COUNT + 1,
-                SpriteTexture = TextureManager.Textures("PlayerDifficulties")
+                Texture = TextureManager.Textures("PlayerDifficulties")
             };
-            _gradeSpriteMap = new SpriteMap
+            _gradeSpriteMap = new SpriteMap3D
             {
                 Columns = 1,
                 Rows = NUM_EVALUATIONS,
-                SpriteTexture = TextureManager.Textures("EvaluationGrades")
+                Texture = TextureManager.Textures("EvaluationGrades")
             };
-            _baseSprite = new Sprite { SpriteTexture = TextureManager.Textures("HighScoreFrame") };
+            _baseSprite = new Sprite3D { Texture = TextureManager.Textures("HighScoreFrame") };
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -53,20 +53,22 @@ namespace WGiBeat.Drawing
 
             CalculatePositions();
             SetOpacity();
-            _baseSprite.Draw(spriteBatch);
-            if (HighScoreEntry != null)
+            _baseSprite.Draw();
+            if (HighScoreEntry == null)
             {
-                var displayedName = String.IsNullOrEmpty(HighScoreEntry.Name) ? "GUEST" : HighScoreEntry.Name;
-                _gradeSpriteMap.Draw(spriteBatch, HighScoreEntry.Grade, 71, 25, _gradePosition);
-                _difficultySpriteMap.Draw(spriteBatch, (int)HighScoreEntry.Difficulty + 1, 25, 25, _difficultyPosition);
-                var displayedScore = string.Format("{0:N0}", HighScoreEntry.Score).Replace((char) 160,',');
-                TextureManager.DrawString(spriteBatch, displayedScore, "TwoTech24", _scorePosition, _textColor, FontAlign.CENTER);
-                TextureManager.DrawString(spriteBatch, "" + displayedName, "TwoTech24", _namePosition, _textColor, FontAlign.CENTER);
+                TextureManager.DrawString(spriteBatch, "No score", "TwoTech24", _namePosition, _textColor,
+                                          FontAlign.Center);
+                return;
             }
-            else
-            {
-                TextureManager.DrawString(spriteBatch, "No score", "TwoTech24", _namePosition, _textColor, FontAlign.CENTER);
-            }
+
+            var displayedName = String.IsNullOrEmpty(HighScoreEntry.Name) ? "GUEST" : HighScoreEntry.Name;
+            _gradeSpriteMap.Draw(HighScoreEntry.Grade, 71, 25, _gradePosition);
+            _difficultySpriteMap.Draw((int) HighScoreEntry.Difficulty + 1, 25, 25, _difficultyPosition);
+            var displayedScore = string.Format("{0:N0}", HighScoreEntry.Score).Replace((char) 160, ',');
+            TextureManager.DrawString(spriteBatch, displayedScore, "TwoTech24", _scorePosition, _textColor,
+                                      FontAlign.Center);
+            TextureManager.DrawString(spriteBatch, "" + displayedName, "TwoTech24", _namePosition, _textColor,
+                                      FontAlign.Center);
         }
 
         private void SetOpacity()

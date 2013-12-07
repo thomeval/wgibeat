@@ -47,15 +47,15 @@ namespace WGiBeat.Screens
         private string _textEntryDestination;
         private string _wgibeatSongsFolder;
 
-        private Sprite _editProgressBaseSprite;
+        private Sprite3D _editProgressBaseSprite;
         private Sprite3D _backgroundSprite;
-        private Sprite _songDetailsDisplaySprite;
-        private Sprite _songBackgroundDisplaySprite;
+        private Sprite3D _songDetailsDisplaySprite;
+        private Sprite3D _songBackgroundDisplaySprite;
 
-        private SpriteMap _editProgressSpriteMap;
-        private SpriteMap _validitySpriteMap;
-        private Sprite _validityTextBaseSprite;
-        private Sprite _textBackground;
+        private SpriteMap3D _editProgressSpriteMap;
+        private SpriteMap3D _validitySpriteMap;
+        private Sprite3D _validityTextBaseSprite;
+        private Sprite3D _textBackground;
         private BpmMeter _bpmMeter;
         private SongTypeDisplay _songTypeDisplay;
 
@@ -115,42 +115,42 @@ namespace WGiBeat.Screens
                 Height = 600,
                 Width = 800,
             };
-            _editProgressBaseSprite = new Sprite
+            _editProgressBaseSprite = new Sprite3D
                                           {
-                                              SpriteTexture = TextureManager.Textures("SongEditProgressBase"),
+                                              Texture = TextureManager.Textures("SongEditProgressBase"),
                                               Position = (Core.Metrics["SongEditProgress", 0])
                                           };
-            _editProgressSpriteMap = new SpriteMap
+            _editProgressSpriteMap = new SpriteMap3D
                                          {
                                              Columns = 4,
                                              Rows = 2,
-                                             SpriteTexture = TextureManager.Textures("SongEditProgress")
+                                             Texture = TextureManager.Textures("SongEditProgress")
                                          };
-            _validitySpriteMap = new SpriteMap
+            _validitySpriteMap = new SpriteMap3D
                                      {
                                          Columns = 1,
                                          Rows = 2,
-                                         SpriteTexture = TextureManager.Textures("EditorSongValidity")
+                                         Texture = TextureManager.Textures("EditorSongValidity")
                                      };
-            _validityTextBaseSprite = new Sprite
+            _validityTextBaseSprite = new Sprite3D
                                           {
-                                              SpriteTexture = TextureManager.Textures("EditorValidityTextBase"),
+                                              Texture = TextureManager.Textures("EditorValidityTextBase"),
                                               Position = (Core.Metrics["EditorSongValidityMessageBase", 0])
                                           };
-            _songDetailsDisplaySprite = new Sprite
+            _songDetailsDisplaySprite = new Sprite3D
                                             {
                                                 Position = Core.Metrics["EditorSongDetailsDisplay", 0],
-                                                SpriteTexture = TextureManager.Textures("EditorDetailsDisplay")
+                                                Texture = TextureManager.Textures("EditorDetailsDisplay")
                                             };
-            _songBackgroundDisplaySprite = new Sprite
+            _songBackgroundDisplaySprite = new Sprite3D
                                                {
                                                    Position = Core.Metrics["EditorSongBackgroundDisplay",0],
-                                                   SpriteTexture =
+                                                   Texture =
                                                        TextureManager.Textures("EditorSongBackgroundDisplay")
                                                };
-            _textBackground = new Sprite
+            _textBackground = new Sprite3D
             {
-                SpriteTexture = TextureManager.Textures("MainGameTextBackground"),
+                Texture = TextureManager.Textures("MainGameTextBackground"),
                 Position = Core.Metrics["EditorTextBackground", 0]
             };
         }
@@ -325,31 +325,31 @@ namespace WGiBeat.Screens
                     break;
                 case EditorCursorPosition.SONG_BASICS:
                     _editProgress = 1;
-                    TextureManager.DrawString(spriteBatch,_errorMessage,"LargeFont",Core.Metrics["EditorErrorMessage",0],Color.Red,FontAlign.CENTER);
+                    TextureManager.DrawString(spriteBatch,_errorMessage,"LargeFont",Core.Metrics["EditorErrorMessage",0],Color.Red,FontAlign.Center);
                     break;
                 case EditorCursorPosition.SONG_DETAILS:
                 case EditorCursorPosition.SONG_DETAILS_DELETE:
                     _editProgress = 2;
                     var validIdx = _songValid ? 1 : 0;
-                    _validitySpriteMap.Draw(spriteBatch, validIdx, 195, 42, Core.Metrics["EditorSongValidity",0]);
-                    _songBackgroundDisplaySprite.Draw(spriteBatch);
+                    _validitySpriteMap.Draw( validIdx, 195, 42, Core.Metrics["EditorSongValidity",0]);
+                    _songBackgroundDisplaySprite.Draw();
                     _bpmMeter.Draw(spriteBatch);
                     DrawBPMMeterExtras(spriteBatch);
                     DrawSongTimeLine(spriteBatch);
                     if (!String.IsNullOrEmpty(_errorMessage))
                     {
                         var scale = TextureManager.ScaleTextToFit(_errorMessage, "DefaultFont", 790, 100);
-                        TextureManager.DrawString(spriteBatch, "An error has occurred:", "LargeFont", Core.Metrics["EditorErrorMessage", 0], Color.Red, FontAlign.CENTER);
-                        TextureManager.DrawString(spriteBatch, _errorMessage, "DefaultFont", Core.Metrics["EditorErrorMessage", 1],scale, Color.Red, FontAlign.CENTER);
+                        TextureManager.DrawString(spriteBatch, "An error has occurred:", "LargeFont", Core.Metrics["EditorErrorMessage", 0], Color.Red, FontAlign.Center);
+                        TextureManager.DrawString(spriteBatch, _errorMessage, "DefaultFont", Core.Metrics["EditorErrorMessage", 1],scale, Color.Red, FontAlign.Center);
 
                     }
                     break;
                 case EditorCursorPosition.SONG_TUNING:
                     _editProgress = 3;
                     TextureManager.LastDrawnPhraseNumber = _phraseNumber;
-                    _beatlineSet.Draw(spriteBatch, _phraseNumber);
+                    _beatlineSet.Draw( _phraseNumber);
                     _noteJudgementSet.Draw(spriteBatch, _phraseNumber);
-                    _countdownSet.Draw(spriteBatch,_phraseNumber);
+                    _countdownSet.Draw(_phraseNumber);
                     break;
                     case EditorCursorPosition.MEASURE_BPM:
                     DrawBPMMeasurement(spriteBatch);
@@ -358,7 +358,7 @@ namespace WGiBeat.Screens
                     case EditorCursorPosition.MEASURE_OFFSET:
                     case EditorCursorPosition.MEASURE_LENGTH:
                     case EditorCursorPosition.MEASURE_AUDIO_START:
-                    TextureManager.DrawString(spriteBatch, String.Format("{0:0.00}", _timeElapsed / 1000), "LargeFont", Core.Metrics["EditorMeasurementDisplay", 0], Color.Black, FontAlign.CENTER);
+                    TextureManager.DrawString(spriteBatch, String.Format("{0:0.00}", _timeElapsed / 1000), "LargeFont", Core.Metrics["EditorMeasurementDisplay", 0], Color.Black, FontAlign.Center);
                     DrawSongTimeLine(spriteBatch);
                     break;
                 case EditorCursorPosition.DONE:
@@ -366,7 +366,7 @@ namespace WGiBeat.Screens
                     break;
                 case EditorCursorPosition.MAIN_MENU:
                     _editProgress = 0;
-                    TextureManager.DrawString(spriteBatch,VERSION,"DefaultFont",Core.Metrics["EditorVersion",0],Color.Black,FontAlign.RIGHT);
+                    TextureManager.DrawString(spriteBatch,VERSION,"DefaultFont",Core.Metrics["EditorVersion",0],Color.Black,FontAlign.Right);
                     break;
             }
 
@@ -411,8 +411,8 @@ namespace WGiBeat.Screens
 
         private void DrawBPMMeterExtras(SpriteBatch spriteBatch)
         {
-            _validityTextBaseSprite.Draw(spriteBatch);
-            _songDetailsDisplaySprite.Draw(spriteBatch);
+            _validityTextBaseSprite.Draw();
+            _songDetailsDisplaySprite.Draw();
             _songTypeDisplay.Song = NewGameSong;
             _songTypeDisplay.Draw(spriteBatch);
         }
@@ -421,21 +421,21 @@ namespace WGiBeat.Screens
         {
 
             var avgAmount = _beatTimings[0] == 0 ? "-----" : string.Format("{0:F1}",60/_beatTimings[0]*1000);
-            TextureManager.DrawString(spriteBatch,  "Last Hit: " + avgAmount, "DefaultFont", Core.Metrics["EditorBPMMeasurements", 0], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch,  "Last Hit: " + avgAmount, "DefaultFont", Core.Metrics["EditorBPMMeasurements", 0], Color.Black, FontAlign.Left);
              avgAmount = (_numBeats >= 5) ? String.Format("{0:F1}", 60 / _beatTimings.Take(5).Average() * 1000) : "-----" ;
 
-            TextureManager.DrawString(spriteBatch, "Last 5 avg: " + avgAmount, "DefaultFont", Core.Metrics["EditorBPMMeasurements", 1], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, "Last 5 avg: " + avgAmount, "DefaultFont", Core.Metrics["EditorBPMMeasurements", 1], Color.Black, FontAlign.Left);
             
             avgAmount = (_numBeats >= 10) ? String.Format("{0:F1}", 60 / _beatTimings.Take(10).Average() * 1000) : "-----";
-            TextureManager.DrawString(spriteBatch, "Last 10 avg: " + avgAmount, "DefaultFont", Core.Metrics["EditorBPMMeasurements", 2], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, "Last 10 avg: " + avgAmount, "DefaultFont", Core.Metrics["EditorBPMMeasurements", 2], Color.Black, FontAlign.Left);
 
             avgAmount = (_numBeats > 0)
                             ? String.Format("{0:F1}", 60/_beatTimings.Take(_numBeats).Average()*1000)
                             : "-----";
-            TextureManager.DrawString(spriteBatch, "Last 25 avg: "+ avgAmount, "DefaultFont", Core.Metrics["EditorBPMMeasurements", 3], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, "Last 25 avg: "+ avgAmount, "DefaultFont", Core.Metrics["EditorBPMMeasurements", 3], Color.Black, FontAlign.Left);
 
             var roundedAmount = (_numBeats > 0) ? "" + Math.Round(60/ _beatTimings.Take(_numBeats).Average() * 1000) : "-----";
-            TextureManager.DrawString(spriteBatch, "Estimated BPM: " + roundedAmount, "TwoTech36", Core.Metrics["EditorMeasurementDisplay", 0], Color.Black, FontAlign.CENTER);
+            TextureManager.DrawString(spriteBatch, "Estimated BPM: " + roundedAmount, "TwoTech36", Core.Metrics["EditorMeasurementDisplay", 0], Color.Black, FontAlign.Center);
 
         }
 
@@ -465,11 +465,11 @@ namespace WGiBeat.Screens
                     offsetPosition.Y += 12;
                     var scale = TextureManager.ScaleTextToFit(String.Format("{0:0.00}", NewGameSong.AudioStart),
                                                               "TwoTech24", 70, 35);
-                    TextureManager.DrawString(spriteBatch, String.Format("{0:0.00}", NewGameSong.AudioStart), "TwoTech24", offsetPosition,scale, Color.Black, FontAlign.LEFT);
+                    TextureManager.DrawString(spriteBatch, String.Format("{0:0.00}", NewGameSong.AudioStart), "TwoTech24", offsetPosition,scale, Color.Black, FontAlign.Left);
                     offsetPosition.X += 160;
                     scale = TextureManager.ScaleTextToFit(String.Format("{0:0.00}", NewGameSong.Offset),
                                                               "TwoTech24", 70, 35);
-                    TextureManager.DrawString(spriteBatch, String.Format("{0:0.00}", NewGameSong.Offset), "TwoTech24", offsetPosition,scale, Color.Black, FontAlign.RIGHT);
+                    TextureManager.DrawString(spriteBatch, String.Format("{0:0.00}", NewGameSong.Offset), "TwoTech24", offsetPosition,scale, Color.Black, FontAlign.Right);
 
                     if ((NewGameSong.StartBPM > 0) && (NewGameSong.Length > 0))
                     {
@@ -477,14 +477,14 @@ namespace WGiBeat.Screens
                         offsetPosition.Y += 25;
                         totalBeatlines = Math.Max(totalBeatlines + 1, 0);
                         TextureManager.DrawString(spriteBatch, "" +totalBeatlines, "TwoTechLarge",
-                                                  offsetPosition, Color.Black, FontAlign.RIGHT);
+                                                  offsetPosition, Color.Black, FontAlign.Right);
                     }
                     
-                    TextureManager.DrawString(spriteBatch, _validityMessage.Replace(".",".\n"), "DefaultFont", Core.Metrics["EditorSongValidityMessage",0],Color.Black, FontAlign.CENTER);
+                    TextureManager.DrawString(spriteBatch, _validityMessage.Replace(".",".\n"), "DefaultFont", Core.Metrics["EditorSongValidityMessage",0],Color.Black, FontAlign.Center);
                     var backgroundText = string.IsNullOrEmpty(NewGameSong.BackgroundFile) ? "None" : NewGameSong.BackgroundFile;
                     offsetPosition = Core.Metrics["EditorSongBackgroundDisplay", 0].Clone();
                     offsetPosition.X += _songBackgroundDisplaySprite.Width -8;
-                    TextureManager.DrawString(spriteBatch, backgroundText, "DefaultFont", offsetPosition, Color.Black, FontAlign.RIGHT);
+                    TextureManager.DrawString(spriteBatch, backgroundText, "DefaultFont", offsetPosition, Color.Black, FontAlign.Right);
 
                     break;
                 case EditorCursorPosition.SONG_TUNING:
@@ -511,27 +511,27 @@ namespace WGiBeat.Screens
                     instructions = Core.Text["EditorDoneDeleting"];
                     break;
             }
-            TextureManager.DrawString(spriteBatch, instructions, "DefaultFont", Core.Metrics["EditorMeasureInstructions", 0], Color.Black, FontAlign.CENTER);
+            TextureManager.DrawString(spriteBatch, instructions, "DefaultFont", Core.Metrics["EditorMeasureInstructions", 0], Color.Black, FontAlign.Center);
 
         }
 
         private void DrawHitOffsetText(SpriteBatch spriteBatch)
         {
 
-            TextureManager.DrawString(spriteBatch, String.Format("Last hit: {0:F2} ms", _hitOffsets[0]), "DefaultFont", Core.Metrics["EditorHitOffset", 0], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, String.Format("Last hit: {0:F2} ms", _hitOffsets[0]), "DefaultFont", Core.Metrics["EditorHitOffset", 0], Color.Black, FontAlign.Left);
             var avg = _hitOffsets.Take(3).Average();
             if (_numHits < 3)
                 return;
 
-            TextureManager.DrawString(spriteBatch, String.Format("Last 3 avg: {0:F2} ms", avg), "DefaultFont", Core.Metrics["EditorHitOffset", 1], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, String.Format("Last 3 avg: {0:F2} ms", avg), "DefaultFont", Core.Metrics["EditorHitOffset", 1], Color.Black, FontAlign.Left);
             if (_numHits < 5)
                 return;
             avg = _hitOffsets.Take(5).Average();
-            TextureManager.DrawString(spriteBatch, String.Format("Last 5 avg: {0:F2} ms", avg), "DefaultFont", Core.Metrics["EditorHitOffset", 2], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, String.Format("Last 5 avg: {0:F2} ms", avg), "DefaultFont", Core.Metrics["EditorHitOffset", 2], Color.Black, FontAlign.Left);
             if (_numHits < 10)
                 return;
             avg = _hitOffsets.Average();
-            TextureManager.DrawString(spriteBatch, String.Format("Last 10 avg: {0:F2} ms", avg), "DefaultFont", Core.Metrics["EditorHitOffset", 3], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, String.Format("Last 10 avg: {0:F2} ms", avg), "DefaultFont", Core.Metrics["EditorHitOffset", 3], Color.Black, FontAlign.Left);
 
         }
 
@@ -543,7 +543,7 @@ namespace WGiBeat.Screens
             var textPosition = Core.Metrics["EditorTweakControls", 0].Clone();
             foreach (string line in lines)
             {
-                TextureManager.DrawString(spriteBatch, line, "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
+                TextureManager.DrawString(spriteBatch, line, "DefaultFont", textPosition, Color.Black, FontAlign.Left);
                 textPosition.Y += 20;
             }
 
@@ -552,7 +552,7 @@ namespace WGiBeat.Screens
 
             foreach (string line in lines)
             {
-                TextureManager.DrawString(spriteBatch, line, "DefaultFont", textPosition, Color.Black, FontAlign.LEFT);
+                TextureManager.DrawString(spriteBatch, line, "DefaultFont", textPosition, Color.Black, FontAlign.Left);
                 textPosition.Y += 20;
             }
         }
@@ -560,19 +560,19 @@ namespace WGiBeat.Screens
 
         private void DrawDebugText(SpriteBatch spriteBatch)
         {
-            _textBackground.Draw(spriteBatch);
+            _textBackground.Draw();
             TextureManager.DrawString(spriteBatch, String.Format("BPM: {0:F2}", NewGameSong.StartBPM),
-                   "DefaultFont", Core.Metrics["EditorSongBPM", 0], Color.Black, FontAlign.LEFT);
+                   "DefaultFont", Core.Metrics["EditorSongBPM", 0], Color.Black, FontAlign.Left);
             TextureManager.DrawString(spriteBatch, String.Format("Offset: {0:F3}s", NewGameSong.Offset),
-                    "DefaultFont", Core.Metrics["EditorSongOffset", 0], Color.Black, FontAlign.LEFT);
+                    "DefaultFont", Core.Metrics["EditorSongOffset", 0], Color.Black, FontAlign.Left);
             TextureManager.DrawString(spriteBatch, "" + String.Format("{0:F3}", _phraseNumber),
-                "DefaultFont", Core.Metrics["EditorSongPhraseNumber", 0], Color.Black, FontAlign.LEFT);
+                "DefaultFont", Core.Metrics["EditorSongPhraseNumber", 0], Color.Black, FontAlign.Left);
             TextureManager.DrawString(spriteBatch, CalculateTimeLeft(),
-                "DefaultFont", Core.Metrics["EditorSongTimeLeft", 0], Color.Black, FontAlign.LEFT);
+                "DefaultFont", Core.Metrics["EditorSongTimeLeft", 0], Color.Black, FontAlign.Left);
             TextureManager.DrawString(spriteBatch, String.Format("Speed: {0}x", Core.Players[0].PlayerOptions.BeatlineSpeed),
-                "DefaultFont", Core.Metrics["EditorTweakBeatlineSpeed", 0], Color.Black, FontAlign.LEFT);
+                "DefaultFont", Core.Metrics["EditorTweakBeatlineSpeed", 0], Color.Black, FontAlign.Left);
             TextureManager.DrawString(spriteBatch, String.Format("Length: {0:F3}s", NewGameSong.Length),
-                "DefaultFont", Core.Metrics["EditorSongLength", 0], Color.Black, FontAlign.LEFT);       
+                "DefaultFont", Core.Metrics["EditorSongLength", 0], Color.Black, FontAlign.Left);       
         }
 
         private string CalculateTimeLeft()
@@ -629,7 +629,7 @@ namespace WGiBeat.Screens
                     headingText = "Completed";
                     break;
             }
-            TextureManager.DrawString(spriteBatch, headingText, "TwoTechLarge", Core.Metrics["EditorHeading", 0], Color.Black, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, headingText, "TwoTechLarge", Core.Metrics["EditorHeading", 0], Color.Black, FontAlign.Left);
         }
 
         private void DrawEditProgress(SpriteBatch spriteBatch)
@@ -638,7 +638,7 @@ namespace WGiBeat.Screens
             {
                 return;
             }
-            _editProgressBaseSprite.Draw(spriteBatch);
+            _editProgressBaseSprite.Draw();
 
             var position = _editProgressBaseSprite.Position.Clone();
             position.X += 10;
@@ -648,11 +648,11 @@ namespace WGiBeat.Screens
             {
                 if (_editProgress >= x)
                 {
-                    _editProgressSpriteMap.Draw(spriteBatch, x + 3, 196, 55, position);
+                    _editProgressSpriteMap.Draw( x + 3, 196, 55, position);
                 }
                 else
                 {
-                    _editProgressSpriteMap.Draw(spriteBatch, x - 1, 196, 55, position);
+                    _editProgressSpriteMap.Draw( x - 1, 196, 55, position);
                 }
                 position.X += 196;
             }

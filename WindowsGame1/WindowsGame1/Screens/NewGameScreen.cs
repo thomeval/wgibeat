@@ -230,7 +230,7 @@ namespace WGiBeat.Screens
                 textPosition.X += 200;
                 textPosition.Y += 5;
                 TextureManager.DrawString(spriteBatch, _infoMessages[x], "DefaultFont", textPosition, Color.White,
-                                          FontAlign.CENTER);
+                                          FontAlign.Center);
             }
 
         }
@@ -244,7 +244,7 @@ namespace WGiBeat.Screens
                 {
                     case CursorPosition.NOT_JOINED:
                         TextureManager.DrawString(spriteBatch, "Press Start to Join...", "LargeFont",
-                        Core.Metrics["NewGameJoinNotification", x], Color.Black, FontAlign.LEFT);
+                        Core.Metrics["NewGameJoinNotification", x], Color.Black, FontAlign.Left);
                         _infoMessages[x] = "";
                         break;
                     case CursorPosition.MAIN_MENU:
@@ -259,7 +259,7 @@ namespace WGiBeat.Screens
                         break;
                     case CursorPosition.READY:
                         TextureManager.DrawString(spriteBatch, "Ready", "LargeFont",
-                        Core.Metrics["NewGameJoinNotification", x], Color.Black, FontAlign.LEFT);
+                        Core.Metrics["NewGameJoinNotification", x], Color.Black, FontAlign.Left);
                         _infoMessages[x] = "Waiting for other players...";
                         break;
                 }

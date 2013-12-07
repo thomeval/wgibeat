@@ -44,12 +44,12 @@ namespace WGiBeat.Screens
         public RoundLineManager LineDrawer;
         private List<RoundLine>[] _playerLines;
         private List<RoundLine> _axisLineList; 
-        private SpriteMap _xborder;
-        private SpriteMap _yborder;
-        private Sprite _backgroundSprite;
-        private SpriteMap _legendSpriteMap;
-        private SpriteMap _teamLegendSpriteMap;
-        private SpriteMap _cornerSpriteMap;
+        private SpriteMap3D _xborder;
+        private SpriteMap3D _yborder;
+        private Sprite3D _backgroundSprite;
+        private SpriteMap3D _legendSpriteMap;
+        private SpriteMap3D _teamLegendSpriteMap;
+        private SpriteMap3D _cornerSpriteMap;
 
         public double[] this[int index]
         {
@@ -75,39 +75,39 @@ namespace WGiBeat.Screens
 
         public void InitSprites()
         {
-            _yborder = new SpriteMap
+            _yborder = new SpriteMap3D
                            {
                                Columns = 1,
                                Rows = 2,
-                               SpriteTexture = TextureManager.Textures("LifegraphYBorder")
+                               Texture = TextureManager.Textures("LifegraphYBorder")
                            };
-            _xborder = new SpriteMap
+            _xborder = new SpriteMap3D
             {
                 Columns = 2,
                 Rows = 1,
-                SpriteTexture = TextureManager.Textures("LifegraphXBorder")
+                Texture = TextureManager.Textures("LifegraphXBorder")
 
             };
-            _backgroundSprite = new Sprite
+            _backgroundSprite = new Sprite3D
                                     {
-                                        SpriteTexture = TextureManager.Textures("LifeGraphMiddle"),
+                                        Texture = TextureManager.Textures("LifeGraphMiddle"),
                                         
                                     };
-            _cornerSpriteMap = new SpriteMap
+            _cornerSpriteMap = new SpriteMap3D
                                    {
-                                       Columns = 2, Rows = 2, SpriteTexture = TextureManager.Textures("LifeGraphCorners")
+                                       Columns = 2, Rows = 2, Texture = TextureManager.Textures("LifeGraphCorners")
                                    };
-            _legendSpriteMap = new SpriteMap
+            _legendSpriteMap = new SpriteMap3D
                                    {
                                        Columns = 1,
                                        Rows = 5,
-                                       SpriteTexture = TextureManager.Textures("PlayerIdentifiers")
+                                       Texture = TextureManager.Textures("PlayerIdentifiers")
                                    };
-            _teamLegendSpriteMap = new SpriteMap
+            _teamLegendSpriteMap = new SpriteMap3D
             {
                 Columns = 1,
                 Rows = 2,
-                SpriteTexture = TextureManager.Textures("TeamIdentifiers")
+                Texture = TextureManager.Textures("TeamIdentifiers")
             };
             LineDrawer = RoundLineManager.Instance;
     
@@ -129,16 +129,16 @@ namespace WGiBeat.Screens
             
             _drawProgress += TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds*LINE_DRAW_SPEED;
             _backgroundSprite.Position = this.Position;
-            _backgroundSprite.Draw(spriteBatch);
+            _backgroundSprite.Draw();
             CalculateMinMax();
             DrawAxis();
-            DrawLegend(spriteBatch);
+            DrawLegend();
             DrawPlayerLines();
             DrawLabels(spriteBatch);
             DrawBorder(spriteBatch);
         }
 
-        private void DrawLegend(SpriteBatch spriteBatch)
+        private void DrawLegend()
         {
          
            
@@ -162,7 +162,7 @@ namespace WGiBeat.Screens
 
                         var colorID = (x == CPUPlayerID) ? 4 : x;
 
-                        _legendSpriteMap.Draw(spriteBatch, colorID, legendItemSize, legendPosition);
+                        _legendSpriteMap.Draw( colorID, legendItemSize, legendPosition);
                         legendPosition.X -= legendItemSize.X + 5;
                     }
                     break;
@@ -171,9 +171,9 @@ namespace WGiBeat.Screens
                     var tlegendItemSize = GameCore.Instance.Metrics["GraphLegendItem.Size", 1];
                     legendPosition.Y += this.Height - tlegendItemSize.Y - 5;
                     legendPosition.X += this.Width - tlegendItemSize.X - 5;
-                    _teamLegendSpriteMap.Draw(spriteBatch, 1, tlegendItemSize, legendPosition);
+                    _teamLegendSpriteMap.Draw( 1, tlegendItemSize, legendPosition);
                     legendPosition.X -= tlegendItemSize.X + 5;
-                    _teamLegendSpriteMap.Draw(spriteBatch, 0, tlegendItemSize, legendPosition);
+                    _teamLegendSpriteMap.Draw( 0, tlegendItemSize, legendPosition);
                     break;
 
             }
@@ -288,14 +288,14 @@ namespace WGiBeat.Screens
         {
 
 
-            _xborder.Draw(spriteBatch,1,20,this.Height,this.X - 20, this.Y);
-            _xborder.Draw(spriteBatch,0,20, this.Height,this.X + this.Width, this.Y);
-            _yborder.Draw(spriteBatch,1,this.Width,20,this.X, this.Y - 20);
-            _yborder.Draw(spriteBatch,0, this.Width, 20, this.X, this.Y + this.Height);
-            _cornerSpriteMap.Draw(spriteBatch,0,this.X - 20, this.Y - 20);
-            _cornerSpriteMap.Draw(spriteBatch, 1, this.X + this.Width, this.Y - 20);
-            _cornerSpriteMap.Draw(spriteBatch, 2, this.X - 20, this.Y +this.Height);
-            _cornerSpriteMap.Draw(spriteBatch, 3, this.X + this.Width, this.Y  + this.Height);
+            _xborder.Draw(1,20,this.Height,this.X - 20, this.Y);
+            _xborder.Draw(0,20, this.Height,this.X + this.Width, this.Y);
+            _yborder.Draw(1,this.Width,20,this.X, this.Y - 20);
+            _yborder.Draw(0, this.Width, 20, this.X, this.Y + this.Height);
+            _cornerSpriteMap.Draw(0,this.X - 20, this.Y - 20);
+            _cornerSpriteMap.Draw( 1, this.X + this.Width, this.Y - 20);
+            _cornerSpriteMap.Draw( 2, this.X - 20, this.Y +this.Height);
+            _cornerSpriteMap.Draw( 3, this.X + this.Width, this.Y  + this.Height);
         }
 
         private void DrawAxis()
@@ -327,8 +327,8 @@ namespace WGiBeat.Screens
             _maxLabelPosition.Y = this.Y + 2;
             _minLabelPosition.X = this.X + 7;
             _minLabelPosition.Y = this.Y + this.Height - 26;
-            TextureManager.DrawString(spriteBatch, "" + _min, "DefaultFont",_minLabelPosition,Color.White, FontAlign.LEFT);
-            TextureManager.DrawString(spriteBatch, "" + _max, "DefaultFont", _maxLabelPosition, Color.White, FontAlign.LEFT);
+            TextureManager.DrawString(spriteBatch, "" + _min, "DefaultFont",_minLabelPosition,Color.White, FontAlign.Left);
+            TextureManager.DrawString(spriteBatch, "" + _max, "DefaultFont", _maxLabelPosition, Color.White, FontAlign.Left);
         }
     }
 

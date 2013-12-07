@@ -18,10 +18,10 @@ namespace WGiBeat.Screens
         private int _selectedIndex;
         private Sprite3D _headerSprite;
         private Sprite3D _background;
-        private Sprite _spectrumBackground;
-        private Sprite _listBackend;
-        private Sprite _songCountBase;
-        private Sprite _songLockedSprite;
+        private Sprite3D _spectrumBackground;
+        private Sprite3D _listBackend;
+        private Sprite3D _songCountBase;
+        private Sprite3D _songLockedSprite;
 
         private bool _previewStarted;
         private PreloadState _preloadState;
@@ -98,7 +98,7 @@ namespace WGiBeat.Screens
                                       Position = Core.Metrics["SelectedSongSpectrum", 0],
                                       ColorShading = Color.White
                                   };
-            _songLockedSprite = new Sprite {Position = Core.Metrics["BPMMeter", 0], SpriteTexture= TextureManager.Textures("SongLocked")};
+            _songLockedSprite = new Sprite3D {Position = Core.Metrics["BPMMeter", 0], Texture= TextureManager.Textures("SongLocked")};
             base.Initialize();
         }
 
@@ -118,20 +118,20 @@ namespace WGiBeat.Screens
                                     Size = Core.Metrics["ScreenHeader.Size",0]
                                 };
 
-            _spectrumBackground = new Sprite
+            _spectrumBackground = new Sprite3D
                                       {
-                                          SpriteTexture = TextureManager.Textures("SpectrumBackground"),
+                                          Texture = TextureManager.Textures("SpectrumBackground"),
                                           Position = Core.Metrics["SelectedSongSpectrum", 0]
                                       };
             _spectrumBackground.Y -= 65;
-            _listBackend = new Sprite
+            _listBackend = new Sprite3D
                                {
-                                   SpriteTexture = TextureManager.Textures("SongListBackend"),
+                                   Texture = TextureManager.Textures("SongListBackend"),
                                    Height = 232,
                                    Width = 50,
                                    Position = (Core.Metrics["SongListBackend", 0])
                                };
-            _songCountBase = new Sprite { SpriteTexture = TextureManager.Textures("SongCountBase"), Position = Core.Metrics["SongCountDisplay", 0] };
+            _songCountBase = new Sprite3D { Texture = TextureManager.Textures("SongCountBase"), Position = Core.Metrics["SongCountDisplay", 0] };
         }
 
         private const int FAIL_GRADE = 18;
@@ -165,10 +165,10 @@ namespace WGiBeat.Screens
 
             if (_preloadState == PreloadState.LOADING_STARTED)
             {
-                TextureManager.DrawString(spriteBatch, "Loading...", "LargeFont", Core.Metrics["SongSelectLoadingMessage", 0], Color.Black, FontAlign.LEFT);
+                TextureManager.DrawString(spriteBatch, "Loading...", "LargeFont", Core.Metrics["SongSelectLoadingMessage", 0], Color.Black, FontAlign.Left);
             }
 
-            DrawWaveForm(spriteBatch);
+            DrawWaveForm();
             _songTypeDisplay.Draw(spriteBatch);
             DrawBpmMeter(spriteBatch);
 
@@ -191,15 +191,15 @@ namespace WGiBeat.Screens
 
         private void DrawSongCount(SpriteBatch spriteBatch)
         {
-            _songCountBase.Draw(spriteBatch);
-            TextureManager.DrawString(spriteBatch, _songList.Count + "", "TwoTech36", Core.Metrics["SongCountDisplay", 1], Color.Black, FontAlign.CENTER);
+            _songCountBase.Draw();
+            TextureManager.DrawString(spriteBatch, _songList.Count + "", "TwoTech36", Core.Metrics["SongCountDisplay", 1], Color.Black, FontAlign.Center);
 
         }
 
 
-        private void DrawWaveForm(SpriteBatch spriteBatch)
+        private void DrawWaveForm()
         {
-            _spectrumBackground.Draw(spriteBatch);
+            _spectrumBackground.Draw();
 
             if (Crossfader.ChannelIndexCurrent == -1) 
                 return;
@@ -209,7 +209,7 @@ namespace WGiBeat.Screens
             {
                 averageLevels[x/SPECTRUM_CLUSTER_SIZE] = levels.Skip(x).Take(SPECTRUM_CLUSTER_SIZE).Average();
             }
-                _spectrumDrawer.Draw(spriteBatch, averageLevels);
+                _spectrumDrawer.Draw( averageLevels);
         }
         private void DrawBpmMeter(SpriteBatch spriteBatch)
         {
@@ -227,11 +227,12 @@ namespace WGiBeat.Screens
 
             _bpmMeter.Draw(spriteBatch);
 
-            if (CurrentSong.RequiredLevel > GetPlayerLevel())
+            if (CurrentSong.RequiredLevel <= GetPlayerLevel())
             {
-                _songLockedSprite.Draw(spriteBatch);
-                TextureManager.DrawString(spriteBatch,"Unlocked at profile level: " + CurrentSong.RequiredLevel,"LargeFont",Core.Metrics["SongLockedRequirements",0],Color.Black,FontAlign.CENTER);
+                return;
             }
+            _songLockedSprite.Draw();
+            TextureManager.DrawString(spriteBatch,"Unlocked at profile level: " + CurrentSong.RequiredLevel,"LargeFont",Core.Metrics["SongLockedRequirements",0],Color.Black,FontAlign.Center);
         }
 
         private void DrawHighScoreFrame(SpriteBatch spriteBatch)
@@ -273,7 +274,7 @@ namespace WGiBeat.Screens
             {
                 _songListDrawOpacity = Math.Max(0, _songListDrawOpacity - TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * SONGLIST_FADEOUT_SPEED);
             }
-            _listBackend.Draw(spriteBatch);
+            _listBackend.Draw();
 
             var midpoint = Core.Metrics["SongListMidpoint", 0];
             midpoint.Y += (int) _songListDrawOffset;    

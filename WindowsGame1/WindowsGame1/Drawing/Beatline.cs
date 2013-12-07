@@ -111,8 +111,8 @@ namespace WGiBeat.Drawing
                                     {
                                         Texture = TextureManager.Textures("BeatlineSpeedScale"),
                                         Size = new Vector2(this.Width - LEFT_SIDE - 25, 5),
-                                        X = (int) (this.Position.X + (LEFT_SIDE + IMPACT_WIDTH) * WidthRatio),
-                                        Y = (int) (this.Position.Y + this.Height / 2 - 2)
+                                        X =  (float) (this.Position.X + (LEFT_SIDE + IMPACT_WIDTH) * WidthRatio),
+                                        Y =  (this.Position.Y + (this.Height / 2.0f) - 2)
                                     };
        
         }
@@ -160,7 +160,7 @@ namespace WGiBeat.Drawing
       
             var mxFactor = 1.0* _speedScaleSprite.Width/BEAT_ZOOM_DISTANCE / _displayedSpeed; 
 
-            _speedScaleSprite.DrawTiled((float) textureOffset, 0, (float) textureOffset + (float) (TEXTURE_WIDTH * mxFactor), 5);
+            _speedScaleSprite.DrawTiled((float) textureOffset, 0, (float) (_speedScaleSprite.Texture.Width * mxFactor), _speedScaleSprite.Texture.Height);
             
         }
 

@@ -11,10 +11,10 @@ namespace WGiBeat.Drawing
         public Keys Key { get; set; }
         public Buttons Button { get; set; }
 
-        private static Sprite _backgroundSprite;
-        private static Sprite _keyboardIcon;
-        private static SpriteMap _controllerNumberSpriteMap;
-        private static SpriteMap _controllerButtonsSpriteMap;
+        private static Sprite3D _backgroundSprite;
+        private static Sprite3D _keyboardIcon;
+        private static SpriteMap3D _controllerNumberSpriteMap;
+        private static SpriteMap3D _controllerButtonsSpriteMap;
 
         private readonly Buttons[] _buttonsLookup = {
                                                Buttons.A, Buttons.B, Buttons.X, Buttons.Y, Buttons.LeftShoulder,
@@ -32,23 +32,23 @@ namespace WGiBeat.Drawing
         }
         private void InitSprites()
         {
-            _backgroundSprite = new Sprite { SpriteTexture = TextureManager.Textures("ActionBindingBase")};
-            _controllerNumberSpriteMap = new SpriteMap
+            _backgroundSprite = new Sprite3D { Texture = TextureManager.Textures("ActionBindingBase")};
+            _controllerNumberSpriteMap = new SpriteMap3D
                                                            {
                                                                Columns = 4,
                                                                Rows = 1,
-                                                               SpriteTexture = TextureManager.Textures("KeyOptionControllerPlayerIcons")
+                                                               Texture = TextureManager.Textures("KeyOptionControllerPlayerIcons")
                                                            };
-            _controllerButtonsSpriteMap = new SpriteMap
+            _controllerButtonsSpriteMap = new SpriteMap3D
                                               {
                                                   Columns = 5,
                                                   Rows = 5,
-                                                  SpriteTexture =
+                                                  Texture =
                                                       TextureManager.Textures("KeyOptionControllerButtonIcons")
                                               };
-            _keyboardIcon = new Sprite
+            _keyboardIcon = new Sprite3D
                                 {
-                                    SpriteTexture = TextureManager.Textures("KeyOptionKeyboardIcon"),
+                                    Texture = TextureManager.Textures("KeyOptionKeyboardIcon"),
                                     Width = 35,
                                     Height = 30
                                 };
@@ -62,7 +62,7 @@ namespace WGiBeat.Drawing
             _backgroundSprite.Width = this.Width;
             _backgroundSprite.Height = this.Height;
             _backgroundSprite.Position = this.Position;
-            _backgroundSprite.Draw(spriteBatch);
+            _backgroundSprite.Draw();
 
             //Determine positions.
             _textPosition = this.Position.Clone();
@@ -75,24 +75,24 @@ namespace WGiBeat.Drawing
             //Draw controller Icon
             if (ControllerNumber > 0)
             {
-                _controllerNumberSpriteMap.Draw(spriteBatch, ControllerNumber - 1, 30, 30, _iconPosition);
+                _controllerNumberSpriteMap.Draw(ControllerNumber - 1, 30, 30, _iconPosition);
                 if (_buttonsLookup.Contains(Button))
                 {
                     _textPosition.Y -= 3;
                     var btnIndex = _buttonsLookup.IndexOf(Button);
-                    _controllerButtonsSpriteMap.Draw(spriteBatch,btnIndex,30,30,_textPosition);
+                    _controllerButtonsSpriteMap.Draw(btnIndex,30,30,_textPosition);
                 }
                 else
                 {
-                    TextureManager.DrawString(spriteBatch, Button.ToString(), "LargeFont", _textPosition, Color.Black, FontAlign.LEFT);
+                    TextureManager.DrawString(spriteBatch, Button.ToString(), "LargeFont", _textPosition, Color.Black, FontAlign.Left);
                 }
                 
             }
             else
             {
                 _keyboardIcon.Position = _iconPosition;
-                _keyboardIcon.Draw(spriteBatch);
-                TextureManager.DrawString(spriteBatch,Key.ToString(),"LargeFont",_textPosition, Color.Black,FontAlign.LEFT);
+                _keyboardIcon.Draw();
+                TextureManager.DrawString(spriteBatch,Key.ToString(),"LargeFont",_textPosition, Color.Black,FontAlign.Left);
             }
 
         }

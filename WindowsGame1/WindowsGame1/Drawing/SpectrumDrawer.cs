@@ -43,10 +43,10 @@ namespace WGiBeat.Drawing
         public override void Draw(SpriteBatch spriteBatch)
         {
            
-            Draw(spriteBatch, new float[1]);
+            Draw(new float[1]);
         }
 
-        public void Draw(SpriteBatch spriteBatch, float[] levels)
+        public void Draw(float[] levels)
         {
             if (!_spritesInit)
             {
@@ -58,9 +58,7 @@ namespace WGiBeat.Drawing
             {
                 throw new ArgumentException(
                     "Levels array size is too large. Set the LevelsCount property to match its length first.");
-            }
-
-          
+            }        
 
                 int posX = 0;
 

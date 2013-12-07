@@ -9,10 +9,10 @@ namespace WGiBeat.Drawing
 
         public long BlueScore { get; set; }
         public long RedScore { get; set; }
-        private Sprite _teamBaseSprite;
-        private Sprite _teamGridSprite;
-        private Sprite _tugBlueSprite;
-        private Sprite _tugRedSprite;
+        private Sprite3D _teamBaseSprite;
+        private Sprite3D _teamGridSprite;
+        private Sprite3D _tugBlueSprite;
+        private Sprite3D _tugRedSprite;
         private double _blueBarTextureStart;
         private double _redBarTextureStart;
         private const double ANIMATION_SPEED = 35;
@@ -24,10 +24,10 @@ namespace WGiBeat.Drawing
         }
         public void InitSprites()
         {
-            _teamBaseSprite = new Sprite { SpriteTexture = TextureManager.Textures("ScoreBaseTeam") };
-            _teamGridSprite = new Sprite {SpriteTexture = TextureManager.Textures("ScoreGridTeam")};
-            _tugBlueSprite = new Sprite {SpriteTexture = TextureManager.Textures("TugOfWarBlue")};
-            _tugRedSprite = new Sprite {SpriteTexture = TextureManager.Textures("TugOfWarRed")};
+            _teamBaseSprite = new Sprite3D { Texture = TextureManager.Textures("ScoreBaseTeam") };
+            _teamGridSprite = new Sprite3D {Texture = TextureManager.Textures("ScoreGridTeam")};
+            _tugBlueSprite = new Sprite3D {Texture = TextureManager.Textures("TugOfWarBlue")};
+            _tugRedSprite = new Sprite3D {Texture = TextureManager.Textures("TugOfWarRed")};
         }
 
         public void Update()
@@ -42,16 +42,16 @@ namespace WGiBeat.Drawing
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            DrawBase(spriteBatch);
-            DrawBars(spriteBatch);
-            DrawGrid(spriteBatch);
+            DrawBase();
+            DrawBars();
+            DrawGrid();
             DrawScoreText(spriteBatch);
         }
 
-        private void DrawGrid(SpriteBatch spriteBatch)
+        private void DrawGrid()
         {
             _teamGridSprite.Position = this.Position;
-            _teamGridSprite.Draw(spriteBatch);
+            _teamGridSprite.Draw();
         }
 
         private void DrawScoreText(SpriteBatch spriteBatch)
@@ -59,13 +59,13 @@ namespace WGiBeat.Drawing
             var blueTextPosition = new Vector2(this.X + 10, this.Y + 5);
             var redTextPosition = new Vector2(this.X + this.Width - 10, this.Y + 5);
                 TextureManager.DrawString(spriteBatch, "" + BlueScore, "LargeFont",
-                                      blueTextPosition, Color.White, FontAlign.LEFT);
+                                      blueTextPosition, Color.White, FontAlign.Left);
                 TextureManager.DrawString(spriteBatch, "" + RedScore, "LargeFont",
-                      redTextPosition, Color.White, FontAlign.RIGHT);
+                      redTextPosition, Color.White, FontAlign.Right);
 
         }
 
-        private void DrawBars(SpriteBatch spriteBatch)
+        private void DrawBars()
         {
             var scoreDiff = CalculateBarDifference();
             _tugBlueSprite.X = this.X + 16;
@@ -74,8 +74,8 @@ namespace WGiBeat.Drawing
             _tugRedSprite.Width = 124 - scoreDiff;
             _tugRedSprite.X = _tugBlueSprite.X + _tugBlueSprite.Width;
             _tugRedSprite.Y = this.Y+3;
-            _tugBlueSprite.DrawTiled(spriteBatch,(int)_blueBarTextureStart,0, _tugBlueSprite.Width, _tugBlueSprite.Height);
-            _tugRedSprite.DrawTiled(spriteBatch, (int)_redBarTextureStart, 0, _tugRedSprite.Width, _tugRedSprite.Height);
+            _tugBlueSprite.DrawTiled((int)_blueBarTextureStart,0, _tugBlueSprite.Width, _tugBlueSprite.Height);
+            _tugRedSprite.DrawTiled((int)_redBarTextureStart, 0, _tugRedSprite.Width, _tugRedSprite.Height);
         }
 
         private const int BAR_MAX_LENGTH = 120;
@@ -95,10 +95,10 @@ namespace WGiBeat.Drawing
             return (int) amount;
         }
 
-        private void DrawBase(SpriteBatch spriteBatch)
+        private void DrawBase()
         {
             _teamBaseSprite.Position = this.Position;
-            _teamBaseSprite.Draw(spriteBatch);
+            _teamBaseSprite.Draw();
 
         }
     }

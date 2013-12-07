@@ -82,10 +82,10 @@ namespace WGiBeat.Drawing.Sets
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Draw(spriteBatch, 0.0);
+            Draw(0.0);
         }
 
-        public void Draw(SpriteBatch spriteBatch, double phraseNumber)
+        public void Draw(double phraseNumber)
         {
             for (int x = 0; x < 4; x++)
             {
