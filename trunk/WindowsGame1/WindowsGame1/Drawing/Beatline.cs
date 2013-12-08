@@ -125,7 +125,7 @@ namespace WGiBeat.Drawing
 
         public Color Colour { get; set; }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
             Draw(0.0);
         }

@@ -124,7 +124,7 @@ namespace WGiBeat.Screens
         }
 
         private const int LINE_DRAW_SPEED = 30;
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
             
             _drawProgress += TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds*LINE_DRAW_SPEED;
@@ -134,8 +134,8 @@ namespace WGiBeat.Screens
             DrawAxis();
             DrawLegend();
             DrawPlayerLines();
-            DrawLabels(spriteBatch);
-            DrawBorder(spriteBatch);
+            DrawLabels();
+            DrawBorder();
         }
 
         private void DrawLegend()
@@ -150,7 +150,7 @@ namespace WGiBeat.Screens
 
             switch (LegendStyle)
             {
-                case LegendStyle.NORMAL:
+                case LegendStyle.Normal:
                     legendPosition.Y += this.Height - legendItemSize.Y - 5;
                     legendPosition.X += this.Width - legendItemSize.X - 5;
                     for (int x = 3; x >= 0; x--)
@@ -166,7 +166,7 @@ namespace WGiBeat.Screens
                         legendPosition.X -= legendItemSize.X + 5;
                     }
                     break;
-                    case LegendStyle.TEAMS:
+                    case LegendStyle.Teams:
                 
                     var tlegendItemSize = GameCore.Instance.Metrics["GraphLegendItem.Size", 1];
                     legendPosition.Y += this.Height - tlegendItemSize.Y - 5;
@@ -278,13 +278,13 @@ namespace WGiBeat.Screens
             {
                 loopedOnce = true;
                 var limit = (int) Math.Min(_lineData[x].Length, _drawProgress);
-                var colour = (x == CPUPlayerID && LegendStyle == LegendStyle.NORMAL) ? LineColours[4] : LineColours[x];
+                var colour = (x == CPUPlayerID && LegendStyle == LegendStyle.Normal) ? LineColours[4] : LineColours[x];
                 LineDrawer.Draw(_playerLines[x].Take(limit),1.5f,colour,0,null);
             }
 
         }
 
-        private void DrawBorder(SpriteBatch spriteBatch)
+        private void DrawBorder()
         {
 
 
@@ -321,21 +321,21 @@ namespace WGiBeat.Screens
         private Vector2 _maxLabelPosition;
  
 
-        private void DrawLabels(SpriteBatch spriteBatch)
+        private void DrawLabels()
         {
             _maxLabelPosition.X = this.X + 7;
             _maxLabelPosition.Y = this.Y + 2;
             _minLabelPosition.X = this.X + 7;
             _minLabelPosition.Y = this.Y + this.Height - 26;
-            TextureManager.DrawString(spriteBatch, "" + _min, "DefaultFont",_minLabelPosition,Color.White, FontAlign.Left);
-            TextureManager.DrawString(spriteBatch, "" + _max, "DefaultFont", _maxLabelPosition, Color.White, FontAlign.Left);
+            FontManager.DrawString("" + _min, "DefaultFont",_minLabelPosition,Color.White, FontAlign.Left);
+            FontManager.DrawString("" + _max, "DefaultFont", _maxLabelPosition, Color.White, FontAlign.Left);
         }
     }
 
     public enum LegendStyle
     {
-        NORMAL,
-        TEAMS,
-        NONE
+        Normal,
+        Teams,
+        None
     }
 }

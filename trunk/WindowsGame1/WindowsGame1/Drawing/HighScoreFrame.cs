@@ -48,7 +48,7 @@ namespace WGiBeat.Drawing
             _baseSprite = new Sprite3D { Texture = TextureManager.Textures("HighScoreFrame") };
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
 
             CalculatePositions();
@@ -56,7 +56,7 @@ namespace WGiBeat.Drawing
             _baseSprite.Draw();
             if (HighScoreEntry == null)
             {
-                TextureManager.DrawString(spriteBatch, "No score", "TwoTech24", _namePosition, _textColor,
+                FontManager.DrawString("No score", "TwoTech24", _namePosition, _textColor,
                                           FontAlign.Center);
                 return;
             }
@@ -65,9 +65,9 @@ namespace WGiBeat.Drawing
             _gradeSpriteMap.Draw(HighScoreEntry.Grade, 71, 25, _gradePosition);
             _difficultySpriteMap.Draw((int) HighScoreEntry.Difficulty + 1, 25, 25, _difficultyPosition);
             var displayedScore = string.Format("{0:N0}", HighScoreEntry.Score).Replace((char) 160, ',');
-            TextureManager.DrawString(spriteBatch, displayedScore, "TwoTech24", _scorePosition, _textColor,
+            FontManager.DrawString(displayedScore, "TwoTech24", _scorePosition, _textColor,
                                       FontAlign.Center);
-            TextureManager.DrawString(spriteBatch, "" + displayedName, "TwoTech24", _namePosition, _textColor,
+            FontManager.DrawString("" + displayedName, "TwoTech24", _namePosition, _textColor,
                                       FontAlign.Center);
         }
 

@@ -36,12 +36,12 @@ namespace WGiBeat.Drawing
         public static int PlayerLevel { get; set; }
         
         //TODO: Batch draw NonText then Text for performance improvement.
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
             //Draw Base
             DrawNonText();
 
-            DrawText(spriteBatch);
+            DrawText();
         }
         public void DrawNonText()
         {
@@ -58,15 +58,15 @@ namespace WGiBeat.Drawing
                 _clearSpriteMap.Draw(ClearColour,ClearIndicatorSize,this.Position);
             }
         }
-        public void DrawText(SpriteBatch spriteBatch)
+        public void DrawText()
         {
 //Draw Text
             var textPosition = new Vector2(this.X + 20, this.Y + 3);
-            Vector2 scale = TextureManager.ScaleTextToFit(Song.Title, "LargeFont", _textMaxWidth, this.Height);
-            TextureManager.DrawString(spriteBatch, Song.Title, "LargeFont", textPosition, scale, _textDrawColor, FontAlign.Left);
+            Vector2 scale = FontManager.ScaleTextToFit(Song.Title, "LargeFont", _textMaxWidth, this.Height);
+            FontManager.DrawString(Song.Title, "LargeFont", textPosition, scale, _textDrawColor, FontAlign.Left);
             textPosition.Y += 20;
-            scale = TextureManager.ScaleTextToFit(Song.Artist, "DefaultFont", TextMaxWidth, this.Height);
-            TextureManager.DrawString(spriteBatch, Song.Artist, "DefaultFont", textPosition, scale, _textDrawColor,
+            scale = FontManager.ScaleTextToFit(Song.Artist, "DefaultFont", TextMaxWidth, this.Height);
+            FontManager.DrawString(Song.Artist, "DefaultFont", textPosition, scale, _textDrawColor,
                                       FontAlign.Left);
         }
 

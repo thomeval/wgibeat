@@ -604,37 +604,37 @@ namespace WGiBeat.Screens
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             TextureManager.LastDrawnPhraseNumber = _phraseNumber;
-            DrawBackground(spriteBatch);
+            DrawBackground();
 
             //Draw the component sets.
-             _scoreSet.Draw(spriteBatch);
-            _lifeBarSet.Draw(spriteBatch, _phraseNumber);
-            _levelbarSet.Draw(spriteBatch, _phraseNumber);
-            _hitsBarSet.Draw(spriteBatch);
+             _scoreSet.Draw();
+            _lifeBarSet.Draw( _phraseNumber);
+            _levelbarSet.Draw( _phraseNumber);
+            _hitsBarSet.Draw();
 
             _beatlineSet.Draw( _phraseNumber);
             _performanceBar.Opacity = 255 - _recordReplayer.Opacity;
-            _performanceBar.Draw(spriteBatch);
-            _recordReplayer.Draw(spriteBatch,_phraseNumber);
-            _gmBarSet.Draw(spriteBatch);
+            _performanceBar.Draw();
+            _recordReplayer.Draw(_phraseNumber);
+            _gmBarSet.Draw();
 
             //Draw the notebars.
-            _noteBarSet.Draw(spriteBatch);
-            _noteJudgementSet.Draw(spriteBatch, _phraseNumber);
+            _noteBarSet.Draw();
+            _noteJudgementSet.Draw( _phraseNumber);
 
             if (_phraseNumber < 0)
             {
                 DrawCountdowns();
             }
-            DrawSongTimeLine(spriteBatch);
+            DrawSongTimeLine();
             DrawKOIndicators();
-            DrawSongInfo(spriteBatch);
+            DrawSongInfo();
             DrawClearIndicators();
-            DrawText(spriteBatch);
+            DrawText();
            
         }
 
-        private void DrawSongTimeLine(SpriteBatch spriteBatch)
+        private void DrawSongTimeLine()
         {
             if (Core.Settings.Get<bool>("SongDebug"))
             {
@@ -643,7 +643,7 @@ namespace WGiBeat.Screens
             _songTimeLine.Song = _gameSong;
             _songTimeLine.CurrentPosition = _gameSong.ConvertPhraseToMS(_phraseNumber) / 1000;
             _songTimeLine.AudioEnd = Core.Audio.GetChannelLength((int) Core.Cookies["GameSongChannel"]) / 1000;               
-            _songTimeLine.Draw(spriteBatch);
+            _songTimeLine.Draw();
         }
 
         private readonly Color[] _visualizerColors = {
@@ -671,7 +671,7 @@ namespace WGiBeat.Screens
 
         private double _rainbowPoint;
 
-        private void DrawBackground(SpriteBatch spriteBatch)
+        private void DrawBackground()
         {
             
             _background.Draw();
@@ -690,7 +690,7 @@ namespace WGiBeat.Screens
                 _visualBackground.Colour = _visualizerColors[(int)Math.Floor(GetAverageLevel() - 1)]; 
             }
 
-            _visualBackground.Draw(spriteBatch,_phraseNumber);
+            _visualBackground.Draw(_phraseNumber);
             _textBackground.Draw();
 
         }
@@ -738,40 +738,40 @@ namespace WGiBeat.Screens
             }
         }
 
-        private void DrawSongInfo(SpriteBatch spriteBatch)
+        private void DrawSongInfo()
         {
-            TextureManager.DrawString(spriteBatch, "" + CalculateTimeLeft(), "DefaultFont",
+            FontManager.DrawString("" + CalculateTimeLeft(), "DefaultFont",
                 Core.Metrics["SongTimeLeft", 0], Color.Black, FontAlign.Left);
-            var scale = TextureManager.ScaleTextToFit(_gameSong.Title, "DefaultFont", 310, 100);
-            TextureManager.DrawString(spriteBatch, _gameSong.Title, "DefaultFont",
+            var scale = FontManager.ScaleTextToFit(_gameSong.Title, "DefaultFont", 310, 100);
+            FontManager.DrawString(_gameSong.Title, "DefaultFont",
                 Core.Metrics["SongTitle", 0], scale, Color.Black, FontAlign.Left);
-            scale = TextureManager.ScaleTextToFit(_gameSong.Artist, "DefaultFont", 310, 100);
-            TextureManager.DrawString(spriteBatch, _gameSong.Artist, "DefaultFont", 
+            scale = FontManager.ScaleTextToFit(_gameSong.Artist, "DefaultFont", 310, 100);
+            FontManager.DrawString(_gameSong.Artist, "DefaultFont", 
                 Core.Metrics["SongArtist", 0],scale, Color.Black, FontAlign.Left);
-            TextureManager.DrawString(spriteBatch, String.Format("{0:F2}", _phraseNumber), "DefaultFont", Core.Metrics["SongDebugPhrase", 0], Color.Black, FontAlign.Left);
+            FontManager.DrawString(String.Format("{0:F2}", _phraseNumber), "DefaultFont", Core.Metrics["SongDebugPhrase", 0], Color.Black, FontAlign.Left);
         }
 
-        private void DrawText(SpriteBatch spriteBatch)
+        private void DrawText()
         {
 
             if (Core.Settings.Get<bool>("SongDebug"))
             {
-                DrawDebugText(spriteBatch);
+                DrawDebugText();
             }
         }
 
-        private void DrawDebugText(SpriteBatch spriteBatch)
+        private void DrawDebugText()
         {
 
-            TextureManager.DrawString(spriteBatch, String.Format("BPM: {0:F2}", _beatlineSet.Bpm),
+            FontManager.DrawString(String.Format("BPM: {0:F2}", _beatlineSet.Bpm),
        "DefaultFont", Core.Metrics["SongDebugBPM", 0], Color.Black, FontAlign.Left);
-            TextureManager.DrawString(spriteBatch, String.Format("Offset: {0:F3}", _gameSong.Offset),
+            FontManager.DrawString(String.Format("Offset: {0:F3}", _gameSong.Offset),
                     "DefaultFont", Core.Metrics["SongDebugOffset", 0], Color.Black, FontAlign.Left);
-            TextureManager.DrawString(spriteBatch, String.Format("Hitoffset: {0:F3}", _debugLastHitOffset),
+            FontManager.DrawString(String.Format("Hitoffset: {0:F3}", _debugLastHitOffset),
                 "DefaultFont", Core.Metrics["SongDebugHitOffset", 0], Color.Black, FontAlign.Left);
-            TextureManager.DrawString(spriteBatch, String.Format("Length: {0:F3}", _gameSong.Length),
+            FontManager.DrawString(String.Format("Length: {0:F3}", _gameSong.Length),
                 "DefaultFont", Core.Metrics["SongDebugLength", 0], Color.Black, FontAlign.Left);
-          //  TextureManager.DrawString(spriteBatch, _gameSong.ConvertPhraseToMS(_phraseNumber) + " ms","DefaultFont",new Vector2(375,350),Color.Black,FontAlign.LEFT );
+          //  TextureManager.DrawString( _gameSong.ConvertPhraseToMS(_phraseNumber) + " ms","DefaultFont",new Vector2(375,350),Color.Black,FontAlign.LEFT );
         }
 
 

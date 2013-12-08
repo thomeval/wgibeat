@@ -18,7 +18,7 @@ namespace WGiBeat.Drawing
 
         public static GraphicsDevice Device;
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
             CheckIfDimensionsSet();
@@ -35,7 +35,7 @@ namespace WGiBeat.Drawing
             spriteBatch.End();
         }
 
-        public void Draw(SpriteBatch spriteBatch, SpriteEffects flip)
+        public void Draw( SpriteEffects flip)
         {
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend,SpriteSortMode.Immediate,SaveStateMode.None);
             CheckIfDimensionsSet();
@@ -51,11 +51,11 @@ namespace WGiBeat.Drawing
             spriteBatch.End();
         }
 
-        public void DrawTiled(SpriteBatch spriteBatch, int texU1, int texV1, int texU2, int texV2)
+        public void DrawTiled( int texU1, int texV1, int texU2, int texV2)
         {
-            DrawTiled(spriteBatch,texU1,texV1,texU2,texV2,SpriteEffects.None);
+            DrawTiled(texU1,texV1,texU2,texV2,SpriteEffects.None);
         }
-        public void DrawTiled(SpriteBatch spriteBatch, int texU1, int texV1, int texU2, int texV2, SpriteEffects flip)
+        public void DrawTiled( int texU1, int texV1, int texU2, int texV2, SpriteEffects flip)
         {
         
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);

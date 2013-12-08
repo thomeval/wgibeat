@@ -95,11 +95,11 @@ namespace WGiBeat.Managers
         }
 
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
             foreach (var pof in _optionsFrames.Where(e => e.Player.Playing))
             {       
-                pof.Draw(spriteBatch);
+                pof.Draw();
             }
             _optionsFrameAttract.Draw();
         }

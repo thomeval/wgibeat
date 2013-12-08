@@ -107,8 +107,8 @@ namespace WGiBeat.Screens
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             DrawBackground(gameTime);
-            DrawOverlay(spriteBatch);
-            DrawText(spriteBatch);
+            DrawOverlay();
+            DrawText();
         }
 
         private void DrawBackground(GameTime gameTime)
@@ -120,7 +120,7 @@ namespace WGiBeat.Screens
 
         private Vector2 _actionPosition;
         private Vector2 _textPosition;
-        private void DrawOverlay(SpriteBatch spriteBatch)
+        private void DrawOverlay()
         {
             _headerSprite.Draw();
 
@@ -147,7 +147,7 @@ namespace WGiBeat.Screens
                     idx += 4;
                 }
                 _gridSideSpriteMap.Draw( idx, _actionPosition);
-                TextureManager.DrawString(spriteBatch, _actions[x], "LargeFont", _textPosition, Color.Black, FontAlign.Right);
+                FontManager.DrawString(_actions[x], "LargeFont", _textPosition, Color.Black, FontAlign.Right);
                 _actionPosition.Y += 40;
                 _textPosition.Y += 40;
             }
@@ -163,12 +163,12 @@ namespace WGiBeat.Screens
             foreach (ActionBinding ab in _actionBindings)
             {
                 ab.Position = _bindingPosition;
-                ab.Draw(spriteBatch);
+                ab.Draw();
                 _bindingPosition.Y += 50;
             }
         }
 
-        private void DrawText(SpriteBatch spriteBatch)
+        private void DrawText()
         {
             string instructionText = "";
 
@@ -178,8 +178,8 @@ namespace WGiBeat.Screens
             {
                 instructionText += "START: Add binding. SELECT: Remove bindings. Press Escape when done.";
             }
-            var scale = TextureManager.ScaleTextToFit(instructionText, "LargeFont", 780, 100);
-            TextureManager.DrawString(spriteBatch,instructionText, "LargeFont", Core.Metrics["KeyOptionInstructionText",0], scale, Color.White,FontAlign.Center);
+            var scale = FontManager.ScaleTextToFit(instructionText, "LargeFont", 780, 100);
+            FontManager.DrawString(instructionText, "LargeFont", Core.Metrics["KeyOptionInstructionText",0], scale, Color.White,FontAlign.Center);
         }
 
         #endregion

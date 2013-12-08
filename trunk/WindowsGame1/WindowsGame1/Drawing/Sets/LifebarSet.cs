@@ -217,11 +217,11 @@ namespace WGiBeat.Drawing.Sets
             Players[player].Life = amount;
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
-            Draw(spriteBatch, 0.0);
+            Draw( 0.0);
         }
-        public void Draw(SpriteBatch spriteBatch, double gameTime)
+        public void Draw( double gameTime)
         {
             switch (_gameType)
             {
@@ -231,19 +231,19 @@ namespace WGiBeat.Drawing.Sets
                     for (int x = 0; x < 4; x++)
                     {
                         if (Players[x].Playing)
-                            _lifeBars[x].Draw(spriteBatch, gameTime);
+                            _lifeBars[x].Draw( gameTime);
                     }
                     break;
                 case GameType.COOPERATIVE:
                     
                         _lifeBars[0].Position = (_metrics["CoopLifeBar", 0]);
-                        _lifeBars[0].Draw(spriteBatch,gameTime);
+                        _lifeBars[0].Draw(gameTime);
                     
                     break;
                     case GameType.SYNC_PRO:
                     case GameType.SYNC_PLUS:
                         _lifeBars[0].Position = (_metrics["SyncLifeBar", 0]);
-                        _lifeBars[0].Draw(spriteBatch, gameTime);
+                        _lifeBars[0].Draw( gameTime);
                     
                     break;
             }

@@ -82,8 +82,6 @@ namespace WGiBeat
             //Using this causes 100% CPU usage (one core) and a frame rate drop.
             this.IsFixedTimeStep = false;
 
-  
-
             WgibeatRootFolder = "" + Path.GetDirectoryName(
 Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             WgibeatRootFolder = WgibeatRootFolder.Replace("file:\\", "");
@@ -138,12 +136,13 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
                                         Crossfader = this.Crossfader
                                     };
             _menuMusicManager.LoadMusicList(_menuMusicManager.MusicFilePath + "MusicList.txt");
+    //        _menuMusicManager.ChangeMusic("InitialLoad");
 
             KeyMappings = new KeyMappings(this.Log);
-            bool passed = KeyMappings.LoadFromFile("Keys.conf");
-
-            if (!passed)
+            if (!KeyMappings.LoadFromFile("Keys.conf"))
+            {
                 KeyMappings.LoadDefault();
+            }            
 
             UpdateManager = new UpdateManager {Log = this.Log};
         }
@@ -220,7 +219,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
                                                                                                          (), 800);
             GraphicsManager.ApplyChanges();
             GraphicsDevice.VertexDeclaration = new VertexDeclaration(GraphicsDevice, VertexPositionColorTexture.VertexElements);
-            TextureManager.FontMatrix = Matrix.CreateScale(GraphicsManager.PreferredBackBufferWidth/800.0f,
+            FontManager.FontMatrix = Matrix.CreateScale(GraphicsManager.PreferredBackBufferWidth/800.0f,
                                                            GraphicsManager.PreferredBackBufferHeight/600.0f, 1);
 
         }
@@ -236,14 +235,16 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
         {         
             // Create a new SpriteBatch, which can be used to draw textures.
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-    
+            FontManager.SpriteBatch = _spriteBatch;
+  
             LoadCurrentTheme();
 
             var files = Directory.GetFiles(Content.RootDirectory + "/Fonts", "*.xnb");
             foreach (string file in files)
             {
-                TextureManager.AddFont(Path.GetFileNameWithoutExtension(file), Content.Load<SpriteFont>("Fonts/" + Path.GetFileNameWithoutExtension(file)));
+                FontManager.AddFont(Path.GetFileNameWithoutExtension(file), Content.Load<SpriteFont>("Fonts/" + Path.GetFileNameWithoutExtension(file)));
             }
+           
         }
 
         public void LoadCurrentTheme()
@@ -298,9 +299,7 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
-        {
-         
-
+        {        
             TextureManager.LastGameTime = gameTime;
             GraphicsDevice.Clear(Color.Black);     
             _activeScreen.Draw(gameTime, _spriteBatch);

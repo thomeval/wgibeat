@@ -93,30 +93,30 @@ namespace WGiBeat.AudioSystem
                 return;
             }
 
-            if (_musicList.ContainsKey(name))
-            {
-                if ((!Directory.Exists(MusicFilePath)) || (!File.Exists(MusicFilePath + _musicList[name])))
-                {
-                    Log.AddMessage("MenuMusicManager: Skipping load of '" + name + "' as the file was not found.",LogLevel.WARN);
-                    Log.AddMessage("Searched in: " + MusicFilePath + _musicList[name],LogLevel.WARN);
-                    StopExistingMusic();
-                    return;
-                }
-                if (_currentMusic == _musicList[name])
-                {
-                    Log.AddMessage("MenuMusicManager: Selected music is already playing. Skipping load.",LogLevel.INFO);
-                    return;
-                }
-
-                _currentMusic = _musicList[name];
-                _musicChannel = AudioManager.PlaySoundEffect(MusicFilePath + _musicList[name],true,false);
-                Crossfader.PreviewDuration = 0;
-                Crossfader.SetNewChannel(_musicChannel);
-            }
-            else
+            if (!_musicList.ContainsKey(name))
             {
                 StopExistingMusic();
+                return;
             }
+
+            if ((!Directory.Exists(MusicFilePath)) || (!File.Exists(MusicFilePath + _musicList[name])))
+            {
+                Log.AddMessage("MenuMusicManager: Skipping load of '" + name + "' as the file was not found.",
+                               LogLevel.WARN);
+                Log.AddMessage("Searched in: " + MusicFilePath + _musicList[name], LogLevel.WARN);
+                StopExistingMusic();
+                return;
+            }
+            if (_currentMusic == _musicList[name])
+            {
+                Log.AddMessage("MenuMusicManager: Selected music is already playing. Skipping load.", LogLevel.INFO);
+                return;
+            }
+
+            _currentMusic = _musicList[name];
+            _musicChannel = AudioManager.PlaySoundEffect(MusicFilePath + _musicList[name], true, false);
+            Crossfader.PreviewDuration = 0;
+            Crossfader.SetNewChannel(_musicChannel);
         }
 
         /// <summary>

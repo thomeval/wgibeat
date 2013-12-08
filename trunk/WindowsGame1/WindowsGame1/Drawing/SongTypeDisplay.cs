@@ -40,7 +40,7 @@ namespace WGiBeat.Drawing
             _songIndex = _songTypes.IndexOf(Path.GetExtension(Song.DefinitionFile)) + 1;
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
 
             var position = this.Position.Clone();
@@ -53,9 +53,9 @@ namespace WGiBeat.Drawing
             position.Y = this.Y + 1;
             var audioExt = Path.GetExtension(Song.AudioFile).ToUpper().TrimStart('.');
             var songExt = Path.GetExtension(Song.DefinitionFile).ToUpper().TrimStart('.');
-            TextureManager.DrawString(spriteBatch,audioExt,"DefaultFont",position,Color.Black,FontAlign.Right);
+            FontManager.DrawString(audioExt,"DefaultFont",position,Color.Black,FontAlign.Right);
             position.Y += 16;
-            TextureManager.DrawString(spriteBatch, songExt, "DefaultFont", position, Color.Black, FontAlign.Right);
+            FontManager.DrawString(songExt, "DefaultFont", position, Color.Black, FontAlign.Right);
         }
     }
 }

@@ -9,6 +9,6 @@ namespace WGiBeat.Drawing
 
         public abstract void Reset();
 
-        public abstract void Draw(SpriteBatch spriteBatch, double gameTime);
+        public abstract void Draw( double gameTime);
     }
 }

@@ -79,11 +79,11 @@ namespace WGiBeat.Drawing
             _spritesInit = true;
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
-            Draw(spriteBatch, 0.0);
+            Draw( 0.0);
         }
-        public void Draw(SpriteBatch spriteBatch, double phraseNumber)
+        public void Draw( double phraseNumber)
         {
             if (!_spritesInit)
             {
@@ -114,15 +114,15 @@ namespace WGiBeat.Drawing
             _maxFrontSprite.Height = this.Height - 6;
             _maxBaseSprite.Position = this.Position;
             _maxBaseSprite.Draw();
-                TextureManager.DrawString(spriteBatch, "" + (int)(Parent.Players[PlayerID].Level * Multiplier), "DefaultFont",
+                FontManager.DrawString("" + (int)(Parent.Players[PlayerID].Level * Multiplier), "DefaultFont",
                        _textPosition, Color.Black,FontAlign.Center);
 
-             DrawBars(spriteBatch);
+             DrawBars();
             _maxFrontSprite.DrawTiled((int)(maxFrontBeatFraction * _maxFrontSprite.Width), 0, _maxFrontSprite.Width, _maxFrontSprite.Height);
          
         }
 
-        private void DrawBars(SpriteBatch spriteBatch)
+        private void DrawBars()
         {
             _displayedLevel *= Multiplier;
             var diff = (Multiplier * Parent.Players[PlayerID].Level) - _displayedLevel;

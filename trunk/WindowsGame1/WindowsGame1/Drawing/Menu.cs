@@ -58,7 +58,7 @@ namespace WGiBeat.Drawing
             _selectedItemSprite = new Sprite3D {Texture = TextureManager.Textures("MenuSelectedItem")};
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
 
             if (MaxVisibleItems == 0)
@@ -89,11 +89,11 @@ namespace WGiBeat.Drawing
             }
 
             DrawBorder(startItem, lastItem);
-            DrawMenuItems(spriteBatch, startItem, lastItem);
+            DrawMenuItems( startItem, lastItem);
 
         }
 
-        private void DrawMenuItems(SpriteBatch spriteBatch, int startItem, int lastItem)
+        private void DrawMenuItems( int startItem, int lastItem)
         {
             int xOptionOffset = CalculateXOptionOffset();
             var position = new Vector2 { X = this.X + 10, Y = this.Y + 30 };
@@ -123,15 +123,15 @@ namespace WGiBeat.Drawing
                 drawColor.A = menuItem.Enabled ? Opacity : (byte) (Opacity/2);
 
                
-                TextureManager.DrawString(spriteBatch, menuItem.ItemText, FontName, position, drawColor, FontAlign.Left);
+                FontManager.DrawString(menuItem.ItemText, FontName, position, drawColor, FontAlign.Left);
                 position.X += xOptionOffset;
 
                 var menuOptionText = menuItem.SelectedText();
 
-                var scale = TextureManager.ScaleTextToFit(menuOptionText, FontName, this.Width - 20 - xOptionOffset,
+                var scale = FontManager.ScaleTextToFit(menuOptionText, FontName, this.Width - 20 - xOptionOffset,
                                                           1000);
 
-                TextureManager.DrawString(spriteBatch, menuOptionText, FontName, position, scale, drawColor, FontAlign.Left);
+                FontManager.DrawString(menuOptionText, FontName, position, scale, drawColor, FontAlign.Left);
 
 
                 position.X -= xOptionOffset;
@@ -174,7 +174,7 @@ namespace WGiBeat.Drawing
             int maxLength = 0;
             foreach (MenuItem menuItem in _menuItems)
             {
-                maxLength = Math.Max(maxLength, (int) TextureManager.Fonts("LargeFont").MeasureString(menuItem.ItemText).X);
+                maxLength = Math.Max(maxLength, (int) FontManager.Fonts("LargeFont").MeasureString(menuItem.ItemText).X);
             }
             return (maxLength) + 25;
         }

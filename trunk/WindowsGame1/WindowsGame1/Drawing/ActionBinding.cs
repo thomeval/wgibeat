@@ -56,7 +56,7 @@ namespace WGiBeat.Drawing
 
         private Vector2 _textPosition;
         private Vector2 _iconPosition;
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
            
             _backgroundSprite.Width = this.Width;
@@ -84,7 +84,7 @@ namespace WGiBeat.Drawing
                 }
                 else
                 {
-                    TextureManager.DrawString(spriteBatch, Button.ToString(), "LargeFont", _textPosition, Color.Black, FontAlign.Left);
+                    FontManager.DrawString(Button.ToString(), "LargeFont", _textPosition, Color.Black, FontAlign.Left);
                 }
                 
             }
@@ -92,7 +92,7 @@ namespace WGiBeat.Drawing
             {
                 _keyboardIcon.Position = _iconPosition;
                 _keyboardIcon.Draw();
-                TextureManager.DrawString(spriteBatch,Key.ToString(),"LargeFont",_textPosition, Color.Black,FontAlign.Left);
+                FontManager.DrawString(Key.ToString(),"LargeFont",_textPosition, Color.Black,FontAlign.Left);
             }
 
         }

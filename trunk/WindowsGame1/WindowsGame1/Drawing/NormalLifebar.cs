@@ -30,11 +30,10 @@ namespace WGiBeat.Drawing
                 new Color(128, 255, 128),
                 new Color(255, 255, 128)
             };
+
         public NormalLifeBar()
         {
-            _displayedLife = 0;
-            
-
+            _displayedLife = 0;          
         }
 
         private void InitSprites()
@@ -57,16 +56,15 @@ namespace WGiBeat.Drawing
             {
 
                 Texture = TextureManager.Textures("LifeBarOvercharge"),
-                Position = new Vector2(this.X + BAR_X_OFFSET, this.Y + 3),
-                Height = this.Height - 6,
+                Position = new Vector2(this.X + BAR_X_OFFSET, this.Y - 3),
+                Height = this.Height + 6,
             };
 
             _2ndOverchargePart = new Sprite3D
             {
                 Texture = TextureManager.Textures("LifeBarOvercharge2"),
-                Position = new Vector2(this.X + BAR_X_OFFSET, this.Y + 3),
-                Height = this.Height - 6
-            };
+                Position = new Vector2(this.X + BAR_X_OFFSET, this.Y - 3),
+                Height = this.Height + 6};
             _gridPart = new Sprite3D
             {
                 Texture = TextureManager.Textures("LifeBarGridBase"),
@@ -91,7 +89,7 @@ namespace WGiBeat.Drawing
         private int _blocksCount;
         private const int OVERCHARGE_FLOW_SPEED = 250;
 
-        public override void Draw(SpriteBatch spriteBatch, double gameTime)
+        public override void Draw( double gameTime)
         {
             if (_basePart == null)
             {
@@ -148,7 +146,7 @@ namespace WGiBeat.Drawing
             DrawBlazingEffect(beatFraction);
             DrawFullEffect();   
 
-            DrawText(spriteBatch);
+            DrawText();
             UpdateOverchargeTexture();
 
         }
@@ -166,13 +164,13 @@ namespace WGiBeat.Drawing
 
         private void DrawFullEffect()
         {
-            if (Parent.LifebarFull(PlayerID) && (!Parent.Players[PlayerID].IsBlazing))
+            if (!Parent.LifebarFull(PlayerID) || (Parent.Players[PlayerID].IsBlazing))
             {
-                _blazingPart.ColorShading = _fullColors[PlayerID];
-                _blazingPart.ColorShading.A = 128;
-                _blazingPart.Draw();
-               
+                return;
             }
+            _blazingPart.ColorShading = _fullColors[PlayerID];
+            _blazingPart.ColorShading.A = 128;
+            _blazingPart.Draw();
         }
 
 
@@ -234,15 +232,15 @@ namespace WGiBeat.Drawing
             }
             return 0;
         }
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
-            Draw(spriteBatch, 0.0);
+            Draw( 0.0);
         }
 
-        private void DrawText(SpriteBatch spriteBatch)
+        private void DrawText()
         {
 
-            TextureManager.DrawString(spriteBatch, String.Format("{0:D3}", (int)_displayedLife),
+            FontManager.DrawString(String.Format("{0:D3}", (int)_displayedLife),
                     "DefaultFont", _textPosition, Color.Black, FontAlign.Center);
 
         }

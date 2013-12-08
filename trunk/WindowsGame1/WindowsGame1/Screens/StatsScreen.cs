@@ -98,7 +98,7 @@ namespace WGiBeat.Screens
             DrawBackground(gameTime);
             DrawBorder();
             DrawHeader();
-            DrawText(spriteBatch);
+            DrawText();
         }
 
         private void DrawBackground(GameTime gameTime)
@@ -120,7 +120,7 @@ namespace WGiBeat.Screens
             RoundLineManager.Instance.Draw(lineSegment,1,Color.Black,0,null);
         }
 
-        private void DrawText(SpriteBatch spriteBatch)
+        private void DrawText()
         {
             for (int x = 0; x < 2; x++)
             {
@@ -128,74 +128,73 @@ namespace WGiBeat.Screens
                 {
 
                     case StatsScreenState.NOT_JOINED:
-                        TextureManager.DrawString(spriteBatch, "Press start to join...", "LargeFont", Core.Metrics["StatsJoinMessage", x], Color.Black, FontAlign.Center);
-                        TextureManager.DrawString(spriteBatch, "START: Join", "DefaultFont", Core.Metrics["StatsInstructionText", x], Color.White, FontAlign.Center);
+                        FontManager.DrawString("Press start to join...", "LargeFont", Core.Metrics["StatsJoinMessage", x], Color.Black, FontAlign.Center);
+                        FontManager.DrawString("START: Join", "DefaultFont", Core.Metrics["StatsInstructionText", x], Color.White, FontAlign.Center);
 
                         break;
                     case StatsScreenState.SELECT_PROFILE:
-                        TextureManager.DrawString(spriteBatch, "START: Select profile", "DefaultFont", Core.Metrics["StatsInstructionText", x], Color.White, FontAlign.Center);
-                        _profileMenus[x].Draw(spriteBatch);
+                        FontManager.DrawString("START: Select profile", "DefaultFont", Core.Metrics["StatsInstructionText", x], Color.White, FontAlign.Center);
+                        _profileMenus[x].Draw();
                         break;
                     case StatsScreenState.VIEWING_STATS:
-                        DrawStats(spriteBatch, x, (Profile)_profileMenus[x].SelectedItem().ItemValue);
-                        TextureManager.DrawString(spriteBatch, "START: Change profile", "DefaultFont", Core.Metrics["StatsInstructionText", x], Color.White, FontAlign.Center);
+                        DrawStats( x, (Profile)_profileMenus[x].SelectedItem().ItemValue);
+                        FontManager.DrawString("START: Change profile", "DefaultFont", Core.Metrics["StatsInstructionText", x], Color.White, FontAlign.Center);
                         break;
 
                 }
             }
         }
 
-        private void DrawStats(SpriteBatch spriteBatch, int side, Profile profile)
+        private void DrawStats( int side, Profile profile)
         {
             var tempPlayer = new Player { Profile = profile };
 
             Vector2[] positions = { Core.Metrics["StatsColumns", (3 * side)].Clone(), Core.Metrics["StatsColumns", (3 * side) + 1].Clone(), Core.Metrics["StatsColumns", (3 * side) + 2].Clone() };
-            TextureManager.DrawString(spriteBatch, profile.Name, "TwoTech36", positions[0],TextureManager.ScaleTextToFit(profile.Name,"TwoTech36",280,80), Color.Black, FontAlign.Left);
+            FontManager.DrawString(profile.Name, "TwoTech36", positions[0],FontManager.ScaleTextToFit(profile.Name,"TwoTech36",280,80), Color.Black, FontAlign.Left);
             positions[0].Y += 28;
             positions[1].Y += 28;
 
-            DrawLevelBars(spriteBatch, positions[0], tempPlayer);
+            DrawLevelBars( positions[0], tempPlayer);
             positions[0].Y += 15;
             positions[1].Y += 15;
 
-            TextureManager.DrawString(spriteBatch,"EXP: ", "DefaultFont",positions[0],Color.Black,FontAlign.Left);
-            TextureManager.DrawString(spriteBatch,
-                          String.Format("{0}/{1}", profile.EXP, tempPlayer.GetNextEXPSafe()),
+            FontManager.DrawString("EXP: ", "DefaultFont",positions[0],Color.Black,FontAlign.Left);
+            FontManager.DrawString(String.Format("{0}/{1}", profile.EXP, tempPlayer.GetNextEXPSafe()),
                           "DefaultFont", positions[1],Color.Black,
                           FontAlign.Left);
             positions[0].Y += 35;
             positions[1].Y += 35;
-            TextureManager.DrawString(spriteBatch, "Total play time:", "LargeFont", positions[0], Color.Black, FontAlign.Left);
+            FontManager.DrawString("Total play time:", "LargeFont", positions[0], Color.Black, FontAlign.Left);
             var playTime = new TimeSpan(0, 0, 0, 0, (int)profile.TotalPlayTime);
 
-            TextureManager.DrawString(spriteBatch, String.Format("{0:F0}:{1:00}:{2:00} ", playTime.TotalHours, playTime.Minutes, playTime.Seconds), "LargeFont", positions[1], Color.Black, FontAlign.Left);
+            FontManager.DrawString(String.Format("{0:F0}:{1:00}:{2:00} ", playTime.TotalHours, playTime.Minutes, playTime.Seconds), "LargeFont", positions[1], Color.Black, FontAlign.Left);
 
             positions[0].Y += 25;
             positions[1].Y += 25;
 
-            TextureManager.DrawString(spriteBatch, "Songs cleared:", "LargeFont", positions[0], Color.Black, FontAlign.Left);
-            TextureManager.DrawString(spriteBatch, "" + profile.SongsCleared, "LargeFont", positions[1], Color.Black, FontAlign.Left);
+            FontManager.DrawString("Songs cleared:", "LargeFont", positions[0], Color.Black, FontAlign.Left);
+            FontManager.DrawString("" + profile.SongsCleared, "LargeFont", positions[1], Color.Black, FontAlign.Left);
             positions[0].Y += 25;
             positions[1].Y += 25;
-            TextureManager.DrawString(spriteBatch, "Songs failed:", "LargeFont", positions[0], Color.Black, FontAlign.Left);
-            TextureManager.DrawString(spriteBatch, "" + profile.SongsFailed, "LargeFont", positions[1], Color.Black, FontAlign.Left);
+            FontManager.DrawString("Songs failed:", "LargeFont", positions[0], Color.Black, FontAlign.Left);
+            FontManager.DrawString("" + profile.SongsFailed, "LargeFont", positions[1], Color.Black, FontAlign.Left);
 
             positions[0].Y += 50;
             positions[1].Y += 50;
             var totalBeatlines = profile.JudgementCounts.Sum() - profile.JudgementCounts[(int)BeatlineNoteJudgement.COUNT];
-            TextureManager.DrawString(spriteBatch, "Total beatlines:", "LargeFont", positions[0], Color.Black, FontAlign.Left);
-            TextureManager.DrawString(spriteBatch, "" + totalBeatlines, "LargeFont", positions[1], Color.Black, FontAlign.Left);
+            FontManager.DrawString("Total beatlines:", "LargeFont", positions[0], Color.Black, FontAlign.Left);
+            FontManager.DrawString("" + totalBeatlines, "LargeFont", positions[1], Color.Black, FontAlign.Left);
             positions[0].Y += 25;
             for (int x = 0; x < (int)BeatlineNoteJudgement.COUNT; x++)
             {
 
                 positions[1].Y = positions[0].Y;
                 positions[2].Y = positions[0].Y;
-                TextureManager.DrawString(spriteBatch, ((BeatlineNoteJudgement)x).ToString(), "DefaultFont",
+                FontManager.DrawString(((BeatlineNoteJudgement)x).ToString(), "DefaultFont",
                                           positions[0], Color.Black, FontAlign.Left);
-                TextureManager.DrawString(spriteBatch, profile.JudgementCounts[x] + "", "DefaultFont",
+                FontManager.DrawString(profile.JudgementCounts[x] + "", "DefaultFont",
                                           positions[1], Color.Black, FontAlign.Left);
-                TextureManager.DrawString(spriteBatch, String.Format("{0:P0}", 1.0 * profile.JudgementCounts[x] / totalBeatlines), "DefaultFont",
+                FontManager.DrawString(String.Format("{0:P0}", 1.0 * profile.JudgementCounts[x] / totalBeatlines), "DefaultFont",
                                           positions[2], Color.Black, FontAlign.Left);
                 positions[0].Y += 20;
 
@@ -204,36 +203,36 @@ namespace WGiBeat.Screens
             positions[1].Y = positions[0].Y;
 
             var totalArrows = profile.TotalHits + profile.JudgementCounts[(int)BeatlineNoteJudgement.COUNT];
-            TextureManager.DrawString(spriteBatch, "Total arrows:", "LargeFont", positions[0], Color.Black, FontAlign.Left);
-            TextureManager.DrawString(spriteBatch, "" + totalArrows, "LargeFont", positions[1], Color.Black, FontAlign.Left);
+            FontManager.DrawString("Total arrows:", "LargeFont", positions[0], Color.Black, FontAlign.Left);
+            FontManager.DrawString("" + totalArrows, "LargeFont", positions[1], Color.Black, FontAlign.Left);
             positions[0].Y += 25;
             positions[1].Y = positions[0].Y;
             positions[2].Y = positions[0].Y;
 
-            TextureManager.DrawString(spriteBatch, "Hits", "DefaultFont", positions[0], Color.Black, FontAlign.Left);
-            TextureManager.DrawString(spriteBatch, "" + profile.TotalHits, "DefaultFont", positions[1], Color.Black, FontAlign.Left);
+            FontManager.DrawString("Hits", "DefaultFont", positions[0], Color.Black, FontAlign.Left);
+            FontManager.DrawString("" + profile.TotalHits, "DefaultFont", positions[1], Color.Black, FontAlign.Left);
             string percentage = String.Format("{0:P0}", 1.0 * profile.TotalHits / totalArrows);
-            TextureManager.DrawString(spriteBatch, percentage, "DefaultFont", positions[2], Color.Black, FontAlign.Left);
+            FontManager.DrawString(percentage, "DefaultFont", positions[2], Color.Black, FontAlign.Left);
             positions[0].Y += 20;
             positions[1].Y = positions[0].Y;
             positions[2].Y = positions[0].Y;
 
-            TextureManager.DrawString(spriteBatch, "Faults", "DefaultFont", positions[0], Color.Black, FontAlign.Left);
-            TextureManager.DrawString(spriteBatch, "" + profile.JudgementCounts[(int)BeatlineNoteJudgement.COUNT], "DefaultFont",
+            FontManager.DrawString("Faults", "DefaultFont", positions[0], Color.Black, FontAlign.Left);
+            FontManager.DrawString("" + profile.JudgementCounts[(int)BeatlineNoteJudgement.COUNT], "DefaultFont",
                 positions[1], Color.Black, FontAlign.Left);
             percentage = String.Format("{0:P0}", 1.0 * profile.JudgementCounts[(int)BeatlineNoteJudgement.COUNT] / totalArrows);
-            TextureManager.DrawString(spriteBatch, percentage, "DefaultFont", positions[2], Color.Black, FontAlign.Left);
+            FontManager.DrawString(percentage, "DefaultFont", positions[2], Color.Black, FontAlign.Left);
             positions[0].Y += 20;
             positions[1].Y = positions[0].Y;
             positions[2].Y = positions[0].Y;
 
         }
 
-        private void DrawLevelBars(SpriteBatch spriteBatch, Vector2 position, Player player)
+        private void DrawLevelBars( Vector2 position, Player player)
         {
             _levelDisplay.Player = player;
             _levelDisplay.Position = position;
-            _levelDisplay.Draw(spriteBatch);
+            _levelDisplay.Draw();
         }
 
 

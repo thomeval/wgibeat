@@ -54,7 +54,7 @@ namespace WGiBeat.Drawing
 
         public void Draw(SpriteBatch spriteBatch, int cellnumber, int width, int height, Vector2 position)
         {
-            Draw(spriteBatch, cellnumber, width, height,(int) position.X, (int) position.Y);
+            Draw(spriteBatch, cellnumber, width, height, (int)position.X, (int)position.Y);
         }
         private Rectangle CalculateSourceRectangle(int cellnumber)
         {

@@ -63,25 +63,25 @@ namespace WGiBeat.Drawing
             FileList.MaxVisibleItems = 15;
             FileList.ItemSpacing = 18;
         }
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
             var shortPath = CurrentFolder;
             var position = this.Position;
             position.X += 5;
 
 
-            var pathWidth = TextureManager.ScaleTextToFit(shortPath, "LargeFont", this.Width - 10, 50);
-            TextureManager.DrawString(spriteBatch,shortPath,"LargeFont",position,pathWidth,Color.Black,FontAlign.Left);
+            var pathWidth = FontManager.ScaleTextToFit(shortPath, "LargeFont", this.Width - 10, 50);
+            FontManager.DrawString(shortPath,"LargeFont",position,pathWidth,Color.Black,FontAlign.Left);
             
             FileList.X = this.X;
             FileList.Y = this.Y + 35;
             FileList.Width = this.Width;
-            FileList.Draw(spriteBatch);
+            FileList.Draw();
 
-            DrawControlHelp(spriteBatch);
+            DrawControlHelp();
         }
 
-        private void DrawControlHelp(SpriteBatch spriteBatch)
+        private void DrawControlHelp()
         {
             var position = this.Position.Clone();
             position.X +=  (int) this.Width/2.0f;
@@ -98,7 +98,7 @@ namespace WGiBeat.Drawing
 
             foreach (var line in instructions)
             {
-                TextureManager.DrawString(spriteBatch, line, "DefaultFont", position, Color.Black,
+                FontManager.DrawString(line, "DefaultFont", position, Color.Black,
                                           FontAlign.Center);
                 position.Y += 20;
             }

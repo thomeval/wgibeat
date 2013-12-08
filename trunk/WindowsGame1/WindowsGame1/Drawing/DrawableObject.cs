@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
+
 namespace WGiBeat.Drawing
 {
     public abstract class DrawableObject
@@ -39,6 +39,6 @@ namespace WGiBeat.Drawing
         }
 
 
-        public abstract void Draw(SpriteBatch spriteBatch);
+        public abstract void Draw();
     }
 }

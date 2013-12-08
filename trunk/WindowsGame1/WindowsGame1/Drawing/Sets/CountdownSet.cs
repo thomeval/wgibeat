@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Managers;
 using WGiBeat.Players;
 
@@ -28,7 +27,7 @@ namespace WGiBeat.Drawing.Sets
             };
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
             Draw(0.0);
         }

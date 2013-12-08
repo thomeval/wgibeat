@@ -42,10 +42,6 @@ namespace WGiBeat.Screens
             item.AddOption("On", true);
             _optionsMenu.AddItem(item);
 
-            item = new MenuItem { ItemText = "Song Previews" };
-            item.AddOption("Off", false);
-            item.AddOption("On", true);
-            _optionsMenu.AddItem(item);
 
             item = new MenuItem { ItemText = "Song Audio Validation" };
             item.AddOption("Ignore", 0);
@@ -159,19 +155,19 @@ namespace WGiBeat.Screens
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            DrawBackground(spriteBatch, gameTime);
-            _optionsMenu.Draw(spriteBatch);
-            DrawOptionDescription(spriteBatch);
+            DrawBackground(gameTime);
+            _optionsMenu.Draw();
+            DrawOptionDescription();
         }
 
-        private void DrawOptionDescription(SpriteBatch spriteBatch)
+        private void DrawOptionDescription()
         {
             _optionBaseSprite.Draw();
             var optionText = Core.Text["Option" + _optionsMenu.SelectedIndex];
-            TextureManager.DrawString(spriteBatch, optionText, "DefaultFont", Core.Metrics["OptionsDescription", 0], Color.White, FontAlign.Center);
+            FontManager.DrawString(optionText, "DefaultFont", Core.Metrics["OptionsDescription", 0], Color.White, FontAlign.Center);
         }
 
-        private void DrawBackground(SpriteBatch spriteBatch, GameTime gameTime)
+        private void DrawBackground(GameTime gameTime)
         {
             _background.Draw();
             _field.Draw(gameTime);
@@ -233,7 +229,6 @@ namespace WGiBeat.Screens
             {
                 _optionsMenu.GetByItemText("Song Volume").SetSelectedByValue("" + Core.Settings.Get<object>("SongVolume"));
                 _optionsMenu.GetByItemText("Song Debugging").SetSelectedByValue(Core.Settings.Get<object>("SongDebug"));
-                _optionsMenu.GetByItemText("Song Previews").SetSelectedByValue(Core.Settings.Get<object>("SongPreview"));
                 _optionsMenu.GetByItemText("Full screen").SetSelectedByValue(Core.Settings.Get<object>("FullScreen"));
                 _optionsMenu.GetByItemText("V-Sync").SetSelectedByValue(Core.Settings.Get<object>("VSync"));
                 _optionsMenu.GetByItemText("Song Audio Validation").SetSelectedByValue(Core.Settings.Get<object>("SongMD5Behaviour"));
@@ -258,7 +253,6 @@ namespace WGiBeat.Screens
 
             Core.Settings.Set("SongVolume", (Convert.ToDouble(_optionsMenu.GetByItemText("Song Volume").SelectedValue())));
             Core.Settings.Set("SongDebug", (_optionsMenu.GetByItemText("Song Debugging").SelectedValue()));
-            Core.Settings.Set("SongPreview", (_optionsMenu.GetByItemText("Song Previews").SelectedValue()));
             Core.Settings.Set("FullScreen", _optionsMenu.GetByItemText("Full screen").SelectedValue());
             Core.Settings.Set("SongMD5Behaviour", _optionsMenu.GetByItemText("Song Audio Validation").SelectedValue());
             Core.Settings.Set("SaveLog", _optionsMenu.GetByItemText("Save Game Log").SelectedValue());

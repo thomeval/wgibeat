@@ -39,11 +39,11 @@ namespace WGiBeat.Drawing.Sets
             }
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
-           Draw(spriteBatch, 0.0);
+           Draw( 0.0);
         }
-        public void Draw(SpriteBatch spriteBatch, double gameTime)
+        public void Draw( double gameTime)
         {
             switch (_gameType)
             {
@@ -55,7 +55,7 @@ namespace WGiBeat.Drawing.Sets
                     {
                         if (Players[x].Playing)
                         {
-                            _levelBars[x].Draw(spriteBatch,gameTime);
+                            _levelBars[x].Draw(gameTime);
                         }
                     }
                     break;
@@ -63,7 +63,7 @@ namespace WGiBeat.Drawing.Sets
                     case GameType.SYNC_PRO:
                     case GameType.SYNC_PLUS:
                         _levelBars[0].Position = _metrics["SyncLevelBarBase", 0];
-                        _levelBars[0].Draw(spriteBatch,gameTime); 
+                        _levelBars[0].Draw(gameTime); 
          
                     break;
             }

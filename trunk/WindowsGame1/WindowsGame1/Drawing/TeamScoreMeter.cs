@@ -40,12 +40,12 @@ namespace WGiBeat.Drawing
                 _blueBarTextureStart += 109;
             }
         }
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
             DrawBase();
             DrawBars();
             DrawGrid();
-            DrawScoreText(spriteBatch);
+            DrawScoreText();
         }
 
         private void DrawGrid()
@@ -54,13 +54,13 @@ namespace WGiBeat.Drawing
             _teamGridSprite.Draw();
         }
 
-        private void DrawScoreText(SpriteBatch spriteBatch)
+        private void DrawScoreText()
         {
             var blueTextPosition = new Vector2(this.X + 10, this.Y + 5);
             var redTextPosition = new Vector2(this.X + this.Width - 10, this.Y + 5);
-                TextureManager.DrawString(spriteBatch, "" + BlueScore, "LargeFont",
+                FontManager.DrawString("" + BlueScore, "LargeFont",
                                       blueTextPosition, Color.White, FontAlign.Left);
-                TextureManager.DrawString(spriteBatch, "" + RedScore, "LargeFont",
+                FontManager.DrawString("" + RedScore, "LargeFont",
                       redTextPosition, Color.White, FontAlign.Right);
 
         }

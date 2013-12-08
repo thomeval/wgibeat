@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using WGiBeat.Notes;
+﻿using WGiBeat.Notes;
 
 namespace WGiBeat.Drawing
 {
@@ -14,7 +13,7 @@ namespace WGiBeat.Drawing
 
         private SpriteMap3D _judgementSprite;
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
             if (_judgementSprite == null)
             {

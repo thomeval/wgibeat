@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Managers;
 using WGiBeat.Players;
 
@@ -31,7 +30,7 @@ namespace WGiBeat.Drawing.Sets
             }
 
         }
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
             if (_gameType != GameType.COOPERATIVE)
             {
@@ -41,7 +40,7 @@ namespace WGiBeat.Drawing.Sets
             UpdateDisplayedGM();
             _gmbar.DisplayedGrooveMomentum = _displayedGrooveMomentum;
              _gmbar.Position = _metrics["GrooveMomentumBar", 0];
-             _gmbar.Draw(spriteBatch);
+             _gmbar.Draw();
 
         
         }

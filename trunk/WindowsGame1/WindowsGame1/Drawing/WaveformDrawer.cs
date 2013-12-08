@@ -20,7 +20,7 @@ namespace WGiBeat.Drawing
             _roundLine = RoundLineManager.Instance;
             _lineList = new List<RoundLine>();
         }
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
             Draw(new float[1]);
         }

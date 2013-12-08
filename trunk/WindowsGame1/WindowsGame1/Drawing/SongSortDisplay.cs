@@ -149,7 +149,7 @@ namespace WGiBeat.Drawing
 
         private const int FADEOUT_SPEED = 600;
         private const int FADEIN_SPEED = 600;
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
             if (Active)
             {
@@ -164,13 +164,13 @@ namespace WGiBeat.Drawing
             _backgroundSprite.Draw();
             _textPosition.X = this.X + (this.Width/2);
             _textPosition.Y = this.Y;
-            TextureManager.DrawString(spriteBatch,"" + SongSortMode, "TwoTechLarge",_textPosition,Color.Black, FontAlign.Center);
+            FontManager.DrawString("" + SongSortMode, "TwoTechLarge",_textPosition,Color.Black, FontAlign.Center);
 
             _arrowSprites.ColorShading.A = (byte) _activeOpacity;
             _arrowSprites.Draw( 1, 35, 35, this.X + 15, this.Y + 8);
             _arrowSprites.Draw( 0, 35, 35, this.X + this.Width - 40, this.Y + 8);
 
-            DrawList(spriteBatch);
+            DrawList();
 
         }
 
@@ -179,7 +179,7 @@ namespace WGiBeat.Drawing
             _backgroundSprite.Position = this.Position;
         }
 
-        private void DrawList(SpriteBatch spriteBatch)
+        private void DrawList()
         {
             _listBackgroundSprite.Height = 40 + (BOOKMARK_TEXT_SIZE * (Math.Min(VISIBLE_BOOKMARKS,_bookmarkMenu.ItemCount)));
             _listBackgroundSprite.ColorShading.A = (byte) _activeOpacity;
@@ -193,7 +193,7 @@ namespace WGiBeat.Drawing
                 SetBookmark(_selectedSongIndex);
             }
             _bookmarkMenu.Opacity =  (byte) _activeOpacity;
-            _bookmarkMenu.Draw(spriteBatch);
+            _bookmarkMenu.Draw();
 
         }
 

@@ -63,7 +63,7 @@ namespace WGiBeat.Drawing
             Step(gameTime);
             return ParticleSpriteMap.GetVertices(ParticleType, (int) GetVector().X, (int)GetVector().Y, ParticleSize, ParticleSize);
         }
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
             Draw(new GameTime());
         }

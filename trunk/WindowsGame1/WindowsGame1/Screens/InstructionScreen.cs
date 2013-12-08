@@ -61,12 +61,12 @@ namespace WGiBeat.Screens
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            _background.Draw(spriteBatch,gameTime);
+            _background.Draw(gameTime);
             _baseSprite.Draw();      
             _instructionPages[PageNumber-1].Draw();
             DrawBeatline(gameTime);
-            TextureManager.DrawString(spriteBatch, "Press start to continue.", "LargeFont", Core.Metrics["LoadMessage", 0], Color.White, FontAlign.Left);
-            TextureManager.DrawString(spriteBatch, String.Format("Page {0} of {1}",PageNumber, TOTAL_PAGES), "DefaultFont", Core.Metrics["LoadErrorCount", 0], Color.White, FontAlign.Left);
+            FontManager.DrawString("Press start to continue.", "LargeFont", Core.Metrics["LoadMessage", 0], Color.White, FontAlign.Left);
+            FontManager.DrawString(String.Format("Page {0} of {1}",PageNumber, TOTAL_PAGES), "DefaultFont", Core.Metrics["LoadErrorCount", 0], Color.White, FontAlign.Left);
 
         }
 

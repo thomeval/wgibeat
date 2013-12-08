@@ -326,16 +326,16 @@ namespace WGiBeat.Screens
         {
             DrawBackground(gameTime);
             DrawBorders();
-            DrawJudgementLines(spriteBatch);
-            DrawMax(spriteBatch);
+            DrawJudgementLines();
+            DrawMax();
             DrawGrades();
-            DrawModeSpecific(spriteBatch);
-            DrawMisc(spriteBatch, gameTime);
-            DrawGraphs(spriteBatch, gameTime);
-            DrawEXPGains(spriteBatch);
+            DrawModeSpecific();
+            DrawMisc( gameTime);
+            DrawGraphs( gameTime);
+            DrawEXPGains();
         }
 
-        private void DrawEXPGains(SpriteBatch spriteBatch)
+        private void DrawEXPGains()
         {
             for (int x = 0; x < 4; x++)
             {
@@ -347,14 +347,14 @@ namespace WGiBeat.Screens
                 {
                     continue;
                 }
-                _profileLevelDisplays[x].Draw(spriteBatch);
+                _profileLevelDisplays[x].Draw();
 
-                TextureManager.DrawString(spriteBatch, String.Format("+{0} EXP", _xpAwarded[x]), "LargeFont", Core.Metrics["EvaluationEXPAwarded", x], Color.Black, FontAlign.Center);
+                FontManager.DrawString(String.Format("+{0} EXP", _xpAwarded[x]), "LargeFont", Core.Metrics["EvaluationEXPAwarded", x], Color.Black, FontAlign.Center);
             }
         }
 
         private int _graphMode;
-        private void DrawGraphs(SpriteBatch spriteBatch, GameTime time)
+        private void DrawGraphs( GameTime time)
         {
 
             if (time.TotalRealTime.TotalSeconds - _lastCycle > 1)
@@ -366,7 +366,7 @@ namespace WGiBeat.Screens
             if (_lifeGraph.X > -100)
             {
 
-                _lifeGraph.Draw(spriteBatch);
+                _lifeGraph.Draw();
             }
         }
 
@@ -380,7 +380,7 @@ namespace WGiBeat.Screens
                     case 0:
                         _lifeGraph[x] = Core.Players[x].Playing ? Core.Players[x].LifeHistory.ToArray(): null;
                         _lifeGraph.SetMinMaxTick(-100, 400, 50);
-                        _lifeGraph.LegendStyle = LegendStyle.NORMAL;
+                        _lifeGraph.LegendStyle = LegendStyle.Normal;
                         break;
                     case 1:
                  
@@ -393,7 +393,7 @@ namespace WGiBeat.Screens
                     case 2:
                         _lifeGraph[x] = Core.Players[x].Playing ? Core.Players[x].LevelHistory.ToArray() : null;
                         _lifeGraph.SetMinMaxTick(1, 15, 2);
-                        _lifeGraph.LegendStyle = LegendStyle.NORMAL;
+                        _lifeGraph.LegendStyle = LegendStyle.Normal;
                         break;
                     case 3:
                         break;
@@ -408,7 +408,7 @@ namespace WGiBeat.Screens
                 case GameType.COOPERATIVE:
                     _lifeGraph[0] = CombineScoreData(0);
                     _lifeGraph[1] = _lifeGraph[2] = _lifeGraph[3] = null;
-                    _lifeGraph.LegendStyle = LegendStyle.NONE;
+                    _lifeGraph.LegendStyle = LegendStyle.None;
                     
                     break;
                 case GameType.TEAM:
@@ -416,7 +416,7 @@ namespace WGiBeat.Screens
                     _lifeGraph[0] = CombineScoreData(2);
                     _lifeGraph[1] = CombineScoreData(1);
                     _lifeGraph[2] = _lifeGraph[3] = null;
-                    _lifeGraph.LegendStyle = LegendStyle.TEAMS;
+                    _lifeGraph.LegendStyle = LegendStyle.Teams;
                     break;
                 default:
                     for (int x = 0; x < 4; x++)
@@ -490,9 +490,9 @@ namespace WGiBeat.Screens
             _field.Draw(gameTime);
         }
 
-        private void DrawModeSpecific(SpriteBatch spriteBatch)
+        private void DrawModeSpecific()
         {
-            DrawModeSpecificPerPlayer(spriteBatch);
+            DrawModeSpecificPerPlayer();
             switch ((GameType)Core.Cookies["CurrentGameType"])
             {
                 case GameType.NORMAL:
@@ -501,7 +501,7 @@ namespace WGiBeat.Screens
                 case GameType.COOPERATIVE:
                     var totalScore = (from e in Core.Players where e.Playing select e.Score).Sum();
                     _coopScoreDisplay.Draw();
-                    TextureManager.DrawString(spriteBatch, "" + totalScore, "LargeFont",
+                    FontManager.DrawString("" + totalScore, "LargeFont",
                                     Core.Metrics["EvaluationTotalScore", 0], Color.White, FontAlign.Right);
 
                     int gradeIndex = _grades[0];
@@ -514,13 +514,13 @@ namespace WGiBeat.Screens
                     var teamBScore = (from e in Core.Players where (e.Playing && e.Team == 2) select e.Score).Sum();
                     _teamScoreMeter.BlueScore = teamAScore;
                     _teamScoreMeter.RedScore = teamBScore;
-                    _teamScoreMeter.Draw(spriteBatch);
+                    _teamScoreMeter.Draw();
                     _teamScoreMeter.Update();
                     break;
             }
         }
 
-        private void DrawModeSpecificPerPlayer(SpriteBatch spriteBatch)
+        private void DrawModeSpecificPerPlayer()
         {
               var teamAScore = (from e in Core.Players where (e.Playing && e.Team == 1) select e.Score).Sum();
               var teamBScore = (from e in Core.Players where (e.Playing && e.Team == 2) select e.Score).Sum();
@@ -534,24 +534,24 @@ namespace WGiBeat.Screens
                   switch ((GameType)Core.Cookies["CurrentGameType"])
                   {
                       case GameType.NORMAL:
-                          TextureManager.DrawString(spriteBatch, "Overall", "LargeFont", Core.Metrics["EvaluationLabelModeSpecific", x], Color.Black, FontAlign.Left);
-                          TextureManager.DrawString(spriteBatch, string.Format("{0:0.0}%", Core.Players[x].CalculatePercentage()), "LargeFont", Core.Metrics["EvaluationModeSpecific", x], Color.Black, FontAlign.Right);
+                          FontManager.DrawString("Overall", "LargeFont", Core.Metrics["EvaluationLabelModeSpecific", x], Color.Black, FontAlign.Left);
+                          FontManager.DrawString(string.Format("{0:0.0}%", Core.Players[x].CalculatePercentage()), "LargeFont", Core.Metrics["EvaluationModeSpecific", x], Color.Black, FontAlign.Right);
                           break;
                       case GameType.COOPERATIVE:
-                          TextureManager.DrawString(spriteBatch, "Groove", "LargeFont", Core.Metrics["EvaluationLabelModeSpecific", x], Color.Black, FontAlign.Left);
-                          TextureManager.DrawString(spriteBatch, string.Format("{0:0.0}x", Player.PeakGrooveMomentum), "LargeFont", Core.Metrics["EvaluationModeSpecific", x], Color.Black, FontAlign.Right);
+                          FontManager.DrawString("Groove", "LargeFont", Core.Metrics["EvaluationLabelModeSpecific", x], Color.Black, FontAlign.Left);
+                          FontManager.DrawString(string.Format("{0:0.0}x", Player.PeakGrooveMomentum), "LargeFont", Core.Metrics["EvaluationModeSpecific", x], Color.Black, FontAlign.Right);
                           break;
                       case GameType.TEAM:
                       case GameType.VS_CPU:
                           if ((teamAScore > teamBScore) ^ Core.Players[x].Team == 1)
                           {
-                              TextureManager.DrawString(spriteBatch, "Defeat", "LargeFont",
+                              FontManager.DrawString("Defeat", "LargeFont",
                                                         Core.Metrics["EvaluationLabelModeSpecific", x], Color.Black,
                                                         FontAlign.Left);
                           }
                           else
                           {
-                              TextureManager.DrawString(spriteBatch, "Victory!", "LargeFont",
+                              FontManager.DrawString("Victory!", "LargeFont",
                                                         Core.Metrics["EvaluationLabelModeSpecific", x], Color.Black,
                                                         FontAlign.Left);
                           }
@@ -560,16 +560,16 @@ namespace WGiBeat.Screens
               }
         }
 
-        private void DrawMisc(SpriteBatch spriteBatch, GameTime gameTime)
+        private void DrawMisc( GameTime gameTime)
         {
-            _playerOptionsSet.Draw(spriteBatch);
+            _playerOptionsSet.Draw();
        
             DrawHighScoreNotification(gameTime);
-            TextureManager.DrawString(spriteBatch, "Press Start to continue.", "LargeFont",
+            FontManager.DrawString("Press Start to continue.", "LargeFont",
                                    Core.Metrics["EvaluationInstruction", 0], Color.Black, FontAlign.Left);
         }
 
-        private void DrawMax(SpriteBatch spriteBatch)
+        private void DrawMax()
         {
             for (int x = 0; x < 4; x++)
             {
@@ -581,14 +581,14 @@ namespace WGiBeat.Screens
                 _maxSprite.Position = (Core.Metrics["EvaluationMaxBase", x]);
                 _maxSprite.Draw();
 
-                TextureManager.DrawString(spriteBatch, "" + Core.Players[x].MaxHits, "LargeFont",
+                FontManager.DrawString("" + Core.Players[x].MaxHits, "LargeFont",
 Core.Metrics["EvaluationMaxHits", x], Color.Black, FontAlign.Center);
-                TextureManager.DrawString(spriteBatch, "" + Core.Players[x].MaxStreak, "LargeFont",
+                FontManager.DrawString("" + Core.Players[x].MaxStreak, "LargeFont",
  Core.Metrics["EvaluationMaxStreak", x], Color.Black, FontAlign.Center);
             }
         }
 
-        private void DrawJudgementLines(SpriteBatch spriteBatch)
+        private void DrawJudgementLines()
         {
 
             for (int x = 0; x < 4; x++)
@@ -607,14 +607,13 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black, FontAlign.Center);
                 foreach (string line in _lines)
                 {
 
-                    TextureManager.DrawString(spriteBatch, line + ":", "DefaultFont",
+                    FontManager.DrawString(line + ":", "DefaultFont",
                                            labelPosition, Color.Black, FontAlign.Left);
-                    TextureManager.DrawString(spriteBatch, "" + Core.Players[x].Judgements[y], "DefaultFont",
+                    FontManager.DrawString("" + Core.Players[x].Judgements[y], "DefaultFont",
                                            valuePosition, Color.Black, FontAlign.Left);
                     if (line != "Fault")
                     {
-                        TextureManager.DrawString(spriteBatch,
-                                                  String.Format("{0:P0}",
+                        FontManager.DrawString(String.Format("{0:P0}",
                                                                 1.0 * Core.Players[x].Judgements[y] / totalBeatlines),
                                                   "DefaultFont",
                                                   percentagePosition, Color.Black, FontAlign.Right);
@@ -626,9 +625,9 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black, FontAlign.Center);
 
                 }
 
-                TextureManager.DrawString(spriteBatch, "Score:", "LargeFont",
+                FontManager.DrawString("Score:", "LargeFont",
                                        Core.Metrics["EvaluationLabelScore", x], Color.Black, FontAlign.Left);
-                TextureManager.DrawString(spriteBatch, "" + Core.Players[x].Score, "LargeFont",
+                FontManager.DrawString("" + Core.Players[x].Score, "LargeFont",
                                        Core.Metrics["EvaluationScore", x], Color.Black, FontAlign.Right);
             }
         }

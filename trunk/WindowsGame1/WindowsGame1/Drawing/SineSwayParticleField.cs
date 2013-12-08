@@ -152,7 +152,7 @@ namespace WGiBeat.Drawing
         }
 
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
             Draw(new GameTime());
         }

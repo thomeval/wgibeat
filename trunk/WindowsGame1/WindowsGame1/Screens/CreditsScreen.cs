@@ -59,8 +59,8 @@ namespace WGiBeat.Screens
             _header.Draw();
             _baseSprite.Draw();
             _creditsPages[PageNumber - 1].Draw();
-            TextureManager.DrawString(spriteBatch, "Press start to continue.", "LargeFont", Core.Metrics["LoadMessage", 0], Color.White, FontAlign.Left);
-            TextureManager.DrawString(spriteBatch, String.Format("Page {0} of {1}", PageNumber, TOTAL_PAGES), "DefaultFont", Core.Metrics["LoadErrorCount", 0], Color.White, FontAlign.Left);
+            FontManager.DrawString("Press start to continue.", "LargeFont", Core.Metrics["LoadMessage", 0], Color.White, FontAlign.Left);
+            FontManager.DrawString(String.Format("Page {0} of {1}", PageNumber, TOTAL_PAGES), "DefaultFont", Core.Metrics["LoadErrorCount", 0], Color.White, FontAlign.Left);
 
         }
 
