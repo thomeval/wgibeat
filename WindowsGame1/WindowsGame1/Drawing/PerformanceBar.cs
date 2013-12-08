@@ -49,7 +49,7 @@ namespace WGiBeat.Drawing
                                 };
         }
       
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
             if (_headerSprite == null)
             {
@@ -62,7 +62,7 @@ namespace WGiBeat.Drawing
 
             if (GameType == GameType.SYNC_PRO || GameType == GameType.SYNC_PLUS)
             {
-                DrawSingleBar(spriteBatch, position, 0,true);
+                DrawSingleBar( position, 0,true);
                 return;
             }
             for (int x = 0; x < Players.Length; x++)
@@ -72,7 +72,7 @@ namespace WGiBeat.Drawing
                 {
                     continue;
                 }
-                DrawSingleBar(spriteBatch, position, x, false);
+                DrawSingleBar( position, x, false);
                 position.Y += this.Height;
             }
         }
@@ -89,7 +89,7 @@ namespace WGiBeat.Drawing
 
         private const int LEFT_SIDE_WIDTH = 50;
         private const int RIGHT_SIDE_WIDTH = 70;
-        private void DrawSingleBar(SpriteBatch spriteBatch, Vector2 position, int player, bool allPlayers)
+        private void DrawSingleBar( Vector2 position, int player, bool allPlayers)
         {
             _rightSprite.ColorShading.A =
                 _leftSpriteMap.ColorShading.A =
@@ -139,7 +139,7 @@ namespace WGiBeat.Drawing
             _rightSprite.Y += (this.Height / 2) - 10;
             var textColour = Color.Black;
             textColour.A = (byte) Opacity;
-            TextureManager.DrawString(spriteBatch, percentageText, "DefaultFont", _rightSprite.Position, textColour,
+            FontManager.DrawString(percentageText, "DefaultFont", _rightSprite.Position, textColour,
                                       FontAlign.Center);
 
             position.X = this.Position.X;

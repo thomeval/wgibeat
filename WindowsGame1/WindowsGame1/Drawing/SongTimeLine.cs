@@ -38,7 +38,7 @@ namespace WGiBeat.Drawing
                                    };
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
             if (Song == null)
             {
@@ -47,7 +47,7 @@ namespace WGiBeat.Drawing
             DrawEdges();
             DrawBars();
             DrawCurrentPosition();
-            DrawLabels(spriteBatch);
+            DrawLabels();
         }
 
         private void DrawCurrentPosition()
@@ -68,7 +68,7 @@ namespace WGiBeat.Drawing
             _currentPosition.Draw();
         }
 
-        private void DrawLabels(SpriteBatch spriteBatch)
+        private void DrawLabels()
         {
             if (!ShowLabels)
             {
@@ -82,7 +82,7 @@ namespace WGiBeat.Drawing
               {
                   position.X = 50;
               }        
-              TextureManager.DrawString(spriteBatch, "AudioStart", "DefaultFont", position, Color.Black, FontAlign.Center);
+              FontManager.DrawString("AudioStart", "DefaultFont", position, Color.Black, FontAlign.Center);
           }
             position.X = (_labelPositions[1] + this.X + 10);
             position.Y = this.Y + 40;
@@ -91,11 +91,11 @@ namespace WGiBeat.Drawing
             {
                 position.X = 35;
             }
-            TextureManager.DrawString(spriteBatch, "Offset", "DefaultFont", position, Color.Black, FontAlign.Center);
+            FontManager.DrawString("Offset", "DefaultFont", position, Color.Black, FontAlign.Center);
 
             position.X = (_labelPositions[2] + this.X + 10);
             position.Y = this.Y;
-          TextureManager.DrawString(spriteBatch, "Length", "DefaultFont", position, Color.Black, FontAlign.Right);
+          FontManager.DrawString("Length", "DefaultFont", position, Color.Black, FontAlign.Right);
         }
 
         private int _totalBarWidth;

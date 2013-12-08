@@ -199,13 +199,13 @@ namespace WGiBeat.Screens
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            DrawBackground(spriteBatch, gameTime);
+            DrawBackground( gameTime);
             DrawBorders();
-            DrawMenus(spriteBatch);
-            DrawMessages(spriteBatch);
+            DrawMenus();
+            DrawMessages();
         }
 
-        private void DrawBackground(SpriteBatch spriteBatch, GameTime gameTime)
+        private void DrawBackground( GameTime gameTime)
         {
 
             _background.Draw();
@@ -219,23 +219,23 @@ namespace WGiBeat.Screens
                     _messageBackground.Draw();
                 }
             }
-            _playerOptionsSet.Draw(spriteBatch);
+            _playerOptionsSet.Draw();
         }
 
-        private void DrawMessages(SpriteBatch spriteBatch)
+        private void DrawMessages()
         {
             for (int x = 0; x < 4; x++)
             {
                 var textPosition = Core.Metrics["NewGameMessageBorder", x].Clone();
                 textPosition.X += 200;
                 textPosition.Y += 5;
-                TextureManager.DrawString(spriteBatch, _infoMessages[x], "DefaultFont", textPosition, Color.White,
+                FontManager.DrawString(_infoMessages[x], "DefaultFont", textPosition, Color.White,
                                           FontAlign.Center);
             }
 
         }
 
-        private void DrawMenus(SpriteBatch spriteBatch)
+        private void DrawMenus()
         {
             for (int x = 0; x < 4; x++)
             {
@@ -243,22 +243,22 @@ namespace WGiBeat.Screens
                 switch (_cursorPositions[x])
                 {
                     case CursorPosition.NOT_JOINED:
-                        TextureManager.DrawString(spriteBatch, "Press Start to Join...", "LargeFont",
+                        FontManager.DrawString("Press Start to Join...", "LargeFont",
                         Core.Metrics["NewGameJoinNotification", x], Color.Black, FontAlign.Left);
                         _infoMessages[x] = "";
                         break;
                     case CursorPosition.MAIN_MENU:
 
-                        _playerMenus[x].Draw(spriteBatch);
+                        _playerMenus[x].Draw();
                         break;
                     case CursorPosition.PROFILE_LIST:
-                        _profileMenus[x].Draw(spriteBatch);
+                        _profileMenus[x].Draw();
                         break;
                     case CursorPosition.KEYBOARD:
-                        _keyboards[x].Draw(spriteBatch);
+                        _keyboards[x].Draw();
                         break;
                     case CursorPosition.READY:
-                        TextureManager.DrawString(spriteBatch, "Ready", "LargeFont",
+                        FontManager.DrawString("Ready", "LargeFont",
                         Core.Metrics["NewGameJoinNotification", x], Color.Black, FontAlign.Left);
                         _infoMessages[x] = "Waiting for other players...";
                         break;

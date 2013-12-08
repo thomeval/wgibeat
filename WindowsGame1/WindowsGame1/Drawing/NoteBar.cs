@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Notes;
 
 namespace WGiBeat.Drawing
@@ -155,7 +154,7 @@ namespace WGiBeat.Drawing
         }
 
  
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
 
             int posX = this.X;

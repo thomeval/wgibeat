@@ -25,7 +25,7 @@ namespace WGiBeat.Drawing.Sets
             _scoreSet = scoreSet;
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
 
             for (int x = 0; x < _displayedJudgements.Length; x++)
@@ -38,7 +38,7 @@ namespace WGiBeat.Drawing.Sets
                 opacity = Math.Max(0,Math.Min(opacity, 255));
                 _displayedJudgements[x].Opacity = Convert.ToByte(opacity);
 
-                _displayedJudgements[x].Draw(spriteBatch);
+                _displayedJudgements[x].Draw();
 
                 if (opacity == 0)
                 {
@@ -48,10 +48,10 @@ namespace WGiBeat.Drawing.Sets
 
         }
 
-        public void Draw(SpriteBatch spriteBatch, double phraseNumber)
+        public void Draw( double phraseNumber)
         {
             _phraseNumber = phraseNumber;
-            Draw(spriteBatch);
+            Draw();
         }
 
         public void AwardJudgement(BeatlineNoteJudgement judgement, int player, int givenMultiplier, int numCompleted)

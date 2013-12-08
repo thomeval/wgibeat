@@ -32,7 +32,7 @@ namespace WGiBeat.Drawing.Sets
 
         private const int REDNESS_ANIMATION_SPEED = 750;
         private const int FADEOUT_SPEED = 500;
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
             var amount = Math.Max(0,  TextureManager.LastDrawnPhraseDiff * REDNESS_ANIMATION_SPEED);
             var fadeAmount = Math.Max(0, TextureManager.LastDrawnPhraseDiff*FADEOUT_SPEED);
@@ -54,40 +54,40 @@ namespace WGiBeat.Drawing.Sets
                 }
                 _noteBars[x].Redness = Math.Max(0, _noteBars[x].Redness - amount);
                 _noteBars[x].XDisplayOffset *= mx;
-                _noteBars[x].Draw(spriteBatch);
+                _noteBars[x].Draw();
    
             }
 
             if (_gameType == GameType.SYNC_PRO)
             {
-                DrawProgressSyncPro(spriteBatch);
+                DrawProgressSyncPro();
             }
             else if (_gameType == GameType.SYNC_PLUS)
             {
-                DrawProgressSyncPlus(spriteBatch);
+                DrawProgressSyncPlus();
             }
             else
             {
-                DrawProgress(spriteBatch);
+                DrawProgress();
             }
         
         }
 
-        private void DrawProgressSyncPlus(SpriteBatch spriteBatch)
+        private void DrawProgressSyncPlus()
         {
             _noteBarProgresses[0].Value = (from e in _noteBars where Players[e.ID].Playing select e.NumberCompleted()).Sum();
             _noteBarProgresses[0].Maximum = (int) (Players[0].Level*(from e in Players where e.Playing select e).Count());
-            _noteBarProgresses[0].Draw(spriteBatch);
+            _noteBarProgresses[0].Draw();
         }
 
-        private void DrawProgressSyncPro(SpriteBatch spriteBatch)
+        private void DrawProgressSyncPro()
         {
             _noteBarProgresses[0].Value = (from e in _noteBars where Players[e.ID].Playing select e.NumberCompleted()).Sum();
             _noteBarProgresses[0].Maximum = (from e in _noteBars where Players[e.ID].Playing select e.Notes.Count).Sum();
-            _noteBarProgresses[0].Draw(spriteBatch);
+            _noteBarProgresses[0].Draw();
         }
 
-        private void DrawProgress(SpriteBatch spriteBatch)
+        private void DrawProgress()
         {
             for (int x = 0; x < _noteBars.Length; x++)
             {
@@ -97,7 +97,7 @@ namespace WGiBeat.Drawing.Sets
                 }
                 _noteBarProgresses[x].Value = _noteBars[x].NumberCompleted();
                 _noteBarProgresses[x].Maximum = _noteBars[x].Notes.Count();
-                _noteBarProgresses[x].Draw(spriteBatch);
+                _noteBarProgresses[x].Draw();
             }
           
         }

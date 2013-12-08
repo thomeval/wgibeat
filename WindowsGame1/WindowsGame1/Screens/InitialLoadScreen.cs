@@ -95,7 +95,7 @@ namespace WGiBeat.Screens
                         drawColor = Color.White;
                         break;
                 }
-                TextureManager.DrawString(spriteBatch, entry.ToString(), "LogFont",
+                FontManager.DrawString(entry.ToString(), "LogFont",
                                           currentPos, drawColor, FontAlign.Left);
                 currentPos.Y += 12;
             }
@@ -103,16 +103,16 @@ namespace WGiBeat.Screens
             _baseSprite.Draw();
             if (_doneLoading)
             {
-                TextureManager.DrawString(spriteBatch,"Loading complete. Press start.","LargeFont",Core.Metrics["LoadMessage",0],Color.White, FontAlign.Left);
+                FontManager.DrawString("Loading complete. Press start.","LargeFont",Core.Metrics["LoadMessage",0],Color.White, FontAlign.Left);
             }
             else
             {
-                TextureManager.DrawString(spriteBatch, "Loading...", "LargeFont", Core.Metrics["LoadMessage", 0], Color.White, FontAlign.Left);
+                FontManager.DrawString("Loading...", "LargeFont", Core.Metrics["LoadMessage", 0], Color.White, FontAlign.Left);
             }
             var errorCount = (from e in entries where e.Level == LogLevel.ERROR select e).Count();
             var warnCount = (from e in entries where e.Level == LogLevel.WARN select e).Count();
-            TextureManager.DrawString(spriteBatch,String.Format("{0} songs, {1} errors, {2} warnings",Core.Songs.Songs.Count, errorCount,warnCount),"DefaultFont",Core.Metrics["LoadErrorCount",0],Color.White,FontAlign.Left);
-            TextureManager.DrawString(spriteBatch,"" + GameCore.VERSION_STRING, "DefaultFont", Core.Metrics["LoadVersion", 0], Color.White, FontAlign.Left);
+            FontManager.DrawString(String.Format("{0} songs, {1} errors, {2} warnings",Core.Songs.Songs.Count, errorCount,warnCount),"DefaultFont",Core.Metrics["LoadErrorCount",0],Color.White,FontAlign.Left);
+            FontManager.DrawString("" + GameCore.VERSION_STRING, "DefaultFont", Core.Metrics["LoadVersion", 0], Color.White, FontAlign.Left);
 
         }
 

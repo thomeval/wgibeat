@@ -98,6 +98,7 @@
     <Compile Include="AudioSystem\SongTimingPoint.cs" />
     <Compile Include="AudioSystem\SoundEffectManager.cs" />
     <Compile Include="Drawing\ActionBinding.cs" />
+    <Compile Include="Drawing\FontManager.cs" />
     <Compile Include="Drawing\GrooveMomentumBar.cs" />
     <Compile Include="Drawing\NoteBarProgress.cs" />
     <Compile Include="Drawing\PerformanceBar.cs" />

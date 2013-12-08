@@ -123,31 +123,31 @@ namespace WGiBeat.Screens
         {
             DrawBackground(gameTime);
 
-            DrawPlayerOptions(spriteBatch);
+            DrawPlayerOptions();
 
             _headerSprite.Draw();
 
-            DrawModeOptions(spriteBatch);
-            DrawModeDescription(spriteBatch);
-            DrawRestriction(spriteBatch);
+            DrawModeOptions();
+            DrawModeDescription();
+            DrawRestriction();
 
             if (_selectingCPUSkill)
             {
-                DrawVSCPUDifficultySelect(spriteBatch);
+                DrawVSCPUDifficultySelect();
             }
             _edgeSpriteMap.Draw( 0, 20, 160, Core.Metrics["ModeSelectEdge", 0]);
             _edgeSpriteMap.Draw( 1, 20, 160, Core.Metrics["ModeSelectEdge", 1]);
         }
 
-        private void DrawModeDescription(SpriteBatch spriteBatch)
+        private void DrawModeDescription()
         {
             _descriptionBaseSprite.Draw();
             var gameType = (GameType)_selectedGameType;
-            TextureManager.DrawString(spriteBatch, GetModeDescription(gameType), "DefaultFont", Core.Metrics["ModeDescription", 0], Color.Black, FontAlign.Left);
+            FontManager.DrawString(GetModeDescription(gameType), "DefaultFont", Core.Metrics["ModeDescription", 0], Color.Black, FontAlign.Left);
             _previewsSpriteMap.Draw(_selectedGameType,Core.Metrics["ModeDescriptionPreview",0]);
         }
 
-        private void DrawRestriction(SpriteBatch spriteBatch)
+        private void DrawRestriction()
         {
             var restrictionMessage = GameTypeAllowed((GameType)_selectedGameType);
             if (restrictionMessage == "")
@@ -156,14 +156,14 @@ namespace WGiBeat.Screens
             }
             _messageBorderSprite.Draw();
             _restrictionSprite.Draw();
-            TextureManager.DrawString(spriteBatch, restrictionMessage, "DefaultFont", Core.Metrics["RestrictionMessage", 0], Color.White, FontAlign.Left);
+            FontManager.DrawString(restrictionMessage, "DefaultFont", Core.Metrics["RestrictionMessage", 0], Color.White, FontAlign.Left);
         }
 
-        private void DrawVSCPUDifficultySelect(SpriteBatch spriteBatch)
+        private void DrawVSCPUDifficultySelect()
         {
             _messageBorderSprite.Draw();
-            TextureManager.DrawString(spriteBatch, Core.Text["ModeSelectCPULevel"], "DefaultFont", Core.Metrics["RestrictionMessage", 0], Color.White, FontAlign.Left);
-            TextureManager.DrawString(spriteBatch, Core.CPUManager.SkillNames[_selectedCPUSkill], "DefaultFont", Core.Metrics["SelectedCPUDifficulty", 0], Color.White, FontAlign.Left);
+            FontManager.DrawString(Core.Text["ModeSelectCPULevel"], "DefaultFont", Core.Metrics["RestrictionMessage", 0], Color.White, FontAlign.Left);
+            FontManager.DrawString(Core.CPUManager.SkillNames[_selectedCPUSkill], "DefaultFont", Core.Metrics["SelectedCPUDifficulty", 0], Color.White, FontAlign.Left);
             var position = Core.Metrics["SelectedCPUDifficulty", 0];
             _arrowSpriteMap.Draw( 1, 24, 24, (int)position.X - 25, (int)position.Y);
             _arrowSpriteMap.Draw( 0, 24, 24, (int)position.X + 220, (int)position.Y);
@@ -173,7 +173,7 @@ namespace WGiBeat.Screens
         private static readonly Color _disabledColor = new Color(255, 255, 255, 64);
         private const int MODE_CHANGE_SPEED = 6;
 
-        private void DrawModeOptions(SpriteBatch spriteBatch)
+        private void DrawModeOptions()
         {
 
             var midpoint = Core.Metrics["ModeSelectOptions", 0].Clone();
@@ -229,9 +229,9 @@ namespace WGiBeat.Screens
             _field.Draw(gameTime);
         }
 
-        private void DrawPlayerOptions(SpriteBatch spriteBatch)
+        private void DrawPlayerOptions()
         {
-            _playerOptionsSet.Draw(spriteBatch);
+            _playerOptionsSet.Draw();
         }
 
         #endregion

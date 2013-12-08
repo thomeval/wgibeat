@@ -87,13 +87,13 @@ namespace WGiBeat.Screens
         {
             DrawBackground();
             DrawMarkers();
-            DrawPlayerOptions(spriteBatch);
-            DrawRestrictionMessage(spriteBatch);
+            DrawPlayerOptions();
+            DrawRestrictionMessage();
         }
 
-        private void DrawPlayerOptions(SpriteBatch spriteBatch)
+        private void DrawPlayerOptions()
         {
-            _playerOptionsSet.Draw(spriteBatch);
+            _playerOptionsSet.Draw();
         }
 
         private void DrawMarkers()
@@ -133,14 +133,14 @@ namespace WGiBeat.Screens
             _teamBorderSprite.Draw();
         }
 
-        private void DrawRestrictionMessage(SpriteBatch spriteBatch)
+        private void DrawRestrictionMessage()
         {
             if (_restrictionMessage == "")
             {
                 return;
             }
             _messageBorder.Draw();
-            TextureManager.DrawString(spriteBatch, _restrictionMessage, "DefaultFont", Core.Metrics["RestrictionMessage", 0], Color.White, FontAlign.Left);
+            FontManager.DrawString(_restrictionMessage, "DefaultFont", Core.Metrics["RestrictionMessage", 0], Color.White, FontAlign.Left);
             if (_showWarningIcon)
             {
                 _restrictionIcon.Draw();

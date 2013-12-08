@@ -48,24 +48,24 @@ namespace WGiBeat.Drawing
             get { return _result.ToString(); }
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
             var myPosition = this.Position.Clone();
 
             DrawEnteredTextBar(myPosition.Clone());
             myPosition.X += (this.Width/2.0f);
             
-            TextureManager.DrawString(spriteBatch, _result.ToString(), "LargeFont", myPosition,
+            FontManager.DrawString(_result.ToString(), "LargeFont", myPosition,
                           TextColour, FontAlign.Center);
             myPosition.Y += 40;
             foreach (string line in DescriptionText.Split('\n'))
             {
-                TextureManager.DrawString(spriteBatch, line, "DefaultFont", myPosition,
+                FontManager.DrawString(line, "DefaultFont", myPosition,
                                           TextColour, FontAlign.Center);
                 myPosition.Y += 25;
             }
            
-            TextureManager.DrawString(spriteBatch, "Press enter when done, or escape to cancel.", "DefaultFont", myPosition,
+            FontManager.DrawString("Press enter when done, or escape to cancel.", "DefaultFont", myPosition,
                                       TextColour, FontAlign.Center);
             myPosition.Y += 25;
 

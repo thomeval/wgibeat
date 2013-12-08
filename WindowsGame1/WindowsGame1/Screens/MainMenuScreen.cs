@@ -108,17 +108,17 @@ namespace WGiBeat.Screens
         {
           
             DrawBackground(gameTime);
-            DrawMenu(spriteBatch);
+            DrawMenu();
 
-            TextureManager.DrawString(spriteBatch,_errorMessage,"DefaultFont", Core.Metrics["MainMenuNoSongsError", 0], Color.Black,FontAlign.Left);
-            DrawUpdater(spriteBatch);
+            FontManager.DrawString(_errorMessage,"DefaultFont", Core.Metrics["MainMenuNoSongsError", 0], Color.Black,FontAlign.Left);
+            DrawUpdater();
 
         }
 
-        private void DrawUpdater(SpriteBatch spriteBatch)
+        private void DrawUpdater()
         {
             _updaterFrame.Visible = Core.Settings.Get<bool>("CheckForUpdates");
-            _updaterFrame.Draw(spriteBatch);
+            _updaterFrame.Draw();
         }
 
         private void DrawBackground(GameTime gameTime)
@@ -129,7 +129,7 @@ namespace WGiBeat.Screens
             _header.Draw();
         }
 
-        private void DrawMenu(SpriteBatch spriteBatch)
+        private void DrawMenu()
         {
 
             for (int menuOption = 0; menuOption < (int)MainMenuOption.COUNT; menuOption++)
@@ -154,7 +154,7 @@ namespace WGiBeat.Screens
                        : Core.Metrics["MainMenuOptions.Size", 0];
                 textPosition.X += size.X / 2;
                 textPosition.Y += size.Y / 2 - 25;
-                TextureManager.DrawString(spriteBatch, _menuText[menuOption], "TwoTech36", textPosition, Color.Black, FontAlign.Center);
+                FontManager.DrawString(_menuText[menuOption], "TwoTech36", textPosition, Color.Black, FontAlign.Center);
             }
 
         }

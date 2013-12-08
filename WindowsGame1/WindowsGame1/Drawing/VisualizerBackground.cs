@@ -49,9 +49,9 @@ namespace WGiBeat.Drawing
 
 
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
-            Draw(spriteBatch,0.0);
+            Draw(0.0);
         }
 
         private const int WAVEFORM_POINTS = 512;
@@ -59,7 +59,7 @@ namespace WGiBeat.Drawing
         private const int BAR_WIDTH = 15;
         private const int BAR_HEIGHT = 300;
         private const int OPACITY_CHANGE_SPEED = 1;
-        public void Draw(SpriteBatch spriteBatch, double phraseNumber)
+        public void Draw( double phraseNumber)
         {
             if (MaxBrightness == 0)
             {
@@ -92,7 +92,7 @@ namespace WGiBeat.Drawing
             _spectrumDrawerTop.Height = 50 + (int)(250 * _displayOpacity / 255);
             _spectrumDrawer.Height = -_spectrumDrawerTop.Height;
             _waveformDrawer.Height = 25 + (int)(125 * _displayOpacity / 255);
-            DrawLevels(spriteBatch, levels);
+            DrawLevels( levels);
 
             DrawWaveform(waveLevels);
         }
@@ -137,7 +137,7 @@ namespace WGiBeat.Drawing
             _spectrumDrawer.Init();
         }
 
-        private void DrawLevels(SpriteBatch spriteBatch, float[] levels)
+        private void DrawLevels( float[] levels)
         {
             _spectrumDrawer.Draw( levels);
             _spectrumDrawerTop.Draw(levels);

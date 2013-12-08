@@ -20,7 +20,7 @@ namespace WGiBeat.Drawing
 
         public Vector2 BarOffset { get; set; }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
             
             if (_barSpriteBack == null)
@@ -51,11 +51,11 @@ namespace WGiBeat.Drawing
             _barSpriteFront.DrawTiled(0, 0, width, _barSpriteFront.Height);
            
 
-            TextureManager.DrawString(spriteBatch, string.Format("{0:0.0}x", _displayedGrooveMomentum), "LargeFont",
+            FontManager.DrawString(string.Format("{0:0.0}x", _displayedGrooveMomentum), "LargeFont",
                                       textPosition, Color.Black, FontAlign.Right);
             textPosition.Y -= 4;
             textPosition.X += 77;
-            TextureManager.DrawString(spriteBatch, string.Format("{0:0.0}x", Player.PeakGrooveMomentum), "DefaultFont",
+            FontManager.DrawString(string.Format("{0:0.0}x", Player.PeakGrooveMomentum), "DefaultFont",
                           textPosition, Color.Black, FontAlign.Right);
         }
 

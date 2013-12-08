@@ -64,15 +64,15 @@ namespace WGiBeat.Drawing
                                 };
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
 
-        Draw(spriteBatch, 0);     
+        Draw( 0);     
         }
 
         private const int FADEIN_SPEED = 240;
         private const int FADEOUT_SPEED = 240;
-        public void Draw(SpriteBatch spriteBatch, double phraseNumber)
+        public void Draw( double phraseNumber)
         {
             if (_middleSprite == null)
             {
@@ -103,10 +103,10 @@ namespace WGiBeat.Drawing
             _headerSprite.Draw();
      
             var textPosition = new Vector2(this.X + this.Width - RIGHT_SIDE_WIDTH/2, this.Y - 13 + (_headerSprite.Height/2));
-            TextureManager.DrawString(spriteBatch, string.Format("{0:F0}", _displayedRecordScore), "DefaultFont", textPosition, drawColor, FontAlign.Center);
+            FontManager.DrawString(string.Format("{0:F0}", _displayedRecordScore), "DefaultFont", textPosition, drawColor, FontAlign.Center);
             position.X = this.X;
             position.Y += 30;
-            DrawChallenges(spriteBatch, (long) _displayedRecordScore, position);
+            DrawChallenges( (long) _displayedRecordScore, position);
         }
 
         private void UpdateDisplayedScores(double phraseNumber)
@@ -160,14 +160,14 @@ namespace WGiBeat.Drawing
             Opacity = Math.Min(Math.Max(0, Opacity), 255);
         }
 
-        private void DrawChallenges(SpriteBatch spriteBatch, long recordScore, Vector2 position)
+        private void DrawChallenges( long recordScore, Vector2 position)
         {
             var drawColor = Color.Black;
             drawColor.A = (byte) Opacity;
 
             if (UseCombinedScoring)
             {
-                DrawSingleBar(spriteBatch, position, 5, (long) _displayedPlayerScore[0], recordScore);
+                DrawSingleBar( position, 5, (long) _displayedPlayerScore[0], recordScore);
             }
             else
             {
@@ -178,7 +178,7 @@ namespace WGiBeat.Drawing
                         continue;
                     }
 
-                    DrawSingleBar(spriteBatch, position, x, (long) _displayedPlayerScore[x], recordScore);
+                    DrawSingleBar( position, x, (long) _displayedPlayerScore[x], recordScore);
                     position.Y += this.Height;
                 }
             }
@@ -187,7 +187,7 @@ namespace WGiBeat.Drawing
 
         private const int LEFT_SIDE_WIDTH = 50;
         private const int RIGHT_SIDE_WIDTH = 90;
-        private void DrawSingleBar(SpriteBatch spriteBatch, Vector2 position, int player, long challengeScore, long recordScore)
+        private void DrawSingleBar( Vector2 position, int player, long challengeScore, long recordScore)
         {
             position = position.Clone();
             _rightSprite.ColorShading.A =
@@ -219,7 +219,7 @@ namespace WGiBeat.Drawing
             _rightSprite.Y += (this.Height / 2) - 10;
             var textColour = Color.Black;
             textColour.A = (byte)Opacity;
-            TextureManager.DrawString(spriteBatch, "" + challengeScore, "DefaultFont", _rightSprite.Position, textColour,
+            FontManager.DrawString("" + challengeScore, "DefaultFont", _rightSprite.Position, textColour,
                                       FontAlign.Center);
 
      

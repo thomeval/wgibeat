@@ -35,7 +35,7 @@ namespace WGiBeat.Drawing
             };
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
             var message = "";
             if (!Visible)
@@ -67,14 +67,14 @@ namespace WGiBeat.Drawing
             _textPosition.Y = this.Y + 25;
 
 
-            TextureManager.DrawString(spriteBatch, message, "DefaultFont", _textPosition, Color.White,
+            FontManager.DrawString(message, "DefaultFont", _textPosition, Color.White,
               FontAlign.Left);
         }
 
         private const int SCROLL_SPEED = 60;
         private string ScrollText(string message)
         {
-            var messageLength = TextureManager.Fonts("DefaultFont").MeasureString(message);
+            var messageLength = FontManager.Fonts("DefaultFont").MeasureString(message);
             if (messageLength.X > 780)
             {
                 XOffset -= TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * SCROLL_SPEED;

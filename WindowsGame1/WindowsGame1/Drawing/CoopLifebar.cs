@@ -2,13 +2,11 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using WGiBeat.Players;
 
 namespace WGiBeat.Drawing
 {
     public class CoopLifeBar : LifeBar
     {
-
         private readonly double[] _displayedLife;
 
         private Sprite3D _basePart;
@@ -94,7 +92,7 @@ namespace WGiBeat.Drawing
         private const int OVERCHARGE_FLOW_SPEED = 320;
         private int _blocksCount;
 
-        public override void Draw(SpriteBatch spriteBatch, double gameTime)
+        public override void Draw( double gameTime)
         {
             if (_basePart == null)
             {
@@ -102,17 +100,17 @@ namespace WGiBeat.Drawing
             }
 
             UpdateDisplayedLife();
-            DrawBase(spriteBatch);
-            DrawSides(spriteBatch);
-            DrawBlocks(spriteBatch, gameTime);
+            DrawBase();
+            DrawSides();
+            DrawBlocks( gameTime);
             DrawGrid();
             DrawOvercharge(); 
             DrawFullEffect();
             DrawBlazingEffect(gameTime);
-            DrawText(spriteBatch);
+            DrawText();
         }
 
-        private void DrawText(SpriteBatch spriteBatch)
+        private void DrawText()
         {
             for (int x = 0; x < 4; x++)
             {
@@ -120,7 +118,7 @@ namespace WGiBeat.Drawing
                 {
                     continue;
                 }
-                DrawText(spriteBatch, x, SidePositions[x]);
+                DrawText(x, SidePositions[x]);
             }
         }
 
@@ -155,7 +153,7 @@ namespace WGiBeat.Drawing
                                        _overchargeOffsetClip;
         }
 
-        private void DrawBlocks(SpriteBatch spriteBatch, double gameTime)
+        private void DrawBlocks( double gameTime)
         {
             var beatFraction = GetBeatFraction(gameTime);
 
@@ -299,32 +297,32 @@ namespace WGiBeat.Drawing
         }
 
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
-            Draw(spriteBatch, 0.0);
+            Draw( 0.0);
         }
 
-        private void DrawBase(SpriteBatch spriteBatch)
+        private void DrawBase()
         {
             _basePart.Position = this.Position;
             _basePart.Draw();
         }
 
-        private void DrawText(SpriteBatch spriteBatch, int player, Vector2 position)
+        private void DrawText( int player, Vector2 position)
         {
             var textPosition = position.Clone();
             textPosition.X += 25;
 
-            TextureManager.DrawString(spriteBatch, String.Format("{0:D3}", (int)_displayedLife[player]),
+            FontManager.DrawString(String.Format("{0:D3}", (int)_displayedLife[player]),
                     "DefaultFont", textPosition, Color.Black, FontAlign.Center);
 
             textPosition.X += 60;
-            TextureManager.DrawString(spriteBatch, String.Format("{0:P0}", _displayedLife[player] / TrueCapacity),
+            FontManager.DrawString(String.Format("{0:P0}", _displayedLife[player] / TrueCapacity),
         "DefaultFont", textPosition, Color.Black, FontAlign.Center);
 
         }
 
-        private void DrawSides(SpriteBatch spriteBatch)
+        private void DrawSides()
         {
 
             for (int x = 0; x < 4; x++)
@@ -342,10 +340,10 @@ namespace WGiBeat.Drawing
 
             var position = MiddlePosition.Clone();
             position.X += 35;
-            TextureManager.DrawString(spriteBatch, String.Format("{0:D3}", (int)TotalLife()), "LargeFont",
+            FontManager.DrawString(String.Format("{0:D3}", (int)TotalLife()), "LargeFont",
                     position, Color.Black, FontAlign.Center);
             position.X += 50;
-            TextureManager.DrawString(spriteBatch, string.Format("{0:D3}", (int)TrueCapacity), "DefaultFont", position, Color.Black, FontAlign.Center);
+            FontManager.DrawString(string.Format("{0:D3}", (int)TrueCapacity), "DefaultFont", position, Color.Black, FontAlign.Center);
         }
 
         #region Helper Methods

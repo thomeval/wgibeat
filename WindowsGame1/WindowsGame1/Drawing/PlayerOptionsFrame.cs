@@ -84,7 +84,7 @@ namespace WGiBeat.Drawing
 
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
 
             var idx = Player.IsCPUPlayer ? 4 : PlayerIndex;
@@ -97,18 +97,18 @@ namespace WGiBeat.Drawing
             _difficultyIcons.Draw( (int)Player.PlayerOptions.PlayDifficulty + 1, 30, 30, this.X + 53, this.Y + 3);
 
             DrawNameBackgrounds();
-            DrawText(spriteBatch);
-            DrawSpeedBlocks(spriteBatch);
-            DrawLevelBar(spriteBatch);
+            DrawText();
+            DrawSpeedBlocks();
+            DrawLevelBar();
         }
 
-        private void DrawLevelBar(SpriteBatch spriteBatch)
+        private void DrawLevelBar()
         {
         
             _levelDisplay.Position = _levelDisplayPosition;
             _levelDisplay.Opacity = (byte) (255 - _optionControlOpacity);
             _levelDisplay.Width = 288;
-            _levelDisplay.Draw(spriteBatch);
+            _levelDisplay.Draw();
         }
 
    
@@ -139,7 +139,7 @@ namespace WGiBeat.Drawing
         }
 
         private Color _textColor = Color.Black;
-        private void DrawText(SpriteBatch spriteBatch)
+        private void DrawText()
         {
             CalculateTextPositions();
             var timeDiff = TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds;
@@ -159,16 +159,16 @@ namespace WGiBeat.Drawing
                 playerName = "CPU";
             }
             
-            DrawChangeControls(spriteBatch);
+            DrawChangeControls();
             _textColor.A = (byte)(255 - _optionControlOpacity);
-            var scale = TextureManager.ScaleTextToFit(playerName, "TwoTech36", 230, 50);
-            TextureManager.DrawString(spriteBatch, playerName, "TwoTech36", _nameTextPosition, scale, _textColor,
+            var scale = FontManager.ScaleTextToFit(playerName, "TwoTech36", 230, 50);
+            FontManager.DrawString(playerName, "TwoTech36", _nameTextPosition, scale, _textColor,
                                       FontAlign.Center);
 
 
         }
 
-        private void DrawChangeControls(SpriteBatch spriteBatch)
+        private void DrawChangeControls()
         {
             _indicatorArrows.ColorShading.A = (byte) _optionControlOpacity;
             _indicatorArrows.Draw( 1, 15, 15, (int)_difficultyTextPosition.X, (int)_difficultyTextPosition.Y + 22);
@@ -177,16 +177,15 @@ namespace WGiBeat.Drawing
             _indicatorArrows.Draw( 3, 15, 15, (int)_speedTextPosition.X - 17, (int)_speedTextPosition.Y - 10);
             var speedText = string.Format("{0:0.0}x", Player.PlayerOptions.BeatlineSpeed);
             _textColor.A = (byte) _optionControlOpacity;
-            TextureManager.DrawString(spriteBatch, speedText, "TwoTech20", _speedTextPosition, _textColor,
+            FontManager.DrawString(speedText, "TwoTech20", _speedTextPosition, _textColor,
                                       FontAlign.Right);
 
-            TextureManager.DrawString(spriteBatch, "" + Player.PlayerOptions.PlayDifficulty, "TwoTech20", _difficultyTextPosition, _textColor,
+            FontManager.DrawString("" + Player.PlayerOptions.PlayDifficulty, "TwoTech20", _difficultyTextPosition, _textColor,
                                       FontAlign.Left);
 
             if (Player.Profile != null)
             {
-                TextureManager.DrawString(spriteBatch,
-                                          String.Format("{0}/{1}", Player.GetEXP(), Player.GetNextEXPSafe()),
+                FontManager.DrawString(String.Format("{0}/{1}", Player.GetEXP(), Player.GetNextEXPSafe()),
                                           "TwoTech20", _expTextPosition, _textColor,
                                           FontAlign.Center);
             }
@@ -214,7 +213,7 @@ namespace WGiBeat.Drawing
         private readonly Color _blockColor = new Color(64, 64, 64, 255);
 
 
-        private void DrawSpeedBlocks(SpriteBatch spriteBatch)
+        private void DrawSpeedBlocks()
         {
             const int TEXTURE_HEIGHT = 140;
             const int TEXTURE_WIDTH = 100;

@@ -19,7 +19,7 @@ namespace WGiBeat.Drawing
         private double _offsetY;
 
  
-        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        public void Draw( GameTime gameTime)
         {
             Move(gameTime);
             DrawTiled( (float) _offsetX, (float) _offsetY,  (float) (_offsetX + Width), (float) (_offsetY + Height));

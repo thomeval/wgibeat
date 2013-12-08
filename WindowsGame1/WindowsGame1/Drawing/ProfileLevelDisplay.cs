@@ -38,7 +38,7 @@ namespace WGiBeat.Drawing
         private Vector2 _levelTextPosition;
         private Color _drawColor = Color.Black;
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
            
             if (Player.Profile == null)
@@ -63,8 +63,8 @@ namespace WGiBeat.Drawing
 
             //Draw level text.
             var playerlevel = String.Format("{0:00}", Player.GetLevel());
-            var scale = TextureManager.ScaleTextToFit(playerlevel, "TwoTech36", 32, 38);
-            TextureManager.DrawString(spriteBatch,playerlevel, "TwoTech36", _levelTextPosition, scale, _drawColor,
+            var scale = FontManager.ScaleTextToFit(playerlevel, "TwoTech36", 32, 38);
+            FontManager.DrawString(playerlevel, "TwoTech36", _levelTextPosition, scale, _drawColor,
    FontAlign.Right);
 
         

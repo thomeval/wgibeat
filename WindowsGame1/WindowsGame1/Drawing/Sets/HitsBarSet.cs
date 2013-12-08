@@ -54,7 +54,7 @@ namespace WGiBeat.Drawing.Sets
 
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
  
             if (_baseSprite == null)
@@ -63,8 +63,8 @@ namespace WGiBeat.Drawing.Sets
             }
             if (SyncGameType)
             {
-                DrawStreakBar(spriteBatch,0);
-                DrawHitsBar(spriteBatch,0);
+                DrawStreakBar(0);
+                DrawHitsBar(0);
 
                 return;
             }
@@ -75,8 +75,8 @@ namespace WGiBeat.Drawing.Sets
                 {
                     continue;
                 }
-                DrawStreakBar(spriteBatch, x);
-                DrawHitsBar(spriteBatch, x);
+                DrawStreakBar( x);
+                DrawHitsBar( x);
 
             }
         }
@@ -87,7 +87,7 @@ namespace WGiBeat.Drawing.Sets
         private const int HITSBAR_HIDE_SPEED = 1000;
         private const int OVERMASK_HIDE_SPEED = 750;
 
-        private void DrawHitsBar(SpriteBatch spriteBatch, int player)
+        private void DrawHitsBar( int player)
         {
             if (Players[player].Hits < 25)
             {
@@ -105,17 +105,17 @@ namespace WGiBeat.Drawing.Sets
             _textColor.A = (byte) _hitsOpacity[player];
             _baseSprite.Draw();
 
-            DrawOvermask(spriteBatch, player);
+            DrawOvermask( player);
 
             var textPosition = _baseSprite.Position.Clone();
             textPosition.X += 25;
-            TextureManager.DrawString(spriteBatch, String.Format("{0:D3}", Players[player].Hits), "DefaultFont",
+            FontManager.DrawString(String.Format("{0:D3}", Players[player].Hits), "DefaultFont",
                    textPosition, _textColor, FontAlign.Center);
         }
 
         private const int STREAKBAR_SHOW_SPEED = 600;
         private const int STREAKBAR_HIDE_SPEED = 3000;
-        private void DrawStreakBar(SpriteBatch spriteBatch, int player)
+        private void DrawStreakBar( int player)
         {
             if (Players[player].Streak < 2)
             {
@@ -133,14 +133,14 @@ namespace WGiBeat.Drawing.Sets
             _textColor.A = (byte)_streakOpacity[player];
             _streakBaseSprite.Draw();
 
-            DrawStreakOvermask(spriteBatch,player);
+            DrawStreakOvermask(player);
             var textPosition = _streakBaseSprite.Position.Clone();
             textPosition.X += _streakBaseSprite.Width - 25;
-            TextureManager.DrawString(spriteBatch, String.Format("x{0}", Players[player].Streak), "DefaultFont",
+            FontManager.DrawString(String.Format("x{0}", Players[player].Streak), "DefaultFont",
                    textPosition, _textColor, FontAlign.Center);
         }
 
-        private void DrawOvermask(SpriteBatch spriteBatch, int player)
+        private void DrawOvermask( int player)
         {
             if (PlayerAtNewMilestone(player))
             {
@@ -153,7 +153,7 @@ namespace WGiBeat.Drawing.Sets
             _baseOvermaskSprite.Draw();
         }
 
-        private void DrawStreakOvermask(SpriteBatch spriteBatch, int player)
+        private void DrawStreakOvermask( int player)
         {
             if ((Players[player].Streak >= 2) && (Players[player].Streak > _lastStreak[player]))
             {

@@ -310,7 +310,7 @@ namespace WGiBeat.Screens
         {
          
             _backgroundSprite.Draw();
-            DrawHeading(spriteBatch);
+            DrawHeading();
 
             switch (_cursorPosition)
             {
@@ -318,14 +318,14 @@ namespace WGiBeat.Screens
                 case EditorCursorPosition.SELECT_SONGFILE:
                 case EditorCursorPosition.SELECT_SONGFILE_DELETE:
                 case EditorCursorPosition.SELECT_BACKGROUND_IMAGE:
-                    _fileSelect.Draw(spriteBatch);
+                    _fileSelect.Draw();
                     break;
                 case EditorCursorPosition.KEY_ENTRY:
-                    _textEntry.Draw(spriteBatch);
+                    _textEntry.Draw();
                     break;
                 case EditorCursorPosition.SONG_BASICS:
                     _editProgress = 1;
-                    TextureManager.DrawString(spriteBatch,_errorMessage,"LargeFont",Core.Metrics["EditorErrorMessage",0],Color.Red,FontAlign.Center);
+                    FontManager.DrawString(_errorMessage,"LargeFont",Core.Metrics["EditorErrorMessage",0],Color.Red,FontAlign.Center);
                     break;
                 case EditorCursorPosition.SONG_DETAILS:
                 case EditorCursorPosition.SONG_DETAILS_DELETE:
@@ -333,14 +333,14 @@ namespace WGiBeat.Screens
                     var validIdx = _songValid ? 1 : 0;
                     _validitySpriteMap.Draw( validIdx, 195, 42, Core.Metrics["EditorSongValidity",0]);
                     _songBackgroundDisplaySprite.Draw();
-                    _bpmMeter.Draw(spriteBatch);
-                    DrawBPMMeterExtras(spriteBatch);
-                    DrawSongTimeLine(spriteBatch);
+                    _bpmMeter.Draw();
+                    DrawBPMMeterExtras();
+                    DrawSongTimeLine();
                     if (!String.IsNullOrEmpty(_errorMessage))
                     {
-                        var scale = TextureManager.ScaleTextToFit(_errorMessage, "DefaultFont", 790, 100);
-                        TextureManager.DrawString(spriteBatch, "An error has occurred:", "LargeFont", Core.Metrics["EditorErrorMessage", 0], Color.Red, FontAlign.Center);
-                        TextureManager.DrawString(spriteBatch, _errorMessage, "DefaultFont", Core.Metrics["EditorErrorMessage", 1],scale, Color.Red, FontAlign.Center);
+                        var scale = FontManager.ScaleTextToFit(_errorMessage, "DefaultFont", 790, 100);
+                        FontManager.DrawString("An error has occurred:", "LargeFont", Core.Metrics["EditorErrorMessage", 0], Color.Red, FontAlign.Center);
+                        FontManager.DrawString(_errorMessage, "DefaultFont", Core.Metrics["EditorErrorMessage", 1],scale, Color.Red, FontAlign.Center);
 
                     }
                     break;
@@ -348,40 +348,40 @@ namespace WGiBeat.Screens
                     _editProgress = 3;
                     TextureManager.LastDrawnPhraseNumber = _phraseNumber;
                     _beatlineSet.Draw( _phraseNumber);
-                    _noteJudgementSet.Draw(spriteBatch, _phraseNumber);
+                    _noteJudgementSet.Draw( _phraseNumber);
                     _countdownSet.Draw(_phraseNumber);
                     break;
                     case EditorCursorPosition.MEASURE_BPM:
-                    DrawBPMMeasurement(spriteBatch);
-                    DrawSongTimeLine(spriteBatch);
+                    DrawBPMMeasurement();
+                    DrawSongTimeLine();
                     break;
                     case EditorCursorPosition.MEASURE_OFFSET:
                     case EditorCursorPosition.MEASURE_LENGTH:
                     case EditorCursorPosition.MEASURE_AUDIO_START:
-                    TextureManager.DrawString(spriteBatch, String.Format("{0:0.00}", _timeElapsed / 1000), "LargeFont", Core.Metrics["EditorMeasurementDisplay", 0], Color.Black, FontAlign.Center);
-                    DrawSongTimeLine(spriteBatch);
+                    FontManager.DrawString(String.Format("{0:0.00}", _timeElapsed / 1000), "LargeFont", Core.Metrics["EditorMeasurementDisplay", 0], Color.Black, FontAlign.Center);
+                    DrawSongTimeLine();
                     break;
                 case EditorCursorPosition.DONE:
                     _editProgress = 4;
                     break;
                 case EditorCursorPosition.MAIN_MENU:
                     _editProgress = 0;
-                    TextureManager.DrawString(spriteBatch,VERSION,"DefaultFont",Core.Metrics["EditorVersion",0],Color.Black,FontAlign.Right);
+                    FontManager.DrawString(VERSION,"DefaultFont",Core.Metrics["EditorVersion",0],Color.Black,FontAlign.Right);
                     break;
             }
 
             SetActiveMenu();
             ValidateInputs();
-            DrawEditProgress(spriteBatch);
-            DrawText(spriteBatch);
+            DrawEditProgress();
+            DrawText();
             if (_activeMenu != null)
             {
-                _menus[_activeMenu].Draw(spriteBatch);
+                _menus[_activeMenu].Draw();
             }
          //   Core.ShiftSpriteBatch(true);
         }
 
-        private void DrawSongTimeLine(SpriteBatch spriteBatch)
+        private void DrawSongTimeLine()
         {
             _songTimeLine.Song = NewGameSong;
             _songTimeLine.AudioStart = null;
@@ -405,41 +405,41 @@ namespace WGiBeat.Screens
             }
             _songTimeLine.AudioEnd = Core.Audio.GetFileLength(NewGameSong.Path + "\\" + NewGameSong.AudioFile)/1000.0;
            
-            _songTimeLine.Draw(spriteBatch);
+            _songTimeLine.Draw();
 
         }
 
-        private void DrawBPMMeterExtras(SpriteBatch spriteBatch)
+        private void DrawBPMMeterExtras()
         {
             _validityTextBaseSprite.Draw();
             _songDetailsDisplaySprite.Draw();
             _songTypeDisplay.Song = NewGameSong;
-            _songTypeDisplay.Draw(spriteBatch);
+            _songTypeDisplay.Draw();
         }
 
-        private void DrawBPMMeasurement(SpriteBatch spriteBatch)
+        private void DrawBPMMeasurement()
         {
 
             var avgAmount = _beatTimings[0] == 0 ? "-----" : string.Format("{0:F1}",60/_beatTimings[0]*1000);
-            TextureManager.DrawString(spriteBatch,  "Last Hit: " + avgAmount, "DefaultFont", Core.Metrics["EditorBPMMeasurements", 0], Color.Black, FontAlign.Left);
+            FontManager.DrawString("Last Hit: " + avgAmount, "DefaultFont", Core.Metrics["EditorBPMMeasurements", 0], Color.Black, FontAlign.Left);
              avgAmount = (_numBeats >= 5) ? String.Format("{0:F1}", 60 / _beatTimings.Take(5).Average() * 1000) : "-----" ;
 
-            TextureManager.DrawString(spriteBatch, "Last 5 avg: " + avgAmount, "DefaultFont", Core.Metrics["EditorBPMMeasurements", 1], Color.Black, FontAlign.Left);
+            FontManager.DrawString("Last 5 avg: " + avgAmount, "DefaultFont", Core.Metrics["EditorBPMMeasurements", 1], Color.Black, FontAlign.Left);
             
             avgAmount = (_numBeats >= 10) ? String.Format("{0:F1}", 60 / _beatTimings.Take(10).Average() * 1000) : "-----";
-            TextureManager.DrawString(spriteBatch, "Last 10 avg: " + avgAmount, "DefaultFont", Core.Metrics["EditorBPMMeasurements", 2], Color.Black, FontAlign.Left);
+            FontManager.DrawString("Last 10 avg: " + avgAmount, "DefaultFont", Core.Metrics["EditorBPMMeasurements", 2], Color.Black, FontAlign.Left);
 
             avgAmount = (_numBeats > 0)
                             ? String.Format("{0:F1}", 60/_beatTimings.Take(_numBeats).Average()*1000)
                             : "-----";
-            TextureManager.DrawString(spriteBatch, "Last 25 avg: "+ avgAmount, "DefaultFont", Core.Metrics["EditorBPMMeasurements", 3], Color.Black, FontAlign.Left);
+            FontManager.DrawString("Last 25 avg: "+ avgAmount, "DefaultFont", Core.Metrics["EditorBPMMeasurements", 3], Color.Black, FontAlign.Left);
 
             var roundedAmount = (_numBeats > 0) ? "" + Math.Round(60/ _beatTimings.Take(_numBeats).Average() * 1000) : "-----";
-            TextureManager.DrawString(spriteBatch, "Estimated BPM: " + roundedAmount, "TwoTech36", Core.Metrics["EditorMeasurementDisplay", 0], Color.Black, FontAlign.Center);
+            FontManager.DrawString("Estimated BPM: " + roundedAmount, "TwoTech36", Core.Metrics["EditorMeasurementDisplay", 0], Color.Black, FontAlign.Center);
 
         }
 
-        private void DrawText(SpriteBatch spriteBatch)
+        private void DrawText()
         {
             string instructions = "";
             switch (_cursorPosition)
@@ -463,34 +463,34 @@ namespace WGiBeat.Screens
                     var offsetPosition = Core.Metrics["EditorSongDetailsDisplay",0].Clone();
                     offsetPosition.X += 2;
                     offsetPosition.Y += 12;
-                    var scale = TextureManager.ScaleTextToFit(String.Format("{0:0.00}", NewGameSong.AudioStart),
+                    var scale = FontManager.ScaleTextToFit(String.Format("{0:0.00}", NewGameSong.AudioStart),
                                                               "TwoTech24", 70, 35);
-                    TextureManager.DrawString(spriteBatch, String.Format("{0:0.00}", NewGameSong.AudioStart), "TwoTech24", offsetPosition,scale, Color.Black, FontAlign.Left);
+                    FontManager.DrawString(String.Format("{0:0.00}", NewGameSong.AudioStart), "TwoTech24", offsetPosition,scale, Color.Black, FontAlign.Left);
                     offsetPosition.X += 160;
-                    scale = TextureManager.ScaleTextToFit(String.Format("{0:0.00}", NewGameSong.Offset),
+                    scale = FontManager.ScaleTextToFit(String.Format("{0:0.00}", NewGameSong.Offset),
                                                               "TwoTech24", 70, 35);
-                    TextureManager.DrawString(spriteBatch, String.Format("{0:0.00}", NewGameSong.Offset), "TwoTech24", offsetPosition,scale, Color.Black, FontAlign.Right);
+                    FontManager.DrawString(String.Format("{0:0.00}", NewGameSong.Offset), "TwoTech24", offsetPosition,scale, Color.Black, FontAlign.Right);
 
                     if ((NewGameSong.StartBPM > 0) && (NewGameSong.Length > 0))
                     {
                         var totalBeatlines = Math.Floor(NewGameSong.GetEndingTimeInPhrase());
                         offsetPosition.Y += 25;
                         totalBeatlines = Math.Max(totalBeatlines + 1, 0);
-                        TextureManager.DrawString(spriteBatch, "" +totalBeatlines, "TwoTechLarge",
+                        FontManager.DrawString("" +totalBeatlines, "TwoTechLarge",
                                                   offsetPosition, Color.Black, FontAlign.Right);
                     }
                     
-                    TextureManager.DrawString(spriteBatch, _validityMessage.Replace(".",".\n"), "DefaultFont", Core.Metrics["EditorSongValidityMessage",0],Color.Black, FontAlign.Center);
+                    FontManager.DrawString(_validityMessage.Replace(".",".\n"), "DefaultFont", Core.Metrics["EditorSongValidityMessage",0],Color.Black, FontAlign.Center);
                     var backgroundText = string.IsNullOrEmpty(NewGameSong.BackgroundFile) ? "None" : NewGameSong.BackgroundFile;
                     offsetPosition = Core.Metrics["EditorSongBackgroundDisplay", 0].Clone();
                     offsetPosition.X += _songBackgroundDisplaySprite.Width -8;
-                    TextureManager.DrawString(spriteBatch, backgroundText, "DefaultFont", offsetPosition, Color.Black, FontAlign.Right);
+                    FontManager.DrawString(backgroundText, "DefaultFont", offsetPosition, Color.Black, FontAlign.Right);
 
                     break;
                 case EditorCursorPosition.SONG_TUNING:
-                    DrawDebugText(spriteBatch);
-                    DrawTweakControlsText(spriteBatch);
-                    DrawHitOffsetText(spriteBatch);
+                    DrawDebugText();
+                    DrawTweakControlsText();
+                    DrawHitOffsetText();
                     break;
                 case EditorCursorPosition.MEASURE_OFFSET:
                     instructions = Core.Text["EditorMeasureOffset"];
@@ -511,31 +511,31 @@ namespace WGiBeat.Screens
                     instructions = Core.Text["EditorDoneDeleting"];
                     break;
             }
-            TextureManager.DrawString(spriteBatch, instructions, "DefaultFont", Core.Metrics["EditorMeasureInstructions", 0], Color.Black, FontAlign.Center);
+            FontManager.DrawString(instructions, "DefaultFont", Core.Metrics["EditorMeasureInstructions", 0], Color.Black, FontAlign.Center);
 
         }
 
-        private void DrawHitOffsetText(SpriteBatch spriteBatch)
+        private void DrawHitOffsetText()
         {
 
-            TextureManager.DrawString(spriteBatch, String.Format("Last hit: {0:F2} ms", _hitOffsets[0]), "DefaultFont", Core.Metrics["EditorHitOffset", 0], Color.Black, FontAlign.Left);
+            FontManager.DrawString(String.Format("Last hit: {0:F2} ms", _hitOffsets[0]), "DefaultFont", Core.Metrics["EditorHitOffset", 0], Color.Black, FontAlign.Left);
             var avg = _hitOffsets.Take(3).Average();
             if (_numHits < 3)
                 return;
 
-            TextureManager.DrawString(spriteBatch, String.Format("Last 3 avg: {0:F2} ms", avg), "DefaultFont", Core.Metrics["EditorHitOffset", 1], Color.Black, FontAlign.Left);
+            FontManager.DrawString(String.Format("Last 3 avg: {0:F2} ms", avg), "DefaultFont", Core.Metrics["EditorHitOffset", 1], Color.Black, FontAlign.Left);
             if (_numHits < 5)
                 return;
             avg = _hitOffsets.Take(5).Average();
-            TextureManager.DrawString(spriteBatch, String.Format("Last 5 avg: {0:F2} ms", avg), "DefaultFont", Core.Metrics["EditorHitOffset", 2], Color.Black, FontAlign.Left);
+            FontManager.DrawString(String.Format("Last 5 avg: {0:F2} ms", avg), "DefaultFont", Core.Metrics["EditorHitOffset", 2], Color.Black, FontAlign.Left);
             if (_numHits < 10)
                 return;
             avg = _hitOffsets.Average();
-            TextureManager.DrawString(spriteBatch, String.Format("Last 10 avg: {0:F2} ms", avg), "DefaultFont", Core.Metrics["EditorHitOffset", 3], Color.Black, FontAlign.Left);
+            FontManager.DrawString(String.Format("Last 10 avg: {0:F2} ms", avg), "DefaultFont", Core.Metrics["EditorHitOffset", 3], Color.Black, FontAlign.Left);
 
         }
 
-        private void DrawTweakControlsText(SpriteBatch spriteBatch)
+        private void DrawTweakControlsText()
         {
 
             var lines = Core.Text["EditorTweakControlsLeft"].Split('\n');
@@ -543,7 +543,7 @@ namespace WGiBeat.Screens
             var textPosition = Core.Metrics["EditorTweakControls", 0].Clone();
             foreach (string line in lines)
             {
-                TextureManager.DrawString(spriteBatch, line, "DefaultFont", textPosition, Color.Black, FontAlign.Left);
+                FontManager.DrawString(line, "DefaultFont", textPosition, Color.Black, FontAlign.Left);
                 textPosition.Y += 20;
             }
 
@@ -552,26 +552,26 @@ namespace WGiBeat.Screens
 
             foreach (string line in lines)
             {
-                TextureManager.DrawString(spriteBatch, line, "DefaultFont", textPosition, Color.Black, FontAlign.Left);
+                FontManager.DrawString(line, "DefaultFont", textPosition, Color.Black, FontAlign.Left);
                 textPosition.Y += 20;
             }
         }
 
 
-        private void DrawDebugText(SpriteBatch spriteBatch)
+        private void DrawDebugText()
         {
             _textBackground.Draw();
-            TextureManager.DrawString(spriteBatch, String.Format("BPM: {0:F2}", NewGameSong.StartBPM),
+            FontManager.DrawString(String.Format("BPM: {0:F2}", NewGameSong.StartBPM),
                    "DefaultFont", Core.Metrics["EditorSongBPM", 0], Color.Black, FontAlign.Left);
-            TextureManager.DrawString(spriteBatch, String.Format("Offset: {0:F3}s", NewGameSong.Offset),
+            FontManager.DrawString(String.Format("Offset: {0:F3}s", NewGameSong.Offset),
                     "DefaultFont", Core.Metrics["EditorSongOffset", 0], Color.Black, FontAlign.Left);
-            TextureManager.DrawString(spriteBatch, "" + String.Format("{0:F3}", _phraseNumber),
+            FontManager.DrawString("" + String.Format("{0:F3}", _phraseNumber),
                 "DefaultFont", Core.Metrics["EditorSongPhraseNumber", 0], Color.Black, FontAlign.Left);
-            TextureManager.DrawString(spriteBatch, CalculateTimeLeft(),
+            FontManager.DrawString(CalculateTimeLeft(),
                 "DefaultFont", Core.Metrics["EditorSongTimeLeft", 0], Color.Black, FontAlign.Left);
-            TextureManager.DrawString(spriteBatch, String.Format("Speed: {0}x", Core.Players[0].PlayerOptions.BeatlineSpeed),
+            FontManager.DrawString(String.Format("Speed: {0}x", Core.Players[0].PlayerOptions.BeatlineSpeed),
                 "DefaultFont", Core.Metrics["EditorTweakBeatlineSpeed", 0], Color.Black, FontAlign.Left);
-            TextureManager.DrawString(spriteBatch, String.Format("Length: {0:F3}s", NewGameSong.Length),
+            FontManager.DrawString(String.Format("Length: {0:F3}s", NewGameSong.Length),
                 "DefaultFont", Core.Metrics["EditorSongLength", 0], Color.Black, FontAlign.Left);       
         }
 
@@ -583,7 +583,7 @@ namespace WGiBeat.Screens
             return ts.Minutes + ":" + String.Format("{0:D2}", Math.Max(0, ts.Seconds));
         }
 
-        private void DrawHeading(SpriteBatch spriteBatch)
+        private void DrawHeading()
         {
             var headingText = "";
             switch (_cursorPosition)
@@ -629,10 +629,10 @@ namespace WGiBeat.Screens
                     headingText = "Completed";
                     break;
             }
-            TextureManager.DrawString(spriteBatch, headingText, "TwoTechLarge", Core.Metrics["EditorHeading", 0], Color.Black, FontAlign.Left);
+            FontManager.DrawString(headingText, "TwoTechLarge", Core.Metrics["EditorHeading", 0], Color.Black, FontAlign.Left);
         }
 
-        private void DrawEditProgress(SpriteBatch spriteBatch)
+        private void DrawEditProgress()
         {
             if (_editProgress == 0)
             {

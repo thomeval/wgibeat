@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace WGiBeat.Drawing
 {
@@ -56,7 +55,7 @@ namespace WGiBeat.Drawing
          
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
 
             if (_baseSprite == null)

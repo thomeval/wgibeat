@@ -165,7 +165,10 @@ namespace WGiBeat.AudioSystem
             {
                 _channelCurrentVolume = (float)Math.Max(0,(PreviewDuration - _previewTime)/2);
             }
-
+            else
+            {
+                _channelCurrentVolume = 1.0f;
+            }
             if (_channelIndexCurrent != -1)
             {
                 AudioManager.SetChannelVolume(_channelIndexCurrent, _channelCurrentVolume);

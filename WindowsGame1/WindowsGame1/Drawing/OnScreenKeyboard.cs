@@ -60,14 +60,14 @@ namespace WGiBeat.Drawing
             _barMiddleSprite = new Sprite3D { Texture = TextureManager.Textures("TextEntryBarMiddle") };
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
             DrawEnteredTextBar(this.Position.Clone());
             var enteredTextPosition = this.Position.Clone();
             enteredTextPosition.X += this.Width/2;
-           TextureManager.DrawString(spriteBatch,EnteredText,"TwoTech24", enteredTextPosition, BaseColor,FontAlign.Center);
+           FontManager.DrawString(EnteredText,"TwoTech24", enteredTextPosition, BaseColor,FontAlign.Center);
 
-            DrawKeyboard(spriteBatch);
+            DrawKeyboard();
         }
 
         private void DrawEnteredTextBar(Vector2 position)
@@ -83,7 +83,7 @@ namespace WGiBeat.Drawing
 
         }
 
-        private void DrawKeyboard(SpriteBatch spriteBatch)
+        private void DrawKeyboard()
         {
             var initialPosition = this.Position.Clone();
             var drawPosition = this.Position.Clone();
@@ -95,11 +95,11 @@ namespace WGiBeat.Drawing
                 drawPosition.Y = (initialPosition.Y) + (SpacingY*(counter/Columns));
                 if (counter == _selectedIndex)
                 {
-                    TextureManager.DrawString(spriteBatch, "" +c, "TwoTech24", drawPosition, HighlightColor, FontAlign.Left);
+                    FontManager.DrawString("" +c, "TwoTech24", drawPosition, HighlightColor, FontAlign.Left);
                 }
                 else
                 {
-                    TextureManager.DrawString(spriteBatch, "" + c, "TwoTech24", drawPosition, BaseColor,FontAlign.Left);                  
+                    FontManager.DrawString("" + c, "TwoTech24", drawPosition, BaseColor,FontAlign.Left);                  
                 }
                 counter++;
             }
