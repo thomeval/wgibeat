@@ -254,7 +254,9 @@ namespace WGiBeat.Screens
             _beatlineSet.MaintainBeatlineNotes(_phraseNumber);
             _lifeBarSet.MaintainBlazings(_phraseNumber);
             MaintainBlazingDSP();
-            _noteBarSet.MaintainCPUArrows(_phraseNumber);
+            var phraseDecimal = _beatlineSet.GetPhraseDecimal(_phraseNumber);
+            
+            _noteBarSet.MaintainCPUArrows(phraseDecimal);
             MaintainGrooveMomentum(_phraseNumber);
             RecordPlayerLife();
             RecordPlayerPlayTime(gameTime.ElapsedRealTime.TotalMilliseconds);
@@ -303,6 +305,7 @@ namespace WGiBeat.Screens
         private double _lastUpdate;
         private void MaintainGrooveMomentum(double phraseNumber)
         {
+            // TODO: Change to milliseconds?
             if (_phraseNumber < 0.0)
             {
                 return;
@@ -328,14 +331,15 @@ namespace WGiBeat.Screens
 
         private void RecordPlayerLife()
         {
-            if (_phraseNumber  > _lastLifeRecord)
+            if (_phraseNumber <= _lastLifeRecord)
             {
-                foreach (Player player in Core.Players)
-                {
-                    player.RecordCurrentLife();
-                }
-                _lastLifeRecord++;
+                return;
             }
+            foreach (Player player in Core.Players)
+            {
+                player.RecordCurrentLife();
+            }
+            _lastLifeRecord++;
         }
 
 
@@ -522,12 +526,21 @@ namespace WGiBeat.Screens
             
             //Keep scoring sane by adding a delay to the awarding of Groove Momentum.
             //Otherwise, the last player to hit each phrase has an advantage.
-            if (Core.Cookies["CurrentGameType"].Equals(GameType.COOPERATIVE))
+            if (!Core.Cookies["CurrentGameType"].Equals(GameType.COOPERATIVE))
             {
-                var thread = new Thread(AdjustGrooveMomentum);
-                thread.Start(new GMAdjustment {Judgement = judgement, Multiplier = _noteBarSet.NumberCompleted(player) + _noteBarSet.NumberReverse(player)});
+                return;
             }
 
+            var thread = new Thread(AdjustGrooveMomentum);
+            double mx = _noteBarSet.NumberCompleted(player) + _noteBarSet.NumberReverse(player);
+            //Ideal streaks provide bonus groove momentum (up to 2x the normal amount)
+            if (judgement == BeatlineNoteJudgement.IDEAL)
+            {
+                var mx2 = Convert.ToDouble((9 + Math.Max(1, Core.Players[player].Streak)));
+                mx2 = Math.Min(2.0, mx2 / 10);
+                mx *= mx2;
+            }
+            thread.Start(new GMAdjustment {Judgement = judgement, Multiplier = mx});
         }
 
         private readonly double[] _gmAdjustments = {0.08, 0.06, 0.03, 0.0, -0.15, -0.04};

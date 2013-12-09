@@ -336,6 +336,7 @@ namespace WGiBeat.AudioSystem
                     //message.
                     if (validated)
                     {
+
                         if (message != "No errors found.")
                         {
                             Log.AddMessage("" + message + " In: " + newSong.Path + "\\" + newSong.DefinitionFile, LogLevel.NOTE);
@@ -429,9 +430,9 @@ namespace WGiBeat.AudioSystem
             {
                 message = "Song does not have an artist.";
             }
-            if (song.Offset < 0)
+            if (song.Offset < 1)
             {
-                message = "Offset position is invalid. Must be more than zero.";
+                message = "Offset position is invalid. Must be at least one second into the song.";
                 return false;
             }
             if ((song.Length <= 0) || (song.Length <= song.Offset))
@@ -495,8 +496,8 @@ namespace WGiBeat.AudioSystem
         {
             foreach (SongFileLoader loader in Loaders.Values)
             {
-                loader.AllowProblematic = enable ? true : SettingsManager.Get<bool>("AllowProblematicSongs");
-                loader.ConvertToSNG = enable ? false : SettingsManager.Get<bool>("ConvertToSNG");
+                loader.AllowProblematic = enable || SettingsManager.Get<bool>("AllowProblematicSongs");
+                loader.ConvertToSNG = !enable && SettingsManager.Get<bool>("ConvertToSNG");
             }
         }
 

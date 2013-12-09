@@ -14,19 +14,19 @@ namespace WGiBeat.Drawing.Sets
     public class BeatlineSet : DrawableObjectSet
     {
 
-        private double _lastBeatlineNote = -1;
         private double _rainbowPoint;
-
         private readonly Beatline[] _beatlines;
-
         private readonly Color[] _blazingColors = {
                                                       new Color(255, 128, 128),
                                                       new Color(128, 255, 128),
                                                       new Color(128, 128, 255),
                                                       new Color(255, 128, 128)
                                                   };
-
         private double _bpm;
+
+        /// <summary>
+        /// Gets or sets the BPM currently used by the beatlines. Used mainly to calculate HitOffsets.
+        /// </summary>
         public double Bpm
         {
             get { return _bpm; }
@@ -40,24 +40,22 @@ namespace WGiBeat.Drawing.Sets
             }
         }
 
-
         public double EndingPhrase { get; set; }
-        public IEnumerable<double> AddNotes { get; set; }
-        public IEnumerable<double> RemoveNotes { get; set; }
-        public IEnumerable<double> SuperNotes { get; set; } 
+        public List<double> AddNotes { get; set; }
+        public List<double> RemoveNotes { get; set; }
+        public List<double> SuperNotes { get; set; } 
 
         public event EventHandler NoteMissed;
         public event EventHandler CPUNoteHit;
-
 
         public BeatlineSet(MetricsManager metrics, Player[] players, GameType gameType)
             : base(metrics, players, gameType)
         {
             _beatlines = new Beatline[4];
             var visibleCount = 0;
-            AddNotes = new double[0];
-            RemoveNotes = new double[0];
-            SuperNotes = new double[0];
+            AddNotes = new List<double>();
+            RemoveNotes = new List<double>();
+            SuperNotes = new List<double>();
 
             for (int x = 0; x < 4; x++)
             {
@@ -133,6 +131,8 @@ namespace WGiBeat.Drawing.Sets
                 {
                     _beatlines[x].Id = 4;
                     var miss = Players[x].NextCPUJudgement == BeatlineNoteJudgement.MISS;
+
+                    // The CPU should hit the beatline note if its destined to get a MISS rating.
                     if ((!miss))
                     {
 
@@ -161,26 +161,7 @@ namespace WGiBeat.Drawing.Sets
                     }
                 }
             }
-//
-  //          GenerateMoreBeatlineNotes(phraseNumber);
 
-        }
-
-        private void GenerateMoreBeatlineNotes(double phraseNumber)
-        {
-            //Extend method using switch block if different rules are required.
-            //Keep generating until end of song.
-            while ((phraseNumber + 2 > _lastBeatlineNote) && (_lastBeatlineNote + 1 < EndingPhrase))
-            {
-                _lastBeatlineNote++;
-                for (int x = 0; x < 4; x++)
-                {
-                    if ((!Players[x].KO) && (Players[x].Playing) && (!RemoveNotes.Contains(_lastBeatlineNote)))
-                    {
-                        _beatlines[x].AddBeatlineNote(new BeatlineNote {Position = _lastBeatlineNote, NoteType = BeatlineNoteType.NORMAL });
-                    }
-                }
-            }
         }
         
 
@@ -192,6 +173,7 @@ namespace WGiBeat.Drawing.Sets
                 {
                     continue;
                 }
+                AddNotes.AddRange(song.AddNotes);
                 var bl = _beatlines[index];
                 GenerateStandardNotes(song, bl);
                 GenerateSongEndNote(song, bl);
@@ -207,6 +189,8 @@ namespace WGiBeat.Drawing.Sets
         private void GenerateStandardNotes(GameSong song, Beatline bl)
         {
 
+            // Add a beatline note for every phrase (4 beats), unless its listed in the
+            // RemoveNotes or SuperNotes collection.
             for (int beat = 0; beat < song.GetEndingTimeInPhrase(); beat++ )
             {
                 if (song.RemoveNotes.Contains(beat))
@@ -218,14 +202,13 @@ namespace WGiBeat.Drawing.Sets
                     continue;
                 }
                bl.AddBeatlineNote(new BeatlineNote { Position = beat});
-
             }
              
             foreach (var pos in song.AddNotes)
             {
                 bl.AddBeatlineNote(new BeatlineNote{Position = pos});
             }
-
+           
             foreach (var pos in song.SuperNotes)
             {
                 bl.AddBeatlineNote(new BeatlineNote { Position = pos, NoteType=BeatlineNoteType.SUPER });
@@ -248,6 +231,7 @@ namespace WGiBeat.Drawing.Sets
             double prev = song.BPMs[0.0];
             foreach (double bpmKey in song.BPMs.Keys)
             {
+                //Don't mark the starting BPM as a BPM change.
                 if (bpmKey == 0.0)
                 {
                     continue;
@@ -265,7 +249,6 @@ namespace WGiBeat.Drawing.Sets
 
 
                 bl.InsertBeatlineNote(new BeatlineNote {NoteType = noteType, Position = bpmKey}, 0);
-
 
                 prev = song.BPMs[bpmKey];
             }
@@ -303,13 +286,53 @@ namespace WGiBeat.Drawing.Sets
 
         public void Reset()
         {
-            _lastBeatlineNote = -1;
             foreach (Beatline beatline in _beatlines)
             {
                 beatline.ClearNotes();
             }
         }
 
+        /// <summary>
+        /// Use some fancy calculations to determine how far the CPU player should be with an arrow sequence (from 0 to 1)
+        /// for any specific moment in time.
+        /// </summary>
+        /// <param name="phraseNumber"></param>
+        /// <returns></returns>
+        public double GetPhraseDecimal(double phraseNumber)
+        {
+            int idx = -1;
 
+            for (int x = 0; x < Players.Count(); x++)
+            {
+                if (!Players[x].IsCPUPlayer || !Players[x].Playing)
+                {
+                    continue;
+                }
+                idx = x;
+                break;
+            }
+            if (idx == -1)
+            {
+                return 0.0;
+            }
+            //Are there any AddNotes in this song. They need to be considered as well.
+            var addNotes = AddNotes.Where(e => e < phraseNumber).ToList();
+
+            //Get the beatline note that was most recently passed, or the phrase number rounded down. Whichever is more recent.
+            var lastNote = Math.Max(Math.Floor(phraseNumber), (addNotes.Any() ? addNotes.Max() : -1));
+
+            //Get the nearest note not yet hit.
+            var nextNote = NearestBeatlineNote(idx, phraseNumber);
+            
+            if (nextNote == null)
+            {
+                return 0.0;
+            }
+
+            var gap = nextNote.Position - lastNote;
+
+            // Returns between 0 (at the last note) and 1 (at the next note).
+           return (phraseNumber - lastNote) / gap;
+        }
     }
 }

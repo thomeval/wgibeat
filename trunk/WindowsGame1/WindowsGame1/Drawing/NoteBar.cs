@@ -62,7 +62,8 @@ namespace WGiBeat.Drawing
             Note currentNote = CurrentNote();
             if (currentNote == null)
             {
-                throw new InvalidOperationException("Note bar doesn't have a current note to mark as complete.");
+              //  throw new InvalidOperationException("Note bar doesn't have a current note to mark as complete.");
+                return;
             }
             currentNote.Completed = true;
             XDisplayOffset += NOTE_SIZE;
