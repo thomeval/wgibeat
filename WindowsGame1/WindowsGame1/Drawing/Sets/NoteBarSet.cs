@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.Helpers;
 using WGiBeat.Managers;
@@ -27,8 +26,6 @@ namespace WGiBeat.Drawing.Sets
             _noteBarProgresses = new NoteBarProgress[4];
             InitNoteBars();
         }
-
-
 
         private const int REDNESS_ANIMATION_SPEED = 750;
         private const int FADEOUT_SPEED = 500;
@@ -156,8 +153,9 @@ namespace WGiBeat.Drawing.Sets
               
         }
 
-        public void MaintainCPUArrows(double phraseNumber)
+        public void MaintainCPUArrows(double phraseDecimal)
         {
+            //TODO: Doesn't handle arbitrary notes.
             for (int x = 0; x < 4; x++)
             {
                 if (!Players[x].IsCPUPlayer)
@@ -166,8 +164,7 @@ namespace WGiBeat.Drawing.Sets
                 }
 
                 var nextHit = 1.0 * (_noteBars[x].NumberCompleted() + 1) / (_noteBars[x].Notes.Count() + 1);
-                var phraseDecimal = phraseNumber - Math.Floor(phraseNumber);
-
+               
                 if (phraseDecimal > nextHit)
                 {
                     _noteBars[x].MarkCurrentCompleted();

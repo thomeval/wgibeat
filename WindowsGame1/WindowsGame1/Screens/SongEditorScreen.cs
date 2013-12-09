@@ -963,10 +963,13 @@ namespace WGiBeat.Screens
 
         private void HitBeatline()
         {
-
+            if (_beatlineSet.CalculateHitOffset(0, _phraseNumber) > 750)
+            {
+                return;
+            }
             _debugLastHitOffset = _beatlineSet.CalculateHitOffset(0, _phraseNumber);
             _numHits = Math.Min(_hitOffsets.Length, _numHits+ 1);
-            
+          
             for (int x = _numHits; x > 0; x--)
             {
                 if (x == _hitOffsets.Length)

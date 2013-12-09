@@ -437,16 +437,10 @@ namespace WGiBeat.Screens
                 _playerMenus[number].GetByItemText("Difficulty").AddOption("Insane", 4);
             }
 
-            _playerMenus[number].GetByItemText("Difficulty").RemoveOption("Ruthless");
-            if (Core.Players[number].GetMaxDifficulty() >= 5)
-            {
-                _playerMenus[number].GetByItemText("Difficulty").AddOption("Ruthless", 5);
-            }
-
             _playerMenus[number].GetByItemText("Beatline Speed").SetSelectedByValue(Core.Players[number].PlayerOptions.BeatlineSpeed);
             _playerMenus[number].GetByItemText("Difficulty").SetSelectedByValue((int)Core.Players[number].PlayerOptions.PlayDifficulty);
             _playerMenus[number].GetByItemText("Disable KO").SetSelectedByValue(Core.Players[number].PlayerOptions.DisableKO);
-            
+            _playerMenus[number].GetByItemText("Disable Extra Life").SetSelectedByValue(Core.Players[number].PlayerOptions.DisableExtraLife);
         }
 
         private void SelectMainMenuItem(int number)

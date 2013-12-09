@@ -22,7 +22,7 @@ namespace WGiBeat.Drawing
         public void Draw( GameTime gameTime)
         {
             Move(gameTime);
-            DrawTiled( (float) _offsetX, (float) _offsetY,  (float) (_offsetX + Width), (float) (_offsetY + Height));
+            DrawTiled( (float) _offsetX, (float) _offsetY,  (float) (Width), (float) (Height));
         }
 
 

@@ -162,8 +162,8 @@ namespace WGiBeat.Drawing
             }
         }
 
-        private readonly string[] _encryptedChars = {"space", "oemperiod", "oemcomma", "oemsemicolon","oemquotes", "oemopenbrackets", "oemclosebrackets", "oemminus", "oemplus","oemquestion", "oemblackslash", "oemtilde", "oembackslash", "oempipe"};
-        private readonly char[] _decryptedChars = { ' ', '.', ',', ';', '\'', '[',']', '-', '=','/', '\'','`', '\\','\\' };
+        private readonly string[] _encryptedChars = {"space", "oemperiod", "oemcomma", "oemsemicolon","oemquotes", "oemopenbrackets", "oemclosebrackets", "oemminus", "oemplus","oemquestion", "oemblackslash", "oemtilde", "oembackslash", "oempipe","decimal"};
+        private readonly char[] _decryptedChars = { ' ', '.', ',', ';', '\'', '[',']', '-', '=','/', '\'','`', '\\','|','.' };
         private string ResolveSpecialKey(string temp)
         {
             if ((temp[0] == 'd') && (Char.IsDigit(temp[1])))

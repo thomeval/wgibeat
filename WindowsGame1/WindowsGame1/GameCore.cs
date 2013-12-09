@@ -204,8 +204,8 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             GraphicsManager.PreferredBackBufferWidth = Convert.ToInt32(resolution[0]);
             GraphicsManager.PreferredBackBufferHeight = Convert.ToInt32(resolution[1]);
             //TODO: remove when stable
-            GraphicsManager.PreferredBackBufferHeight = 720;
-            GraphicsManager.PreferredBackBufferWidth = 1280;
+            GraphicsManager.PreferredBackBufferHeight = 600;
+            GraphicsManager.PreferredBackBufferWidth = 800;
 
 
             //Sprite.Device = this.GraphicsDevice;
@@ -364,7 +364,13 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
                         _activeScreen.PerformAction(KeyMappings.GetAction(key));
 
                     _activeScreen.PerformKey(key);
+
+                    if (key == Keys.Enter && (currentState.IsKeyDown(Keys.LeftAlt) || currentState.IsKeyDown(Keys.RightAlt)))
+                    {
+                        ToggleFullScreen();
+                    }
                 }
+                
             }
 
             foreach (var key in _lastKeystate.GetPressedKeys())
@@ -376,6 +382,15 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             }
             _lastKeystate = currentState;
         }
+
+        private void ToggleFullScreen()
+        {
+            GraphicsManager.IsFullScreen = ! GraphicsManager.IsFullScreen;
+            GraphicsManager.ApplyChanges();
+            GraphicsDevice.VertexDeclaration = new VertexDeclaration(GraphicsDevice, VertexPositionColorTexture.VertexElements);
+            Settings["FullScreen"] = GraphicsManager.IsFullScreen;
+        }
+
         #endregion
 
 

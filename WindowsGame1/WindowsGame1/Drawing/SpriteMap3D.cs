@@ -93,12 +93,12 @@ namespace WGiBeat.Drawing
 
             public void Draw(int cellnumber, float x, float y)
             {
-                Draw(cellnumber, Texture.Width / Columns, Texture.Height / Rows, x, y);
+                Draw(cellnumber, 1.0f * Texture.Width / Columns, 1.0f * Texture.Height / Rows, x, y);
             }
 
             public void Draw(int cellnumber, Vector2 position)
             {
-                Draw(cellnumber, Texture.Width / Columns, Texture.Height / Rows, position);
+                Draw(cellnumber, 1.0f * Texture.Width / Columns, 1.0f * Texture.Height / Rows, position);
             }
 
             public void Draw(int cellnumber, Vector2 size, Vector2 position)

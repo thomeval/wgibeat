@@ -97,8 +97,8 @@ namespace WGiBeat.Drawing
             _baseSprite.Position = this.Position;
             _baseSprite.Height = this.Height;
             _baseSprite.Width = this.Width;
-            _gradePosition.X = this.X + this.Width - 74;
-            _gradePosition.Y = this.Y + this.Height - 26;
+            _gradePosition.X = this.X + this.Width - 80;
+            _gradePosition.Y = this.Y + this.Height - 29;
             _difficultyPosition.X = this.X + 40;
             _difficultyPosition.Y = this.Y + this.Height - 28;
             _scorePosition.X = this.X + (this.Width/2);
