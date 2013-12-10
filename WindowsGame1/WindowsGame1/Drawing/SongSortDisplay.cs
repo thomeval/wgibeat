@@ -129,8 +129,7 @@ namespace WGiBeat.Drawing
 
         public SongSortDisplay()
         {
-            this.Width = 300;
-            this.Height = 50;
+
         }
         public void InitSprites()
         {
@@ -177,6 +176,7 @@ namespace WGiBeat.Drawing
         private void SetSpritePositions()
         {
             _backgroundSprite.Position = this.Position;
+            _backgroundSprite.Size = this.Size;
         }
 
         private void DrawList()

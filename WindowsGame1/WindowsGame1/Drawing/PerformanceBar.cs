@@ -119,11 +119,11 @@ namespace WGiBeat.Drawing
                 _partsSpriteMap.ColorShading.A = (byte) (_barOpacity * Opacity / 255);
                 for (int y = 0; y < (int) BeatlineNoteJudgement.COUNT; y++)
                 {
-                    var width = (int) Math.Ceiling((double) (barWidth)*Players[player].Judgements[y]/totalBeatlines);
+                    var width = (float) Math.Ceiling((barWidth)*Players[player].Judgements[y]/totalBeatlines);
                     width = Math.Min(width, maxWidth);
-                    maxWidth -= width;
+                    maxWidth -=  width;
                     _partsSpriteMap.Draw( y, width, this.Height, position);
-                    position.X += width;
+                    position.X +=  width;
                 }
                 _barOpacity = Math.Min(255, _barOpacity + (TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds * BAR_SHOW_SPEED));
                 percentageText = String.Format("{0:F1}%", Players[player].CalculatePercentage());

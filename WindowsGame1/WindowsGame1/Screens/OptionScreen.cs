@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.AudioSystem;
@@ -21,14 +20,14 @@ namespace WGiBeat.Screens
         public OptionScreen(GameCore core)
             : base(core)
         {
-            _optionsMenu = new Menu { Width = 700, MaxVisibleItems = 12 };
+            _optionsMenu = new Menu { Width = (int) Core.Metrics["OptionsMenuStart.Size", 0].X, MaxVisibleItems = 12 };
             BuildMenu();
             _optionsMenu.Position = (Core.Metrics["OptionsMenuStart", 0]);
         }
 
         private void BuildMenu()
         {
-            var item = new MenuItem { ItemText = "Song Volume" };
+            var item = new MenuItem { ItemText = "Song Volume", IsSelectable = false};
             item.AddOption("0%", "" + 0.0001);
 
             for (int x = 1; x < 11; x++)
@@ -37,13 +36,13 @@ namespace WGiBeat.Screens
             }
             _optionsMenu.AddItem(item);
 
-            item = new MenuItem { ItemText = "Song Debugging" };
+            item = new MenuItem { ItemText = "Song Debugging", IsSelectable = false };
             item.AddOption("Off", false);
             item.AddOption("On", true);
             _optionsMenu.AddItem(item);
 
 
-            item = new MenuItem { ItemText = "Song Audio Validation" };
+            item = new MenuItem { ItemText = "Song Audio Validation", IsSelectable = false };
             item.AddOption("Ignore", 0);
             item.AddOption("Warn only", 1);
             item.AddOption("Warn and exclude", 2);
@@ -51,12 +50,12 @@ namespace WGiBeat.Screens
 
             _optionsMenu.AddItem(item);
 
-            item = new MenuItem { ItemText = "Save Game Log" };
+            item = new MenuItem { ItemText = "Save Game Log", IsSelectable = false };
             item.AddOption("Off", false);
             item.AddOption("On", true);
             _optionsMenu.AddItem(item);
 
-            item = new MenuItem { ItemText = "Logging Level" };
+            item = new MenuItem { ItemText = "Logging Level", IsSelectable = false };
             item.AddOption("Errors only", LogLevel.ERROR);
             item.AddOption("Warnings and errors", LogLevel.WARN);
             item.AddOption("Notes or above", LogLevel.NOTE);
@@ -64,7 +63,7 @@ namespace WGiBeat.Screens
             item.AddOption("Debug or above", LogLevel.DEBUG);
             _optionsMenu.AddItem(item);
 
-            item = new MenuItem { ItemText = "Theme" };
+            item = new MenuItem { ItemText = "Theme", IsSelectable = false };
             foreach (string dir in System.IO.Directory.GetDirectories(Core.WgibeatRootFolder + "\\Content\\Textures"))
             {
                 var dirname = dir.Substring(dir.LastIndexOf("\\") + 1);
@@ -72,47 +71,50 @@ namespace WGiBeat.Screens
             }
             _optionsMenu.AddItem(item);
 
-            item = new MenuItem {ItemText = "Allow Problematic Songs"};
+            item = new MenuItem { ItemText = "Allow Problematic Songs", IsSelectable = false };
             item.AddOption("Off", false);
             item.AddOption("On", true);
             _optionsMenu.AddItem(item);
 
-            item = new MenuItem {ItemText = "Convert Files to .sng"};
+            item = new MenuItem { ItemText = "Convert Files to .sng", IsSelectable = false };
             item.AddOption("Off", false);
             item.AddOption("On", true);
             _optionsMenu.AddItem(item);
 
-            //TODO: enable again when stable
-            item = new MenuItem {ItemText = "Screen Resolution",Enabled=false};
-            item.AddOption("800x600", "800x600");
-            item.AddOption("1024x768", "1024x768");
-            item.AddOption("1200x900","1200x900");
-            item.AddOption("1280x1024", "1280x1024");
+            item = new MenuItem { ItemText = "Screen Resolution", IsSelectable = false };
+            item.AddOption("640x480 (4:3)", "640x480");
+            item.AddOption("800x600 (4:3)", "800x600");
+            item.AddOption("1024x768 (4:3)", "1024x768");
+            item.AddOption("1280x1024 (4:3)", "1280x1024");
+
+            item.AddOption("1280x720 (16:9)", "1280x720");
+            item.AddOption("1600x900 (16:9)", "1600x900");
+            item.AddOption("1920x1080 (16:9)", "1920x1080");
             _optionsMenu.AddItem(item);
 
-            item = new MenuItem { ItemText = "Full screen" };
+            item = new MenuItem { ItemText = "Full screen", IsSelectable = false };
             item.AddOption("Off", false);
             item.AddOption("On", true);
             _optionsMenu.AddItem(item);
 
-            item = new MenuItem { ItemText = "V-Sync" };
+            item = new MenuItem { ItemText = "V-Sync", IsSelectable = false };
             item.AddOption("Off", false);
             item.AddOption("On", true);
             _optionsMenu.AddItem(item);
 
-            item = new MenuItem {ItemText = "Check For Updates"};
+            item = new MenuItem { ItemText = "Check For Updates", IsSelectable = false };
             item.AddOption("Off", false);
             item.AddOption("On", true);
             _optionsMenu.AddItem(item);
 
-            item = new MenuItem { ItemText = "Background Animation" };
+            item = new MenuItem { ItemText = "Background Animation", IsSelectable = false };
             item.AddOption("Off", 0);
             item.AddOption("Normal", 128);
             item.AddOption("ARGH! MY EYES!", 255);
 
             _optionsMenu.AddItem(item);
 
-            item = new MenuItem { ItemText = "Blazing Bass Boost" };
+            item = new MenuItem { ItemText = "Blazing Bass Boost", IsSelectable = false };
             item.AddOption("Off", 1);
             item.AddOption("Light", 1.25);
             item.AddOption("Mild", 1.5);
@@ -121,7 +123,7 @@ namespace WGiBeat.Screens
 
             item = new MenuItem { ItemText = "Save" };
             _optionsMenu.AddItem(item);
-            item = new MenuItem { ItemText = "Cancel" };
+            item = new MenuItem { ItemText = "Cancel", IsCancel = true };
             _optionsMenu.AddItem(item);
         }
 
@@ -136,8 +138,8 @@ namespace WGiBeat.Screens
         {
             _background = new Sprite3D
             {
-                Height = 600,
-                Width = 800,
+                Size = Core.Metrics["ScreenBackground.Size", 0],
+                Position = Core.Metrics["ScreenBackground", 0],
                 Texture = TextureManager.Textures("AllBackground"),
             };
             _header = new Sprite3D
@@ -149,7 +151,8 @@ namespace WGiBeat.Screens
             _optionBaseSprite = new Sprite3D
                                     {
                                         Texture = TextureManager.Textures("OptionDescriptionBase"),
-                                        Position = Core.Metrics["OptionsDescriptionBase",0]
+                                        Position = Core.Metrics["OptionsDescriptionBase",0],
+                                        Size = Core.Metrics["OptionsDescriptionBase.Size",0]
                                     };
         }
 
@@ -180,20 +183,10 @@ namespace WGiBeat.Screens
             switch (inputAction.Action)
             {
                 case "LEFT":
-                    _optionsMenu.DecrementOption();
-                    RaiseSoundTriggered(SoundEvent.MENU_OPTION_SELECT_LEFT);
-                    break;
                 case "RIGHT":
-                    _optionsMenu.IncrementOption();
-                    RaiseSoundTriggered(SoundEvent.MENU_OPTION_SELECT_RIGHT);
-                    break;
                 case "UP":
-                    _optionsMenu.DecrementSelected();
-                    RaiseSoundTriggered(SoundEvent.MENU_SELECT_UP);
-                    break;
                 case "DOWN":
-                    _optionsMenu.IncrementSelected();
-                    RaiseSoundTriggered(SoundEvent.MENU_SELECT_DOWN);
+                    _optionsMenu.HandleAction(inputAction);
                     break;
                 case "BACK":
                     Core.ScreenTransition("MainMenu");
@@ -202,23 +195,23 @@ namespace WGiBeat.Screens
 
                 case "START":
                 case "BEATLINE":
-                    DoAction();
+                    DoAction(inputAction);
                     break;
             }
         }
 
-        private void DoAction()
+        private void DoAction(InputAction action)
         {
+            _optionsMenu.HandleAction(action);
             switch (_optionsMenu.SelectedItem().ItemText)
             {
                 case "Save":
                     SaveOptions();
                     Core.ScreenTransition("MainMenu");
-                    RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     break;
                 case "Cancel":
                     Core.ScreenTransition("MainMenu");
-                    RaiseSoundTriggered(SoundEvent.MENU_BACK);
+
                     break;
             }
         }

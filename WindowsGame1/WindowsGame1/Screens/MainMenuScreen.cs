@@ -36,6 +36,7 @@ namespace WGiBeat.Screens
             _updaterFrame = new UpdaterFrame
             {
                 Position = Core.Metrics["UpdaterFrame", 0],
+                Size = Core.Metrics["UpdaterFrame.Size",0],
                 Status = UpdaterStatus.DISABLED
             };
 
@@ -85,17 +86,16 @@ namespace WGiBeat.Screens
         {
             _background = new Sprite3D
                               {
-                                  Height = 600,
-                                  Width = 800,
+                                  Size = Core.Metrics["ScreenBackground.Size",0],
                                   Texture = TextureManager.Textures("MainMenuBackground"),
                               };
-            _foreground = new Sprite3D
-                              {
-                                  Texture = TextureManager.Textures("MainMenuForeground"),
-                                  Height = 600,
-                                  Width = 800,
-                              };
-            _header = Core.Metrics.SetupFromMetrics("MainMenuHeader",0);
+            _foreground = Core.Metrics.SetupFromMetrics("MainMenuForeground", 0);
+            _header = new Sprite3D
+                          {
+                              Position = Core.Metrics["MainMenuHeader", 0],
+                              Size = Core.Metrics["MainMenuHeader.Size", 0],
+                              Texture = TextureManager.Textures("MainMenuHeader")
+                          };
             _menuOptionSprite = new SpriteMap3D
                                     {
                                         Texture = TextureManager.Textures("MainMenuOption"),

@@ -81,7 +81,7 @@ namespace WGiBeat.Drawing
             var texHeight = (int) (_frontSprite.Texture.Height*_displayedValue/Maximum);
             _frontSprite.Height = (int) drawHeight;
             _frontSprite.Y = this.Y + this.Height - (int) drawHeight;
-            _frontSprite.DrawTiled(0, _frontSprite.Texture.Height  -  texHeight, _frontSprite.Width, texHeight);
+            _frontSprite.DrawTiled(0, _frontSprite.Texture.Height  -  texHeight, _frontSprite.Texture.Width, texHeight);
             DrawReadyIndicator();
 
 

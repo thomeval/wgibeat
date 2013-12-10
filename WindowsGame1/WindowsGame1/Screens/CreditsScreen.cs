@@ -27,16 +27,26 @@ namespace WGiBeat.Screens
 
         private void InitSprites()
         {
-            _background = new Sprite3D { Texture = TextureManager.Textures("AllBackground") };
-            _header = new Sprite3D {Texture = TextureManager.Textures("CreditsHeader"), Position  = Core.Metrics["ScreenHeader",0], Size = Core.Metrics["ScreenHeader.Size",0]};
+            _background = new Sprite3D
+            {
+                Texture = TextureManager.Textures("AllBackground"),
+                Size = Core.Metrics["ScreenBackground.Size", 0],
+                Position = Core.Metrics["ScreenBackground", 0],
+            };
+            _header = new Sprite3D { Texture = TextureManager.Textures("CreditsHeader"), Position = Core.Metrics["ScreenHeader", 0], Size = Core.Metrics["ScreenHeader.Size", 0] };
             for (int x = 0; x < TOTAL_PAGES; x++)
             {
-                _creditsPages[x] = new Sprite3D { Texture = TextureManager.Textures("CreditsPage" + (x + 1)), Size= new Vector2(800,600) };
+                _creditsPages[x] = new Sprite3D
+                {
+                    Texture = TextureManager.Textures("CreditsPage" + (x + 1)),
+                    Size = new Vector2(GameCore.INTERNAL_WIDTH, GameCore.INTERNAL_HEIGHT)
+                };
             }
             _baseSprite = new Sprite3D
                               {
                                   Texture = TextureManager.Textures("LoadingMessageBase"),
-                                  Position = (Core.Metrics["LoadMessageBase", 0])
+                                  Position = (Core.Metrics["LoadMessageBase", 0]),
+                                  Size = (Core.Metrics["LoadMessageBase.Size", 0])
                               };
             _field = new SineSwayParticleField();
         }

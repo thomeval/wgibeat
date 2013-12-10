@@ -62,6 +62,7 @@ namespace WGiBeat.Drawing
             message = ScrollText(message);
             
             _updaterFrame.Position = this.Position;
+            _updaterFrame.Size = this.Size;
             _updaterFrame.Draw();
             _textPosition.X = this.X + (int) XOffset + 20;
             _textPosition.Y = this.Y + 25;

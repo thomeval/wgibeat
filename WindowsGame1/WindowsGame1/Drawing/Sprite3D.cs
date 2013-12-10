@@ -18,8 +18,10 @@ namespace WGiBeat.Drawing
         private static BasicEffect _effect;
         public static bool EffectInit;
         private VertexPositionColorTexture[] _vertices;
+        
         private static Matrix _viewMatrix;
         private static Matrix _projectionMatrix;
+       
         private bool _dimensionsSet;
 
         private static VertexDeclaration _vertexDeclaration;
@@ -155,10 +157,6 @@ namespace WGiBeat.Drawing
             }
             var result = new BasicEffect(Device, null);
 
-
-            _viewMatrix = Matrix.CreateLookAt(new Vector3(400, 300, 0), new Vector3(400, 300, 1), new Vector3(0, -1, 0));
-            _projectionMatrix = Matrix.CreateOrthographic(800, 600, -10, 10);
-
             result.View = _viewMatrix;
             result.Projection = _projectionMatrix;
 
@@ -221,12 +219,12 @@ namespace WGiBeat.Drawing
             _dimensionsSet = true;
         }
 
-        public static Matrix GetViewProjMatrix()
+        public static Matrix GetViewProjMatrix(int width, int height)
         {
             if (!EffectInit)
             {
-                _viewMatrix = Matrix.CreateLookAt(new Vector3(400, 300, 0), new Vector3(400, 300, 1), new Vector3(0, -1, 0));
-                _projectionMatrix = Matrix.CreateOrthographic(800, 600, -10, 10);
+                _viewMatrix = Matrix.CreateLookAt(new Vector3(width /2, height / 2, 0), new Vector3(width / 2, height / 2, 1), new Vector3(0, -1, 0));
+                _projectionMatrix = Matrix.CreateOrthographic(width, height, -10, 10);
             }
             return _viewMatrix*_projectionMatrix;
         }

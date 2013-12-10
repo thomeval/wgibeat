@@ -57,7 +57,7 @@ namespace WGiBeat.Screens
 
         public override void Initialize()
         {
-            _songSortDisplay = new SongSortDisplay { Position = (Core.Metrics["SongSortDisplay", 0]) };
+            _songSortDisplay = new SongSortDisplay { Position = Core.Metrics["SongSortDisplay", 0], Size = Core.Metrics["SongSortDisplay.Size",0] };
             _songSortDisplay.InitSprites();
             _songListDrawOpacity = 255;
             Crossfader = Core.Crossfader;
@@ -89,16 +89,16 @@ namespace WGiBeat.Screens
             }
 
 
-            _songTypeDisplay = new SongTypeDisplay { Position = Core.Metrics["SongTypeDisplay", 0], Width = 112, Height = 42 };
+            _songTypeDisplay = new SongTypeDisplay { Position = Core.Metrics["SongTypeDisplay", 0], Size = Core.Metrics["SongTypeDisplay.Size",0] };
             InitSprites();
             _spectrumDrawer = new SpectrumDrawer
                                   {
-                                      LevelsCount = SPECTRUM_POINTS/SPECTRUM_CLUSTER_SIZE,
+                                      LevelsCount = SPECTRUM_POINTS / SPECTRUM_CLUSTER_SIZE,
                                       Size = Core.Metrics["SelectedSongSpectrum.Size", 0],
                                       Position = Core.Metrics["SelectedSongSpectrum", 0],
                                       ColorShading = Color.White
                                   };
-            _songLockedSprite = new Sprite3D {Position = Core.Metrics["BPMMeter", 0], Texture= TextureManager.Textures("SongLocked")};
+            _songLockedSprite = new Sprite3D { Position = Core.Metrics["BPMMeter", 0], Texture = TextureManager.Textures("SongLocked") };
             base.Initialize();
         }
 
@@ -106,16 +106,16 @@ namespace WGiBeat.Screens
         {
             _background = new Sprite3D
             {
-                Height = 600,
-                Width = 800,
+                Size = Core.Metrics["ScreenBackground.Size", 0],
+                Position = Core.Metrics["ScreenBackground", 0],
                 Texture = TextureManager.Textures("AllBackground"),
             };
 
             _headerSprite = new Sprite3D
                                 {
                                     Texture = TextureManager.Textures("SongSelectHeader"),
-                                    Position = Core.Metrics["ScreenHeader",0],
-                                    Size = Core.Metrics["ScreenHeader.Size",0]
+                                    Position = Core.Metrics["ScreenHeader", 0],
+                                    Size = Core.Metrics["ScreenHeader.Size", 0]
                                 };
 
             _spectrumBackground = new Sprite3D
@@ -131,20 +131,30 @@ namespace WGiBeat.Screens
                                    Width = 50,
                                    Position = (Core.Metrics["SongListBackend", 0])
                                };
-            _songCountBase = new Sprite3D { Texture = TextureManager.Textures("SongCountBase"), Position = Core.Metrics["SongCountDisplay", 0] };
+            _songCountBase = new Sprite3D
+            {
+                Texture = TextureManager.Textures("SongCountBase"),
+                Position = Core.Metrics["SongCountDisplay", 0],
+                Size = Core.Metrics["SongCountDisplay.Size", 0]
+            };
         }
 
         private const int FAIL_GRADE = 18;
         private void CreateSongList()
         {
             _songList.Clear();
-            SongListItem.ClearIndicatorSize = Core.Metrics["SongListItem.ClearIndicatorSize",0];
+            SongListItem.ClearIndicatorSize = Core.Metrics["SongListItem.ClearIndicatorSize", 0];
             foreach (var song in Core.Songs.Songs)
             {
-                var hse = Core.HighScores.GetHighScoreEntry(song.GetHashCode(), HighScoreManager.TranslateGameType((GameType) Core.Cookies["CurrentGameType"]));
-                var clearColour = (hse == null) || (hse.Grade == FAIL_GRADE) ? -1 : (int) hse.Difficulty;
-                _songList.Add(new SongListItem { Size = Core.Metrics["SongListItem.Size",0], Song = song, TextMaxWidth = 325, 
-                    ClearColour= clearColour });
+                var hse = Core.HighScores.GetHighScoreEntry(song.GetHashCode(), HighScoreManager.TranslateGameType((GameType)Core.Cookies["CurrentGameType"]));
+                var clearColour = (hse == null) || (hse.Grade == FAIL_GRADE) ? -1 : (int)hse.Difficulty;
+                _songList.Add(new SongListItem
+                {
+                    Size = Core.Metrics["SongListItem.Size", 0],
+                    Song = song,
+                    TextMaxWidth = (int)Core.Metrics["SongListItem.MaxTextWidth", 0].X,
+                    ClearColour = clearColour
+                });
             }
 
             _songSortDisplay.SongList = _songList;
@@ -153,7 +163,7 @@ namespace WGiBeat.Screens
 
         private void SetCurrentLevelInSongList()
         {
-            SongListItem.PlayerLevel = GetPlayerLevel();      
+            SongListItem.PlayerLevel = GetPlayerLevel();
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
@@ -201,15 +211,15 @@ namespace WGiBeat.Screens
         {
             _spectrumBackground.Draw();
 
-            if (Crossfader.ChannelIndexCurrent == -1) 
+            if (Crossfader.ChannelIndexCurrent == -1)
                 return;
             float[] levels = Core.Audio.GetChannelSpectrum(Crossfader.ChannelIndexCurrent, SPECTRUM_POINTS);
-            var averageLevels = new float[SPECTRUM_POINTS/SPECTRUM_CLUSTER_SIZE];
-            for (int x = 0; x < levels.Length; x+= SPECTRUM_CLUSTER_SIZE )
+            var averageLevels = new float[SPECTRUM_POINTS / SPECTRUM_CLUSTER_SIZE];
+            for (int x = 0; x < levels.Length; x += SPECTRUM_CLUSTER_SIZE)
             {
-                averageLevels[x/SPECTRUM_CLUSTER_SIZE] = levels.Skip(x).Take(SPECTRUM_CLUSTER_SIZE).Average();
+                averageLevels[x / SPECTRUM_CLUSTER_SIZE] = levels.Skip(x).Take(SPECTRUM_CLUSTER_SIZE).Average();
             }
-                _spectrumDrawer.Draw( averageLevels);
+            _spectrumDrawer.Draw(averageLevels);
         }
         private void DrawBpmMeter()
         {
@@ -232,7 +242,7 @@ namespace WGiBeat.Screens
                 return;
             }
             _songLockedSprite.Draw();
-            FontManager.DrawString("Unlocked at profile level: " + CurrentSong.RequiredLevel,"LargeFont",Core.Metrics["SongLockedRequirements",0],Color.Black,FontAlign.Center);
+            FontManager.DrawString("Unlocked at profile level: " + CurrentSong.RequiredLevel, "LargeFont", Core.Metrics["SongLockedRequirements", 0], Color.Black, FontAlign.Center);
         }
 
         private void DrawHighScoreFrame()
@@ -261,7 +271,7 @@ namespace WGiBeat.Screens
             double phrase = 0.0;
             if (Crossfader.ChannelIndexCurrent > -1)
             {
-                phrase = CurrentSong.ConvertMSToPhrase(Core.Audio.GetChannelPosition(Crossfader.ChannelIndexCurrent));    
+                phrase = CurrentSong.ConvertMSToPhrase(Core.Audio.GetChannelPosition(Crossfader.ChannelIndexCurrent));
             }
             _field.Draw(gameTime, phrase);
         }
@@ -276,14 +286,14 @@ namespace WGiBeat.Screens
             _listBackend.Draw();
 
             var midpoint = Core.Metrics["SongListMidpoint", 0];
-            midpoint.Y += (int) _songListDrawOffset;    
-            
-            SetCurrentLevelInSongList();          
- 
+            midpoint.Y += (int)_songListDrawOffset;
+
+            SetCurrentLevelInSongList();
+
             _songList[_selectedIndex].Position = (midpoint);
             _songList[_selectedIndex].IsSelected = true;
             _songList[_selectedIndex].Opacity = 255;
-            
+
             _songList[_selectedIndex].Draw();
 
             foreach (SongListItem sli in _songList)
@@ -293,13 +303,13 @@ namespace WGiBeat.Screens
             //Draw SongListItems below (after) the selected one.
             for (int x = 1; x <= LISTITEMS_DRAWN; x++)
             {
-                midpoint.Y += 50;
+                midpoint.Y += Core.Metrics["SongListItem.Size", 0].Y;
                 _songList[(_selectedIndex + x) % _songList.Count].IsSelected = false;
                 _songList[(_selectedIndex + x) % _songList.Count].Position = (midpoint);
                 _songList[(_selectedIndex + x) % _songList.Count].Draw();
             }
 
-            midpoint.Y -= 50 * LISTITEMS_DRAWN;
+            midpoint.Y -= Core.Metrics["SongListItem.Size", 0].Y * LISTITEMS_DRAWN;
             int index = _selectedIndex;
 
             //Draw SongListItems above (before) the selected one.
@@ -310,15 +320,15 @@ namespace WGiBeat.Screens
                 {
                     index = _songList.Count - 1;
                 }
-                midpoint.Y -= 50;
+                midpoint.Y -= Core.Metrics["SongListItem.Size", 0].Y;
                 _songList[index].IsSelected = false;
                 _songList[index].Position = (midpoint);
                 _songList[index].Draw();
             }
 
-            midpoint.Y -= (int) _songListDrawOffset;
-            var changeMx = Math.Min(0.5, SONG_CHANGE_SPEED*TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds);
-            _songListDrawOffset -= (_songListDrawOffset*(changeMx));
+            midpoint.Y -= (int)_songListDrawOffset;
+            var changeMx = Math.Min(0.5, SONG_CHANGE_SPEED * TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds);
+            _songListDrawOffset -= (_songListDrawOffset * (changeMx));
 
         }
 
@@ -339,9 +349,9 @@ namespace WGiBeat.Screens
                 _bpmMeter.DisplayedSong = CurrentSong;
                 _songTypeDisplay.Song = CurrentSong;
                 Crossfader.PreviewDuration = 10;
-              
-                    _spectrumDrawer.ResetMaxLevels();
-                    Crossfader.SetPreviewedSong(CurrentSong, true, GetPlayerLevel() < CurrentSong.RequiredLevel);
+
+                _spectrumDrawer.ResetMaxLevels();
+                Crossfader.SetPreviewedSong(CurrentSong, true, GetPlayerLevel() < CurrentSong.RequiredLevel);
             }
 
             if (_preloadState == PreloadState.LOADING_FINISHED)
@@ -457,27 +467,27 @@ namespace WGiBeat.Screens
                 return;
             }
             Core.Cookies["CurrentSong"] = CurrentSong;
-            var gameType = (GameType) Core.Cookies["CurrentGameType"];
+            var gameType = (GameType)Core.Cookies["CurrentGameType"];
             if (gameType == GameType.SYNC_PRO || gameType == GameType.SYNC_PLUS)
             {
                 _playerOptionsSet.CheckSyncDifficulty();
             }
 
 
-                _songLoadingThread = new Thread(StartSongLoading) { Name = "Song Loading Thread" };
-                _songLoadingThread.Start();
+            _songLoadingThread = new Thread(StartSongLoading) { Name = "Song Loading Thread" };
+            _songLoadingThread.Start();
 
-                RaiseSoundTriggered(SoundEvent.SONG_DECIDE);
-                Core.Settings.Set("LastSongPlayed", CurrentSong.GetHashCode());
-                Core.Settings.Set("LastSortMode", (int)_songSortDisplay.SongSortMode);
-                Core.Settings.SaveToFile("settings.txt");
+            RaiseSoundTriggered(SoundEvent.SONG_DECIDE);
+            Core.Settings.Set("LastSongPlayed", CurrentSong.GetHashCode());
+            Core.Settings.Set("LastSortMode", (int)_songSortDisplay.SongSortMode);
+            Core.Settings.SaveToFile("settings.txt");
         }
 
         private Thread _songLoadingThread;
         private void StartSongLoading(object state)
         {
             _preloadState = PreloadState.LOADING_STARTED;
-            Core.Log.AddMessage("Song preload started...",LogLevel.DEBUG);
+            Core.Log.AddMessage("Song preload started...", LogLevel.DEBUG);
             Core.Cookies["GameSongChannel"] = Core.Songs.PreloadSong(CurrentSong);
             SetPanicState();
             Core.Log.AddMessage("Song preload done.", LogLevel.DEBUG);

@@ -65,7 +65,7 @@ namespace WGiBeat.Screens
                 {
                     _profileMenus[x].AddItem(new MenuItem { ItemText = profile.Name, ItemValue = profile });
                 }
-                _profileMenus[x].AddItem(new MenuItem { ItemText = "Main Menu", ItemValue = null });
+                _profileMenus[x].AddItem(new MenuItem { ItemText = "Main Menu", ItemValue = null, IsCancel = true});
             }
             _levelDisplay = new ProfileLevelDisplay{Width = 365};
         }
@@ -75,8 +75,8 @@ namespace WGiBeat.Screens
             _backgroundSprite = new Sprite3D
                                     {
                                         Texture = TextureManager.Textures("StatsBackground"),
-                                        Height = 600,
-                                        Width = 800,
+                                        Size = Core.Metrics["ScreenBackground.Size", 0],
+                                        Position = Core.Metrics["ScreenBackground", 0]
                                     };
             _headerSprite = new Sprite3D
                                 {
@@ -88,7 +88,8 @@ namespace WGiBeat.Screens
             _instructionBaseSprite = new Sprite3D
             {
                 Texture = TextureManager.Textures("StatsInstructionBase"),
-                Position = Core.Metrics["StatsInstructionBase", 0]
+                Position = Core.Metrics["StatsInstructionBase", 0],
+                Size = Core.Metrics["StatsInstructionBase.Size", 0]
             };
 
         }
@@ -115,8 +116,8 @@ namespace WGiBeat.Screens
 
         private void DrawBorder()
         {
-          
-            var lineSegment = new RoundLine(400,0,400,600);
+
+            var lineSegment = new RoundLine(GameCore.INTERNAL_WIDTH / 2, 0, GameCore.INTERNAL_WIDTH / 2, GameCore.INTERNAL_HEIGHT);
             RoundLineManager.Instance.Draw(lineSegment,1,Color.Black,0,null);
         }
 
@@ -150,7 +151,7 @@ namespace WGiBeat.Screens
             var tempPlayer = new Player { Profile = profile };
 
             Vector2[] positions = { Core.Metrics["StatsColumns", (3 * side)].Clone(), Core.Metrics["StatsColumns", (3 * side) + 1].Clone(), Core.Metrics["StatsColumns", (3 * side) + 2].Clone() };
-            FontManager.DrawString(profile.Name, "TwoTech36", positions[0],FontManager.ScaleTextToFit(profile.Name,"TwoTech36",280,80), Color.Black, FontAlign.Left);
+            FontManager.DrawString(profile.Name, "TwoTech36", positions[0],FontManager.ScaleTextToFit(profile.Name,"TwoTech36",280,80),Color.Black,FontAlign.Left );
             positions[0].Y += 28;
             positions[1].Y += 28;
 
@@ -164,26 +165,26 @@ namespace WGiBeat.Screens
                           FontAlign.Left);
             positions[0].Y += 35;
             positions[1].Y += 35;
-            FontManager.DrawString("Total play time:", "LargeFont", positions[0], Color.Black, FontAlign.Left);
+            FontManager.DrawString("Total play time:", "LargeFont", positions[0]  );
             var playTime = new TimeSpan(0, 0, 0, 0, (int)profile.TotalPlayTime);
 
-            FontManager.DrawString(String.Format("{0:F0}:{1:00}:{2:00} ", playTime.TotalHours, playTime.Minutes, playTime.Seconds), "LargeFont", positions[1], Color.Black, FontAlign.Left);
+            FontManager.DrawString(String.Format("{0:F0}:{1:00}:{2:00} ", playTime.TotalHours, playTime.Minutes, playTime.Seconds), "LargeFont", positions[1]  );
 
             positions[0].Y += 25;
             positions[1].Y += 25;
 
-            FontManager.DrawString("Songs cleared:", "LargeFont", positions[0], Color.Black, FontAlign.Left);
-            FontManager.DrawString("" + profile.SongsCleared, "LargeFont", positions[1], Color.Black, FontAlign.Left);
+            FontManager.DrawString("Songs cleared:", "LargeFont", positions[0]  );
+            FontManager.DrawString("" + profile.SongsCleared, "LargeFont", positions[1]  );
             positions[0].Y += 25;
             positions[1].Y += 25;
-            FontManager.DrawString("Songs failed:", "LargeFont", positions[0], Color.Black, FontAlign.Left);
-            FontManager.DrawString("" + profile.SongsFailed, "LargeFont", positions[1], Color.Black, FontAlign.Left);
+            FontManager.DrawString("Songs failed:", "LargeFont", positions[0]  );
+            FontManager.DrawString("" + profile.SongsFailed, "LargeFont", positions[1]  );
 
             positions[0].Y += 50;
             positions[1].Y += 50;
             var totalBeatlines = profile.JudgementCounts.Sum() - profile.JudgementCounts[(int)BeatlineNoteJudgement.COUNT];
-            FontManager.DrawString("Total beatlines:", "LargeFont", positions[0], Color.Black, FontAlign.Left);
-            FontManager.DrawString("" + totalBeatlines, "LargeFont", positions[1], Color.Black, FontAlign.Left);
+            FontManager.DrawString("Total beatlines:", "LargeFont", positions[0]  );
+            FontManager.DrawString("" + totalBeatlines, "LargeFont", positions[1]  );
             positions[0].Y += 25;
             for (int x = 0; x < (int)BeatlineNoteJudgement.COUNT; x++)
             {
@@ -191,11 +192,11 @@ namespace WGiBeat.Screens
                 positions[1].Y = positions[0].Y;
                 positions[2].Y = positions[0].Y;
                 FontManager.DrawString(((BeatlineNoteJudgement)x).ToString(), "DefaultFont",
-                                          positions[0], Color.Black, FontAlign.Left);
+                                          positions[0]  );
                 FontManager.DrawString(profile.JudgementCounts[x] + "", "DefaultFont",
-                                          positions[1], Color.Black, FontAlign.Left);
+                                          positions[1]  );
                 FontManager.DrawString(String.Format("{0:P0}", 1.0 * profile.JudgementCounts[x] / totalBeatlines), "DefaultFont",
-                                          positions[2], Color.Black, FontAlign.Left);
+                                          positions[2]  );
                 positions[0].Y += 20;
 
             }
@@ -203,29 +204,36 @@ namespace WGiBeat.Screens
             positions[1].Y = positions[0].Y;
 
             var totalArrows = profile.TotalHits + profile.JudgementCounts[(int)BeatlineNoteJudgement.COUNT];
-            FontManager.DrawString("Total arrows:", "LargeFont", positions[0], Color.Black, FontAlign.Left);
-            FontManager.DrawString("" + totalArrows, "LargeFont", positions[1], Color.Black, FontAlign.Left);
+            FontManager.DrawString("Total arrows:", "LargeFont", positions[0]  );
+            FontManager.DrawString("" + totalArrows, "LargeFont", positions[1]  );
             positions[0].Y += 25;
             positions[1].Y = positions[0].Y;
             positions[2].Y = positions[0].Y;
 
-            FontManager.DrawString("Hits", "DefaultFont", positions[0], Color.Black, FontAlign.Left);
-            FontManager.DrawString("" + profile.TotalHits, "DefaultFont", positions[1], Color.Black, FontAlign.Left);
+            FontManager.DrawString("Hits", "DefaultFont", positions[0] );
+            FontManager.DrawString("" + profile.TotalHits, "DefaultFont", positions[1]  );
             string percentage = String.Format("{0:P0}", 1.0 * profile.TotalHits / totalArrows);
-            FontManager.DrawString(percentage, "DefaultFont", positions[2], Color.Black, FontAlign.Left);
+            FontManager.DrawString(percentage, "DefaultFont", positions[2]  );
             positions[0].Y += 20;
             positions[1].Y = positions[0].Y;
             positions[2].Y = positions[0].Y;
 
-            FontManager.DrawString("Faults", "DefaultFont", positions[0], Color.Black, FontAlign.Left);
+            FontManager.DrawString("Faults", "DefaultFont", positions[0]);
             FontManager.DrawString("" + profile.JudgementCounts[(int)BeatlineNoteJudgement.COUNT], "DefaultFont",
-                positions[1], Color.Black, FontAlign.Left);
+                positions[1]);
             percentage = String.Format("{0:P0}", 1.0 * profile.JudgementCounts[(int)BeatlineNoteJudgement.COUNT] / totalArrows);
-            FontManager.DrawString(percentage, "DefaultFont", positions[2], Color.Black, FontAlign.Left);
-            positions[0].Y += 20;
+            FontManager.DrawString(percentage, "DefaultFont", positions[2]);
+            positions[0].Y += 35;
             positions[1].Y = positions[0].Y;
             positions[2].Y = positions[0].Y;
 
+            FontManager.DrawString("Best Hit Chain:", "LargeFont", positions[0]);
+            FontManager.DrawString(profile.MostHitsEver + "", "LargeFont", positions[1]);
+            positions[0].Y += 30;
+            positions[1].Y = positions[0].Y;
+            positions[2].Y = positions[0].Y;
+            FontManager.DrawString("Best Streak:", "LargeFont", positions[0]);
+            FontManager.DrawString(profile.MostStreakEver + "", "LargeFont", positions[1]);
         }
 
         private void DrawLevelBars( Vector2 position, Player player)
@@ -245,11 +253,23 @@ namespace WGiBeat.Screens
                     StartPressed(inputAction.Player);
                     break;
                 case "UP":
-                    MoveScrollPosition(inputAction.Player, -1);
-                    break;
                 case "DOWN":
-                    MoveScrollPosition(inputAction.Player, 1);
+                    var side = PlayerToSide(inputAction.Player);
+                    if (side == -1)
+                    {
+                        return;
+                    }
+                    switch (GetState(side))
+                    {
+                        case StatsScreenState.SELECT_PROFILE:
+                            _profileMenus[side].HandleAction(inputAction);
+                            break;
+                            case StatsScreenState.VIEWING_STATS:
+                            MoveScrollPosition(side, -1);
+                            break;
+                    }                 
                     break;
+                
                 case "BACK":
                     Core.ScreenTransition("MainMenu");
                     RaiseSoundTriggered(SoundEvent.MENU_BACK);
@@ -257,33 +277,12 @@ namespace WGiBeat.Screens
             }
         }
 
-        private void MoveScrollPosition(int player, int amount)
+        private void MoveScrollPosition(int idx, int amount)
         {
-            var idx = _activePlayers.IndexOf(player);
-            if (idx == -1)
-            {
-                return;
-            }
 
-            switch (GetState(idx))
-            {
-                case StatsScreenState.SELECT_PROFILE:
-                    _profileMenus[idx].MoveSelected(amount);
-                    if (amount > 0)
-                    {
-                        RaiseSoundTriggered(SoundEvent.MENU_SELECT_DOWN);
-                    }
-                    else
-                    {
-                        RaiseSoundTriggered(SoundEvent.MENU_SELECT_UP);
-                    }
-                    break;
-                case StatsScreenState.VIEWING_STATS:
                     _scrollPosition[idx] += amount;
                     _scrollPosition[idx] = Math.Min(MAX_SCROLL, _scrollPosition[idx]);
                     _scrollPosition[idx] = Math.Max(0, _scrollPosition[idx]);
-                    break;
-            }
         }
 
         private void StartPressed(int player)
@@ -299,15 +298,14 @@ namespace WGiBeat.Screens
             switch (GetState(side))
             {
                 case StatsScreenState.SELECT_PROFILE:
+                    _profileMenus[side].HandleAction(new InputAction {Action = "START"});
                     if (_profileMenus[side].SelectedItem().ItemValue != null)
                     {
                         _activeProfiles[side] = (Profile)_profileMenus[side].SelectedItem().ItemValue;
-                        RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     }
                     else
                     {
                         Core.ScreenTransition("MainMenu");
-                        RaiseSoundTriggered(SoundEvent.MENU_BACK);
                     }
 
                     break;

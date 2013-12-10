@@ -96,7 +96,7 @@ namespace WGiBeat.Drawing
             return result;
         }
 
-        public static Vector2 ScaleTextToFit(string text, string fontName, int width, int height)
+        public static Vector2 ScaleTextToFit(string text, string fontName, float width, float height)
         {
             return ScaleTextToFit(text, fontName, new Vector2(width, height));
         }

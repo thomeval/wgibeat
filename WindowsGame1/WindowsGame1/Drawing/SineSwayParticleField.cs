@@ -81,14 +81,14 @@ namespace WGiBeat.Drawing
             MinWidth = 3; //5
             MaxWidth = 30; //30
 
-            MinHeight = 700;
-            MaxHeight = 850;
+            MinHeight = 820;
+            MaxHeight = 970;
 
             MinY = -95;
             MaxY = -5;
 
             MinX = -15;
-            MaxX = 800;
+            MaxX = GameCore.INTERNAL_WIDTH;
 
             Count = 520;
             _vertices = new VertexPositionColorTexture[Count*6];

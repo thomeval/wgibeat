@@ -10,6 +10,7 @@ namespace WGiBeat.Drawing
         private string _currentFolder = "C:\\";
 
         private  string[] _patterns = {"*.*"};
+        private readonly SoundEffectManager _sounds;
 
         public string[] Patterns
         { 
@@ -62,6 +63,7 @@ namespace WGiBeat.Drawing
             FileList.FontName = "DefaultFont";
             FileList.MaxVisibleItems = 15;
             FileList.ItemSpacing = 18;
+            _sounds = GameCore.Instance.Sounds;
         }
         public override void Draw()
         {
@@ -70,7 +72,7 @@ namespace WGiBeat.Drawing
             position.X += 5;
 
 
-            var pathWidth = FontManager.ScaleTextToFit(shortPath, "LargeFont", this.Width - 10, 50);
+            var pathWidth = FontManager.ScaleTextToFit(shortPath, "LargeFont", (int) this.Width - 10, 50);
             FontManager.DrawString(shortPath,"LargeFont",position,pathWidth,Color.Black,FontAlign.Left);
             
             FileList.X = this.X;
@@ -84,7 +86,7 @@ namespace WGiBeat.Drawing
         private void DrawControlHelp()
         {
             var position = this.Position.Clone();
-            position.X +=  (int) this.Width/2.0f;
+            position.X +=  this.Width/2.0f;
             position.Y += FileList.ItemSpacing*FileList.MaxVisibleItems;
             position.Y += 110;
 
@@ -93,7 +95,7 @@ namespace WGiBeat.Drawing
                     "Use UP and DOWN to select a file or folder.",
                     "\nUse START to pick a file or folder.",
                     "\nUse LEFT or the '..' option to go up a folder.",
-                    "\nPress SELECT to pick a different drive.",
+                    "\nPress SELECT to pick a different drive."
                 };
 
             foreach (var line in instructions)
@@ -116,27 +118,29 @@ namespace WGiBeat.Drawing
                 CreateDriveList();
                 return;
             }
-            if (Directory.Exists(path))
+            if (!Directory.Exists(path))
             {
-                FileList.Clear();
-                FileList.AddItem(new MenuItem{ItemText = "..", ItemValue = "DIR"});
+                return;
+            }
 
-                foreach (string dir in Directory.GetDirectories(path))
-                {
+            FileList.Clear();
+            FileList.AddItem(new MenuItem{ItemText = "..", ItemValue = "DIR", IsCancel = true});
+
+            foreach (string dir in Directory.GetDirectories(path))
+            {
                
-                    var dirname = dir.Substring(dir.LastIndexOf("\\"));
-                    FileList.AddItem(new MenuItem{ItemText = dirname, ItemValue = "DIR"});
+                var dirname = dir.Substring(dir.LastIndexOf("\\"));
+                FileList.AddItem(new MenuItem{ItemText = dirname, ItemValue = "DIR"});
 
-                }
+            }
 
                 
-                foreach (string pattern in Patterns)
-                {
+            foreach (string pattern in Patterns)
+            {
 
-                    foreach (string file in Directory.GetFiles(path,pattern))
-                    {
-                        FileList.AddItem(new MenuItem {ItemText = Path.GetFileName(file), ItemValue = "FILE"});
-                    }
+                foreach (string file in Directory.GetFiles(path,pattern))
+                {
+                    FileList.AddItem(new MenuItem {ItemText = Path.GetFileName(file), ItemValue = "FILE"});
                 }
             }
         }
@@ -175,16 +179,12 @@ namespace WGiBeat.Drawing
             switch (inputAction.Action)
             {
                 case "UP":
-                    FileList.DecrementSelected();
-                    RaiseSoundEvent(SoundEvent.MENU_SELECT_UP);
-                    break;
                 case "DOWN":
-                    FileList.IncrementSelected();
-                    RaiseSoundEvent(SoundEvent.MENU_SELECT_DOWN);
+                    FileList.HandleAction(inputAction);
                     break;
                 case "LEFT":
                     CurrentFolder = Path.GetFullPath(CurrentFolder + "\\..");
-                    RaiseSoundEvent(SoundEvent.MENU_OPTION_SELECT_LEFT);
+                    _sounds.PlaySoundEffect(SoundEvent.MENU_OPTION_SELECT_LEFT);
                     break;
                 case "START":
                     if (SelectedItemIsFolder())
@@ -199,32 +199,23 @@ namespace WGiBeat.Drawing
                         }
                     }
                     else
-                    {
-                        
+                    {                       
                         FileSelected(this, null);
                     }
 
-                    RaiseSoundEvent(SoundEvent.MENU_DECIDE);
+                    _sounds.PlaySoundEffect(SoundEvent.MENU_DECIDE);
                     break;
                 case "SELECT":
                     CurrentFolder = "";
-                    RaiseSoundEvent(SoundEvent.MENU_BACK);
+                    _sounds.PlaySoundEffect(SoundEvent.MENU_BACK);
                     break;
                 case "BACK":
                     if (FileSelectCancelled != null)
                     {
                         FileSelectCancelled(this, null);
                     }
-                    RaiseSoundEvent(SoundEvent.MENU_BACK);
+                    _sounds.PlaySoundEffect(SoundEvent.MENU_BACK);
                     break;
-            }
-        }
-
-        private void RaiseSoundEvent(SoundEvent sevent)
-        {
-            if (SoundEventTriggered != null)
-            {
-                SoundEventTriggered(this, new ObjectEventArgs {Object = sevent});
             }
         }
 
@@ -249,6 +240,5 @@ namespace WGiBeat.Drawing
             CreateFileList(_currentFolder);
         }
 
-        public event EventHandler<ObjectEventArgs> SoundEventTriggered;
     }
 }

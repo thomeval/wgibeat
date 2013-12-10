@@ -60,7 +60,8 @@ namespace WGiBeat.Screens
                              {
 
                                  Position = new Vector2(-1000, -1000),
-                                 CPUPlayerID = GetCPUPlayerID()
+                                 CPUPlayerID = GetCPUPlayerID(),
+                                 Size = Core.Metrics["LifeGraph.Size", 0]
                              };
             SetGraphData();
             for (int x = 0; x < 4; x++)
@@ -68,7 +69,7 @@ namespace WGiBeat.Screens
                 _profileLevelDisplays[x] = new ProfileLevelDisplay
                                                {
                                                    Player = Core.Players[x],
-                                                   Width = 400,
+                                                   Width = GameCore.INTERNAL_WIDTH / 2,
                                                    Position = Core.Metrics["EvaluationLevelDisplay", x]
                                                };
 
@@ -76,6 +77,7 @@ namespace WGiBeat.Screens
                 {
                     _profileLevelDisplays[x].Player = null;
                     _lifeGraph.Position = Core.Metrics["LifeGraph", x];
+                   
                 }
             }
 
@@ -109,8 +111,8 @@ namespace WGiBeat.Screens
 
             _background = new Sprite3D
                               {
-                                  Height = 600,
-                                  Width = 800,
+                                  Size = Core.Metrics["ScreenBackground.Size", 0],
+                                  Position = Core.Metrics["ScreenBackground", 0],
                                   Texture = TextureManager.Textures("AllBackground")
                               };
 
@@ -666,9 +668,9 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black, FontAlign.Center);
             if (_lineList == null)
             {
                 _lineList = new List<RoundLine>();
-                _lineList.Add(new RoundLine(400, 0, 400, 600));
-                _lineList.Add(new RoundLine(0, 275, 800, 275));
-                _lineList.Add(new RoundLine(0, 325, 800, 325));
+                _lineList.Add(new RoundLine(GameCore.INTERNAL_WIDTH / 2, 0, GameCore.INTERNAL_WIDTH / 2, GameCore.INTERNAL_HEIGHT));
+                _lineList.Add(new RoundLine(0, 330, GameCore.INTERNAL_WIDTH, 330));
+                _lineList.Add(new RoundLine(0, 390, GameCore.INTERNAL_WIDTH, 390));
             }
             RoundLineManager.Instance.Draw(_lineList, 1, Color.Black);
 

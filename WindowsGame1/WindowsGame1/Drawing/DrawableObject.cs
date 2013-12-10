@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework;
 
 namespace WGiBeat.Drawing
 {
     public abstract class DrawableObject
     {
 
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int Width{ get; set; }
-        public int Height { get; set; }
+        public float X { get; set; }
+        public float Y { get; set; }
+        public float Width { get; set; }
+        public float Height { get; set; }
 
         public float Rotation { get; set; }
 
@@ -23,8 +18,8 @@ namespace WGiBeat.Drawing
             get { return new Vector2(X, Y); }
             set
             {
-                X = (int)value.X;
-                Y = (int)value.Y;
+                X = value.X;
+                Y = value.Y;
             }
         }
 
@@ -33,8 +28,8 @@ namespace WGiBeat.Drawing
             get { return new Vector2(Width, Height); }
             set
             {
-                Width = (int)value.X;
-                Height = (int)value.Y;
+                Width = value.X;
+                Height = value.Y;
             }
         }
 

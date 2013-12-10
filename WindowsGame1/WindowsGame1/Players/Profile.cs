@@ -25,6 +25,9 @@ namespace WGiBeat.Players
         public double AverageHitOffset { get; set; }
         public long HitOffsetCount { get; set; }
 
+        public int MostHitsEver { get; set; }
+        public int MostStreakEver { get; set; }
+
         public static readonly long[] Levels = {
                                                    0, 50, 110, 180, 260, 360, 480, 640, 820, 1000, 
                                                    1200, 1400, 1600, 1820, 2040, 2270, 2500, 2800, 3100, 3400, 
@@ -32,7 +35,7 @@ namespace WGiBeat.Players
                                                    8500,9250,10000, 11000,12000,13000,14000,15500,17000,18500,
                                                    20000,21500,23000, 24500,26000,28000,30000,32000,34000,36000,
                                                    38000,40000,42500,45000,47500,50000,53000,56000,60000,64000,
-                                                   69000,74000,80000,87000
+                                                   69000,74000,80000,87000,94000
                                                };
 
         public Profile()
@@ -64,6 +67,8 @@ namespace WGiBeat.Players
                 LastPlayerOptions.ScrollDirectionEast = si.GetBoolean("ScrollDirectionEast");
                 LastPlayerOptions.ScrollDirectionWest = si.GetBoolean("ScrollDirectionWest");
                 LastPlayerOptions.DisableExtraLife = si.GetBoolean("DisableExtraLife");
+                MostHitsEver = si.GetInt32("MostHitsEver");
+                MostStreakEver = si.GetInt32("MostStreakEver");
                 ProfileOutOfDate = false;
             }
             catch (SerializationException)
@@ -90,6 +95,8 @@ namespace WGiBeat.Players
             si.AddValue("ScrollDirectionEast", LastPlayerOptions.ScrollDirectionEast);
             si.AddValue("ScrollDirectionWest", LastPlayerOptions.ScrollDirectionWest);
             si.AddValue("DisableExtraLife", LastPlayerOptions.DisableExtraLife);
+            si.AddValue("MostHitsEver", MostHitsEver);
+            si.AddValue("MostStreakEver", MostStreakEver);
         }
 
         public int GetLevel()

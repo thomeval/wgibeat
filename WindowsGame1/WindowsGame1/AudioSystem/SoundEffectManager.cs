@@ -92,6 +92,7 @@ namespace WGiBeat.AudioSystem
         MAIN_MENU_SELECT_UP,
         MAIN_MENU_SELECT_DOWN,
         MENU_DECIDE,
+        MENU_INVALID_DECIDE,
         MENU_BACK,
         MENU_SELECT_UP,
         MENU_SELECT_DOWN,
@@ -112,6 +113,7 @@ namespace WGiBeat.AudioSystem
         KEY_CHANGE_COMPLETE,
         KEY_CHANGE_START,
         KEYBOARD_MOVE,
-        KEY_CHANGE_CANCEL
+        KEY_CHANGE_CANCEL,
+
     }
 }

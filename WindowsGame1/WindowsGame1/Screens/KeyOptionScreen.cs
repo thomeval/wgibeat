@@ -58,8 +58,8 @@ namespace WGiBeat.Screens
 
             _backgroundSprite = new Sprite3D
             {
-                Height = 600,
-                Width = 800,
+                Size = Core.Metrics["ScreenBackground.Size", 0],
+                Position = Core.Metrics["ScreenBackground", 0],
                 Texture = TextureManager.Textures("AllBackground"),
             };
 

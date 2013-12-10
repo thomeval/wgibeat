@@ -159,7 +159,7 @@ namespace WGiBeat.Drawing
 
             int[] blockAssignments = AssignBlocks(beatFraction);
 
-            int posX = this.X + 3;
+            float posX = this.X + 3;
 
             for (int y = 0; y < blockAssignments.Length; y++)
             {

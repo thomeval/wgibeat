@@ -329,6 +329,8 @@ namespace WGiBeat.Players
             }
             Profile.TotalHits += TotalHits;
             Profile.TotalPlayTime += PlayTime;
+            Profile.MostHitsEver = Math.Max(Profile.MostHitsEver, (int) MaxHits);
+            Profile.MostStreakEver = Math.Max(Profile.MostStreakEver, MaxStreak);
             Profile.EXP += AwardXP();
         }
 
