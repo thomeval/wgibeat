@@ -192,7 +192,7 @@ namespace WGiBeat.Drawing
             var meterBPM = Math.Max(BpmLevels[BpmLevels.Count() - 1], DisplayedSong.StartBPM * (1 - beatFraction));
 
           
-            int height = (this.Height - 2) / _meterSprite.Rows;
+            float height = (this.Height - 2) / _meterSprite.Rows;
             for (int x = 0; x < BpmLevels.Count(); x++)
             {
                 if ((meterBPM >= BpmLevels[x]))

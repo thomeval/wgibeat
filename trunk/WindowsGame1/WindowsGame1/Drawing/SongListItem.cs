@@ -21,8 +21,8 @@ namespace WGiBeat.Drawing
         public int ClearColour { get; set; }
         public static Vector2 ClearIndicatorSize { get; set; }
         
-        private readonly Color LOCKED_COLOUR = new Color(255,160,160);
-        private readonly Color UNLOCKED_COLOR = new Color(255,255,160);
+        private readonly Color _lockedColour = new Color(255,160,160);
+        private readonly Color _unlockedColor = new Color(255,255,192);
         
         public SongListItem()
         {
@@ -61,11 +61,12 @@ namespace WGiBeat.Drawing
         public void DrawText()
         {
 //Draw Text
-            var textPosition = new Vector2(this.X + 20, this.Y + 3);
-            Vector2 scale = FontManager.ScaleTextToFit(Song.Title, "LargeFont", _textMaxWidth, this.Height);
+            var textPosition = this.Position.Clone();
+            textPosition += new Vector2(45,1);
+            Vector2 scale = FontManager.ScaleTextToFit(Song.Title, "LargeFont", _textMaxWidth, (int) this.Height);
             FontManager.DrawString(Song.Title, "LargeFont", textPosition, scale, _textDrawColor, FontAlign.Left);
-            textPosition.Y += 20;
-            scale = FontManager.ScaleTextToFit(Song.Artist, "DefaultFont", TextMaxWidth, this.Height);
+            textPosition.Y += 22;
+            scale = FontManager.ScaleTextToFit(Song.Artist, "DefaultFont", TextMaxWidth, (int) this.Height);
             FontManager.DrawString(Song.Artist, "DefaultFont", textPosition, scale, _textDrawColor,
                                       FontAlign.Left);
         }
@@ -78,9 +79,9 @@ namespace WGiBeat.Drawing
             }
             if (PlayerLevel >= Song.RequiredLevel)
             {
-                return UNLOCKED_COLOR;
+                return _unlockedColor;
             }
-            return LOCKED_COLOUR;
+            return _lockedColour;
         }
     }
 }

@@ -31,10 +31,9 @@ namespace WGiBeat.Managers
 
             Log.AddMessage("Metrics loaded successfully.", LogLevel.INFO);
         }
+
         private void LoadFromText(string text)
         {
-
- 
             if (text.Substring(0, 8) != "#METRICS")
             {
                 throw new FileLoadException("File requested is not a valid metrics file.");
@@ -60,9 +59,6 @@ namespace WGiBeat.Managers
                     int x = Convert.ToInt32(svalues[2 * i]);
                     int y = Convert.ToInt32(svalues[(2 * i) + 1]);
                     values[i] = new Vector2(x, y);
-
-                    x = (int) (1.5 * x);
-                    y = (int) (1.5*y);
 
                 }
                 this[id] = values;
@@ -112,23 +108,6 @@ namespace WGiBeat.Managers
             }
         }
 
-        /*
-        public Sprite SetupFromMetrics(string metricsKey, int id)
-        {
-            var result = new Sprite3D();
-            if (_metrics.ContainsKey(metricsKey))
-            {
-                result.Position = this[metricsKey, id];
-            }
-            if (_metrics.ContainsKey(metricsKey + ".Size"))
-            {
-                //Handle both a single size definition and multiple (one per ID).
-                result.Size = _metrics[metricsKey + ".Size"].Count() > id ? this[metricsKey + ".Size", id] : this[metricsKey + ".Size", 0];
-            }
-            result.Texture = TextureManager.Textures(metricsKey);
-            return result;
-        }
-        */
         public Sprite3D SetupFromMetrics(string metricsKey, int id)
         {
             var result = new Sprite3D();
@@ -143,6 +122,24 @@ namespace WGiBeat.Managers
             }
             result.Texture = TextureManager.Textures(metricsKey);
             return result;
+        }
+
+        public void SaveMetrics()
+        {
+            var text = "";
+            var mx = 1280.0/800;
+            var my = 800.0/720;
+            foreach (var metric in _metrics)
+            {
+                text += metric.Key + "=";
+                foreach (var pair in metric.Value)
+                {
+                    text += string.Format("[{0:F0},{1:F0}]",pair.X * mx,pair.Y * my);
+                }
+                text += ";\n";
+            }
+
+            File.WriteAllText("metricsWide.txt",text);
         }
     }
 }

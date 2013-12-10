@@ -18,6 +18,15 @@ namespace WGiBeat.Drawing
             set { _enabled = value; }
         }
 
+        public bool IsCancel { get; set; }
+
+        public bool IsSelectable { get; set; }
+
+        public bool HasOptions
+        {
+            get { return _optionValues.Count > 0; }    
+        }
+
         private int _selectedOption;
 
         public MenuItem()
@@ -25,6 +34,7 @@ namespace WGiBeat.Drawing
             _optionValues = new List<object>();
             _optionDisplays = new List<string>();
             _selectedOption = 0;
+            IsSelectable = true;
         }
 
         public void AddOption(string display, object value)

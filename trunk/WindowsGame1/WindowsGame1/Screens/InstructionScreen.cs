@@ -37,16 +37,23 @@ namespace WGiBeat.Screens
         private void InitSprites()
         {
             _background = new MovingBackground
-                              {Direction = Math.PI / 4, Speed = 30, Texture = TextureManager.Textures("MovingBackground1"), Width = 800, Height = 600};
+            {
+                Direction = Math.PI / 4,
+                Speed = 30,
+                Texture = TextureManager.Textures("MovingBackground1"),
+                Size = Core.Metrics["ScreenBackground.Size", 0],
+                Position = Core.Metrics["ScreenBackground", 0],
+            };
             _instructionPages = new Sprite3D[TOTAL_PAGES];
             for (int x = 0; x < TOTAL_PAGES; x++)
             {
-                _instructionPages[x] = new Sprite3D { Texture = TextureManager.Textures("InstructionPage" + (x + 1)), Size = new Vector2(800, 600) };
+                _instructionPages[x] = new Sprite3D { Texture = TextureManager.Textures("InstructionPage" + (x + 1)), Size = new Vector2(GameCore.INTERNAL_WIDTH, GameCore.INTERNAL_HEIGHT) };
             }
             _baseSprite = new Sprite3D
                               {
                                   Texture = TextureManager.Textures("LoadingMessageBase"),
-                                  Position = (Core.Metrics["LoadMessageBase", 0])
+                                  Position = (Core.Metrics["LoadMessageBase", 0]),
+                                  Size = Core.Metrics["LoadMessageBase.Size", 0]
                               };
             _beatline = new Beatline
                             {

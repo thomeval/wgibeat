@@ -60,9 +60,7 @@ namespace WGiBeat.Drawing
                     "Levels array size is too large. Set the LevelsCount property to match its length first.");
             }        
 
-                int posX = 0;
-
-
+                float posX = 0;
                 for (int x = 0; x < levels.Count(); x++)
                 {
 
@@ -93,7 +91,7 @@ namespace WGiBeat.Drawing
 
         private void DrawLineLevels()
         {
-            int posX = 0;
+            float posX = 0;
             _lineList.Clear();
             for (int x = 0; x < _lineLevels.Count(); x++)
             {

@@ -98,8 +98,8 @@ namespace WGiBeat.Drawing
           FontManager.DrawString("Length", "DefaultFont", position, Color.Black, FontAlign.Right);
         }
 
-        private int _totalBarWidth;
-        private int[] _labelPositions = new int[4];
+        private float _totalBarWidth;
+        private readonly int[] _labelPositions = new int[4];
         private void DrawBars()
         {
             var barHeight = this.Height - 40;

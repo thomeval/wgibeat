@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.AudioSystem;
+using WGiBeat.Managers;
 
 namespace WGiBeat.Drawing
 {
@@ -23,7 +25,7 @@ namespace WGiBeat.Drawing
         private SpriteMap3D _arrowSpriteMap;
         private SpriteMap3D _sideSpriteMap;
         private Sprite3D _selectedItemSprite;
-
+        private SoundEffectManager _sounds;
 
         public string FontName
         {
@@ -46,6 +48,7 @@ namespace WGiBeat.Drawing
             SelectedIndex = 0;
             Opacity = 255;
             _menuItems = new List<MenuItem>();
+            _sounds = GameCore.Instance.Sounds;
             InitSprites();
         }
 
@@ -108,7 +111,7 @@ namespace WGiBeat.Drawing
                     drawColor = HighlightColor;
                     _selectedItemSprite.ColorShading = SelectedItemBackgroundColor;
                     _selectedItemSprite.Position = position.Clone();
-                    _selectedItemSprite.Y += 3;
+                    _selectedItemSprite.Y += 1;
                     _selectedItemSprite.X -= 5;
                     _selectedItemSprite.Width = this.Width - 10;
                     _selectedItemSprite.Height = ItemSpacing + 3;
@@ -118,24 +121,19 @@ namespace WGiBeat.Drawing
                 {
                     drawColor = TextColor;
                 }
-
-             
-                drawColor.A = menuItem.Enabled ? Opacity : (byte) (Opacity/2);
-
-               
+            
+                drawColor.A = menuItem.Enabled ? Opacity : (byte) (Opacity/2);               
                 FontManager.DrawString(menuItem.ItemText, FontName, position, drawColor, FontAlign.Left);
                 position.X += xOptionOffset;
 
                 var menuOptionText = menuItem.SelectedText();
-
-                var scale = FontManager.ScaleTextToFit(menuOptionText, FontName, this.Width - 20 - xOptionOffset,
+                var scale = FontManager.ScaleTextToFit(menuOptionText, FontName, (int) this.Width - 20 - xOptionOffset,
                                                           1000);
 
                 FontManager.DrawString(menuOptionText, FontName, position, scale, drawColor, FontAlign.Left);
 
 
                 position.X -= xOptionOffset;
-
                 position.Y += ItemSpacing;
             }
         }
@@ -194,6 +192,7 @@ namespace WGiBeat.Drawing
                 SelectedIndex %= _menuItems.Count;
             }
             _animationOffset = (SelectedIndex - temp) * 25;
+            _sounds.PlaySoundEffect(SoundEvent.MAIN_MENU_SELECT_UP);
         }
 
         public void DecrementSelected()
@@ -208,28 +207,81 @@ namespace WGiBeat.Drawing
                 }
             }
             _animationOffset = (SelectedIndex - temp)*25;
+            _sounds.PlaySoundEffect(SoundEvent.MAIN_MENU_SELECT_DOWN);
 
         }
 
+        public void DecrementOption()
+        {
+            if ((_menuItems.Count > 0) && (_menuItems[SelectedIndex].Enabled) && _menuItems[SelectedIndex].HasOptions)
+            {
+                _menuItems[SelectedIndex].DecrementSelected();
+                _sounds.PlaySoundEffect(SoundEvent.MENU_OPTION_SELECT_LEFT);
+            }
+        }
+        public void IncrementOption()
+        {
+            if ((_menuItems.Count > 0) && (_menuItems[SelectedIndex].Enabled) && _menuItems[SelectedIndex].HasOptions)
+            {
+                _menuItems[SelectedIndex].IncrementSelected();
+                _sounds.PlaySoundEffect(SoundEvent.MENU_OPTION_SELECT_RIGHT);
+            }
+        }
+
+        public bool ConfirmSelection()
+        {
+            var item = _menuItems[SelectedIndex];
+            if (!item.IsSelectable)
+            {
+                // Not a selectable menu item, since it has options.
+                return false;
+            }
+            if (!item.Enabled)
+            {
+                _sounds.PlaySoundEffect(SoundEvent.MENU_INVALID_DECIDE);
+                return false;
+            }
+            if (item.IsCancel)
+            {
+                _sounds.PlaySoundEffect(SoundEvent.MENU_BACK);
+            }
+            else
+            {
+                _sounds.PlaySoundEffect(SoundEvent.MENU_DECIDE);
+            }
+            return true;
+        }
+
+        public bool HandleAction(InputAction action)
+        {
+            switch (action.Action)
+            {
+                case "LEFT":
+                    DecrementOption();
+                    break;
+                case "RIGHT":
+                    IncrementOption();
+                    break;
+                case "UP":
+                    DecrementSelected();
+                    break;
+                case "DOWN":
+                    IncrementSelected();
+                    break;
+                case "START":
+                    ConfirmSelection();
+                    break;
+                default:
+                    return false;
+            }
+            return true;
+        }
         public void AddItem(MenuItem item)
         {
             _menuItems.Add(item);
         }
 
-        public void DecrementOption()
-        {
-            if ((_menuItems.Count > 0) && (_menuItems[SelectedIndex].Enabled))
-            {
-                _menuItems[SelectedIndex].DecrementSelected();
-            }
-        }
-        public void IncrementOption()
-        {
-            if ((_menuItems.Count > 0) && (_menuItems[SelectedIndex].Enabled))
-            {
-                _menuItems[SelectedIndex].IncrementSelected();
-            }
-        }
+
 
         public MenuItem GetByItemText(string difficulty)
         {

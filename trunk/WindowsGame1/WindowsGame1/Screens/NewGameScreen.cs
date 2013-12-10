@@ -55,7 +55,7 @@ namespace WGiBeat.Screens
                                         MaxLength = 10,
                                         Id = x,
                                         Position = (Core.Metrics["OnScreenKeyboard", x]),
-                                        Width = 400
+                                        Width = 640
                                     };
                 _keyboards[x].EntryCancelled += Keyboard_EntryCancelled;
                 _keyboards[x].EntryComplete += Keyboard_EntryComplete;
@@ -78,8 +78,8 @@ namespace WGiBeat.Screens
         {
             _background = new Sprite3D
             {
-                Height = 600,
-                Width = 800,
+               Size = Core.Metrics["ScreenBackground.Size",0],
+               Position = Core.Metrics["ScreenBackground",0],
                 Texture = TextureManager.Textures("AllBackground"),
             };
             _messageBackground = new Sprite3D
@@ -93,7 +93,7 @@ namespace WGiBeat.Screens
         {
             _profileMenus[x] = new Menu
                                    {
-                                       Width = 350,
+                                       Width = 590,
                                        Position = (Core.Metrics["NewGameMenuStart", x]),
                                        MaxVisibleItems = 6,
                                        SelectedItemBackgroundColor = _backgroundColors[x]
@@ -106,17 +106,17 @@ namespace WGiBeat.Screens
 
             _profileMenus[x].AddItem(new MenuItem { ItemText = "[Guest]" });
             _profileMenus[x].AddItem(new MenuItem { ItemText = "[Create New]" });
-            _profileMenus[x].AddItem(new MenuItem {ItemText = "[Cancel]"});
+            _profileMenus[x].AddItem(new MenuItem {ItemText = "[Cancel]", IsCancel = true});
 
         }
 
         private void CreatePlayerMenu(int x)
         {
-            _playerMenus[x] = new Menu { Width = 350 };
+            _playerMenus[x] = new Menu { Width = 590 };
             _playerMenus[x].AddItem(new MenuItem { ItemText = "Decision" });
             _playerMenus[x].AddItem(new MenuItem { ItemText = "Profile" });
             _playerMenus[x].SelectedItemBackgroundColor = _backgroundColors[x];
-            var difficulty = new MenuItem { ItemText = "Difficulty" };
+            var difficulty = new MenuItem { ItemText = "Difficulty", IsSelectable = false };
             difficulty.AddOption("Beginner", 0);
             difficulty.AddOption("Easy", 1);
             difficulty.AddOption("Medium", 2);
@@ -133,7 +133,7 @@ namespace WGiBeat.Screens
             }
             _playerMenus[x].AddItem(difficulty);
 
-            var noteSpeed = new MenuItem { ItemText = "Beatline Speed" };
+            var noteSpeed = new MenuItem { ItemText = "Beatline Speed", IsSelectable = false};
             noteSpeed.AddOption("0.5x", 0.5);
             noteSpeed.AddOption("1x", 1.0);
             noteSpeed.AddOption("1.5x", 1.5);
@@ -144,21 +144,20 @@ namespace WGiBeat.Screens
             noteSpeed.SetSelectedByValue(1.0);
             _playerMenus[x].AddItem(noteSpeed);
 
-            var disableKO = new MenuItem {ItemText = "Disable KO"};
+            var disableKO = new MenuItem {ItemText = "Disable KO", IsSelectable = false};
             disableKO.AddOption("Off",false);
             disableKO.AddOption("On",true);
             _playerMenus[x].AddItem(disableKO);
 
-            var disableLB = new MenuItem { ItemText = "Disable Extra Life" };
+            var disableLB = new MenuItem { ItemText = "Disable Extra Life", IsSelectable = false };
             disableLB.AddOption("Off", false);
             disableLB.AddOption("On", true);
-
 
             _playerMenus[x].AddItem(disableLB);
             _playerMenus[x].Position = (Core.Metrics["NewGameMenuStart", x]);
             _playerMenus[x].MaxVisibleItems = 6;
 
-            _playerMenus[x].AddItem(new MenuItem { ItemText = "Leave" });
+            _playerMenus[x].AddItem(new MenuItem { ItemText = "Leave", IsCancel = true});
         }
 
         private void Keyboard_EntryComplete(object sender, EventArgs e)
@@ -272,8 +271,9 @@ namespace WGiBeat.Screens
             if (_lineList == null)
             {
                 _lineList = new List<RoundLine>();
-                _lineList.Add(new RoundLine(400, 0, 400, 600));
-                _lineList.Add(new RoundLine(0, 300, 800, 300));
+
+                _lineList.Add(new RoundLine(GameCore.INTERNAL_WIDTH / 2, 0, GameCore.INTERNAL_WIDTH / 2, GameCore.INTERNAL_HEIGHT));
+                _lineList.Add(new RoundLine(0, GameCore.INTERNAL_HEIGHT / 2, GameCore.INTERNAL_WIDTH, GameCore.INTERNAL_HEIGHT / 2));
             }
             RoundLineManager.Instance.Draw(_lineList, 1, Color.Black);
         }
@@ -284,6 +284,13 @@ namespace WGiBeat.Screens
 
         public override void PerformAction(InputAction inputAction)
         {
+            if (inputAction.Action == "BACK")
+            {
+                Core.ScreenTransition("MainMenu");
+                RaiseSoundTriggered(SoundEvent.MENU_BACK);
+                return;
+            }
+
             var playerIdx = inputAction.Player - 1;
             if ((playerIdx > -1) && Core.Players[playerIdx].Remote)
             {
@@ -296,35 +303,35 @@ namespace WGiBeat.Screens
                 return;
             }
 
+            Menu relevantMenu;
+
+            switch (_cursorPositions[playerIdx])
+            {
+                    case CursorPosition.PROFILE_LIST:
+                    relevantMenu = _profileMenus[playerIdx];
+                    break;
+                    case CursorPosition.MAIN_MENU:
+                    relevantMenu = _playerMenus[playerIdx];
+                    break;
+                default:
+                    relevantMenu = null;
+                    break;
+            }
             switch (inputAction.Action)
             {
                 case "START":
                     StartPressed(playerIdx);
                     break;
                 case "UP":
-                        _playerMenus[playerIdx].DecrementSelected();
-                        _profileMenus[playerIdx].DecrementSelected();
-                    RaiseSoundTriggered(SoundEvent.MENU_SELECT_UP);                    
-                    break;
                 case "DOWN":
-                        _playerMenus[playerIdx].IncrementSelected();
-                        _profileMenus[playerIdx].IncrementSelected();
-                        RaiseSoundTriggered(SoundEvent.MENU_SELECT_DOWN);   
-                    break;
                 case "RIGHT":
-                        _playerMenus[playerIdx].IncrementOption();
-                        RaiseSoundTriggered(SoundEvent.MENU_OPTION_SELECT_RIGHT);   
-                    break;
                 case "LEFT":
-                        _playerMenus[playerIdx].DecrementOption();
-                        RaiseSoundTriggered(SoundEvent.MENU_OPTION_SELECT_LEFT);   
+                    if (relevantMenu != null)
+                    {
+                        relevantMenu.HandleAction(inputAction);
+                    }
                     break;
-                case "BACK":
-                    Core.ScreenTransition("MainMenu");
-                    RaiseSoundTriggered(SoundEvent.MENU_BACK);   
-                    //NetHelper.Instance.BroadcastScreenTransition("MainMenu");
-                    //Core.Net.Disconnect();
-                    break;
+       
             }
         }
 
@@ -361,8 +368,9 @@ namespace WGiBeat.Screens
 
         private void SelectProfileListItem(int number)
         {
+    
             _playerMenus[number].SelectedIndex = 0;
-            RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
+            _profileMenus[number].ConfirmSelection();
            if (_profileMenus[number].SelectedItem().ItemValue == null)
            {
                switch (_profileMenus[number].SelectedItem().ItemText)
@@ -395,32 +403,37 @@ namespace WGiBeat.Screens
            else
            {
                var newSelection = (Profile) _profileMenus[number].SelectedItem().ItemValue;
-               bool okToChange = true;
-               for (int x = 0; x < 4; x++ )
-               {
-                   if (number == x)
-                   {
-                       continue;
-                   }
-                   if (Core.Players[x].Profile == newSelection)
-                   {
-                       okToChange = false;
-                       _infoMessages[number] = "This profile is already in use.";
-                   }
-               }
-               if (okToChange)
-               {
-                   Core.Players[number].Profile = newSelection;
-                   Core.Players[number].LoadPreferences();
-                   RefereshSelectedOptions(number);
-                   ChangeCursorPosition(number,CursorPosition.MAIN_MENU);
-                   _infoMessages[number] = "";
-                   
-                   //NetHelper.Instance.BroadcastProfileChange(number);
-                  // NetHelper.Instance.BroadcastPlayerOptions(number);
-               }
+               LoadProfile(number, newSelection);
            }
+        }
 
+        private void LoadProfile(int player, Profile profile)
+        {
+            bool okToChange = true;
+
+            //Check if the profile is in use.
+            for (int x = 0; x < 4; x++)
+            {
+                if (player == x || Core.Players[x].Profile != profile)
+                {
+                    continue;
+                }
+
+                okToChange = false;
+                _infoMessages[player] = "This profile is already in use.";
+            }
+            if (!okToChange)
+            {
+                return;
+            }
+            Core.Players[player].Profile = profile;
+            Core.Players[player].LoadPreferences();
+            RefereshSelectedOptions(player);
+            ChangeCursorPosition(player, CursorPosition.MAIN_MENU);
+            _infoMessages[player] = "";
+
+            //NetHelper.Instance.BroadcastProfileChange(number);
+            // NetHelper.Instance.BroadcastPlayerOptions(number);
         }
 
         private void ChangeCursorPosition(int player, CursorPosition position)
@@ -451,21 +464,19 @@ namespace WGiBeat.Screens
                     ChangeCursorPosition(number, CursorPosition.NOT_JOINED);
                     Core.Players[number].Playing = false;
                     Core.Players[number].Profile = null;
-                    RaiseSoundTriggered(SoundEvent.MENU_BACK);
                     TryToStart();
                     break;
                 case "Decision":
                     ChangeCursorPosition(number,CursorPosition.READY);
-                    RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     TryToStart();
                     break;
                 case "Profile":
                     ChangeCursorPosition(number, CursorPosition.PROFILE_LIST);
                     _profileMenus[number].SelectedIndex = 0;
                     _infoMessages[number] = "Select a profile.";
-                    RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
                     break;
             }
+            _playerMenus[number].ConfirmSelection();
         }
 
         private void TryToStart()
@@ -517,7 +528,6 @@ namespace WGiBeat.Screens
         private void StartGame()
         {
            // NetHelper.Instance.BroadcastScreenTransition("ModeSelect");
-            RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
             Core.ScreenTransition("ModeSelect");
         }
 

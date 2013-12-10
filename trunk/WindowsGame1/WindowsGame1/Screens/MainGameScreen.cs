@@ -78,7 +78,7 @@ namespace WGiBeat.Screens
             _noteBarSet = new NoteBarSet(Core.Metrics, Core.Players, currentGameType);
             _noteBarSet.PlayerFaulted += (PlayerFaulted);
             _noteBarSet.PlayerArrowHit += (PlayerArrowHit);
-            _songTimeLine = new SongTimeLine {Position = new Vector2(365, 530), Size = new Vector2(370, 80)};
+            _songTimeLine = new SongTimeLine {Position = Core.Metrics["MainGameSongTimeline",0], Size= Core.Metrics["MainGameSongTimeline.Size",0]};
 
             _beatlineSet.NoteMissed += BeatlineNoteMissed;
             _beatlineSet.CPUNoteHit += BeatlineNoteCPUHit;
@@ -112,9 +112,9 @@ namespace WGiBeat.Screens
             _noteBarSet.Visible = true;
             _visualBackground = new VisualizerBackground
                                     {
-                                        Size = new Vector2(800, 600),
+                                        Size = Core.Metrics["VisualizerBackground.Size", 0],
                                         AudioManager = Core.Audio,
-                                        Position = new Vector2(0, 0),
+                                        Position = Core.Metrics["VisualizerBackground",0],
                                         SongChannel = (int)Core.Cookies["GameSongChannel"],
                                         MaxBrightness = Convert.ToByte(Core.Settings["BackgroundAnimation"])
                                     };
@@ -212,14 +212,15 @@ namespace WGiBeat.Screens
             if (File.Exists(_gameSong.Path + "\\" + _gameSong.BackgroundFile))
             {
                 TextureManager.CreateAndAddTexture(_gameSong.Path + "\\" + _gameSong.BackgroundFile, "SongBackground");
-                _background = new Sprite3D { Height = 600, Width = 800, Texture = TextureManager.Textures("SongBackground") };
+                _background = new Sprite3D {  Size = Core.Metrics["ScreenBackground.Size", 0],
+                Position = Core.Metrics["ScreenBackground", 0], Texture = TextureManager.Textures("SongBackground") };
             }
             else
             {
                 _background = new Sprite3D
                 {
-                    Height = 600,
-                    Width = 800,
+                    Size = Core.Metrics["ScreenBackground.Size", 0],
+                    Position = Core.Metrics["ScreenBackground", 0],
                     Texture = TextureManager.Textures("MainGameScreenBackground"),
                 };            
             }
@@ -227,7 +228,8 @@ namespace WGiBeat.Screens
             _textBackground = new Sprite3D
                                   {
                                       Texture = TextureManager.Textures("MainGameTextBackground"),
-                                      Position = Core.Metrics["MainGameTextBackground", 0]
+                                      Position = Core.Metrics["MainGameTextBackground", 0],
+                                      Size = Core.Metrics["MainGameTextBackground.Size", 0]
                                   };
         }
 
@@ -755,10 +757,10 @@ namespace WGiBeat.Screens
         {
             FontManager.DrawString("" + CalculateTimeLeft(), "DefaultFont",
                 Core.Metrics["SongTimeLeft", 0], Color.Black, FontAlign.Left);
-            var scale = FontManager.ScaleTextToFit(_gameSong.Title, "DefaultFont", 310, 100);
+            var scale = FontManager.ScaleTextToFit(_gameSong.Title, "DefaultFont", 510, 100);
             FontManager.DrawString(_gameSong.Title, "DefaultFont",
                 Core.Metrics["SongTitle", 0], scale, Color.Black, FontAlign.Left);
-            scale = FontManager.ScaleTextToFit(_gameSong.Artist, "DefaultFont", 310, 100);
+            scale = FontManager.ScaleTextToFit(_gameSong.Artist, "DefaultFont", 510, 100);
             FontManager.DrawString(_gameSong.Artist, "DefaultFont", 
                 Core.Metrics["SongArtist", 0],scale, Color.Black, FontAlign.Left);
             FontManager.DrawString(String.Format("{0:F2}", _phraseNumber), "DefaultFont", Core.Metrics["SongDebugPhrase", 0], Color.Black, FontAlign.Left);

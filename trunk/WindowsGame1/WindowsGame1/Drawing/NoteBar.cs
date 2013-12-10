@@ -158,8 +158,8 @@ namespace WGiBeat.Drawing
         public override void Draw()
         {
 
-            int posX = this.X;
-            int posY = this.Y;
+            float posX = this.X;
+            float posY = this.Y;
 
             if (RednessSprite != null)
             {

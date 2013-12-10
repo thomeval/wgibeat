@@ -63,8 +63,8 @@ namespace WGiBeat.Screens
         {
             _background = new Sprite3D
             {
-                Height = 600,
-                Width = 800,
+                Size = Core.Metrics["ScreenBackground.Size", 0],
+                Position = Core.Metrics["ScreenBackground", 0],
                 Texture = TextureManager.Textures("AllBackground"),
             };
 
@@ -102,12 +102,14 @@ namespace WGiBeat.Screens
             _descriptionBaseSprite = new Sprite3D
                                          {
                                              Texture = TextureManager.Textures("ModeDescriptionBase"),
-                                             Position = (Core.Metrics["ModeDescriptionBase", 0])
+                                             Position = (Core.Metrics["ModeDescriptionBase", 0]),
+                                             Size = (Core.Metrics["ModeDescriptionBase.Size", 0])
                                          };
             _messageBorderSprite = new Sprite3D
                                        {
                                            Texture = TextureManager.Textures("MessageBorder"),
-                                           Position = (Core.Metrics["MessageBorder", 0])
+                                           Position = (Core.Metrics["ModeSelectMessageBorder", 0]),
+                                           Size = (Core.Metrics["ModeSelectMessageBorder.Size", 0])
                                        };
             _restrictionSprite = new Sprite3D { Texture = TextureManager.Textures("RestrictionIcon"), Width = 48, Height = 48 };
             _restrictionSprite.X = _messageBorderSprite.X + 7;
@@ -178,26 +180,28 @@ namespace WGiBeat.Screens
 
             var midpoint = Core.Metrics["ModeSelectOptions", 0].Clone();
             midpoint.X += (int) _listDrawOffset;
-
+            
+            var optionSize = Core.Metrics["ModeSelectOptions.Size", 0].Clone();
+            var gap = optionSize.X + 5;
             int index = _selectedGameType;
             //Draw selected game type.
-            _optionBaseSpriteMap.Draw( 1, 250, 160, midpoint);
+            _optionBaseSpriteMap.Draw( 1, optionSize, midpoint);
             var allowed = String.IsNullOrEmpty(GameTypeAllowed((GameType)index));
             _optionsSpriteMap.ColorShading = allowed ? Color.White : _disabledColor;
-            _optionsSpriteMap.Draw( index, 229, 139, (int)midpoint.X + 10, (int)midpoint.Y + 10);
+            _optionsSpriteMap.Draw(index, optionSize.X - 20, optionSize.Y - 20, (int)midpoint.X + 10, (int)midpoint.Y + 10);
 
             //Draw Mode options to the right of (after) the selected one.
             for (int x = 1; x <= LIST_ITEMS_DRAWN; x++)
             {
                 index = (index + 1) % (int)GameType.COUNT;
-                midpoint.X += 255;
-                _optionBaseSpriteMap.Draw( 0, 250, 160, midpoint);
+                midpoint.X += gap;
+                _optionBaseSpriteMap.Draw( 0, optionSize , midpoint);
                 allowed = String.IsNullOrEmpty(GameTypeAllowed((GameType)index));
                 _optionsSpriteMap.ColorShading = allowed ? Color.White : _disabledColor;
-                _optionsSpriteMap.Draw( index, 229, 139, (int)midpoint.X + 10, (int)midpoint.Y + 10);
+                _optionsSpriteMap.Draw( index, optionSize.X - 20, optionSize.Y - 20, (int)midpoint.X + 10, (int)midpoint.Y + 10);
             }
 
-            midpoint.X -= 255 * LIST_ITEMS_DRAWN;
+            midpoint.X -= gap * LIST_ITEMS_DRAWN;
 
             index = _selectedGameType;
             //Draw Mode options to the left of (before) the selected one.
@@ -208,20 +212,18 @@ namespace WGiBeat.Screens
                 {
                     index = (int)GameType.COUNT - 1;
                 }
-                midpoint.X -= 255;
-                _optionBaseSpriteMap.Draw( 0, 250, 160, midpoint);
+                midpoint.X -= gap;
+                _optionBaseSpriteMap.Draw(0, optionSize, midpoint);
                 allowed = String.IsNullOrEmpty(GameTypeAllowed((GameType)index));
                 _optionsSpriteMap.ColorShading = allowed ? Color.White : _disabledColor;
-                _optionsSpriteMap.Draw( index, 229, 139, (int)midpoint.X + 10, (int)midpoint.Y + 10);
+                _optionsSpriteMap.Draw(index, optionSize.X - 20, optionSize.Y - 20, (int)midpoint.X + 10, (int)midpoint.Y + 10);
             }
 
             midpoint.X -= (int) _listDrawOffset;
             
             var changeMx = Math.Min(1.0, TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds*MODE_CHANGE_SPEED);
             _listDrawOffset -= (_listDrawOffset*(changeMx));
-
         }
-
 
         private void DrawBackground(GameTime gameTime)
         {

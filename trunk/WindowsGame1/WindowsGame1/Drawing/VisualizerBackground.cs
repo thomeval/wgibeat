@@ -56,8 +56,8 @@ namespace WGiBeat.Drawing
 
         private const int WAVEFORM_POINTS = 512;
         private const int SPECTRUM_POINTS = 64;
-        private const int BAR_WIDTH = 15;
-        private const int BAR_HEIGHT = 300;
+        private const int BAR_WIDTH = 25;
+        private const int BAR_HEIGHT = GameCore.INTERNAL_HEIGHT / 2;
         private const int OPACITY_CHANGE_SPEED = 1;
         public void Draw( double phraseNumber)
         {
@@ -113,7 +113,7 @@ namespace WGiBeat.Drawing
             };
             _spectrumDrawer = new SpectrumDrawer
                                   {
-                                      Position = new Vector2(0, 600),
+                                      Position = new Vector2(0, GameCore.INTERNAL_HEIGHT),
                                       Size = new Vector2(BAR_WIDTH, -BAR_HEIGHT),
                                       ColorShading = Colour,
                                       LevelsCount = WAVEFORM_POINTS
@@ -129,8 +129,8 @@ namespace WGiBeat.Drawing
             _waveformDrawer = new WaveformDrawer
                                   {
                                       ColorShading = Colour,
-                                      Size = new Vector2(800, 150),
-                                      Position = new Vector2(0, 300),
+                                      Size = new Vector2(GameCore.INTERNAL_WIDTH, GameCore.INTERNAL_HEIGHT / 4),
+                                      Position = new Vector2(0, GameCore.INTERNAL_HEIGHT / 2),
                                    
                                   };
             _waveformDrawer.Init();

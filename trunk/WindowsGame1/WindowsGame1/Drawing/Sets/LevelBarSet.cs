@@ -25,17 +25,15 @@ namespace WGiBeat.Drawing.Sets
             var numPlayers = (from e in Players where e.Playing select e).Count();
             for (int x = 0; x < _levelBars.Length; x++)
             {
-                
+
                 _levelBars[x] = new LevelBar
                                     {
                                         Parent = this,
-                                        Height = 25,
-                                        Width = 216,
+                                        Size = _metrics["LevelBarBase.Size", 0],
                                         PlayerID = x,
-                                        Multiplier = _gameType == GameType.SYNC_PLUS ?  numPlayers : 1
+                                        Multiplier = _gameType == GameType.SYNC_PLUS ? numPlayers : 1,
+                                        Position = (_metrics["LevelBarBase", x])
                                     };
-                _levelBars[x].Position = (_metrics["LevelBarBase", x]);
-                
             }
         }
 

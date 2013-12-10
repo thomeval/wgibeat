@@ -194,6 +194,8 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
 
         }
 
+        public const int INTERNAL_WIDTH = 1280;
+        public const int INTERNAL_HEIGHT = 720;
         public void SetGraphicsSettings()
         {
             
@@ -203,24 +205,17 @@ Assembly.GetAssembly(typeof(GameCore)).CodeBase);
             string[] resolution = Settings.Get<string>("ScreenResolution").Split('x');
             GraphicsManager.PreferredBackBufferWidth = Convert.ToInt32(resolution[0]);
             GraphicsManager.PreferredBackBufferHeight = Convert.ToInt32(resolution[1]);
-            //TODO: remove when stable
-            GraphicsManager.PreferredBackBufferHeight = 600;
-            GraphicsManager.PreferredBackBufferWidth = 800;
 
-
-            //Sprite.Device = this.GraphicsDevice;
             Sprite3D.Device = this.GraphicsDevice;
             SpriteMap3D.Device = this.GraphicsDevice;
             Sprite3D.EffectInit = false;
-            RoundLineManager.Instance.Init(this.GraphicsDevice,this.Content, Sprite3D.GetViewProjMatrix());
-            RoundLineManager.Instance.BlurThreshold = RoundLineManager.Instance.ComputeBlurThreshold(1.0f,
-                                                                                                     Sprite3D.
-                                                                                                         GetViewProjMatrix
-                                                                                                         (), 800);
+            RoundLineManager.Instance.Init(this.GraphicsDevice,this.Content, Sprite3D.GetViewProjMatrix(INTERNAL_WIDTH, INTERNAL_HEIGHT));
+            RoundLineManager.Instance.BlurThreshold = 
+                RoundLineManager.Instance.ComputeBlurThreshold(1.0f,Sprite3D.GetViewProjMatrix(INTERNAL_WIDTH,INTERNAL_HEIGHT),INTERNAL_WIDTH);
             GraphicsManager.ApplyChanges();
             GraphicsDevice.VertexDeclaration = new VertexDeclaration(GraphicsDevice, VertexPositionColorTexture.VertexElements);
-            FontManager.FontMatrix = Matrix.CreateScale(GraphicsManager.PreferredBackBufferWidth/800.0f,
-                                                           GraphicsManager.PreferredBackBufferHeight/600.0f, 1);
+            FontManager.FontMatrix = Matrix.CreateScale(1.0f * GraphicsManager.PreferredBackBufferWidth/INTERNAL_WIDTH,
+                                                           1.0f * GraphicsManager.PreferredBackBufferHeight/INTERNAL_HEIGHT, 1);
 
         }
 

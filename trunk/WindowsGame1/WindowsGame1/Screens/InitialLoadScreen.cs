@@ -32,7 +32,8 @@ namespace WGiBeat.Screens
             _baseSprite = new Sprite3D
                               {
                                   Texture = TextureManager.Textures("LoadingMessageBase"),
-                                  Position = (Core.Metrics["LoadMessageBase", 0])
+                                  Position = (Core.Metrics["LoadMessageBase", 0]),
+                                  Size = Core.Metrics["LoadMessageBase.Size",0]
                               };
             var thread = new Thread(LoadSongs);
             thread.Start();
