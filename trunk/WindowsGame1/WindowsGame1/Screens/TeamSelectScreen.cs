@@ -24,6 +24,7 @@ namespace WGiBeat.Screens
         private bool _showWarningIcon;
         private Sprite3D _messageBorder;
         private Sprite3D _restrictionIcon;
+        private Vector2 _textPosition;
 
         public TeamSelectScreen(GameCore core) : base(core)
         {
@@ -45,7 +46,7 @@ namespace WGiBeat.Screens
                 CurrentGameType = GameType.TEAM,  Size = Core.Metrics["PlayerOptionsFrame.Size",0], DrawAttract = true, StackableFrames = true};
             _playerOptionsSet.CreatePlayerOptionsFrames();
 
-            SetRestrictionMessage("Press left or right to \nchoose a team. Press start \nto confirm selection.", false);
+            SetRestrictionMessage("Press LEFT or RIGHT to choose \na team. Press START to confirm \nselection.", false);
 
         }
         private void InitSprites()
@@ -68,7 +69,8 @@ namespace WGiBeat.Screens
             _teamBorderSprite = new Sprite3D
                                     {
                                         Texture = TextureManager.Textures("TeamScreenBackground"),
-                                        Position = (Core.Metrics["TeamScreenBackground", 0])
+                                        Position = (Core.Metrics["TeamScreenBackground", 0]),
+                                        Size = Core.Metrics["TeamScreenBackground.Size",0]
                                     };
 
             _playerMarkers = new SpriteMap3D
@@ -78,11 +80,16 @@ namespace WGiBeat.Screens
             _messageBorder = new Sprite3D
                                  {
                                      Texture = TextureManager.Textures("MessageBorder"),
-                                     Position = (Core.Metrics["MessageBorder", 0])
+                                     Position = (Core.Metrics["TeamScreenMessageBorder", 0]),
+                                     Size = Core.Metrics["TeamScreenMessageBorder.Size",0]
                                  };
             _restrictionIcon = new Sprite3D {Texture = TextureManager.Textures("RestrictionIcon"), Width = 48, Height = 48};
             _restrictionIcon.X = _messageBorder.X + 7;
             _restrictionIcon.Y = _messageBorder.Y + 7;
+            _textPosition = _messageBorder.Position.Clone();
+            _textPosition.X += 60;
+            _textPosition.Y += 25;
+
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
@@ -99,6 +106,8 @@ namespace WGiBeat.Screens
 
         private void DrawMarkers()
         {
+            var markerSize = Core.Metrics["PlayerTeamMarkers.Size",0];
+            var playerReadyMarkerSize = Core.Metrics["PlayerTeamReadyMarkers.Size", 0];
             for (int x =0; x < 4; x++)
             {
                 if (!Core.Players[x].Playing)
@@ -109,20 +118,21 @@ namespace WGiBeat.Screens
                                                  Core.Metrics["PlayerTeamMarkers", x].Y);
                 if (Core.Players[x].Team == 1)
                 {
-                    markerPosition.X -= 160;
+                    markerPosition.X -= playerReadyMarkerSize.X;
                 }
                 if (Core.Players[x].Team == 2)
                 {
-                    markerPosition.X += 160;
+                    markerPosition.X += playerReadyMarkerSize.X;
                 }
                 if (_ready[x])
                 {
-                    markerPosition.X -= 55;
-                    _playerReadyMarkers.Draw( 2 - Core.Players[x].Team, 165, 60, markerPosition);
-                    markerPosition.X += 55;
+                    //TODO: Use PlayerTeamReadyMarkers metrics for positioning.
+                    markerPosition.X -= markerSize.X;
+                    _playerReadyMarkers.Draw(2 - Core.Players[x].Team, playerReadyMarkerSize, markerPosition);
+                    markerPosition.X += markerSize.X;
                 }
 
-                _playerMarkers.Draw( x, 60,60, markerPosition);
+                _playerMarkers.Draw( x, markerSize, markerPosition);
 
             }
         }
@@ -134,6 +144,7 @@ namespace WGiBeat.Screens
             _teamBorderSprite.Draw();
         }
 
+
         private void DrawRestrictionMessage()
         {
             if (_restrictionMessage == "")
@@ -141,7 +152,7 @@ namespace WGiBeat.Screens
                 return;
             }
             _messageBorder.Draw();
-            FontManager.DrawString(_restrictionMessage, "DefaultFont", Core.Metrics["RestrictionMessage", 0], Color.White, FontAlign.Left);
+            FontManager.DrawString(_restrictionMessage, "DefaultFont", _textPosition, Color.White, FontAlign.Left);
             if (_showWarningIcon)
             {
                 _restrictionIcon.Draw();
@@ -224,7 +235,7 @@ namespace WGiBeat.Screens
             }
             if (!canStart)
             {
-                SetRestrictionMessage("Press left or right to \nchoose a team. Press start \nto confirm selection.", false);
+                SetRestrictionMessage("Press LEFT or RIGHT to choose \na team. Press START to confirm \nselection.", false);
                 return;
             }
             var blueTeamCount = (from e in Core.Players where e.Playing && e.Team == 1 select e).Count();

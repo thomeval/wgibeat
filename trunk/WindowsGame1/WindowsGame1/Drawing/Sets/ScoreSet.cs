@@ -268,9 +268,15 @@ namespace WGiBeat.Drawing.Sets
                 case GameType.COOPERATIVE:
                 case GameType.TEAM:
                 case GameType.VS_CPU:
+                    Players[player].Score += amount;
+                    break;
                 case GameType.SYNC_PRO:
                     case GameType.SYNC_PLUS:
                     Players[player].Score += amount;
+                    for (int x = 1; x < 4; x++ )
+                    {
+                        Players[x].Score = Players[0].Score;
+                    }
                         break;
             }
         }
