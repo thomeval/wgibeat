@@ -25,6 +25,7 @@ namespace WGiBeat.Screens
         private Sprite3D _messageBorder;
         private Sprite3D _restrictionIcon;
         private Vector2 _textPosition;
+        private readonly SineSwayParticleField _field = new SineSwayParticleField();
 
         public TeamSelectScreen(GameCore core) : base(core)
         {
@@ -93,7 +94,7 @@ namespace WGiBeat.Screens
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            DrawBackground();
+            DrawBackground(gameTime);
             DrawMarkers();
             DrawPlayerOptions();
             DrawRestrictionMessage();
@@ -103,6 +104,7 @@ namespace WGiBeat.Screens
         {
             _playerOptionsSet.Draw();
         }
+
 
         private void DrawMarkers()
         {
@@ -118,18 +120,16 @@ namespace WGiBeat.Screens
                                                  Core.Metrics["PlayerTeamMarkers", x].Y);
                 if (Core.Players[x].Team == 1)
                 {
-                    markerPosition.X -= playerReadyMarkerSize.X;
+                    markerPosition -= Core.Metrics["PlayerTeamMarkers.Movement",0];
                 }
                 if (Core.Players[x].Team == 2)
                 {
-                    markerPosition.X += playerReadyMarkerSize.X;
+                    markerPosition += Core.Metrics["PlayerTeamMarkers.Movement", 0];
                 }
                 if (_ready[x])
                 {
-                    //TODO: Use PlayerTeamReadyMarkers metrics for positioning.
-                    markerPosition.X -= markerSize.X;
-                    _playerReadyMarkers.Draw(2 - Core.Players[x].Team, playerReadyMarkerSize, markerPosition);
-                    markerPosition.X += markerSize.X;
+                    _playerReadyMarkers.Draw(2 - Core.Players[x].Team, playerReadyMarkerSize.X, playerReadyMarkerSize.Y, markerPosition.X - 65, markerPosition.Y);
+    
                 }
 
                 _playerMarkers.Draw( x, markerSize, markerPosition);
@@ -137,9 +137,10 @@ namespace WGiBeat.Screens
             }
         }
 
-        private void DrawBackground()
+        private void DrawBackground(GameTime gameTime)
         {
             _backgroundSprite.Draw();
+            _field.Draw(gameTime);
             _headingSprite.Draw();
             _teamBorderSprite.Draw();
         }
