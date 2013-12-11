@@ -115,7 +115,9 @@ namespace WGiBeat.Screens
             _restrictionSprite = new Sprite3D { Texture = TextureManager.Textures("RestrictionIcon"), Width = 48, Height = 48 };
             _restrictionSprite.X = _messageBorderSprite.X + 7;
             _restrictionSprite.Y = _messageBorderSprite.Y + 7;
-
+            _textPosition = _messageBorderSprite.Position.Clone();
+            _textPosition.X += 60;
+            _textPosition.Y += 25;
         }
 
         #endregion
@@ -159,7 +161,7 @@ namespace WGiBeat.Screens
             }
             _messageBorderSprite.Draw();
             _restrictionSprite.Draw();
-            FontManager.DrawString(restrictionMessage, "DefaultFont", Core.Metrics["RestrictionMessage", 0], Color.White, FontAlign.Left);
+            FontManager.DrawString(restrictionMessage, "DefaultFont", _textPosition, Color.White, FontAlign.Left);
         }
 
         private void DrawVSCPUDifficultySelect()
@@ -174,6 +176,7 @@ namespace WGiBeat.Screens
 
         private const int LIST_ITEMS_DRAWN = 4;
         private static readonly Color _disabledColor = new Color(255, 255, 255, 64);
+        private Vector2 _textPosition;
         private const int MODE_CHANGE_SPEED = 6;
 
         private void DrawModeOptions()

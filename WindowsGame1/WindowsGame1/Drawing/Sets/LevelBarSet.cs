@@ -86,9 +86,10 @@ namespace WGiBeat.Drawing.Sets
                 var amount = (long)
                     (MomentumJudgementMultiplier(judgement)*
                      MomentumIncreaseByDifficulty(Players[player].PlayerOptions.PlayDifficulty));
-                if (_gameType == GameType.SYNC_PRO)
-                {
-                 
+
+                //Make all players share the same momentum in SYNC modes.
+                if (_gameType == GameType.SYNC_PRO || _gameType == GameType.SYNC_PLUS)
+                {             
                     SetMomentumSync(Players[0].Momentum + amount);
                 }
                 else

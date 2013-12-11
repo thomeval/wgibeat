@@ -157,7 +157,7 @@ SelectedSongSpectrum.Size=[6,-60];
 SongTypeDisplay=[547,457];
 SongTypeDisplay.Size=[113,40];
 SongSelectLoadingMessage=[910,415];
-SongLockedRequirements=[467,265];
+SongLockedRequirements=[657,460];
 
 #Options Screen;
 OptionsMenuStart=[320,111];
@@ -182,8 +182,14 @@ SelectedCPUDifficulty=[816,583];
 
 #Team Select;
 TeamSelectScreenHeader=[0,0];
-PlayerTeamMarkers=[296,172][296,239][296,306][296,372];
-TeamScreenBackground=[16,117];
+PlayerTeamMarkers=[592,172][592,252][592,332][592,412];
+PlayerTeamMarkers.Size=[72,72];
+PlayerTeamReadyMarkers=[605,172][605,252][605,332][605,412];
+PlayerTeamReadyMarkers.Size=[248, 72];
+TeamScreenBackground=[312,117];
+TeamScreenBackground.Size=[656,396];
+TeamScreenMessageBorder=[930,600];
+TeamScreenMessageBorder.Size=[350,120];
 
 #WGiEdit;
 SongEditProgress=[0,640];
