@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -28,19 +27,24 @@ namespace WGiBeat.Drawing
             }
         }
 
+        #region Sorting
+
         private void SortSongList()
         {
 
             switch (SongSortMode)
             {
-                case SongSortMode.TITLE:
+                case SongSortMode.Title:
                     SongList.Sort(SortByName);
                     break;
-                case SongSortMode.ARTIST:
+                case SongSortMode.Artist:
                     SongList.Sort(SortByArtist);
                     break;
                 case SongSortMode.BPM:
                     SongList.Sort(SortByBpm);
+                    break;
+                case SongSortMode.Length:
+                    SongList.Sort(SortByLength);
                     break;
             }
  
@@ -89,6 +93,12 @@ namespace WGiBeat.Drawing
             return first.Song.StartBPM.CompareTo(second.Song.StartBPM);
         }
 
+        private int SortByLength(SongListItem first, SongListItem second)
+        {
+            return first.Song.PlayableLength.CompareTo(second.Song.PlayableLength);
+        }
+
+        #endregion
 
         private List<SongListItem> _songList;
 
@@ -111,12 +121,10 @@ namespace WGiBeat.Drawing
         private Menu _bookmarkMenu;
         private int _selectedBookmarkIndex;
         private const int BOOKMARK_TEXT_SIZE = 18;
-
         public const int VISIBLE_BOOKMARKS = 10;
         private int _lastSongHash;
 
         private int _selectedSongIndex;
-
         public int SelectedSongIndex
         {
             get { return _selectedSongIndex; }
@@ -127,10 +135,8 @@ namespace WGiBeat.Drawing
             }
         }
 
-        public SongSortDisplay()
-        {
+        #region Drawing
 
-        }
         public void InitSprites()
         {
             _backgroundSprite = new Sprite3D {Texture = TextureManager.Textures("SongSortBackground")};
@@ -197,12 +203,13 @@ namespace WGiBeat.Drawing
 
         }
 
+        #endregion
 
         public void MoveSort(int amount)
         {
             _lastSongHash = SongList[SelectedSongIndex].GetHashCode();
             var current = (int) SongSortMode + amount;
-            const int COUNT = (int) SongSortMode.COUNT;
+            const int COUNT = (int) SongSortMode.Count;
             if (current < 0)
             {
                 current += COUNT;
@@ -232,19 +239,24 @@ namespace WGiBeat.Drawing
             JumpToBookmark();
         }
 
+        #region Jumping
+
         private void JumpToBookmark()
         {
            
             switch (SongSortMode)
             {
-                case SongSortMode.TITLE:
+                case SongSortMode.Title:
                     _selectedSongIndex = JumpBookmarkTitle(_bookmarkMenu.SelectedItem().ItemValue.ToString());
                     break;
-                    case SongSortMode.ARTIST:
+                    case SongSortMode.Artist:
                     _selectedSongIndex = JumpBookmarkArtist(_bookmarkMenu.SelectedItem().ItemValue.ToString());
                     break;
                     case SongSortMode.BPM:
                     _selectedSongIndex = JumpBookmarkBPM(_bookmarkMenu.SelectedItem().ItemValue.ToString());
+                    break;
+                    case SongSortMode.Length:
+                    _selectedSongIndex = JumpBookmarkLength(_bookmarkMenu.SelectedItem().ItemValue.ToString());
                     break;
             }
         }
@@ -308,8 +320,6 @@ namespace WGiBeat.Drawing
             }
 
            char startChar = start[0];
-
-
             for (int x = 0; x < SongList.Count; x++)
             {
 
@@ -333,6 +343,23 @@ namespace WGiBeat.Drawing
             }
             return SelectedSongIndex;
         }
+
+        private int JumpBookmarkLength(string start)
+        {
+            double startLength = Convert.ToDouble(start, System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+
+            for (int x = 0; x < SongList.Count; x++)
+            {
+                if (SongList[x].Song.PlayableLength >= startLength)
+                {
+                    return x;
+                }
+            }
+            return SelectedSongIndex;
+        }
+
+        #endregion
+
         public bool PerformAction(InputAction action)
         {
             if (!Active)
@@ -354,11 +381,11 @@ namespace WGiBeat.Drawing
                 case "DOWN":
                     MoveCurrentBookmark(1);
                     break;
-            }
-
-         
+            }        
             return true;
         }
+
+#region Bookmark Creation
 
         private void CreateBookmarkMenu()
         {
@@ -371,7 +398,7 @@ namespace WGiBeat.Drawing
                                         ItemSpacing = BOOKMARK_TEXT_SIZE,
                                         Width = (int) _listBackgroundSprite.Width
                                     };
-            foreach (MenuItem item in CreateBookmarks())
+            foreach (var item in CreateBookmarks())
             {
                 _bookmarkMenu.AddItem(item);
             }
@@ -379,22 +406,24 @@ namespace WGiBeat.Drawing
         
         }
 
-        private IEnumerable CreateBookmarks()
+        private IEnumerable<MenuItem> CreateBookmarks()
         {
             var result = new List<MenuItem>();
             char[] validChars = {};
 
-
             switch (SongSortMode)
             {
-                case SongSortMode.TITLE:
+                case SongSortMode.Title:
                     validChars = (from e in SongList select e.Song.Title.ToUpper()[0]).Distinct().ToArray();
                         break;
-                case SongSortMode.ARTIST:
+                case SongSortMode.Artist:
                        validChars = (from e in SongList select e.Song.Artist.ToUpper()[0]).Distinct().ToArray();
                     break;
                     case SongSortMode.BPM:
                     result = CreateBPMBookmarks();
+                    break;
+                    case SongSortMode.Length:
+                    result = CreateLengthBookmarks();
                     break;
             }
             if (ContainsSymbol(validChars))
@@ -413,20 +442,25 @@ namespace WGiBeat.Drawing
                 }
             }
            
-
             return result;
         }
 
         private readonly string[] _bpmTexts = {
                                          "Slow", "80", "90", "100", "110", "120", "135", "150", "165", "180", "200", "Fast"
                                      };
+        private readonly string[] _lengthTexts = {"0:00", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "5:00", "6:00", "7:00"};
 
         private readonly int[] _bpmValues = {0,80,90,100,110,120,135,150,165,180,200,300};
+        private readonly int[] _lengthValues = { 0, 60, 90, 120, 150, 180, 210, 240, 300, 360,420};
         private List<MenuItem> CreateBPMBookmarks()
         {
             return _bpmTexts.Select((t, x) => new MenuItem {ItemText = t, ItemValue = _bpmValues[x]}).ToList();
         }
 
+        private List<MenuItem> CreateLengthBookmarks()
+        {
+            return _lengthTexts.Select((t, x) => new MenuItem { ItemText = t, ItemValue = _lengthValues[x] }).ToList();
+        }
         private bool ContainsSymbol(IEnumerable<char> chars)
         {
             return chars.Any(c => !Char.IsLetterOrDigit(c));
@@ -443,16 +477,19 @@ namespace WGiBeat.Drawing
             object value = "";
             switch (SongSortMode)
             {
-                case SongSortMode.TITLE:
+                case SongSortMode.Title:
                     value = SongList[index].Song.Title.ToUpperInvariant()[0] + "";
                     value = CheckForSymbolOrDigit(value.ToString());
                     break;
-                case SongSortMode.ARTIST:
+                case SongSortMode.Artist:
                     value = SongList[index].Song.Artist.ToUpperInvariant()[0] + "";
                     break;
                 case SongSortMode.BPM:
                     var temp = SongList[index].Song.StartBPM;
                     value = (from e in _bpmValues where e >= temp select e).FirstOrDefault();
+                    break;
+                    case SongSortMode.Length:
+                    value = (from e in _lengthValues where e >= SongList[index].Song.PlayableLength select e).FirstOrDefault();
                     break;
             }
 
@@ -473,11 +510,15 @@ namespace WGiBeat.Drawing
             return value;
         }
     }
+
+#endregion
+
        public enum SongSortMode
     {
-        TITLE = 0,
-        ARTIST = 1,
+        Title = 0,
+        Artist = 1,
         BPM = 2,
-        COUNT = 3
+        Length = 3,
+        Count = 4
     }
 }

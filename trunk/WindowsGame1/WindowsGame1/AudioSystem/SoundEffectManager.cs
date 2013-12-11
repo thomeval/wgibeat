@@ -115,5 +115,7 @@ namespace WGiBeat.AudioSystem
         KEYBOARD_MOVE,
         KEY_CHANGE_CANCEL,
 
+        PLAYER_JOIN,
+        PLAYER_LEAVE
     }
 }

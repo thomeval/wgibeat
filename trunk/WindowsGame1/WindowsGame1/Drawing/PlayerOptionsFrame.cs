@@ -43,6 +43,7 @@ namespace WGiBeat.Drawing
 
         private const int FADEIN_SPEED = 600;
         private const int FADEOUT_SPEED = 600;
+
         public PlayerOptionsFrame()
         {
             InitSprites();
@@ -57,6 +58,7 @@ namespace WGiBeat.Drawing
             _background = new Sprite3D
                                {
                                    Texture = TextureManager.Textures("PlayerOptionsFrame")
+                                   
                                };
             _speedBlocks = new Sprite3D
                                {
@@ -88,8 +90,7 @@ namespace WGiBeat.Drawing
         {
 
             var idx = Player.IsCPUPlayer ? 4 : PlayerIndex;
-            _background.Height = this.Height;
-            _background.Width = this.Width;
+            _background.Size = this.Size;
             _background.Position = this.Position;
             _background.Draw();
             
@@ -107,12 +108,10 @@ namespace WGiBeat.Drawing
         
             _levelDisplay.Position = _levelDisplayPosition;
             _levelDisplay.Opacity = (byte) (255 - _optionControlOpacity);
-            _levelDisplay.Width = 288;
+            _levelDisplay.Width = this.Width - 112;
             _levelDisplay.Draw();
         }
 
-   
- 
 
         private readonly Color _blueBackground = new Color(128,128,255,128);
         private readonly Color _redBackground = new Color(255,128,128,128);
@@ -161,7 +160,7 @@ namespace WGiBeat.Drawing
             
             DrawChangeControls();
             _textColor.A = (byte)(255 - _optionControlOpacity);
-            var scale = FontManager.ScaleTextToFit(playerName, "TwoTech36", 230, 50);
+            var scale = FontManager.ScaleTextToFit(playerName, "TwoTech36", this.Width - 170, 50);
             FontManager.DrawString(playerName, "TwoTech36", _nameTextPosition, scale, _textColor,
                                       FontAlign.Center);
 
@@ -171,10 +170,10 @@ namespace WGiBeat.Drawing
         private void DrawChangeControls()
         {
             _indicatorArrows.ColorShading.A = (byte) _optionControlOpacity;
-            _indicatorArrows.Draw( 1, 15, 15, (int)_difficultyTextPosition.X, (int)_difficultyTextPosition.Y + 22);
-            _indicatorArrows.Draw( 0, 15, 15, (int)_difficultyTextPosition.X + 15, (int)_difficultyTextPosition.Y + 22);
-            _indicatorArrows.Draw( 2, 15, 15, (int)_speedTextPosition.X - 32, (int)_speedTextPosition.Y - 10);
-            _indicatorArrows.Draw( 3, 15, 15, (int)_speedTextPosition.X - 17, (int)_speedTextPosition.Y - 10);
+            _indicatorArrows.Draw( 1, 15, 15, _difficultyTextPosition.X, _difficultyTextPosition.Y + 22);
+            _indicatorArrows.Draw( 0, 15, 15, _difficultyTextPosition.X + 15, _difficultyTextPosition.Y + 22);
+            _indicatorArrows.Draw( 2, 15, 15, _speedTextPosition.X - 32, _speedTextPosition.Y - 10);
+            _indicatorArrows.Draw( 3, 15, 15, _speedTextPosition.X - 17, _speedTextPosition.Y - 10);
             var speedText = string.Format("{0:0.0}x", Player.PlayerOptions.BeatlineSpeed);
             _textColor.A = (byte) _optionControlOpacity;
             FontManager.DrawString(speedText, "TwoTech20", _speedTextPosition, _textColor,
@@ -209,14 +208,10 @@ namespace WGiBeat.Drawing
         }
 
         private readonly double[] _speedOptions = { 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0 };
-
         private readonly Color _blockColor = new Color(64, 64, 64, 255);
-
 
         private void DrawSpeedBlocks()
         {
-            const int TEXTURE_HEIGHT = 140;
-            const int TEXTURE_WIDTH = 100;
 
             const int DRAW_HEIGHT = 35;
             _speedBlocks.Y = this.Y + 1;
@@ -232,8 +227,8 @@ namespace WGiBeat.Drawing
             _speedBlocks.Height = (int) litHeight;
             _speedBlocks.Y = this.Y +1 + DRAW_HEIGHT - _speedBlocks.Height;
 
-            var texV2 = TEXTURE_HEIGHT/_speedOptions.Count()*numberLit;
-            _speedBlocks.DrawTiled(0, TEXTURE_HEIGHT - texV2, TEXTURE_WIDTH, texV2);
+            var texV2 = _speedBlocks.Texture.Height /_speedOptions.Count()*numberLit;
+            _speedBlocks.DrawTiled(0, _speedBlocks.Texture.Height - texV2, _speedBlocks.Texture.Width, texV2);
 
           
         }

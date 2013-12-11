@@ -73,12 +73,12 @@ namespace WGiBeat.Screens
                                                    Position = Core.Metrics["EvaluationLevelDisplay", x]
                                                };
 
-                if (!Core.Players[x].Playing)
+                if (Core.Players[x].Playing)
                 {
-                    _profileLevelDisplays[x].Player = null;
-                    _lifeGraph.Position = Core.Metrics["LifeGraph", x];
-                   
+                    continue;
                 }
+                _profileLevelDisplays[x].Player = null;
+                _lifeGraph.Position = Core.Metrics["LifeGraph", x];
             }
 
 
@@ -88,7 +88,7 @@ namespace WGiBeat.Screens
                                   };
             _teamScoreMeter.InitSprites();
 
-            _playerOptionsSet = new PlayerOptionsSet { Players = Core.Players, Positions = Core.Metrics["EvaluationPlayerOptionsFrames"], DrawAttract = false };
+            _playerOptionsSet = new PlayerOptionsSet { Players = Core.Players, Positions = Core.Metrics["EvaluationPlayerOptionsFrames"], Size = Core.Metrics["PlayerOptionsFrame.Size",0], DrawAttract = false };
             _playerOptionsSet.CreatePlayerOptionsFrames();
         }
 

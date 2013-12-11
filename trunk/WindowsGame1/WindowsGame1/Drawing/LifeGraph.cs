@@ -91,7 +91,7 @@ namespace WGiBeat.Screens
             _backgroundSprite = new Sprite3D
                                     {
                                         Texture = TextureManager.Textures("LifeGraphMiddle"),
-                                        
+                                
                                     };
             _cornerSpriteMap = new SpriteMap3D
                                    {
@@ -128,7 +128,8 @@ namespace WGiBeat.Screens
         {
             
             _drawProgress += TextureManager.LastGameTime.ElapsedRealTime.TotalSeconds*LINE_DRAW_SPEED;
-            _backgroundSprite.Position = this.Position;
+            _backgroundSprite.Size = this.Size;
+           _backgroundSprite.Position = this.Position;
             _backgroundSprite.Draw();
             CalculateMinMax();
             DrawAxis();
@@ -309,7 +310,7 @@ namespace WGiBeat.Screens
                 {
    
                         var posY = (x - _min) * -tickY;
-                        _axisLineList.Add(new RoundLine(new Vector2(this.X, this.Y + this.Height + posY), new Vector2(this.X + this.Width, this.Y + this.Height + posY)));
+                        _axisLineList.Add(new RoundLine(new Vector2(this.X + 5, this.Y + this.Height + posY), new Vector2(this.X + this.Width - 10, this.Y + this.Height + posY)));
                 }
             }
     

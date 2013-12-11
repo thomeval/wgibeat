@@ -34,8 +34,6 @@ namespace WGiBeat.Drawing
         {
             get { return (int) (Parent.Players[PlayerID].Level) == Parent.Players[PlayerID].MaxArrowLevel(); }
         }
-
-        //TODO: Possible solution to constantly setting position of sprites. Investigate.
  
         private void InitSprites()
         {
@@ -85,8 +83,7 @@ namespace WGiBeat.Drawing
             {
                 InitSprites();
             }
-
-   
+  
             _baseSprite.Size = this.Size;
             _baseSprite.Draw();
             _maxBaseSprite.ColorShading = Parent.MaxHighlightColors[PlayerID];
@@ -113,7 +110,7 @@ namespace WGiBeat.Drawing
                        _textPosition, Color.Black,FontAlign.Center);
 
              DrawBars();
-            _maxFrontSprite.DrawTiled((int)(maxFrontBeatFraction * _maxFrontSprite.Width), 0, _maxFrontSprite.Width, _maxFrontSprite.Height);
+            _maxFrontSprite.DrawTiled((int)(maxFrontBeatFraction * _maxFrontSprite.Texture.Width), 0, _maxFrontSprite.Texture.Width, _maxFrontSprite.Texture.Height);
          
         }
 
@@ -122,10 +119,7 @@ namespace WGiBeat.Drawing
             _displayedLevel *= Multiplier;
             var diff = (Multiplier * Parent.Players[PlayerID].Level) - _displayedLevel;
             _displayedLevel += diff * Math.Min(TextureManager.LastDrawnPhraseDiff * FRONT_BAR_CHANGE_SPEED, 0.5);
-
-         
-            //The maximum possible width of the bar.
-            
+          
             //The current progress towards the next level.
             double levelFraction = _displayedLevel - Math.Floor(_displayedLevel);
             //The calculated width of the level bar.
@@ -155,7 +149,7 @@ namespace WGiBeat.Drawing
 
             //Draw the current level bar.
             _barSprite.ColorShading.A = LevelBarFull ? (byte) 255 : (byte) (40 + (215 * levelFraction));
-            _barSprite.Draw(((int)(_displayedLevel - 1) % _barSprite.Rows), _maxBarWidth, this.Height - 6, _barPosition);
+            _barSprite.Draw(((int)(_displayedLevel - 1) % _barSprite.Rows), (float) barWidth, this.Height - 6, _barPosition);
 
             _displayedLevel /= Multiplier;
         }

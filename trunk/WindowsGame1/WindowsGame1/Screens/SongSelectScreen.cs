@@ -73,7 +73,8 @@ namespace WGiBeat.Screens
             _highScoreFrame.InitSprites();
             _bpmMeter = new BpmMeter { Position = (Core.Metrics["BPMMeter", 0]) };
 
-            _playerOptionsSet = new PlayerOptionsSet { Players = Core.Players, Positions = Core.Metrics["PlayerOptionsFrame"], CurrentGameType = (GameType)Core.Cookies["CurrentGameType"], DrawAttract = true, StackableFrames = true };
+            _playerOptionsSet = new PlayerOptionsSet { Players = Core.Players, Positions = Core.Metrics["PlayerOptionsFrame"], CurrentGameType = (GameType)Core.Cookies["CurrentGameType"], 
+                DrawAttract = true, StackableFrames = true , Size = Core.Metrics["PlayerOptionsFrame.Size",0] };
             _playerOptionsSet.GameTypeInvalidated += delegate
                                                          { Core.ScreenTransition("MainMenu"); };
             _playerOptionsSet.CreatePlayerOptionsFrames();
@@ -373,7 +374,6 @@ namespace WGiBeat.Screens
             var pass = _playerOptionsSet.PerformAction(inputAction);
             if (pass)
             {
-                RaiseSoundTriggered(SoundEvent.PLAYER_OPTIONS_CHANGE);
                 CheckCPUDifficulty();
                 return;
             }
@@ -408,7 +408,6 @@ namespace WGiBeat.Screens
                     break;
                 case "SELECT":
                     _playerOptionsSet.SetChangeMode(inputAction.Player, true);
-                    RaiseSoundTriggered(SoundEvent.PLAYER_OPTIONS_DISPLAY);
                     break;
                 case "START":
                     StartSong();
@@ -451,7 +450,6 @@ namespace WGiBeat.Screens
             {
                 case "SELECT":
                     _playerOptionsSet.SetChangeMode(inputAction.Player, false);
-                    RaiseSoundTriggered(SoundEvent.PLAYER_OPTIONS_HIDE);
                     break;
                 case "BEATLINE":
                     _songSortDisplay.Active = false;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Players;
 
@@ -19,13 +20,16 @@ namespace WGiBeat.Managers
 
         public Player[] Players { get; set; }
         public Vector2[] Positions { get; set; }
+
         public GameType CurrentGameType { get; set; }
 
         public event EventHandler GameTypeInvalidated;
+        private readonly SoundEffectManager _sounds;
 
         public PlayerOptionsSet()
         {
             _optionsFrames = new List<PlayerOptionsFrame>();
+            _sounds = GameCore.Instance.Sounds;
             InitSprites();
   
         }
@@ -35,7 +39,8 @@ namespace WGiBeat.Managers
             _optionsFrameAttract = new Sprite3D
                                        {
                                            Texture = TextureManager.Textures("PlayerOptionsFrameAttract"),
-                                           ColorShading = new Color(255, 255, 255, 128)
+                                           ColorShading = new Color(255, 255, 255, 128),
+                                           Size = Size
                                        };
         }
 
@@ -46,7 +51,7 @@ namespace WGiBeat.Managers
             for (int x = 0; x < 4; x++)
             {
                 //Absolute positions for each player options frame.
-                _optionsFrames.Add(new PlayerOptionsFrame { Player = Players[x], PlayerIndex = x });
+                _optionsFrames.Add(new PlayerOptionsFrame { Player = Players[x], PlayerIndex = x, Size = Size });
                 _optionsFrames[x].Position = (Positions[x]);
             }
 
@@ -56,9 +61,9 @@ namespace WGiBeat.Managers
                 return;
             }   
 
-            if (DrawAttract && (from e in _optionsFrames where !e.Player.Playing select e).Any())
+            if (DrawAttract && (_optionsFrames.Where(e => !e.Player.Playing)).Any())
             {
-                var freeSlot = (from e in _optionsFrames where !e.Player.Playing select e.PlayerIndex).FirstOrDefault();
+                var freeSlot = (_optionsFrames.Where(e => !e.Player.Playing).Select(e => e.PlayerIndex)).FirstOrDefault();
                 _optionsFrameAttract.Position = Positions[freeSlot];
             }
             else
@@ -94,7 +99,6 @@ namespace WGiBeat.Managers
             }
         }
 
-
         public override void Draw()
         {
             foreach (var pof in _optionsFrames.Where(e => e.Player.Playing))
@@ -107,9 +111,7 @@ namespace WGiBeat.Managers
         public bool PerformAction(InputAction inputAction)
         {
             var playerIdx = inputAction.Player - 1;
-            var playerOptions = (from e in _optionsFrames where e.PlayerIndex == playerIdx select e).SingleOrDefault();
-
-         
+            var playerOptions = (from e in _optionsFrames where e.PlayerIndex == playerIdx select e).SingleOrDefault();        
             
             //Ignore inputs from players not playing EXCEPT for players joining in.
             if ((inputAction.Player == 0) || (!Players[inputAction.Player - 1].IsHumanPlayer))
@@ -117,13 +119,14 @@ namespace WGiBeat.Managers
                 if (inputAction.Action == "START")
                 {
                     JoinPlayer(inputAction.Player);
+                    _sounds.PlaySoundEffect(SoundEvent.PLAYER_JOIN);
                     return true;
                 }
                 return false;
             }
 
             //Ignore input if the player's options frame isn't in option change mode.
-            if (!playerOptions.OptionChangeActive)
+            if (playerOptions == null || !playerOptions.OptionChangeActive)
             {
                 return false;
             }
@@ -132,18 +135,23 @@ namespace WGiBeat.Managers
             {
                 case "LEFT":
                         playerOptions.AdjustDifficulty(-1);
+                        _sounds.PlaySoundEffect(SoundEvent.PLAYER_OPTIONS_CHANGE);
                     break;
                 case "RIGHT":
                         playerOptions.AdjustDifficulty(1);
+                        _sounds.PlaySoundEffect(SoundEvent.PLAYER_OPTIONS_CHANGE);
                     break;
                 case "UP":
                         playerOptions.AdjustSpeed(1);
+                        _sounds.PlaySoundEffect(SoundEvent.PLAYER_OPTIONS_CHANGE);
                     break;
                 case "DOWN":
                         playerOptions.AdjustSpeed(-1);
+                        _sounds.PlaySoundEffect(SoundEvent.PLAYER_OPTIONS_CHANGE);
                     break;
                 case "START":
                     LeavePlayer(inputAction.Player);
+                    _sounds.PlaySoundEffect(SoundEvent.PLAYER_LEAVE);
                     break;
             }
             return true;
@@ -155,7 +163,6 @@ namespace WGiBeat.Managers
             Players[player - 1].Playing = false;
             CheckNumberOfPlayers();
             CreatePlayerOptionsFrames();
-   
         }
 
         private void CheckNumberOfPlayers()
@@ -168,8 +175,15 @@ namespace WGiBeat.Managers
                     //Anything is allowed here.
                     break;
                     case GameType.COOPERATIVE:
-                    case GameType.TEAM:
                     if (playerCount < 2)
+                    {
+                        RequestReturnToMainMenu();
+                    }
+                    break;
+                    case GameType.TEAM:
+                    var blueCount = Players.Count(e => e.Team == 1 && e.Playing);
+                    var redCount = Players.Count(e => e.Team == 2 && e.Playing);
+                    if (blueCount == 0 || redCount == 0)
                     {
                         RequestReturnToMainMenu();
                     }
@@ -220,8 +234,8 @@ namespace WGiBeat.Managers
         private void AssignTeam(int player)
         {
             Players[player - 1].Team = 0;
-            var team1Count = (from e in Players where e.Team == 1 select e).Count();
-            var team2Count = (from e in Players where e.Team == 2 select e).Count();
+            var team1Count = Players.Count(e => e.Team == 1);
+            var team2Count = Players.Count(e => e.Team == 2);
             if (team1Count > team2Count)
             {
                 Players[player - 1].Team = 2;
@@ -237,14 +251,15 @@ namespace WGiBeat.Managers
             Players[player-1].CPU = false;
             for (int x = 0; x < 4; x++)
             {
-                if (!Players[x].Playing)
+                if (Players[x].Playing)
                 {
-                    Players[x].Playing = true;
-                    Players[x].CPU = true;
-                    Players[x].Profile = null;
-                    Players[x].Team = 2;
-                    return;
-                }            
+                    continue;
+                }
+                Players[x].Playing = true;
+                Players[x].CPU = true;
+                Players[x].Profile = null;
+                Players[x].Team = 2;
+                return;
             }
         }
 
@@ -252,23 +267,23 @@ namespace WGiBeat.Managers
         {
             var pof = (from e in _optionsFrames where e.PlayerIndex == player - 1 select e).SingleOrDefault();
             
-            if (pof != null)
+            if (pof != null && pof.Player.IsHumanPlayer)
             {
                 pof.OptionChangeActive = enabled;
+                _sounds.PlaySoundEffect(enabled ? SoundEvent.PLAYER_OPTIONS_DISPLAY : SoundEvent.PLAYER_OPTIONS_HIDE);
             }
         }
 
         public void CheckSyncDifficulty()
         {
-
-            if ((from e in Players where e.IsHumanPlayer select e).Count() == 0)
+            if (!(Players.Any(e => e.IsHumanPlayer)))
             {
                 return;
             }
 
             var lowestDifficulty = (from e in Players where e.IsHumanPlayer select e.PlayerOptions.PlayDifficulty).Min();
 
-            foreach (Player player in (from e in Players select e))
+            foreach (var player in Players)
             {
                 player.PlayerOptions.PlayDifficulty = lowestDifficulty;
             }
