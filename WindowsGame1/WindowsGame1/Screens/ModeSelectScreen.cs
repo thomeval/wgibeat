@@ -44,7 +44,8 @@ namespace WGiBeat.Screens
             Core.Cookies["CurrentGameType"] = GameType.NORMAL;
             RemoveCPUPlayers();
             ResetTeams();
-            _playerOptionsSet = new PlayerOptionsSet { Players = Core.Players, Positions = Core.Metrics["PlayerOptionsFrame"], DrawAttract = true, StackableFrames = true };
+            _playerOptionsSet = new PlayerOptionsSet { Players = Core.Players, Positions = Core.Metrics["PlayerOptionsFrame"], Size = Core.Metrics["PlayerOptionsFrame.Size",0], 
+                DrawAttract = true, StackableFrames = true };
             _playerOptionsSet.CreatePlayerOptionsFrames();
    
             base.Initialize();
@@ -247,7 +248,6 @@ namespace WGiBeat.Screens
             if (pass)
             {
                 //NetHelper.Instance.BroadcastPlayerOptions(inputAction.Player);
-                RaiseSoundTriggered(SoundEvent.PLAYER_OPTIONS_CHANGE);
                 return;
             }
             
@@ -294,7 +294,6 @@ namespace WGiBeat.Screens
                     break;
                 case "SELECT":
                     _playerOptionsSet.SetChangeMode(inputAction.Player,true);
-                    RaiseSoundTriggered(SoundEvent.PLAYER_OPTIONS_DISPLAY);
                     break;
 
             }
@@ -306,7 +305,6 @@ namespace WGiBeat.Screens
             {
                 case "SELECT":
                     _playerOptionsSet.SetChangeMode(inputAction.Player, false);
-                    RaiseSoundTriggered(SoundEvent.PLAYER_OPTIONS_HIDE);
                     break;
             }
             //NetHelper.Instance.BroadcastActionReleased(inputAction);

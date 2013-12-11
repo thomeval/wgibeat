@@ -66,11 +66,11 @@ namespace WGiBeat.Drawing
 
             //Determine positions.
             _textPosition = this.Position.Clone();
-            _textPosition.X += 50;
-            _textPosition.Y += 10;
+            _textPosition.X += 60;
+            _textPosition.Y += 13;
             _iconPosition = this.Position.Clone();
             _iconPosition.X += 10;
-            _iconPosition.Y += 7;
+            _iconPosition.Y += 12;
 
             //Draw controller Icon
             if (ControllerNumber > 0)

@@ -93,11 +93,8 @@ namespace WGiBeat.Screens
                                         Texture = TextureManager.Textures("KeyOptionGridBorder"),
                                         Position = Core.Metrics["KeyOptionGridBorder",0]
                                     };
-            _instructionBaseSprite = new Sprite3D
-                                         {
-                                             Texture = TextureManager.Textures("KeyOptionInstructionBase"),
-                                             Position = Core.Metrics["KeyOptionInstructionBase",0]
-                                         };
+            _instructionBaseSprite = Core.Metrics.SetupFromMetrics("KeyOptionInstructionBase", 0);
+
         }
 
         #endregion
@@ -132,12 +129,13 @@ namespace WGiBeat.Screens
                 {
                     idx += 4;
                 }
-                _gridTopSpriteMap.Draw( idx, Core.Metrics["KeyOptionGridTop", x]);
+                _gridTopSpriteMap.Draw( idx,Core.Metrics["KeyOptionGridTop.Size",0], Core.Metrics["KeyOptionGridTop", x]);
             }
 
             //Draw Grid Side
 
             _actionPosition = Core.Metrics["KeyOptionGridSide", 0].Clone();
+            var actionSize = Core.Metrics["KeyOptionGridSide.Size", 0];
             _textPosition = Core.Metrics["KeyOptionGridSideText", 0].Clone();
             for (int x = 0; x < _actions.Length; x++)
             {
@@ -146,25 +144,27 @@ namespace WGiBeat.Screens
                 {
                     idx += 4;
                 }
-                _gridSideSpriteMap.Draw( idx, _actionPosition);
+                _gridSideSpriteMap.Draw( idx, actionSize,_actionPosition);
                 FontManager.DrawString(_actions[x], "LargeFont", _textPosition, Color.Black, FontAlign.Right);
-                _actionPosition.Y += 40;
-                _textPosition.Y += 40;
+                _actionPosition.Y += actionSize.Y;
+                _textPosition.Y += actionSize.Y;
             }
             //Draw Grid Inside
             var size = Core.Metrics["KeyOptionGridInsideSize", 0];
-            _gridInsideSpriteMap.Draw( _currentPlayer - 1, (int)size.X, (int)size.Y, Core.Metrics["KeyOptionGridInside", 0]);
+            _gridInsideSpriteMap.Draw( _currentPlayer - 1, size.X, size.Y, Core.Metrics["KeyOptionGridInside", 0]);
 
             //Draw Border
             _gridBorderSprite.Draw();
 
             //Draw Bindings.
             _bindingPosition = Core.Metrics["KeyOptionGridBindings", 0].Clone();
+            var bindingSize = Core.Metrics["KeyOptionGridBindings.Size", 0];
             foreach (ActionBinding ab in _actionBindings)
             {
                 ab.Position = _bindingPosition;
+                ab.Size = bindingSize;
                 ab.Draw();
-                _bindingPosition.Y += 50;
+                _bindingPosition.Y += bindingSize.Y + 5;
             }
         }
 
@@ -178,7 +178,7 @@ namespace WGiBeat.Screens
             {
                 instructionText += "START: Add binding. SELECT: Remove bindings. Press Escape when done.";
             }
-            var scale = FontManager.ScaleTextToFit(instructionText, "LargeFont", 780, 100);
+            var scale = FontManager.ScaleTextToFit(instructionText, "LargeFont", GameCore.INTERNAL_WIDTH - 20, 100);
             FontManager.DrawString(instructionText, "LargeFont", Core.Metrics["KeyOptionInstructionText",0], scale, Color.White,FontAlign.Center);
         }
 

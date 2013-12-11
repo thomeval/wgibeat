@@ -61,9 +61,16 @@ namespace WGiBeat.Screens
                 _keyboards[x].EntryComplete += Keyboard_EntryComplete;
             }
 
-            _playerOptionsSet = new PlayerOptionsSet { Players = Core.Players, Positions = Core.Metrics["NewGamePlayerOptionsFrames"], DrawAttract = false };
+            _playerOptionsSet = new PlayerOptionsSet
+                                    {
+                                        Players = Core.Players, 
+                                        Positions = Core.Metrics["NewGamePlayerOptionsFrames"], 
+                                        DrawAttract = false, 
+                                        Size = Core.Metrics["PlayerOptionsFrame.Size",0]
+                                    };
             _playerOptionsSet.CreatePlayerOptionsFrames();
 
+            //Join the player that pressed START to enter this screen automatically.
             if (Core.Cookies.ContainsKey("JoiningPlayer"))
             {
                 var player = (int) Core.Cookies["JoiningPlayer"];
@@ -149,11 +156,11 @@ namespace WGiBeat.Screens
             disableKO.AddOption("On",true);
             _playerMenus[x].AddItem(disableKO);
 
-            var disableLB = new MenuItem { ItemText = "Disable Extra Life", IsSelectable = false };
-            disableLB.AddOption("Off", false);
-            disableLB.AddOption("On", true);
+            var disableLb = new MenuItem { ItemText = "Disable Extra Life", IsSelectable = false };
+            disableLb.AddOption("Off", false);
+            disableLb.AddOption("On", true);
 
-            _playerMenus[x].AddItem(disableLB);
+            _playerMenus[x].AddItem(disableLb);
             _playerMenus[x].Position = (Core.Metrics["NewGameMenuStart", x]);
             _playerMenus[x].MaxVisibleItems = 6;
 
@@ -212,11 +219,12 @@ namespace WGiBeat.Screens
             
             for (int x = 0; x < 4; x++)
             {
-                if (Core.Players[x].Playing)
+                if (!Core.Players[x].Playing)
                 {
-                    _messageBackground.Position = (Core.Metrics["NewGameMessageBorder", x]);
-                    _messageBackground.Draw();
+                    continue;
                 }
+                _messageBackground.Position = (Core.Metrics["NewGameMessageBorder", x]);
+                _messageBackground.Draw();
             }
             _playerOptionsSet.Draw();
         }

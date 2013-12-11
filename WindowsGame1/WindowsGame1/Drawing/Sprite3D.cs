@@ -107,7 +107,7 @@ namespace WGiBeat.Drawing
         {
             CheckIfDimensionsSet();
             var result = SetupPrimitives();
-            Device.SamplerStates[0].AddressU = TextureAddressMode.Clamp;
+            Device.SamplerStates[0].AddressU = TextureAddressMode.Clamp;       
             Device.SamplerStates[0].AddressV = TextureAddressMode.Clamp;
             return result;
         }

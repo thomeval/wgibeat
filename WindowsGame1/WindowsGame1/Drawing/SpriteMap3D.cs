@@ -5,7 +5,6 @@ namespace WGiBeat.Drawing
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
-  
         public class SpriteMap3D
         {
             private VertexPositionColorTexture[] _vertices;

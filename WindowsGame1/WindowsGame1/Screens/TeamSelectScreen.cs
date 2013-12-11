@@ -41,7 +41,8 @@ namespace WGiBeat.Screens
             {
                 _ready[x] = false;
             }
-            _playerOptionsSet = new PlayerOptionsSet { Players = Core.Players, Positions = Core.Metrics["PlayerOptionsFrame"], CurrentGameType = GameType.TEAM,  DrawAttract = true, StackableFrames = true};
+            _playerOptionsSet = new PlayerOptionsSet { Players = Core.Players, Positions = Core.Metrics["PlayerOptionsFrame"], 
+                CurrentGameType = GameType.TEAM,  Size = Core.Metrics["PlayerOptionsFrame.Size",0], DrawAttract = true, StackableFrames = true};
             _playerOptionsSet.CreatePlayerOptionsFrames();
 
             SetRestrictionMessage("Press left or right to \nchoose a team. Press start \nto confirm selection.", false);
@@ -153,7 +154,6 @@ namespace WGiBeat.Screens
             var pass = _playerOptionsSet.PerformAction(inputAction);
             if (pass)
             {
-                RaiseSoundTriggered(SoundEvent.PLAYER_OPTIONS_CHANGE);
                 TryToStart();
                 return;
             }
@@ -191,7 +191,6 @@ namespace WGiBeat.Screens
                     break;
                 case "SELECT":
                     _playerOptionsSet.SetChangeMode(inputAction.Player, true);
-                    RaiseSoundTriggered(SoundEvent.PLAYER_OPTIONS_DISPLAY);
                     break;
                 case "BACK":
                     for (int x = 0; x < 4; x++ )
@@ -211,7 +210,6 @@ namespace WGiBeat.Screens
             {
                 case "SELECT":
                     _playerOptionsSet.SetChangeMode(inputAction.Player, false);
-                    RaiseSoundTriggered(SoundEvent.PLAYER_OPTIONS_HIDE);
                     break;
             }
         }

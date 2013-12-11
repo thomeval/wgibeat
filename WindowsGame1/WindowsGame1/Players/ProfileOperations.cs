@@ -72,34 +72,31 @@ namespace WGiBeat.Players
 
         public static int GetMaxDifficulty(this Player player)
         {
-            if ((player.Profile == null) || (player.GetLevel() < 10))
+            if (player.GetLevel() < 10)
             {
                 return 3;
-            }
-            
-            if (player.GetLevel() >= 50)
-            {
-                return 5;
-            }
+            }            
               
             return 4;
         }
-   
+
+        private const int MAX_POSSIBLE_LIFE = 300;
+        private const int BASIC_MAX_LIFE = 100;
         public static double GetMaxLife(this Player player)
         {
             if (player.Profile == null)
             {
-                return 100;
+                return BASIC_MAX_LIFE;
             }
 
             if (player.PlayerOptions.DisableExtraLife)
             {
-                return 100;
+                return BASIC_MAX_LIFE;
             }
-            var maxLife = 100;
+            var maxLife = BASIC_MAX_LIFE;
 
             maxLife += (player.GetLevel() - 1)*5;
-            maxLife = Math.Min(300, maxLife);
+            maxLife = Math.Min(MAX_POSSIBLE_LIFE, maxLife);
             return maxLife;
         }
 

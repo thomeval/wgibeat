@@ -29,6 +29,7 @@ namespace WGiBeat.AudioSystem
 
         public double Offset { get; set; }
         public double Length { get; set; }
+        public double PlayableLength { get { return Length - Offset; } }
         public double AudioStart { get; set; }
         public string Path { get; set; }
 
