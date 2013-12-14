@@ -210,6 +210,7 @@ namespace WGiBeat.Screens
                         Core.Players[x].Team = 0;
                     }
                         Core.ScreenTransition("ModeSelect");
+                    RaiseSoundTriggered(SoundEvent.MENU_BACK);
                     break;
             }
 

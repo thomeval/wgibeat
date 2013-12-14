@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RoundLineCode;
+using WGiBeat.AudioSystem;
 using WGiBeat.Drawing;
 using WGiBeat.Managers;
 using WGiBeat.Notes;
@@ -31,6 +32,7 @@ namespace WGiBeat.Screens
         private Sprite3D _coopScoreDisplay;
         private readonly ProfileLevelDisplay[] _profileLevelDisplays;
         private readonly long[] _xpAwarded;
+        private bool[] _levelledUp;
         private PlayerOptionsSet _playerOptionsSet;
         private List<RoundLine> _lineList;
 
@@ -40,12 +42,13 @@ namespace WGiBeat.Screens
         {
             _profileLevelDisplays = new ProfileLevelDisplay[4];
             _xpAwarded = new long[4];
-
+            _levelledUp = new bool[4];
         }
 
         #region Overrides
         public override void Initialize()
         {
+            _levelledUp = new bool[4];
             CalculateGrades();
             SaveHighScore();
             SaveProfiles();
@@ -84,7 +87,8 @@ namespace WGiBeat.Screens
 
             _teamScoreMeter = new TeamScoreMeter
                                   {
-                                      Position = (Core.Metrics["EvaluationTeamScoreMeter", 0])
+                                      Position = (Core.Metrics["EvaluationTeamScoreMeter", 0]),
+                                      Size = Core.Metrics["EvaluationTeamScoreMeter.Size",0]
                                   };
             _teamScoreMeter.InitSprites();
 
@@ -140,7 +144,8 @@ namespace WGiBeat.Screens
             _coopScoreDisplay = new Sprite3D
                                     {
                                         Texture = TextureManager.Textures("ScoreBaseCombined"),
-                                        Position = Core.Metrics["EvaluationTeamScoreMeter", 0]
+                                        Position = Core.Metrics["EvaluationTeamScoreMeter", 0],
+                                        Size = Core.Metrics["EvaluationTeamScoreMeter.Size",0]
                                     };
 
         }
@@ -165,8 +170,6 @@ namespace WGiBeat.Screens
             {
                 case 4:
                     scores = (from e in CombineScoreData(0) select (long) e).ToList();
-                  
-                    //TODO: Combine high scores.
                     break;
                 case 5:
                     scores = Core.Players[0].ScoreHistory;
@@ -181,10 +184,12 @@ namespace WGiBeat.Screens
 
         private void SaveProfiles()
         {
+        
             for (int x = 0; x < 4; x++)
             {
                 _xpAwarded[x] = Core.Players[x].AwardXP();
 
+                
                 if (Core.Players[x].Profile == null)
                 {
                     continue;
@@ -197,8 +202,18 @@ namespace WGiBeat.Screens
                 {
                     Core.Players[x].Profile.SongsCleared++;
                 }
+                
+                //Is the player's current EXP plus the amount just earned more than the next level threshhold? But not the player's current EXP only?
+                _levelledUp[x] = Core.Players[x].GetNextEXPSafe() <= Core.Players[x].GetEXP() + _xpAwarded[x] && Core.Players[x].GetEXP() < Core.Players[x].GetNextEXPSafe();
+    
                 Core.Players[x].UpdateToProfile();
                 Core.Profiles.SaveToFolder(Core.WgibeatRootFolder + "\\" + Core.Settings["ProfileFolder"]);
+
+            }
+
+            if (_levelledUp.Any(e => e))
+            {
+                Core.Sounds.PlaySoundEffect(SoundEvent.PLAYER_LEVEL_UP);
             }
         }
 
@@ -352,6 +367,12 @@ namespace WGiBeat.Screens
                 _profileLevelDisplays[x].Draw();
 
                 FontManager.DrawString(String.Format("+{0} EXP", _xpAwarded[x]), "LargeFont", Core.Metrics["EvaluationEXPAwarded", x], Color.Black, FontAlign.Center);
+                
+                if (_levelledUp[x])
+                {
+                    FontManager.DrawString("LEVEL UP!", "LargeFont", Core.Metrics["EvaluationLevelUpIndicator",x]);
+                }
+                
             }
         }
 

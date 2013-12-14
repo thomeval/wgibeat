@@ -13,6 +13,7 @@ namespace WGiBeat.Drawing
         private Sprite3D _baseBlinkSprite;
         private Sprite3D _songLengthBase;
         private Sprite3D _songTitleBase;
+        private Sprite3D _warningSprite;
         private double _displayedMinBpm;
         private double _displayedMaxBpm;
         private double _actualMinBpm;
@@ -93,14 +94,19 @@ namespace WGiBeat.Drawing
                 Texture = TextureManager.Textures("BpmMeterBlink"),
             };
 
+            _warningSprite = new Sprite3D
+                                 {
+                                     Texture = TextureManager.Textures("RestrictionIcon"),
+                                     Size = new Vector2(64,64)
+                                 };
             RepositionSprites();
         }
 
         private void RepositionSprites()
         {
-
+            //TODO: Fix to use metrics
             _songTitleBase.Position = this.Position.Clone();
-
+            
             _songLengthBase.Position = this.Position.Clone();
             _songLengthBase.X += 185;
             _songLengthBase.Y += 190;
@@ -116,6 +122,8 @@ namespace WGiBeat.Drawing
             _bpmTextPosition = _baseSprite.Position.Clone();
             _bpmTextPosition.X += 125;
             _bpmTextPosition.Y += 85;
+            _songTitleBase.Size = new Vector2(383,82);
+            _warningSprite.Position = new Vector2(this.X + _songTitleBase.Width - _warningSprite.Width - 10, this.Y + this.Height  + 60 - _warningSprite.Height);
         }
 
         private readonly Color _notLitColor = new Color(64, 64, 64, 255);
@@ -207,11 +215,24 @@ namespace WGiBeat.Drawing
             }
 
             DrawBPMText();
+            DrawWarningIcon();
 
+        }
+
+        private void DrawWarningIcon()
+        {
+            if (_actualMaxBpm >= 180)
+            {
+                var beatFraction = (SongTime) - Math.Floor(SongTime);
+                _warningSprite.ColorShading.A = (byte)(255 * (1 - beatFraction));
+                _warningSprite.Draw();
+            }
         }
 
         private readonly double[] _bpmColors = {70, 140, 195, 210};
         private readonly Color[] _blinkColors = new[] { Color.Lime, Color.Yellow, Color.Red, new Color(234, 15, 158) };
+
+
         private void DrawBase()
         {
             var beatFraction = (SongTime) - Math.Floor(SongTime);

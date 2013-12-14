@@ -20,7 +20,7 @@ namespace WGiBeat.Screens
         #region Fields
         private readonly Dictionary<string, Menu> _menus = new Dictionary<string, Menu>();
         private readonly FileSelectDialog _fileSelect = new FileSelectDialog();
-        private readonly TextEntry _textEntry = new TextEntry { Width = 800, Height = 600 };
+        private readonly TextEntry _textEntry = new TextEntry { Width = GameCore.INTERNAL_WIDTH, Height = GameCore.INTERNAL_HEIGHT  };
         private BeatlineSet _beatlineSet;
         private NoteJudgementSet _noteJudgementSet;
         private CountdownSet _countdownSet;
@@ -103,7 +103,7 @@ namespace WGiBeat.Screens
             _countdownSet = new CountdownSet(Core.Metrics, Core.Players, GameType.NORMAL);
             _songTimeLine = new SongTimeLine
                                 {Size = Core.Metrics["EditorSongTimeLine.Size",0], Position = Core.Metrics["EditorSongTimeLine", 0], ShowLabels=true};
-            _songTypeDisplay = new SongTypeDisplay { Position = Core.Metrics["EditorSongTypeDisplay", 0], Width = 155, Height = 40 };
+            _songTypeDisplay = new SongTypeDisplay { Position = Core.Metrics["EditorSongTypeDisplay", 0], Size = Core.Metrics["EditorSongTypeDisplay.Size", 0] };
 
         }
 
@@ -131,28 +131,32 @@ namespace WGiBeat.Screens
                                      {
                                          Columns = 1,
                                          Rows = 2,
-                                         Texture = TextureManager.Textures("EditorSongValidity")
+                                         Texture = TextureManager.Textures("EditorSongValidity"),
+                                       
                                      };
             _validityTextBaseSprite = new Sprite3D
                                           {
                                               Texture = TextureManager.Textures("EditorValidityTextBase"),
-                                              Position = (Core.Metrics["EditorSongValidityMessageBase", 0])
+                                              Position = (Core.Metrics["EditorSongValidityMessageBase", 0]),
+                                               Size = Core.Metrics["EditorSongValidityMessageBase.Size",0]
                                           };
             _songDetailsDisplaySprite = new Sprite3D
                                             {
                                                 Position = Core.Metrics["EditorSongDetailsDisplay", 0],
-                                                Texture = TextureManager.Textures("EditorDetailsDisplay")
+                                                Texture = TextureManager.Textures("EditorDetailsDisplay"),
+                                                Size = Core.Metrics["EditorSongDetailsDisplay.Size",0]
                                             };
             _songBackgroundDisplaySprite = new Sprite3D
                                                {
                                                    Position = Core.Metrics["EditorSongBackgroundDisplay",0],
-                                                   Texture =
-                                                       TextureManager.Textures("EditorSongBackgroundDisplay")
+                                                   Texture =TextureManager.Textures("EditorSongBackgroundDisplay"),
+                                                    Size = Core.Metrics["EditorSongBackgroundDisplay.Size",0]
                                                };
             _textBackground = new Sprite3D
             {
                 Texture = TextureManager.Textures("MainGameTextBackground"),
-                Position = Core.Metrics["EditorTextBackground", 0]
+                Position = Core.Metrics["EditorTextBackground", 0],
+                Size = Core.Metrics["EditorTextBackground.Size",0]
             };
         }
 
@@ -332,14 +336,14 @@ namespace WGiBeat.Screens
                 case EditorCursorPosition.SONG_DETAILS_DELETE:
                     _editProgress = 2;
                     var validIdx = _songValid ? 1 : 0;
-                    _validitySpriteMap.Draw( validIdx, 195, 42, Core.Metrics["EditorSongValidity",0]);
+                    _validitySpriteMap.Draw( validIdx, Core.Metrics["EditorSongValidity.Size",0], Core.Metrics["EditorSongValidity",0]);
                     _songBackgroundDisplaySprite.Draw();
                     _bpmMeter.Draw();
                     DrawBPMMeterExtras();
                     DrawSongTimeLine();
                     if (!String.IsNullOrEmpty(_errorMessage))
                     {
-                        var scale = FontManager.ScaleTextToFit(_errorMessage, "DefaultFont", 790, 100);
+                        var scale = FontManager.ScaleTextToFit(_errorMessage, "DefaultFont", GameCore.INTERNAL_WIDTH - 20, 100);
                         FontManager.DrawString("An error has occurred:", "LargeFont", Core.Metrics["EditorErrorMessage", 0], Color.Red, FontAlign.Center);
                         FontManager.DrawString(_errorMessage, "DefaultFont", Core.Metrics["EditorErrorMessage", 1],scale, Color.Red, FontAlign.Center);
 

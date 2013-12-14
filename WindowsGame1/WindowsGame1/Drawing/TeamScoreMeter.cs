@@ -56,8 +56,8 @@ namespace WGiBeat.Drawing
 
         private void DrawScoreText()
         {
-            var blueTextPosition = new Vector2(this.X + 10, this.Y + 5);
-            var redTextPosition = new Vector2(this.X + this.Width - 10, this.Y + 5);
+            var blueTextPosition = new Vector2(this.X + 15, this.Y + 5);
+            var redTextPosition = new Vector2(this.X + this.Width - 15, this.Y + 5);
                 FontManager.DrawString("" + BlueScore, "LargeFont",
                                       blueTextPosition, Color.White, FontAlign.Left);
                 FontManager.DrawString("" + RedScore, "LargeFont",
@@ -68,14 +68,15 @@ namespace WGiBeat.Drawing
         private void DrawBars()
         {
             var scoreDiff = CalculateBarDifference();
+            var halfWidth = (this.Width/2 - 16);
             _tugBlueSprite.X = this.X + 16;
              _tugBlueSprite.Y = this.Y +3;
-            _tugBlueSprite.Width = 124 + scoreDiff;
-            _tugRedSprite.Width = 124 - scoreDiff;
+            _tugBlueSprite.Width = halfWidth + scoreDiff;
+            _tugRedSprite.Width = halfWidth - scoreDiff;
             _tugRedSprite.X = _tugBlueSprite.X + _tugBlueSprite.Width;
             _tugRedSprite.Y = this.Y+3;
-            _tugBlueSprite.DrawTiled((int)_blueBarTextureStart,0, _tugBlueSprite.Width, _tugBlueSprite.Height);
-            _tugRedSprite.DrawTiled((int)_redBarTextureStart, 0, _tugRedSprite.Width, _tugRedSprite.Height);
+            _tugBlueSprite.DrawTiled((float) _blueBarTextureStart,0, _tugBlueSprite.Width, _tugBlueSprite.Texture.Height);
+            _tugRedSprite.DrawTiled((float)_redBarTextureStart, 0, _tugRedSprite.Width, _tugRedSprite.Texture.Height);
         }
 
         private const int BAR_MAX_LENGTH = 120;
@@ -98,6 +99,7 @@ namespace WGiBeat.Drawing
         private void DrawBase()
         {
             _teamBaseSprite.Position = this.Position;
+            _teamBaseSprite.Size = this.Size;
             _teamBaseSprite.Draw();
 
         }

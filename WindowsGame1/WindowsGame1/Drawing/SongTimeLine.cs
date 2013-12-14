@@ -36,6 +36,7 @@ namespace WGiBeat.Drawing
                                       Texture = TextureManager.Textures("SongTimeLineCurrentPosition"),
                                       Width= 6
                                    };
+       
         }
 
         public override void Draw()
@@ -44,6 +45,8 @@ namespace WGiBeat.Drawing
             {
                 return;
             }
+            _barHeight = this.Height - 45;
+            _currentPosition.Height = _barHeight;
             DrawEdges();
             DrawBars();
             DrawCurrentPosition();
@@ -56,10 +59,10 @@ namespace WGiBeat.Drawing
             {
                 return;
             }
-            _currentPosition.Height = this.Height - 40;
+ 
             var position = this.Position.Clone();
             position.X += 10;
-            position.Y += 20;
+            position.Y += TEXT_HEIGHT;
             var ending = Math.Max(Song.ConvertPhraseToMS(Song.GetEndingTimeInPhrase()) / 1000.0, AudioEnd);
 
             position.X += (float) (CurrentPosition.Value/ ending * _totalBarWidth);
@@ -85,7 +88,7 @@ namespace WGiBeat.Drawing
               FontManager.DrawString("AudioStart", "DefaultFont", position, Color.Black, FontAlign.Center);
           }
             position.X = (_labelPositions[1] + this.X + 10);
-            position.Y = this.Y + 40;
+            position.Y = this.Y + this.Height - 20;
 
             if (position.X < 35)
             {
@@ -99,13 +102,17 @@ namespace WGiBeat.Drawing
         }
 
         private float _totalBarWidth;
+        private float _barHeight;
+        private const float TEXT_HEIGHT = 25;
         private readonly int[] _labelPositions = new int[4];
+
+
         private void DrawBars()
         {
-            var barHeight = this.Height - 40;
+            
             var position = this.Position.Clone();
             position.X += 10;
-            position.Y += 20;
+            position.Y += TEXT_HEIGHT;
 
             _totalBarWidth = this.Width - 20;
             var ending = Math.Max(Song.ConvertPhraseToMS(Song.GetEndingTimeInPhrase())/1000.0, AudioEnd);
@@ -113,34 +120,34 @@ namespace WGiBeat.Drawing
             //Draw outro section.
             var width = AudioEnd / ending * _totalBarWidth;
             width = Math.Min(width, _totalBarWidth);
-            _barParts.Draw( 3,(int) width, barHeight,position);
+            _barParts.Draw( 3,(int) width, _barHeight,position);
 
             //Draw playable section.
             width = (Length ?? Song.Length) /ending * _totalBarWidth;
             width = Math.Min(width, _totalBarWidth);
             _labelPositions[2] = (int) width;
-            _barParts.Draw( 2, (int)width, barHeight, position);
+            _barParts.Draw( 2, (int)width, _barHeight, position);
 
             //Draw intro section.
             width = (Offset ?? Song.Offset) / ending * _totalBarWidth;
             width = Math.Min(width, _totalBarWidth);
             _labelPositions[1] = (int)width;
-            _barParts.Draw( 1, (int)width, barHeight, position);
+            _barParts.Draw( 1, (int)width, _barHeight, position);
 
             //Draw skipped section.
             width = (AudioStart ?? Song.AudioStart) / ending * _totalBarWidth;
             width = Math.Min(width, _totalBarWidth);
             _labelPositions[0] = (int)width;
-            _barParts.Draw( 0, (int)width, barHeight, position);
+            _barParts.Draw( 0, (int)width, _barHeight, position);
         }
 
         private void DrawEdges()
         {
             var position = this.Position.Clone();
-            position.Y += 20;
-            _barEdges.Draw(0,10,this.Height - 40,position);
+            position.Y += TEXT_HEIGHT;
+            _barEdges.Draw(0,10,_barHeight,position);
             position.X += this.Width - 10;
-            _barEdges.Draw(1,10,this.Height-40,position);
+            _barEdges.Draw(1, 10, _barHeight, position);
         }
     }
 }

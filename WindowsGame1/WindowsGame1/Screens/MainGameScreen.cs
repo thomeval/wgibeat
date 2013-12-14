@@ -724,8 +724,11 @@ namespace WGiBeat.Screens
             _countdownSet.Draw( _phraseNumber);
         }
 
+        //TODO: Refactor this and KO into a Set.
         private void DrawClearIndicators()
         {
+                        var syncGameType = (GameType) Core.Cookies["CurrentGameType"] == GameType.SYNC_PLUS ||
+                               (GameType) Core.Cookies["CurrentGameType"] == GameType.SYNC_PRO;
             if (_displayState != 1)
             {
                 return;
@@ -734,7 +737,8 @@ namespace WGiBeat.Screens
             {
                 if ((!Core.Players[x].KO) && (Core.Players[x].Playing))
                 {
-                    _clearSprite.Position = (Core.Metrics["KOIndicator", x]);
+                    _clearSprite.Position = Core.Metrics[syncGameType ? "SyncClearIndicator" : "ClearIndicator", x];
+                    _clearSprite.Size = Core.Metrics["ClearIndicator.Size", 0];
                     _clearSprite.Draw();
                 }
             }
@@ -743,11 +747,14 @@ namespace WGiBeat.Screens
         private void DrawKOIndicators()
         {
 
+            var syncGameType = (GameType) Core.Cookies["CurrentGameType"] == GameType.SYNC_PLUS ||
+                               (GameType) Core.Cookies["CurrentGameType"] == GameType.SYNC_PRO;
             for (int x = 0; x < PLAYER_COUNT; x++)
             {
                 if ((Core.Players[x].KO) && (Core.Players[x].Playing))
                 {
-                    _koSprite.Position = (Core.Metrics["KOIndicator", x]);
+                    _koSprite.Position = Core.Metrics[syncGameType ? "SyncKOIndicator" : "KOIndicator", x];
+                    _koSprite.Size = Core.Metrics["KOIndicator.Size", 0];
                     _koSprite.Draw();
                 }
             }

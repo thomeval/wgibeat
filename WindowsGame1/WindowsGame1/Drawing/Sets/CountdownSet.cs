@@ -48,7 +48,7 @@ namespace WGiBeat.Drawing.Sets
                     if (phraseNumber < _threshholds[y])
                     {
                         _countdownSpriteMap.ColorShading.A = (byte)Math.Min(255, (_threshholds[y] - phraseNumber) * 255 * 4);
-                        _countdownSpriteMap.Draw( y, 200, 60, SyncGameType ? _metrics["SyncCountdown",visiblePlayers]: _metrics["Countdown", x]);
+                        _countdownSpriteMap.Draw( y, _metrics["Countdown.Size",0], SyncGameType ? _metrics["SyncCountdown",visiblePlayers]: _metrics["Countdown", x]);
                         break;
                     }
                 }

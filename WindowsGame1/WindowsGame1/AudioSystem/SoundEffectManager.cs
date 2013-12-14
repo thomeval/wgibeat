@@ -116,6 +116,7 @@ namespace WGiBeat.AudioSystem
         KEY_CHANGE_CANCEL,
 
         PLAYER_JOIN,
-        PLAYER_LEAVE
+        PLAYER_LEAVE,
+        PLAYER_LEVEL_UP
     }
 }
