@@ -138,12 +138,12 @@ LifeGraph.Size=[605,295];
 GraphLegendItem.Size=[88,33][200,33];
 
 #New Game;
-NewGameJoinNotification=[80,139][720,139][80,500][720,500];
-NewGameMenuStart=[40,0][680,0][40,333][680,333];
-NewGameMessageBorder=[0,244][640,244][0,578][640,578];
-NewGameMessageBorder.Size=[640,61];
-NewGamePlayerOptionsFrames=[0,325][640,325][0,685][640,685];
-OnScreenKeyboard=[16,44][656,44][16,378][656,378];
+NewGameJoinNotification=[80,160][720,160][80,520][720,520];
+NewGameMenuStart=[40,0][680,0][40,360][680,360];
+NewGameMessageBorder=[0,305][640,305][0,665][640,665];
+NewGameMessageBorder.Size=[640,55];
+NewGamePlayerOptionsFrames=[0,265][640,265][0,625][640,625];
+OnScreenKeyboard=[16,44][656,44][16,404][656,404];
 OnScreenKeyboard.Size=[0,0];
 
 #Song Select;
@@ -153,7 +153,7 @@ SongSelectScreenHeader=[0,0];
 SongListItem.Size=[608,50];
 SongListItem.ClearIndicatorSize=[48,50];
 SongListItem.MaxTextWidth=[390,0];
-SongHighScoreFrame=[467,347];
+SongHighScoreFrame=[467,346];
 SongSortDisplay=[980,89];
 SongSortDisplay.Size=[300,50];
 SongCountDisplay=[875,89][935,83];
@@ -164,8 +164,8 @@ SelectedMode=[480,611];
 BPMMeter=[467,265];
 SelectedSongSpectrum=[632,407];
 SelectedSongSpectrum.Size=[6,-60];
-SongTypeDisplay=[547,457];
-SongTypeDisplay.Size=[113,40];
+SongTypeDisplay=[547,455];
+SongTypeDisplay.Size=[113,42];
 SongSelectLoadingMessage=[910,415];
 SongLockedRequirements=[657,460];
 

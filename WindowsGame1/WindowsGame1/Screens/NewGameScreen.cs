@@ -234,7 +234,7 @@ namespace WGiBeat.Screens
             for (int x = 0; x < 4; x++)
             {
                 var textPosition = Core.Metrics["NewGameMessageBorder", x].Clone();
-                textPosition.X += 200;
+                textPosition.X += Core.Metrics["NewGameMessageBorder.Size",0].X / 2;
                 textPosition.Y += 5;
                 FontManager.DrawString(_infoMessages[x], "DefaultFont", textPosition, Color.White,
                                           FontAlign.Center);
