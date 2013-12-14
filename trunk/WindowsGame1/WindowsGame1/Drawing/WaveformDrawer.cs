@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RoundLineCode;
@@ -10,7 +8,6 @@ namespace WGiBeat.Drawing
 {
     public class WaveformDrawer : DrawableObject
     {
-
         public Color ColorShading;
         private RoundLineManager _roundLine;
         private List<RoundLine> _lineList;
@@ -27,8 +24,6 @@ namespace WGiBeat.Drawing
 
         public void Draw(float[] levels)
         {
-
-
             if (levels.Length < 2)
             {
                 return;
@@ -50,7 +45,6 @@ namespace WGiBeat.Drawing
             }
 
             _roundLine.Draw(_lineList,2,ColorShading,0,null);
-
         }
 
     }

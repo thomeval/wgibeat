@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WGiBeat.AudioSystem;
@@ -16,7 +15,7 @@ namespace WGiBeat.Drawing
         public double Opacity { get; set; }
         private double _displayOpacity;
 
-        public Color _colour = Color.Black;
+        private Color _colour = Color.Black;
 
         public Color Colour 
         { 
@@ -43,11 +42,8 @@ namespace WGiBeat.Drawing
         private SpectrumDrawer _spectrumDrawer;
         private WaveformDrawer _waveformDrawer;
  
-
         private bool _init;
         private SpectrumDrawer _spectrumDrawerTop;
-
-
 
         public override void Draw()
         {
@@ -79,19 +75,16 @@ namespace WGiBeat.Drawing
             var myOpacity = 255 * Math.Min(MaxBrightness, _displayOpacity) / 255 * (GetBeatFraction(phraseNumber));
 
    
-                float[] levels = AudioManager.GetChannelSpectrum(SongChannel, SPECTRUM_POINTS);
+            float[] levels = AudioManager.GetChannelSpectrum(SongChannel, SPECTRUM_POINTS);
             float[] waveLevels = AudioManager.GetChannelWaveform(SongChannel, WAVEFORM_POINTS);
 
                 _mySprite.ColorShading.A = (byte)(myOpacity);
            _mySprite.Draw();
 
-
-     
-
             _spectrumDrawer.ColorShading.A = _spectrumDrawerTop.ColorShading.A = _waveformDrawer.ColorShading.A = (byte) Math.Min(MaxBrightness, _displayOpacity);
-            _spectrumDrawerTop.Height = 50 + (int)(250 * _displayOpacity / 255);
+            _spectrumDrawerTop.Height = 50 + (int)(((BAR_HEIGHT) - 50) * _displayOpacity / 255);
             _spectrumDrawer.Height = -_spectrumDrawerTop.Height;
-            _waveformDrawer.Height = 25 + (int)(125 * _displayOpacity / 255);
+            _waveformDrawer.Height = 25 + (int)(((BAR_HEIGHT /2 ) - 25) * _displayOpacity / 255);
             DrawLevels( levels);
 
             DrawWaveform(waveLevels);
@@ -142,7 +135,6 @@ namespace WGiBeat.Drawing
             _spectrumDrawer.Draw( levels);
             _spectrumDrawerTop.Draw(levels);
         }
-
 
         private double GetBeatFraction(double phraseNumber)
         {

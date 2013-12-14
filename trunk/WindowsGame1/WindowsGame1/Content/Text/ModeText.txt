@@ -1,8 +1,8 @@
 ﻿#TEXT-1.0;
 ModeSelectCPULevel=Select CPU Skill level:
-ModeSelect0=1 to 4 players:\nEach player plays independantly and \nis evaluated individually.
-ModeSelect1=2 to 4 players:\nPlay as a team to earn Groove Momentum \nand achieve high scores. \nPlayer scores and life bars are combined.
+ModeSelect0=1 to 4 players:\nEach player plays independantly and is evaluated individually.
+ModeSelect1=2 to 4 players:\nPlay as a team to earn Groove Momentum and achieve high scores. \nPlayer scores and life bars are combined.
 ModeSelect2=2 to 4 players:\nTwo teams play competitively.\nThe team with the higher score wins.
-ModeSelect3=1 to 3 players:\nPlayers compete against a computer opponent.\nThe opponent is scaled to match the number \nof players.
-ModeSelect4=2 to 4 players:\nPlayers play as a combined unit.\nOnly the performance of the weakest player\n is counted. One shared life and level bar.
-ModeSelect5=2 to 4 players:\nPlayers play as a combined unit but can support \neach other to complete arrows. \nOne shared life and level bar.
+ModeSelect3=1 to 3 players:\nPlayers compete against a computer opponent.\nThe opponent is scaled to match the number of players.
+ModeSelect4=2 to 4 players:\nPlayers play as a combined unit.\nOnly the performance of the weakest player is counted. \nOne shared life and level bar.
+ModeSelect5=2 to 4 players:\nPlayers play as a combined unit but can support each other to complete arrows. \nOne shared life and level bar.

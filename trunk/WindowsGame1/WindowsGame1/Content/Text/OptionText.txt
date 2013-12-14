@@ -1,17 +1,17 @@
 ﻿#TEXT-1.0;
 Option0=Adjust the volume of all game audio.
-Option1=Allows adjustments to be made to a song's BPM, length and offset during gameplay.\nUse the F5 to F12 keys.
+Option1=Allows adjustments to be made to a song's BPM, length and offset during gameplay.\nUse the F3 to F12 keys.
 Option2=This affects how the game treats MD5 validation of audio (.mp3) files. \nSet to 'Ignore' to disable and decrease initial loading times.\nSet to 'Auto Correct' to correct invalid MD5 hashes automatically.
 Option3=If enabled, the game log (displayed when the game is started)\n is saved to log.txt when the game is closed. It is helpful for troubleshooting.
-Option4=This option determines how much information is logged.\n Setting this to 'Debug or Above' will cause all log information to be recored. \nHigher levels will result in less information.
+Option4=This option determines how much information is logged.\n Setting this to 'Debug or Above' will cause all log information to be recored. Higher levels will result in less information.
 Option5=This changes the currently active theme.\n Themes are stored in separate folders in the Content\Textures folder.
 Option6=Determines whether WGiBeat should allow or ignore songs that are known \n to be problematic, such as .sm or .dwi songs that have negative BPMs or Stops. 
-Option7=Determines whether any song files loaded that are not in .sng format should be \n saved as .sng files. Since the original .dwi or .sm files \nare never changed by WGiBeat, this is required to make such files editable.
-Option8=Adjusts the size of the game's window. This has no effect if 'full screen' is on.\nHigher levels will cause minor graphical glitches.\nNOTE: This is disabled because its currently broken, and will be fixed later.
-Option9=Switches between windowed and full-screen mode.
+Option7=Determines whether any song files loaded that are not in .sng format should be saved as .sng files.\n Since the original .dwi or .sm files are never changed by WGiBeat, this is required to make such files editable.
+Option8=Adjusts the size of the game's resolution. Higher settings will look nicer but require a faster system.
+Option9=Switches between windowed and full-screen mode.\nPressing Alt + Enter will also toggle full screen mode temporarily.
 Option10=Enables or disables vertical sync.\nIf enabled, the frame rate will be limited to the refresh rate of the monitor.\nThis should be disabled on slower systems.
 Option11=Determines whether WGiBeat will check for newer versions from the internet.\n This is done automatically on the Main Menu screen when enabled.
 Option12=Controls the maximum brightness of the animated background during gameplay.\n This should be turned off on slower systems.
-Option13=Controls the extent to which the bass is amplified while Blazing Mode is active.\n The highest setting is known to cause sound distortion.
+Option13=Controls the extent to which the bass is amplified while Blazing Mode is active.\n Higher settings are known to cause sound distortion. Headphones are strongly recommended!
 Option14=Saves all changes made and returns to the main menu.
 Option15=Discards all changes made and returns to the main menu.

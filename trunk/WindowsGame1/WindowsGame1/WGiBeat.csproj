@@ -206,6 +206,9 @@
     <Content Include="Content\SoundEffects\Default\MenuSounds.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\SoundEffects\Default\playerlevelup.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\SoundEffects\Fallback.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
