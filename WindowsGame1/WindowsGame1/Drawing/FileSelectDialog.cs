@@ -61,7 +61,7 @@ namespace WGiBeat.Drawing
         {
             FileList.TextColor = Color.Black;
             FileList.FontName = "DefaultFont";
-            FileList.MaxVisibleItems = 15;
+            FileList.MaxVisibleItems = 23;
             FileList.ItemSpacing = 18;
             _sounds = GameCore.Instance.Sounds;
         }
