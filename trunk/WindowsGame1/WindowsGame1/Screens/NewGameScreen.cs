@@ -500,7 +500,7 @@ namespace WGiBeat.Screens
         private void TryToStart()
         {
             
-            var noPlayers = _cursorPositions.Any(e => e != CursorPosition.NotJoined);
+            var noPlayers = _cursorPositions.All(e => e == CursorPosition.NotJoined);
             if (noPlayers)
             {
                 return;

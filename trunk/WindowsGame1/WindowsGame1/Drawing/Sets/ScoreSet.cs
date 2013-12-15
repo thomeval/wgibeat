@@ -141,6 +141,7 @@ namespace WGiBeat.Drawing.Sets
             _coopBaseSprite.Size = _metrics["SyncScoreBase.Size", 0];
                     _coopBaseSprite.Draw();
                     _coopPulseSprite.Position = _metrics["SyncScoreBase", 0];
+            _coopPulseSprite.Size = _metrics["SyncScoreBase.Size", 0];
                     _coopPulseSprite.ColorShading.A = (byte)Math.Min(255, 2 * Math.Sqrt(Players[0].Score - scoreText));
                     _coopPulseSprite.Draw();
                     FontManager.DrawString("" + Math.Ceiling(scoreText), "LargeFont",

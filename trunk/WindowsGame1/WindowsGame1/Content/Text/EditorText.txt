@@ -1,4 +1,4 @@
-﻿#TEXT-1.0;
+#TEXT-1.0;
 EditorDoneCreating=The song has been created successfully, and saved in the designated folder.\nIt is now playable by selecting it from the Song Select Screen.\nThe song can be edited later by selecting 'Edit Existing Song'\nfrom the WGiEdit main menu.\nPress START to return to the main menu.
 EditorDoneDeleting=The song has been deleted successfully.\nPress START to return to the main menu.
 EditorEnterDestinationFolder=Enter the name of the folder where this song will be stored.\n It will be created if it doesn't exist.
@@ -15,4 +15,4 @@ EditorMeasureLength=Press START or BEATLINE to mark the end of the playable area
 EditorEnterSongAudioStart=(Optional) Enter the Audio Start point of the song, in seconds.\nThis is used to mark where audio playback should begin when the song is played.\nUse this to shorten the pre-gameplay section of the song.
 EditorMeasureAudioStart=Press START or BEATLINE to mark the Audio Start point of the song.\nThis is used to mark where audio playback should begin when the song is played.\nUse this to shorten the pre-gameplay section of the song.\nPress LEFT or RIGHT to rewind or fast forward the song by 3 seconds.\nPress Escape to cancel.
 EditorTweakControlsLeft=F3 - Decrease BPM (0.01) \nF4 - Increase BPM (0.01)\nF5 - Decrease BPM (0.1) \nF6 - Increase BPM (0.1)\nF7 - Decrease Offset (0.1)\nF8 - Increase Offset (0.1)\nF9 - Decrease Offset (0.01)\nF10 - Increase Offset (0.01)\nF11 - Decrease Length\nF12 - Increase Length
-EditorTweakControlsRight=LEFT - Rewind 3 seconds\nRIGHT - Fast foward 3 seconds\nDOWN - Decrease Beatline Speed\nUP - Increase Beatline Speed\nBEATLINE - Hit beatline\nSELECT - Restart Song\nSTART - Complete Tuning
+EditorTweakControlsRight=LEFT - Rewind 3 seconds\nRIGHT - Fast forward 3 seconds\nDOWN - Decrease Beatline Speed\nUP - Increase Beatline Speed\nBEATLINE - Hit beatline\nSELECT - Restart Song\nSTART - Complete Tuning
