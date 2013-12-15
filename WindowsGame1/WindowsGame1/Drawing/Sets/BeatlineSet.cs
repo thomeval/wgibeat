@@ -130,7 +130,7 @@ namespace WGiBeat.Drawing.Sets
                 if (Players[x].CPU)
                 {
                     _beatlines[x].Id = 4;
-                    var miss = Players[x].NextCPUJudgement == BeatlineNoteJudgement.MISS;
+                    var miss = Players[x].NextCPUJudgement == BeatlineNoteJudgement.Miss;
 
                     // The CPU should hit the beatline note if its destined to get a MISS rating.
                     if ((!miss))
@@ -211,7 +211,7 @@ namespace WGiBeat.Drawing.Sets
            
             foreach (var pos in song.SuperNotes)
             {
-                bl.AddBeatlineNote(new BeatlineNote { Position = pos, NoteType=BeatlineNoteType.SUPER });
+                bl.AddBeatlineNote(new BeatlineNote { Position = pos, NoteType=BeatlineNoteType.Super });
             }
                   
         }
@@ -220,7 +220,7 @@ namespace WGiBeat.Drawing.Sets
         {
                 bl.AddBeatlineNote(new BeatlineNote
                                        {
-                                           NoteType = BeatlineNoteType.END_OF_SONG,
+                                           NoteType = BeatlineNoteType.EndOfSong,
                                            Position = song.GetEndingTimeInPhrase()
                                        });
  
@@ -244,8 +244,8 @@ namespace WGiBeat.Drawing.Sets
                 }
 
                 var noteType = song.BPMs[bpmKey] > prev
-                                   ? BeatlineNoteType.BPM_INCREASE
-                                   : BeatlineNoteType.BPM_DECREASE;
+                                   ? BeatlineNoteType.BPMIncrease
+                                   : BeatlineNoteType.BPMDecrease;
 
 
                 bl.InsertBeatlineNote(new BeatlineNote {NoteType = noteType, Position = bpmKey}, 0);
@@ -259,7 +259,7 @@ namespace WGiBeat.Drawing.Sets
             foreach (var stopKey in song.Stops.Keys)
             {
                 bl.InsertBeatlineNote(
-                    new BeatlineNote {NoteType = BeatlineNoteType.STOP, Position = stopKey }, 0);
+                    new BeatlineNote {NoteType = BeatlineNoteType.Stop, Position = stopKey }, 0);
             }
         }
 

@@ -40,7 +40,7 @@ namespace WGiBeat.Players
 
         public Profile()
         {
-            JudgementCounts = new long[(int)BeatlineNoteJudgement.COUNT + 2];
+            JudgementCounts = new long[(int)BeatlineNoteJudgement.Count + 2];
             LastPlayerOptions = new PlayerOptions { BeatlineSpeed = 1.0, ScrollDirectionEast = true };
         }
 

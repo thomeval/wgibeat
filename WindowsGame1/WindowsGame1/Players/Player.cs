@@ -16,7 +16,6 @@ namespace WGiBeat.Players
             Judgements = new int[8];
             PlayerOptions = new PlayerOptions();
             ApplyDefaultOptions();
-
         }
 
         public Profile Profile { get; set; }
@@ -95,7 +94,6 @@ namespace WGiBeat.Players
                 x = Math.Min(MaxArrowLevel(PlayerOptions.PlayDifficulty), x);
 
                 return Math.Max(1, x);
-
             }
         }
 
@@ -103,17 +101,17 @@ namespace WGiBeat.Players
         {
             switch (difficulty)
             {
-                case Difficulty.BEGINNER:
+                case Difficulty.Beginner:
                     return 3;
-                case Difficulty.EASY:
+                case Difficulty.Easy:
                     return 5;
-                case Difficulty.MEDIUM:
+                case Difficulty.Medium:
                     return 7;
-                case Difficulty.HARD:
+                case Difficulty.Hard:
                     return 9;
-                case Difficulty.INSANE:
+                case Difficulty.Insane:
                     return 11;
-                case Difficulty.RUTHLESS:
+                case Difficulty.Ruthless:
                     return 13;
                 default:
                     return 10;
@@ -196,21 +194,21 @@ namespace WGiBeat.Players
             int result = 0;
             switch (PlayerOptions.PlayDifficulty)
             {
-                case Difficulty.BEGINNER:
+                case Difficulty.Beginner:
                     break;
-                case Difficulty.EASY:
+                case Difficulty.Easy:
                     result = -1;
                     break;
-                case Difficulty.MEDIUM:
+                case Difficulty.Medium:
                     result = -2;
                     break;
-                case Difficulty.HARD:
+                case Difficulty.Hard:
                     result = -4;
                     break;
-                case Difficulty.INSANE:
+                case Difficulty.Insane:
                     result -= 6;
                     break;
-                    case Difficulty.RUTHLESS:
+                    case Difficulty.Ruthless:
                     result -= 8;
                     break;
             }
@@ -223,22 +221,22 @@ namespace WGiBeat.Players
             var result = 0;
             switch (PlayerOptions.PlayDifficulty)
             {
-                case Difficulty.BEGINNER:
+                case Difficulty.Beginner:
                     result = -2;
                     break;
-                case Difficulty.EASY:
+                case Difficulty.Easy:
                     result = -4;
                     break;
-                case Difficulty.MEDIUM:
+                case Difficulty.Medium:
                     result = -8;
                     break;
-                case Difficulty.HARD:
+                case Difficulty.Hard:
                     result = -12;
                     break;
-                case Difficulty.INSANE:
+                case Difficulty.Insane:
                     result -= 16;
                     break;
-                case Difficulty.RUTHLESS:
+                case Difficulty.Ruthless:
                     result -= 20;
                     break;
             }
@@ -251,22 +249,22 @@ namespace WGiBeat.Players
             var result = 0;
             switch (PlayerOptions.PlayDifficulty)
             {
-                case Difficulty.BEGINNER:
+                case Difficulty.Beginner:
                     result = -4;
                     break;
-                case Difficulty.EASY:
+                case Difficulty.Easy:
                     result = -8;
                     break;
-                case Difficulty.MEDIUM:
+                case Difficulty.Medium:
                     result = -16;
                     break;
-                case Difficulty.HARD:
+                case Difficulty.Hard:
                     result = -24;
                     break;
-                case Difficulty.INSANE:
+                case Difficulty.Insane:
                     result -= 32;
                     break;
-                case Difficulty.RUTHLESS:
+                case Difficulty.Ruthless:
                     result -= 40;
                     break;
             }
@@ -297,20 +295,20 @@ namespace WGiBeat.Players
             _scoreHistory.Clear();
             _levelHistory.Clear();
             _gmHistory.Clear();
-            NextCPUJudgement = BeatlineNoteJudgement.COUNT;
+            NextCPUJudgement = BeatlineNoteJudgement.Count;
         }
 
         private long GetStartingMomentum()
         {
             switch (PlayerOptions.PlayDifficulty)
             {
-                case Difficulty.RUTHLESS:
+                case Difficulty.Ruthless:
                     return 1000;
-                    case Difficulty.INSANE:
+                    case Difficulty.Insane:
                     return 360;
-                    case Difficulty.HARD:
+                    case Difficulty.Hard:
                     return 190;
-                    case Difficulty.MEDIUM:
+                    case Difficulty.Medium:
                     return 76;
                 default:
                     return 0;
@@ -338,7 +336,6 @@ namespace WGiBeat.Players
         private readonly double[] _gradeBonusAmounts = { 1.4, 1.3, 1.2, 1.1, 1.05 };
         private readonly double[] _difficultyMultipliers = { 0.5, 0.75, 1.0, 1.1, 1.2, 1.25 };
      
-
         public long AwardXP()
         {
             double result = 0;
@@ -395,7 +392,7 @@ namespace WGiBeat.Players
             PlayerOptions.DisableKO = false;
             PlayerOptions.ScrollDirectionEast = true;
             PlayerOptions.ScrollDirectionWest = false;
-            PlayerOptions.PlayDifficulty = Difficulty.BEGINNER;
+            PlayerOptions.PlayDifficulty = Difficulty.Beginner;
         }
     }
 
@@ -411,21 +408,19 @@ namespace WGiBeat.Players
 
         public PlayerOptions()
         {
-            ScrollDirectionEast = true;
             BeatlineSpeed = 1.0;
-            PlayDifficulty = Difficulty.BEGINNER;
-     
+            PlayDifficulty = Difficulty.Beginner;
         }
     }
 
     public enum Difficulty
     {
-        BEGINNER = 0,
-        EASY = 1,
-        MEDIUM = 2,
-        HARD = 3,
-        INSANE = 4,
-        RUTHLESS =5,
-        COUNT = 6
+        Beginner = 0,
+        Easy = 1,
+        Medium = 2,
+        Hard = 3,
+        Insane = 4,
+        Ruthless =5,
+        Count = 6
     }
 }

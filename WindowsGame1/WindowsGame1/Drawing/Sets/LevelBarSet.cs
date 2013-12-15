@@ -71,11 +71,11 @@ namespace WGiBeat.Drawing.Sets
         public void AdjustMomentum(BeatlineNoteJudgement judgement, int player)
         {
            
-            if (judgement == BeatlineNoteJudgement.MISS)
+            if (judgement == BeatlineNoteJudgement.Miss)
             {
                 MultiplyMomentum(0.8, player);
             }
-            else if (judgement == BeatlineNoteJudgement.FAIL)
+            else if (judgement == BeatlineNoteJudgement.Fail)
             {
               MultiplyMomentum(0.7,player);   
             }
@@ -134,17 +134,17 @@ namespace WGiBeat.Drawing.Sets
         {
             switch (difficulty)
             {
-                case Difficulty.BEGINNER:
+                case Difficulty.Beginner:
                     return 15;
-                case Difficulty.EASY:
+                case Difficulty.Easy:
                     return 40;
-                case Difficulty.MEDIUM:
+                case Difficulty.Medium:
                     return 70;
-                case Difficulty.HARD:
+                case Difficulty.Hard:
                     return 175;
-                case Difficulty.INSANE:
+                case Difficulty.Insane:
                     return 300;
-                    case Difficulty.RUTHLESS:
+                    case Difficulty.Ruthless:
                     return 750;
                 default:
                     return 0;
@@ -155,9 +155,9 @@ namespace WGiBeat.Drawing.Sets
         {
             switch (judgement)
             {
-                case BeatlineNoteJudgement.IDEAL:
+                case BeatlineNoteJudgement.Ideal:
                     return 1.0;
-                case BeatlineNoteJudgement.COOL:
+                case BeatlineNoteJudgement.Cool:
                     return 2.0 / 3;
                 case BeatlineNoteJudgement.OK:
                     return 1.0 / 3;

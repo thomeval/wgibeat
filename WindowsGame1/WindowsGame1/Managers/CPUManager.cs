@@ -70,7 +70,7 @@ namespace WGiBeat.Managers
             }
 
             Log.AddMessage("CPU Skill level '" + skillLevel +"' does not exist.",LogLevel.ERROR);
-            return BeatlineNoteJudgement.COUNT;
+            return BeatlineNoteJudgement.Count;
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace WGiBeat.Managers
         {
             var total = SkillLevels[level].Values.Sum();
             //Exclude the last skill level value (streak max)
-            total -= SkillLevels[level][BeatlineNoteJudgement.COUNT];
+            total -= SkillLevels[level][BeatlineNoteJudgement.Count];
             double roll = _rnd.Next((int) total);
             var judgement = -1;
             do
@@ -95,7 +95,7 @@ namespace WGiBeat.Managers
             } while (roll > 0);
 
             //Enforce the max streak rule.
-            if ((judgement == 0) && streak >= SkillLevels[level][BeatlineNoteJudgement.COUNT])
+            if ((judgement == 0) && streak >= SkillLevels[level][BeatlineNoteJudgement.Count])
             {
                 judgement++;
             }

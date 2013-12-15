@@ -36,7 +36,7 @@ namespace WGiBeat.Drawing
             _difficultySpriteMap = new SpriteMap3D
             {
                 Columns = 1,
-                Rows = (int)Difficulty.COUNT + 1,
+                Rows = (int)Difficulty.Count + 1,
                 Texture = TextureManager.Textures("PlayerDifficulties")
             };
             _gradeSpriteMap = new SpriteMap3D

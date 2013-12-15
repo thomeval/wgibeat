@@ -60,7 +60,7 @@ namespace WGiBeat.Drawing.Sets
             long scoreAdjust = 0;
             switch (judgement)
             {
-                case BeatlineNoteJudgement.IDEAL:
+                case BeatlineNoteJudgement.Ideal:
                     Players[player].Streak++;
 
                     double multiplier = Convert.ToDouble((9 + Math.Max(1, Players[player].Streak)));
@@ -69,7 +69,7 @@ namespace WGiBeat.Drawing.Sets
                     scoreAdjust = (long) Math.Round(1000 * (numCompleted) * multiplier);
                     lifeAdjust = (1 * numCompleted);
                     break;
-                case BeatlineNoteJudgement.COOL:
+                case BeatlineNoteJudgement.Cool:
                     scoreAdjust = 750 * numCompleted;
                     lifeAdjust = (0.5 * numCompleted);
                     Players[player].Streak = 0;
@@ -78,20 +78,20 @@ namespace WGiBeat.Drawing.Sets
                     scoreAdjust = 500 * numCompleted;
                     Players[player].Streak = 0;
                     break;
-                case BeatlineNoteJudgement.BAD:
+                case BeatlineNoteJudgement.Bad:
                     scoreAdjust = 250 * numCompleted;
                     Players[player].Streak = 0;
                     lifeAdjust = -1 * numCompleted;
                     break;
-                case BeatlineNoteJudgement.MISS:
+                case BeatlineNoteJudgement.Miss:
                     Players[player].Streak = 0;
                     lifeAdjust = Players[player].MissedBeat();
                     break;
-                case BeatlineNoteJudgement.FAIL:
+                case BeatlineNoteJudgement.Fail:
                     Players[player].Streak = 0;
                     lifeAdjust = Players[player].FailedBeat();
                     break;
-                    case BeatlineNoteJudgement.COUNT:
+                    case BeatlineNoteJudgement.Count:
                     //Ignore judgement
                     break;
             }

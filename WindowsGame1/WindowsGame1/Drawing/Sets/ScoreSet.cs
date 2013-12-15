@@ -43,7 +43,7 @@ namespace WGiBeat.Drawing.Sets
             _iconSpriteMap = new SpriteMap3D
             {
                 Columns = 1,
-                Rows = (int)Difficulty.COUNT + 1,
+                Rows = (int)Difficulty.Count + 1,
                 Texture = TextureManager.Textures("PlayerDifficulties")
             };
 

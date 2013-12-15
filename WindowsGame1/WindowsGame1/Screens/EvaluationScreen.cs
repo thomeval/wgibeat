@@ -625,7 +625,7 @@ Core.Metrics["EvaluationMaxHits", x], Color.Black, FontAlign.Center);
                     continue;
                 }
                 int y = 0;
-                var totalBeatlines = Core.Players[x].Judgements.Sum() - Core.Players[x].Judgements[(int)BeatlineNoteJudgement.COUNT];
+                var totalBeatlines = Core.Players[x].Judgements.Sum() - Core.Players[x].Judgements[(int)BeatlineNoteJudgement.Count];
 
                 foreach (string line in _lines)
                 {

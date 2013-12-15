@@ -86,7 +86,7 @@ namespace WGiBeat.Screens
 
         public override void Initialize()
         {
-            _cursorPosition = EditorCursorPosition.MAIN_MENU;
+            _cursorPosition = EditorCursorPosition.MainMenu;
             foreach (Player player in Core.Players)
             {
                 player.Playing = false;
@@ -226,7 +226,7 @@ namespace WGiBeat.Screens
             {
                 case "DefinitionFile":
                 case "SongFolder":
-                    _cursorPosition = EditorCursorPosition.SONG_BASICS;
+                    _cursorPosition = EditorCursorPosition.SongBasics;
                     break;
                 case "SongTitle":
                 case "SongSubtitle":
@@ -235,7 +235,7 @@ namespace WGiBeat.Screens
                 case "SongBPM":
                 case "SongLength":
                 case "SongAudioStart":
-                    _cursorPosition = EditorCursorPosition.SONG_DETAILS;
+                    _cursorPosition = EditorCursorPosition.SongDetails;
                     break;
             }
             _keyInput = false;
@@ -255,33 +255,33 @@ namespace WGiBeat.Screens
                     {
                         _destinationFileName += ".sng";
                     }
-                    _cursorPosition = EditorCursorPosition.SONG_BASICS;
+                    _cursorPosition = EditorCursorPosition.SongBasics;
                     break;
                 case "SongFolder":
                     _destinationFolderName = _textEntry.EnteredText;
-                    _cursorPosition = EditorCursorPosition.SONG_BASICS;
+                    _cursorPosition = EditorCursorPosition.SongBasics;
                     break;
                 case "SongTitle":
-                    _cursorPosition = EditorCursorPosition.SONG_DETAILS;
+                    _cursorPosition = EditorCursorPosition.SongDetails;
                     NewGameSong.Title = _textEntry.EnteredText;
                     break;
                 case "SongSubtitle":
-                    _cursorPosition = EditorCursorPosition.SONG_DETAILS;
+                    _cursorPosition = EditorCursorPosition.SongDetails;
                     NewGameSong.Subtitle = _textEntry.EnteredText;
                     break;
                 case "SongArtist":
-                    _cursorPosition = EditorCursorPosition.SONG_DETAILS;
+                    _cursorPosition = EditorCursorPosition.SongDetails;
                     NewGameSong.Artist = _textEntry.EnteredText;
                     break;
                 case "SongOffset":
-                    _cursorPosition = EditorCursorPosition.SONG_DETAILS;
+                    _cursorPosition = EditorCursorPosition.SongDetails;
                     if (isDouble)
                     {
                         NewGameSong.Offset = temp;
                     }
                     break;
                 case "SongBPM":
-                    _cursorPosition = EditorCursorPosition.SONG_DETAILS;
+                    _cursorPosition = EditorCursorPosition.SongDetails;
                     if (isDouble)
                     {
                         NewGameSong.StartBPM = temp;
@@ -289,14 +289,14 @@ namespace WGiBeat.Screens
                     }
                     break;
                 case "SongLength":
-                    _cursorPosition = EditorCursorPosition.SONG_DETAILS;
+                    _cursorPosition = EditorCursorPosition.SongDetails;
                     if (isDouble)
                     {
                         NewGameSong.Length = temp;
                     }
                     break;
                 case "SongAudioStart":
-                    _cursorPosition = EditorCursorPosition.SONG_DETAILS;
+                    _cursorPosition = EditorCursorPosition.SongDetails;
                     if (isDouble)
                     {
                         NewGameSong.AudioStart = temp;
@@ -319,21 +319,21 @@ namespace WGiBeat.Screens
 
             switch (_cursorPosition)
             {
-                case EditorCursorPosition.SELECT_AUDIO:
-                case EditorCursorPosition.SELECT_SONGFILE:
-                case EditorCursorPosition.SELECT_SONGFILE_DELETE:
-                case EditorCursorPosition.SELECT_BACKGROUND_IMAGE:
+                case EditorCursorPosition.SelectAudio:
+                case EditorCursorPosition.SelectSongFile:
+                case EditorCursorPosition.SelectSongFileDelete:
+                case EditorCursorPosition.SelectBackgroundImage:
                     _fileSelect.Draw();
                     break;
-                case EditorCursorPosition.KEY_ENTRY:
+                case EditorCursorPosition.KeyEntry:
                     _textEntry.Draw();
                     break;
-                case EditorCursorPosition.SONG_BASICS:
+                case EditorCursorPosition.SongBasics:
                     _editProgress = 1;
                     FontManager.DrawString(_errorMessage,"LargeFont",Core.Metrics["EditorErrorMessage",0],Color.Red,FontAlign.Center);
                     break;
-                case EditorCursorPosition.SONG_DETAILS:
-                case EditorCursorPosition.SONG_DETAILS_DELETE:
+                case EditorCursorPosition.SongDetails:
+                case EditorCursorPosition.SongDetailsDelete:
                     _editProgress = 2;
                     var validIdx = _songValid ? 1 : 0;
                     _validitySpriteMap.Draw( validIdx, Core.Metrics["EditorSongValidity.Size",0], Core.Metrics["EditorSongValidity",0]);
@@ -349,27 +349,27 @@ namespace WGiBeat.Screens
 
                     }
                     break;
-                case EditorCursorPosition.SONG_TUNING:
+                case EditorCursorPosition.SongTuning:
                     _editProgress = 3;
                     TextureManager.LastDrawnPhraseNumber = _phraseNumber;
                     _beatlineSet.Draw( _phraseNumber);
                     _noteJudgementSet.Draw( _phraseNumber);
                     _countdownSet.Draw(_phraseNumber);
                     break;
-                    case EditorCursorPosition.MEASURE_BPM:
+                    case EditorCursorPosition.MeasureBPM:
                     DrawBPMMeasurement();
                     DrawSongTimeLine();
                     break;
-                    case EditorCursorPosition.MEASURE_OFFSET:
-                    case EditorCursorPosition.MEASURE_LENGTH:
-                    case EditorCursorPosition.MEASURE_AUDIO_START:
+                    case EditorCursorPosition.MeasureOffset:
+                    case EditorCursorPosition.MeasureLength:
+                    case EditorCursorPosition.MeasureAudioStart:
                     FontManager.DrawString(String.Format("{0:0.00}", _timeElapsed / 1000), "LargeFont", Core.Metrics["EditorMeasurementDisplay", 0], Color.Black, FontAlign.Center);
                     DrawSongTimeLine();
                     break;
-                case EditorCursorPosition.DONE:
+                case EditorCursorPosition.Done:
                     _editProgress = 4;
                     break;
-                case EditorCursorPosition.MAIN_MENU:
+                case EditorCursorPosition.MainMenu:
                     _editProgress = 0;
                     FontManager.DrawString(VERSION,"DefaultFont",Core.Metrics["EditorVersion",0],Color.Black,FontAlign.Right);
                     break;
@@ -395,15 +395,15 @@ namespace WGiBeat.Screens
             _songTimeLine.CurrentPosition = null;
             switch (_cursorPosition)
             {
-                case EditorCursorPosition.MEASURE_AUDIO_START:
+                case EditorCursorPosition.MeasureAudioStart:
                     _songTimeLine.AudioStart = _timeElapsed / 1000;
                     _songTimeLine.CurrentPosition = _timeElapsed / 1000;
                     break;
-                case EditorCursorPosition.MEASURE_LENGTH:
+                case EditorCursorPosition.MeasureLength:
                     _songTimeLine.Length = _timeElapsed / 1000;
                     _songTimeLine.CurrentPosition = _timeElapsed / 1000;
                     break;
-                case EditorCursorPosition.MEASURE_OFFSET:
+                case EditorCursorPosition.MeasureOffset:
                     _songTimeLine.Offset = _timeElapsed / 1000;
                     _songTimeLine.CurrentPosition = _timeElapsed / 1000;
                     break;
@@ -449,7 +449,7 @@ namespace WGiBeat.Screens
             string instructions = "";
             switch (_cursorPosition)
             {
-                case EditorCursorPosition.SONG_BASICS:
+                case EditorCursorPosition.SongBasics:
                     var currentMenu = _menus["Basics"];
                     currentMenu.ClearMenuOptions();
 
@@ -462,8 +462,8 @@ namespace WGiBeat.Screens
                     }
 
                     break;
-                case EditorCursorPosition.SONG_DETAILS:
-                case EditorCursorPosition.SONG_DETAILS_DELETE:
+                case EditorCursorPosition.SongDetails:
+                case EditorCursorPosition.SongDetailsDelete:
 
                     var offsetPosition = Core.Metrics["EditorSongDetailsDisplay",0].Clone();
                     offsetPosition.X += 2;
@@ -492,27 +492,27 @@ namespace WGiBeat.Screens
                     FontManager.DrawString(backgroundText, "DefaultFont", offsetPosition, Color.Black, FontAlign.Right);
 
                     break;
-                case EditorCursorPosition.SONG_TUNING:
+                case EditorCursorPosition.SongTuning:
                     DrawDebugText();
                     DrawTweakControlsText();
                     DrawHitOffsetText();
                     break;
-                case EditorCursorPosition.MEASURE_OFFSET:
+                case EditorCursorPosition.MeasureOffset:
                     instructions = Core.Text["EditorMeasureOffset"];
                     break;
-                case EditorCursorPosition.MEASURE_LENGTH:
+                case EditorCursorPosition.MeasureLength:
                     instructions = Core.Text["EditorMeasureLength"];
                     break;
-                case EditorCursorPosition.MEASURE_BPM:
+                case EditorCursorPosition.MeasureBPM:
                     instructions = Core.Text["EditorMeasureBPM"];
                     break;
-                    case EditorCursorPosition.MEASURE_AUDIO_START:
+                    case EditorCursorPosition.MeasureAudioStart:
                     instructions = Core.Text["EditorMeasureAudioStart"];
                     break;
-                    case EditorCursorPosition.DONE:
+                    case EditorCursorPosition.Done:
                     instructions = Core.Text["EditorDoneCreating"];
                     break;
-                    case EditorCursorPosition.DONE_DELETE:
+                    case EditorCursorPosition.DoneDelete:
                     instructions = Core.Text["EditorDoneDeleting"];
                     break;
             }
@@ -542,7 +542,6 @@ namespace WGiBeat.Screens
 
         private void DrawTweakControlsText()
         {
-
             var lines = Core.Text["EditorTweakControlsLeft"].Split('\n');
 
             var textPosition = Core.Metrics["EditorTweakControls", 0].Clone();
@@ -593,44 +592,44 @@ namespace WGiBeat.Screens
             var headingText = "";
             switch (_cursorPosition)
             {
-                case EditorCursorPosition.MAIN_MENU:
+                case EditorCursorPosition.MainMenu:
                     headingText = "WGiEdit";
                     break;
-                case EditorCursorPosition.SELECT_AUDIO:
+                case EditorCursorPosition.SelectAudio:
                     headingText = "Select Audio File";
                     break;
-                case EditorCursorPosition.SELECT_SONGFILE:
+                case EditorCursorPosition.SelectSongFile:
                     headingText = "Select Song To Edit";
                     break;
-                case EditorCursorPosition.SONG_BASICS:
+                case EditorCursorPosition.SongBasics:
                     headingText = "Song Basics";
                     break;
-                case EditorCursorPosition.SONG_DETAILS:
+                case EditorCursorPosition.SongDetails:
                     headingText = "Song Details";
                     break;
-                case EditorCursorPosition.SONG_DETAILS_DELETE:
-                case EditorCursorPosition.SELECT_SONGFILE_DELETE:
+                case EditorCursorPosition.SongDetailsDelete:
+                case EditorCursorPosition.SelectSongFileDelete:
                     headingText = "Delete Song";
                     break;
-                    case EditorCursorPosition.SELECT_BACKGROUND_IMAGE:
+                    case EditorCursorPosition.SelectBackgroundImage:
                     headingText = "Select Background Image";
                     break;
-                    case EditorCursorPosition.MEASURE_BPM:
+                    case EditorCursorPosition.MeasureBPM:
                     headingText = "Measure BPM";
                     break;
-                    case EditorCursorPosition.MEASURE_LENGTH:
+                    case EditorCursorPosition.MeasureLength:
                     headingText = "Measure Length";
                     break;
-                case EditorCursorPosition.MEASURE_OFFSET:
+                case EditorCursorPosition.MeasureOffset:
                     headingText = "Measure Offset";
                     break;
-                    case EditorCursorPosition.MEASURE_AUDIO_START:
+                    case EditorCursorPosition.MeasureAudioStart:
                     headingText = "Measure Audio Start";
                     break;
-                case EditorCursorPosition.SONG_TUNING:
+                case EditorCursorPosition.SongTuning:
                     headingText = "Song Tuning";
                     break;
-                case EditorCursorPosition.DONE:
+                case EditorCursorPosition.Done:
                     headingText = "Completed";
                     break;
             }
@@ -686,20 +685,20 @@ namespace WGiBeat.Screens
         {
             switch (_cursorPosition)
             {
-                case EditorCursorPosition.SELECT_AUDIO:
-                case EditorCursorPosition.SELECT_SONGFILE:
-                case EditorCursorPosition.SELECT_SONGFILE_DELETE:
-                case EditorCursorPosition.SELECT_BACKGROUND_IMAGE:
+                case EditorCursorPosition.SelectAudio:
+                case EditorCursorPosition.SelectSongFile:
+                case EditorCursorPosition.SelectSongFileDelete:
+                case EditorCursorPosition.SelectBackgroundImage:
                     _fileSelect.PerformAction(inputAction);
                     
                     return;
-                case EditorCursorPosition.SONG_TUNING:
+                case EditorCursorPosition.SongTuning:
                     PerformActionTweak(inputAction);
                     break;
-                    case EditorCursorPosition.MEASURE_BPM:
-                    case EditorCursorPosition.MEASURE_LENGTH:
-                    case EditorCursorPosition.MEASURE_OFFSET:
-                    case EditorCursorPosition.MEASURE_AUDIO_START:
+                    case EditorCursorPosition.MeasureBPM:
+                    case EditorCursorPosition.MeasureLength:
+                    case EditorCursorPosition.MeasureOffset:
+                    case EditorCursorPosition.MeasureAudioStart:
                     PerformActionMeasurement(inputAction);
                     break;
             }
@@ -730,26 +729,26 @@ namespace WGiBeat.Screens
         {
             switch (_cursorPosition)
             {
-                case EditorCursorPosition.SONG_DETAILS:
+                case EditorCursorPosition.SongDetails:
                     if (_editMode)
                     {
-                        _cursorPosition = EditorCursorPosition.MAIN_MENU;
+                        _cursorPosition = EditorCursorPosition.MainMenu;
                     }
                     else
                     {
-                        _cursorPosition = EditorCursorPosition.SONG_BASICS;
+                        _cursorPosition = EditorCursorPosition.SongBasics;
                     }
                     RaiseSoundTriggered(SoundEvent.MENU_BACK);
                     break;
-                case EditorCursorPosition.SONG_DETAILS_DELETE:
-                    _cursorPosition = EditorCursorPosition.SELECT_SONGFILE_DELETE;
+                case EditorCursorPosition.SongDetailsDelete:
+                    _cursorPosition = EditorCursorPosition.SelectSongFileDelete;
                     RaiseSoundTriggered(SoundEvent.MENU_BACK);
                     break;
-                    case EditorCursorPosition.SONG_BASICS:
-                    _cursorPosition = EditorCursorPosition.MAIN_MENU;
+                    case EditorCursorPosition.SongBasics:
+                    _cursorPosition = EditorCursorPosition.MainMenu;
                     RaiseSoundTriggered(SoundEvent.MENU_BACK);
                     break;
-                    case EditorCursorPosition.MAIN_MENU:
+                    case EditorCursorPosition.MainMenu:
                     Core.ScreenTransition("MainMenu");
                     RaiseSoundTriggered(SoundEvent.MENU_BACK);
                     break;
@@ -767,7 +766,7 @@ namespace WGiBeat.Screens
                     //for BEATLINE and START.
                     switch (_cursorPosition)
                     {
-                        case EditorCursorPosition.MEASURE_BPM:
+                        case EditorCursorPosition.MeasureBPM:
                             if (inputAction.Action == "BEATLINE")
                             {
                                 UpdateBPMMeasurement();
@@ -784,20 +783,20 @@ namespace WGiBeat.Screens
                             }
                             break;
                            
-                            case EditorCursorPosition.MEASURE_LENGTH:
+                            case EditorCursorPosition.MeasureLength:
                             NewGameSong.Length = Math.Round(_timeElapsed / 1000, 2);
                             break;
 
-                            case EditorCursorPosition.MEASURE_OFFSET:
+                            case EditorCursorPosition.MeasureOffset:
                             NewGameSong.Offset = Math.Round(_timeElapsed /1000,2);
                             break;
-                            case EditorCursorPosition.MEASURE_AUDIO_START:
+                            case EditorCursorPosition.MeasureAudioStart:
                             NewGameSong.AudioStart = Math.Round(_timeElapsed / 1000, 2);
                             break;
                     }
 
                     Core.Audio.StopChannel(_audioChannel);
-                    _cursorPosition = EditorCursorPosition.SONG_DETAILS;
+                    _cursorPosition = EditorCursorPosition.SongDetails;
                     _songPlaying = false;
                     break;
 
@@ -812,7 +811,7 @@ namespace WGiBeat.Screens
                     break;
                 case "BACK":
                     Core.Audio.StopChannel(_audioChannel);
-                    _cursorPosition = EditorCursorPosition.SONG_DETAILS;
+                    _cursorPosition = EditorCursorPosition.SongDetails;
                     _songPlaying = false;
                     break;
             }
@@ -876,7 +875,7 @@ namespace WGiBeat.Screens
                     break;
                 case "BACK":
                     Core.Songs.StopCurrentSong();
-                    _cursorPosition = EditorCursorPosition.SONG_DETAILS;
+                    _cursorPosition = EditorCursorPosition.SongDetails;
                     _songPlaying = false;
                     break;
                 case "START":
@@ -889,7 +888,7 @@ namespace WGiBeat.Screens
                         Core.Songs.RemoveSong(oldSongFile);
                     }
                     Core.Songs.AddSong(Core.Songs.LoadFromFile(NewGameSong.Path + "\\" + NewGameSong.DefinitionFile, true));
-                    _cursorPosition = EditorCursorPosition.DONE;
+                    _cursorPosition = EditorCursorPosition.Done;
                     _songPlaying = false;
                     Core.Log.AddMessage(String.Format("SongFile '{0}' was saved successfully!", NewGameSong.DefinitionFile),LogLevel.DEBUG);
                     break;
@@ -976,7 +975,7 @@ namespace WGiBeat.Screens
             }
             _hitOffsets[0] = _debugLastHitOffset;
             var judgement = _beatlineSet.AwardJudgement(_phraseNumber, 0, true);
-            if (judgement == BeatlineNoteJudgement.COUNT)
+            if (judgement == BeatlineNoteJudgement.Count)
             {
                 return;
             }
@@ -1022,7 +1021,7 @@ namespace WGiBeat.Screens
             {
                 case "0":
                     NewGameSong = new GameSong();
-                    _cursorPosition = EditorCursorPosition.SONG_BASICS;
+                    _cursorPosition = EditorCursorPosition.SongBasics;
                     _destinationFileName = "";
                     _destinationFolderName = "";
                     _sourceFilePath = "";
@@ -1030,11 +1029,11 @@ namespace WGiBeat.Screens
                     _importMode = false;
                     break;
                 case "1":
-                    _cursorPosition = EditorCursorPosition.SELECT_SONGFILE;
-                    ActivateEditMode(EditorCursorPosition.SONG_DETAILS);
+                    _cursorPosition = EditorCursorPosition.SelectSongFile;
+                    ActivateEditMode(EditorCursorPosition.SongDetails);
                     break;
                 case "2":
-                    _cursorPosition = EditorCursorPosition.SONG_BASICS;
+                    _cursorPosition = EditorCursorPosition.SongBasics;
                     _destinationFolderName = "";
                     _destinationFileName = "";
                     _sourceFilePath = "";
@@ -1043,8 +1042,8 @@ namespace WGiBeat.Screens
  
                     break;
                 case "3":
-                    _cursorPosition = EditorCursorPosition.SELECT_SONGFILE_DELETE;
-                    ActivateEditMode(EditorCursorPosition.SONG_DETAILS_DELETE);
+                    _cursorPosition = EditorCursorPosition.SelectSongFileDelete;
+                    ActivateEditMode(EditorCursorPosition.SongDetailsDelete);
                     break;
                 case "4":
                     Core.ScreenTransition("MainMenu");
@@ -1098,10 +1097,10 @@ namespace WGiBeat.Screens
                     _errorMessage = "";
                         _bpmMeter.DisplayedSong = NewGameSong;
                         _songTimeLine.AudioEnd = Core.Audio.GetFileLength(NewGameSong.Path + "\\" + NewGameSong.AudioFile) / 1000.0;
-                        _cursorPosition = EditorCursorPosition.SONG_DETAILS;
+                        _cursorPosition = EditorCursorPosition.SongDetails;
                     break;
                 case "4":
-                    _cursorPosition = EditorCursorPosition.MAIN_MENU;
+                    _cursorPosition = EditorCursorPosition.MainMenu;
                     break;
             }
         }
@@ -1158,9 +1157,9 @@ namespace WGiBeat.Screens
             _fileSelect.FileSelected += delegate
                                             {
                                                 ApplySongBackground(_fileSelect.SelectedFile);
-                                                _cursorPosition = EditorCursorPosition.SONG_DETAILS;
+                                                _cursorPosition = EditorCursorPosition.SongDetails;
                                             };
-            _fileSelect.FileSelectCancelled += delegate { _cursorPosition = EditorCursorPosition.SONG_DETAILS; };
+            _fileSelect.FileSelectCancelled += delegate { _cursorPosition = EditorCursorPosition.SongDetails; };
         }
 
         private void ApplySongBackground(string selectedFile)
@@ -1190,15 +1189,15 @@ namespace WGiBeat.Screens
 
         private void BasicsSelectSourceFile()
         {
-            _cursorPosition = EditorCursorPosition.SELECT_AUDIO;
+            _cursorPosition = EditorCursorPosition.SelectAudio;
             _fileSelect.CurrentFolder = Path.GetFullPath(_wgibeatSongsFolder + "\\..");
             _fileSelect.ResetEvents();
             _fileSelect.FileSelected += delegate
             {
                 _sourceFilePath = _fileSelect.SelectedFile;
-                _cursorPosition = EditorCursorPosition.SONG_BASICS;
+                _cursorPosition = EditorCursorPosition.SongBasics;
             };
-            _fileSelect.FileSelectCancelled += delegate { _cursorPosition = EditorCursorPosition.SONG_BASICS; };
+            _fileSelect.FileSelectCancelled += delegate { _cursorPosition = EditorCursorPosition.SongBasics; };
         }
 
         private void DoMenuActionDetails(Menu menu)
@@ -1226,7 +1225,7 @@ namespace WGiBeat.Screens
                     _textEntry.DescriptionText = Core.Text["EditorEnterSongBPM"];
                     break;
                 case 4:
-                    _cursorPosition = EditorCursorPosition.MEASURE_BPM;
+                    _cursorPosition = EditorCursorPosition.MeasureBPM;
                     ActivateMeasureMode();
                     _numBeats = -1;
                     _guessedBPM = 0;
@@ -1239,7 +1238,7 @@ namespace WGiBeat.Screens
                     _textEntry.DescriptionText = Core.Text["EditorEnterSongOffset"];
                     break;
                 case 6:
-                    _cursorPosition = EditorCursorPosition.MEASURE_OFFSET;
+                    _cursorPosition = EditorCursorPosition.MeasureOffset;
                     ActivateMeasureMode();               
                     break;
                 case 7:
@@ -1248,7 +1247,7 @@ namespace WGiBeat.Screens
                     _textEntry.DescriptionText = Core.Text["EditorEnterSongLength"];
                     break;
                 case 8:
-                    _cursorPosition = EditorCursorPosition.MEASURE_LENGTH;
+                    _cursorPosition = EditorCursorPosition.MeasureLength;
                     ActivateMeasureMode();
                     break;
                 case 9:
@@ -1257,11 +1256,11 @@ namespace WGiBeat.Screens
                     _textEntry.DescriptionText = Core.Text["EditorEnterSongAudioStart"];
                     break;
                 case 10:
-                    _cursorPosition = EditorCursorPosition.MEASURE_AUDIO_START;
+                    _cursorPosition = EditorCursorPosition.MeasureAudioStart;
                     ActivateMeasureMode();
                     break;
                 case 11:
-                    _cursorPosition = EditorCursorPosition.SELECT_BACKGROUND_IMAGE;
+                    _cursorPosition = EditorCursorPosition.SelectBackgroundImage;
                     SelectSongBackground();       
                     break;
                 case 12:
@@ -1272,7 +1271,7 @@ namespace WGiBeat.Screens
                     {
                         Core.Log.AddMessage(String.Format("DEBUG: Attempting to save song details to: {0}\\{1}", NewGameSong.Path, NewGameSong.DefinitionFile), LogLevel.DEBUG);
                         Core.Songs.SaveToFile(NewGameSong);
-                        _cursorPosition = EditorCursorPosition.SONG_TUNING;
+                        _cursorPosition = EditorCursorPosition.SongTuning;
                         _startTime = null;
                         _songPlaying = false;
                         SetupBeatline();
@@ -1286,11 +1285,11 @@ namespace WGiBeat.Screens
                 case 14:
                     if (_editMode)
                     {
-                        _cursorPosition = EditorCursorPosition.MAIN_MENU;
+                        _cursorPosition = EditorCursorPosition.MainMenu;
                     }
                     else
                     {
-                        _cursorPosition = EditorCursorPosition.SONG_BASICS;
+                        _cursorPosition = EditorCursorPosition.SongBasics;
                     }
 
                     break;
@@ -1315,18 +1314,18 @@ namespace WGiBeat.Screens
                     _errorMessage = Core.Songs.DeleteSongFile(NewGameSong, false);
                     if (String.IsNullOrEmpty(_errorMessage))
                     {
-                        _cursorPosition = EditorCursorPosition.DONE_DELETE;
+                        _cursorPosition = EditorCursorPosition.DoneDelete;
                     }
                     break;
                 case 1:
                     _errorMessage = Core.Songs.DeleteSongFile(NewGameSong, true);
                     if (String.IsNullOrEmpty(_errorMessage))
                     {
-                        _cursorPosition = EditorCursorPosition.DONE_DELETE;
+                        _cursorPosition = EditorCursorPosition.DoneDelete;
                     }
                     break;
                 case 2:
-                    _cursorPosition = EditorCursorPosition.MAIN_MENU;
+                    _cursorPosition = EditorCursorPosition.MainMenu;
                     break;
 
             }
@@ -1337,18 +1336,17 @@ namespace WGiBeat.Screens
            switch (menu.SelectedItem().ItemValue.ToString())
            {
                case "0":
-                   if (_cursorPosition == EditorCursorPosition.DONE_DELETE )
+                   if (_cursorPosition == EditorCursorPosition.DoneDelete )
                    {
                        _fileSelect.RefreshFolder();
-                       _cursorPosition = EditorCursorPosition.SELECT_SONGFILE_DELETE;
+                       _cursorPosition = EditorCursorPosition.SelectSongFileDelete;
                    }
                    else
                    {
                        Core.ScreenTransition("MainMenu");
                    }
                    
-                   break;
-                   
+                   break;                  
            }
 
         }
@@ -1426,7 +1424,7 @@ namespace WGiBeat.Screens
         {
             switch (_cursorPosition)
             {
-                case EditorCursorPosition.SONG_BASICS:
+                case EditorCursorPosition.SongBasics:
                     var invalidFilename =
                         (from e in Path.GetInvalidFileNameChars() where _destinationFileName.Contains("" + e) select e).
                             Any();
@@ -1451,7 +1449,7 @@ namespace WGiBeat.Screens
                         _errorMessage = "Destination File name contains invalid characters.";
                     }
                     break;
-                case EditorCursorPosition.SONG_DETAILS:             
+                case EditorCursorPosition.SongDetails:             
                     _songValid =
                         _menus["Details"].GetByItemText("Next Step").Enabled =
                         Core.Songs.ValidateSongFile(NewGameSong, out _validityMessage);
@@ -1464,20 +1462,20 @@ namespace WGiBeat.Screens
             _activeMenu = null;
             switch (_cursorPosition)
             {
-                case EditorCursorPosition.MAIN_MENU:
+                case EditorCursorPosition.MainMenu:
                     _activeMenu = "Main";
                     break;
-                case EditorCursorPosition.SONG_BASICS:
+                case EditorCursorPosition.SongBasics:
                     _activeMenu = "Basics";
                     break;
-                case EditorCursorPosition.SONG_DETAILS:
+                case EditorCursorPosition.SongDetails:
                     _activeMenu = "Details";
                     break;
-                    case EditorCursorPosition.SONG_DETAILS_DELETE:
+                    case EditorCursorPosition.SongDetailsDelete:
                     _activeMenu = "DeleteDetails";
                     break;
-                case EditorCursorPosition.DONE:
-                case EditorCursorPosition.DONE_DELETE:
+                case EditorCursorPosition.Done:
+                case EditorCursorPosition.DoneDelete:
                     _activeMenu = "Done";
                     break;
             }
@@ -1492,7 +1490,7 @@ namespace WGiBeat.Screens
             _keyInput = true;
             _ignoreNextKey = true;
             _textEntry.Clear();
-            _cursorPosition = EditorCursorPosition.KEY_ENTRY;
+            _cursorPosition = EditorCursorPosition.KeyEntry;
         }
 
         private void ActivateMeasureMode()
@@ -1507,13 +1505,13 @@ namespace WGiBeat.Screens
 
             switch (_cursorPosition)
             {
-                case EditorCursorPosition.MEASURE_LENGTH:
+                case EditorCursorPosition.MeasureLength:
                     desiredStartPoint = songLength - 15000;
                     break;
-                case EditorCursorPosition.MEASURE_BPM:
+                case EditorCursorPosition.MeasureBPM:
                     desiredStartPoint = NewGameSong.Offset * 1000;
                     break;
-                    case EditorCursorPosition.MEASURE_OFFSET:
+                    case EditorCursorPosition.MeasureOffset:
                     desiredStartPoint = NewGameSong.AudioStart * 1000;
                     break;
             }
@@ -1542,7 +1540,7 @@ namespace WGiBeat.Screens
             };
             _fileSelect.FileSelectCancelled += delegate
             {
-                _cursorPosition = EditorCursorPosition.MAIN_MENU;
+                _cursorPosition = EditorCursorPosition.MainMenu;
             };
         }
 
@@ -1562,7 +1560,7 @@ namespace WGiBeat.Screens
             }
             _timeElapsed = (int) (gameTime.TotalRealTime.TotalMilliseconds - _startTime.Value.TotalMilliseconds + _songLoadDelay);
 
-            if (_cursorPosition == EditorCursorPosition.SONG_TUNING)
+            if (_cursorPosition == EditorCursorPosition.SongTuning)
             {
 
                 if (!_songPlaying)
@@ -1584,7 +1582,6 @@ namespace WGiBeat.Screens
         }
 
         private bool _songPlaying;
-
 
         private void SyncSong()
         {
@@ -1609,22 +1606,22 @@ namespace WGiBeat.Screens
 
         private enum EditorCursorPosition
         {
-            MAIN_MENU,
-            KEY_ENTRY,
-            SELECT_AUDIO,
-            SELECT_SONGFILE,
-            SELECT_SONGFILE_DELETE,
-            SONG_BASICS,
-            SONG_DETAILS,
-            SONG_DETAILS_DELETE,
-            SONG_TUNING,
-            MEASURE_BPM,
-            MEASURE_OFFSET,
-            MEASURE_LENGTH,
-            DONE,
-            DONE_DELETE,
-            MEASURE_AUDIO_START,
-            SELECT_BACKGROUND_IMAGE
+            MainMenu,
+            KeyEntry,
+            SelectAudio,
+            SelectSongFile,
+            SelectSongFileDelete,
+            SongBasics,
+            SongDetails,
+            SongDetailsDelete,
+            SongTuning,
+            MeasureBPM,
+            MeasureOffset,
+            MeasureLength,
+            Done,
+            DoneDelete,
+            MeasureAudioStart,
+            SelectBackgroundImage
         }
     }
 }

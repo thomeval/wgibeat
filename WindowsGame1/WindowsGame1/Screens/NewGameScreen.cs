@@ -40,7 +40,7 @@ namespace WGiBeat.Screens
         {
             for (int x = 0; x < Core.Players.Count(); x++)
             {
-                _cursorPositions[x] = CursorPosition.NOT_JOINED;
+                _cursorPositions[x] = CursorPosition.NotJoined;
                 Core.Players[x].Playing = false;
                 Core.Players[x].Remote = false;
                 Core.Players[x].PlayerOptions = new PlayerOptions();
@@ -191,7 +191,7 @@ namespace WGiBeat.Screens
                 CreateProfileMenu(x);
             }
             Core.Profiles.SaveToFolder(Core.Settings["ProfileFolder"] + "");
-            ChangeCursorPosition(player,CursorPosition.MAIN_MENU);
+            ChangeCursorPosition(player,CursorPosition.MainMenu);
             RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
             _infoMessages[player] = "";
  
@@ -200,7 +200,7 @@ namespace WGiBeat.Screens
         private void Keyboard_EntryCancelled(object sender, EventArgs e)
         {
             var player = ((OnScreenKeyboard) sender).Id;
-            _cursorPositions[player] = CursorPosition.PROFILE_LIST;
+            _cursorPositions[player] = CursorPosition.ProfileList;
             RaiseSoundTriggered(SoundEvent.MENU_BACK);
             _infoMessages[player] = "";
         }
@@ -253,22 +253,22 @@ namespace WGiBeat.Screens
 
                 switch (_cursorPositions[x])
                 {
-                    case CursorPosition.NOT_JOINED:
+                    case CursorPosition.NotJoined:
                         FontManager.DrawString("Press START to Join...", "LargeFont",
                         Core.Metrics["NewGameJoinNotification", x], Color.Black, FontAlign.Left);
                         _infoMessages[x] = "";
                         break;
-                    case CursorPosition.MAIN_MENU:
+                    case CursorPosition.MainMenu:
 
                         _playerMenus[x].Draw();
                         break;
-                    case CursorPosition.PROFILE_LIST:
+                    case CursorPosition.ProfileList:
                         _profileMenus[x].Draw();
                         break;
-                    case CursorPosition.KEYBOARD:
+                    case CursorPosition.Keyboard:
                         _keyboards[x].Draw();
                         break;
-                    case CursorPosition.READY:
+                    case CursorPosition.Ready:
                         FontManager.DrawString("Ready", "LargeFont",
                         Core.Metrics["NewGameJoinNotification", x], Color.Black, FontAlign.Left);
                         _infoMessages[x] = "Waiting for other players...";
@@ -314,7 +314,7 @@ namespace WGiBeat.Screens
             {
                 return;
             }
-            if (_cursorPositions[playerIdx] == CursorPosition.KEYBOARD)
+            if (_cursorPositions[playerIdx] == CursorPosition.Keyboard)
             {
                 _keyboards[playerIdx].MoveSelection(inputAction.Action);
                 RaiseSoundTriggered(SoundEvent.KEYBOARD_MOVE);
@@ -325,10 +325,10 @@ namespace WGiBeat.Screens
 
             switch (_cursorPositions[playerIdx])
             {
-                    case CursorPosition.PROFILE_LIST:
+                    case CursorPosition.ProfileList:
                     relevantMenu = _profileMenus[playerIdx];
                     break;
-                    case CursorPosition.MAIN_MENU:
+                    case CursorPosition.MainMenu:
                     relevantMenu = _playerMenus[playerIdx];
                     break;
                 default:
@@ -357,8 +357,8 @@ namespace WGiBeat.Screens
         {
             switch (_cursorPositions[number])
             {
-                case CursorPosition.NOT_JOINED:
-                    ChangeCursorPosition(number, CursorPosition.PROFILE_LIST);
+                case CursorPosition.NotJoined:
+                    ChangeCursorPosition(number, CursorPosition.ProfileList);
                     _infoMessages[number] = "Select a profile.";
                     Core.Players[number].Playing = true;
                     Core.Players[number].CPU = false;
@@ -367,16 +367,16 @@ namespace WGiBeat.Screens
                         RaiseSoundTriggered(SoundEvent.PLAYER_JOIN);
                     }
                     break;
-                case CursorPosition.MAIN_MENU:
+                case CursorPosition.MainMenu:
                     SelectMainMenuItem(number);
                     break;
-                    case CursorPosition.PROFILE_LIST:
+                    case CursorPosition.ProfileList:
                     SelectProfileListItem(number);
                     break;
-                case CursorPosition.KEYBOARD:
+                case CursorPosition.Keyboard:
                     _keyboards[number].PickSelection();
                     break;
-                case CursorPosition.READY:
+                case CursorPosition.Ready:
                     //Player is already ready.
                     return;
                     
@@ -394,20 +394,20 @@ namespace WGiBeat.Screens
                switch (_profileMenus[number].SelectedItem().ItemText)
                {
                    case "[Create New]":
-                       ChangeCursorPosition(number, CursorPosition.KEYBOARD);
+                       ChangeCursorPosition(number, CursorPosition.Keyboard);
                        _infoMessages[number] = "Enter a profile name.";
                        break;
                    case "[Guest]":
                        Core.Players[number].Profile = null;
                        Core.Players[number].PlayerOptions = new PlayerOptions();
                        RefereshSelectedOptions(number);
-                       ChangeCursorPosition(number, CursorPosition.MAIN_MENU);
+                       ChangeCursorPosition(number, CursorPosition.MainMenu);
                        _infoMessages[number] = "";
                        //NetHelper.Instance.BroadcastProfileChange(number);
                        //NetHelper.Instance.BroadcastPlayerOptions(number);
                        break;
                    case "[Cancel]":
-                       ChangeCursorPosition(number, CursorPosition.MAIN_MENU);
+                       ChangeCursorPosition(number, CursorPosition.MainMenu);
                        _infoMessages[number] = "";
                        break;
                }
@@ -447,7 +447,7 @@ namespace WGiBeat.Screens
             Core.Players[player].Profile = profile;
             Core.Players[player].LoadPreferences();
             RefereshSelectedOptions(player);
-            ChangeCursorPosition(player, CursorPosition.MAIN_MENU);
+            ChangeCursorPosition(player, CursorPosition.MainMenu);
             _infoMessages[player] = "";
 
             //NetHelper.Instance.BroadcastProfileChange(number);
@@ -479,17 +479,17 @@ namespace WGiBeat.Screens
             switch (_playerMenus[number].SelectedItem().ItemText)
             {
                 case "Leave":
-                    ChangeCursorPosition(number, CursorPosition.NOT_JOINED);
+                    ChangeCursorPosition(number, CursorPosition.NotJoined);
                     Core.Players[number].Playing = false;
                     Core.Players[number].Profile = null;
                     TryToStart();
                     break;
                 case "Decision":
-                    ChangeCursorPosition(number,CursorPosition.READY);
+                    ChangeCursorPosition(number,CursorPosition.Ready);
                     TryToStart();
                     break;
                 case "Profile":
-                    ChangeCursorPosition(number, CursorPosition.PROFILE_LIST);
+                    ChangeCursorPosition(number, CursorPosition.ProfileList);
                     _profileMenus[number].SelectedIndex = 0;
                     _infoMessages[number] = "Select a profile.";
                     break;
@@ -499,11 +499,8 @@ namespace WGiBeat.Screens
 
         private void TryToStart()
         {
-            bool noPlayers = true;
-            for (int x = 0; x < 4; x++)
-            {
-                noPlayers = noPlayers && (_cursorPositions[x] == CursorPosition.NOT_JOINED);
-            }
+            
+            var noPlayers = _cursorPositions.Any(e => e != CursorPosition.NotJoined);
             if (noPlayers)
             {
                 return;
@@ -512,7 +509,7 @@ namespace WGiBeat.Screens
             bool everyoneReady = true;
             for (int x = 0; x < 4; x++)
             {
-                everyoneReady = everyoneReady && (!(Core.Players[x].Playing ^ _cursorPositions[x] == CursorPosition.READY));
+                everyoneReady = everyoneReady && (!(Core.Players[x].Playing ^ _cursorPositions[x] == CursorPosition.Ready));
             }
 
             if (everyoneReady)
@@ -612,10 +609,10 @@ namespace WGiBeat.Screens
 
     enum CursorPosition
     {
-        NOT_JOINED,
-        MAIN_MENU,
-        READY,
-        KEYBOARD,
-        PROFILE_LIST
+        NotJoined,
+        MainMenu,
+        Ready,
+        Keyboard,
+        ProfileList
     }
 }
