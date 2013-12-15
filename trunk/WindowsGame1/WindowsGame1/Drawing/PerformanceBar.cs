@@ -117,7 +117,7 @@ namespace WGiBeat.Drawing
             if (totalBeatlines >= 5)
             {
                 _partsSpriteMap.ColorShading.A = (byte) (_barOpacity * Opacity / 255);
-                for (int y = 0; y < (int) BeatlineNoteJudgement.COUNT; y++)
+                for (int y = 0; y < (int) BeatlineNoteJudgement.Count; y++)
                 {
                     var width = (float) Math.Ceiling((barWidth)*Players[player].Judgements[y]/totalBeatlines);
                     width = Math.Min(width, maxWidth);

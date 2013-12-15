@@ -182,11 +182,11 @@ namespace WGiBeat.Screens
 
             positions[0].Y += 50;
             positions[1].Y += 50;
-            var totalBeatlines = profile.JudgementCounts.Sum() - profile.JudgementCounts[(int)BeatlineNoteJudgement.COUNT];
+            var totalBeatlines = profile.JudgementCounts.Sum() - profile.JudgementCounts[(int)BeatlineNoteJudgement.Count];
             FontManager.DrawString("Total beatlines:", "LargeFont", positions[0]  );
             FontManager.DrawString("" + totalBeatlines, "LargeFont", positions[1]  );
             positions[0].Y += 25;
-            for (int x = 0; x < (int)BeatlineNoteJudgement.COUNT; x++)
+            for (int x = 0; x < (int)BeatlineNoteJudgement.Count; x++)
             {
 
                 positions[1].Y = positions[0].Y;
@@ -203,7 +203,7 @@ namespace WGiBeat.Screens
             positions[0].Y += 25;
             positions[1].Y = positions[0].Y;
 
-            var totalArrows = profile.TotalHits + profile.JudgementCounts[(int)BeatlineNoteJudgement.COUNT];
+            var totalArrows = profile.TotalHits + profile.JudgementCounts[(int)BeatlineNoteJudgement.Count];
             FontManager.DrawString("Total arrows:", "LargeFont", positions[0]  );
             FontManager.DrawString("" + totalArrows, "LargeFont", positions[1]  );
             positions[0].Y += 25;
@@ -219,9 +219,9 @@ namespace WGiBeat.Screens
             positions[2].Y = positions[0].Y;
 
             FontManager.DrawString("Faults", "DefaultFont", positions[0]);
-            FontManager.DrawString("" + profile.JudgementCounts[(int)BeatlineNoteJudgement.COUNT], "DefaultFont",
+            FontManager.DrawString("" + profile.JudgementCounts[(int)BeatlineNoteJudgement.Count], "DefaultFont",
                 positions[1]);
-            percentage = String.Format("{0:P0}", 1.0 * profile.JudgementCounts[(int)BeatlineNoteJudgement.COUNT] / totalArrows);
+            percentage = String.Format("{0:P0}", 1.0 * profile.JudgementCounts[(int)BeatlineNoteJudgement.Count] / totalArrows);
             FontManager.DrawString(percentage, "DefaultFont", positions[2]);
             positions[0].Y += 35;
             positions[1].Y = positions[0].Y;

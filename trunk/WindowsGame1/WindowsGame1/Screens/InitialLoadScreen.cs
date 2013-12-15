@@ -44,7 +44,6 @@ namespace WGiBeat.Screens
         {
             string[] paths = _songFolderPath.Split('|');
 
-
             for (int x = 0; x < paths.Length; x++)
             {
                 string path = paths[x];
@@ -110,8 +109,8 @@ namespace WGiBeat.Screens
             {
                 FontManager.DrawString("Loading...", "LargeFont", Core.Metrics["LoadMessage", 0], Color.White, FontAlign.Left);
             }
-            var errorCount = (from e in entries where e.Level == LogLevel.ERROR select e).Count();
-            var warnCount = (from e in entries where e.Level == LogLevel.WARN select e).Count();
+            var errorCount = entries.Count(e => e.Level == LogLevel.ERROR);
+            var warnCount = entries.Count(e => e.Level == LogLevel.WARN);
             FontManager.DrawString(String.Format("{0} songs, {1} errors, {2} warnings",Core.Songs.Songs.Count, errorCount,warnCount),"DefaultFont",Core.Metrics["LoadErrorCount",0],Color.White,FontAlign.Left);
             FontManager.DrawString("" + GameCore.VERSION_STRING, "DefaultFont", Core.Metrics["LoadVersion", 0], Color.White, FontAlign.Left);
 
@@ -154,8 +153,7 @@ namespace WGiBeat.Screens
                     _textPosition.Y = Math.Max(_minY, _textPosition.Y - 36);
                     _autoScroll = false;
                     break;
-                    
-                    
+                                       
             }
   
         }

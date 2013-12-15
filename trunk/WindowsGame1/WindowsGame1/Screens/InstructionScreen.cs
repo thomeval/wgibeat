@@ -91,7 +91,7 @@ namespace WGiBeat.Screens
             if (_phraseNumber  + 2> _lastBeatline)
             {
                 _beatline.AddBeatlineNote(
-                    new BeatlineNote {Position = _lastBeatline + 1, NoteType = BeatlineNoteType.NORMAL});
+                    new BeatlineNote {Position = _lastBeatline + 1, NoteType = BeatlineNoteType.Normal});
                  _lastBeatline++;
             }
             

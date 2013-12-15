@@ -132,7 +132,7 @@ namespace WGiBeat.Screens
         private void DrawMenu()
         {
 
-            for (int menuOption = 0; menuOption < (int)MainMenuOption.COUNT; menuOption++)
+            for (int menuOption = 0; menuOption < (int)MainMenuOption.Count; menuOption++)
             {
                 var size = menuOption == 0
                   ? Core.Metrics["MainMenuOptions.Size", 1]
@@ -146,7 +146,7 @@ namespace WGiBeat.Screens
             }
 
             _menuOptionSprite.DrawVertices(_vertices);
-            for (int menuOption = 0; menuOption < (int) MainMenuOption.COUNT; menuOption++)
+            for (int menuOption = 0; menuOption < (int) MainMenuOption.Count; menuOption++)
             {
                 var textPosition = Core.Metrics["MainMenuOptions", menuOption].Clone();
                 var size = menuOption == 0
@@ -189,10 +189,10 @@ namespace WGiBeat.Screens
         {
             
             var newOptionValue = (int) _selectedMenuOption + value;
-            newOptionValue %= (int) MainMenuOption.COUNT;
+            newOptionValue %= (int) MainMenuOption.Count;
             if (newOptionValue < 0)
             {
-                newOptionValue += (int) MainMenuOption.COUNT;
+                newOptionValue += (int) MainMenuOption.Count;
             }
             _selectedMenuOption = (MainMenuOption) newOptionValue;
         
@@ -203,7 +203,7 @@ namespace WGiBeat.Screens
             RaiseSoundTriggered(SoundEvent.MAIN_MENU_DECIDE);
             switch (_selectedMenuOption)
             {
-                case MainMenuOption.START_GAME:
+                case MainMenuOption.StartGame:
                     if (Core.Songs.Songs.Count > 0)
                     {
                         Core.Cookies["JoiningPlayer"] =  player;
@@ -223,32 +223,32 @@ namespace WGiBeat.Screens
                     }
                     break;
                      */
-                case MainMenuOption.STATS:
+                case MainMenuOption.Stats:
                     Core.ScreenTransition("Stats");
                     break;
-                case MainMenuOption.HOW_TO_PLAY:
+                case MainMenuOption.HowToPlay:
                     Core.ScreenTransition("Instruction");
                     break;
-                case MainMenuOption.KEYS:
+                case MainMenuOption.Keys:
                     Core.ScreenTransition("KeyOptions");
                     break;
-                case MainMenuOption.OPTIONS:
+                case MainMenuOption.Options:
                     Core.ScreenTransition("Options");
                     break;
-                    case MainMenuOption.SONG_EDIT:
+                    case MainMenuOption.SongEdit:
                     Core.ScreenTransition("SongEdit");
                     break;
-                    case MainMenuOption.CREDITS:
+                    case MainMenuOption.Credits:
                     Core.ScreenTransition("Credits");
                     break;
-                case MainMenuOption.WEBSITE:
+                case MainMenuOption.Website:
                     var thread = new Thread(LaunchBrowser);
                     thread.Start();
           
                     
                     break;
 
-                case MainMenuOption.EXIT:
+                case MainMenuOption.Exit:
                     Core.Exit();
                     break;
             }
@@ -271,17 +271,17 @@ namespace WGiBeat.Screens
 
     public enum MainMenuOption
     {
-        START_GAME = 0,
-        STATS = 1,
-        HOW_TO_PLAY = 2,
-        KEYS = 3,
-        OPTIONS = 4,
-        SONG_EDIT = 5,
-        WEBSITE = 6,
-        CREDITS = 7,
-        EXIT = 8,
-        NETPLAY = 9,
-        COUNT = 9,
+        StartGame = 0,
+        Stats = 1,
+        HowToPlay = 2,
+        Keys = 3,
+        Options = 4,
+        SongEdit = 5,
+        Website = 6,
+        Credits = 7,
+        Exit = 8,
+        Netplay = 9,
+        Count = 9,
     }
 
 }

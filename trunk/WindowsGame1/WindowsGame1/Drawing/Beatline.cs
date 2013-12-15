@@ -224,16 +224,16 @@ namespace WGiBeat.Drawing
 
                 switch (bn.NoteType)
                 {
-                    case BeatlineNoteType.NORMAL:
+                    case BeatlineNoteType.Normal:
                         noteIdx = this.Id;
                         break;
-                    case BeatlineNoteType.SUPER:
+                    case BeatlineNoteType.Super:
                         noteIdx = 5;
                         break;
-                    case BeatlineNoteType.END_OF_SONG:
-                    case BeatlineNoteType.BPM_INCREASE:
-                    case BeatlineNoteType.BPM_DECREASE:
-                        case BeatlineNoteType.STOP:
+                    case BeatlineNoteType.EndOfSong:
+                    case BeatlineNoteType.BPMIncrease:
+                    case BeatlineNoteType.BPMDecrease:
+                        case BeatlineNoteType.Stop:
                         width = 1;
                         noteIdx = 4;
                         break;
@@ -242,7 +242,7 @@ namespace WGiBeat.Drawing
                 _markerSprite.Draw(noteIdx, width, markerHeight,markerPosition);
      
                 //Draw the effect icon on top of the marker if appropriate (such as a BPM change arrow)
-                if ((bn.NoteType != BeatlineNoteType.NORMAL) && (bn.NoteType != BeatlineNoteType.SUPER))
+                if ((bn.NoteType != BeatlineNoteType.Normal) && (bn.NoteType != BeatlineNoteType.Super))
                 {
                     _beatlineEffects.ColorShading.A = (byte) (_markerSprite.ColorShading.A  * 0.8);
                     _beatlineEffects.Draw((int)bn.NoteType - 1, EffectIconSize, new Vector2(markerPosition.X - EffectIconSize.X / 2.0f,markerPosition.Y));
@@ -344,7 +344,7 @@ namespace WGiBeat.Drawing
             {
                 _beatlineNotes.Remove(bnr);
             }
-            return (from e in _notesToRemove where (!e.Hit) && (e.NoteType == BeatlineNoteType.NORMAL) select e).Count();
+            return (from e in _notesToRemove where (!e.Hit) && (e.NoteType == BeatlineNoteType.Normal) select e).Count();
         }
 
         public double CalculateHitOffset(double phraseNumber)
@@ -381,7 +381,7 @@ namespace WGiBeat.Drawing
             if (offset > HIT_IGNORE_CUTOFF)
             {
                 //Note that the COUNT judgement is essentially an 'ignored' judgement.
-                return BeatlineNoteJudgement.COUNT;
+                return BeatlineNoteJudgement.Count;
             }
             BeatlineNoteJudgement result = GetJudgementResult(offset, completed);
             //Mark the beatlinenote as hit (it will be displayed differently and hold position)
@@ -395,7 +395,7 @@ namespace WGiBeat.Drawing
 
         private BeatlineNoteJudgement GetJudgementResult(double offset, bool completed)
         {
-            var result = BeatlineNoteJudgement.FAIL;
+            var result = BeatlineNoteJudgement.Fail;
             if (completed)
             {
                 for (int x = 0; x < NoteJudgementSet.JudgementCutoffs.Count(); x++)
@@ -416,7 +416,7 @@ namespace WGiBeat.Drawing
         {
             var passedNotes =
                 (from e in _beatlineNotes where (!e.Hit) && (CalculateHitOffset(e, phraseNumber) < 0) 
-                 && (e.NoteType == BeatlineNoteType.NORMAL ) select e).ToList();
+                 && (e.NoteType == BeatlineNoteType.Normal ) select e).ToList();
             var result = passedNotes.Count();
 
             foreach (var bln in passedNotes)

@@ -21,7 +21,7 @@ namespace WGiBeat.Helpers
             _lastJudgements = new BeatlineNoteJudgement[4];
             for (int x = 0; x < 4; x++)
             {
-                _lastJudgements[x] = BeatlineNoteJudgement.COUNT;
+                _lastJudgements[x] = BeatlineNoteJudgement.Count;
             }
         }
 
@@ -59,7 +59,7 @@ namespace WGiBeat.Helpers
 
         private BeatlineNoteJudgement GetWorstJudgement()
         {
-            var worst = BeatlineNoteJudgement.IDEAL;
+            var worst = BeatlineNoteJudgement.Ideal;
             for (int x = 0; x < 4; x++)
             {
                 if (Players[x].Playing)
@@ -78,7 +78,7 @@ namespace WGiBeat.Helpers
         {
             for (int x = 0; x < 4; x++)
             {
-                _lastJudgements[x] = BeatlineNoteJudgement.COUNT;
+                _lastJudgements[x] = BeatlineNoteJudgement.Count;
             }
         }
 
@@ -91,7 +91,7 @@ namespace WGiBeat.Helpers
         {
             for (int x = 0; x < 4; x++)
             {
-                if ((_lastJudgements[x] == BeatlineNoteJudgement.COUNT) && Players[x].Playing)
+                if ((_lastJudgements[x] == BeatlineNoteJudgement.Count) && Players[x].Playing)
                 {
                     return false;
                 }

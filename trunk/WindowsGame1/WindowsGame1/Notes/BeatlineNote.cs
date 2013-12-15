@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WGiBeat.Notes
+﻿namespace WGiBeat.Notes
 {
     /// <summary>
     /// A BeatlineNote represents a single note on a Beatline that must be hit in time with the beat of a song,
@@ -8,7 +6,7 @@ namespace WGiBeat.Notes
     /// </summary>
     public class BeatlineNote
     {
-        public bool CanBeHit {get { return NoteType == BeatlineNoteType.NORMAL || NoteType == BeatlineNoteType.SUPER; }}
+        public bool CanBeHit {get { return NoteType == BeatlineNoteType.Normal || NoteType == BeatlineNoteType.Super; }}
         public double Opacity { get; set; }
 
         public double Position { get; set; }
@@ -23,22 +21,26 @@ namespace WGiBeat.Notes
     /// </summary>
     public enum BeatlineNoteJudgement
     {
-        IDEAL = 0,
-        COOL = 1,
+        Ideal = 0,
+        Cool = 1,
         OK = 2,
-        BAD = 3,
-        FAIL = 4,
-        MISS = 5,
-        COUNT = 6
+        Bad = 3,
+        Fail = 4,
+        Miss = 5,
+        Count = 6
     }
 
+    /// <summary>
+    /// Represents the type of Beatline note. Not all Beatline notes are designed to be hit - others are used as markers
+    /// for significant events in the song, such as BPM changes, Stops, or the end of the song.
+    /// </summary>
     public enum BeatlineNoteType
     {
-        NORMAL = 0,
-        END_OF_SONG = 1,
-        BPM_INCREASE = 2,
-        BPM_DECREASE = 3,
-        STOP = 4,
-        SUPER = 5
+        Normal = 0,
+        EndOfSong = 1,
+        BPMIncrease = 2,
+        BPMDecrease = 3,
+        Stop = 4,
+        Super = 5
     }
 }

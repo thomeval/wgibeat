@@ -153,7 +153,7 @@ namespace WGiBeat.Screens
                         ApplyJudgement(ar.Judgement, (int)ar.Player, ar.Multiplier);
                     break;
             }
-            if (ar.Judgement == BeatlineNoteJudgement.MISS)
+            if (ar.Judgement == BeatlineNoteJudgement.Miss)
             {
                 if (ar.Player ==  AggregatorPlayerID.ALL)
                 {
@@ -268,8 +268,8 @@ namespace WGiBeat.Screens
         private bool _dspActive;
         private float _dspIntensity = 1;
         private double _desiredIntensity;
-        private int _dspLifePeak = 100;
-        private float DSP_UPDATE_SPEED = 0.125f;
+        private const int DSP_LIFE_PEAK = 100;
+        private const float DSP_UPDATE_SPEED = 0.125f;
         private void MaintainBlazingDSP()
         {
 
@@ -282,7 +282,7 @@ namespace WGiBeat.Screens
             }
 
             var playerAdjustedLife = (Core.Players.Where(e => e.Playing).Select(e => e.IsBlazing ? e.Life - 100 : 0));
-            var adjustmentFactor = Math.Min(1, playerAdjustedLife.Average()/_dspLifePeak);
+            var adjustmentFactor = Math.Min(1, playerAdjustedLife.Average()/DSP_LIFE_PEAK);
             //This should be 1 if no one is blazing. Otherwise somewhere between 1 and intensityMax. IntensityMax if all players are
             //blazing and at or above _dspLifePeak.
             _desiredIntensity = ((intensityMax - 1) * adjustmentFactor) + 1;
@@ -504,7 +504,7 @@ namespace WGiBeat.Screens
             var complete = _noteBarSet.AllCompleted(player);
             var judgement = _beatlineSet.AwardJudgement(_phraseNumber, player, complete);
 
-            if (judgement == BeatlineNoteJudgement.COUNT)
+            if (judgement == BeatlineNoteJudgement.Count)
             {
                 return;
             }
@@ -536,7 +536,7 @@ namespace WGiBeat.Screens
             var thread = new Thread(AdjustGrooveMomentum);
             double mx = _noteBarSet.NumberCompleted(player) + _noteBarSet.NumberReverse(player);
             //Ideal streaks provide bonus groove momentum (up to 2x the normal amount)
-            if (judgement == BeatlineNoteJudgement.IDEAL)
+            if (judgement == BeatlineNoteJudgement.Ideal)
             {
                 var mx2 = Convert.ToDouble((9 + Math.Max(1, Core.Players[player].Streak)));
                 mx2 = Math.Min(2.0, mx2 / 10);
@@ -576,7 +576,7 @@ namespace WGiBeat.Screens
         private void BeatlineNoteMissed(object sender, EventArgs e)
         {
             var player = (int) sender;
-            _hitAggregator.RegisterHit(player, BeatlineNoteJudgement.MISS);
+            _hitAggregator.RegisterHit(player, BeatlineNoteJudgement.Miss);
        
             
             if (Core.Players[player].CPU)
@@ -592,7 +592,7 @@ namespace WGiBeat.Screens
             var player = (int) sender;
             var judgement = Core.Players[player].NextCPUJudgement;
 
-            if (judgement == BeatlineNoteJudgement.COUNT)
+            if (judgement == BeatlineNoteJudgement.Count)
             {
                 judgement = Core.CPUManager.GetNextJudgement(Core.Cookies["CPUSkillLevel"].ToString(), Core.Players[player].Streak);
             }
@@ -609,7 +609,7 @@ namespace WGiBeat.Screens
         private bool IsNextNoteSuper(int player)
         {
             var result = _beatlineSet.NearestBeatlineNote(player, _phraseNumber);
-            return result != null && result.NoteType == BeatlineNoteType.SUPER;
+            return result != null && result.NoteType == BeatlineNoteType.Super;
         }
 
         #endregion
