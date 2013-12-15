@@ -139,7 +139,8 @@ GraphLegendItem.Size=[88,33][200,33];
 
 #New Game;
 NewGameJoinNotification=[80,160][720,160][80,520][720,520];
-NewGameMenuStart=[40,0][680,0][40,360][680,360];
+NewGameMenuStart=[20,5][660,5][20,365][660,365];
+NewGameMenu.Size=[600,7];
 NewGameMessageBorder=[0,305][640,305][0,665][640,665];
 NewGameMessageBorder.Size=[640,55];
 NewGamePlayerOptionsFrames=[0,265][640,265][0,625][640,625];
@@ -171,7 +172,7 @@ SongLockedRequirements=[657,460];
 
 #Options Screen;
 OptionsMenuStart=[320,111];
-OptionsMenuStart.Size=[640,0];
+OptionsMenuStart.Size=[640,17];
 OptionsDescription=[640,630];
 OptionsDescriptionBase=[0,600];
 OptionsDescriptionBase.Size=[1280,120];

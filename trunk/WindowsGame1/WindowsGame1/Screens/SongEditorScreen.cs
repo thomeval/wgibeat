@@ -211,7 +211,7 @@ namespace WGiBeat.Screens
 
             _fileSelect.Width = GameCore.INTERNAL_WIDTH;
             _fileSelect.Position = Core.Metrics["EditorMenuStart", 0];
-
+            
             _textEntry.EntryComplete += TextEntryEntryComplete;
             _textEntry.EntryCancelled += TextEntryEntryCancelled;
 

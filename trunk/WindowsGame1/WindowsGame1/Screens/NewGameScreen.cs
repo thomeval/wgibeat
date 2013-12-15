@@ -100,9 +100,9 @@ namespace WGiBeat.Screens
         {
             _profileMenus[x] = new Menu
                                    {
-                                       Width = 590,
+                                       Width = Core.Metrics["NewGameMenu.Size",0].X,
                                        Position = (Core.Metrics["NewGameMenuStart", x]),
-                                       MaxVisibleItems = 6,
+                                       MaxVisibleItems = (int) Core.Metrics["NewGameMenu.Size",0].Y,
                                        SelectedItemBackgroundColor = _backgroundColors[x]
                                    };
 
@@ -119,10 +119,16 @@ namespace WGiBeat.Screens
 
         private void CreatePlayerMenu(int x)
         {
-            _playerMenus[x] = new Menu { Width = 590 };
+            _playerMenus[x] = new Menu
+                                  {
+                                      Width = Core.Metrics["NewGameMenu.Size", 0].X,
+                                      Position = (Core.Metrics["NewGameMenuStart", x]),
+                                      MaxVisibleItems = (int)Core.Metrics["NewGameMenu.Size", 0].Y,
+                                      SelectedItemBackgroundColor = _backgroundColors[x]
+                                  };
             _playerMenus[x].AddItem(new MenuItem { ItemText = "Decision" });
             _playerMenus[x].AddItem(new MenuItem { ItemText = "Profile" });
-            _playerMenus[x].SelectedItemBackgroundColor = _backgroundColors[x];
+
             var difficulty = new MenuItem { ItemText = "Difficulty", IsSelectable = false };
             difficulty.AddOption("Beginner", 0);
             difficulty.AddOption("Easy", 1);
@@ -161,8 +167,6 @@ namespace WGiBeat.Screens
             disableLb.AddOption("On", true);
 
             _playerMenus[x].AddItem(disableLb);
-            _playerMenus[x].Position = (Core.Metrics["NewGameMenuStart", x]);
-            _playerMenus[x].MaxVisibleItems = 6;
 
             _playerMenus[x].AddItem(new MenuItem { ItemText = "Leave", IsCancel = true});
         }
@@ -250,7 +254,7 @@ namespace WGiBeat.Screens
                 switch (_cursorPositions[x])
                 {
                     case CursorPosition.NOT_JOINED:
-                        FontManager.DrawString("Press Start to Join...", "LargeFont",
+                        FontManager.DrawString("Press START to Join...", "LargeFont",
                         Core.Metrics["NewGameJoinNotification", x], Color.Black, FontAlign.Left);
                         _infoMessages[x] = "";
                         break;
@@ -299,12 +303,18 @@ namespace WGiBeat.Screens
                 return;
             }
 
+            
             var playerIdx = inputAction.Player - 1;
-            if ((playerIdx > -1) && Core.Players[playerIdx].Remote)
+
+            if (playerIdx == -1)
             {
                 return;
             }
-            if ((playerIdx > -1) && (_cursorPositions[playerIdx] == CursorPosition.KEYBOARD))
+            if (Core.Players[playerIdx].Remote)
+            {
+                return;
+            }
+            if (_cursorPositions[playerIdx] == CursorPosition.KEYBOARD)
             {
                 _keyboards[playerIdx].MoveSelection(inputAction.Action);
                 RaiseSoundTriggered(SoundEvent.KEYBOARD_MOVE);
@@ -354,7 +364,7 @@ namespace WGiBeat.Screens
                     Core.Players[number].CPU = false;
                     if (!Core.Cookies.ContainsKey("JoiningPlayer"))
                     {
-                        RaiseSoundTriggered(SoundEvent.MENU_DECIDE);
+                        RaiseSoundTriggered(SoundEvent.PLAYER_JOIN);
                     }
                     break;
                 case CursorPosition.MAIN_MENU:
