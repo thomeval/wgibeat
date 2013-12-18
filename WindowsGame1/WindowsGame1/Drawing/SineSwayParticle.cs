@@ -7,14 +7,12 @@ namespace WGiBeat.Drawing
     public class SineSwayParticle : DrawableObject
     {
         public double ParticlePosition { get; set; } //Between 0 and 1.
-        public double Frequency { get; set; }
+        public double Frequency { get; set; } // Frequency of the sine path (left to right movement)
         public bool Vertical { get; set; }
-        public double StepSize { get; set; }
+        public double StepSize { get; set; } // How much the particle moves per second.
         public float RotationStepSize { get; set; }
         public double Shift { get; set; }
-
-
-        public int ParticleSize { get; set; }
+        public float ParticleSize { get; set; } // The size of the particle texture.
 
         public SpriteMap3D ParticleSpriteMap { get; set; }
         public int ParticleType { get; set; }
@@ -25,7 +23,7 @@ namespace WGiBeat.Drawing
             ParticleSpriteMap = new SpriteMap3D
             {
                 Texture = TextureManager.Textures("BackgroundParticles"),
-                Columns = 5,
+                Columns = 1,
                 Rows = 1
             };
         }
@@ -42,8 +40,8 @@ namespace WGiBeat.Drawing
 
         private Vector2 GetVector()
         {
-            var widthAlt  = (int) (Math.Sin((ParticlePosition + Shift) * Math.PI * 2 * Frequency) * Width);
-            var heightAlt = (int) (ParticlePosition * Height);
+            var widthAlt  = (float) (Math.Sin((ParticlePosition + Shift) * Math.PI * 2 * Frequency) * Width);
+            var heightAlt = (float) (ParticlePosition * Height);
 
             if (Vertical)
                 return new Vector2(X + widthAlt, Y + heightAlt);
@@ -54,20 +52,18 @@ namespace WGiBeat.Drawing
         public void Draw(GameTime gameTime)
         {
             Step(gameTime);
-            ParticleSpriteMap.Draw(ParticleType, ParticleSize, ParticleSize, (int) GetVector().X, (int) GetVector().Y);
+            ParticleSpriteMap.Draw(ParticleType, ParticleSize, ParticleSize,GetVector());
             
         }
 
         public VertexPositionColorTexture[] GetVertices(GameTime gameTime)
         {
             Step(gameTime);
-            return ParticleSpriteMap.GetVertices(ParticleType, (int) GetVector().X, (int)GetVector().Y, ParticleSize, ParticleSize);
+            return ParticleSpriteMap.GetVertices(ParticleType,GetVector(), new Vector2(ParticleSize,ParticleSize));
         }
         public override void Draw()
         {
             Draw(new GameTime());
         }
-
-
     }
 }

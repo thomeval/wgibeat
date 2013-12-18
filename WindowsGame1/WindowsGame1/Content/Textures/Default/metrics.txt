@@ -6,6 +6,7 @@ CoopLifeBar=[8,250];
 CoopLifeBar.Size=[1264,33];
 CoopLifeBarMiddle=[456,283];
 CoopLifeBarMiddle.Size=[176,33];
+CoopLifeBarMiddleText=[501,283][606,283];
 LevelBarBase=[80,56][720,56][80,356][720,356];
 LevelBarBase.Size=[346,28];
 LevelBarBaseSync=[80,56];

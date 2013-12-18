@@ -90,7 +90,7 @@ namespace WGiBeat.Drawing
             MinX = -15;
             MaxX = GameCore.INTERNAL_WIDTH;
 
-            Count = 520;
+            Count = 750;
             _vertices = new VertexPositionColorTexture[Count*6];
         }
 
@@ -150,7 +150,6 @@ namespace WGiBeat.Drawing
             //Send the entire batch of vertices to SpriteMap3D for drawing (any Particle object's SpriteMap3D will do).
             _swayers[0].ParticleSpriteMap.DrawVertices(_vertices);
         }
-
 
         public override void Draw()
         {
