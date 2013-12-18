@@ -25,14 +25,8 @@ namespace WGiBeat.Drawing
             
             if (_barSpriteBack == null)
             {
-                _barSpriteBack = new Sprite3D { Texture = TextureManager.Textures("GrooveMomentumBarBack") };
-                _barSpriteFront = new Sprite3D { Texture = TextureManager.Textures("GrooveMomentumBarFront") };
+                InitSprites();           
             }
-
-            _barSpriteBack.Position = this.Position;
-            _barSpriteBack.Size = this.Size;
-            _barSpriteFront.Position = this.Position + this.BarOffset;
-            _barSpriteFront.Size = this.Size - this.BarOffset;
             _barSpriteBack.Draw();
 
             var actMx = _displayedGrooveMomentum - 0.5;
@@ -43,22 +37,42 @@ namespace WGiBeat.Drawing
             }
             actMx = Math.Min(MAX_MX, actMx);
 
-            var width = (int) (_barSpriteFront.Width/MAX_MX* (actMx));
+            var widthRatio = actMx / MAX_MX;
+
+            _barSpriteFront.Width = (this.Size.X - this.BarOffset.X) * (float) widthRatio;
+            _barSpriteFront.DrawTiled(0, 0, (float) (_barSpriteFront.Texture.Width * widthRatio), _barSpriteFront.Texture.Height);
+
+            DrawText();
+        }
+
+        private void InitSprites()
+        {
+            _barSpriteBack = new Sprite3D
+                                 {
+                                     Texture = TextureManager.Textures("GrooveMomentumBarBack"),
+                                     Position = this.Position,
+                                     Size = this.Size
+                                 };
+            _barSpriteFront = new Sprite3D
+                                  {
+                                      Texture = TextureManager.Textures("GrooveMomentumBarFront"),
+                                      Position = this.Position + this.BarOffset,
+                                      Size = this.Size - this.BarOffset
+                                  };
+        }
+
+        private void DrawText()
+        {
             var textPosition = this.Position.Clone();
             textPosition.X += 70;
             textPosition.Y += 2;
-            _barSpriteFront.Width = width;
-            _barSpriteFront.DrawTiled(0, 0, width, _barSpriteFront.Height);
-           
 
             FontManager.DrawString(string.Format("{0:0.0}x", _displayedGrooveMomentum), "LargeFont",
-                                      textPosition, Color.Black, FontAlign.Right);
-            textPosition.Y -= 4;
-            textPosition.X += 77;
+                                   textPosition, Color.Black, FontAlign.Right);
+      
+            textPosition.X += 84;
             FontManager.DrawString(string.Format("{0:0.0}x", Player.PeakGrooveMomentum), "DefaultFont",
-                          textPosition, Color.Black, FontAlign.Right);
+                                   textPosition, Color.Black, FontAlign.Right);
         }
-
- 
     }
 }

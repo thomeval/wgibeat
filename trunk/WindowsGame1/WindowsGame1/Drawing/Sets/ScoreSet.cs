@@ -106,9 +106,7 @@ namespace WGiBeat.Drawing.Sets
 
             var idx = (from e in Players where e.Playing select e.PlayerOptions.PlayDifficulty).Min() + 1;
                     _iconSyncBaseSpriteMap.Draw();
-                    _iconSpriteMap.Draw( (int) idx, _metrics["SyncPlayerDifficulties.Size",0], _metrics["SyncPlayerDifficulties", 0]);
-                
-            
+                    _iconSpriteMap.Draw( (int) idx, _metrics["SyncPlayerDifficulties.Size",0], _metrics["SyncPlayerDifficulties", 0]);                           
         }
 
         private void DrawCombinedScores()

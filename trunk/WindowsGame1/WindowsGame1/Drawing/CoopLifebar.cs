@@ -71,7 +71,12 @@ namespace WGiBeat.Drawing
                                       Y = this.Y + 3
                                   };
 
-            _blazingPart = new Sprite3D { Texture = TextureManager.Textures("LifeBarBlazingCoop") };
+            _blazingPart = new Sprite3D
+                               {
+                                   Texture = TextureManager.Textures("LifeBarBlazingCoop"),
+                                   Position = this.Position,
+                                   Size = this.Size
+                               };
             _blazingSidePart = new Sprite3D
             {
                 Texture = TextureManager.CreateWhiteMask("LifeBarBaseCoop"),
@@ -255,7 +260,7 @@ namespace WGiBeat.Drawing
             beatFraction = 1 - beatFraction;
             var opacity = (byte)(beatFraction * 255);
             _blazingPart.ColorShading.A = opacity;
-            _blazingPart.Position = this.Position;
+
             _blazingPart.Draw();
             _blazingSidePart.ColorShading = Color.White;
             _blazingSidePart.ColorShading.A = opacity;
@@ -338,12 +343,11 @@ namespace WGiBeat.Drawing
             }
             _middlePart.Draw();
 
-            var position = MiddlePosition.Clone();
-            position.X += 35;
+      
             FontManager.DrawString(String.Format("{0:D3}", (int)TotalLife()), "LargeFont",
-                    position, Color.Black, FontAlign.Center);
-            position.X += 50;
-            FontManager.DrawString(string.Format("{0:D3}", (int)TrueCapacity), "DefaultFont", position, Color.Black, FontAlign.Center);
+                    GameCore.Instance.Metrics["CoopLifeBarMiddleText",0], Color.Black, FontAlign.Center);
+
+            FontManager.DrawString(string.Format("{0:D3}", (int)TrueCapacity), "DefaultFont", GameCore.Instance.Metrics["CoopLifeBarMiddleText", 1], Color.Black, FontAlign.Center);
         }
 
         #region Helper Methods
