@@ -38,7 +38,7 @@ When this frame is visible, press and hold the SELECT key. The current difficult
 This can be done from any screen that displays the Player Options Frame, including the Song Select and Mode Select screens.
 
 ==Changing the song sort order==
-The song sort order is displayed near the top right corner of the song select screen. By default, songs are sorted alphabetically by title. To change this, hold the BEATLINE key, and press left or right. Any player can do this.
+The song sort order is displayed near the top right corner of the song select screen. By default, songs are sorted alphabetically by title. To change this, hold the BEATLINE key, and press left or right. Any player can do this. The song list can be sorted by Title, Artist, BPM or Length (in Transcendence Alpha 3 or later).
 
 [http://wgibeat.googlecode.com/svn/wiki/SongSortAdjustMode.png]
 
@@ -99,6 +99,8 @@ Once enabled, the song's current BPM, length, offset and phrase number (position
 
 The following keys can be used to adjust the BPM, length or offset of the song. These are the same as the keys used during the "Tuning" step in WGiEdit. Changes are saved once the song gameplay is completed (when the evaluation screen is displayed).
 
+ * F3 - Decrease BPM by 0.01
+ * F4 - Increase BPM by 0.01
  * F5 - Decrease BPM by 0.1
  * F6 - Increase BPM by 0.1
  * F7 - Decrease Offset by 0.1
