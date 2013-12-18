@@ -16,6 +16,7 @@ AUDIOFILE=The name of the song file (such as mysong.mp3) goes here.;
 AUDIOFILEMD5=(Optional) The MD5 of the song file goes here.;
 AUDIOSTART=(Optional) The starting position of audio playback goes here.;
 BACKGROUND=(Optional) The name of the background image (such as mybackground.png) goes here.;
+REQUIREDLEVEL=(Optional) The minimum required profile level to play this song. Guest players, and players below this level will not be able to play this song.
 }}}
 
 Note that each line *must* end in a semicolon, and the file must start with #SONG-1.0; or #SONG-1-1; The 1.1 .sng format was introduced in version 0.75 to support BPM changes and Stops. Either format can be used for songs that have no BPM changes or Stops.
