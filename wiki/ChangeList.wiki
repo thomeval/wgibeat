@@ -19,7 +19,8 @@
  * Many graphical items can now be resized by editing the Metrics file (in addition to their position). This is still a work in progress.
  * Added ability to sort by song length in the Song Select Screen.
  * Added a level up indicator and menu sound on the Evaluation Screen. 
- * BPM Meter now displays a warning icon for very fast songs.    
+ * BPM Meter now displays a warning icon for very fast songs.
+ * Profiles now record the highest ever ideal streak and hit chains per player. It can be viewed in the Stats Screen.    
  * Bugfix: Fixed Numpad . not working for text entry in WGiEdit (Thanks MarkStockwell)
  * Bugfix: Song Offsets must now be at least 1 second to be considered valid. (Thanks MarkStockwell)
  * Bugfix: Fixed sound effects triggering incorrectly on menus (such as LEFT/RIGHT when a menu item doesn't have options).
