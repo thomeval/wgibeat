@@ -2,6 +2,32 @@
 
 =Version History=
 
+ ==2.0 Alpha 3 (r654) "Inappropriate Allocation" ==
+ 
+ * Resolution upgrade! WGiBeat is now designed for 16:9 aspect ratio, and supports up to 1920x1080 resolution! Previous 4:3 resolutions are still available.
+ * The resolution can now be changed again in the Options Screen. 
+ * A new look for overcharge in normal and coop lifebars.
+ * Alt + Enter now works to toggle full screen mode (Thanks eXeCutor18, MarkStockwell)
+ * Added feature to add or remove arbitrary beatline notes in a song, using the AddNotes and RemoveNotes fields.
+ * Added highly experimental Super Beatline Notes. Twice as many arrows must be hit before these notes. This uses the SuperNotes field.
+ * Arrow sequence progress bars are now animated.   
+ * Tweaked groove momentum and ideal streak scoring.
+ * Added the Song Timeline to the Main Game Screen to show the progress of the current song. 
+ * Blazing Bass Boost is now dynamic based on the number of players blazing, and their average life.
+ * The number of reverse arrows is now more dynamic based on the player's current life. There can now be up to 75% reverse arrows per beatline.
+ * New sound events for MENU_INVALID_DECIDE, PLAYER_JOIN and PLAYER_LEAVE. 
+ * Many graphical items can now be resized by editing the Metrics file (in addition to their position). This is still a work in progress.
+ * Added ability to sort by song length in the Song Select Screen.
+ * Added a level up indicator and menu sound on the Evaluation Screen. 
+ * BPM Meter now displays a warning icon for very fast songs.    
+ * Bugfix: Fixed Numpad . not working for text entry in WGiEdit (Thanks MarkStockwell)
+ * Bugfix: Song Offsets must now be at least 1 second to be considered valid. (Thanks MarkStockwell)
+ * Bugfix: Fixed sound effects triggering incorrectly on menus (such as LEFT/RIGHT when a menu item doesn't have options).
+ * Bugfix: Fixed sound effects triggering incorrectly on player options frames (such as when a player leaves).       
+ * Bugfix: Fixed BPM Meter showing incorrect level in WGiEdit, step 2.
+ * Bugfix: Fixed 'jumpy' animation in Coop lifebars when life is lost.
+ * Bugfix: Fixed life graph not showing scores and levels correctly for Sync Plus and Sync Pro modes.   
+
 ==2.0 Alpha 2 (r623) - "Continued Habit"==
  * The evaluation screen now displays the overall performance percentage in Normal Mode, the Peak Groove Momentum in Coop mode, and Win/Lose judgements in Team and VS CPU modes. 
  * The evaluation screen can now display life, score and level graphs. Cycle using the BEATLINE key.  
