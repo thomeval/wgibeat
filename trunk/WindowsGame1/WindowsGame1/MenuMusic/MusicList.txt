@@ -6,15 +6,15 @@
 #The basic format of this file is [ScreenName] = [FileName];. [FileName] refers to the name of the music file, including extension.
 #Valid options for [ScreenName] are: Evaluation, KeyOptions, MainGame (not recommended), MainMenu,
 #ModeSelect, TeamSelect, NewGame, Options and SongSelect(not recommended).
-#All lines must end with a semicolon, and lines starting with # are ignored.
+#All lines must end with a semicolon, and lines starting with # are ignored (although those should end with a semicolon too).
 #The same music file can be used for multiple screens.;
-#The following lines are examples. Remove the # at the start to configure WGiBeat to play "MenuMusic.mp3"
-#on every screen as the menu music, assuming that this file exists in this folder.
-#MainMenu=MenuMusic.mp3;
-#NewGame=MenuMusic.mp3;
-#ModeSelect=MenuMusic.mp3;
-#TeamSelect=MenuMusic.mp3;
-#KeyOptions=MenuMusic.mp3;
-#Options=MenuMusic.mp3;
-#Stats=MenuMusic.mp3;
-#Instruction=MenuMusic.mp3;
+MainMenu=river3.ogg;
+NewGame=RiverFlowsInYou.ogg;
+ModeSelect=RiverFlowsInYou.ogg;
+TeamSelect=RiverFlowsInYou.ogg;
+KeyOptions=river4.ogg;
+Options=river4.ogg;
+Stats=river4.ogg;
+Instruction=RiverIntro.ogg;
+Credits=RiverIntro.ogg;
+InitialLoad=RiverIntro.ogg;
