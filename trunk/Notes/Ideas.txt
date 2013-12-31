@@ -2,19 +2,26 @@
 ==Low Priority==
 - Netplay (major)
 - Mix / nonstop play.
- 
-==WNX==
+ - Transition effects for DrawableObjects.
 
-- Main menu new layout
+
+  
+==Delayed==
+- Apparent inconsistency between WGiEdit Step 2 and Step 3 song timing (esp. AudioStart)?
+ 
+==Post Release==
+- Update main page screenshot
+
+==TODO==
+- Fix Keys Screen
+ - Main menu new layout
   - Showing either Performance Bar / Record comparer or both option.
   - Install desktop icon
   - Super beatlines (bonus points, possibly double length) - needs more testing
 
   - Mode select screen preview gfx
   - Mode select options gfx
-- Transition effects for DrawableObjects.
  - Higher Resolution Textures
-
 
   - WGiEdit header gfx
    - Refactor WGiEdit.
@@ -29,20 +36,14 @@
   - Tutorial for WGiEdit
   - Add offset/BPM into menu music
   - New game screen option descriptions
-  - Fix player options frame blink
+  - Fix player options frame blink (when first drawn)
   - Customizable POF backgrounds
   - Bonus EXP for SYNC modes
   - Bigger Groove Momentum Gauge
-  
-==Delayed==
-- Apparent inconsistency between WGiEdit Step 2 and Step 3 song timing (esp. AudioStart)?
- 
-==Post Release==
-- Update main page screenshot
-
-==TODO==
-- Fix Keys Screen
-     
+  - Fix sync bug for P4 (especially when P1 isn't playing)
+  - Fix position for coop score/grade display in Evaluation Screen
+  - Fix position for clear indicators (especially sync mode)
+      
  ==Done==
  
  ==2.0 A3 "Inappropriate Allocation" ==
